@@ -44,38 +44,42 @@ showPaths paths = "[" ++ intercalate ", " (map showPath paths) ++ "]"
 
 indent = unlines . map ("  " ++) . lines
 
-generate (Rectangle x y z) = "cube(" ++ "[" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ "]" ++ ");"
-generate (Sphere r) = "sphere(" ++ show r ++ ");"
-generate (Shape2D n r) =
+gen (Rectangle x y z) = "cube(" ++ "[" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ "]" ++ ");"
+gen (Sphere r) = "sphere(" ++ show r ++ ");"
+gen (Shape2D n r) =
   "circle(r = " ++ show r ++ ", $fn = " ++ show n ++ ");"
-generate (Cylinder r h) =
+gen (Cylinder r h) =
   "cylinder(h = " ++ show h ++ ", r = " ++ show r ++ ");"
-generate (Cone r h) =
+gen (Cone r h) =
   "cylinder(h = " ++ show h ++ ", r1 = " ++ show r ++ ", r2 = 0);"
-generate (Prism n r h) =
+gen (Prism n r h) =
   "cylinder(h = " ++ show h ++ ", r = " ++ show r ++ ", $fn = " ++ show n ++ ");"
-generate (Poly (PD points paths)) =
+gen (Poly (PD points paths)) =
   "polygon(points = " ++ showPoints points ++ ", paths = " ++ showPaths paths ++ ");"
-generate (Tx dx s) =
-  "translate([" ++ show dx ++ ", 0, 0]) {\n" ++ indent (generate s) ++ "}"
-generate (Ty dy s) =
-  "translate([0, " ++ show dy ++ ", 0]) {\n" ++ indent (generate s) ++ "}"
-generate (Tz dz s) =
-  "translate([0, 0, " ++ show dz ++ "]) {\n" ++ indent (generate s) ++ "}"
-generate (Rx ax s) =
-  "rotate([" ++ show ax ++ ", 0, 0]) {\n" ++ indent (generate s) ++ "}"
-generate (Ry ay s) =
-  "rotate([0, " ++ show ay ++ ", 0]) {\n" ++ indent (generate s) ++ "}"
-generate (Rz az s) =
-  "rotate([0, 0, " ++ show az ++ "]) {\n" ++ indent (generate s) ++ "}"
-generate (Scale (sx, sy, sz) s) =
-  "scale([" ++ show sx ++ ", " ++ show sy ++ ", " ++ show sz ++ "]) {\n" ++ indent (generate s) ++ "}"
-generate (Extrude h s) =
-  "linear_extrude(height = " ++ show h ++ ") {\n" ++ indent (generate s) ++ "}"
-generate (Diff a b) =
-  "difference() {\n" ++ indent (generate a) ++ indent (generate b) ++ "}"
-generate (Union shapes) =
-  "union() {\n" ++ concatMap (indent . generate) shapes ++ "}"
+gen (Tx dx s) =
+  "translate([" ++ show dx ++ ", 0, 0]) {\n" ++ indent (gen s) ++ "}"
+gen (Ty dy s) =
+  "translate([0, " ++ show dy ++ ", 0]) {\n" ++ indent (gen s) ++ "}"
+gen (Tz dz s) =
+  "translate([0, 0, " ++ show dz ++ "]) {\n" ++ indent (gen s) ++ "}"
+gen (Rx ax s) =
+  "rotate([" ++ show ax ++ ", 0, 0]) {\n" ++ indent (gen s) ++ "}"
+gen (Ry ay s) =
+  "rotate([0, " ++ show ay ++ ", 0]) {\n" ++ indent (gen s) ++ "}"
+gen (Rz az s) =
+  "rotate([0, 0, " ++ show az ++ "]) {\n" ++ indent (gen s) ++ "}"
+gen (Scale (sx, sy, sz) s) =
+  "scale([" ++ show sx ++ ", " ++ show sy ++ ", " ++ show sz ++ "]) {\n" ++ indent (gen s) ++ "}"
+gen (Extrude h s) =
+  "linear_extrude(height = " ++ show h ++ ") {\n" ++ indent (gen s) ++ "}"
+gen (Diff a b) =
+  "difference() {\n" ++ indent (gen a) ++ indent (gen b) ++ "}"
+gen (Union shapes) =
+  "union() {\n" ++ concatMap (indent . gen) shapes ++ "}"
+
+writeScad shape filename = writeFile filename (fn50 $ gen shape)
+
+fn50 x = x ++ "\n$fn = 50;"
 
 -- ACTUAL LANGUAGE
 -- Glyph-style aliases
