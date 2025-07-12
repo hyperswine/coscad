@@ -8,7 +8,6 @@ import System.Exit (exitFailure, exitSuccess)
 import System.FilePath (dropExtension, takeExtension)
 import System.IO (hPutStrLn, stderr)
 
-main :: IO ()
 main = do
   args <- getArgs
   case args of
@@ -47,7 +46,6 @@ main = do
       hPutStrLn stderr "  ⮕ 15 (△ 8)      -- extrude triangle by height 15"
       exitFailure
 
-processFile :: FilePath -> IO ()
 processFile inputFile = do
   -- Check if input file exists
   exists <- doesFileExist inputFile
@@ -95,17 +93,19 @@ parseSimpleExpression contents =
    in -- First check for boolean operations (higher precedence)
       if "⊖" `isInfixOf` trimmed
         then parseBooleanOp "⊖" trimmed Diff
-        else if "⊝" `isInfixOf` trimmed
-          then parseBooleanOp "⊝" trimmed Diff
-          else if "⊕" `isInfixOf` trimmed
-            then parseBooleanOp "⊕" trimmed (\a b -> Union [a, b])
-            else if "⊛" `isInfixOf` trimmed
-              then parseBooleanOp "⊛" trimmed (\a b -> Union [a, b])
-              else -- Check for transformations
-                parseTransformOrShape trimmed
+        else
+          if "⊝" `isInfixOf` trimmed
+            then parseBooleanOp "⊝" trimmed Diff
+            else
+              if "⊕" `isInfixOf` trimmed
+                then parseBooleanOp "⊕" trimmed (\a b -> Union [a, b])
+                else
+                  if "⊛" `isInfixOf` trimmed
+                    then parseBooleanOp "⊛" trimmed (\a b -> Union [a, b])
+                    else -- Check for transformations
+                      parseTransformOrShape trimmed
 
 -- Generic parser for binary boolean operations
-parseBooleanOp :: String -> String -> (Shape -> Shape -> Shape) -> Either String Shape
 parseBooleanOp op input constructor =
   case splitOn op input of
     [left, right] ->
@@ -116,7 +116,6 @@ parseBooleanOp op input constructor =
     _ -> Left $ "Invalid " ++ op ++ " syntax. Expected: shape1 " ++ op ++ " shape2"
 
 -- Parser for transformations and basic shapes
-parseTransformOrShape :: String -> Either String Shape
 parseTransformOrShape input =
   let ws = words input
    in case ws of
@@ -144,29 +143,24 @@ parseTransformOrShape input =
         _ -> parseComplexTransform input
 
 -- Parse expressions recursively
-parseExpression :: String -> Either String Shape
 parseExpression = parseSimpleExpression
 
 -- Helper parsers
-parseWithSize :: String -> (Double -> Shape) -> Either String Shape
 parseWithSize sizeStr constructor =
   case readDouble sizeStr of
     Just size -> Right $ constructor size
     Nothing -> Left $ "Could not parse size: " ++ sizeStr
 
-parseWithTwoSizes :: String -> String -> (Double -> Double -> Shape) -> Either String Shape
 parseWithTwoSizes s1 s2 constructor =
   case (readDouble s1, readDouble s2) of
     (Just v1, Just v2) -> Right $ constructor v1 v2
     _ -> Left $ "Could not parse parameters: " ++ s1 ++ " " ++ s2
 
-parseWithThreeSizes :: String -> String -> String -> (Double -> Double -> Double -> Shape) -> Either String Shape
 parseWithThreeSizes s1 s2 s3 constructor =
   case (readDouble s1, readDouble s2, readDouble s3) of
     (Just v1, Just v2, Just v3) -> Right $ constructor v1 v2 v3
     _ -> Left $ "Could not parse parameters: " ++ s1 ++ " " ++ s2 ++ " " ++ s3
 
-parseTransform :: String -> String -> (Double -> Shape -> Shape) -> Either String Shape
 parseTransform valueStr shapeStr constructor =
   case readDouble valueStr of
     Just value -> case parseExpression shapeStr of
@@ -174,7 +168,6 @@ parseTransform valueStr shapeStr constructor =
       Left err -> Left err
     Nothing -> Left $ "Could not parse transform value: " ++ valueStr
 
-parseScaleTransform :: String -> String -> String -> String -> Either String Shape
 parseScaleTransform sx sy sz shapeStr =
   case (readDouble sx, readDouble sy, readDouble sz) of
     (Just x, Just y, Just z) -> case parseExpression shapeStr of
@@ -183,7 +176,6 @@ parseScaleTransform sx sy sz shapeStr =
     _ -> Left $ "Could not parse scale values: " ++ sx ++ " " ++ sy ++ " " ++ sz
 
 -- Handle more complex transformation syntax
-parseComplexTransform :: String -> Either String Shape
 parseComplexTransform input =
   -- If we can't parse it as a known pattern, try to extract parentheses
   case parseParentheses input of
@@ -199,17 +191,15 @@ parseComplexTransform input =
     Nothing -> Left $ "Could not parse expression: " ++ input
 
 -- Extract content within parentheses
-parseParentheses :: String -> Maybe (String, String, String)
 parseParentheses input =
   case span (/= '(') input of
-    (before, '(':rest) ->
+    (before, '(' : rest) ->
       case span (/= ')') rest of
-        (inside, ')':after) -> Just (before, inside, after)
+        (inside, ')' : after) -> Just (before, inside, after)
         _ -> Nothing
     _ -> Nothing
 
 -- Parse transformation prefix (like "χ 5" to create Tx 5)
-parseTransformPrefix :: String -> Either String (Shape -> Shape)
 parseTransformPrefix input =
   case words input of
     ["χ", dx] -> case readDouble dx of
@@ -239,47 +229,39 @@ parseTransformPrefix input =
     _ -> Left $ "Unknown transformation: " ++ input
 
 -- Simple string splitting function
-splitOn :: String -> String -> [String]
 splitOn sep str = case breakOn sep str of
   (before, after)
     | null after -> [before]
     | otherwise -> before : splitOn sep (drop (length sep) after)
 
 -- Helper function to break string on separator
-breakOn :: String -> String -> (String, String)
 breakOn sep str = case findIndex (isPrefixOf sep) (tails str) of
   Just i -> splitAt i str
   Nothing -> (str, "")
 
 -- Check if one list is prefix of another
-isPrefixOf :: Eq a => [a] -> [a] -> Bool
 isPrefixOf [] _ = True
 isPrefixOf _ [] = False
-isPrefixOf (x:xs) (y:ys) = x == y && isPrefixOf xs ys
+isPrefixOf (x : xs) (y : ys) = x == y && isPrefixOf xs ys
 
 -- Get all tails of a list
-tails :: [a] -> [[a]]
 tails [] = [[]]
-tails xs@(_:ys) = xs : tails ys
+tails xs@(_ : ys) = xs : tails ys
 
 -- Find index of first element satisfying predicate
-findIndex :: (a -> Bool) -> [a] -> Maybe Int
 findIndex p xs = findIndex' p xs 0
   where
     findIndex' _ [] _ = Nothing
-    findIndex' predicate (y:ys) i
+    findIndex' predicate (y : ys) i
       | predicate y = Just i
       | otherwise = findIndex' predicate ys (i + 1)
 
-readDouble :: String -> Maybe Double
 readDouble s = case reads s of
   [(x, "")] -> Just x
   _ -> Nothing
 
-trim :: String -> String
 trim = unwords . words
 
-isInfixOf :: String -> String -> Bool
 isInfixOf needle haystack = any (needle `isPrefixOf`) (tails haystack)
 
 handleError :: SomeException -> IO (Either String ())
