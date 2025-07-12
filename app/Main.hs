@@ -71,21 +71,25 @@ processFileContents inputFile outputFile = do
 parseSimpleExpression :: String -> Either String Shape
 parseSimpleExpression contents =
   let trimmed = trim contents
-   in case trimmed of
-        -- Simple cube
-        c | "■" `isInfixOf` c -> parseShapeWithSize "■" c Rectangle
-        -- Simple sphere
-        s | "●" `isInfixOf` s -> parseShapeWithSize "●" s (\r -> Sphere r)
-        -- Simple cylinder
-        cyl | "◎" `isInfixOf` cyl -> parseCylinder cyl
-        -- Default example
-        _ ->
-          Right $
-            Union
-              [ Rectangle 10 10 10,
-                Tx 15 (Sphere 5),
-                Ty 15 (Cylinder 3 10)
-              ]
+   in -- First check for boolean operations (higher precedence)
+      if "⊖" `isInfixOf` trimmed
+        then parseDifference trimmed
+        else if "⊕" `isInfixOf` trimmed
+          then parseUnion trimmed
+          else -- Then check for basic shapes
+            case words trimmed of
+              ["■", _] -> parseCube trimmed
+              ["●", _] -> parseShapeWithSize "●" trimmed (\r -> Sphere r)
+              ["◎", _, _] -> parseCylinder trimmed
+              ["▻", _, _] -> parseCone trimmed
+              -- Default example for unrecognized input
+              _ ->
+                Right $
+                  Union
+                    [ Rectangle 10 10 10,
+                      Tx 15 (Sphere 5),
+                      Ty 15 (Cylinder 3 10)
+                    ]
 
 parseShapeWithSize :: String -> String -> (Double -> Shape) -> Either String Shape
 parseShapeWithSize symbol input constructor =
@@ -96,6 +100,16 @@ parseShapeWithSize symbol input constructor =
         Nothing -> Left $ "Could not parse size: " ++ sizeStr
     _ -> Left $ "Invalid " ++ symbol ++ " syntax. Expected: " ++ symbol ++ " <size>"
 
+-- Special parser for cube that creates a cube with equal dimensions
+parseCube :: String -> Either String Shape
+parseCube input =
+  case words input of
+    ["■", sizeStr] ->
+      case readDouble sizeStr of
+        Just size -> Right $ Rectangle size size size
+        Nothing -> Left $ "Could not parse cube size: " ++ sizeStr
+    _ -> Left "Invalid cube syntax. Expected: ■ <size>"
+
 parseCylinder :: String -> Either String Shape
 parseCylinder input =
   case words input of
@@ -104,6 +118,96 @@ parseCylinder input =
         (Just r, Just h) -> Right $ Cylinder r h
         _ -> Left "Could not parse cylinder parameters"
     _ -> Left "Invalid cylinder syntax. Expected: ◎ <radius> <height>"
+
+-- Special parser for cone
+parseCone :: String -> Either String Shape
+parseCone input =
+  case words input of
+    ["▻", rStr, hStr] ->
+      case (readDouble rStr, readDouble hStr) of
+        (Just r, Just h) -> Right $ Cone r h
+        _ -> Left "Could not parse cone parameters"
+    _ -> Left "Invalid cone syntax. Expected: ▻ <radius> <height>"
+
+-- Simple parser for difference operations
+parseDifference :: String -> Either String Shape
+parseDifference input =
+  -- Very basic parser - looks for "shape1 ⊖ shape2"
+  case splitOn "⊖" input of
+    [left, right] ->
+      case (parseBasicShape (trim left), parseBasicShape (trim right)) of
+        (Right s1, Right s2) -> Right $ Diff s1 s2
+        (Left err, _) -> Left err
+        (_, Left err) -> Left err
+    _ -> Left "Invalid difference syntax. Expected: shape1 ⊖ shape2"
+
+-- Simple parser for union operations
+parseUnion :: String -> Either String Shape
+parseUnion input =
+  -- Very basic parser - looks for "shape1 ⊕ shape2"
+  case splitOn "⊕" input of
+    [left, right] ->
+      case (parseBasicShape (trim left), parseBasicShape (trim right)) of
+        (Right s1, Right s2) -> Right $ Union [s1, s2]
+        (Left err, _) -> Left err
+        (_, Left err) -> Left err
+    _ -> Left "Invalid union syntax. Expected: shape1 ⊕ shape2"
+
+-- Parse basic shapes without operators
+parseBasicShape :: String -> Either String Shape
+parseBasicShape input =
+  let trimmed = trim input
+   in case words trimmed of
+        ["■", sizeStr] ->
+          case readDouble sizeStr of
+            Just size -> Right $ Rectangle size size size
+            Nothing -> Left $ "Could not parse cube size: " ++ sizeStr
+        ["●", rStr] ->
+          case readDouble rStr of
+            Just r -> Right $ Sphere r
+            Nothing -> Left $ "Could not parse sphere radius: " ++ rStr
+        ["◎", rStr, hStr] ->
+          case (readDouble rStr, readDouble hStr) of
+            (Just r, Just h) -> Right $ Cylinder r h
+            _ -> Left "Could not parse cylinder parameters"
+        ["▻", rStr, hStr] ->
+          case (readDouble rStr, readDouble hStr) of
+            (Just r, Just h) -> Right $ Cone r h
+            _ -> Left "Could not parse cone parameters"
+        _ -> Left $ "Could not parse shape: " ++ trimmed
+
+-- Simple string splitting function
+splitOn :: String -> String -> [String]
+splitOn sep str = case breakOn sep str of
+  (before, after)
+    | null after -> [before]
+    | otherwise -> before : splitOn sep (drop (length sep) after)
+
+-- Helper function to break string on separator
+breakOn :: String -> String -> (String, String)
+breakOn sep str = case findIndex (isPrefixOf sep) (tails str) of
+  Just i -> splitAt i str
+  Nothing -> (str, "")
+
+-- Check if one list is prefix of another
+isPrefixOf :: Eq a => [a] -> [a] -> Bool
+isPrefixOf [] _ = True
+isPrefixOf _ [] = False
+isPrefixOf (x:xs) (y:ys) = x == y && isPrefixOf xs ys
+
+-- Get all tails of a list
+tails :: [a] -> [[a]]
+tails [] = [[]]
+tails xs@(_:ys) = xs : tails ys
+
+-- Find index of first element satisfying predicate
+findIndex :: (a -> Bool) -> [a] -> Maybe Int
+findIndex p xs = findIndex' p xs 0
+  where
+    findIndex' _ [] _ = Nothing
+    findIndex' predicate (y:ys) i
+      | predicate y = Just i
+      | otherwise = findIndex' predicate ys (i + 1)
 
 readDouble :: String -> Maybe Double
 readDouble s = case reads s of
