@@ -66,115 +66,155 @@ processFileContents inputFile outputFile = do
       return $ Right ()
     Left err -> return $ Left err
 
--- Simple parser for basic coscad expressions
--- This is a basic implementation - you can expand this for more complex parsing
+-- Parser for coscad expressions with support for all glyphs
 parseSimpleExpression :: String -> Either String Shape
 parseSimpleExpression contents =
   let trimmed = trim contents
    in -- First check for boolean operations (higher precedence)
       if "⊖" `isInfixOf` trimmed
-        then parseDifference trimmed
-        else if "⊕" `isInfixOf` trimmed
-          then parseUnion trimmed
-          else -- Then check for basic shapes
-            case words trimmed of
-              ["■", _] -> parseCube trimmed
-              ["●", _] -> parseShapeWithSize "●" trimmed (\r -> Sphere r)
-              ["◎", _, _] -> parseCylinder trimmed
-              ["▻", _, _] -> parseCone trimmed
-              -- Default example for unrecognized input
-              _ ->
-                Right $
-                  Union
-                    [ Rectangle 10 10 10,
-                      Tx 15 (Sphere 5),
-                      Ty 15 (Cylinder 3 10)
-                    ]
+        then parseBooleanOp "⊖" trimmed Diff
+        else if "⊝" `isInfixOf` trimmed
+          then parseBooleanOp "⊝" trimmed Diff
+          else if "⊕" `isInfixOf` trimmed
+            then parseBooleanOp "⊕" trimmed (\a b -> Union [a, b])
+            else if "⊛" `isInfixOf` trimmed
+              then parseBooleanOp "⊛" trimmed (\a b -> Union [a, b])
+              else -- Check for transformations
+                parseTransformOrShape trimmed
 
-parseShapeWithSize :: String -> String -> (Double -> Shape) -> Either String Shape
-parseShapeWithSize symbol input constructor =
-  case words input of
-    [s, sizeStr] | s == symbol ->
-      case readDouble sizeStr of
-        Just size -> Right $ constructor size
-        Nothing -> Left $ "Could not parse size: " ++ sizeStr
-    _ -> Left $ "Invalid " ++ symbol ++ " syntax. Expected: " ++ symbol ++ " <size>"
-
--- Special parser for cube that creates a cube with equal dimensions
-parseCube :: String -> Either String Shape
-parseCube input =
-  case words input of
-    ["■", sizeStr] ->
-      case readDouble sizeStr of
-        Just size -> Right $ Rectangle size size size
-        Nothing -> Left $ "Could not parse cube size: " ++ sizeStr
-    _ -> Left "Invalid cube syntax. Expected: ■ <size>"
-
-parseCylinder :: String -> Either String Shape
-parseCylinder input =
-  case words input of
-    ["◎", rStr, hStr] ->
-      case (readDouble rStr, readDouble hStr) of
-        (Just r, Just h) -> Right $ Cylinder r h
-        _ -> Left "Could not parse cylinder parameters"
-    _ -> Left "Invalid cylinder syntax. Expected: ◎ <radius> <height>"
-
--- Special parser for cone
-parseCone :: String -> Either String Shape
-parseCone input =
-  case words input of
-    ["▻", rStr, hStr] ->
-      case (readDouble rStr, readDouble hStr) of
-        (Just r, Just h) -> Right $ Cone r h
-        _ -> Left "Could not parse cone parameters"
-    _ -> Left "Invalid cone syntax. Expected: ▻ <radius> <height>"
-
--- Simple parser for difference operations
-parseDifference :: String -> Either String Shape
-parseDifference input =
-  -- Very basic parser - looks for "shape1 ⊖ shape2"
-  case splitOn "⊖" input of
+-- Generic parser for binary boolean operations
+parseBooleanOp :: String -> String -> (Shape -> Shape -> Shape) -> Either String Shape
+parseBooleanOp op input constructor =
+  case splitOn op input of
     [left, right] ->
-      case (parseBasicShape (trim left), parseBasicShape (trim right)) of
-        (Right s1, Right s2) -> Right $ Diff s1 s2
+      case (parseExpression (trim left), parseExpression (trim right)) of
+        (Right s1, Right s2) -> Right $ constructor s1 s2
         (Left err, _) -> Left err
         (_, Left err) -> Left err
-    _ -> Left "Invalid difference syntax. Expected: shape1 ⊖ shape2"
+    _ -> Left $ "Invalid " ++ op ++ " syntax. Expected: shape1 " ++ op ++ " shape2"
 
--- Simple parser for union operations
-parseUnion :: String -> Either String Shape
-parseUnion input =
-  -- Very basic parser - looks for "shape1 ⊕ shape2"
-  case splitOn "⊕" input of
-    [left, right] ->
-      case (parseBasicShape (trim left), parseBasicShape (trim right)) of
-        (Right s1, Right s2) -> Right $ Union [s1, s2]
-        (Left err, _) -> Left err
-        (_, Left err) -> Left err
-    _ -> Left "Invalid union syntax. Expected: shape1 ⊕ shape2"
+-- Parser for transformations and basic shapes
+parseTransformOrShape :: String -> Either String Shape
+parseTransformOrShape input =
+  let ws = words input
+   in case ws of
+        -- Basic shapes
+        ["■", size] -> parseWithSize size (\s -> Rectangle s s s)
+        ["●", size] -> parseWithSize size Sphere
+        ["◎", r, h] -> parseWithTwoSizes r h Cylinder
+        ["▻", r, h] -> parseWithTwoSizes r h Cone
+        ["▬", x, y, z] -> parseWithThreeSizes x y z Rectangle
+        ["⎏", n, r, h] -> parseWithThreeSizes n r h (\n' r' h' -> Prism (round n') r' h')
+        ["△", r] -> parseWithSize r (Shape2D 3)
+        ["⬠", r] -> parseWithSize r (Shape2D 5)
+        ["⭘", r] -> parseWithSize r (Shape2D 100)
+        -- Transformations
+        ["χ", dx, rest] -> parseTransform dx rest Tx
+        ["ψ", dy, rest] -> parseTransform dy rest Ty
+        ["ζ", dz, rest] -> parseTransform dz rest Tz
+        ["θ", ax, rest] -> parseTransform ax rest Rx
+        ["ϕ", ay, rest] -> parseTransform ay rest Ry
+        ["ω", az, rest] -> parseTransform az rest Rz
+        ["⮕", h, rest] -> parseTransform h rest Extrude
+        -- Scale transformation (expects 3 values then shape)
+        ["⬈", sx, sy, sz, rest] -> parseScaleTransform sx sy sz rest
+        -- Try to parse as a transformation with more complex syntax
+        _ -> parseComplexTransform input
 
--- Parse basic shapes without operators
-parseBasicShape :: String -> Either String Shape
-parseBasicShape input =
-  let trimmed = trim input
-   in case words trimmed of
-        ["■", sizeStr] ->
-          case readDouble sizeStr of
-            Just size -> Right $ Rectangle size size size
-            Nothing -> Left $ "Could not parse cube size: " ++ sizeStr
-        ["●", rStr] ->
-          case readDouble rStr of
-            Just r -> Right $ Sphere r
-            Nothing -> Left $ "Could not parse sphere radius: " ++ rStr
-        ["◎", rStr, hStr] ->
-          case (readDouble rStr, readDouble hStr) of
-            (Just r, Just h) -> Right $ Cylinder r h
-            _ -> Left "Could not parse cylinder parameters"
-        ["▻", rStr, hStr] ->
-          case (readDouble rStr, readDouble hStr) of
-            (Just r, Just h) -> Right $ Cone r h
-            _ -> Left "Could not parse cone parameters"
-        _ -> Left $ "Could not parse shape: " ++ trimmed
+-- Parse expressions recursively
+parseExpression :: String -> Either String Shape
+parseExpression = parseSimpleExpression
+
+-- Helper parsers
+parseWithSize :: String -> (Double -> Shape) -> Either String Shape
+parseWithSize sizeStr constructor =
+  case readDouble sizeStr of
+    Just size -> Right $ constructor size
+    Nothing -> Left $ "Could not parse size: " ++ sizeStr
+
+parseWithTwoSizes :: String -> String -> (Double -> Double -> Shape) -> Either String Shape
+parseWithTwoSizes s1 s2 constructor =
+  case (readDouble s1, readDouble s2) of
+    (Just v1, Just v2) -> Right $ constructor v1 v2
+    _ -> Left $ "Could not parse parameters: " ++ s1 ++ " " ++ s2
+
+parseWithThreeSizes :: String -> String -> String -> (Double -> Double -> Double -> Shape) -> Either String Shape
+parseWithThreeSizes s1 s2 s3 constructor =
+  case (readDouble s1, readDouble s2, readDouble s3) of
+    (Just v1, Just v2, Just v3) -> Right $ constructor v1 v2 v3
+    _ -> Left $ "Could not parse parameters: " ++ s1 ++ " " ++ s2 ++ " " ++ s3
+
+parseTransform :: String -> String -> (Double -> Shape -> Shape) -> Either String Shape
+parseTransform valueStr shapeStr constructor =
+  case readDouble valueStr of
+    Just value -> case parseExpression shapeStr of
+      Right shape -> Right $ constructor value shape
+      Left err -> Left err
+    Nothing -> Left $ "Could not parse transform value: " ++ valueStr
+
+parseScaleTransform :: String -> String -> String -> String -> Either String Shape
+parseScaleTransform sx sy sz shapeStr =
+  case (readDouble sx, readDouble sy, readDouble sz) of
+    (Just x, Just y, Just z) -> case parseExpression shapeStr of
+      Right shape -> Right $ Scale (x, y, z) shape
+      Left err -> Left err
+    _ -> Left $ "Could not parse scale values: " ++ sx ++ " " ++ sy ++ " " ++ sz
+
+-- Handle more complex transformation syntax
+parseComplexTransform :: String -> Either String Shape
+parseComplexTransform input =
+  -- If we can't parse it as a known pattern, try to extract parentheses
+  case parseParentheses input of
+    Just (beforeParen, insideParen, afterParen) ->
+      -- Try to parse what's inside parentheses first
+      case parseExpression insideParen of
+        Right innerShape ->
+          -- Now try to parse the transformation prefix
+          case parseTransformPrefix (beforeParen ++ afterParen) of
+            Right transformer -> Right $ transformer innerShape
+            Left _ -> Left $ "Could not parse transformation: " ++ beforeParen ++ afterParen
+        Left err -> Left err
+    Nothing -> Left $ "Could not parse expression: " ++ input
+
+-- Extract content within parentheses
+parseParentheses :: String -> Maybe (String, String, String)
+parseParentheses input =
+  case span (/= '(') input of
+    (before, '(':rest) ->
+      case span (/= ')') rest of
+        (inside, ')':after) -> Just (before, inside, after)
+        _ -> Nothing
+    _ -> Nothing
+
+-- Parse transformation prefix (like "χ 5" to create Tx 5)
+parseTransformPrefix :: String -> Either String (Shape -> Shape)
+parseTransformPrefix input =
+  case words input of
+    ["χ", dx] -> case readDouble dx of
+      Just d -> Right $ Tx d
+      Nothing -> Left $ "Could not parse Tx value: " ++ dx
+    ["ψ", dy] -> case readDouble dy of
+      Just d -> Right $ Ty d
+      Nothing -> Left $ "Could not parse Ty value: " ++ dy
+    ["ζ", dz] -> case readDouble dz of
+      Just d -> Right $ Tz d
+      Nothing -> Left $ "Could not parse Tz value: " ++ dz
+    ["θ", ax] -> case readDouble ax of
+      Just d -> Right $ Rx d
+      Nothing -> Left $ "Could not parse Rx value: " ++ ax
+    ["ϕ", ay] -> case readDouble ay of
+      Just d -> Right $ Ry d
+      Nothing -> Left $ "Could not parse Ry value: " ++ ay
+    ["ω", az] -> case readDouble az of
+      Just d -> Right $ Rz d
+      Nothing -> Left $ "Could not parse Rz value: " ++ az
+    ["⮕", h] -> case readDouble h of
+      Just d -> Right $ Extrude d
+      Nothing -> Left $ "Could not parse Extrude value: " ++ h
+    ["⬈", sx, sy, sz] -> case (readDouble sx, readDouble sy, readDouble sz) of
+      (Just x, Just y, Just z) -> Right $ Scale (x, y, z)
+      _ -> Left $ "Could not parse Scale values: " ++ sx ++ " " ++ sy ++ " " ++ sz
+    _ -> Left $ "Unknown transformation: " ++ input
 
 -- Simple string splitting function
 splitOn :: String -> String -> [String]
@@ -218,7 +258,7 @@ trim :: String -> String
 trim = unwords . words
 
 isInfixOf :: String -> String -> Bool
-isInfixOf needle haystack = needle `elem` words haystack
+isInfixOf needle haystack = any (needle `isPrefixOf`) (tails haystack)
 
 handleError :: SomeException -> IO (Either String ())
 handleError e = return $ Left $ "IO Error: " ++ show e
