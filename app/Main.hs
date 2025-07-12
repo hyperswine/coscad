@@ -73,7 +73,6 @@ processFile inputFile = do
               hPutStrLn stderr $ "Error: " ++ errMsg
               exitFailure
 
-processFileContents :: FilePath -> FilePath -> IO (Either String ())
 processFileContents inputFile outputFile = do
   -- Read the .coscad file
   contents <- readFile inputFile
@@ -87,7 +86,6 @@ processFileContents inputFile outputFile = do
     Left err -> return $ Left err
 
 -- Parser for coscad expressions with support for all glyphs
-parseSimpleExpression :: String -> Either String Shape
 parseSimpleExpression contents =
   let trimmed = trim contents
    in -- First check for boolean operations (higher precedence)
@@ -125,7 +123,7 @@ parseTransformOrShape input =
         ["◎", r, h] -> parseWithTwoSizes r h Cylinder
         ["▻", r, h] -> parseWithTwoSizes r h Cone
         ["▬", x, y, z] -> parseWithThreeSizes x y z Rectangle
-        ["⎏", n, r, h] -> parseWithThreeSizes n r h (\n' r' h' -> Prism (round n') r' h')
+        ["⎏", n, r, h] -> parseWithThreeSizes n r h (Prism . round)
         ["△", r] -> parseWithSize r (Shape2D 3)
         ["⬠", r] -> parseWithSize r (Shape2D 5)
         ["⭘", r] -> parseWithSize r (Shape2D 100)
