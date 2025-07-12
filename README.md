@@ -44,3 +44,78 @@ This library provides Unicode glyph aliases for CAD operations. Here's the compl
 
 - `|>` (U+007C U+003E) - Forward pipe operator
 - `▷` (U+25B7) - Forward pipe operator (alias)
+
+## CLI Usage
+
+The `coscad` CLI tool converts `.coscad` files to `.scad` (OpenSCAD) format.
+
+### Basic Usage
+
+```bash
+coscad <input.coscad>
+```
+
+This will create a corresponding `.scad` file in the same directory.
+
+### Examples
+
+Create a simple cube:
+
+```bash
+echo "■ 10" > cube.coscad
+coscad cube.coscad
+```
+
+Create a sphere:
+
+```bash
+echo "● 15" > sphere.coscad
+coscad sphere.coscad
+```
+
+Create a cylinder:
+
+```bash
+echo "◎ 5 10" > cylinder.coscad
+coscad cylinder.coscad
+```
+
+Create a cone:
+
+```bash
+echo "▻ 8 15" > cone.coscad
+coscad cone.coscad
+```
+
+Boolean operations:
+
+```bash
+echo "● 15 ⊖ ◎ 5 10" > difference.coscad
+coscad difference.coscad
+```
+
+```bash
+echo "■ 10 ⊕ ● 5" > union.coscad
+coscad union.coscad
+```
+
+### Syntax
+
+The current parser supports:
+
+- Basic shapes: `■ size`, `● radius`, `◎ radius height`, `▻ radius height`
+- Boolean operations: `shape1 ⊖ shape2` (difference), `shape1 ⊕ shape2` (union)
+
+### Building
+
+To build the project:
+
+```bash
+stack build
+```
+
+To run the executable:
+
+```bash
+stack exec coscad-exe -- input.coscad
+```

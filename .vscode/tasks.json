@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build CoSCAD",
+			"type": "shell",
+			"command": "stack build",
+			"group": "build",
+			"problemMatcher": [
+				"$haskell"
+			]
+		}
+	]
+}
