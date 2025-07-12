@@ -81,27 +81,103 @@ generate (Union shapes) =
 -- Glyph-style aliases
 
 {-
-cube = black medium square
+cube = ■ 25A0
+sphere = ● 25CF
+cyl = ◎ 25CE
+cone = ▻ 25BB
+rec = ▬
 
+diff = ⊖ 2296
+union = ⊛ 229b
+
+extrude = ⮕ 2B95
+
+scale = ⬈ 2B08
 -}
 
 -- | cube x
-(◼) :: Double -> Shape
-(◼) x = Rectangle x x x
+(■) x = Rectangle x x x
+cube = (■)
+
+rect x = Rectangle x x x
+(▬) = rect
 
 -- | sphere r
-(⚪) :: Double -> Shape
-(⚪) = Sphere
+(●) = Sphere
+
+sph = (●)
 
 -- | cylinder radius height
-(⚈) :: Double -> Double -> Shape
-(⚈) = Cylinder
+(◎) = Cylinder
+
+cyl = (◎)
 
 -- | white up pointing triangle
 -- | cone radius height
-(△) :: Double -> Double -> Shape
-(△) = Cone
+(▻) = Cone
+
+cone = (▻)
 
 -- | prism n radius height
-prism :: Int -> Double -> Double -> Shape
 prism = Prism
+
+(⎏) = prism
+
+-- 2D regular polygons
+
+-- | equilateral triangle profile
+(△) = Shape2D 3
+
+-- | regular pentagon profile
+(⬠) = Shape2D 5
+
+-- | circle profile
+(⭘) = Shape2D 100
+
+-- | Create a polygon with points and paths
+poly points paths = Poly (PD points paths)
+
+-- | Unicode operator for polygon
+(⟁) = poly
+
+χ = Tx
+
+ψ = Ty
+
+ζ = Ty
+
+-- | Rotation glyphs (axis‑specific)
+θ = Rx
+
+ϕ = Ry
+
+ω = Rz
+
+-- | Scaling (vector form)
+(⬈) = Scale
+
+-- | Linear extrusion (2‑D → 3‑D)
+(⮕) = Extrude
+
+infixl 0 ⊖
+infixl 0 ⊝
+infixl 0 ⊛
+infixl 0 ⊕
+
+-- Boolean difference
+a ⊖ b = Diff a b
+
+(⊝) = (⊖)
+
+a ⊕ b = Union [a, b]
+
+(⊛) = (⊕)
+
+-- COMPOSE OPERATIONS
+
+infixl 1 |>
+infixl 1 ▷
+
+x |> f = f x
+
+x ▷ f = f x
