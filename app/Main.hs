@@ -7,6 +7,11 @@ import System.Environment (getArgs)
 import System.Exit (exitFailure, exitSuccess)
 import System.FilePath (dropExtension, takeExtension)
 import System.IO (hPutStrLn, stderr)
+import qualified Data.Map as Map
+import Data.Char (isAlpha, isAlphaNum, isDigit)
+
+type VarName = String
+type VarTable = Map.Map VarName Shape
 
 main = do
   args <- getArgs
@@ -15,6 +20,11 @@ main = do
     _ -> do
       hPutStrLn stderr "Usage: coscad <input.coscad>"
       hPutStrLn stderr "Converts a .coscad file to .scad format"
+      hPutStrLn stderr ""
+      hPutStrLn stderr "Variable Syntax:"
+      hPutStrLn stderr "  c₁ = ■ 10           -- cube variable"
+      hPutStrLn stderr "  s₁ = ● 15           -- sphere variable"
+      hPutStrLn stderr "  main = c₁ ⊕ s₁      -- main variable (gets rendered)"
       hPutStrLn stderr ""
       hPutStrLn stderr "Basic Shapes:"
       hPutStrLn stderr "  ■ 10           -- cube (10x10x10)"
@@ -77,73 +87,155 @@ processFileContents inputFile outputFile = do
   -- Read the .coscad file
   contents <- readFile inputFile
 
-  -- For now, we'll create a simple example
-  -- In a real implementation, you'd want to parse the DSL syntax
-  case parseSimpleExpression contents of
-    Right shape -> do
-      writeScad shape outputFile
+  -- Parse the program with variables
+  case parseProgram contents of
+    Right (varTable, mainShape) -> do
+      writeScad mainShape outputFile
       return $ Right ()
     Left err -> return $ Left err
 
--- Parser for coscad expressions with support for all glyphs
-parseSimpleExpression contents =
-  let trimmed = trim contents
-   in -- First check for boolean operations (higher precedence)
-      if "⊖" `isInfixOf` trimmed
-        then parseBooleanOp "⊖" trimmed Diff
-        else
-          if "⊝" `isInfixOf` trimmed
-            then parseBooleanOp "⊝" trimmed Diff
-            else
-              if "⊕" `isInfixOf` trimmed
-                then parseBooleanOp "⊕" trimmed (\a b -> Union [a, b])
-                else
-                  if "⊛" `isInfixOf` trimmed
-                    then parseBooleanOp "⊛" trimmed (\a b -> Union [a, b])
-                    else -- Check for transformations
-                      parseTransformOrShape trimmed
+-- Parse a complete program with variable definitions
+parseProgram :: String -> Either String (VarTable, Shape)
+parseProgram contents = do
+  let contentLines = lines contents
+  let nonEmptyLines = filter (not . null . trim) contentLines
+  let nonCommentLines = filter (not . isCommentLine) nonEmptyLines
 
--- Generic parser for binary boolean operations
-parseBooleanOp op input constructor =
+  -- Parse each line as a variable definition
+  varDefs <- mapM parseVarDefinition nonCommentLines
+
+  -- Build variable table (later definitions shadow earlier ones)
+  let varTable = foldl (\acc (var, shape) -> Map.insert var shape acc) Map.empty varDefs
+
+  -- Look for main variable
+  case Map.lookup "main" varTable of
+    Just mainShape -> Right (varTable, mainShape)
+    Nothing -> Left "Error: No 'main' variable found. Please define a 'main' variable."
+
+-- Parse a single variable definition line
+parseVarDefinition :: String -> Either String (VarName, Shape)
+parseVarDefinition line =
+  case break (== '=') line of
+    (varPart, '=' : exprPart) -> do
+      let varName = trim varPart
+      let expr = trim exprPart
+      if isValidVarName varName
+        then do
+          -- Parse with an empty variable table first, then we'll need to fix this
+          -- to support forward references properly
+          shape <- parseExpressionWithVars expr Map.empty
+          Right (varName, shape)
+        else Left $ "Invalid variable name: " ++ varName
+    _ -> Left $ "Invalid syntax: expected variable = expression, got: " ++ line
+
+-- Check if a variable name is valid
+isValidVarName :: String -> Bool
+isValidVarName [] = False
+isValidVarName (c:cs) = isAlpha c && all isValidVarChar cs
+  where
+    isValidVarChar ch = isAlphaNum ch || ch == '_' || ch == '₀' || ch == '₁' || ch == '₂' || ch == '₃' || ch == '₄' || ch == '₅' || ch == '₆' || ch == '₇' || ch == '₈' || ch == '₉'
+
+-- Check if a line is a comment
+isCommentLine :: String -> Bool
+isCommentLine line = take 2 (trim line) == "//"
+
+-- Parse expression with variable context
+parseExpressionWithVars :: String -> VarTable -> Either String Shape
+parseExpressionWithVars expr varTable =
+  let trimmed = trim expr
+  in -- First check for boolean operations (higher precedence)
+     if "⊖" `isInfixOf` trimmed
+       then parseBooleanOpWithVars "⊖" trimmed Diff varTable
+       else
+         if "⊝" `isInfixOf` trimmed
+           then parseBooleanOpWithVars "⊝" trimmed Diff varTable
+           else
+             if "⊕" `isInfixOf` trimmed
+               then parseBooleanOpWithVars "⊕" trimmed (\a b -> Union [a, b]) varTable
+               else
+                 if "⊛" `isInfixOf` trimmed
+                   then parseBooleanOpWithVars "⊛" trimmed (\a b -> Union [a, b]) varTable
+                   else -- Check for transformations or shapes
+                     parseTransformOrShapeWithVars trimmed varTable
+
+-- Parse boolean operations with variable context
+parseBooleanOpWithVars :: String -> String -> (Shape -> Shape -> Shape) -> VarTable -> Either String Shape
+parseBooleanOpWithVars op input constructor varTable =
   case splitOn op input of
     [left, right] ->
-      case (parseExpression (trim left), parseExpression (trim right)) of
+      case (parseExpressionWithVars (trim left) varTable, parseExpressionWithVars (trim right) varTable) of
         (Right s1, Right s2) -> Right $ constructor s1 s2
         (Left err, _) -> Left err
         (_, Left err) -> Left err
     _ -> Left $ "Invalid " ++ op ++ " syntax. Expected: shape1 " ++ op ++ " shape2"
 
--- Parser for transformations and basic shapes
-parseTransformOrShape input =
+-- Parse transformations and basic shapes with variable context
+parseTransformOrShapeWithVars :: String -> VarTable -> Either String Shape
+parseTransformOrShapeWithVars input varTable =
   let ws = words input
-   in case ws of
-        -- Basic shapes
-        ["■", size] -> parseWithSize size (\s -> Rectangle s s s)
-        ["●", size] -> parseWithSize size Sphere
-        ["◎", r, h] -> parseWithTwoSizes r h Cylinder
-        ["▻", r, h] -> parseWithTwoSizes r h Cone
-        ["▬", x, y, z] -> parseWithThreeSizes x y z Rectangle
-        ["⎏", n, r, h] -> parseWithThreeSizes n r h (Prism . round)
-        ["△", r] -> parseWithSize r (Shape2D 3)
-        ["⬠", r] -> parseWithSize r (Shape2D 5)
-        ["⭘", r] -> parseWithSize r (Shape2D 100)
-        -- Transformations
-        ["χ", dx, rest] -> parseTransform dx rest Tx
-        ["ψ", dy, rest] -> parseTransform dy rest Ty
-        ["ζ", dz, rest] -> parseTransform dz rest Tz
-        ["θ", ax, rest] -> parseTransform ax rest Rx
-        ["ϕ", ay, rest] -> parseTransform ay rest Ry
-        ["ω", az, rest] -> parseTransform az rest Rz
-        ["⮕", h, rest] -> parseTransform h rest Extrude
-        -- Scale transformation (expects 3 values then shape)
-        ["⬈", sx, sy, sz, rest] -> parseScaleTransform sx sy sz rest
-        -- Try to parse as a transformation with more complex syntax
-        _ -> parseComplexTransform input
+  in case ws of
+       -- Variable reference
+       [var] -> case Map.lookup var varTable of
+         Just shape -> Right shape
+         Nothing -> Left $ "Undefined variable: " ++ var
+       -- Basic shapes
+       ["■", size] -> parseWithSize size (\s -> Rectangle s s s)
+       ["●", size] -> parseWithSize size Sphere
+       ["◎", r, h] -> parseWithTwoSizes r h Cylinder
+       ["▻", r, h] -> parseWithTwoSizes r h Cone
+       ["▬", x, y, z] -> parseWithThreeSizes x y z Rectangle
+       ["⎏", n, r, h] -> parseWithThreeSizes n r h (Prism . round)
+       ["△", r] -> parseWithSize r (Shape2D 3)
+       ["⬠", r] -> parseWithSize r (Shape2D 5)
+       ["⭘", r] -> parseWithSize r (Shape2D 100)
+       -- Transformations
+       ["χ", dx, rest] -> parseTransformWithVars dx rest Tx varTable
+       ["ψ", dy, rest] -> parseTransformWithVars dy rest Ty varTable
+       ["ζ", dz, rest] -> parseTransformWithVars dz rest Tz varTable
+       ["θ", ax, rest] -> parseTransformWithVars ax rest Rx varTable
+       ["ϕ", ay, rest] -> parseTransformWithVars ay rest Ry varTable
+       ["ω", az, rest] -> parseTransformWithVars az rest Rz varTable
+       ["⮕", h, rest] -> parseTransformWithVars h rest Extrude varTable
+       -- Scale transformation (expects 3 values then shape)
+       ["⬈", sx, sy, sz, rest] -> parseScaleTransformWithVars sx sy sz rest varTable
+       -- Try to parse as a transformation with more complex syntax
+       _ -> parseComplexTransformWithVars input varTable
 
--- Parse expressions recursively
-parseExpression = parseSimpleExpression
+-- Parse transformations with variable context
+parseTransformWithVars :: String -> String -> (Double -> Shape -> Shape) -> VarTable -> Either String Shape
+parseTransformWithVars valueStr shapeStr constructor varTable =
+  case readDouble valueStr of
+    Just value -> case parseExpressionWithVars shapeStr varTable of
+      Right shape -> Right $ constructor value shape
+      Left err -> Left err
+    Nothing -> Left $ "Could not parse transform value: " ++ valueStr
 
--- Helper parsers
+-- Parse scale transformation with variable context
+parseScaleTransformWithVars :: String -> String -> String -> String -> VarTable -> Either String Shape
+parseScaleTransformWithVars sx sy sz shapeStr varTable =
+  case (readDouble sx, readDouble sy, readDouble sz) of
+    (Just x, Just y, Just z) -> case parseExpressionWithVars shapeStr varTable of
+      Right shape -> Right $ Scale (x, y, z) shape
+      Left err -> Left err
+    _ -> Left $ "Could not parse scale values: " ++ sx ++ " " ++ sy ++ " " ++ sz
+
+-- Handle complex transformations with variable context
+parseComplexTransformWithVars :: String -> VarTable -> Either String Shape
+parseComplexTransformWithVars input varTable =
+  -- If we can't parse it as a known pattern, try to extract parentheses
+  case parseParentheses input of
+    Just (beforeParen, insideParen, afterParen) ->
+      -- Try to parse what's inside parentheses first
+      case parseExpressionWithVars insideParen varTable of
+        Right innerShape ->
+          -- Now try to parse the transformation prefix
+          case parseTransformPrefix (beforeParen ++ afterParen) of
+            Right transformer -> Right $ transformer innerShape
+            Left _ -> Left $ "Could not parse transformation: " ++ beforeParen ++ afterParen
+        Left err -> Left err
+    Nothing -> Left $ "Could not parse expression: " ++ input
+
+-- Helper parsers (unchanged from original)
 parseWithSize sizeStr constructor =
   case readDouble sizeStr of
     Just size -> Right $ constructor size
@@ -161,14 +253,14 @@ parseWithThreeSizes s1 s2 s3 constructor =
 
 parseTransform valueStr shapeStr constructor =
   case readDouble valueStr of
-    Just value -> case parseExpression shapeStr of
+    Just value -> case parseExpressionWithVars shapeStr Map.empty of
       Right shape -> Right $ constructor value shape
       Left err -> Left err
     Nothing -> Left $ "Could not parse transform value: " ++ valueStr
 
 parseScaleTransform sx sy sz shapeStr =
   case (readDouble sx, readDouble sy, readDouble sz) of
-    (Just x, Just y, Just z) -> case parseExpression shapeStr of
+    (Just x, Just y, Just z) -> case parseExpressionWithVars shapeStr Map.empty of
       Right shape -> Right $ Scale (x, y, z) shape
       Left err -> Left err
     _ -> Left $ "Could not parse scale values: " ++ sx ++ " " ++ sy ++ " " ++ sz
@@ -179,7 +271,7 @@ parseComplexTransform input =
   case parseParentheses input of
     Just (beforeParen, insideParen, afterParen) ->
       -- Try to parse what's inside parentheses first
-      case parseExpression insideParen of
+      case parseExpressionWithVars insideParen Map.empty of
         Right innerShape ->
           -- Now try to parse the transformation prefix
           case parseTransformPrefix (beforeParen ++ afterParen) of
@@ -226,6 +318,13 @@ parseTransformPrefix input =
       _ -> Left $ "Could not parse Scale values: " ++ sx ++ " " ++ sy ++ " " ++ sz
     _ -> Left $ "Unknown transformation: " ++ input
 
+-- Utility functions
+readDouble s = case reads s of
+  [(x, "")] -> Just x
+  _ -> Nothing
+
+trim = unwords . words
+
 -- Simple string splitting function
 splitOn sep str = case breakOn sep str of
   (before, after)
@@ -253,12 +352,6 @@ findIndex p xs = findIndex' p xs 0
     findIndex' predicate (y : ys) i
       | predicate y = Just i
       | otherwise = findIndex' predicate ys (i + 1)
-
-readDouble s = case reads s of
-  [(x, "")] -> Just x
-  _ -> Nothing
-
-trim = unwords . words
 
 isInfixOf needle haystack = any (needle `isPrefixOf`) (tails haystack)
 
