@@ -15,6 +15,15 @@ import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
 import Control.Monad (void)
 
+-- Try to resolve a single variable
+tryResolveVar :: VarTable -> (VarName, String) -> Either (VarName, String) (VarName, Shape)
+tryResolveVar table (name, expr) =
+  let cleanExpr = trim expr in
+  case parseExpression table cleanExpr of
+    Right shape -> Right (name, shape)
+    Left err -> Left (name, cleanExpr)
+
+
 type VarName = String
 type VarTable = Map.Map VarName Shape
 type Parser = Parsec Void String
@@ -41,7 +50,7 @@ identifier = lexeme $ do
     subscriptChar = oneOf "₀₁₂₃₄₅₆₇₈₉"
 
 double :: Parser Double
-double = lexeme L.float <|> lexeme (fromIntegral <$> L.decimal)
+double = lexeme $ try L.float <|> (fromIntegral <$> L.decimal)
 
 -- Parse a complete program
 parseProgram :: String -> Either String (VarTable, Shape)
@@ -251,13 +260,6 @@ resolveVariables remaining table = do
     else do
       let newTable = foldl (\acc (name, shape) -> Map.insert name shape acc) table resolved
       resolveVariables unresolved newTable
-
--- Try to resolve a single variable
-tryResolveVar :: VarTable -> (VarName, String) -> Either (VarName, String) (VarName, Shape)
-tryResolveVar table (name, expr) =
-  case parseExpression table expr of
-    Right shape -> Right (name, shape)
-    Left _ -> Left (name, expr)
 
 -- Utility functions
 trim :: String -> String
