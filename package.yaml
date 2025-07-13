@@ -17,6 +17,7 @@ dependencies:
 - filepath
 - directory
 - containers
+- megaparsec
 
 ghc-options:
 - -Wall

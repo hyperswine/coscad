@@ -36,6 +36,7 @@ library
     , containers
     , directory
     , filepath
+    , megaparsec
   default-language: Haskell2010
 
 executable coscad-exe
@@ -51,6 +52,7 @@ executable coscad-exe
     , coscad
     , directory
     , filepath
+    , megaparsec
   default-language: Haskell2010
 
 test-suite coscad-test
@@ -67,4 +69,5 @@ test-suite coscad-test
     , coscad
     , directory
     , filepath
+    , megaparsec
   default-language: Haskell2010

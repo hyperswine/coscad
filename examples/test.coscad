@@ -1,1 +1,7 @@
-■ 10
+// Simple test: Just a cube
+// This creates a basic 10x10x10 cube
+
+cube1 = ■ 10
+
+// Main shape: single cube
+main = cube1

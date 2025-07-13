@@ -1,1 +1,8 @@
-■ 10 ⊕ ● 5
+// Union example: Cube and sphere combined
+// This creates a union of a cube and sphere
+
+cube1 = ■ 10
+sphere1 = ● 5
+
+// Main shape: cube plus sphere
+main = cube1 ⊕ sphere1

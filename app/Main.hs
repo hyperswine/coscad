@@ -101,16 +101,58 @@ parseProgram contents = do
   let nonEmptyLines = filter (not . null . trim) contentLines
   let nonCommentLines = filter (not . isCommentLine) nonEmptyLines
 
-  -- Parse each line as a variable definition
-  varDefs <- mapM parseVarDefinition nonCommentLines
+  -- First pass: collect variable names and their raw expressions
+  rawVarDefs <- mapM parseVarDefinitionRaw nonCommentLines
 
-  -- Build variable table (later definitions shadow earlier ones)
-  let varTable = foldl (\acc (var, shape) -> Map.insert var shape acc) Map.empty varDefs
+  -- Second pass: recursively resolve variables
+  varTable <- resolveVariables rawVarDefs Map.empty
 
   -- Look for main variable
   case Map.lookup "main" varTable of
     Just mainShape -> Right (varTable, mainShape)
     Nothing -> Left "Error: No 'main' variable found. Please define a 'main' variable."
+
+-- Parse a variable definition to extract name and raw expression
+parseVarDefinitionRaw :: String -> Either String (VarName, String)
+parseVarDefinitionRaw line =
+  case break (== '=') line of
+    (varPart, '=' : exprPart) -> do
+      let varName = trim varPart
+      let expr = trim exprPart
+      if isValidVarName varName
+        then Right (varName, expr)
+        else Left $ "Invalid variable name: " ++ varName
+    _ -> Left $ "Invalid syntax: expected variable = expression, got: " ++ line
+
+-- Resolve all variables by building the table incrementally
+resolveVariables :: [(VarName, String)] -> VarTable -> Either String VarTable
+resolveVariables [] table = Right table
+resolveVariables remaining table = do
+  -- Try to resolve any variable that we can with the current table
+  let results = map (tryResolveVar table) remaining
+  let resolved = [x | Right x <- results]
+  let unresolved = [x | Left x <- results]
+
+  if null resolved
+    then Left $ "Cannot resolve variables (possible circular dependency): " ++ show (map fst unresolved)
+    else do
+      -- Add resolved variables to the table
+      let newTable = foldl (\acc (name, shape) -> Map.insert name shape acc) table resolved
+      -- Continue with unresolved variables
+      resolveVariables unresolved newTable
+
+-- Try to resolve a single variable with the current table
+tryResolveVar :: VarTable -> (VarName, String) -> Either (VarName, String) (VarName, Shape)
+tryResolveVar table (name, expr) =
+  case parseExpressionWithVars expr table of
+    Right shape -> Right (name, shape)
+    Left _ -> Left (name, expr)
+
+-- Helper function to partition Either values
+partitionEithers :: [Either a b] -> ([b], [a])
+partitionEithers [] = ([], [])
+partitionEithers (Left x : xs) = let (rs, ls) = partitionEithers xs in (rs, x : ls)
+partitionEithers (Right x : xs) = let (rs, ls) = partitionEithers xs in (x : rs, ls)
 
 -- Parse a single variable definition line
 parseVarDefinition :: String -> Either String (VarName, Shape)
@@ -188,16 +230,16 @@ parseTransformOrShapeWithVars input varTable =
        ["△", r] -> parseWithSize r (Shape2D 3)
        ["⬠", r] -> parseWithSize r (Shape2D 5)
        ["⭘", r] -> parseWithSize r (Shape2D 100)
-       -- Transformations
-       ["χ", dx, rest] -> parseTransformWithVars dx rest Tx varTable
-       ["ψ", dy, rest] -> parseTransformWithVars dy rest Ty varTable
-       ["ζ", dz, rest] -> parseTransformWithVars dz rest Tz varTable
-       ["θ", ax, rest] -> parseTransformWithVars ax rest Rx varTable
-       ["ϕ", ay, rest] -> parseTransformWithVars ay rest Ry varTable
-       ["ω", az, rest] -> parseTransformWithVars az rest Rz varTable
-       ["⮕", h, rest] -> parseTransformWithVars h rest Extrude varTable
+       -- Transformations - handle by parsing the rest of the expression
+       ("χ" : dx : rest) -> parseTransformWithVars dx (unwords rest) Tx varTable
+       ("ψ" : dy : rest) -> parseTransformWithVars dy (unwords rest) Ty varTable
+       ("ζ" : dz : rest) -> parseTransformWithVars dz (unwords rest) Tz varTable
+       ("θ" : ax : rest) -> parseTransformWithVars ax (unwords rest) Rx varTable
+       ("ϕ" : ay : rest) -> parseTransformWithVars ay (unwords rest) Ry varTable
+       ("ω" : az : rest) -> parseTransformWithVars az (unwords rest) Rz varTable
+       ("⮕" : h : rest) -> parseTransformWithVars h (unwords rest) Extrude varTable
        -- Scale transformation (expects 3 values then shape)
-       ["⬈", sx, sy, sz, rest] -> parseScaleTransformWithVars sx sy sz rest varTable
+       ("⬈" : sx : sy : sz : rest) -> parseScaleTransformWithVars sx sy sz (unwords rest) varTable
        -- Try to parse as a transformation with more complex syntax
        _ -> parseComplexTransformWithVars input varTable
 

@@ -1,1 +1,7 @@
-● 15
+// Sphere example: Basic sphere shape
+// This creates a sphere with radius 15
+
+sphere1 = ● 15
+
+// Main shape: single sphere
+main = sphere1

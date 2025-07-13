@@ -1,1 +1,8 @@
-▻ 10 20 ⊖ ● 5
+// Demo: Cone with sphere subtracted
+// This creates a cone with a spherical hole
+
+cone1 = ▻ 10 20
+sphere1 = ● 5
+
+// Main shape: cone minus sphere
+main = cone1 ⊖ sphere1

@@ -1,0 +1,4 @@
+// Simple transformation test
+cube1 = ■ 10
+moved_cube = χ 5 cube1
+main = moved_cube

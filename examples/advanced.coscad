@@ -1,0 +1,18 @@
+// Advanced example: Complex shape with transformations
+// This demonstrates variables, transformations, and boolean operations
+
+// Basic shapes
+base_cube = ■ 20
+small_sphere = ● 8
+cylinder_hole = ◎ 3 25
+
+// Transformed shapes
+raised_sphere = ψ 15 small_sphere  // Translate sphere up by 15
+rotated_cylinder = θ 45 cylinder_hole  // Rotate cylinder 45 degrees around X-axis
+
+// Boolean operations
+cube_with_sphere = base_cube ⊕ raised_sphere  // Union of cube and raised sphere
+final_shape = cube_with_sphere ⊖ rotated_cylinder  // Subtract rotated cylinder
+
+// Main shape
+main = final_shape

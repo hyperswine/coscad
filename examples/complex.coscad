@@ -1,1 +1,8 @@
-● 15 ⊖ ◎ 5 10
+// Complex example: Sphere with cylindrical hole
+// This creates a sphere with a cylinder subtracted from it
+
+sphere1 = ● 15
+cylinder1 = ◎ 5 10
+
+// Main shape: sphere minus cylinder
+main = sphere1 ⊖ cylinder1

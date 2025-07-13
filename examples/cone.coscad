@@ -1,1 +1,7 @@
-▻ 8 15
+// Cone example: Basic cone shape
+// This creates a cone with radius 8 and height 15
+
+cone1 = ▻ 8 15
+
+// Main shape: single cone
+main = cone1

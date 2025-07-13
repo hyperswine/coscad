@@ -1,1 +1,7 @@
-◎ 5 10
+// Cylinder example: Basic cylinder shape
+// This creates a cylinder with radius 5 and height 10
+
+cylinder1 = ◎ 5 10
+
+// Main shape: single cylinder
+main = cylinder1

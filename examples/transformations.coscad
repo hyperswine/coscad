@@ -1,0 +1,26 @@
+// Transformation examples
+// This demonstrates various transformation operations
+
+// Basic shapes
+cube1 = ■ 10
+sphere1 = ● 5
+cylinder1 = ◎ 3 8
+
+// Translation transformations
+cube_moved_x = χ 15 cube1       // Move cube 15 units in X direction
+sphere_moved_y = ψ 10 sphere1   // Move sphere 10 units in Y direction
+cylinder_moved_z = ζ 5 cylinder1 // Move cylinder 5 units in Z direction
+
+// Rotation transformations
+cube_rotated_x = θ 45 cube1     // Rotate cube 45 degrees around X-axis
+sphere_rotated_y = ϕ 30 sphere1 // Rotate sphere 30 degrees around Y-axis
+cylinder_rotated_z = ω 60 cylinder1 // Rotate cylinder 60 degrees around Z-axis
+
+// Scale transformation
+scaled_cube = ⬈ 2 1.5 0.5 cube1  // Scale cube by (2, 1.5, 0.5)
+
+// Combine all transformations
+combined_shape = cube_moved_x ⊕ sphere_moved_y ⊕ cylinder_moved_z ⊕ cube_rotated_x ⊕ sphere_rotated_y ⊕ cylinder_rotated_z ⊕ scaled_cube
+
+// Main shape
+main = combined_shape
