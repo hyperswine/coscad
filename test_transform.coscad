@@ -1,0 +1,5 @@
+// Test transformations
+cube1 = ■ 10
+translated = χ 5 cube1  // Translate in X
+rotated = θ 45 translated  // Rotate around X
+main = rotated

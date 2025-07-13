@@ -1,0 +1,3 @@
+// Test with comments
+cube1 = ■ 10  // A cube
+main = cube1

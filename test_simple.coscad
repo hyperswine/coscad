@@ -1,0 +1,3 @@
+// Test file with variables and comments
+cube1 = ■ 10       // A simple cube
+main = cube1

@@ -1,0 +1,4 @@
+cube1 = ■ 10
+sphere1 = ● 5.5
+combined = cube1 ⊕ sphere1
+main = combined
