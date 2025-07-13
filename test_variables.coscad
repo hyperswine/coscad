@@ -1,0 +1,10 @@
+// Test file for variable syntax
+// This is a comment
+
+// Define some basic shapes
+cube1 = ■ 10
+sphere1 = ● 5
+cylinder1 = ◎ 3 8
+
+// Define a composite shape
+main = cube1 ⊕ sphere1
