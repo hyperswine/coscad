@@ -40,6 +40,12 @@ This library provides Unicode glyph aliases for CAD operations. Here's the compl
 - `⊛` (U+229B) - `Union` - Boolean union (alias)
 - `⊕` (U+2295) - `Union` - Boolean union
 
+### Advanced Operations
+
+- `⇓` (U+21D3) - `Hull` - Convex hull operation
+- `⊞` (U+229E) - `Minkowski` - Minkowski sum operation
+- `↯` (U+21AF) - `Offset` - Offset operation (2D profiles)
+
 ### Composition Operations
 
 - `|>` (U+007C U+003E) - Forward pipe operator
@@ -99,12 +105,30 @@ echo "■ 10 ⊕ ● 5" > union.coscad
 coscad union.coscad
 ```
 
+Advanced operations:
+
+```bash
+echo "■ 10 ⇓ ● 5" > hull.coscad
+coscad hull.coscad
+```
+
+```bash
+echo "■ 10 ⊞ ● 5" > minkowski.coscad
+coscad minkowski.coscad
+```
+
+```bash
+echo "△ 8 ↯ ● 2" > offset.coscad
+coscad offset.coscad
+```
+
 ### Syntax
 
 The current parser supports:
 
 - Basic shapes: `■ size`, `● radius`, `◎ radius height`, `▻ radius height`
 - Boolean operations: `shape1 ⊖ shape2` (difference), `shape1 ⊕ shape2` (union)
+- Advanced operations: `shape1 ⇓ shape2` (hull), `shape1 ⊞ shape2` (minkowski), `profile ↯ shape` (offset)
 
 ### Building
 

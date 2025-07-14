@@ -15,6 +15,13 @@ import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
 import Control.Monad (void)
 
+-- Helper function to extract offset value from a shape (for Offset operation)
+getOffsetValue :: Shape -> Double
+getOffsetValue (Sphere r) = r
+getOffsetValue (Cylinder r _) = r
+getOffsetValue (Shape2D _ r) = r
+getOffsetValue _ = 1.0  -- Default offset value
+
 -- Try to resolve a single variable
 tryResolveVar :: VarTable -> (VarName, String) -> Either (VarName, String) (VarName, Shape)
 tryResolveVar table (name, expr) =
@@ -95,12 +102,12 @@ parseExpression varTable input =
 expression :: VarTable -> Parser Shape
 expression varTable = booleanExpression varTable
 
--- Parse boolean expressions (union, difference)
+-- Parse boolean expressions (union, difference, hull, minkowski, offset)
 booleanExpression :: VarTable -> Parser Shape
 booleanExpression varTable = do
   left <- transformExpression varTable
   rest <- many $ do
-    op <- (symbol "⊖" <|> symbol "⊝" <|> symbol "⊕" <|> symbol "⊛")
+    op <- (symbol "⊖" <|> symbol "⊝" <|> symbol "⊕" <|> symbol "⊛" <|> symbol "⇓" <|> symbol "⊞" <|> symbol "↯")
     right <- transformExpression varTable
     return (op, right)
   return $ foldl applyBooleanOp left rest
@@ -109,6 +116,9 @@ booleanExpression varTable = do
     applyBooleanOp left ("⊝", right) = Diff left right
     applyBooleanOp left ("⊕", right) = Union [left, right]
     applyBooleanOp left ("⊛", right) = Union [left, right]
+    applyBooleanOp left ("⇓", right) = Hull [left, right]
+    applyBooleanOp left ("⊞", right) = Minkowski [left, right]
+    applyBooleanOp left ("↯", right) = Offset (getOffsetValue right) left
     applyBooleanOp left (op, _) = error $ "Unknown boolean operator: " ++ op
 
 -- Parse transformation expressions
@@ -298,6 +308,11 @@ main = do
       hPutStrLn stderr "  ● 15 ⊝ ◎ 5 10   -- difference (alternative glyph)"
       hPutStrLn stderr "  ■ 10 ⊕ ● 5     -- union (cube plus sphere)"
       hPutStrLn stderr "  ■ 10 ⊛ ● 5     -- union (alternative glyph)"
+      hPutStrLn stderr ""
+      hPutStrLn stderr "Advanced Operations:"
+      hPutStrLn stderr "  ■ 10 ⇓ ● 5     -- hull (convex hull of cube and sphere)"
+      hPutStrLn stderr "  ■ 10 ⊞ ● 5     -- minkowski sum (cube and sphere)"
+      hPutStrLn stderr "  △ 8 ↯ ● 2      -- offset (offset triangle by sphere radius)"
       hPutStrLn stderr ""
       hPutStrLn stderr "Transformations:"
       hPutStrLn stderr "  χ 5 (● 3)       -- translate X by 5"

@@ -1,0 +1,13 @@
+// Test file for Hull, Minkowski, and Offset operations
+
+// Hull example - convex hull of a cube and sphere
+hull_example = ■ 10 ⇓ ● 5
+
+// Minkowski example - minkowski sum of cube and sphere
+minkowski_example = ■ 8 ⊞ ● 3
+
+// Offset example - offset a triangle profile
+offset_example = △ 6 ↯ ● 2
+
+// Main shape for testing - can change this to test different operations
+main = hull_example
