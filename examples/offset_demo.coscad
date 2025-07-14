@@ -1,0 +1,25 @@
+// Simple demonstration of offset operation
+// Shows how offset can be used to create rounded profiles
+
+// Original sharp profile (triangle)
+sharp_profile = △ 15
+
+// Create a small circle for offsetting
+offset_circle = ⭘ 3
+
+// Apply offset to round the triangle edges
+rounded_profile = sharp_profile ↯ offset_circle
+
+// Extrude both for comparison
+sharp_extruded = ⮕ 10 sharp_profile
+rounded_extruded = ⮕ 10 rounded_profile
+
+// Position them side by side
+sharp_positioned = χ -25 sharp_extruded
+rounded_positioned = χ 25 rounded_extruded
+
+// Combine for comparison
+comparison = sharp_positioned ⊕ rounded_positioned
+
+// Main shape
+main = comparison

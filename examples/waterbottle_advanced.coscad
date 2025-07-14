@@ -1,0 +1,54 @@
+// Advanced water bottle design using offset operations
+// This demonstrates offset for creating rounded/beveled edges
+
+// Base profiles
+base_circle = ⭘ 20         // Base circle for bottle
+small_circle = ⭘ 2         // Small circle for offset operations
+
+// Create a bottle body with rounded edges using offset + minkowski
+// The offset operation will round the edges
+bottle_profile_base = ⭘ 22
+bottle_profile_rounded = bottle_profile_base ↯ small_circle
+
+// Create main bottle body
+bottle_body = ⮕ 70 bottle_profile_rounded
+
+// Create a tapered neck section
+neck_base_profile = ⭘ 12
+neck_top_profile = ⭘ 8
+
+// For now, we'll use a simple cylinder for the neck
+// (True tapering would need more advanced operations)
+neck_cylinder = ⮕ 25 neck_top_profile
+
+// Position neck on bottle
+neck_positioned = ζ 70 neck_cylinder
+
+// Create bottle cap with rounded edges
+cap_profile = ⭘ 10
+cap_rounded = cap_profile ↯ small_circle
+cap = ⮕ 12 cap_rounded
+cap_positioned = ζ 95 cap
+
+// Create bottle base (slightly rounded)
+base_profile = ⭘ 24
+base_rounded = base_profile ↯ small_circle
+base = ⮕ 5 base_rounded
+
+// Create hollow interior
+interior_profile = ⭘ 19
+interior_body = ⮕ 68 interior_profile
+interior_positioned = ζ 2 interior_body
+
+// Neck interior
+neck_interior = ⮕ 23 (⭘ 6)
+neck_interior_positioned = ζ 72 neck_interior
+
+// Combine solid parts
+solid_bottle = base ⊕ bottle_body ⊕ neck_positioned ⊕ cap_positioned
+
+// Make it hollow
+final_bottle = solid_bottle ⊖ interior_positioned ⊖ neck_interior_positioned
+
+// Main result
+main = final_bottle

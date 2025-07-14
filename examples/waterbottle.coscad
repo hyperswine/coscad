@@ -1,0 +1,42 @@
+// Simple water bottle design using offset and extrusion
+// This demonstrates 2D profiles, offset, and extrusion
+
+// 2D profiles for the bottle
+bottle_profile = ⭘ 25      // Circle profile for bottle body (radius 25)
+neck_profile = ⭘ 8        // Circle profile for neck (radius 8)
+cap_profile = ⭘ 10        // Circle profile for cap (radius 10)
+
+// Create bottle body using extrusion
+bottle_body = ⮕ 80 bottle_profile
+
+// Create neck using extrusion
+neck = ⮕ 20 neck_profile
+
+// Create cap using extrusion
+cap = ⮕ 15 cap_profile
+
+// Position the neck on top of the bottle body
+neck_positioned = ζ 80 neck
+
+// Position the cap on top of the neck
+cap_positioned = ζ 100 cap
+
+// Create the bottle opening (hollow interior)
+// Use a slightly smaller profile for the interior
+interior_profile = ⭘ 22    // Interior radius (3mm wall thickness)
+interior_body = ⮕ 78 interior_profile
+interior_positioned = ζ 2 interior_body
+
+// Create neck opening
+neck_interior_profile = ⭘ 6
+neck_interior = ⮕ 18 neck_interior_profile
+neck_interior_positioned = ζ 82 neck_interior
+
+// Combine all solid parts
+solid_parts = bottle_body ⊕ neck_positioned ⊕ cap_positioned
+
+// Subtract the interior to make it hollow
+hollow_bottle = solid_parts ⊖ interior_positioned ⊖ neck_interior_positioned
+
+// Main shape
+main = hollow_bottle
