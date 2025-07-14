@@ -110,9 +110,11 @@ scale = ⬈ 2B08
 
 -- | cube x
 (■) x = Rectangle x x x
+
 cube = (■)
 
 rect x = Rectangle x x x
+
 (▬) = rect
 
 -- | sphere r
@@ -173,16 +175,23 @@ poly points paths = Poly (PD points paths)
 (⮕) = Extrude
 
 infixl 0 ⊞
+
 infixl 0 ⇓
+
 infixl 1 ↯
 
 (⇓) = Hull
+
 (⊞) = Minkowski
+
 (↯) = Offset
 
 infixl 0 ⊖
+
 infixl 0 ⊝
+
 infixl 0 ⊛
+
 infixl 0 ⊕
 
 -- Boolean difference
@@ -197,6 +206,7 @@ a ⊕ b = Union [a, b]
 -- COMPOSE OPERATIONS
 
 infixl 1 |>
+
 infixl 1 ▷
 
 x |> f = f x

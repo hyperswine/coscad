@@ -1,38 +1,40 @@
 module Main (main) where
 
 import Control.Exception (SomeException, catch)
+import Control.Monad (void)
+import Data.Char (isSpace)
+import Data.Either (lefts, rights)
+import qualified Data.Map as Map
+import Data.Void (Void)
 import Lib
 import System.Directory (doesFileExist)
 import System.Environment (getArgs)
 import System.Exit (exitFailure, exitSuccess)
 import System.FilePath (dropExtension, takeExtension)
 import System.IO (hPutStrLn, stderr)
-import qualified Data.Map as Map
-import Data.Char (isSpace)
-import Data.Void (Void)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
-import Control.Monad (void)
 
 -- Helper function to extract offset value from a shape (for Offset operation)
 getOffsetValue :: Shape -> Double
 getOffsetValue (Sphere r) = r
 getOffsetValue (Cylinder r _) = r
 getOffsetValue (Shape2D _ r) = r
-getOffsetValue _ = 1.0  -- Default offset value
+getOffsetValue _ = 1.0 -- Default offset value
 
 -- Try to resolve a single variable
 tryResolveVar :: VarTable -> (VarName, String) -> Either (VarName, String) (VarName, Shape)
 tryResolveVar table (name, expr) =
-  let cleanExpr = trim expr in
-  case parseExpression table cleanExpr of
-    Right shape -> Right (name, shape)
-    Left err -> Left (name, cleanExpr)
-
+  let cleanExpr = trim expr
+   in case parseExpression table cleanExpr of
+        Right shape -> Right (name, shape)
+        Left err -> Left (name, cleanExpr)
 
 type VarName = String
+
 type VarTable = Map.Map VarName Shape
+
 type Parser = Parsec Void String
 
 -- Lexer helpers
@@ -57,7 +59,7 @@ identifier = lexeme $ do
     subscriptChar = oneOf "₀₁₂₃₄₅₆₇₈₉"
 
 double :: Parser Double
-double = lexeme $ try L.float <|> (fromIntegral <$> L.decimal)
+double = lexeme $ try L.float <|> fromIntegral <$> L.decimal
 
 -- Parse a complete program
 parseProgram :: String -> Either String (VarTable, Shape)
@@ -100,14 +102,14 @@ parseExpression varTable input =
 
 -- Parse an expression
 expression :: VarTable -> Parser Shape
-expression varTable = booleanExpression varTable
+expression = booleanExpression
 
 -- Parse boolean expressions (union, difference, hull, minkowski, offset)
 booleanExpression :: VarTable -> Parser Shape
 booleanExpression varTable = do
   left <- transformExpression varTable
   rest <- many $ do
-    op <- (symbol "⊖" <|> symbol "⊝" <|> symbol "⊕" <|> symbol "⊛" <|> symbol "⇓" <|> symbol "⊞" <|> symbol "↯")
+    op <- symbol "⊖" <|> symbol "⊝" <|> symbol "⊕" <|> symbol "⊛" <|> symbol "⇓" <|> symbol "⊞" <|> symbol "↯"
     right <- transformExpression varTable
     return (op, right)
   return $ foldl applyBooleanOp left rest
@@ -127,11 +129,17 @@ transformExpression varTable = transformation varTable <|> primaryExpression var
 
 -- Parse transformations
 transformation :: VarTable -> Parser Shape
-transformation varTable = choice
-  [ translateX, translateY, translateZ
-  , rotateX, rotateY, rotateZ
-  , scaleTransform, extrudeTransform
-  ]
+transformation varTable =
+  choice
+    [ translateX,
+      translateY,
+      translateZ,
+      rotateX,
+      rotateY,
+      rotateZ,
+      scaleTransform,
+      extrudeTransform
+    ]
   where
     translateX = do
       symbol "χ"
@@ -185,12 +193,13 @@ transformation varTable = choice
 
 -- Parse primary expressions (shapes, variables, parentheses)
 primaryExpression :: VarTable -> Parser Shape
-primaryExpression varTable = choice
-  [ parenthesized
-  , variable
-  , basicShape
-  , shape2D
-  ]
+primaryExpression varTable =
+  choice
+    [ parenthesized,
+      variable,
+      basicShape,
+      shape2D
+    ]
   where
     parenthesized = between (symbol "(") (symbol ")") (expression varTable)
 
@@ -200,8 +209,9 @@ primaryExpression varTable = choice
         Just shape -> return shape
         Nothing -> fail $ "Undefined variable: " ++ name
 
-    basicShape = choice
-      [ cube, sphere, cylinder, cone, rectangle, prism ]
+    basicShape =
+      choice
+        [cube, sphere, cylinder, cone, rectangle, prism]
 
     cube = do
       symbol "■"
@@ -210,60 +220,53 @@ primaryExpression varTable = choice
 
     sphere = do
       symbol "●"
-      radius <- double
-      return $ Sphere radius
+      Sphere <$> double
 
     cylinder = do
       symbol "◎"
       radius <- double
-      height <- double
-      return $ Cylinder radius height
+      Cylinder radius <$> double
 
     cone = do
       symbol "▻"
       radius <- double
-      height <- double
-      return $ Cone radius height
+      Cone radius <$> double
 
     rectangle = do
       symbol "▬"
       x <- double
       y <- double
-      z <- double
-      return $ Rectangle x y z
+      Rectangle x y <$> double
 
     prism = do
       symbol "⎏"
       n <- double
       radius <- double
-      height <- double
-      return $ Prism (round n) radius height
+      Prism (round n) radius <$> double
 
-    shape2D = choice
-      [ triangle, pentagon, circle ]
+    shape2D =
+      choice
+        [triangle, pentagon, circle]
 
     triangle = do
       symbol "△"
-      radius <- double
-      return $ Shape2D 3 radius
+      Shape2D 3 <$> double
 
     pentagon = do
       symbol "⬠"
-      radius <- double
-      return $ Shape2D 5 radius
+      Shape2D 5 <$> double
 
     circle = do
       symbol "⭘"
-      radius <- double
-      return $ Shape2D 100 radius
+      Shape2D 100 <$> double
 
 -- Resolve variables with dependency resolution
 resolveVariables :: [(VarName, String)] -> VarTable -> Either String VarTable
 resolveVariables [] table = Right table
 resolveVariables remaining table = do
   let results = map (tryResolveVar table) remaining
-  let resolved = [x | Right x <- results]
-  let unresolved = [x | Left x <- results]
+  let resolved = rights results
+  let unresolved = lefts results
 
   if null resolved
     then Left $ "Cannot resolve variables (possible circular dependency): " ++ show (map fst unresolved)
@@ -274,7 +277,8 @@ resolveVariables remaining table = do
 -- Utility functions
 trim :: String -> String
 trim = f . f
-  where f = reverse . dropWhile isSpace
+  where
+    f = reverse . dropWhile isSpace
 
 main :: IO ()
 main = do
