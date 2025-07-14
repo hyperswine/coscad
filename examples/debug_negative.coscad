@@ -1,0 +1,5 @@
+// Test negative translation
+t = △ 8
+t2 = ⮕ 15 t
+t3 = χ -20 t2
+main = t3

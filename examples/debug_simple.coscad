@@ -1,0 +1,4 @@
+// Simple test to isolate the issue
+t = △ 8
+t2 = ⮕ 15 t
+main = t2

@@ -10,4 +10,4 @@ minkowski_example = ■ 8 ⊞ ● 3
 offset_example = △ 6 ↯ ● 2
 
 // Main shape for testing - can change this to test different operations
-main = hull_example
+main = offset_example

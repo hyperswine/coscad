@@ -59,7 +59,7 @@ identifier = lexeme $ do
     subscriptChar = oneOf "₀₁₂₃₄₅₆₇₈₉"
 
 double :: Parser Double
-double = lexeme $ try L.float <|> fromIntegral <$> L.decimal
+double = lexeme $ L.signed sc (try L.float <|> fromIntegral <$> L.decimal)
 
 -- Parse a complete program
 parseProgram :: String -> Either String (VarTable, Shape)

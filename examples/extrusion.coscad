@@ -20,4 +20,4 @@ c3 = χ 20 c2
 comb = t3 ⊕ p3 ⊕ c3
 
 // Main shape
-main = t3 ⊕ p3 ⊕ c3
+main = comb
