@@ -1,6 +1,5 @@
 // Complex example: Sphere with cylindrical hole
 // This creates a sphere with a cylinder subtracted from it
-
 s₁ = ● 15
 cylinder1 = ◎ 5 10
 

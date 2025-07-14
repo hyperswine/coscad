@@ -27,6 +27,9 @@ data Shape
   | Diff Shape Shape
   | Extrude D Shape
   | Union [Shape]
+  | Hull [Shape]
+  | Minkowski [Shape]
+  | Offset D Shape
   deriving (Show)
 
 -- | Polygon Data
@@ -76,6 +79,12 @@ gen (Diff a b) =
   "difference() {\n" ++ indent (gen a) ++ indent (gen b) ++ "}"
 gen (Union shapes) =
   "union() {\n" ++ concatMap (indent . gen) shapes ++ "}"
+gen (Hull shapes) =
+  "hull() {\n" ++ concatMap (indent . gen) shapes ++ "}"
+gen (Minkowski shapes) =
+  "minkowski() {\n" ++ concatMap (indent . gen) shapes ++ "}"
+gen (Offset r s) =
+  "offset(r = " ++ show r ++ ") {\n" ++ indent (gen s) ++ "}"
 
 writeScad shape filename = writeFile filename (fn50 $ gen shape)
 
@@ -162,6 +171,14 @@ poly points paths = Poly (PD points paths)
 
 -- | Linear extrusion (2‑D → 3‑D)
 (⮕) = Extrude
+
+infixl 0 ⊞
+infixl 0 ⇓
+infixl 1 ↯
+
+(⇓) = Hull
+(⊞) = Minkowski
+(↯) = Offset
 
 infixl 0 ⊖
 infixl 0 ⊝
