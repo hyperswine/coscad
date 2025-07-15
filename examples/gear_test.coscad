@@ -1,0 +1,33 @@
+// Test the gear generation concept
+// Simple 8-tooth gear with direct values
+
+// Base gear body
+c1 = ⭘ 10
+s1 = ⮕ 2 c1
+
+// Inner hole
+c2 = ⭘ 5
+s2 = ⮕ 2 c2
+
+// Base gear with hole
+base_gear = s1 ⊖ s2
+
+// Single tooth
+tooth_profile = △ 2
+tooth = ⮕ 2 tooth_profile
+
+// Position teeth manually for 8-tooth gear (45 degree spacing)
+tooth1 = χ 10 tooth                    // 0 degrees
+tooth2 = χ 7.07 (ψ 7.07 (ω 45 tooth)) // 45 degrees
+tooth3 = ψ 10 (ω 90 tooth)            // 90 degrees
+tooth4 = χ -7.07 (ψ 7.07 (ω 135 tooth)) // 135 degrees
+tooth5 = χ -10 (ω 180 tooth)          // 180 degrees
+tooth6 = χ -7.07 (ψ -7.07 (ω 225 tooth)) // 225 degrees
+tooth7 = ψ -10 (ω 270 tooth)          // 270 degrees
+tooth8 = χ 7.07 (ψ -7.07 (ω 315 tooth)) // 315 degrees
+
+// Combine all teeth
+all_teeth = tooth1 ⊕ tooth2 ⊕ tooth3 ⊕ tooth4 ⊕ tooth5 ⊕ tooth6 ⊕ tooth7 ⊕ tooth8
+
+// Final gear
+main = base_gear ⊕ all_teeth
