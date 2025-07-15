@@ -33,7 +33,8 @@ neck_interior = ⮕ 18 neck_interior_profile
 neck_interior_positioned = ζ 82 neck_interior
 
 // Combine all solid parts
-solid_parts = bottle_body ⊕ neck_positioned ⊕ cap_positioned
+//  ⊕ neck_positioned ⊕ cap_positioned
+solid_parts = bottle_body
 
 // Subtract the interior to make it hollow
 hollow_bottle = solid_parts ⊖ interior_positioned ⊖ neck_interior_positioned
