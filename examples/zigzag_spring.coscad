@@ -1,0 +1,39 @@
+-- Test the zigzag spring generation
+-- Manual recreation of the spring concept in coscad syntax
+
+-- Spring dimensions: 20 x 5 overall
+-- 4 end squares with holes, connected by zigzag
+
+-- Define the spring profile points manually
+-- This creates a zigzag pattern between two square ends
+
+-- For now, let's create a simplified version using basic shapes
+-- Left end square
+left_square = ▬ 4 5 2
+left_hole = ● 1
+left_hole_positioned = χ 2 (ψ 2.5 (⮕ 2 left_hole))
+left_end = left_square ⊖ left_hole_positioned
+
+-- Right end square
+right_square = ▬ 4 5 2
+right_hole = ● 1
+right_hole_positioned = χ 18 (ψ 2.5 (⮕ 2 right_hole))
+right_end = χ 16 right_square ⊖ right_hole_positioned
+
+-- Zigzag middle section (simplified as connecting beams)
+beam1 = ▬ 3 1 2
+beam2 = ▬ 3 1 2
+beam3 = ▬ 3 1 2
+beam4 = ▬ 3 1 2
+
+-- Position beams in zigzag pattern
+beam1_pos = χ 4 (ψ 3.5 beam1)
+beam2_pos = χ 7 (ψ 0.5 beam2)
+beam3_pos = χ 10 (ψ 3.5 beam3)
+beam4_pos = χ 13 (ψ 0.5 beam4)
+
+-- Combine all parts
+spring_body = left_end ⊕ right_end ⊕ beam1_pos ⊕ beam2_pos ⊕ beam3_pos ⊕ beam4_pos
+
+-- Main shape
+main = spring_body
