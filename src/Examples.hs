@@ -1,6 +1,6 @@
 module Examples where
 
-import Lib (D, PD (..), Shape (Diff, Extrude, Poly, Rz, Shape2D, Tx, Ty, Union), gen, writeScad)
+import Lib (D, PD (..), Shape (Diff, Extrude, Poly, Rectangle, Rz, Shape2D, Tx, Ty, Union), writeScad)
 
 -- Gear generation using functional programming
 -- Parameters: number of teeth, gear radius, inner radius, thickness
@@ -75,7 +75,7 @@ zigzagSpring width height holeRadius thickness =
     -- Mathematical parameters
     c = 1.8
     d = 1.0
-    zigzagThickness = 0.5  -- Thickness of zigzag line
+    zigzagThickness = 1.25  -- Thickness of zigzag line
 
     -- Calculate dimensions
     endWidth = 4.0  -- Width of each end square
@@ -111,25 +111,24 @@ zigzagSpring width height holeRadius thickness =
     zigzagUpperPoints = map (\(x, y) -> (x, y + zigzagThickness / 2.0)) zigzagCenterPoints
     zigzagLowerPoints = reverse (map (\(x, y) -> (x, y - zigzagThickness / 2.0)) zigzagCenterPoints)
 
-    -- Spring outline points (clockwise from bottom-left)
+    -- Spring outline points (just the zigzag part)
     springPoints =
-      -- Left end (bottom to top)
-      [(0, 0), (0, height), (endWidth, height)]
-      ++
       -- Zigzag upper edge
       zigzagUpperPoints
       ++
-      -- Right end (top to bottom)
-      [(width, height), (width, 0), (width - endWidth, 0)]
-      ++
       -- Zigzag lower edge
       zigzagLowerPoints
-      ++
-      -- Close the shape
-      [(endWidth, 0)]
 
-    -- Create the spring body polygon
+    -- Create the spring body polygon (just zigzag)
     springBody = Poly (PD springPoints [[0..fromIntegral (length springPoints - 1)]])
+
+    -- Create end cuboids separately
+    leftEnd = Rectangle endWidth height thickness
+    rightEnd = Rectangle endWidth height thickness
+
+    -- Position the end cuboids
+    leftEndPos = leftEnd  -- Already at origin
+    rightEndPos = Tx (width - endWidth) rightEnd
 
     -- Create holes for the ends
     leftHole = Shape2D 100 holeRadius   -- Circle profile
@@ -144,8 +143,12 @@ zigzagSpring width height holeRadius thickness =
     leftHole3D = Extrude thickness leftHolePos
     rightHole3D = Extrude thickness rightHolePos
 
-    -- Subtract holes from spring body
-    finalSpring = Diff (Diff springBody3D leftHole3D) rightHole3D
+    -- Create ends with holes
+    leftEndWithHole = Diff leftEndPos leftHole3D
+    rightEndWithHole = Diff rightEndPos rightHole3D
+
+    -- Combine spring body with ends
+    finalSpring = Union [springBody3D, leftEndWithHole, rightEndWithHole]
   in
     finalSpring
 
@@ -175,4 +178,4 @@ springDemo = Union [s1, s2, s3]
 
 --- >>> gen gearDemo
 
---- >>> writeScad springDemo "examples/springDemo.scad"
+--- >>> writeScad springDemo "examples/springDemo2.scad"
