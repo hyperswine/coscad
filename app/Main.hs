@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unused-do-bind #-}
+
 module Main (main) where
 
 import Control.Exception (SomeException, catch)
@@ -121,7 +123,7 @@ booleanExpression varTable = do
     applyBooleanOp left ("⇓", right) = Hull [left, right]
     applyBooleanOp left ("⊞", right) = Minkowski [left, right]
     applyBooleanOp left ("↯", right) = Offset (getOffsetValue right) left
-    applyBooleanOp left (op, _) = error $ "Unknown boolean operator: " ++ op
+    applyBooleanOp _ (op, _) = error $ "Unknown boolean operator: " ++ op
 
 -- Parse transformation expressions
 transformExpression :: VarTable -> Parser Shape
@@ -364,7 +366,7 @@ processFileContents inputFile outputFile = do
 
   -- Parse the program with variables
   case parseProgram contents of
-    Right (varTable, mainShape) -> do
+    Right (_, mainShape) -> do
       writeScad mainShape outputFile
       return $ Right ()
     Left err -> return $ Left err

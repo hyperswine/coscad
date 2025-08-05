@@ -2,11 +2,11 @@
 
 Amazing CAD in haskell that compiles to OPENSCAD, by yours truly (Jasen Qin)
 
-## Unicode Glyph Functions
+**Unicode Glyph Functions**
 
 This library provides Unicode glyph aliases for CAD operations. Here's the complete mapping:
 
-### 3D Shapes
+3D Shapes
 
 - `■` (U+25A0) - `cube` - Creates a cube/rectangular prism
 - `●` (U+25CF) - `sphere` - Creates a sphere
@@ -15,14 +15,14 @@ This library provides Unicode glyph aliases for CAD operations. Here's the compl
 - `▬` (U+25AC) - `rect` - Creates a rectangle (alias for cube)
 - `⎏` (U+23CF) - `prism` - Creates a regular prism
 
-### 2D Shapes
+2D Shapes
 
 - `△` (U+25B3) - Equilateral triangle profile
 - `⬠` (U+2B20) - Regular pentagon profile
 - `⭘` (U+2B58) - Circle profile
 - `⟁` (U+27C1) - `poly` - Creates a polygon with points and paths
 
-### Transformations
+Transformations
 
 - `χ` (U+03C7) - `Tx` - Translation along X-axis
 - `ψ` (U+03C8) - `Ty` - Translation along Y-axis
@@ -33,29 +33,29 @@ This library provides Unicode glyph aliases for CAD operations. Here's the compl
 - `⬈` (U+2B08) - `Scale` - Scaling transformation
 - `⮕` (U+2B95) - `Extrude` - Linear extrusion (2D → 3D)
 
-### Boolean Operations
+Boolean Operations
 
 - `⊖` (U+2296) - `Diff` - Boolean difference
 - `⊝` (U+229D) - `Diff` - Boolean difference (alias)
 - `⊛` (U+229B) - `Union` - Boolean union (alias)
 - `⊕` (U+2295) - `Union` - Boolean union
 
-### Advanced Operations
+Advanced Operations
 
 - `⇓` (U+21D3) - `Hull` - Convex hull operation
 - `⊞` (U+229E) - `Minkowski` - Minkowski sum operation
 - `↯` (U+21AF) - `Offset` - Offset operation (2D profiles)
 
-### Composition Operations
+Composition Operations
 
 - `|>` (U+007C U+003E) - Forward pipe operator
 - `▷` (U+25B7) - Forward pipe operator (alias)
 
-## CLI Usage
+**CLI Usage**
 
 The `coscad` CLI tool converts `.coscad` files to `.scad` (OpenSCAD) format.
 
-### Basic Usage
+Basic Usage
 
 ```bash
 coscad <input.coscad>
@@ -63,7 +63,7 @@ coscad <input.coscad>
 
 This will create a corresponding `.scad` file in the same directory.
 
-### Examples
+**Examples**
 
 Create a simple cube:
 
@@ -122,7 +122,7 @@ echo "△ 8 ↯ ● 2" > offset.coscad
 coscad offset.coscad
 ```
 
-### Syntax
+**Syntax**
 
 The current parser supports:
 
@@ -130,7 +130,7 @@ The current parser supports:
 - Boolean operations: `shape1 ⊖ shape2` (difference), `shape1 ⊕ shape2` (union)
 - Advanced operations: `shape1 ⇓ shape2` (hull), `shape1 ⊞ shape2` (minkowski), `profile ↯ shape` (offset)
 
-### Building
+**Building**
 
 To build the project:
 
@@ -138,8 +138,10 @@ To build the project:
 stack build
 ```
 
-To run the executable:
+This creates the executable in .stack-work. You can add its path to PATH to call `coscad` directly.
+
+Otherwise, to run the executable with stack:
 
 ```bash
-stack exec coscad-exe -- input.coscad
+stack run -- input.coscad
 ```
