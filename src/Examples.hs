@@ -1,20 +1,21 @@
 module Examples where
 
-import Lib (D, PD (..), Shape (..), writeScad, (■))
+import Lib (D, PD (..), Shape (..))
 
 -- Gear generation using functional programming
 -- Parameters: number of teeth, gear radius, inner radius, thickness
+gear :: (Integral a) => a -> D -> D -> D -> Shape
 gear numTeeth gearRadius innerRadius thickness =
   let -- Base gear body (extruded circle)
       c1 = Shape2D 100 gearRadius -- Circle profile
-      s1 = Extrude thickness c1
+      gearS1 = Extrude thickness c1
 
       -- Inner hole (extruded circle)
       c2 = Shape2D 100 innerRadius -- Circle profile
-      s2 = Extrude thickness c2
+      gearS2 = Extrude thickness c2
 
       -- Base gear with hole
-      baseGear = Diff s1 s2
+      baseGear = Diff gearS1 gearS2
 
       -- Single tooth (extruded triangle)
       toothProfile = Shape2D 3 2 -- Triangle profile
@@ -48,20 +49,27 @@ gear numTeeth gearRadius innerRadius thickness =
    in finalGear
 
 -- Example gears
+gear8 :: Shape
 gear8 = gear 8 10 5 2 -- 8-tooth gear
 
+gear12 :: Shape
 gear12 = gear 12 15 7 2 -- 12-tooth gear
 
+gear16 :: Shape
 gear16 = gear 16 20 8 2 -- 16-tooth gear
 
 -- Positioned gears for display
+g1 :: Shape
 g1 = Tx (-40) gear8
 
+g2 :: Shape
 g2 = Tx 0 gear12
 
+g3 :: Shape
 g3 = Tx 50 gear16
 
 -- Combined display
+gearDemo :: Shape
 gearDemo = Union [g1, g2, g3]
 
 -- Zigzag spring generation using mathematical equations
@@ -186,24 +194,8 @@ submarine =
     subLength = 18.0
     subRadius = 2.5
 
-    -- Hull cross-section: circle intersected with rectangle to create flat top/bottom
-    -- The rectangle cuts off the top and bottom to create flat surfaces
-    hullProfile =
-      let
-        -- Circle for the basic shape
-        circle = Shape2D 100 subRadius
-
-        -- Rectangle to intersect (slightly wider than diameter, but shorter height)
-        -- This creates the flat top and bottom effect
-        rectHeight = subRadius * 1.6  -- Leaves some flat area
-        rect = Rectangle (subRadius * 3) rectHeight 1.0
-
-        -- Center the rectangle
-        centeredRect = Ty (-rectHeight / 2.0) rect
-      in
-        -- For 2D intersection, we'll use the circle directly
-        -- The flat effect will come from the hull operation with positioned profiles
-        circle
+    -- Hull cross-section: simple circle for hull operation
+    hullProfile = Shape2D 100 subRadius
 
     -- Create 5 cross-sections along the submarine length for hull operation
     -- Position them at different points and scale them for streamlined shape
@@ -226,15 +218,14 @@ submarine =
     towerTopRadius = 0.7
 
     -- Position the tower at the middle-front of the submarine
-    towerPos = Tx (subLength * 0.4) (Ty 0 (Tz 0.5))
-    tower = towerPos (Frustum towerHeight towerBottomRadius towerTopRadius)
+    tower = Tx (subLength * 0.4) (Ty 0 (Tz 0.5 (Frustum towerHeight towerBottomRadius towerTopRadius)))
 
     -- Create additional details
     -- Propeller shaft (small cylinder at the back)
     propShaft = Tx (subLength + 0.2) (Ry 90 (Cylinder 0.2 1.0))
 
     -- Periscope (thin cylinder on tower)
-    periscope = Tx (subLength * 0.4) (Ty 0 (Tz (0.5 + towerHeight))) (Cylinder 0.1 1.0)
+    periscope = Tx (subLength * 0.4) (Ty 0 (Tz (0.5 + towerHeight) (Cylinder 0.1 1.0)))
 
     -- Combine all parts
     fullSubmarine = Union [hull3D, tower, propShaft, periscope]
@@ -261,46 +252,43 @@ submarineStreamlined =
       in flattened
 
     -- Five cross-sections with varying sizes and flattening
-    s1 = Tx 0 (createFlattenedCircle (subRadius * 0.2) 0.6)           -- Pointed nose
-    s2 = Tx (subLength * 0.2) (createFlattenedCircle (subRadius * 0.7) 0.8)  -- Growing
-    s3 = Tx (subLength * 0.4) (createFlattenedCircle subRadius 0.85)          -- Near full size
-    s4 = Tx (subLength * 0.7) (createFlattenedCircle (subRadius * 0.9) 0.8)  -- Tapering
-    s5 = Tx subLength (createFlattenedCircle (subRadius * 0.15) 0.5)          -- Tapered stern
+    sec1 = Tx 0 (createFlattenedCircle (subRadius * 0.2) 0.6)           -- Pointed nose
+    sec2 = Tx (subLength * 0.2) (createFlattenedCircle (subRadius * 0.7) 0.8)  -- Growing
+    sec3 = Tx (subLength * 0.4) (createFlattenedCircle subRadius 0.85)          -- Near full size
+    sec4 = Tx (subLength * 0.7) (createFlattenedCircle (subRadius * 0.9) 0.8)  -- Tapering
+    sec5 = Tx subLength (createFlattenedCircle (subRadius * 0.15) 0.5)          -- Tapered stern
 
     -- Create hull
-    hullShape = Hull [s1, s2, s3, s4, s5]
+    hullShape = Hull [sec1, sec2, sec3, sec4, sec5]
     hull3D = Extrude 1.0 hullShape
 
     -- Conning tower - more realistic proportions
-    towerBase = Tx (subLength * 0.35) (Ty 0 (Tz 0.5))
-    tower = towerBase (Union [
+    tower = Tx (subLength * 0.35) (Ty 0 (Tz 0.5 (Union [
         -- Main tower body
         Frustum 1.2 0.9 0.6,
         -- Tower top platform
         Tz 1.2 (Cylinder 0.8 0.3)
-      ])
+      ])))
 
     -- Fins and rudders
     -- Dorsal fin
-    dorsalFin = Tx (subLength * 0.8) (Ty 0 (Tz 0.5)) (Scale (0.3, 0.1, 1.5) (■ 1))
+    dorsalFin = Tx (subLength * 0.8) (Ty 0 (Tz 0.5 (Scale (0.3, 0.1, 1.5) (Rectangle 1 1 1))))
 
     -- Side rudders
-    leftRudder = Tx (subLength * 0.9) (Ty (-subRadius * 0.8) (Tz 0)) (Scale (0.2, 1.0, 0.8) (■ 1))
-    rightRudder = Tx (subLength * 0.9) (Ty (subRadius * 0.8) (Tz 0)) (Scale (0.2, 1.0, 0.8) (■ 1))
+    leftRudder = Tx (subLength * 0.9) (Ty (-subRadius * 0.8) (Tz 0 (Scale (0.2, 1.0, 0.8) (Rectangle 1 1 1))))
+    rightRudder = Tx (subLength * 0.9) (Ty (subRadius * 0.8) (Tz 0 (Scale (0.2, 1.0, 0.8) (Rectangle 1 1 1))))
 
     -- Propeller (simplified)
     propeller = Tx (subLength + 0.1) (Ry 90 (Union [
       Cylinder 0.15 0.5,  -- Hub
-      Rz 0 (Scale (2.0, 0.1, 0.1) (■ 1)),     -- Blade 1
-      Rz 90 (Scale (2.0, 0.1, 0.1) (■ 1))     -- Blade 2
+      Rz 0 (Scale (2.0, 0.1, 0.1) (Rectangle 1 1 1)),     -- Blade 1
+      Rz 90 (Scale (2.0, 0.1, 0.1) (Rectangle 1 1 1))     -- Blade 2
       ]))
 
     -- Complete submarine
     complete = Union [hull3D, tower, dorsalFin, leftRudder, rightRudder, propeller]
 
-  in complete
-
--- Basic submarine example
+  in complete-- Basic submarine example
 uboat :: Shape
 uboat = submarine
 
