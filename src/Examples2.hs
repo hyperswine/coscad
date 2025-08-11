@@ -74,27 +74,42 @@ bookendDetailed =
 
       supportWidth = 3.0
       supportHeight = 8.0
-      supportDepth = 2.5
+      supportDepth = baseLength + verticalWidth  -- Extend to cover full length
 
       -- Create vertical section
       verticalSection = Rectangle verticalWidth totalWidth verticalHeight
       positionedVertical = Tz baseHeight verticalSection
 
-      -- Create base slab with smooth chamfer using hull operation
-      -- Create two rectangles and hull between them for smooth transition
-      baseRect = Rectangle (baseLength - 2.0) totalWidth baseHeight
-      tipRect = Rectangle 0.5 totalWidth (baseHeight * 0.3) -- Smaller rectangle at tip
+      -- Create base slab with right-angled triangle tip
+      -- Main flat base rectangle
+      flatBase = Rectangle (baseLength - 1.5) totalWidth baseHeight
 
-      -- Position the tip rectangle
-      positionedTipRect = Tx (baseLength - 1.0) (Tz (baseHeight * 0.35) tipRect)
+      -- Right-angled triangle tip profile
+      triangleTipProfile =
+        let
+          -- Right triangle: long base (1.5), short height (baseHeight), hypotenuse connects them
+          points = [
+            (0.0, 0.0),           -- Bottom-left (start of triangle)
+            (1.5, 0.0),           -- Bottom-right (end of base - tip point)
+            (0.0, baseHeight)     -- Top-left (forms right angle)
+            ]
+          paths = [[0, 1, 2]]
+        in Poly (PD points paths)
 
-      -- Hull operation to create smooth chamfer
-      baseSlab = Hull [baseRect, positionedTipRect]
+      -- Extrude the triangle tip
+      triangleTip = Extrude totalWidth triangleTipProfile
+
+      -- Position the triangle tip at the end of the flat base
+      positionedTriangleTip = Tx (baseLength - 1.5) triangleTip
+
+      -- Combine flat base and triangle tip to form complete slab
+      baseSlab = Union [flatBase, positionedTriangleTip]
       positionedBaseSlab = Tx verticalWidth baseSlab
 
-      -- Rear support
+      -- Rear support - extends full length to eliminate gap
       rearSupport = Rectangle supportDepth supportWidth supportHeight
-      positionedRearSupport = Tx (verticalWidth - supportDepth) rearSupport
+      -- Position at the very back, covering from vertical wall to end of slab
+      positionedRearSupport = Tx 0 rearSupport
 
       -- Combine all parts
       completeBookend = Union [positionedVertical, positionedBaseSlab, positionedRearSupport]
