@@ -14,6 +14,7 @@ data Shape
   | Sphere D
   | Cylinder D D
   | Cone D D
+  | Frustum D D D
   | Prism I D D
   | Poly PD
   | Shape2D I D
@@ -55,6 +56,8 @@ gen (Cylinder r h) =
   "cylinder(h = " ++ show h ++ ", r = " ++ show r ++ ");"
 gen (Cone r h) =
   "cylinder(h = " ++ show h ++ ", r1 = " ++ show r ++ ", r2 = 0);"
+gen (Frustum h r1 r2) =
+  "cylinder(h = " ++ show h ++ ", r1 = " ++ show r1 ++ ", r2 = " ++ show r2 ++ ");"
 gen (Prism n r h) =
   "cylinder(h = " ++ show h ++ ", r = " ++ show r ++ ", $fn = " ++ show n ++ ");"
 gen (Poly (PD points paths)) =
