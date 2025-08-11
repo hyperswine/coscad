@@ -49,3 +49,41 @@ One way to define is with a circle which we intersect a rectangle from.
 ```
 
 The extra tower on the top is like a frustum unioned to the top flat surface of the submarine.
+
+-------------
+
+Bookend
+
+```
+     ******
+     *    *
+     *    *
+     *    *
+     *    *
+     *    *
+     *    *
+     *    *
+     *    *
+     *    *
+     *    *
+    **    *
+  ****    *
+ **  *    *
+ *   *    *
+ *   *    *
+ *   *    *
+ *   *    *
+ *   *    *
+ *   *    *
+ *   *    *
+ *   *    *
+ *   *    *
+ *   *    *
+**   *    *
+*    *    *
+*    *    *
+*    *    *
+*    *    *
+*    *    ***********************
+************************************
+```

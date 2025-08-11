@@ -1,6 +1,6 @@
 module Examples where
 
-import Lib (D, PD (..), Shape (..))
+import Lib (D, PD (..), Shape (..), writeScad)
 
 -- Gear generation using functional programming
 -- Parameters: number of teeth, gear radius, inner radius, thickness
@@ -79,86 +79,84 @@ gearDemo = Union [g1, g2, g3]
 -- and b = -c * mod(floor(dx), 2)
 zigzagSpring :: D -> D -> D -> D -> Shape
 zigzagSpring width height holeRadius thickness =
-  let
-    -- Mathematical parameters
-    c = 1.8
-    d = 1.0
-    zigzagThickness = 1.25  -- Thickness of zigzag line
+  let -- Mathematical parameters
+      c = 1.8
+      d = 1.0
+      zigzagThickness = 1.25 -- Thickness of zigzag line
 
-    -- Calculate dimensions
-    endWidth = 4.0  -- Width of each end square
-    springLength = width - 2 * endWidth
-    centerY = height / 2.0
+      -- Calculate dimensions
+      endWidth = 4.0 -- Width of each end square
+      springLength = width - 2 * endWidth
+      centerY = height / 2.0
 
-    -- Mathematical zigzag function
-    zigzagY :: D -> D
-    zigzagY x =
-      let
-        dx = d * x
-        floorDx = fromIntegral (floor dx)
-        fractionalPart = dx - floorDx
-        modFloorDx = fromIntegral (floor dx `mod` 2)
-        a = c * (-1 + 2 * modFloorDx)
-        b = -c * modFloorDx
-      in
-        fractionalPart * a + b + c / 2.0
+      -- Mathematical zigzag function
+      zigzagY :: D -> D
+      zigzagY x =
+        let dx = d * x
+            floorDx = fromIntegral (floor dx)
+            fractionalPart = dx - floorDx
+            modFloorDx = fromIntegral (floor dx `mod` 2)
+            a = c * (-1 + 2 * modFloorDx)
+            b = -c * modFloorDx
+         in fractionalPart * a + b + c / 2.0
 
-    -- Generate points along the zigzag curve
-    numPoints = 50  -- Number of points to sample
-    stepSize = springLength / fromIntegral numPoints
+      -- Generate points along the zigzag curve
+      numPoints = 50 -- Number of points to sample
+      stepSize = springLength / fromIntegral numPoints
 
-    -- Generate zigzag centerline points
-    zigzagCenterPoints = map (\i ->
-      let
-        x = fromIntegral i * stepSize
-        y = centerY + zigzagY x
-      in (endWidth + x, y)
-      ) [0..numPoints]
+      -- Generate zigzag centerline points
+      zigzagCenterPoints =
+        map
+          ( \i ->
+              let x = fromIntegral i * stepSize
+                  y = centerY + zigzagY x
+               in (endWidth + x, y)
+          )
+          [0 .. numPoints]
 
-    -- Create upper and lower boundaries of the zigzag
-    zigzagUpperPoints = map (\(x, y) -> (x, y + zigzagThickness / 2.0)) zigzagCenterPoints
-    zigzagLowerPoints = reverse (map (\(x, y) -> (x, y - zigzagThickness / 2.0)) zigzagCenterPoints)
+      -- Create upper and lower boundaries of the zigzag
+      zigzagUpperPoints = map (\(x, y) -> (x, y + zigzagThickness / 2.0)) zigzagCenterPoints
+      zigzagLowerPoints = reverse (map (\(x, y) -> (x, y - zigzagThickness / 2.0)) zigzagCenterPoints)
 
-    -- Spring outline points (just the zigzag part)
-    springPoints =
-      -- Zigzag upper edge
-      zigzagUpperPoints
-      ++
-      -- Zigzag lower edge
-      zigzagLowerPoints
+      -- Spring outline points (just the zigzag part)
+      springPoints =
+        -- Zigzag upper edge
+        zigzagUpperPoints
+          ++
+          -- Zigzag lower edge
+          zigzagLowerPoints
 
-    -- Create the spring body polygon (just zigzag)
-    springBody = Poly (PD springPoints [[0..fromIntegral (length springPoints - 1)]])
+      -- Create the spring body polygon (just zigzag)
+      springBody = Poly (PD springPoints [[0 .. fromIntegral (length springPoints - 1)]])
 
-    -- Create end cuboids separately
-    leftEnd = Rectangle endWidth height thickness
-    rightEnd = Rectangle endWidth height thickness
+      -- Create end cuboids separately
+      leftEnd = Rectangle endWidth height thickness
+      rightEnd = Rectangle endWidth height thickness
 
-    -- Position the end cuboids
-    leftEndPos = leftEnd  -- Already at origin
-    rightEndPos = Tx (width - endWidth) rightEnd
+      -- Position the end cuboids
+      leftEndPos = leftEnd -- Already at origin
+      rightEndPos = Tx (width - endWidth) rightEnd
 
-    -- Create holes for the ends
-    leftHole = Shape2D 100 holeRadius   -- Circle profile
-    rightHole = Shape2D 100 holeRadius  -- Circle profile
+      -- Create holes for the ends
+      leftHole = Shape2D 100 holeRadius -- Circle profile
+      rightHole = Shape2D 100 holeRadius -- Circle profile
 
-    -- Position holes
-    leftHolePos = Tx (endWidth / 2.0) (Ty (height / 2.0) leftHole)
-    rightHolePos = Tx (width - endWidth / 2.0) (Ty (height / 2.0) rightHole)
+      -- Position holes
+      leftHolePos = Tx (endWidth / 2.0) (Ty (height / 2.0) leftHole)
+      rightHolePos = Tx (width - endWidth / 2.0) (Ty (height / 2.0) rightHole)
 
-    -- Extrude everything
-    springBody3D = Extrude thickness springBody
-    leftHole3D = Extrude thickness leftHolePos
-    rightHole3D = Extrude thickness rightHolePos
+      -- Extrude everything
+      springBody3D = Extrude thickness springBody
+      leftHole3D = Extrude thickness leftHolePos
+      rightHole3D = Extrude thickness rightHolePos
 
-    -- Create ends with holes
-    leftEndWithHole = Diff leftEndPos leftHole3D
-    rightEndWithHole = Diff rightEndPos rightHole3D
+      -- Create ends with holes
+      leftEndWithHole = Diff leftEndPos leftHole3D
+      rightEndWithHole = Diff rightEndPos rightHole3D
 
-    -- Combine spring body with ends
-    finalSpring = Union [springBody3D, leftEndWithHole, rightEndWithHole]
-  in
-    finalSpring
+      -- Combine spring body with ends
+      finalSpring = Union [springBody3D, leftEndWithHole, rightEndWithHole]
+   in finalSpring
 
 -- Example springs
 spring1 :: Shape
@@ -189,106 +187,191 @@ springDemo = Union [s1, s2, s3]
 -- Features: streamlined hull with flat top/bottom, circular sides, conning tower
 submarine :: Shape
 submarine =
-  let
-    -- Basic parameters
-    subLength = 18.0
-    subRadius = 2.5
+  let -- Basic parameters
+      subLength = 18.0
+      subRadius = 2.5
 
-    -- Hull cross-section: simple circle for hull operation
-    hullProfile = Shape2D 100 subRadius
+      -- Hull cross-section: simple circle for hull operation
+      hullProfile = Shape2D 100 subRadius
 
-    -- Create 5 cross-sections along the submarine length for hull operation
-    -- Position them at different points and scale them for streamlined shape
-    section1 = Tx 0 (Scale (0.2, 1.0, 1.0) hullProfile)          -- Nose (20% scale)
-    section2 = Tx (subLength * 0.25) (Scale (0.8, 1.0, 1.0) hullProfile)  -- Forward (80% scale)
-    section3 = Tx (subLength * 0.5) hullProfile                   -- Middle (100% scale)
-    section4 = Tx (subLength * 0.75) (Scale (0.8, 1.0, 1.0) hullProfile)  -- Aft (80% scale)
-    section5 = Tx subLength (Scale (0.1, 1.0, 1.0) hullProfile)   -- Stern (10% scale)
+      -- Create 5 cross-sections along the submarine length for hull operation
+      -- Position them at different points and scale them for streamlined shape
+      section1 = Tx 0 (Scale (0.2, 1.0, 1.0) hullProfile) -- Nose (20% scale)
+      section2 = Tx (subLength * 0.25) (Scale (0.8, 1.0, 1.0) hullProfile) -- Forward (80% scale)
+      section3 = Tx (subLength * 0.5) hullProfile -- Middle (100% scale)
+      section4 = Tx (subLength * 0.75) (Scale (0.8, 1.0, 1.0) hullProfile) -- Aft (80% scale)
+      section5 = Tx subLength (Scale (0.1, 1.0, 1.0) hullProfile) -- Stern (10% scale)
 
-    -- Create the main hull using hull operation
-    mainHull = Hull [section1, section2, section3, section4, section5]
+      -- Create the main hull using hull operation
+      mainHull = Hull [section1, section2, section3, section4, section5]
 
-    -- Extrude the hull in the Z direction to give it thickness
-    hull3D = Extrude 1.0 mainHull
+      -- Extrude the hull in the Z direction to give it thickness
+      hull3D = Extrude 1.0 mainHull
 
-    -- Create the conning tower (periscope tower)
-    -- This is like a frustum on top of the submarine
-    towerHeight = 1.5
-    towerBottomRadius = 1.0
-    towerTopRadius = 0.7
+      -- Create the conning tower (periscope tower)
+      -- This is like a frustum on top of the submarine
+      towerHeight = 1.5
+      towerBottomRadius = 1.0
+      towerTopRadius = 0.7
 
-    -- Position the tower at the middle-front of the submarine
-    tower = Tx (subLength * 0.4) (Ty 0 (Tz 0.5 (Frustum towerHeight towerBottomRadius towerTopRadius)))
+      -- Position the tower at the middle-front of the submarine
+      tower = Tx (subLength * 0.4) (Ty 0 (Tz 0.5 (Frustum towerHeight towerBottomRadius towerTopRadius)))
 
-    -- Create additional details
-    -- Propeller shaft (small cylinder at the back)
-    propShaft = Tx (subLength + 0.2) (Ry 90 (Cylinder 0.2 1.0))
+      -- Create additional details
+      -- Propeller shaft (small cylinder at the back)
+      propShaft = Tx (subLength + 0.2) (Ry 90 (Cylinder 0.2 1.0))
 
-    -- Periscope (thin cylinder on tower)
-    periscope = Tx (subLength * 0.4) (Ty 0 (Tz (0.5 + towerHeight) (Cylinder 0.1 1.0)))
+      -- Periscope (thin cylinder on tower)
+      periscope = Tx (subLength * 0.4) (Ty 0 (Tz (0.5 + towerHeight) (Cylinder 0.1 1.0)))
 
-    -- Combine all parts
-    fullSubmarine = Union [hull3D, tower, propShaft, periscope]
-
-  in
-    fullSubmarine
+      -- Combine all parts
+      fullSubmarine = Union [hull3D, tower, propShaft, periscope]
+   in fullSubmarine
 
 -- Create a streamlined submarine variant with better hull definition
 submarineStreamlined :: Shape
 submarineStreamlined =
-  let
-    -- Parameters
-    subLength = 18.0
-    subRadius = 2.5
+  let -- Parameters
+      subLength = 18.0
+      subRadius = 2.5
 
-    -- Create a more sophisticated hull using multiple shaped sections
-    -- Each section is a circle that's been flattened on top and bottom
-    createFlattenedCircle :: D -> D -> Shape
-    createFlattenedCircle radius flattenFactor =
-      let
-        -- Create an ellipse-like shape by scaling Y
-        circle = Shape2D 100 radius
-        flattened = Scale (1.0, flattenFactor, 1.0) circle
-      in flattened
+      -- Create a more sophisticated hull using multiple shaped sections
+      -- Each section is a circle that's been flattened on top and bottom
+      createFlattenedCircle :: D -> D -> Shape
+      createFlattenedCircle radius flattenFactor =
+        let -- Create an ellipse-like shape by scaling Y
+            circle = Shape2D 200 radius
+            flattened = Scale (1.0, flattenFactor, 1.0) circle
+         in flattened
 
-    -- Five cross-sections with varying sizes and flattening
-    sec1 = Tx 0 (createFlattenedCircle (subRadius * 0.2) 0.6)           -- Pointed nose
-    sec2 = Tx (subLength * 0.2) (createFlattenedCircle (subRadius * 0.7) 0.8)  -- Growing
-    sec3 = Tx (subLength * 0.4) (createFlattenedCircle subRadius 0.85)          -- Near full size
-    sec4 = Tx (subLength * 0.7) (createFlattenedCircle (subRadius * 0.9) 0.8)  -- Tapering
-    sec5 = Tx subLength (createFlattenedCircle (subRadius * 0.15) 0.5)          -- Tapered stern
+      -- Five cross-sections with varying sizes and flattening
+      sec1 = Tx 0 (createFlattenedCircle (subRadius * 0.2) 0.6) -- Pointed nose
+      sec2 = Tx (subLength * 0.2) (createFlattenedCircle (subRadius * 0.7) 0.8) -- Growing
+      sec3 = Tx (subLength * 0.4) (createFlattenedCircle subRadius 0.85) -- Near full size
+      sec4 = Tx (subLength * 0.7) (createFlattenedCircle (subRadius * 0.9) 0.8) -- Tapering
+      sec5 = Tx subLength (createFlattenedCircle (subRadius * 0.15) 0.5) -- Tapered stern
 
-    -- Create hull
-    hullShape = Hull [sec1, sec2, sec3, sec4, sec5]
-    hull3D = Extrude 1.0 hullShape
+      -- Create hull
+      hullShape = Hull [sec1, sec2, sec3, sec4, sec5]
+      hull3D = Extrude 1.0 hullShape
 
-    -- Conning tower - more realistic proportions
-    tower = Tx (subLength * 0.35) (Ty 0 (Tz 0.5 (Union [
-        -- Main tower body
-        Frustum 1.2 0.9 0.6,
-        -- Tower top platform
-        Tz 1.2 (Cylinder 0.8 0.3)
-      ])))
+      -- Conning tower - more realistic proportions
+      tower =
+        Tx
+          (subLength * 0.35)
+          ( Ty
+              0
+              ( Tz
+                  0.5
+                  ( Union
+                      [ -- Main tower body
+                        Frustum 1.2 0.9 0.6
+                        -- Tower top platform
+                        -- Tz 1.2 (Cylinder 0.8 0.3)
+                      ]
+                  )
+              )
+          )
 
-    -- Fins and rudders
-    -- Dorsal fin
-    dorsalFin = Tx (subLength * 0.8) (Ty 0 (Tz 0.5 (Scale (0.3, 0.1, 1.5) (Rectangle 1 1 1))))
+      -- Fins and rudders
+      -- Dorsal fin
+      dorsalFin = Tx (subLength * 0.8) (Ty 0 (Tz 0.5 (Scale (0.3, 0.1, 1.5) (Rectangle 1 1 1))))
 
-    -- Side rudders
-    leftRudder = Tx (subLength * 0.9) (Ty (-subRadius * 0.8) (Tz 0 (Scale (0.2, 1.0, 0.8) (Rectangle 1 1 1))))
-    rightRudder = Tx (subLength * 0.9) (Ty (subRadius * 0.8) (Tz 0 (Scale (0.2, 1.0, 0.8) (Rectangle 1 1 1))))
+      -- Side rudders
+      leftRudder = Tx (subLength * 0.9) (Ty (-subRadius * 0.8) (Tz 0 (Scale (0.2, 1.0, 0.8) (Rectangle 1 1 1))))
+      rightRudder = Tx (subLength * 0.9) (Ty (subRadius * 0.8) (Tz 0 (Scale (0.2, 1.0, 0.8) (Rectangle 1 1 1))))
 
-    -- Propeller (simplified)
-    propeller = Tx (subLength + 0.1) (Ry 90 (Union [
-      Cylinder 0.15 0.5,  -- Hub
-      Rz 0 (Scale (2.0, 0.1, 0.1) (Rectangle 1 1 1)),     -- Blade 1
-      Rz 90 (Scale (2.0, 0.1, 0.1) (Rectangle 1 1 1))     -- Blade 2
-      ]))
+      -- Propeller (simplified)
+      propeller =
+        Tx
+          (subLength + 0.1)
+          ( Ry
+              90
+              ( Union
+                  [ Cylinder 0.15 0.5, -- Hub
+                    Rz 0 (Scale (2.0, 0.1, 0.1) (Rectangle 1 1 1)), -- Blade 1
+                    Rz 90 (Scale (2.0, 0.1, 0.1) (Rectangle 1 1 1)) -- Blade 2
+                  ]
+              )
+          )
 
-    -- Complete submarine
-    complete = Union [hull3D, tower, dorsalFin, leftRudder, rightRudder, propeller]
+      -- Complete submarine
+      -- complete = Union [hull3D, tower, dorsalFin, leftRudder, rightRudder, propeller]
+      complete = Union [hull3D, tower]
+   in complete
 
-  in complete-- Basic submarine example
+-- Create a taller submarine variant with increased height dimensions
+submarine' :: Shape
+submarine' =
+  let -- Parameters (same length, but increased radius for taller profile)
+      subLength = 18.0
+      subRadius = 5 -- Increased from 2.5 to 3.5 for more height
+
+      -- Create a more sophisticated hull using multiple shaped sections
+      -- Each section is a circle that's been flattened on top and bottom
+      createFlattenedCircle :: D -> D -> Shape
+      createFlattenedCircle radius flattenFactor =
+        let -- Create an ellipse-like shape by scaling Y (less flattening for taller profile)
+            circle = Shape2D 200 radius
+            flattened = Scale (1.0, flattenFactor, 1.0) circle
+         in flattened
+
+      -- Five cross-sections with varying sizes and less flattening for more height
+      sec1 = Tx 0 (createFlattenedCircle (subRadius * 0.2) 0.8) -- Pointed nose, less flat
+      sec2 = Tx (subLength * 0.2) (createFlattenedCircle (subRadius * 0.7) 0.95) -- Growing, more circular
+      sec3 = Tx (subLength * 0.4) (createFlattenedCircle subRadius 1.0) -- Near full size, fully circular
+      sec4 = Tx (subLength * 0.7) (createFlattenedCircle (subRadius * 0.9) 0.95) -- Tapering, more circular
+      sec5 = Tx subLength (createFlattenedCircle (subRadius * 0.15) 0.7) -- Tapered stern
+
+      -- Create hull with increased thickness
+      hullShape = Hull [sec1, sec2, sec3, sec4, sec5]
+      hull3D = Extrude 1.5 hullShape -- Increased from 1.0 to 1.5 for more vertical height
+
+      -- Conning tower - taller and more prominent
+      tower =
+        Tx
+          (subLength * 0.35)
+          ( Ty
+              0
+              ( Tz
+                  0.75 -- Raised higher due to thicker hull
+                  ( Union
+                      [ -- Main tower body - taller
+                        Frustum 2.0 1.2 0.8, -- Increased height from 1.2 to 2.0
+                        -- Tower top platform
+                        Tz 2.0 (Cylinder 1.0 0.4) -- Adjusted position and size
+                      ]
+                  )
+              )
+          )
+
+      -- Fins and rudders - scaled appropriately for larger submarine
+      -- Dorsal fin - taller
+      dorsalFin = Tx (subLength * 0.8) (Ty 0 (Tz 0.75 (Scale (0.4, 0.15, 2.0) (Rectangle 1 1 1))))
+
+      -- Side rudders - larger
+      leftRudder = Tx (subLength * 0.9) (Ty (-subRadius * 0.8) (Tz 0 (Scale (0.3, 1.2, 1.0) (Rectangle 1 1 1))))
+      rightRudder = Tx (subLength * 0.9) (Ty (subRadius * 0.8) (Tz 0 (Scale (0.3, 1.2, 1.0) (Rectangle 1 1 1))))
+
+      -- Propeller - larger for bigger submarine
+      propeller =
+        Tx
+          (subLength + 0.1)
+          ( Ry
+              90
+              ( Union
+                  [ Cylinder 0.2 0.7, -- Larger hub
+                    Rz 0 (Scale (2.5, 0.15, 0.15) (Rectangle 1 1 1)), -- Larger blades
+                    Rz 90 (Scale (2.5, 0.15, 0.15) (Rectangle 1 1 1))
+                  ]
+              )
+          )
+
+      -- Complete submarine with all components
+      complete = Union [hull3D, tower, dorsalFin, leftRudder, rightRudder, propeller]
+   in complete
+
+-- Basic submarine example
 uboat :: Shape
 uboat = submarine
 
@@ -296,19 +379,30 @@ uboat = submarine
 uboatAdvanced :: Shape
 uboatAdvanced = submarineStreamlined
 
+-- Taller submarine example
+uboatTall :: Shape
+uboatTall = submarine'
+
 -- Positioned submarines for comparison
 sub1 :: Shape
-sub1 = Ty (-8) uboat
+sub1 = Ty (-12) uboat
 
 sub2 :: Shape
-sub2 = Ty 8 uboatAdvanced
+sub2 = Ty 0 uboatAdvanced
 
--- Combined submarine demo
+sub3 :: Shape
+sub3 = Ty 12 uboatTall
+
+-- Combined submarine demo with all three variants
 submarineDemo :: Shape
-submarineDemo = Union [sub1, sub2]
+submarineDemo = Union [sub1, sub2, sub3]
 
 --- >>> gen gearDemo
 
 --- >>> writeScad springDemo "examples/springDemo2.scad"
 
 --- >>> writeScad submarineDemo "examples/submarine.scad"
+
+--- >>> writeScad uboatAdvanced "examples/uboat-adv.scad"
+
+--- >>> writeScad uboatTall "examples/uboat-tall.scad"
