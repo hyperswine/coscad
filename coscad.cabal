@@ -25,7 +25,9 @@ source-repository head
 
 library
   exposed-modules:
+      Bookend
       Examples
+      Examples2
       Lib
   other-modules:
       Paths_coscad

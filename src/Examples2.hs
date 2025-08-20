@@ -1,6 +1,6 @@
 module Examples2 where
 
-import Lib (PD (..), Shape (..), writeScad)
+import Lib
 
 -- Bookend design
 -- Total dimensions: 15cm tall, 8cm wide
@@ -186,3 +186,5 @@ bookendDemo = Union [bookend1, bookend2, bookend3]
 --- >>> writeScad detailedBookend "examples/bookend_detailed.scad"
 
 --- >>> writeScad roundedBookend "examples/bookend_rounded.scad"
+
+polytriangle = Poly $ PD [(1.0, 2.0)] [[0]]

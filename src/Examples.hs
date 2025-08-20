@@ -1,10 +1,9 @@
 module Examples where
 
-import Lib (D, PD (..), Shape (..), writeScad)
+import Lib
 
 -- Gear generation using functional programming
 -- Parameters: number of teeth, gear radius, inner radius, thickness
-gear :: (Integral a) => a -> D -> D -> D -> Shape
 gear numTeeth gearRadius innerRadius thickness =
   let -- Base gear body (extruded circle)
       c1 = Shape2D 100 gearRadius -- Circle profile
@@ -49,27 +48,20 @@ gear numTeeth gearRadius innerRadius thickness =
    in finalGear
 
 -- Example gears
-gear8 :: Shape
 gear8 = gear 8 10 5 2 -- 8-tooth gear
 
-gear12 :: Shape
 gear12 = gear 12 15 7 2 -- 12-tooth gear
 
-gear16 :: Shape
 gear16 = gear 16 20 8 2 -- 16-tooth gear
 
 -- Positioned gears for display
-g1 :: Shape
 g1 = Tx (-40) gear8
 
-g2 :: Shape
 g2 = Tx 0 gear12
 
-g3 :: Shape
 g3 = Tx 50 gear16
 
 -- Combined display
-gearDemo :: Shape
 gearDemo = Union [g1, g2, g3]
 
 -- Zigzag spring generation using mathematical equations
@@ -77,7 +69,6 @@ gearDemo = Union [g1, g2, g3]
 -- Uses equations: y = (dx - floor(dx)) * a + b + c/2
 -- where a = c * (-1 + 2 * mod(floor(dx), 2))
 -- and b = -c * mod(floor(dx), 2)
-zigzagSpring :: D -> D -> D -> D -> Shape
 zigzagSpring width height holeRadius thickness =
   let -- Mathematical parameters
       c = 1.8
@@ -119,12 +110,7 @@ zigzagSpring width height holeRadius thickness =
       zigzagLowerPoints = reverse (map (\(x, y) -> (x, y - zigzagThickness / 2.0)) zigzagCenterPoints)
 
       -- Spring outline points (just the zigzag part)
-      springPoints =
-        -- Zigzag upper edge
-        zigzagUpperPoints
-          ++
-          -- Zigzag lower edge
-          zigzagLowerPoints
+      springPoints = zigzagUpperPoints ++ zigzagLowerPoints
 
       -- Create the spring body polygon (just zigzag)
       springBody = Poly (PD springPoints [[0 .. fromIntegral (length springPoints - 1)]])
@@ -159,33 +145,25 @@ zigzagSpring width height holeRadius thickness =
    in finalSpring
 
 -- Example springs
-spring1 :: Shape
 spring1 = zigzagSpring 20 5 1.0 2.0 -- 20x5 spring
 
-spring2 :: Shape
 spring2 = zigzagSpring 25 6 1.2 2.5 -- 25x6 spring
 
-spring3 :: Shape
 spring3 = zigzagSpring 15 4 0.8 1.5 -- 15x4 spring
 
 -- Positioned springs for display
-s1 :: Shape
 s1 = Ty (-8) spring1
 
-s2 :: Shape
 s2 = Ty 0 spring2
 
-s3 :: Shape
 s3 = Ty 10 spring3
 
 -- Combined spring display
-springDemo :: Shape
 springDemo = Union [s1, s2, s3]
 
 -- Submarine (U-boat style) generation
 -- Length: 18cm, Diameter: 5cm (radius 2.5cm)
 -- Features: streamlined hull with flat top/bottom, circular sides, conning tower
-submarine :: Shape
 submarine =
   let -- Basic parameters
       subLength = 18.0
@@ -301,7 +279,6 @@ submarineStreamlined =
    in complete
 
 -- Create a taller submarine variant with increased height dimensions
-submarine' :: Shape
 submarine' =
   let -- Parameters (same length, but increased radius for taller profile)
       subLength = 18.0
@@ -372,29 +349,22 @@ submarine' =
    in complete
 
 -- Basic submarine example
-uboat :: Shape
 uboat = submarine
 
 -- Advanced submarine example
-uboatAdvanced :: Shape
 uboatAdvanced = submarineStreamlined
 
 -- Taller submarine example
-uboatTall :: Shape
 uboatTall = submarine'
 
 -- Positioned submarines for comparison
-sub1 :: Shape
 sub1 = Ty (-12) uboat
 
-sub2 :: Shape
 sub2 = Ty 0 uboatAdvanced
 
-sub3 :: Shape
 sub3 = Ty 12 uboatTall
 
 -- Combined submarine demo with all three variants
-submarineDemo :: Shape
 submarineDemo = Union [sub1, sub2, sub3]
 
 --- >>> gen gearDemo
