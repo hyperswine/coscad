@@ -188,3 +188,10 @@ bookendDemo = Union [bookend1, bookend2, bookend3]
 --- >>> writeScad roundedBookend "examples/bookend_rounded.scad"
 
 polytriangle = Poly $ PD [(1.0, 2.0)] [[0]]
+
+-- make two triangles and hull them
+triangle1 = Poly $ PD [(0.0, 0.0), (2.0, 0.0), (1.0, 2.0)] [[0, 1, 2]]
+triangle2 = Tx 1.0 $ Poly $ PD [(0.0, 0.0), (2.0, 0.0), (1.0, 2.0)] [[0, 1, 2]]
+hullTriangles = Hull [triangle1, triangle2]
+
+--- >>> writeScad hullTriangles "examples/hull_triangles.scad"
