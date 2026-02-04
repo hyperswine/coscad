@@ -2,47 +2,45 @@ module Z where
 
 import Lib
 
--- | Create a zigzag spring profile (2D)
--- n: number of complete zigzag cycles
--- h: height of each zig
--- angle: angle from horizontal in degrees (typically 30-60)
-zigzagSpring :: Int -> D -> D -> Shape
-zigzagSpring n h angleDeg =
+-- | Create a zigzag spring with proper thickness (manual offsetting)
+zigzagSpring :: Int -> D -> D -> D -> Shape
+zigzagSpring n h angleDeg lineWidth =
   let angle = angleDeg * pi / 180.0
-      dx = h / tan angle  -- horizontal distance per zig
+      dx = h / tan angle
+      halfWidth = lineWidth / 2
 
-      -- Generate points for the zigzag path
-      points = [(fromIntegral i * dx, if odd i then h else 0) | i <- [0 .. (2 * n)]]
+      -- Calculate perpendicular offset direction for each segment
+      -- For a line at angle α, perpendicular is at (α + 90°)
+      perpX = sin angle * halfWidth
+      perpY = cos angle * halfWidth
 
-      -- Connect all points in sequence
-      paths = [[0 .. (2 * n)]] |> map (map fromIntegral)
+      -- Generate centerline points
+      centerPoints = [(fromIntegral i * dx, if odd i then h else 0) | i <- [0 .. (2 * n)]]
 
-  in Poly (PD points paths)
+      -- Offset points outward (top edge)
+      topPoints = [if odd i
+                   then (x - perpX, y + perpY)  -- going up-right, offset left
+                   else (x + perpX, y + perpY)  -- going down-right, offset right
+                   | (i, (x, y)) <- zip [0..] centerPoints]
 
--- | Zigzag spring with thickness (extruded version)
-zigzagSpring3D :: Int -> D -> D -> D -> Shape
-zigzagSpring3D n h angleDeg thickness =
-  Extrude thickness (zigzagSpring n h angleDeg)
+      -- Offset points inward (bottom edge)
+      bottomPoints = reverse [if odd i
+                              then (x + perpX, y - perpY)
+                              else (x - perpX, y - perpY)
+                              | (i, (x, y)) <- zip [0..] centerPoints]
 
--- | Zigzag spring with rounded thickness using offset
-zigzagSpringRounded :: Int -> D -> D -> D -> Shape
-zigzagSpringRounded n h angleDeg thickness =
-  Extrude thickness (Offset (thickness / 2) (zigzagSpring n h angleDeg))
+      -- Combine to create closed shape
+      allPoints = topPoints ++ bottomPoints
+      paths = [[0 .. (length allPoints - 1)]] |> map (map fromIntegral)
 
--- Basic zigzag spring: 5 cycles, 10mm height, 45° angle
-spring1 = zigzagSpring 5 10.0 45.0
+  in Poly (PD allPoints paths)
 
--- 3D version with 2mm thickness
-spring2 = zigzagSpring3D 5 10.0 45.0 2.0
+-- | 3D version
+zigzagSpring3D :: Int -> D -> D -> D -> D -> Shape
+zigzagSpring3D n h angleDeg lineWidth thickness =
+  Extrude thickness (zigzagSpring n h angleDeg lineWidth)
 
--- Rounded version (smoother corners)
-spring3 = zigzagSpringRounded 5 10.0 45.0 2.0
+-- 5 cycles, 10mm height, 45° angle, 2mm line width, 3mm extrusion
+spring = zigzagSpring3D 5 10.0 45.0 2.0 3.0
 
--- Steeper angle (60°) makes tighter zigzag
-spring4 = zigzagSpring3D 8 8.0 60.0 1.5
-
--- Shallower angle (30°) makes more stretched zigzag
-spring5 = zigzagSpring3D 8 8.0 30.0 1.5
-
--- Write to file
---- >>> writeScad spring3 "examples/zigz/zigzag_spring.scad"
+--- >>> writeScad spring "zigz/zigzag_spring_proper.scad"
