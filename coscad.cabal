@@ -29,6 +29,7 @@ library
       Examples
       Examples2
       Lib
+      Z
   other-modules:
       Paths_coscad
   hs-source-dirs:
