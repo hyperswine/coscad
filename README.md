@@ -22,6 +22,20 @@ This library provides Unicode glyph aliases for CAD operations. Here's the compl
 - `⭘` (U+2B58) - Circle profile
 - `⟁` (U+27C1) - `poly` - Creates a polygon with points and paths
 
+BOSL2 Shapes
+
+These emit [BOSL2](https://github.com/BelfrySCAD/BOSL2) primitives instead of vanilla OpenSCAD. Any `.coscad` file that uses one of these automatically gets `include <BOSL2/std.scad>` added to the generated `.scad` file, so BOSL2 must be installed in your OpenSCAD library path.
+
+- `▣` (U+25A3) - `cuboid` (chamfered) - `▣ x y z chamfer`
+- `◙` (U+25D9) - `cuboid` (rounded) - `◙ x y z rounding`
+- `⌭` (U+232D) - `cyl` (chamfered) - `⌭ r h chamfer`
+- `⌽` (U+233D) - `cyl` (rounded) - `⌽ r h rounding`
+- `xcyl` / `ycyl` / `zcyl` - axis-aligned cylinders - `xcyl r l`
+- `⊚` (U+229A) - `tube` - `⊚ outer_r inner_r h`
+- `⏢` (U+23E2) - `prismoid` - `⏢ x1 y1 x2 y2 h`
+- `◉` (U+25C9) - `torus` - `◉ r_major r_minor`
+- `⊿` (U+22BF) - `wedge` - `⊿ x y z` (vertical face at -X, hypotenuse in XZ)
+
 Transformations
 
 - `χ` (U+03C7) - `Tx` - Translation along X-axis
@@ -31,6 +45,7 @@ Transformations
 - `ϕ` (U+03C6) - `Ry` - Rotation around Y-axis
 - `ω` (U+03C9) - `Rz` - Rotation around Z-axis
 - `⬈` (U+2B08) - `Scale` - Scaling transformation
+- `⇋` (U+21CB) - `Mirror` - Mirror across a plane normal - `⇋ mx my mz shape`
 - `⮕` (U+2B95) - `Extrude` - Linear extrusion (2D → 3D)
 
 Boolean Operations
@@ -122,13 +137,51 @@ echo "△ 8 ↯ ● 2" > offset.coscad
 coscad offset.coscad
 ```
 
+BOSL2 shapes:
+
+```bash
+echo "▣ 20 15 10 2" > chamfered_cuboid.coscad
+coscad chamfered_cuboid.coscad
+```
+
+```bash
+echo "⌽ 5 20 2" > rounded_cyl.coscad
+coscad rounded_cyl.coscad
+```
+
+```bash
+echo "⊚ 10 6 25" > tube.coscad
+coscad tube.coscad
+```
+
+Transforming with mirror:
+
+```bash
+echo "⇋ 1 0 0 (● 5)" > mirror.coscad
+coscad mirror.coscad
+```
+
+Using variables (a `main` variable is required and is the shape that gets rendered):
+
+```
+c₁ = ■ 10
+s₁ = ● 15
+main = c₁ ⊕ s₁
+```
+
 **Syntax**
 
 The current parser supports:
 
-- Basic shapes: `■ size`, `● radius`, `◎ radius height`, `▻ radius height`
+- Basic shapes: `■ size`, `● radius`, `◎ radius height`, `▻ radius height`, `▬ x y z`, `⎏ sides radius height`
+- 2D profiles: `△ radius`, `⬠ radius`, `⭘ radius`
+- BOSL2 shapes: `▣ x y z chamfer`, `◙ x y z rounding`, `⌭ r h chamfer`, `⌽ r h rounding`, `xcyl/ycyl/zcyl r l`, `⊚ outer_r inner_r h`, `⏢ x1 y1 x2 y2 h`, `◉ r_major r_minor`, `⊿ x y z`
+- Transformations: `χ`/`ψ`/`ζ dist shape` (translate), `θ`/`ϕ`/`ω angle shape` (rotate), `⬈ sx sy sz shape` (scale), `⇋ mx my mz shape` (mirror), `⮕ height shape` (extrude)
 - Boolean operations: `shape1 ⊖ shape2` (difference), `shape1 ⊕ shape2` (union)
 - Advanced operations: `shape1 ⇓ shape2` (hull), `shape1 ⊞ shape2` (minkowski), `profile ↯ shape` (offset)
+- Variables: define with `name = expression` on each line; a `main` variable is required and its value is what gets rendered
+
+BOSL2 shapes automatically add `include <BOSL2/std.scad>` to the generated `.scad` file, so [BOSL2](https://github.com/BelfrySCAD/BOSL2) must be available in your OpenSCAD library path to render the output.
 
 **Building**
 

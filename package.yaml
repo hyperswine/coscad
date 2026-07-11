@@ -34,7 +34,7 @@ library:
   source-dirs: src
 
 executables:
-  coscad-exe:
+  coscad:
     main:                Main.hs
     source-dirs:         app
     ghc-options:

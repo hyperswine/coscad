@@ -43,7 +43,7 @@ library
     , megaparsec
   default-language: Haskell2010
 
-executable coscad-exe
+executable coscad
   main-is: Main.hs
   other-modules:
       Paths_coscad
