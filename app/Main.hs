@@ -14,6 +14,7 @@ import System.Environment (getArgs)
 import System.Exit (exitFailure, exitSuccess)
 import System.FilePath (dropExtension, takeExtension)
 import System.IO (hPutStrLn, stderr)
+import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
@@ -51,6 +52,11 @@ lexeme = L.lexeme sc
 
 symbol :: String -> Parser String
 symbol = L.symbol sc
+
+-- | Identifier-like keyword (e.g. "xcyl") that must not be a prefix of a
+-- longer identifier, so user variables like "xcyl2" still work.
+keyword :: String -> Parser String
+keyword s = lexeme $ try (string s <* notFollowedBy (alphaNumChar <|> char '_'))
 
 identifier :: Parser String
 identifier = lexeme $ do
@@ -140,6 +146,7 @@ transformation varTable =
       rotateY,
       rotateZ,
       scaleTransform,
+      mirrorTransform,
       extrudeTransform
     ]
   where
@@ -187,6 +194,14 @@ transformation varTable =
       shape <- primaryExpression varTable
       return $ Scale (sx, sy, sz) shape
 
+    mirrorTransform = do
+      symbol "⇋"
+      mx <- double
+      my <- double
+      mz <- double
+      shape <- primaryExpression varTable
+      return $ Mirror (mx, my, mz) shape
+
     extrudeTransform = do
       symbol "⮕"
       h <- double
@@ -194,13 +209,16 @@ transformation varTable =
       return $ Extrude h shape
 
 -- Parse primary expressions (shapes, variables, parentheses)
+-- NOTE: shapes come before variables so keyword primitives (xcyl etc.)
+-- are not swallowed by the variable parser.
 primaryExpression :: VarTable -> Parser Shape
 primaryExpression varTable =
   choice
     [ parenthesized,
-      variable,
       basicShape,
-      shape2D
+      bosl2Shape,
+      shape2D,
+      variable
     ]
   where
     parenthesized = between (symbol "(") (symbol ")") (expression varTable)
@@ -246,6 +264,93 @@ primaryExpression varTable =
       radius <- double
       Prism (round n) radius <$> double
 
+    -- BOSL2 primitives (all centered, matching BOSL2 defaults) ----
+    bosl2Shape =
+      choice
+        [ cuboidChamfer,
+          cuboidRound,
+          cylChamfer,
+          cylRound,
+          tubeShape,
+          prismoidShape,
+          torusShape,
+          wedgeShape,
+          xcylShape,
+          ycylShape,
+          zcylShape
+        ]
+
+    cuboidChamfer = do
+      symbol "▣"
+      x <- double
+      y <- double
+      z <- double
+      c <- double
+      return $ Cuboid (x, y, z) c 0
+
+    cuboidRound = do
+      symbol "◙"
+      x <- double
+      y <- double
+      z <- double
+      r <- double
+      return $ Cuboid (x, y, z) 0 r
+
+    cylChamfer = do
+      symbol "⌭"
+      r <- double
+      h <- double
+      c <- double
+      return $ Cyl r h c 0
+
+    cylRound = do
+      symbol "⌽"
+      r <- double
+      h <- double
+      ro <- double
+      return $ Cyl r h 0 ro
+
+    tubeShape = do
+      symbol "⊚"
+      ro <- double
+      ri <- double
+      Tube ro ri <$> double
+
+    prismoidShape = do
+      symbol "⏢"
+      x1 <- double
+      y1 <- double
+      x2 <- double
+      y2 <- double
+      Prismoid (x1, y1) (x2, y2) <$> double
+
+    torusShape = do
+      symbol "◉"
+      rj <- double
+      Torus rj <$> double
+
+    wedgeShape = do
+      symbol "⊿"
+      x <- double
+      y <- double
+      z <- double
+      return $ Wedge (x, y, z)
+
+    xcylShape = do
+      keyword "xcyl"
+      r <- double
+      XCyl r <$> double
+
+    ycylShape = do
+      keyword "ycyl"
+      r <- double
+      YCyl r <$> double
+
+    zcylShape = do
+      keyword "zcyl"
+      r <- double
+      ZCyl r <$> double
+
     shape2D =
       choice
         [triangle, pentagon, circle]
@@ -284,6 +389,7 @@ trim = f . f
 
 main :: IO ()
 main = do
+  setLocaleEncoding utf8
   args <- getArgs
   case args of
     [inputFile] -> processFile inputFile
@@ -303,6 +409,17 @@ main = do
       hPutStrLn stderr "  ▻ 8 12         -- cone (radius 8, height 12)"
       hPutStrLn stderr "  ▬ 5 10 15      -- rectangle (5x10x15)"
       hPutStrLn stderr "  ⎏ 6 8 12       -- prism (6-sides, radius 8, height 12)"
+      hPutStrLn stderr ""
+      hPutStrLn stderr "BOSL2 Shapes (centered; emit include <BOSL2/std.scad>):"
+      hPutStrLn stderr "  ▣ 20 15 10 2   -- cuboid 20x15x10, chamfer 2 (0 = plain)"
+      hPutStrLn stderr "  ◙ 20 15 10 3   -- cuboid 20x15x10, rounding 3"
+      hPutStrLn stderr "  ⌭ 5 20 1       -- cylinder r5 h20, chamfered ends 1"
+      hPutStrLn stderr "  ⌽ 5 20 2       -- cylinder r5 h20, rounded ends 2"
+      hPutStrLn stderr "  xcyl 5 20      -- cylinder r5 l20 along X (also ycyl, zcyl)"
+      hPutStrLn stderr "  ⊚ 10 6 25      -- tube outer-r 10, inner-r 6, h 25"
+      hPutStrLn stderr "  ⏢ 24 24 10 10 18 -- prismoid base 24x24 top 10x10 h 18"
+      hPutStrLn stderr "  ◉ 12 4         -- torus major-r 12, minor-r 4"
+      hPutStrLn stderr "  ⊿ 20 20 15     -- wedge (vertical face at -X)"
       hPutStrLn stderr ""
       hPutStrLn stderr "2D Profiles:"
       hPutStrLn stderr "  △ 10           -- triangle profile (radius 10)"
@@ -328,6 +445,7 @@ main = do
       hPutStrLn stderr "  ϕ 90 (● 5)      -- rotate Y by 90 degrees"
       hPutStrLn stderr "  ω 30 (■ 6)      -- rotate Z by 30 degrees"
       hPutStrLn stderr "  ⬈ 2 1.5 0.5 (● 5) -- scale by (2, 1.5, 0.5)"
+      hPutStrLn stderr "  ⇋ 1 0 0 (● 5)   -- mirror across plane with normal (1,0,0)"
       hPutStrLn stderr "  ⮕ 15 (△ 8)      -- extrude triangle by height 15"
       exitFailure
 

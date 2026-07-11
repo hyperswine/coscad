@@ -1,0 +1,25 @@
+// 2020 seam bracket, CoScad edition
+// rail face at x=0, bracket in +x, rail top at z=20
+
+plate  = χ 2.5 (ζ 10 (▣ 5 15 20 0))
+flange = χ 8 (ζ 17.5 (▣ 16 15 5 0))
+
+// BOSL2 wedge profile is in the YZ plane (right angle at -Y,-Z);
+// rotate -90 about Z to put the vertical face at -X, then mirror
+// in Z so the flat face sits up under the flange
+gusset = χ 8.5 (ζ 8.1 (⇋ 0 0 1 (ω -90 (⊿ 15 15 14.2))))
+
+// anti-rotation key into the slot mouth
+key = χ -0.5 (ζ 10 (▣ 1 15 5.8 0))
+
+// M5 clearance into the side-slot T-nut (d5.4)
+m5 = χ 2.5 (ζ 10 (xcyl 2.7 12))
+
+// socket-head + hex key access tunnel (d9)
+tunnel = χ 15.5 (ζ 10 (xcyl 4.5 21))
+
+// M3 pilot through the flange (d2.8)
+m3 = χ 10 (ζ 16 (zcyl 1.4 10))
+
+solid = plate ⊕ flange ⊕ gusset ⊕ key
+main  = solid ⊖ m5 ⊖ tunnel ⊖ m3

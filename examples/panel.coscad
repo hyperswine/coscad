@@ -1,0 +1,14 @@
+// 200 x 200 x 2.5 PETG panel, rounded vertical edges,
+// M5 clearance holes (d5.5) 10mm in from each edge,
+// plus the optional center hole
+
+p  = ◙ 200 200 2.5 1
+h  = zcyl 2.75 8
+
+h1 = χ 90 (ψ 90 h)
+h2 = χ -90 (ψ 90 h)
+h3 = χ 90 (ψ -90 h)
+h4 = χ -90 (ψ -90 h)
+hc = h
+
+main = p ⊖ h1 ⊖ h2 ⊖ h3 ⊖ h4 ⊖ hc
