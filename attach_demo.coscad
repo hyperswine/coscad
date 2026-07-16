@@ -1,0 +1,24 @@
+// attachment / joining demo
+//   ⌖ v   position: snap child's opposite anchor to parent anchor v
+//   ⋈ v   attach:   rotate child +Z along v, mate its bottom to the face
+//   ⚓ v   anchor:   re-origin a shape at its own anchor point
+// anchors: top bot lft rt fwd bak ctr, combinable: top+rt
+
+base = ▣ 40 40 10 1
+post = ⌽ 5 26 2
+cap  = ◙ 16 16 6 2
+stud = ⌭ 3 10 0.5
+
+// studs on all four side faces of the base, then stack a tower
+// on the composite, then perch a ball on top — every result is
+// itself a shape with anchors
+studs = base ⋈ rt stud ⋈ lft stud ⋈ fwd stud ⋈ bak stud
+tower = studs ⌖ top post ⌖ top cap ⋈ top (● 5)
+
+// diagonal (edge) anchors on a separate block
+corner = χ 70 ((▣ 20 20 20 2) ⋈ top+rt (⌭ 3 8 0.5) ⋈ top+lft (⌭ 3 8 0.5))
+
+// ⚓ re-origins: a sphere sitting exactly on the ground plane
+grounded = χ -50 (⚓ bot (● 8))
+
+main = tower ⊕ corner ⊕ grounded

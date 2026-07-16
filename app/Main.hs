@@ -115,10 +115,10 @@ expression = booleanExpression
 -- Parse boolean expressions (union, difference, hull, minkowski, offset)
 booleanExpression :: VarTable -> Parser Shape
 booleanExpression varTable = do
-  left <- transformExpression varTable
+  left <- attachExpression varTable
   rest <- many $ do
     op <- symbol "⊖" <|> symbol "⊝" <|> symbol "⊕" <|> symbol "⊛" <|> symbol "⇓" <|> symbol "⊞" <|> symbol "↯"
-    right <- transformExpression varTable
+    right <- attachExpression varTable
     return (op, right)
   return $ foldl applyBooleanOp left rest
   where
@@ -130,6 +130,49 @@ booleanExpression varTable = do
     applyBooleanOp left ("⊞", right) = Minkowski [left, right]
     applyBooleanOp left ("↯", right) = Offset (getOffsetValue right) left
     applyBooleanOp _ (op, _) = error $ "Unknown boolean operator: " ++ op
+
+-- | Anchor vector: words like top/bot/lft/rt/fwd/bak/ctr, combinable
+-- with '+', e.g. "top+rt" for the top-right edge.
+anchorVec :: Parser (Double, Double, Double)
+anchorVec = do
+  ws <- sepBy1 anchorWord (symbol "+")
+  let (xs, ys, zs) = unzip3 ws
+  return (cl (sum xs), cl (sum ys), cl (sum zs))
+  where
+    cl = max (-1) . min 1
+    anchorWord =
+      choice
+        [ (0, 0, 1) <$ (keyword "top" <|> keyword "up"),
+          (0, 0, -1) <$ (keyword "bot" <|> keyword "dn" <|> keyword "down"),
+          (1, 0, 0) <$ (keyword "rt" <|> keyword "right"),
+          (-1, 0, 0) <$ (keyword "lft" <|> keyword "left"),
+          (0, -1, 0) <$ (keyword "fwd" <|> keyword "front"),
+          (0, 1, 0) <$ (keyword "bak" <|> keyword "back"),
+          (0, 0, 0) <$ (keyword "ctr" <|> keyword "center")
+        ]
+
+-- Parse attachment expressions: bind tighter than boolean ops.
+--   a ⌖ top b   -- position: b's bottom snapped to a's top (translate only)
+--   a ⋈ rt b    -- attach: b rotated so +Z points right, bottom mated to face
+attachExpression :: VarTable -> Parser Shape
+attachExpression varTable = do
+  left <- transformExpression varTable
+  rest <- many step
+  return $ foldl (flip ($)) left rest
+  where
+    step =
+      choice
+        [ do
+            symbol "⌖"
+            v <- anchorVec
+            right <- transformExpression varTable
+            return (\l -> Position v l right),
+          do
+            symbol "⋈"
+            v <- anchorVec
+            right <- transformExpression varTable
+            return (\l -> AttachTo v l right)
+        ]
 
 -- Parse transformation expressions
 transformExpression :: VarTable -> Parser Shape
@@ -147,9 +190,16 @@ transformation varTable =
       rotateZ,
       scaleTransform,
       mirrorTransform,
+      anchorTransform,
       extrudeTransform
     ]
   where
+    anchorTransform = do
+      symbol "⚓"
+      v <- anchorVec
+      shape <- primaryExpression varTable
+      return $ Anchor v shape
+
     translateX = do
       symbol "χ"
       dx <- double
