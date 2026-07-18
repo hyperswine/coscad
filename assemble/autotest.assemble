@@ -1,0 +1,5 @@
+plate 220 220 6
+flatbr ← bracket90.coscad ×2
+innerbr ← inner90.coscad ×2
+seambr ← bracket.coscad ×2
+asm = flatbr ⊕ χ 70 innerbr ⊕ χ 130 seambr

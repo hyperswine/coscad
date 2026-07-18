@@ -1,0 +1,21 @@
+{
+  "source": "spill.assemble",
+  "bed": {"w": 120, "d": 120, "margin": 6, "max_z": 250},
+  "variants": [
+    {"id": "br_top", "part": "br", "source": "./bracket90.coscad", "down": "top", "orientation_mode": "declared", "fff_score": 0.268, "footprint": [43, 42.982, 6.5], "mesh": "spill_next_br_top.stl", "hints": {}}
+  ],
+  "beds": [
+    {"index": 1, "stl": "spill_bed1.stl", "placements": [
+      {"instance": "br_1", "variant": "br_top", "x": 6, "y": 6, "w": 43, "d": 42.982},
+      {"instance": "br_2", "variant": "br_top", "x": 55, "y": 6, "w": 43, "d": 42.982},
+      {"instance": "br_3", "variant": "br_top", "x": 6, "y": 54.982, "w": 43, "d": 42.982},
+      {"instance": "br_4", "variant": "br_top", "x": 55, "y": 54.982, "w": 43, "d": 42.982}
+    ]},
+    {"index": 2, "stl": "spill_bed2.stl", "placements": [
+      {"instance": "br_5", "variant": "br_top", "x": 6, "y": 6, "w": 43, "d": 42.982},
+      {"instance": "br_6", "variant": "br_top", "x": 55, "y": 6, "w": 43, "d": 42.982},
+      {"instance": "br_7", "variant": "br_top", "x": 6, "y": 54.982, "w": 43, "d": 42.982}
+    ]}
+  ],
+  "assembly_only": []
+}

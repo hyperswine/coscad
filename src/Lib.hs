@@ -46,6 +46,7 @@ data Shape
   | Diff Shape Shape
   | Extrude D Shape
   | Union [Shape]
+  | Intersection [Shape]
   | Hull [Shape]
   | Minkowski [Shape]
   | Offset D Shape
@@ -131,6 +132,11 @@ fromCorners pts =
 bmerge :: BBox -> BBox -> BBox
 bmerge a b = fromCorners (bcorners a ++ bcorners b)
 
+-- | Conservative bbox of an intersection (componentwise overlap)
+boverlap :: BBox -> BBox -> BBox
+boverlap ((a,b,c),(d,e,f)) ((p,q,r),(s,t,u)) =
+  ((max a p, max b q, max c r), (min d s, min e t, min f u))
+
 bcenter :: BBox -> V3
 bcenter (lo, hi) = vmul (0.5, 0.5, 0.5) (vadd lo hi)
 
@@ -193,6 +199,7 @@ bbox s = case s of
   Extrude h x -> let ((x0, y0, _), (x1, y1, _)) = bbox x in ((x0, y0, 0), (x1, y1, h))
   Offset r x -> let ((x0, y0, z0), (x1, y1, z1)) = bbox x in ((x0 - r, y0 - r, z0), (x1 + r, y1 + r, z1))
   Union xs -> foldr1 bmerge (map bbox xs)
+  Intersection xs -> foldr1 boverlap (map bbox xs)
   Hull xs -> foldr1 bmerge (map bbox xs)
   Minkowski xs -> foldr1 (\(l1, h1) (l2, h2) -> (vadd l1 l2, vadd h1 h2)) (map bbox xs)
   Anchor {} -> bbox (resolve s)
@@ -245,6 +252,7 @@ resolve s = case s of
   Offset r x -> Offset r (resolve x)
   Diff a b -> Diff (resolve a) (resolve b)
   Union xs -> Union (map resolve xs)
+  Intersection xs -> Intersection (map resolve xs)
   Hull xs -> Hull (map resolve xs)
   Minkowski xs -> Minkowski (map resolve xs)
   prim -> prim
@@ -330,6 +338,8 @@ gen (Diff a b) =
   "difference() {\n" ++ indent (gen a) ++ indent (gen b) ++ "}"
 gen (Union shapes) =
   "union() {\n" ++ concatMap (indent . gen) shapes ++ "}"
+gen (Intersection shapes) =
+  "intersection() {\n" ++ concatMap (indent . gen) shapes ++ "}"
 gen (Hull shapes) =
   "hull() {\n" ++ concatMap (indent . gen) shapes ++ "}"
 gen (Minkowski shapes) =
@@ -366,6 +376,7 @@ usesBosl2 s = case s of
   Offset _ x -> usesBosl2 x
   Diff a b -> usesBosl2 a || usesBosl2 b
   Union xs -> any usesBosl2 xs
+  Intersection xs -> any usesBosl2 xs
   Hull xs -> any usesBosl2 xs
   Minkowski xs -> any usesBosl2 xs
   _ -> False
@@ -566,6 +577,10 @@ a ⊖ b = Diff a b
 (⊝) = (⊖)
 
 a ⊕ b = Union [a, b]
+
+infixl 0 ∩
+
+a ∩ b = Intersection [a, b]
 
 (⊛) = (⊕)
 
