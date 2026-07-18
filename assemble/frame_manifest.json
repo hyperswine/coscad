@@ -1,0 +1,17 @@
+{
+  "source": "frame.assemble",
+  "plate": {"w": 220, "d": 220, "margin": 6},
+  "variants": [
+    {"id": "bracket_top", "part": "bracket", "source": "./bracket90.coscad", "down": "top", "count": 4, "footprint": [43, 43, 6.5], "scad": "frame_part_bracket_top.scad", "hints": {"seam": "rear", "material": "petg"}},
+    {"id": "inner_bak", "part": "inner", "source": "./inner90.coscad", "down": "bak", "count": 2, "footprint": [33.5, 33.5, 20], "scad": "frame_part_inner_bak.scad", "hints": {}}
+  ],
+  "placements": [
+    {"instance": "corner/bracket_1", "variant": "bracket_top", "x": 6, "y": 6, "w": 43, "d": 43},
+    {"instance": "corner/bracket_2", "variant": "bracket_top", "x": 55, "y": 6, "w": 43, "d": 43},
+    {"instance": "corner/bracket_3", "variant": "bracket_top", "x": 104, "y": 6, "w": 43, "d": 43},
+    {"instance": "corner/bracket_4", "variant": "bracket_top", "x": 153, "y": 6, "w": 43, "d": 43},
+    {"instance": "corner/inner_1", "variant": "inner_bak", "x": 6, "y": 55, "w": 33.5, "d": 33.5},
+    {"instance": "corner/inner_2", "variant": "inner_bak", "x": 45.5, "y": 55, "w": 33.5, "d": 33.5}
+  ],
+  "assembly_only": [{"part": "railH", "source": "./rail200.coscad"}, {"part": "railV", "source": "./rail120.coscad"}]
+}

@@ -1,0 +1,10 @@
+// one frame corner: two flat 90° brackets on the side faces,
+// one inner bracket in the corner, rails present but not printed
+plate 220 220 6
+bracket ← bracket90.coscad ×2 ▽top seam=rear material=petg
+inner   ← inner90.coscad ×1 ▽bak
+railH   ← rail200.coscad ×0
+railV   ← rail120.coscad ×0
+
+// assembled view: horizontal rail top face = z0, vertical rail face = x0
+asm = χ 100 (ζ -10 railH) ⊕ χ -10 (ζ 60 railV) ⊕ inner ⊕ χ -10 (ζ -10 (ψ 10 (θ -90 bracket))) ⊕ χ -10 (ζ -10 (ψ -10 (θ 90 bracket)))

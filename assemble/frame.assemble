@@ -1,0 +1,3 @@
+// recursion test: two corner subassemblies
+corner ← corner.assemble ×2
+asm = corner ⊕ ψ 300 (⇋ 0 1 0 corner)

@@ -1,0 +1,37 @@
+// 90° INSIDE corner bracket for 2020 rails — sits in the corner
+// between the extrusions, bearing on both inner faces.
+// Frame: horizontal rail top face = z0 plane (rail below, along X),
+// vertical rail face = x0 plane (rail behind, along Z).
+//
+// Both mounting faces carry the T-nut capture spikes: tip-down
+// tapered prismoids (5.8 wide, 1.5 into the slot mouth) flanking
+// each M5 hole with a 10.4mm pocket for a 10mm drop-in nut.
+// Screws: M5 x 10-12 socket cap, reached through d10 access bores
+// drilled through the solid web (4mm hex key fits with clearance).
+// Quarter-round relief (r3) along the corner line for burrs/heads.
+// Print lying on its side: web is solid full-width, no supports.
+
+foot   = χ 16 (ζ 2.5 (▣ 32 20 5 0.5))
+vplate = χ 2.5 (ζ 16 (▣ 5 20 32 0.5))
+web    = χ 17.5 (ζ 17.5 (ω -90 (⊿ 20 25 25)))
+
+// nut-capture spikes: two on the foot underside (slot along X),
+// two on the vertical plate back (slot along Z, so spin them ϕ 90)
+spkA = χ 13.3 (ζ -0.6 (⏢ 2.2 5.4 3 5.8 1.8))
+spkB = χ 26.7 (ζ -0.6 (⏢ 2.2 5.4 3 5.8 1.8))
+spkC = χ -0.6 (ζ 13.3 (ϕ 90 (⏢ 2.2 5.4 3 5.8 1.8)))
+spkD = χ -0.6 (ζ 26.7 (ϕ 90 (⏢ 2.2 5.4 3 5.8 1.8)))
+
+// M5 clearance holes at slot centerlines, 20mm from the corner
+holeF = χ 20 (ζ 2.5 (zcyl 2.75 12))
+holeV = χ 2.5 (ζ 20 (xcyl 2.75 12))
+
+// d10 driver/head access bores through the web (head seats at
+// the plate surface, recessed 0.1 to avoid coplanar-face issues)
+boreF = χ 20 (ζ 15.9 (zcyl 5 22))
+boreV = χ 15.9 (ζ 20 (xcyl 5 22))
+
+relief = ycyl 3 24
+
+solid = foot ⊕ vplate ⊕ web ⊕ spkA ⊕ spkB ⊕ spkC ⊕ spkD
+main  = solid ⊖ holeF ⊖ holeV ⊖ boreF ⊖ boreV ⊖ relief

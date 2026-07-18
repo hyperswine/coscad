@@ -1,20 +1,113 @@
 {
   "source": "autotest.assemble",
-  "bed": {"w": 220, "d": 220, "margin": 6, "max_z": 250},
+  "bed": {
+    "w": 220,
+    "d": 220,
+    "margin": 6,
+    "max_z": 250
+  },
   "variants": [
-    {"id": "flatbr_asis", "part": "flatbr", "source": "./bracket90.coscad", "down": "top", "orientation_mode": "auto", "fff_score": 0.268, "footprint": [43, 42.982, 6.5], "mesh": "autotest_next_flatbr_asis.stl", "hints": {}},
-    {"id": "innerbr_asis", "part": "innerbr", "source": "./inner90.coscad", "down": "fwd", "orientation_mode": "auto", "fff_score": -0.211, "footprint": [33.5, 33.5, 20], "mesh": "autotest_next_innerbr_asis.stl", "hints": {}},
-    {"id": "seambr_asis", "part": "seambr", "source": "./bracket.coscad", "down": "bak", "orientation_mode": "auto", "fff_score": -0.239, "footprint": [17, 20, 15], "mesh": "autotest_next_seambr_asis.stl", "hints": {}}
+    {
+      "id": "flatbr_asis",
+      "part": "flatbr",
+      "source": "./bracket90.coscad",
+      "down": "top",
+      "orientation_mode": "auto",
+      "fff_score": 0.268,
+      "footprint": [
+        43,
+        42.982,
+        6.5
+      ],
+      "mesh": "autotest_next_flatbr_asis.stl",
+      "hints": {}
+    },
+    {
+      "id": "innerbr_asis",
+      "part": "innerbr",
+      "source": "./inner90.coscad",
+      "down": "fwd",
+      "orientation_mode": "auto",
+      "fff_score": -0.211,
+      "footprint": [
+        33.5,
+        33.5,
+        20
+      ],
+      "mesh": "autotest_next_innerbr_asis.stl",
+      "hints": {}
+    },
+    {
+      "id": "seambr_asis",
+      "part": "seambr",
+      "source": "./bracket.coscad",
+      "down": "bak",
+      "orientation_mode": "auto",
+      "fff_score": -0.239,
+      "footprint": [
+        17,
+        20,
+        15
+      ],
+      "mesh": "autotest_next_seambr_asis.stl",
+      "hints": {}
+    }
   ],
   "beds": [
-    {"index": 1, "stl": "autotest_bed1.stl", "placements": [
-      {"instance": "flatbr_1", "variant": "flatbr_asis", "x": 6, "y": 6, "w": 43, "d": 42.982},
-      {"instance": "flatbr_2", "variant": "flatbr_asis", "x": 55, "y": 6, "w": 43, "d": 42.982},
-      {"instance": "innerbr_1", "variant": "innerbr_asis", "x": 104, "y": 6, "w": 33.5, "d": 33.5},
-      {"instance": "innerbr_2", "variant": "innerbr_asis", "x": 143.5, "y": 6, "w": 33.5, "d": 33.5},
-      {"instance": "seambr_1", "variant": "seambr_asis", "x": 183, "y": 6, "w": 17, "d": 20},
-      {"instance": "seambr_2", "variant": "seambr_asis", "x": 6, "y": 54.982, "w": 17, "d": 20}
-    ]}
+    {
+      "index": 1,
+      "stl": "autotest_bed1.stl",
+      "placements": [
+        {
+          "instance": "flatbr_1",
+          "variant": "flatbr_asis",
+          "x": 6,
+          "y": 6,
+          "w": 43,
+          "d": 42.982
+        },
+        {
+          "instance": "flatbr_2",
+          "variant": "flatbr_asis",
+          "x": 55,
+          "y": 6,
+          "w": 43,
+          "d": 42.982
+        },
+        {
+          "instance": "innerbr_1",
+          "variant": "innerbr_asis",
+          "x": 104,
+          "y": 6,
+          "w": 33.5,
+          "d": 33.5
+        },
+        {
+          "instance": "innerbr_2",
+          "variant": "innerbr_asis",
+          "x": 143.5,
+          "y": 6,
+          "w": 33.5,
+          "d": 33.5
+        },
+        {
+          "instance": "seambr_1",
+          "variant": "seambr_asis",
+          "x": 183,
+          "y": 6,
+          "w": 17,
+          "d": 20
+        },
+        {
+          "instance": "seambr_2",
+          "variant": "seambr_asis",
+          "x": 6,
+          "y": 54.982,
+          "w": 17,
+          "d": 20
+        }
+      ]
+    }
   ],
   "assembly_only": []
 }
