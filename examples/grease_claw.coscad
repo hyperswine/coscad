@@ -1,0 +1,70 @@
+// Lead screw grease applicator
+// -----------------------------
+// T8 lead screw (8mm nominal). The claw is an OPEN-TOP trough, not a
+// snap-fit clip: a repeated-flex clip is a fatigue-crack risk in FDM
+// plastic for no real benefit here, since you hold this tool the whole
+// time you're greasing (it doesn't need to stay attached unattended).
+// The open top also means you hook it onto the screw mid-span, at any
+// point along its length — you don't need a free end to thread it
+// onto, which most captured lead screws don't have anyway.
+//
+// Claw: through-bore (rod dia + 0.8mm clearance for a grease film and
+// the thread crest) in a rounded block, then the top half is sliced
+// away above the bore centerline -> an open half-pipe cross-section.
+// Handle: 14mm solid rod, printed lying flat along its length so layer
+// lines run WITH the bending load (the strong FDM orientation) —
+// sized from a cantilever bending calc (see chat) for a firm ~2kgf
+// push at the very tip without exceeding a conservative allowable
+// stress. Smooth hull-taper from claw block to rod avoids the sharp
+// cross-section step that would otherwise concentrate stress there.
+
+// Dimensions (CoScad has no arithmetic layer, only shape composition,
+// so every derived value below is precomputed by hand / a scratch
+// calc rather than written as an in-language expression):
+//   rod_d 8, clear 0.4        -> bore_r  = 4.4
+//   bore_r*2 + wall(3)*2      -> blk_w = blk_h = 14.8
+//   blk_len 22                -> blk_len/2 = 11
+//   blk_h/2 + 25 (clearance)  -> 32.4
+//   handle_d 14                -> handle_r = 7
+//   blk_len(22) + taper_l(12) -> 34
+//   34 + handle_l(200)/2       -> 134
+//   total tool length          -> 234
+
+// Claw bore now runs along Y, PERPENDICULAR to the handle's X axis --
+// a crossbar/hoe layout rather than the earlier coaxial one. This is
+// what makes a single side view (looking along Y) show the handle's
+// full length AND the claw's circular/U cross-section at once, which
+// a coaxial bore could never do in one view. "Up" stays Z unchanged --
+// the trough still opens upward regardless of which horizontal axis
+// the bore itself runs along.
+//   block cross-section (X,Z) = bore_r(4.4)*2 + wall(3)*2 = 14.8
+//   block centered on its own thickness -> χ 7.4
+//   bore length (Y) = 22 + 2 clearance = 24
+//   opencut dims (X,Y,Z) = 16.8, 24, 50 -- same swap as the block
+//   taper: hull the ACTUAL block (not an approximating disk) against
+//   a thin handle-radius disk, so it smoothly closes the gap between
+//   the block's true 22x14.8 end-face and the round 14mm handle
+//   taper end at x = 14.8 + 12 = 26.8; handle center at 126.8
+
+block = χ 7.4 (◙ 14.8 22 14.8 1.5)
+bore  = χ 7.4 (ycyl 4.4 24)
+// slice away everything above the bore centerline -> open trough
+opencut = χ 7.4 (ζ 25.3 (▣ 16.8 24 50 0))
+
+// taper: hull a thin END-CAP matching the block's actual 22x14.8
+// footprint against a thin handle-radius disk. This must NOT hull the
+// block itself -- an earlier version did, and hull() necessarily
+// returns a convex (gap-filling) result, so it silently re-solidified
+// the exact bore+trough region on union (caught by an OpenSCAD-CSG
+// probe test showing solid material at what should have been the
+// open bore center -- trimesh's ray casting agreed, so this was a
+// real modeling bug, not a measurement artifact). The end-cap sits
+// entirely at/beyond x=14.8, never overlapping the cut region.
+tapA = χ 14.8 (▣ 0.1 22 14.8 0)
+tapB = χ 26.8 (xcyl 7 0.1)
+taper = tapA ⇓ tapB
+
+handle = χ 126.8 (xcyl 7 200)
+
+claw  = (block ⊖ bore) ⊖ opencut
+main  = claw ⊕ taper ⊕ handle

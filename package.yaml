@@ -18,6 +18,7 @@ dependencies:
 - directory
 - containers
 - megaparsec
+- process
 
 ghc-options:
 - -Wall

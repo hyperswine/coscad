@@ -1,0 +1,16 @@
+// Lead screw grease applicator — =======( from the side.
+// Claw: C-ring, bore d8.5 for a T8 (8mm) lead screw, mouth 7.4mm so
+// it snaps over the screw and is retained by stepped lips while you
+// slide it along the threads. Flared mouth tips for easy entry.
+// Inner torus groove at mid-height = grease reservoir that wipes
+// onto the threads as the screw turns / the tool slides.
+// Rod: d15, ~200mm total reach, sphere-capped handle end.
+
+ring   = ⊚ 8 4.25 14
+mouth  = χ 5 (▣ 10 7.4 16 0)
+flare  = χ 7.2 (▣ 6 11.4 16 0)
+groove = ◉ 4.6 1
+rod    = χ -99 (xcyl 7.5 188)
+cap    = χ -193 (● 7.5)
+
+main = (ring ⊕ rod ⊕ cap) ⊖ mouth ⊖ flare ⊖ groove

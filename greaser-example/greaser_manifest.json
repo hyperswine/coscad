@@ -1,0 +1,13 @@
+{
+  "source": "greaser.assemble",
+  "bed": {"w": 220, "d": 220, "margin": 6, "max_z": 250},
+  "variants": [
+    {"id": "tool_asis", "part": "tool", "source": "./greaser.coscad", "down": "lft", "orientation_mode": "auto", "fff_score": -0.325, "footprint": [15, 15.968, 206.094], "mesh": "greaser_next_tool_asis.stl", "hints": {}}
+  ],
+  "beds": [
+    {"index": 1, "stl": "greaser_bed1.stl", "placements": [
+      {"instance": "tool_1", "variant": "tool_asis", "x": 6, "y": 6, "w": 15, "d": 15.968}
+    ]}
+  ],
+  "assembly_only": []
+}
