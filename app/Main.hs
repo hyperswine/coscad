@@ -99,9 +99,16 @@ variableDefinition = do
 -- Get the remaining expression as a string (for later parsing with context)
 expressionString :: Parser String
 expressionString = lexeme $ do
-  -- Parse until end of line or end of input
-  expr <- manyTill anySingle (try (void newline) <|> eof)
-  return (trim expr)
+  -- Parse until end of line; a following line beginning with |>
+  -- continues the same expression (multi-line pipelines)
+  first <- manyTill anySingle (try (void newline) <|> eof)
+  rest <- many contLine
+  return (trim (unwords (first : rest)))
+  where
+    contLine = try $ do
+      _ <- many (char ' ' <|> char '\t')
+      _ <- lookAhead (string "|>")
+      manyTill anySingle (try (void newline) <|> eof)
 
 -- Parse an expression with variable context
 parseExpression :: VarTable -> String -> Either String Shape
@@ -110,9 +117,54 @@ parseExpression varTable input =
     Left err -> Left (errorBundlePretty err)
     Right shape -> Right shape
 
--- Parse an expression
+-- Parse an expression (pipelines bind loosest)
 expression :: VarTable -> Parser Shape
-expression = booleanExpression
+expression = pipeExpression
+
+-- |> pipelines: each stage is a postfix operation on the shape so far.
+--   plate |> at top 5.5 0 -5 flange |> cutat lft 3.5 0 0 (xcyl 2.7 12)
+pipeExpression :: VarTable -> Parser Shape
+pipeExpression varTable = do
+  left <- booleanExpression varTable
+  rest <- many (symbol "|>" *> pipeStage varTable)
+  return (foldl (flip ($)) left rest)
+
+pipeStage :: VarTable -> Parser (Shape -> Shape)
+pipeStage vt =
+  choice
+    [ num1 "x" Tx
+    , num1 "y" Ty
+    , num1 "z" Tz
+    , num1 "rotx" Rx
+    , num1 "roty" Ry
+    , num1 "rotz" Rz
+    , num1 "extrude" Extrude
+    , num3 "move" Translate
+    , num3 "scale" Scale
+    , num3 "mirror" Mirror
+    , try (keyword "anchor" *> (Anchor <$> anchorVec))
+    , rel "at" Position
+    , rel "on" AttachTo
+    , rel "cutat" CutAt
+    , bin "add" (\p s -> Union [p, s])
+    , bin "cut" Diff
+    , bin "isect" (\p s -> Intersection [p, s])
+    , bin "hull" (\p s -> Hull [p, s])
+    , bin "mink" (\p s -> Minkowski [p, s])
+    ]
+  where
+    num1 w f = try (keyword w *> (f <$> double))
+    num3 w f = try (keyword w *> (f <$> ((,,) <$> double <*> double <*> double)))
+    rel w f = try $ do
+      keyword w
+      v <- anchorVec
+      off <- option (0, 0, 0) (try ((,,) <$> double <*> double <*> double))
+      child <- primaryExpression vt
+      return (\p -> f v off p child)
+    bin w f = try $ do
+      keyword w
+      s <- primaryExpression vt
+      return (`f` s)
 
 -- Parse boolean expressions (union, difference, hull, minkowski, offset)
 booleanExpression :: VarTable -> Parser Shape
@@ -169,12 +221,12 @@ attachExpression varTable = do
             symbol "⌖"
             v <- anchorVec
             right <- transformExpression varTable
-            return (\l -> Position v l right),
+            return (\l -> Position v (0, 0, 0) l right),
           do
             symbol "⋈"
             v <- anchorVec
             right <- transformExpression varTable
-            return (\l -> AttachTo v l right)
+            return (\l -> AttachTo v (0, 0, 0) l right)
         ]
 
 -- Parse transformation expressions
@@ -270,6 +322,7 @@ primaryExpression varTable =
     [ parenthesized,
       basicShape,
       bosl2Shape,
+      wordShape,
       shape2D,
       variable
     ]
@@ -403,6 +456,18 @@ primaryExpression varTable =
       keyword "zcyl"
       r <- double
       ZCyl r <$> double
+
+    -- word-named shapes (all BOSL2-centered family)
+    wordShape =
+      choice
+        [ try (keyword "cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> double))
+        , try (keyword "box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> double <*> double <*> double))
+        , try (keyword "sphere" *> (Sphere <$> double))
+        , try (keyword "cyl" *> ((\r h -> Cyl r h 0 0) <$> double <*> double))
+        , try (keyword "tube" *> (Tube <$> double <*> double <*> double))
+        , try (keyword "torus" *> (Torus <$> double <*> double))
+        , try (keyword "wedge" *> ((\a b c -> Wedge (a, b, c)) <$> double <*> double <*> double))
+        ]
 
     shape2D =
       choice

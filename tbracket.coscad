@@ -1,0 +1,17 @@
+// The seam bracket, topologically: no absolute translations at all.
+// Every placement is an anchor + small offset on the evolving part;
+// every hole is a cutat. Should be geometrically identical to the
+// original coordinate-built bracket.coscad.
+
+plate  = box 5 15 20
+flange = box 16 15 5
+key    = box 1 15 5.8
+gusset = ⊿ 15 15 14.2 |> rotz -90 |> mirror 0 0 1
+
+main = plate
+  |> at top 5.5 0 -5 flange
+  |> at lft key
+  |> at ctr 1 0 -1.9 gusset
+  |> cutat lft 3.5 0 0 (xcyl 2.7 12)
+  |> cutat rt -0.5 0 0 (xcyl 4.5 21)
+  |> cutat top 2.5 0 -4 (zcyl 1.4 10)

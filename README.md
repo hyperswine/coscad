@@ -200,3 +200,7 @@ stack run -- input.coscad
 ```
 
 USEFUL: `openscad-st1 rack_pinion.scad`
+
+SIMPLER: openscad -o part_A.stl -D 'output_part="part_A"' jx.scad
+
+SIMPLE: openscad -o part.stl part.scad

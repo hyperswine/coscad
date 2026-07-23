@@ -41,8 +41,9 @@ data Shape
   | RotAxis D (D, D, D) Shape -- axis-angle rotation (used by attachment desugaring)
   | -- Attachment sugar (desugared by 'resolve' before codegen) ----
     Anchor (D, D, D) Shape -- re-origin shape at its own anchor point
-  | Position (D, D, D) Shape Shape -- snap child's opposite anchor to parent anchor
-  | AttachTo (D, D, D) Shape Shape -- orient child +Z along anchor, mate its bottom
+  | Position (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, child: snap child at anchor+offset
+  | AttachTo (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, child: rotate-mate at anchor+offset
+  | CutAt (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, cutter: SUBTRACT cutter centered there
   | Diff Shape Shape
   | Extrude D Shape
   | Union [Shape]
@@ -205,6 +206,7 @@ bbox s = case s of
   Anchor {} -> bbox (resolve s)
   Position {} -> bbox (resolve s)
   AttachTo {} -> bbox (resolve s)
+  CutAt {} -> bbox (resolve s)
   where
     bshift v (lo, hi) = (vadd v lo, vadd v hi)
 
@@ -214,16 +216,22 @@ resolve s = case s of
   Anchor v x ->
     let x' = resolve x
      in Translate (vneg (anchorPt (bbox x') v)) x'
-  Position v p c ->
+  Position v off p c ->
     let p' = resolve p
         c' = resolve c
-        pa = anchorPt (bbox p') v
+        pa = vadd off (anchorPt (bbox p') v)
         ca = anchorPt (bbox c') (vneg v)
      in Union [p', Translate (vsub pa ca) c']
-  AttachTo v p c ->
+  CutAt v off p c ->
     let p' = resolve p
         c' = resolve c
-        pa = anchorPt (bbox p') v
+        target = vadd off (anchorPt (bbox p') v)
+        cc = bcenter (bbox c')
+     in Diff p' (Translate (vsub target cc) c')
+  AttachTo v off p c ->
+    let p' = resolve p
+        c' = resolve c
+        pa = vadd off (anchorPt (bbox p') v)
         cb = bbox c'
         ctr = bcenter cb
         bot = anchorPt cb (0, 0, -1)
@@ -334,6 +342,7 @@ gen (RotAxis a (x, y, z) s) =
 gen s@(Anchor {}) = gen (resolve s)
 gen s@(Position {}) = gen (resolve s)
 gen s@(AttachTo {}) = gen (resolve s)
+gen s@(CutAt {}) = gen (resolve s)
 gen (Extrude h s) =
   "linear_extrude(height = " ++ show h ++ ") {\n" ++ indent (gen s) ++ "}"
 gen (Diff a b) =
@@ -372,8 +381,9 @@ usesBosl2 s = case s of
   Translate _ x -> usesBosl2 x
   RotAxis _ _ x -> usesBosl2 x
   Anchor _ x -> usesBosl2 x
-  Position _ a b -> usesBosl2 a || usesBosl2 b
-  AttachTo _ a b -> usesBosl2 a || usesBosl2 b
+  Position _ _ a b -> usesBosl2 a || usesBosl2 b
+  AttachTo _ _ a b -> usesBosl2 a || usesBosl2 b
+  CutAt _ _ a b -> usesBosl2 a || usesBosl2 b
   Extrude _ x -> usesBosl2 x
   Offset _ x -> usesBosl2 x
   Diff a b -> usesBosl2 a || usesBosl2 b
@@ -401,10 +411,13 @@ bak = (0, 1, 0)
 ctr = (0, 0, 0)
 
 -- | posAt v parent child: child snapped to parent's anchor v (glyph ⌖)
-posAt = Position
+posAt v = Position v (0, 0, 0)
 
 -- | attachAt v parent child: child oriented +Z along v, bottom mated (glyph ⋈)
-attachAt = AttachTo
+attachAt v = AttachTo v (0, 0, 0)
+
+-- | cutAt v parent cutter: cutter centered at parent's anchor v, subtracted
+cutAt v = CutAt v (0, 0, 0)
 
 -- | anchorAt v shape: re-origin shape at its own anchor point (glyph ⚓)
 anchorAt = Anchor
