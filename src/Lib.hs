@@ -286,6 +286,8 @@ gen (Frustum h r1 r2) =
   "cylinder(h = " ++ show h ++ ", r1 = " ++ show r1 ++ ", r2 = " ++ show r2 ++ ");"
 gen (Prism n r h) =
   "cylinder(h = " ++ show h ++ ", r = " ++ show r ++ ", $fn = " ++ show n ++ ");"
+gen (Poly (PD points [])) =
+  "polygon(points = " ++ showPoints points ++ ");"
 gen (Poly (PD points paths)) =
   "polygon(points = " ++ showPoints points ++ ", paths = " ++ showPaths paths ++ ");"
 -- BOSL2 primitives (all centered at origin, BOSL2 default anchoring)
@@ -302,7 +304,7 @@ gen (ZCyl r l) =
 gen (Tube ro ri h) =
   "tube(h = " ++ show h ++ ", or = " ++ show ro ++ ", ir = " ++ show ri ++ ");"
 gen (Prismoid (x1, y1) (x2, y2) h) =
-  "prismoid(size1 = [" ++ show x1 ++ ", " ++ show y1 ++ "], size2 = [" ++ show x2 ++ ", " ++ show y2 ++ "], h = " ++ show h ++ ");"
+  "prismoid(size1 = [" ++ show x1 ++ ", " ++ show y1 ++ "], size2 = [" ++ show x2 ++ ", " ++ show y2 ++ "], h = " ++ show h ++ ", anchor = CENTER);"
 gen (Torus rj rn) =
   "torus(r_maj = " ++ show rj ++ ", r_min = " ++ show rn ++ ");"
 gen (Wedge (x, y, z)) =
@@ -485,6 +487,26 @@ poly points paths = Poly (PD points paths)
 
 -- | Unicode operator for polygon
 (⟁) = poly
+
+-- | Piecewise cubic bezier path -> closed polygon Shape, evaluated
+-- here in the compiler (the emitted OpenSCAD is a plain polygon).
+-- Takes 3k+1 control points; each consecutive group of 4 (sharing
+-- endpoints) is one cubic segment. The path auto-closes.
+bezPoly :: Int -> [(D, D)] -> Shape
+bezPoly samples cps = Poly (PD pts [])
+  where
+    pts = concatMap sampleSeg (segsOf cps) ++ [last cps]
+    segsOf (a : b : c : d : rest) = (a, b, c, d) : segsOf (d : rest)
+    segsOf _ = []
+    sampleSeg (p0, p1, p2, p3) =
+      [cubic p0 p1 p2 p3 (fromIntegral i / fromIntegral samples) | i <- [0 .. samples - 1]]
+    cubic (x0, y0) (x1, y1) (x2, y2) (x3, y3) t =
+      let u = 1 - t
+          f a b c d = u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d
+       in (f x0 x1 x2 x3, f y0 y1 y2 y3)
+
+-- | Bezier path glyph (Haskell side takes the point list directly)
+(✎) = bezPoly 24
 
 -- BOSL2 aliases -----------------------------------------------
 

@@ -406,7 +406,18 @@ primaryExpression varTable =
 
     shape2D =
       choice
-        [triangle, pentagon, circle]
+        [triangle, pentagon, circle, bezier]
+
+    bezier = do
+      symbol "✎"
+      ns <- some double
+      let n = length ns
+      if odd n || n < 8 || (n `div` 2) `mod` 3 /= 1
+        then fail ("✎ needs 3k+1 control points as x y pairs (got " ++ show n ++ " numbers)")
+        else return (bezPoly 24 (pairUp ns))
+      where
+        pairUp (a : b : r) = (a, b) : pairUp r
+        pairUp _ = []
 
     triangle = do
       symbol "△"
@@ -947,10 +958,15 @@ fffScore maxZ tris =
       verts (a, b, c) = [a, b, c]
       total = max 1e-9 (sum [a | (_, a, _, _) <- stats])
       contact = sum [a | ((_, _, nz), a, _, mxz) <- stats, nz < -0.9, mxz < z0 + eps]
-      overhang = sum [a | ((_, _, nz), a, mnz, _) <- stats, nz < -0.707, mnz > z0 + eps]
+      -- only near-horizontal downward faces need support; curved
+      -- flanks of lying cylinders (45-65 deg) self-support in FFF
+      overhang = sum [a | ((_, _, nz), a, mnz, _) <- stats, nz < -0.9, mnz > z0 + eps]
+      -- stability: punish tall skinny prints (wobble, layer-shear)
+      slender = h / max 1 (min (x1 - x0) (y1 - y0))
+      wobble = 0.1 * max 0 (slender - 2)
    in if h > maxZ
         then Nothing
-        else Just (contact / total - 3 * overhang / total - 0.3 * h / maxdim)
+        else Just (contact / total - 3 * overhang / total - 0.3 * h / maxdim - wobble)
 
 -- | Choose orientation: declared ▽ wins; otherwise best FFF score.
 -- Returns (rotation matrix, chosen face label, mode, score).
