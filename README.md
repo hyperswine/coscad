@@ -198,3 +198,5 @@ Otherwise, to run the executable with stack:
 ```bash
 stack run -- input.coscad
 ```
+
+USEFUL: `openscad-st1 rack_pinion.scad`

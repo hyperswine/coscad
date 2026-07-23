@@ -1,0 +1,13 @@
+// Bow arch with root flange tab: bezier limb + square bracket
+// (26x28x7, upper lap) with 2x M4 clearance holes (d4.3, c'bored)
+// one each side of the limb profile, bolting into heat-set inserts
+// in the center piece. Nock hook at the far end as before.
+arch2d = ✎ 55 0 126 1 196.2 14 241.4 44 246.9 47 250 54 246.1 59 242.2 62 237.5 57 238.3 49 235.2 55 232.8 55 228.9 50 172.8 20 116.6 10 55 12
+arch   = ⮕ 14 arch2d
+tab    = χ 42.3 (ψ 6 (ζ 10.5 (▣ 26 28 7 0)))
+holeA  = χ 42 (ψ -2 (ζ 10 (zcyl 2.15 20)))
+holeB  = χ 42 (ψ 14 (ζ 10 (zcyl 2.15 20)))
+cbA    = χ 42 (ψ -2 (ζ 13.1 (zcyl 3.8 3)))
+cbB    = χ 42 (ψ 14 (ζ 13.1 (zcyl 3.8 3)))
+part   = (arch ⊕ tab) ⊖ holeA ⊖ holeB ⊖ cbA ⊖ cbB
+main   = part

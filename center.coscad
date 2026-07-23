@@ -1,0 +1,12 @@
+// Bow center piece / riser: rounded grip block with a lap pocket
+// at each end for the arch tabs (0.25mm side / 0.2mm floor
+// clearance) and 4x blind holes (d5.6 x ~6.5) for M4 heat-set
+// inserts under the tab hole positions. M4 x 12 socket screws.
+body  = ψ 6 (ζ 7 (◙ 110 30 14 2))
+pockR = χ 42 (ψ 6 (ζ 10.9 (▣ 27.5 28.5 8.2 0)))
+pockL = χ -42 (ψ 6 (ζ 10.9 (▣ 27.5 28.5 8.2 0)))
+insA  = χ 42 (ψ -2 (ζ 3.6 (zcyl 2.8 6.6)))
+insB  = χ 42 (ψ 14 (ζ 3.6 (zcyl 2.8 6.6)))
+insC  = χ -42 (ψ -2 (ζ 3.6 (zcyl 2.8 6.6)))
+insD  = χ -42 (ψ 14 (ζ 3.6 (zcyl 2.8 6.6)))
+main  = body ⊖ pockR ⊖ pockL ⊖ insA ⊖ insB ⊖ insC ⊖ insD
