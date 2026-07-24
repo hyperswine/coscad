@@ -9,12 +9,13 @@ license: N/A — project-internal tool, not third-party licensed software.
 ## What this is
 
 CoScad is a small glyph-syntax language, implemented as a Haskell compiler
-(`Main.hs` + `Lib.hs`), that parses `.coscad` files and emits `.scad`
+(`src/Coscad/*.hs`, CLI in `app/Main.hs`), that parses `.coscad` and
+`.assemble` files and emits `.scad`, packed-bed `.stl`, and manifests
 (OpenSCAD) source. One variable, `main`, is the rendered shape. Every other
 variable is a named sub-expression you can reuse.
 
 The compiler is not a published package — it's a project-specific tool.
-Treat `Main.hs`/`Lib.hs` as the source of truth over this document if they
+Treat the `src/Coscad/` modules as the source of truth over this document if they
 ever disagree; this file can drift, the compiler cannot.
 
 ## Before writing any .coscad
@@ -167,6 +168,52 @@ unioning it into the composite, or nudge afterward with `χ`/`ψ`/`ζ`.
   default, not 2, since cube isn't handled. Use a sphere/cylinder/2D
   profile as the right operand of `↯`, never a cube/rectangle.
 
+## Pipelines and topological modelling
+
+`|>` pipelines with word stages (`x`, `rotz`, `extrude`, `add`, `cut`,
+`at`, `on`, `cutat`, ...) coexist with the glyphs; a line starting with
+`|>` continues the previous definition. Full table in
+docs/LANGEXTENSION.md; the topological methodology (anchors, offsets,
+and why features must be anchored to stable corner datums, not
+composite centers) is in docs/TOPOLOGICAL.md — read it before writing
+anchor-relative models.
+
+Critical semantics: `at`/`on` mate the CHILD'S OPPOSITE anchor to the
+parent anchor (stacking); `cutat` CENTERS the cutter at the anchor
+point. Confusing the two shifts geometry by half the child's size.
+
+## .assemble and coscad next
+
+`.assemble` = separate physical parts (recursive refs, `×N` counts,
+`×0` assembly-only, `▽anchor` print orientation, key=value hints).
+`coscad foo.assemble` = design outputs; `coscad next foo.assemble` =
+per-bed STLs + slice-once/stamp-many manifest, with automatic FFF
+orientation search for undeclared parts. Details and limitations in
+docs/MANUFACTURING.md. Set COSCAD_OPENSCAD to an xvfb wrapper when
+headless.
+
+- **Anchoring class of traps.** BOSL2 defaults differ per shape:
+  `prismoid` is bottom-anchored upstream (CoScad now forces
+  `anchor=CENTER` in codegen so the bbox engine is honest — keep it
+  that way if editing Codegen), and plain-OpenSCAD glyph shapes
+  (`■ ◎`...) are corner/bottom-anchored while the BOSL2/word family is
+  centered. When adding a shape, verify its real anchoring by
+  rendering it solo and checking mesh bounds before trusting bbox math.
+- **Rotations are about the origin.** `ω 15 (χ 7 cutter)` pulls the
+  cutter toward the origin as it rotates — this once silently shaved
+  off a part's retention lips. For rotated features near other
+  geometry, verify with a section/occupancy probe, or restructure to
+  axis-aligned cuts.
+- **Stable datums for anchor-relative features.** A composite's center
+  or far-face anchor moves when distant geometry changes; a 0.33 mm
+  drift once consumed an entire M4 clearance. Anchor to the adjacent
+  corner/edge (`lft+fwd`-style) of the geometry the feature belongs to.
+- **Timid bezier concavities vanish.** Cubic segments interpolate only
+  endpoints; a hook/notch needs the path to genuinely double back with
+  its endpoints, not just interior control pulls. Design 2D outlines
+  with an occupancy-grid raster loop (sample the curve in Python,
+  print '#'/'.') before compiling.
+
 ## Workflow: verify, don't eyeball
 
 Rendered preview images of small/thin features are frequently
@@ -197,6 +244,11 @@ print('volume:', m.volume, '| bounds:', m.bounds.round(2).tolist())
   volume and centroid match) is a strong equivalence check — near-zero
   residual volume confirms they're the same solid, not just
   similar-looking.
+- Interference checks via OpenSCAD boolean intersection: DELETE the
+  output STL before each run. An empty intersection makes OpenSCAD skip
+  the export, and a stale file from the previous check silently
+  masquerades as a result (this produced a phantom 42 mm³ 'failure'
+  once). Treat missing-file as volume 0.
 - For fit/tolerance parts (jigs, channels, slots), render the part
   intersected with a nominal mating solid (expect ~0 interference
   volume) and again with that solid shifted by the tolerance amount

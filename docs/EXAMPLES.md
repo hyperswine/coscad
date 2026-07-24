@@ -1,92 +1,17 @@
-submersible uboatstyle example
-low CoG, streamlined hull
+# Examples index
 
-length = 18cm
-diameter = 5cm (r=2.5)
+- `examples/` — small single-part `.coscad` files (shapes, booleans,
+  transforms, bezier, zoo of all primitives).
+- `examples/topological/` — pipeline syntax and anchor-relative
+  modelling: `pipeline_basics`, `topo_tour` (annotated), `tbracket`
+  (the zero-translation seam bracket, verified identical to its
+  coordinate-built twin).
+- `examples/assemble/` — `.assemble` specs: `corner`/`frame`
+  (recursion), `spill` (multi-bed), `autotest` (orientation search),
+  and `bow3/` — the flagship three-part manufactured assembly.
+- `examples-next/` — earlier manufacturing-era parts (bow2 generation,
+  greaser tool with its manifest kept as a reference output).
+- `examples/archive/` — historical debug/test scratch files.
 
-use coscad features to define the cross sections then use the hull operator
-define 5 cross sections
-The cross section looks kind of like
-
-```
-
-************ **********************
-*                                 *
-*                                 *
-*                                 *
-*                                 *
-*                                 *
-*                                 *
- *                               *
- *                               *
- *                               *
- *                               *
- *                               *
- *                               *
-  *                             *
-  *                             *
-  **                           **
-   **                          *
-    **                        *
-     **                     **
-       **                **
-        ******************
-```
-
-as you can see, flat on the top and bottom, but wider near the top. Circular on the sides.
-One way to define is with a circle which we intersect a rectangle from.
-
-```
-                *****
-               **** *
-             ***  * **
-*************************************************
-**                                  **          *
- ***                              ***          **
-   ***                          ***           **
-     ***                       **           ***
-       **************************************
-```
-
-The extra tower on the top is like a frustum unioned to the top flat surface of the submarine.
-
--------------
-
-Bookend
-
-```
-     ******
-     *    *
-     *    *
-     *    *
-     *    *
-     *    *
-     *    *
-     *    *
-     *    *
-     *    *
-     *    *
-    **    *
-  ****    *
- **  *    *
- *   *    *
- *   *    *
- *   *    *
- *   *    *
- *   *    *
- *   *    *
- *   *    *
- *   *    *
- *   *    *
- *   *    *
-**   *    *
-*    *    *
-*    *    *
-*    *    *
-*    *    *
-*    *    ***********************
-************************************
-```
-
-THE NEXT IS A TWO-thing
-telescoptic rod and crankshaft
+Generated `.scad`/`.stl` are gitignored; regenerate with
+`coscad <file>` / `coscad next <file>`.

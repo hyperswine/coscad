@@ -26,6 +26,13 @@ source-repository head
 library
   exposed-modules:
       Bookend
+      Coscad.Assemble
+      Coscad.Codegen
+      Coscad.Dsl
+      Coscad.Geometry
+      Coscad.Next
+      Coscad.Parser
+      Coscad.Shape
       Examples
       Examples2
       Lib
