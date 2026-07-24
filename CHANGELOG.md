@@ -9,3 +9,9 @@ and this project adheres to the
 ## Unreleased
 
 ## 0.1.0.0 - YYYY-MM-DD
+
+A lot of stuff
+
+## 1.0.0.0 - 2026-07-24
+
+First edition of Coscad with Next.
