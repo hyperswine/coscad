@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+
 # openscad-stl — export parts from a make_parts()-based .scad file.
 #
-#   openscad-stl my.scad a          # exports my_a.stl
-#   openscad-stl my.scad --list     # prints part names, one per line
-#   openscad-stl my.scad --all      # exports my_<part>.stl for every part
+#   openscad-stl.sh my.scad a          # exports my_a.stl
+#   openscad-stl.sh my.scad --list     # prints part names, one per line
+#   openscad-stl.sh my.scad --all      # exports my_<part>.stl for every part
 #
 set -euo pipefail
 

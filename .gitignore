@@ -24,3 +24,4 @@ cabal.project.local~
 .ghc.environment.*
 output/
 bin/
+.DS_Store
