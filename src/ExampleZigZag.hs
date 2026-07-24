@@ -1,4 +1,4 @@
-module Z where
+module ExampleZigZag where
 
 import Lib
 

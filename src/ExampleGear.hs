@@ -1,4 +1,4 @@
-module Examples where
+module ExampleGear where
 
 import Lib
 

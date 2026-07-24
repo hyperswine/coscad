@@ -1,4 +1,4 @@
-module Examples2 where
+module ExampleBookend2 where
 
 import Lib
 

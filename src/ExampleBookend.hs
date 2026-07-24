@@ -1,4 +1,4 @@
-module Bookend where
+module ExampleBookend where
 
 import Lib (D, PD (..), Shape (..), writeScad)
 
