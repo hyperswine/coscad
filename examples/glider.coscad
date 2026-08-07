@@ -1,4 +1,37 @@
-// glider as large as possible in a 250x250x250 volume
-// easy to print so make it a low wing aircraft
-// easy to launch to have some way to launch it (enough of a tube at the middle-end of the glider to hold with hands)
-// good CoG
+// Glider mk2 — 260mm nose-to-tail, Y = longitudinal (nose at -130), Z up
+// Fixes vs Blender v1: horizontal stab (Vh~0.5), vertical fin, 6 deg dihedral,
+// slimmer fuselage (d18). Print: 2 walls, 8% infill. Nose ballast to trim CG.
+
+// --- fuselage: piecewise hulls of spheres (round cross-sections) ---
+// nose tip r2.5 @-128, max section r9 @-95, mid r7 @-15, boom r3.5 @+70, tail r2.5 @+126
+fnose = ψ -128 (● 2.5)
+fmax  = ψ -95 (● 9)
+fmid  = ψ -15 (● 7)
+fboom = ψ 70 (● 3.5)
+ftail = ψ 126 (● 2.5)
+fuse  = (fnose ⇓ fmax) ⊕ (fmax ⇓ fmid) ⊕ (fmid ⇓ fboom) ⊕ (fboom ⇓ ftail)
+
+// --- right wing: 3mm plate = hull of 3 short posts (delta, tips at TE) ---
+// root LE y-40, root TE y+45 (chord 85), tip x113 @TE, dihedral: tip +11mm (~6 deg)
+wposRLE = χ 3 (ψ -40 (ζ -4 (zcyl 1.5 3)))
+wposRTE = χ 3 (ψ 45 (ζ -4 (zcyl 1.5 3)))
+wposTip = χ 113 (ψ 45 (ζ 7 (zcyl 1.5 3)))
+wingR = wposRLE ⇓ wposRTE ⇓ wposTip
+wingL = ⇋ 1 0 0 wingR
+
+// --- horizontal stabilizer: 96 x 26 x 2.5 plate, TE at y=127 ---
+// St=2496mm2 (~26% Sw), tail arm ~112mm -> Vh ~ 0.52
+stab = ψ 114 (▣ 96 26 2.5 0)
+
+// --- vertical fin: 2.5mm plate, triangle above boom ---
+finA = ψ 92 (ζ 2 (xcyl 1.25 2.5))
+finB = ψ 127 (ζ 2 (xcyl 1.25 2.5))
+finC = ψ 127 (ζ 38 (xcyl 1.25 2.5))
+fin = finA ⇓ finB ⇓ finC
+
+// --- nose ballast pocket: d9 x 10 blind hole from below at y=-100 ---
+// fill with ~6g (7x M4 nuts / 4.5mm BBs / lead shot), then tape over
+pocket = ψ -100 (ζ -8 (zcyl 4.5 10))
+main = (fuse ⊕ wingR ⊕ wingL ⊕ stab ⊕ fin) ⊖ pocket
+
+// ⇓ means hull between two shapes, ⊕ means union, ⊖ means difference, ⇋ means mirror across plane
