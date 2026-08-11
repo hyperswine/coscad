@@ -35,3 +35,4 @@ pocket = ψ -100 (ζ -8 (zcyl 4.5 10))
 main = (fuse ⊕ wingR ⊕ wingL ⊕ stab ⊕ fin) ⊖ pocket
 
 // ⇓ means hull between two shapes, ⊕ means union, ⊖ means difference, ⇋ means mirror across plane
+// doing a lot of x and y translations to get the shapes in the right place, since the hulls are defined in their own local coordinates
