@@ -68,6 +68,8 @@ executable coscad
     , megaparsec
     , process
   default-language: Haskell2010
+  if os(darwin)
+    ghc-options: -optP-Wno-nonportable-include-path
 
 test-suite coscad-test
   type: exitcode-stdio-1.0

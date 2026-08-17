@@ -28,3 +28,4 @@ bin/
 *.zip
 *.stl
 output.txt
+.vscode/settings.json
