@@ -26,3 +26,5 @@ output/
 bin/
 .DS_Store
 *.zip
+*.stl
+output.txt

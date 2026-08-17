@@ -114,6 +114,7 @@ xformBBox m = fromCorners . map (mApply m) . bcorners
 -- | Bounding box of a (resolved) shape tree
 bbox :: Shape -> BBox
 bbox s = case s of
+  Empty -> ((0, 0, 0), (0, 0, 0))
   Rectangle x y z -> ((0, 0, 0), (x, y, z))
   Sphere r -> ((-r, -r, -r), (r, r, r))
   Cylinder r h -> ((-r, -r, 0), (r, r, h))

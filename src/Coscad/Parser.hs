@@ -19,11 +19,26 @@ getOffsetValue (Cylinder r _) = r
 getOffsetValue (Shape2D _ r) = r
 getOffsetValue _ = 1.0 -- Default offset value
 
+-- | Syntax mode, chosen by a pragma on the first code line of a file:
+--   !glyph  — glyph operators/shapes (plus legacy lowercase words)
+--   !simple — ASCII word set: Translate/Rotate/Scale/Mirror (with .x/.y/.z
+--             and (x, y, z) tuple forms), Hull/Intersect/Minkowski/Offset,
+--             capitalized shape words, and '*' / '-' for union / difference.
+-- No pragma = legacy mode: both sets accepted (backwards compatible).
+-- '$' (Haskell-style loose application) and |> pipelines work in ALL modes.
+data SynMode = ModeLegacy | ModeGlyph | ModeSimple deriving (Eq, Show)
+
+data Ctx = Ctx {cMode :: SynMode, cVars :: VarTable}
+
+glyphOK, simpleOK :: Ctx -> Bool
+glyphOK c = cMode c /= ModeSimple
+simpleOK c = cMode c /= ModeGlyph
+
 -- Try to resolve a single variable
-tryResolveVar :: VarTable -> (VarName, String) -> Either (VarName, String) (VarName, Shape)
-tryResolveVar table (name, expr) =
+tryResolveVar :: SynMode -> VarTable -> (VarName, String) -> Either (VarName, String) (VarName, Shape)
+tryResolveVar mode table (name, expr) =
   let cleanExpr = trim expr
-   in case parseExpression table cleanExpr of
+   in case parseExpression (Ctx mode table) cleanExpr of
         Right shape -> Right (name, shape)
         Left err -> Left (name, cleanExpr)
 
@@ -65,16 +80,31 @@ double = lexeme $ L.signed sc (try L.float <|> fromIntegral <$> L.decimal)
 -- Parse a complete program
 parseProgram :: String -> Either String (VarTable, Shape)
 parseProgram input =
-  case parse (sc *> program <* eof) "" input of
-    Left err -> Left (errorBundlePretty err)
-    Right result -> result
+  let (mode, body) = splitPragma input
+   in case parse (sc *> program mode <* eof) "" body of
+        Left err -> Left (errorBundlePretty err)
+        Right result -> result
+
+-- | Detect a !simple / !glyph pragma on the first non-comment, non-blank
+-- line. The pragma line is blanked (not removed) so error line numbers
+-- in the body stay correct.
+splitPragma :: String -> (SynMode, String)
+splitPragma input = go [] (lines input)
+  where
+    go _ [] = (ModeLegacy, input)
+    go acc (l : rest)
+      | blank l = go (acc ++ [l]) rest
+      | trim l == "!simple" = (ModeSimple, unlines (acc ++ ("" : rest)))
+      | trim l == "!glyph" = (ModeGlyph, unlines (acc ++ ("" : rest)))
+      | otherwise = (ModeLegacy, input)
+    blank l = let t = trim l in null t || take 2 t == "//"
 
 -- Parse the entire program
-program :: Parser (Either String (VarTable, Shape))
-program = do
+program :: SynMode -> Parser (Either String (VarTable, Shape))
+program mode = do
   varDefs <- many variableDefinition
   return $ do
-    varTable <- resolveVariables varDefs Map.empty
+    varTable <- resolveVariables mode varDefs Map.empty
     case Map.lookup "main" varTable of
       Just mainShape -> Right (varTable, mainShape)
       Nothing -> Left "Error: No 'main' variable found. Please define a 'main' variable."
@@ -102,25 +132,31 @@ expressionString = lexeme $ do
       manyTill anySingle (try (void newline) <|> eof)
 
 -- Parse an expression with variable context
-parseExpression :: VarTable -> String -> Either String Shape
-parseExpression varTable input =
-  case parse (sc *> expression varTable <* eof) "" input of
+parseExpression :: Ctx -> String -> Either String Shape
+parseExpression ctx input =
+  case parse (sc *> expression ctx <* eof) "" input of
     Left err -> Left (errorBundlePretty err)
     Right shape -> Right shape
 
 -- Parse an expression (pipelines bind loosest)
-expression :: VarTable -> Parser Shape
+expression :: Ctx -> Parser Shape
 expression = pipeExpression
+
+-- | Shape argument for prefix forms: either a primary, or '$' followed
+-- by the whole rest of the expression (Haskell-style loose application):
+--   Translate.x 5 $ a * b        χ 5 $ a ⊕ b
+shapeArg :: Ctx -> Parser Shape
+shapeArg ctx = (symbol "$" *> expression ctx) <|> primaryExpression ctx
 
 -- |> pipelines: each stage is a postfix operation on the shape so far.
 --   plate |> at top 5.5 0 -5 flange |> cutat lft 3.5 0 0 (xcyl 2.7 12)
-pipeExpression :: VarTable -> Parser Shape
+pipeExpression :: Ctx -> Parser Shape
 pipeExpression varTable = do
   left <- booleanExpression varTable
   rest <- many (symbol "|>" *> pipeStage varTable)
   return (foldl (flip ($)) left rest)
 
-pipeStage :: VarTable -> Parser (Shape -> Shape)
+pipeStage :: Ctx -> Parser (Shape -> Shape)
 pipeStage vt =
   choice
     [ num1 "x" Tx
@@ -150,27 +186,33 @@ pipeStage vt =
       keyword w
       v <- anchorVec
       off <- option (0, 0, 0) (try ((,,) <$> double <*> double <*> double))
-      child <- primaryExpression vt
+      child <- shapeArg vt
       return (\p -> f v off p child)
     bin w f = try $ do
       keyword w
-      s <- primaryExpression vt
+      s <- shapeArg vt
       return (`f` s)
 
 -- Parse boolean expressions (union, difference, hull, minkowski, offset)
-booleanExpression :: VarTable -> Parser Shape
-booleanExpression varTable = do
-  left <- attachExpression varTable
+-- Glyph operators in !glyph/legacy; '*' (union) and '-' (difference)
+-- in !simple/legacy.
+booleanExpression :: Ctx -> Parser Shape
+booleanExpression ctx = do
+  left <- attachExpression ctx
   rest <- many $ do
-    op <- symbol "⊖" <|> symbol "⊝" <|> symbol "⊕" <|> symbol "⊛" <|> symbol "∩" <|> symbol "⇓" <|> symbol "⊞" <|> symbol "↯"
-    right <- attachExpression varTable
+    op <- choice (gOps ++ sOps)
+    right <- attachExpression ctx
     return (op, right)
   return $ foldl applyBooleanOp left rest
   where
+    gOps = if glyphOK ctx then map symbol ["⊖", "⊝", "⊕", "⊛", "∩", "⇓", "⊞", "↯"] else []
+    sOps = if simpleOK ctx then map symbol ["*", "-"] else []
     applyBooleanOp left ("⊖", right) = Diff left right
     applyBooleanOp left ("⊝", right) = Diff left right
+    applyBooleanOp left ("-", right) = Diff left right
     applyBooleanOp left ("⊕", right) = Union [left, right]
     applyBooleanOp left ("⊛", right) = Union [left, right]
+    applyBooleanOp left ("*", right) = Union [left, right]
     applyBooleanOp left ("∩", right) = Intersection [left, right]
     applyBooleanOp left ("⇓", right) = Hull [left, right]
     applyBooleanOp left ("⊞", right) = Minkowski [left, right]
@@ -200,131 +242,152 @@ anchorVec = do
 -- Parse attachment expressions: bind tighter than boolean ops.
 --   a ⌖ top b   -- position: b's bottom snapped to a's top (translate only)
 --   a ⋈ rt b    -- attach: b rotated so +Z points right, bottom mated to face
-attachExpression :: VarTable -> Parser Shape
-attachExpression varTable = do
-  left <- transformExpression varTable
-  rest <- many step
+attachExpression :: Ctx -> Parser Shape
+attachExpression ctx = do
+  left <- transformExpression ctx
+  rest <- many (choice steps)
   return $ foldl (flip ($)) left rest
   where
-    step =
-      choice
-        [ do
-            symbol "⌖"
-            v <- anchorVec
-            right <- transformExpression varTable
-            return (\l -> Position v (0, 0, 0) l right),
-          do
-            symbol "⋈"
-            v <- anchorVec
-            right <- transformExpression varTable
-            return (\l -> AttachTo v (0, 0, 0) l right)
-        ]
+    steps
+      | glyphOK ctx =
+          [ do
+              symbol "⌖"
+              v <- anchorVec
+              right <- transformExpression ctx
+              return (\l -> Position v (0, 0, 0) l right),
+            do
+              symbol "⋈"
+              v <- anchorVec
+              right <- transformExpression ctx
+              return (\l -> AttachTo v (0, 0, 0) l right)
+          ]
+      | otherwise = []
 
 -- Parse transformation expressions
-transformExpression :: VarTable -> Parser Shape
-transformExpression varTable = transformation varTable <|> primaryExpression varTable
+transformExpression :: Ctx -> Parser Shape
+transformExpression ctx = transformation ctx <|> primaryExpression ctx
+
+-- | A comma tuple: (x, y, z)
+tuple3 :: Parser (Double, Double, Double)
+tuple3 = try $ between (symbol "(") (symbol ")") $ do
+  a <- double
+  _ <- symbol ","
+  b <- double
+  _ <- symbol ","
+  c <- double
+  return (a, b, c)
 
 -- Parse transformations
-transformation :: VarTable -> Parser Shape
-transformation varTable =
-  choice
-    [ translateX,
-      translateY,
-      translateZ,
-      rotateX,
-      rotateY,
-      rotateZ,
-      scaleTransform,
-      mirrorTransform,
-      anchorTransform,
-      extrudeTransform
-    ]
+transformation :: Ctx -> Parser Shape
+transformation ctx =
+  choice (glyphTs ++ simpleTs)
   where
-    anchorTransform = do
-      symbol "⚓"
-      v <- anchorVec
-      shape <- primaryExpression varTable
-      return $ Anchor v shape
+    glyphTs
+      | glyphOK ctx =
+          [ g1 "χ" Tx, g1 "ψ" Ty, g1 "ζ" Tz
+          , g1 "θ" Rx, g1 "ϕ" Ry, g1 "ω" Rz
+          , g3 "⬈" Scale, g3 "⇋" Mirror
+          , g1 "⮕" Extrude
+          , do
+              symbol "⚓"
+              v <- anchorVec
+              Anchor v <$> shapeArg ctx
+          ]
+      | otherwise = []
+    g1 s f = do
+      _ <- symbol s
+      n <- double
+      f n <$> shapeArg ctx
+    g3 s f = do
+      _ <- symbol s
+      a <- double
+      b <- double
+      c <- double
+      f (a, b, c) <$> shapeArg ctx
 
-    translateX = do
-      symbol "χ"
-      dx <- double
-      shape <- primaryExpression varTable
-      return $ Tx dx shape
-
-    translateY = do
-      symbol "ψ"
-      dy <- double
-      shape <- primaryExpression varTable
-      return $ Ty dy shape
-
-    translateZ = do
-      symbol "ζ"
-      dz <- double
-      shape <- primaryExpression varTable
-      return $ Tz dz shape
-
-    rotateX = do
-      symbol "θ"
-      ax <- double
-      shape <- primaryExpression varTable
-      return $ Rx ax shape
-
-    rotateY = do
-      symbol "ϕ"
-      ay <- double
-      shape <- primaryExpression varTable
-      return $ Ry ay shape
-
-    rotateZ = do
-      symbol "ω"
-      az <- double
-      shape <- primaryExpression varTable
-      return $ Rz az shape
-
-    scaleTransform = do
-      symbol "⬈"
-      sx <- double
-      sy <- double
-      sz <- double
-      shape <- primaryExpression varTable
-      return $ Scale (sx, sy, sz) shape
-
-    mirrorTransform = do
-      symbol "⇋"
-      mx <- double
-      my <- double
-      mz <- double
-      shape <- primaryExpression varTable
-      return $ Mirror (mx, my, mz) shape
-
-    extrudeTransform = do
-      symbol "⮕"
-      h <- double
-      shape <- primaryExpression varTable
-      return $ Extrude h shape
+    -- !simple word set: namespaced transforms + prefix combinators.
+    --   Translate (x, y, z) obj      Translate.x n obj
+    --   Rotate (x, y, z) obj         Rotate.z n obj    (rotate order: x, y, z)
+    --   Scale (x, y, z) / Scale.x n  Mirror (x, y, z) / Mirror.x
+    --   Extrude h obj   Anchor top obj
+    --   Hull a b   Union a b   Intersect a b   Minkowski a b   Offset n a
+    simpleTs
+      | simpleOK ctx =
+          [ ns "Translate" Translate [("x", Tx), ("y", Ty), ("z", Tz)]
+          , ns "Rotate" rotXYZ [("x", Rx), ("y", Ry), ("z", Rz)]
+          , ns "Scale" Scale [("x", \n -> Scale (n, 1, 1)), ("y", \n -> Scale (1, n, 1)), ("z", \n -> Scale (1, 1, n))]
+          , nsMirror
+          , try (keyword "Extrude" *> (Extrude <$> double <*> shapeArg ctx))
+          , try (keyword "Anchor" *> (Anchor <$> anchorVec <*> shapeArg ctx))
+          , bin2 "Hull" (\a b -> Hull [a, b])
+          , bin2 "Union" (\a b -> Union [a, b])
+          , bin2 "Intersect" (\a b -> Intersection [a, b])
+          , bin2 "Minkowski" (\a b -> Minkowski [a, b])
+          , try (keyword "Offset" *> ((\n s -> Offset n s) <$> double <*> shapeArg ctx))
+          ]
+      | otherwise = []
+    rotXYZ (a, b, c) s = Rz c (Ry b (Rx a s))
+    ns w tupleF axes = try $ do
+      _ <- keyword w
+      choice
+        ( [ try (symbol ("." ++ ax) *> (axF <$> double <*> shapeArg ctx))
+          | (ax, axF) <- axes
+          ]
+            ++ [tupleF <$> tuple3 <*> shapeArg ctx]
+        )
+    nsMirror = try $ do
+      _ <- keyword "Mirror"
+      choice
+        [ try (symbol ".x" *> (Mirror (1, 0, 0) <$> shapeArg ctx))
+        , try (symbol ".y" *> (Mirror (0, 1, 0) <$> shapeArg ctx))
+        , try (symbol ".z" *> (Mirror (0, 0, 1) <$> shapeArg ctx))
+        , Mirror <$> tuple3 <*> shapeArg ctx
+        ]
+    bin2 w f = try $ do
+      _ <- keyword w
+      a <- primaryExpression ctx
+      f a <$> shapeArg ctx
 
 -- Parse primary expressions (shapes, variables, parentheses)
 -- NOTE: shapes come before variables so keyword primitives (xcyl etc.)
 -- are not swallowed by the variable parser.
-primaryExpression :: VarTable -> Parser Shape
-primaryExpression varTable =
+primaryExpression :: Ctx -> Parser Shape
+primaryExpression ctx =
   choice
-    [ parenthesized,
-      basicShape,
-      bosl2Shape,
-      wordShape,
-      shape2D,
-      variable
-    ]
+    ( [parenthesized]
+        ++ (if glyphOK ctx then [basicShape, bosl2Shape] else [])
+        ++ [wordShape]
+        ++ (if simpleOK ctx then [simpleShape] else [])
+        ++ (if glyphOK ctx then [shape2D] else [])
+        ++ [variable]
+    )
   where
-    parenthesized = between (symbol "(") (symbol ")") (expression varTable)
+    varTable = cVars ctx
+    parenthesized = between (symbol "(") (symbol ")") (expression ctx)
 
     variable = do
       name <- identifier
       case Map.lookup name varTable of
         Just shape -> return shape
         Nothing -> fail $ "Undefined variable: " ++ name
+
+    -- !simple capitalized shape words
+    simpleShape =
+      choice
+        [ try (keyword "Sphere" *> (Sphere <$> double))
+        , try (keyword "Cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> double))
+        , try (keyword "Box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> double <*> double <*> double))
+        , try (keyword "Cylinder" *> ((\r h -> Cyl r h 0 0) <$> double <*> double))
+        , try (keyword "Cone" *> (Cone <$> double <*> double))
+        , try (keyword "Tube" *> (Tube <$> double <*> double <*> double))
+        , try (keyword "Torus" *> (Torus <$> double <*> double))
+        , try (keyword "Wedge" *> ((\a b c -> Wedge (a, b, c)) <$> double <*> double <*> double))
+        , try (keyword "Prismoid" *> ((\a b c d h -> Prismoid (a, b) (c, d) h) <$> double <*> double <*> double <*> double <*> double))
+        , try (keyword "Circle" *> (Shape2D 100 <$> double))
+        , try (keyword "Triangle" *> (Shape2D 3 <$> double))
+        , try (keyword "Pentagon" *> (Shape2D 5 <$> double))
+        , try (keyword "Bezier" *> bezierBody)
+        ]
 
     basicShape =
       choice
@@ -371,10 +434,7 @@ primaryExpression varTable =
           tubeShape,
           prismoidShape,
           torusShape,
-          wedgeShape,
-          xcylShape,
-          ycylShape,
-          zcylShape
+          wedgeShape
         ]
 
     cuboidChamfer = do
@@ -448,10 +508,13 @@ primaryExpression varTable =
       r <- double
       ZCyl r <$> double
 
-    -- word-named shapes (all BOSL2-centered family)
+    -- word-named shapes (all BOSL2-centered family) — available in every mode
     wordShape =
       choice
-        [ try (keyword "cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> double))
+        [ xcylShape
+        , ycylShape
+        , zcylShape
+        , try (keyword "cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> double))
         , try (keyword "box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> double <*> double <*> double))
         , try (keyword "sphere" *> (Sphere <$> double))
         , try (keyword "cyl" *> ((\r h -> Cyl r h 0 0) <$> double <*> double))
@@ -464,16 +527,7 @@ primaryExpression varTable =
       choice
         [triangle, pentagon, circle, bezier]
 
-    bezier = do
-      symbol "✎"
-      ns <- some double
-      let n = length ns
-      if odd n || n < 8 || (n `div` 2) `mod` 3 /= 1
-        then fail ("✎ needs 3k+1 control points as x y pairs (got " ++ show n ++ " numbers)")
-        else return (bezPoly 24 (pairUp ns))
-      where
-        pairUp (a : b : r) = (a, b) : pairUp r
-        pairUp _ = []
+    bezier = symbol "✎" *> bezierBody
 
     triangle = do
       symbol "△"
@@ -487,11 +541,23 @@ primaryExpression varTable =
       symbol "⭘"
       Shape2D 100 <$> double
 
+-- | Shared body for ✎ / Bezier: 3k+1 control points as x y pairs
+bezierBody :: Parser Shape
+bezierBody = do
+  ns <- some double
+  let n = length ns
+  if odd n || n < 8 || (n `div` 2) `mod` 3 /= 1
+    then fail ("bezier needs 3k+1 control points as x y pairs (got " ++ show n ++ " numbers)")
+    else return (bezPoly 24 (pairUp ns))
+  where
+    pairUp (a : b : r) = (a, b) : pairUp r
+    pairUp _ = []
+
 -- Resolve variables with dependency resolution
-resolveVariables :: [(VarName, String)] -> VarTable -> Either String VarTable
-resolveVariables [] table = Right table
-resolveVariables remaining table = do
-  let results = map (tryResolveVar table) remaining
+resolveVariables :: SynMode -> [(VarName, String)] -> VarTable -> Either String VarTable
+resolveVariables _ [] table = Right table
+resolveVariables mode remaining table = do
+  let results = map (tryResolveVar mode table) remaining
   let resolved = rights results
   let unresolved = lefts results
 
@@ -499,7 +565,7 @@ resolveVariables remaining table = do
     then Left $ "Cannot resolve variables (possible circular dependency): " ++ show (map fst unresolved)
     else do
       let newTable = foldl (\acc (name, shape) -> Map.insert name shape acc) table resolved
-      resolveVariables unresolved newTable
+      resolveVariables mode unresolved newTable
 
 -- Utility functions
 trim :: String -> String

@@ -1,0 +1,39 @@
+// Frame mk3 — mid fuselage: nose socket, wing seats (6 deg dihedral), boom deck.
+// Slice LIGHT: 2 walls, 8% infill. Hollowed by geometry so it stays light anyway.
+// Flight frame. Spans y ~112..250.
+fa = ψ 122 (● 9.5)
+fb = ψ 155 (● 9.5)
+fc = ψ 246 (● 5)
+outer = (fa ⇓ fb) ⊕ (fb ⇓ fc)
+// front socket bore d12 for the nose spigot
+bore = ψ 131 (ycyl 6 46)
+// internal cavity to keep the mid light even if over-infilled
+cava = ψ 165 (● 5.5)
+cavb = ψ 238 (● 2.5)
+cav = cava ⇓ cavb
+body = outer ⊖ bore ⊖ cav
+
+// wing seats: flat decks in local frame (top=z0), rotated +-6deg, raised to z8
+// wing root LE at y=144; decks span y 141..233; insert holes at y=160 and 208
+deckR = χ 13 (ψ 187 (ζ -3 (▣ 30 92 6 0)))
+insRA = χ 16.5 (ψ 160 (ζ -3.5 (zcyl 2.05 9)))
+insRB = χ 16.5 (ψ 208 (ζ -3.5 (zcyl 2.05 9)))
+seatR = ζ 8 (ϕ -6 deckR)
+seatL = ⇋ 1 0 0 seatR
+holRA = ζ 8 (ϕ -6 insRA)
+holRB = ζ 8 (ϕ -6 insRB)
+holLA = ⇋ 1 0 0 holRA
+holLB = ⇋ 1 0 0 holRB
+
+// nose joint: M3 clearance through frame top wall into spigot insert at y=127
+jhole = ψ 127 (ζ 6 (zcyl 1.7 12))
+
+// rear deck: boom tab bolts here, 2x M3 inserts
+rdeck = ψ 239 (ζ 3 (▣ 16 22 6 0))
+insCA = ψ 232 (ζ 2 (zcyl 2.05 9))
+insCB = ψ 246 (ζ 2 (zcyl 2.05 9))
+
+// relieve the outer dome above the seat planes so the wing seats flush
+reliefR = ζ 8 (ϕ -6 (χ 13 (ψ 187 (ζ 3 (▣ 30 92 6 0)))))
+reliefL = ⇋ 1 0 0 reliefR
+main = (body ⊕ seatR ⊕ seatL ⊕ rdeck) ⊖ reliefR ⊖ reliefL ⊖ holRA ⊖ holRB ⊖ holLA ⊖ holLB ⊖ insCA ⊖ insCB ⊖ jhole

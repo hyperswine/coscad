@@ -1,3 +1,5 @@
+{-# LANGUAGE PatternSynonyms #-}
+
 -- | The .assemble subsystem: recursive part references with print
 -- counts, orientation declarations, and hints; design-stage outputs
 -- (assembled view, packed plate, per-variant scads, manifest).
@@ -46,6 +48,7 @@ data POpt = OCount Int | ODown (Double, Double, Double) String | OHint (String, 
 data AsmStmt
   = APart String FilePath Int (Maybe ((Double, Double, Double), String)) [(String, String)]
   | APlate Double Double Double
+  | AClearance Double
   | ADef (VarName, String)
 
 data FlatPart = FlatPart
@@ -62,13 +65,22 @@ data AsmResult = AsmResult
   { arPlate :: (Double, Double, Double)
   , arAsm :: Maybe Shape
   , arFlat :: [FlatPart]
+  , arMode :: SynMode           -- pragma of this .assemble file
+  , arClearance :: Double       -- required clearance for `coscad check` (0 = contacts only)
+  , arDefs :: [(VarName, String)] -- raw asm-side defs (re-resolvable with substitutions)
+  , arParts :: [(String, Shape)]  -- top-level part name -> resolved shape
   }
 
 asmProgram :: Parser [AsmStmt]
 asmProgram = many asmStmt
 
 asmStmt :: Parser AsmStmt
-asmStmt = try plateStmt <|> try partStmt <|> (ADef <$> variableDefinition)
+asmStmt = try plateStmt <|> try clearanceStmt <|> try partStmt <|> (ADef <$> variableDefinition)
+
+clearanceStmt :: Parser AsmStmt
+clearanceStmt = do
+  keyword "clearance"
+  AClearance <$> double
 
 plateStmt :: Parser AsmStmt
 plateStmt = do
@@ -122,19 +134,21 @@ loadAssembleFile visited path
         then return (Left ("File not found: " ++ path))
         else do
           contents <- readFile path
-          case parse (sc *> asmProgram <* eof) path contents of
+          let (fmode, fbody) = splitPragma contents
+          case parse (sc *> asmProgram <* eof) path fbody of
             Left err -> return (Left (errorBundlePretty err))
             Right stmts -> do
               let dir = takeDirectory path
                   partsS = [p | p@APart {} <- stmts]
                   defs = [d | ADef d <- stmts]
                   plate = last ((220, 220, 6) : [(w, d, m) | APlate w d m <- stmts])
+                  clr = last (0 : [c | AClearance c <- stmts])
               loaded <- mapM (loadRef (path : visited) dir) partsS
               case sequence loaded of
                 Left err -> return (Left err)
                 Right entries -> do
                   let table0 = Map.fromList [(n, s) | (n, s, _) <- entries]
-                  case resolveVariables defs table0 of
+                  case resolveVariables fmode defs table0 of
                     Left err -> return (Left err)
                     Right table ->
                       return $
@@ -142,6 +156,10 @@ loadAssembleFile visited path
                           AsmResult
                             { arPlate = plate
                             , arAsm = Map.lookup "asm" table
+                            , arMode = fmode
+                            , arClearance = clr
+                            , arDefs = defs
+                            , arParts = [(n, s) | (n, s, _) <- entries]
                             , arFlat = concat [f | (_, _, f) <- entries]
                             }
 
