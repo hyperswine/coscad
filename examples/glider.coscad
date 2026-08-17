@@ -1,4 +1,6 @@
-// Glider mk2 — 260mm nose-to-tail, Y = longitudinal (nose at -130), Z up
+// Glider mk3 — scaled down from mk2's ~228x259mm to ~120x136mm span/length
+// (factor 0.526): cheaper/easier to CNC in aluminium, still flies decently
+// with the same proportions. Y = longitudinal (nose at -130), Z up.
 // Fixes vs Blender v1: horizontal stab (Vh~0.5), vertical fin, 6 deg dihedral,
 // slimmer fuselage (d18). Print: 2 walls, 8% infill. Nose ballast to trim CG.
 
@@ -32,7 +34,8 @@ fin = finA ⇓ finB ⇓ finC
 // --- nose ballast pocket: d9 x 10 blind hole from below at y=-100 ---
 // fill with ~6g (7x M4 nuts / 4.5mm BBs / lead shot), then tape over
 pocket = ψ -100 (ζ -8 (zcyl 4.5 10))
-main = (fuse ⊕ wingR ⊕ wingL ⊕ stab ⊕ fin) ⊖ pocket
+main = ⬈ 0.526 0.526 0.526 ((fuse ⊕ wingR ⊕ wingL ⊕ stab ⊕ fin) ⊖ pocket)
 
 // ⇓ means hull between two shapes, ⊕ means union, ⊖ means difference, ⇋ means mirror across plane
+// ⬈ means scale (sx sy sz shape)
 // doing a lot of x and y translations to get the shapes in the right place, since the hulls are defined in their own local coordinates
