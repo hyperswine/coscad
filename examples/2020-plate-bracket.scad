@@ -7,10 +7,10 @@
 // The part is symmetric in Y, so the SAME part serves both the
 // left and right side of the rail (rotate 180°).
 //
-// Panel convention: panel edge sits at the rail face; panel hole
-// is `panel_hole_x` in from the panel edge (default 10 mm, same
-// inset as the perimeter holes that hit rail-top slot centerlines,
-// so all panels stay identical/interchangeable).
+// Panel convention: each panel extends `panel_contact` onto the rail
+// top (default 10 mm). On a 2020 rail, adjacent panels therefore meet
+// at the slot centerline and each edge has 10 mm of bearing surface.
+// The bracket pilot remains `panel_hole_x` beyond the rail side face.
 //
 // Hardware:
 //   - Rail side: M5 x 12 socket-cap screw + drop-in T-nut,
@@ -47,8 +47,14 @@ key_h = 5.8; // 2020 slot mouth is ~6.0-6.2; leave clearance
 key_proud = 1.0; // how far it pokes into the slot mouth
 
 /* [Render] */
-// "part" = single printable bracket, "assembly" = rail + 2 brackets + panels
+// "part" = single printable bracket, "assembly" = 2x2 panel grid
 mode = "assembly"; // ["part", "assembly"]
+
+/* [Assembly preview] */
+opening_x = 60; // clear span between vertical rail faces
+opening_y = 50; // clear span between horizontal rail faces
+panel_contact = 10; // panel overlap onto each rail top
+panel_t = 2.5;
 
 $fn = 48;
 
@@ -115,21 +121,68 @@ module rail2020(len = 60) {
   }
 }
 
-module panel(sz = 40, t = 2.5) {
-  color("skyblue", 0.75)
-    translate([sz / 2, 0, rail + t / 2])
-      cuboid([sz, 50, t]);
+module panel(size = [80, 70], panel_label = "", panel_color = "skyblue") {
+  color(panel_color, 0.72)
+    translate([0, 0, rail + panel_t / 2])
+      cuboid([size[0], size[1], panel_t]);
+
+  color("midnightblue")
+    translate([0, 0, rail + panel_t + 0.01])
+      linear_extrude(0.25)
+        text(panel_label, size=7, halign="center", valign="center");
+}
+
+module placed_bracket(position, direction, bracket_color = "orange") {
+  color(bracket_color)
+    translate([position[0], position[1], 0])
+      rotate([0, 0, direction])
+        translate([rail / 2, 0, 0])
+          bracket();
 }
 
 module assembly() {
-  color("silver") translate([0, 0, 0]) rail2020();
-  // right-side bracket
-  color("orange") translate([rail / 2, 0, 0]) bracket();
-  // left-side bracket = same part rotated 180 about Z
-  color("orangered") rotate([0, 0, 180]) translate([rail / 2, 0, 0]) bracket();
-  // the two panels, edges at the rail faces
-  translate([rail / 2, 0, 0]) panel();
-  rotate([0, 0, 180]) translate([rail / 2, 0, 0]) panel();
+  assert(
+    panel_contact >= 0 && panel_contact <= rail / 2,
+    "panel_contact must be between 0 and half the rail width"
+  );
+
+  pitch_x = opening_x + rail;
+  pitch_y = opening_y + rail;
+  panel_size = [opening_x + 2 * panel_contact, opening_y + 2 * panel_contact];
+  rail_x_len = 2 * pitch_x + rail;
+  rail_y_len = 2 * pitch_y + rail;
+
+  // Three rails in each direction form the perimeter and center cross.
+  color("silver") {
+    for (x = [-pitch_x, 0, pitch_x])
+      translate([x, 0, 0]) rail2020(rail_y_len);
+    for (y = [-pitch_y, 0, pitch_y])
+      translate([0, y, 0]) rotate([0, 0, 90]) rail2020(rail_x_len);
+  }
+
+  // One bracket supports the midpoint of every panel edge.
+  for (y = [-pitch_y / 2, pitch_y / 2]) {
+    placed_bracket([-pitch_x, y], 0);
+    placed_bracket([0, y], 180, "darkorange");
+    placed_bracket([0, y], 0);
+    placed_bracket([pitch_x, y], 180, "darkorange");
+  }
+  for (x = [-pitch_x / 2, pitch_x / 2]) {
+    placed_bracket([x, -pitch_y], 90);
+    placed_bracket([x, 0], 270, "darkorange");
+    placed_bracket([x, 0], 90);
+    placed_bracket([x, pitch_y], 270, "darkorange");
+  }
+
+  // Panels extend from each opening onto half of every surrounding rail.
+  translate([-pitch_x / 2, -pitch_y / 2, 0])
+    panel(panel_size, "plate 1", "lightskyblue");
+  translate([pitch_x / 2, -pitch_y / 2, 0])
+    panel(panel_size, "plate 2", "powderblue");
+  translate([pitch_x / 2, pitch_y / 2, 0])
+    panel(panel_size, "plate 3", "lightcyan");
+  translate([-pitch_x / 2, pitch_y / 2, 0])
+    panel(panel_size, "plate 4", "paleturquoise");
 }
 
 // ------------------------------------------------------------
