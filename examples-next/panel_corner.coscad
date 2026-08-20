@@ -1,0 +1,16 @@
+// Corner panel, 210 x 210 x 2.5 PETG.
+// Sizing rule (opening = 180 between rail faces):
+//   each interior edge adds +10 (reaches the shared rail slot centerline)
+//   each perimeter edge adds +20 (covers the full rail to its outer edge)
+//   center 200x200 | edge 210x200 | corner 210x210 | single-span lid 220x220
+// This part: interior edges on local -X,-Y; perimeter on +X,+Y.
+// M3 clearance (d3.4) over bracket pilots: 20mm in from interior edges,
+// 30mm in from perimeter edges (pilot is always 10mm off the rail face).
+// The square rotates: one part serves all four quadrants of a 2x2 grid.
+p = ◙ 210 210 2.5 1
+h = zcyl 1.7 8
+main = p
+  |> cut (χ -85 h)
+  |> cut (χ 75 h)
+  |> cut (ψ -85 h)
+  |> cut (ψ 75 h)

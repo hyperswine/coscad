@@ -1,0 +1,8 @@
+// Interior panel 200 x 200 (all four edges meet neighbours at slot centerlines).
+p = ◙ 200 200 2.5 1
+h = zcyl 1.7 8
+main = p
+  |> cut (χ -80 h)
+  |> cut (χ 80 h)
+  |> cut (ψ -80 h)
+  |> cut (ψ 80 h)

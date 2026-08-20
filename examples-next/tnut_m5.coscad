@@ -1,0 +1,13 @@
+// M5 drop-in T-nut, crude preview solid (x0 hardware).
+// Base 2.3 x 10 x 9 sits in the slot chamber with its front face 0.1mm
+// behind the lip (the measured lip underside slopes back from 8.2 at the
+// mouth to ~7.95 at the flanks, so a flat 9mm base cannot touch 8.2).
+// Neck 0.9 x 10 x 6 rises through the mouth and stops 1.0mm short of the
+// rail face so it clears the bracket's 1.0mm anti-rotation key
+// (key_proud + neck_proud must stay <= 1.8mm mouth depth).
+// Neck outer face at local x = +2.05.
+base = box 2.3 10 9
+neck = box 0.9 10 6
+main = base
+  |> at rt neck
+  |> cutat ctr 0.4 0 0 (xcyl 2.1 6)

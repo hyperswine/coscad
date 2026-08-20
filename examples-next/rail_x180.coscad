@@ -1,0 +1,12 @@
+// 2020 rail segment, 180mm, running along X, butts between Y rails (x0).
+r = box 180 20 20
+main = r
+  |> cutat fwd (box 182 3.6 6.4)
+  |> cutat bak (box 182 3.6 6.4)
+  |> cutat top (box 182 6.4 3.6)
+  |> cutat bot (box 182 6.4 3.6)
+  |> cutat ctr 0 6.8 0 (box 182 2.8 9.5)
+  |> cutat ctr 0 -6.8 0 (box 182 2.8 9.5)
+  |> cutat ctr 0 0 6.8 (box 182 9.5 2.8)
+  |> cutat ctr 0 0 -6.8 (box 182 9.5 2.8)
+  |> cutat ctr (xcyl 2.1 182)

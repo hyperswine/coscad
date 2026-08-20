@@ -1,0 +1,41 @@
+{
+  "source": "examples-next/enclosure2x2.assemble",
+  "bed": {"w": 250, "d": 250, "margin": 6, "max_z": 250},
+  "variants": [
+    {"id": "bracket_fwd", "part": "bracket", "source": "examples-next/bracket_seam.coscad", "down": "fwd", "orientation_mode": "declared", "fff_score": -0.173, "footprint": [17, 20, 15], "mesh": "examples-next/enclosure2x2_next_bracket_fwd.stl", "hints": {"material": "petg"}},
+    {"id": "panel_bot", "part": "panel", "source": "examples-next/panel_corner.coscad", "down": "bot", "orientation_mode": "declared", "fff_score": 0.483, "footprint": [210, 210, 2.5], "mesh": "examples-next/enclosure2x2_next_panel_bot.stl", "hints": {"material": "petg"}}
+  ],
+  "beds": [
+    {"index": 1, "stl": "examples-next/enclosure2x2_bed1.stl", "placements": [
+      {"instance": "panel_1", "variant": "panel_bot", "x": 6, "y": 6, "w": 210, "d": 210}
+    ]},
+    {"index": 2, "stl": "examples-next/enclosure2x2_bed2.stl", "placements": [
+      {"instance": "panel_2", "variant": "panel_bot", "x": 6, "y": 6, "w": 210, "d": 210}
+    ]},
+    {"index": 3, "stl": "examples-next/enclosure2x2_bed3.stl", "placements": [
+      {"instance": "panel_3", "variant": "panel_bot", "x": 6, "y": 6, "w": 210, "d": 210}
+    ]},
+    {"index": 4, "stl": "examples-next/enclosure2x2_bed4.stl", "placements": [
+      {"instance": "panel_4", "variant": "panel_bot", "x": 6, "y": 6, "w": 210, "d": 210},
+      {"instance": "bracket_1", "variant": "bracket_fwd", "x": 222, "y": 6, "w": 17, "d": 20},
+      {"instance": "bracket_2", "variant": "bracket_fwd", "x": 6, "y": 222, "w": 17, "d": 20},
+      {"instance": "bracket_3", "variant": "bracket_fwd", "x": 29, "y": 222, "w": 17, "d": 20},
+      {"instance": "bracket_4", "variant": "bracket_fwd", "x": 52, "y": 222, "w": 17, "d": 20},
+      {"instance": "bracket_5", "variant": "bracket_fwd", "x": 75, "y": 222, "w": 17, "d": 20},
+      {"instance": "bracket_6", "variant": "bracket_fwd", "x": 98, "y": 222, "w": 17, "d": 20},
+      {"instance": "bracket_7", "variant": "bracket_fwd", "x": 121, "y": 222, "w": 17, "d": 20},
+      {"instance": "bracket_8", "variant": "bracket_fwd", "x": 144, "y": 222, "w": 17, "d": 20},
+      {"instance": "bracket_9", "variant": "bracket_fwd", "x": 167, "y": 222, "w": 17, "d": 20},
+      {"instance": "bracket_10", "variant": "bracket_fwd", "x": 190, "y": 222, "w": 17, "d": 20},
+      {"instance": "bracket_11", "variant": "bracket_fwd", "x": 213, "y": 222, "w": 17, "d": 20}
+    ]},
+    {"index": 5, "stl": "examples-next/enclosure2x2_bed5.stl", "placements": [
+      {"instance": "bracket_12", "variant": "bracket_fwd", "x": 6, "y": 6, "w": 17, "d": 20},
+      {"instance": "bracket_13", "variant": "bracket_fwd", "x": 29, "y": 6, "w": 17, "d": 20},
+      {"instance": "bracket_14", "variant": "bracket_fwd", "x": 52, "y": 6, "w": 17, "d": 20},
+      {"instance": "bracket_15", "variant": "bracket_fwd", "x": 75, "y": 6, "w": 17, "d": 20},
+      {"instance": "bracket_16", "variant": "bracket_fwd", "x": 98, "y": 6, "w": 17, "d": 20}
+    ]}
+  ],
+  "assembly_only": [{"part": "railY", "source": "examples-next/rail_y420.coscad"}, {"part": "railX", "source": "examples-next/rail_x180.coscad"}, {"part": "tnut", "source": "examples-next/tnut_m5.coscad"}, {"part": "corner", "source": "examples-next/corner_90.coscad"}]
+}
