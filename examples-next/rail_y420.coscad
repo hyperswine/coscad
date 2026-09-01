@@ -1,0 +1,14 @@
+// 2020 rail, 420mm, running along Y (x0 preview part).
+// Slot geometry matched to the measured extrusion: mouth 6.4 wide x 1.8
+// deep, chamber 2.8 deep x 9.5 wide behind the lip (lip inner at 8.2).
+r = box 20 420 20
+main = r
+  |> cutat rt (box 3.6 422 6.4)
+  |> cutat lft (box 3.6 422 6.4)
+  |> cutat top (box 6.4 422 3.6)
+  |> cutat bot (box 6.4 422 3.6)
+  |> cutat ctr 6.8 0 0 (box 2.8 422 9.5)
+  |> cutat ctr -6.8 0 0 (box 2.8 422 9.5)
+  |> cutat ctr 0 0 6.8 (box 9.5 422 2.8)
+  |> cutat ctr 0 0 -6.8 (box 9.5 422 2.8)
+  |> cutat ctr (ycyl 2.1 422)

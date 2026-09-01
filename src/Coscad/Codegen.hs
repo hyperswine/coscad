@@ -24,6 +24,7 @@ boslMod ch ro =
   (if ch /= 0 then ", chamfer = " ++ show ch else "")
     ++ (if ro /= 0 then ", rounding = " ++ show ro else "")
 
+gen Empty = "union() { }"
 gen (Rectangle x y z) = "cube(" ++ "[" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ "]" ++ ");"
 gen (Sphere r) = "sphere(" ++ show r ++ ");"
 gen (Shape2D n r) =

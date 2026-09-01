@@ -6,6 +6,7 @@
 // clean), extruded 14mm so top and bottom faces are dead flat.
 // Each limb bounding box ~250 x 71 x 14 mm.
 
+// ✎ = bezier path
 limb2d = ✎ -1 0 90 1 180 14 238 44 245 47 249 54 244 59 239 62 233 57 234 49 230 55 227 55 222 50 150 20 78 10 -1 12
 limb   = ⮕ 14 limb2d
 grip   = ψ 7 (ζ 7 (◙ 100 30 14 3))

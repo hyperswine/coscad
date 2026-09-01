@@ -6,7 +6,8 @@ type D = Double
 type I = Int
 
 data Shape
-  = Rectangle D D D
+  = Empty -- renders nothing; used by the checker to isolate one part
+  | Rectangle D D D
   | Sphere D
   | Cylinder D D
   | Cone D D

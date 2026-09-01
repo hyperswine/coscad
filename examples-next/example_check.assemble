@@ -1,0 +1,8 @@
+!simple
+
+plate 250 250 1
+clearance 0.3
+partA ← a.coscad ×1
+partB ← b.coscad ×1
+partC ← c.coscad ×1
+asm = partA * (Translate.x 18 partB) * (Translate.z 10.2 partC)

@@ -6,6 +6,7 @@ import Control.Exception (SomeException, catch)
 import Coscad.Assemble (processAssemble)
 import Coscad.Codegen (writeScad)
 import Coscad.Next (processNext)
+import Coscad.Check (processCheck)
 import Coscad.Parser (parseProgram)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import System.Directory (doesFileExist)
@@ -20,6 +21,7 @@ main = do
   args <- getArgs
   case args of
     ["next", inputFile] -> processNext inputFile
+    ["check", inputFile] -> processCheck inputFile
     [inputFile] -> processFile inputFile
     _ -> do
       hPutStrLn stderr "Usage: coscad <input.coscad>"

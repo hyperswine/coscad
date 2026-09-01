@@ -42,6 +42,10 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    when:
+    - condition: os(darwin)
+      ghc-options:
+      - -optP-Wno-nonportable-include-path
     dependencies:
     - coscad
 

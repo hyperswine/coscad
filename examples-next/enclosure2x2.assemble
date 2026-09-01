@@ -1,0 +1,83 @@
+// ============================================================
+// 2x2 panel enclosure face on 2020 T-slot, 420 x 420 outer.
+// ------------------------------------------------------------
+// Frame: 3 full Y rails (x = -200, 0, 200) + 6 X segments (180mm)
+// butted between them at y = -200, 0, 200. Rails sit z 0..20.
+//
+// Panel sizing rule (opening = 180 between rail faces):
+//   interior edge  -> +10  (reaches the shared slot centerline)
+//   perimeter edge -> +20  (covers the rail to its outer edge)
+//   center 200x200 | edge 210x200 | corner 210x210 | 1x1 lid 220x220
+// In a 2x2 every panel is a corner panel (210x210); the square part
+// rotates 0/90/180/270 to serve all four quadrants, and the four
+// outer corners land exactly on the frame's outer edge (420 = 2*210).
+//
+// One seam bracket at the midpoint of every panel edge (16), each
+// with an M5 drop-in T-nut in the side slot behind it. Bracket pose:
+// rotate to face, translate face axis by (face_plane + 2.5), lift z 10.
+// T-nut pose: same rotation, translate by (rail_center +- 6.95).
+// 90-deg corner connectors tie the four outer butt joints.
+// ============================================================
+plate 250 250 6
+clearance 0.05
+
+railY   ← rail_y420.coscad ×0
+railX   ← rail_x180.coscad ×0
+bracket ← bracket_seam.coscad ×16 ▽fwd material=petg
+tnut    ← tnut_m5.coscad ×0
+corner  ← corner_90.coscad ×0
+panel   ← panel_corner.coscad ×4 ▽bot material=petg
+
+// Pose blocks below, in order: rails, brackets (center Y rail both
+// faces; perimeter Y rails inward; center X rails both faces; perimeter
+// X rails inward), T-nuts mirroring the bracket block, the four corner
+// connectors, then the four rotated panels on the rail tops.
+asm = ζ 10 (χ -200 railY)
+  |> add (ζ 10 railY)
+  |> add $ ζ 10 (χ 200 railY)
+  |> add $ ζ 10 (ψ -200 (χ -100 railX))
+  |> add $ ζ 10 (ψ -200 (χ 100 railX))
+  |> add $ ζ 10 (χ -100 railX)
+  |> add $ ζ 10 (χ 100 railX)
+  |> add $ ζ 10 (ψ 200 (χ -100 railX))
+  |> add $ ζ 10 (ψ 200 (χ 100 railX))
+  |> add $ ζ 10 (ψ 105 (χ 12.5 bracket))
+  |> add $ ζ 10 (ψ -105 (χ 12.5 bracket))
+  |> add $ ζ 10 (ψ 105 (χ -12.5 (ω 180 bracket)))
+  |> add $ ζ 10 (ψ -105 (χ -12.5 (ω 180 bracket)))
+  |> add $ ζ 10 (ψ 105 (χ -187.5 bracket))
+  |> add $ ζ 10 (ψ -105 (χ -187.5 bracket))
+  |> add $ ζ 10 (ψ 105 (χ 187.5 (ω 180 bracket)))
+  |> add $ ζ 10 (ψ -105 (χ 187.5 (ω 180 bracket)))
+  |> add $ ζ 10 (χ 105 (ψ 12.5 (ω 90 bracket)))
+  |> add $ ζ 10 (χ -105 (ψ 12.5 (ω 90 bracket)))
+  |> add $ ζ 10 (χ 105 (ψ -12.5 (ω 270 bracket)))
+  |> add $ ζ 10 (χ -105 (ψ -12.5 (ω 270 bracket)))
+  |> add $ ζ 10 (χ 105 (ψ -187.5 (ω 90 bracket)))
+  |> add $ ζ 10 (χ -105 (ψ -187.5 (ω 90 bracket)))
+  |> add $ ζ 10 (χ 105 (ψ 187.5 (ω 270 bracket)))
+  |> add $ ζ 10 (χ -105 (ψ 187.5 (ω 270 bracket)))
+  |> add $ ζ 10 (ψ 105 (χ 6.95 tnut))
+  |> add $ ζ 10 (ψ -105 (χ 6.95 tnut))
+  |> add $ ζ 10 (ψ 105 (χ -6.95 (ω 180 tnut)))
+  |> add $ ζ 10 (ψ -105 (χ -6.95 (ω 180 tnut)))
+  |> add $ ζ 10 (ψ 105 (χ 193.05 (ω 180 tnut)))
+  |> add $ ζ 10 (ψ -105 (χ 193.05 (ω 180 tnut)))
+  |> add $ ζ 10 (ψ 105 (χ -193.05 tnut))
+  |> add $ ζ 10 (ψ -105 (χ -193.05 tnut))
+  |> add $ ζ 10 (χ 105 (ψ 6.95 (ω 90 tnut)))
+  |> add $ ζ 10 (χ -105 (ψ 6.95 (ω 90 tnut)))
+  |> add $ ζ 10 (χ 105 (ψ -6.95 (ω 270 tnut)))
+  |> add $ ζ 10 (χ -105 (ψ -6.95 (ω 270 tnut)))
+  |> add $ ζ 10 (χ 105 (ψ -193.05 (ω 90 tnut)))
+  |> add $ ζ 10 (χ -105 (ψ -193.05 (ω 90 tnut)))
+  |> add $ ζ 10 (χ 105 (ψ 193.05 (ω 270 tnut)))
+  |> add $ ζ 10 (χ -105 (ψ 193.05 (ω 270 tnut)))
+  |> add $ ζ 10 (χ 181.5 (ψ 188 corner))
+  |> add $ ζ 10 (χ -188 (ψ 181.5 (ω 90 corner)))
+  |> add $ ζ 10 (χ -181.5 (ψ -188 (ω 180 corner)))
+  |> add $ ζ 10 (χ 188 (ψ -181.5 (ω 270 corner)))
+  |> add $ ζ 21.25 (χ 105 (ψ 105 panel))
+  |> add $ ζ 21.25 (χ -105 (ψ 105 (ω 90 panel)))
+  |> add $ ζ 21.25 (χ -105 (ψ -105 (ω 180 panel)))
+  |> add $ ζ 21.25 (χ 105 (ψ -105 (ω 270 panel)))

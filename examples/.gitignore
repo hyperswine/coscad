@@ -1,3 +1,4 @@
 *.scad
 *.stl
 *_manifest.json
+!*plate-bracket.scad
