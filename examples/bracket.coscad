@@ -15,8 +15,8 @@ key = χ -0.5 (ζ 10 (▣ 1 15 5.8 0))
 // M5 clearance into the side-slot T-nut (d5.4)
 m5 = χ 2.5 (ζ 10 (xcyl 2.7 12))
 
-// socket-head + hex key access tunnel (d9)
-tunnel = χ 15.5 (ζ 10 (xcyl 4.5 21))
+// socket-head + hex key access tunnel (d10)
+tunnel = χ 15.5 (ζ 10 (xcyl 5.0 21))
 
 // M3 pilot through the flange (d2.8)
 m3 = χ 10 (ζ 16 (zcyl 1.4 10))
