@@ -1,6 +1,6 @@
 -- | Backwards-compatible re-export of the CoScad library.
--- Existing embedded-DSL code (Examples.hs, Z.hs, Spec.hs) imports
--- Lib; new code can import the Coscad.* modules directly.
+-- The embedded-DSL samples in examples/haskell/ import Lib; new code
+-- can import the Coscad.* modules directly.
 module Lib
   ( module Coscad.Shape
   , module Coscad.Geometry

@@ -1,5 +1,5 @@
 difference() {
-  cylinder(h = 20.0, r1 = 10.0, r2 = 0);
-  sphere(5.0);
+  cylinder(h = 20, r1 = 10, r2 = 0);
+  sphere(5);
 }
 $fn = 50;

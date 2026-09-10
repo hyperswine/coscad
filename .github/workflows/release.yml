@@ -1,0 +1,61 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: coscad-linux-x86_64
+          - os: macos-latest
+            artifact: coscad-macos-arm64
+          - os: windows-latest
+            artifact: coscad-windows-x86_64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/setup@v2
+        with:
+          ghc-version: "9.8"
+          cabal-version: "3.12"
+      - run: cabal update
+      - name: Build
+        run: cabal install exe:coscad --installdir=dist-bin --install-method=copy --overwrite-policy=always
+      - name: Package
+        shell: bash
+        run: |
+          mkdir -p "${{ matrix.artifact }}"
+          cp dist-bin/coscad* README.md LICENSE CHANGELOG.md "${{ matrix.artifact }}/"
+          cp -r docs "${{ matrix.artifact }}/docs"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            7z a "${{ matrix.artifact }}.zip" "${{ matrix.artifact }}"
+          else
+            tar czf "${{ matrix.artifact }}.tar.gz" "${{ matrix.artifact }}"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            ${{ matrix.artifact }}.tar.gz
+            ${{ matrix.artifact }}.zip
+          if-no-files-found: ignore
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true

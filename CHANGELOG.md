@@ -6,7 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
-## Unreleased
+## 1.1.0.0 - 2026-09-10
+
+- CLI: `--help` (with a language cheat sheet), `--version`, `-o` for
+  `coscad part.coscad` and the new `coscad stl part.coscad` (compile +
+  render + volume/bounds), `coscad doctor` (finds OpenSCAD and BOSL2,
+  reports versions, renders a test part), `coscad check --keep-temp`.
+- `coscad check` renders into the system temp directory and cleans up;
+  no more `_chk_*` files next to the assembly.
+- Design stage (`coscad foo.assemble`) packs across as many plates as
+  needed (`foo_plate1.scad`, ...; manifest placements carry `plate`)
+  instead of failing on overflow, matching `coscad next`.
+- OpenSCAD is located via `COSCAD_OPENSCAD`, PATH, then the usual
+  install paths; BOSL2 via `COSCAD_BOSL2` or the OpenSCAD library
+  folders (its parent is added to OPENSCADPATH when running OpenSCAD).
+  OpenSCAD WARNING/ERROR output fails a render instead of being ignored.
+- Emitted .scad: numbers print as `10` not `10.0`, rotation noise like
+  `3.06e-16` prints as `0`, identity translates/rotates from attachment
+  desugaring are elided.
+- Source files are read and written as UTF-8 regardless of locale.
+- Embedded-DSL sample modules moved from `src/` to `examples/haskell/`.
+- CI on Linux/macOS/Windows (build, `coscad doctor`, full test suite
+  with OpenSCAD + BOSL2) and tagged releases with prebuilt binaries.
+- License id corrected to `GPL-3.0-only`.
 
 - Numeric bindings: `w = 20`, `r = w / 2 - 1` (arithmetic with parens,
   numbers may reference numbers); usable in any numeric argument

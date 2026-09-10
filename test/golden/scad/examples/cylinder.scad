@@ -1,2 +1,2 @@
-cylinder(h = 10.0, r = 5.0);
+cylinder(h = 10, r = 5);
 $fn = 50;

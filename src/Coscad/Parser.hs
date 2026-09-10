@@ -297,8 +297,8 @@ pipeStage ctx =
     , num3 "move" Translate
     , num3 "scale" Scale
     , num3 "mirror" Mirror
-    , try (keyword "anchor" *> (Anchor <$> anchorVec))
-    , try (keyword "loft" *> (loftStage <$> num ctx <*> primaryExpression ctx))
+    , keyword "anchor" *> (Anchor <$> anchorVec)
+    , keyword "loft" *> (loftStage <$> num ctx <*> primaryExpression ctx)
     , rel "at" Position
     , rel "on" AttachTo
     , rel "cutat" CutAt
@@ -309,15 +309,19 @@ pipeStage ctx =
     , bin "mink" (\p s -> Minkowski [p, s])
     ]
   where
-    num1 w f = try (keyword w *> (f <$> num ctx))
-    num3 w f = try (keyword w *> (f <$> ((,,) <$> num ctx <*> num ctx <*> num ctx)))
-    rel w f = try $ do
+    -- `keyword` backtracks by itself when the word does not match; the
+    -- stage body is deliberately NOT under `try`, so an error inside a
+    -- stage is reported where it happened (megaparsec >= 9.7 reports a
+    -- failed `try` at its start).
+    num1 w f = keyword w *> (f <$> num ctx)
+    num3 w f = keyword w *> (f <$> ((,,) <$> num ctx <*> num ctx <*> num ctx))
+    rel w f = do
       keyword w
       v <- anchorVec
       off <- option (0, 0, 0) (try ((,,) <$> num ctx <*> num ctx <*> num ctx))
       child <- shapeArg ctx
       return (\p -> f v off p child)
-    bin w f = try $ do
+    bin w f = do
       keyword w
       s <- shapeArg ctx
       return (`f` s)
@@ -410,7 +414,7 @@ transformExpression ctx = (transformation ctx <?> tLabel) <|> primaryExpression 
 
 -- | A comma tuple: (x, y, z)
 tuple3 :: Ctx -> Parser (Double, Double, Double)
-tuple3 ctx = try $ between (symbol "(") (symbol ")") $ do
+tuple3 ctx = between (symbol "(") (symbol ")") $ do
   a <- num ctx
   _ <- symbol ","
   b <- num ctx
@@ -425,11 +429,11 @@ transformation ctx =
   where
     -- loft z0 p0 z1 p1 [z2 p2 ...] : skin 2D profiles at ascending z
     loftPairs = do
-      ps <- some (try ((,) <$> num ctx <*> primaryExpression ctx))
+      ps <- some ((,) <$> try (num ctx) <*> primaryExpression ctx)
       if length ps < 2
         then fail "loft needs at least two profiles: loft z0 profile0 z1 profile1 ..."
         else return (Loft ps)
-    wordTs = [try (keyword "loft" *> loftPairs)]
+    wordTs = [keyword "loft" *> loftPairs]
     glyphTs
       | glyphOK ctx =
           [ g1 "χ" Tx, g1 "ψ" Ty, g1 "ζ" Tz
@@ -466,34 +470,34 @@ transformation ctx =
           , ns "Rotate" rotXYZ [("x", Rx), ("y", Ry), ("z", Rz)]
           , ns "Scale" Scale [("x", \n -> Scale (n, 1, 1)), ("y", \n -> Scale (1, n, 1)), ("z", \n -> Scale (1, 1, n))]
           , nsMirror
-          , try (keyword "Extrude" *> (Extrude <$> num ctx <*> shapeArg ctx))
-          , try (keyword "Loft" *> loftPairs)
-          , try (keyword "Anchor" *> (Anchor <$> anchorVec <*> shapeArg ctx))
+          , keyword "Extrude" *> (Extrude <$> num ctx <*> shapeArg ctx)
+          , keyword "Loft" *> loftPairs
+          , keyword "Anchor" *> (Anchor <$> anchorVec <*> shapeArg ctx)
           , bin2 "Hull" (\a b -> Hull [a, b])
           , bin2 "Union" (\a b -> Union [a, b])
           , bin2 "Intersect" (\a b -> Intersection [a, b])
           , bin2 "Minkowski" (\a b -> Minkowski [a, b])
-          , try (keyword "Offset" *> ((\n s -> Offset n s) <$> num ctx <*> shapeArg ctx))
+          , keyword "Offset" *> ((\n s -> Offset n s) <$> num ctx <*> shapeArg ctx)
           ]
       | otherwise = []
     rotXYZ (a, b, c) s = Rz c (Ry b (Rx a s))
-    ns w tupleF axes = try $ do
+    ns w tupleF axes = do
       _ <- keyword w
       choice
-        ( [ try (symbol ("." ++ ax) *> (axF <$> num ctx <*> shapeArg ctx))
+        ( [ try (symbol ("." ++ ax)) *> (axF <$> num ctx <*> shapeArg ctx)
           | (ax, axF) <- axes
           ]
             ++ [tupleF <$> tuple3 ctx <*> shapeArg ctx]
         )
-    nsMirror = try $ do
+    nsMirror = do
       _ <- keyword "Mirror"
       choice
-        [ try (symbol ".x" *> (Mirror (1, 0, 0) <$> shapeArg ctx))
-        , try (symbol ".y" *> (Mirror (0, 1, 0) <$> shapeArg ctx))
-        , try (symbol ".z" *> (Mirror (0, 0, 1) <$> shapeArg ctx))
+        [ try (symbol ".x") *> (Mirror (1, 0, 0) <$> shapeArg ctx)
+        , try (symbol ".y") *> (Mirror (0, 1, 0) <$> shapeArg ctx)
+        , try (symbol ".z") *> (Mirror (0, 0, 1) <$> shapeArg ctx)
         , Mirror <$> tuple3 ctx <*> shapeArg ctx
         ]
-    bin2 w f = try $ do
+    bin2 w f = do
       _ <- keyword w
       a <- primaryExpression ctx
       f a <$> shapeArg ctx
@@ -533,19 +537,19 @@ primaryExpression ctx =
     -- !simple capitalized shape words
     simpleShape =
       choice
-        [ try (keyword "Sphere" *> (Sphere <$> num ctx))
-        , try (keyword "Cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> num ctx))
-        , try (keyword "Box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> num ctx <*> num ctx <*> num ctx))
-        , try (keyword "Cylinder" *> ((\r h -> Cyl r h 0 0) <$> num ctx <*> num ctx))
-        , try (keyword "Cone" *> (Cone <$> num ctx <*> num ctx))
-        , try (keyword "Tube" *> (Tube <$> num ctx <*> num ctx <*> num ctx))
-        , try (keyword "Torus" *> (Torus <$> num ctx <*> num ctx))
-        , try (keyword "Wedge" *> ((\a b c -> Wedge (a, b, c)) <$> num ctx <*> num ctx <*> num ctx))
-        , try (keyword "Prismoid" *> ((\a b c d h -> Prismoid (a, b) (c, d) h) <$> num ctx <*> num ctx <*> num ctx <*> num ctx <*> num ctx))
-        , try (keyword "Circle" *> (Shape2D 100 <$> num ctx))
-        , try (keyword "Triangle" *> (Shape2D 3 <$> num ctx))
-        , try (keyword "Pentagon" *> (Shape2D 5 <$> num ctx))
-        , try (keyword "Bezier" *> bezierBody ctx)
+        [ keyword "Sphere" *> (Sphere <$> num ctx)
+        , keyword "Cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> num ctx)
+        , keyword "Box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> num ctx <*> num ctx <*> num ctx)
+        , keyword "Cylinder" *> ((\r h -> Cyl r h 0 0) <$> num ctx <*> num ctx)
+        , keyword "Cone" *> (Cone <$> num ctx <*> num ctx)
+        , keyword "Tube" *> (Tube <$> num ctx <*> num ctx <*> num ctx)
+        , keyword "Torus" *> (Torus <$> num ctx <*> num ctx)
+        , keyword "Wedge" *> ((\a b c -> Wedge (a, b, c)) <$> num ctx <*> num ctx <*> num ctx)
+        , keyword "Prismoid" *> ((\a b c d h -> Prismoid (a, b) (c, d) h) <$> num ctx <*> num ctx <*> num ctx <*> num ctx <*> num ctx)
+        , keyword "Circle" *> (Shape2D 100 <$> num ctx)
+        , keyword "Triangle" *> (Shape2D 3 <$> num ctx)
+        , keyword "Pentagon" *> (Shape2D 5 <$> num ctx)
+        , keyword "Bezier" *> bezierBody ctx
         ]
 
     basicShape =
@@ -673,13 +677,13 @@ primaryExpression ctx =
         [ xcylShape
         , ycylShape
         , zcylShape
-        , try (keyword "cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> num ctx))
-        , try (keyword "box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> num ctx <*> num ctx <*> num ctx))
-        , try (keyword "sphere" *> (Sphere <$> num ctx))
-        , try (keyword "cyl" *> ((\r h -> Cyl r h 0 0) <$> num ctx <*> num ctx))
-        , try (keyword "tube" *> (Tube <$> num ctx <*> num ctx <*> num ctx))
-        , try (keyword "torus" *> (Torus <$> num ctx <*> num ctx))
-        , try (keyword "wedge" *> ((\a b c -> Wedge (a, b, c)) <$> num ctx <*> num ctx <*> num ctx))
+        , keyword "cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> num ctx)
+        , keyword "box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> num ctx <*> num ctx <*> num ctx)
+        , keyword "sphere" *> (Sphere <$> num ctx)
+        , keyword "cyl" *> ((\r h -> Cyl r h 0 0) <$> num ctx <*> num ctx)
+        , keyword "tube" *> (Tube <$> num ctx <*> num ctx <*> num ctx)
+        , keyword "torus" *> (Torus <$> num ctx <*> num ctx)
+        , keyword "wedge" *> ((\a b c -> Wedge (a, b, c)) <$> num ctx <*> num ctx <*> num ctx)
         ]
 
     shape2D =

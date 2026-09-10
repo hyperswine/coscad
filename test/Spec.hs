@@ -20,23 +20,26 @@ module Main (main) where
 
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
-import Coscad.Assemble (loadAssembleFile)
-import Coscad.Check (meshVolume, processCheck)
-import Coscad.Codegen (renderScad)
+import Coscad.Assemble (loadAssembleFile, packBeds, processAssemble)
+import Coscad.Check (processCheckWith)
+import Coscad.Codegen (renderScad, showD)
 import Coscad.Geometry (bbox, resolve)
-import Coscad.Next (Tri, findOpenscad, meshBounds, openscadStlArgs, parseStlAscii, processNext)
+import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
+import Coscad.Next (processNext)
+import Coscad.OpenScad (bosl2Version, findOpenscad, openscadVersion, renderStlFile)
 import Coscad.Parser (parseProgramNamed)
+import Coscad.Part (renderPart)
 import Coscad.Shape (Shape)
 import Data.IORef
 import Data.List (isInfixOf, isPrefixOf, sort)
 import qualified Data.Map as Map
 import Data.Time.Clock (diffUTCTime, getCurrentTime)
+import GHC.IO.Encoding (setLocaleEncoding)
 import System.Directory
 import System.Environment (lookupEnv)
 import System.Exit (exitFailure)
 import System.FilePath
 import System.IO
-import System.Process (readProcessWithExitCode)
 import Text.Printf (printf)
 
 -- ------------------------------------------------------------------
@@ -118,21 +121,21 @@ diagnostics t = do
     (p "main = 5\n") ["'main' is a number"] []
   expectErr t "undefined name in arithmetic"
     (p "r = q * 2\nmain = ● r\n") ["undefined variable 'q'"] ["circular"]
-  expectGen t "numeric binding as argument" (p "r = 5\nmain = ● r\n") "sphere(5.0);"
+  expectGen t "numeric binding as argument" (p "r = 5\nmain = ● r\n") "sphere(5);"
   expectGen t "arithmetic in parens, forward numeric reference"
-    (p "main = box (w / 2) w (w - 2 * 3)\nw = 20\n") "cuboid([10.0, 20.0, 14.0]);"
+    (p "main = box (w / 2) w (w - 2 * 3)\nw = 20\n") "cuboid([10, 20, 14]);"
   expectGen t "numbers depend on numbers, negated name"
-    (p "a = b * 2 + 1\nb = 3\nmain = χ -a (● 1)\n") "translate([-7.0, 0, 0])"
-  expectGen t "numeric offset in a pipeline stage"
-    (p "t = 4\nmain = box 20 20 t |> cutat top 0 0 (-t / 2) (zcyl 1 50)\n") "translate([0.0, 0.0, 0.0])"
+    (p "a = b * 2 + 1\nb = 3\nmain = χ -a (● 1)\n") "translate([-7, 0, 0])"
+  expectGen t "numeric offset in a pipeline stage (identity translate elided)"
+    (p "t = 4\nmain = box 20 20 t |> cutat top 0 0 (-t / 2) (zcyl 1 50)\n") "difference() {\n  cuboid([20, 20, 4]);\n  zcyl(r = 1, l = 50);"
   -- lofts
   expectGen t "loft prefix form emits skin"
-    (p "main = loft 0 (⭘ 10) 30 (⭘ 5)\n") "skin([circle(r = 10.0, $fn = 100), circle(r = 5.0, $fn = 100)], z = [0.0, 30.0], slices = 0, method = \"reindex\");"
+    (p "main = loft 0 (⭘ 10) 30 (⭘ 5)\n") "skin([circle(r = 10, $fn = 100), circle(r = 5, $fn = 100)], z = [0, 30], slices = 0, method = \"reindex\");"
   expectGen t "loft pipeline form starts at z = 0 and chains"
-    (p "main = ⭘ 10 |> loft 20 (△ 5) |> loft 35 (⬠ 3)\n") "z = [0.0, 20.0, 35.0]"
+    (p "main = ⭘ 10 |> loft 20 (△ 5) |> loft 35 (⬠ 3)\n") "z = [0, 20, 35]"
   expectGen t "loft profile transforms become path functions"
     (p "main = loft 0 (χ 2 (ω 30 (⬈ 1 0.5 1 (⭘ 6)))) 10 (△ 4 ↯ ⭘ 1)\n")
-    "move([2.0, 0], p = zrot(30.0, p = scale([1.0, 0.5], p = circle(r = 6.0, $fn = 100)))), offset(circle(r = 4.0, $fn = 3), r = 1.0, closed = true)"
+    "move([2, 0], p = zrot(30, p = scale([1, 0.5], p = circle(r = 6, $fn = 100)))), offset(circle(r = 4, $fn = 3), r = 1, closed = true)"
   expectGen t "loft with mismatched vertex counts uses method distance"
     (p "main = loft 0 (⭘ 10) 30 (△ 5)\n") "method = \"distance\""
   expectGen t "loft with an offset profile (unknown count) uses method distance"
@@ -154,10 +157,21 @@ diagnostics t = do
        in assertT t "trailing comment does not swallow continuation lines" (abs (zmax - 2) < 1e-9) ("zmax = " ++ show zmax)
   case p "main = χ 5 $ ● 3 ⊕ ● 3" of
     Left e -> failT t "$ application" e
-    Right (_, m) -> assertT t "$ application" ("translate([5.0, 0, 0]) {\n  union()" `isInfixOf` renderScad m) (renderScad m)
+    Right (_, m) -> assertT t "$ application" ("translate([5, 0, 0]) {\n  union()" `isInfixOf` renderScad m) (renderScad m)
   case p "  main = ● 5\n" of
     Left e -> failT t "indented definition" e
     Right _ -> pass t
+  -- number formatting in emitted .scad
+  assertT t "showD: rotation noise, integers, -0, decimals"
+    (map showD [3.061616997868383e-16, 10, -0.0, 2.5, -7, 0.1] == ["0", "10", "0", "2.5", "-7", "0.1"])
+    (show (map showD [3.061616997868383e-16, 10, -0.0, 2.5, -7, 0.1]))
+  -- packing: seven 43x43 brackets on a 120x120 plate with 6 mm margins = 4 + 3
+  case packBeds (120, 120, 6) [("br_" ++ show i, ("b", "top"), (43, 42.98)) | i <- [1 .. 7 :: Int]] of
+    Left e -> failT t "packBeds spills to a second plate" e
+    Right plates -> assertT t "packBeds spills to a second plate" (map length plates == [4, 3]) (show (map length plates))
+  case packBeds (100, 100, 6) [("big", ("b", "top"), (200, 10))] of
+    Left e -> assertT t "packBeds rejects an oversized footprint with a clear message" ("exceeds the 100.0x100.0 plate" `isInfixOf` e) e
+    Right _ -> failT t "packBeds rejects an oversized footprint with a clear message" "packed"
   -- .assemble diagnostics
   tmp <- tempDir "asm-diag"
   let asm1 = tmp </> "d1.assemble"
@@ -175,7 +189,7 @@ diagnostics t = do
 exampleFiles :: String -> IO [FilePath]
 exampleFiles ext = do
   fs <- concat <$> mapM walk ["examples", "examples-next"]
-  return (sort [f | f <- fs, takeExtension f == ext, not ("examples/archive/" `isPrefixOf` f)])
+  return (sort [normKey f | f <- fs, takeExtension f == ext, not ("examples/archive/" `isPrefixOf` normKey f)])
   where
     walk d = do
       es <- listDirectory d
@@ -183,6 +197,10 @@ exampleFiles ext = do
         let f = d </> e
         isD <- doesDirectoryExist f
         if isD then walk f else return [f])
+
+-- | Golden keys always use forward slashes so the files are shared across OSes.
+normKey :: FilePath -> FilePath
+normKey = map (\c -> if c == '\\' then '/' else c)
 
 goldenScad :: FilePath -> FilePath
 goldenScad f = "test/golden/scad" </> replaceExtension f ".scad"
@@ -228,20 +246,13 @@ firstDiff a b =
 type Geo = (Double, (Double, Double, Double), (Double, Double, Double))
 
 renderMesh :: FilePath -> FilePath -> String -> IO (Either String [Tri])
-renderMesh bin dir scadText = do
+renderMesh _ dir scadText = do
   let scadF = dir </> "part.scad"
       stlF = dir </> "part.stl"
   writeFile scadF scadText
-  (code, out, err) <- readProcessWithExitCode bin (openscadStlArgs stlF scadF) ""
-  let warns = [l | l <- lines err ++ lines out, "WARNING" `isPrefixOf` l || "ERROR" `isPrefixOf` l]
-  case code of
-    _ | not (null warns) -> return (Left (unlines warns))
-    _ -> do
-      ok <- doesFileExist stlF
-      if not ok then return (Left ("openscad produced no STL:\n" ++ err)) else do
-        tris <- parseStlAscii <$> readFile stlF
-        removeFile stlF
-        return (Right tris)
+  r <- renderStlFile scadF stlF
+  removePathForcibly stlF
+  return r
 
 geoOf :: [Tri] -> Geo
 geoOf tris = (meshVolume tris, lo, hi)
@@ -329,8 +340,37 @@ geometry t update bin = do
       assertT t "coscad next: placements inside 250x250 bed with 6mm margin, on z=0"
         (x0 >= 6 - 1e-6 && y0 >= 6 - 1e-6 && x1 <= 244 + 1e-6 && y1 <= 244 + 1e-6 && abs z0 < 1e-6)
         (show (meshBounds bed))
-  rc <- try (processCheck (bow </> "bow3.assemble")) :: IO (Either SomeException ())
+  rc <- try (processCheckWith False (bow </> "bow3.assemble")) :: IO (Either SomeException ())
   assertT t "coscad check bow3: no overlaps" (either (const False) (const True) rc) (either show (const "") rc)
+  leftovers <- filter ("chk" `isInfixOf`) <$> listDirectory bow
+  assertT t "coscad check leaves no scratch files next to the assembly" (null leftovers) (show leftovers)
+  -- design stage spills across plates instead of failing
+  sp <- tempDir "spill"
+  copyFile "examples/assemble/spill.assemble" (sp </> "spill.assemble")
+  copyFile "examples/assemble/bracket90.coscad" (sp </> "bracket90.coscad")
+  ra <- try (processAssemble (sp </> "spill.assemble")) :: IO (Either SomeException ())
+  case ra of
+    Left e -> failT t "design stage: multi-plate spill" (show e)
+    Right () -> do
+      p1 <- doesFileExist (sp </> "spill_plate1.scad")
+      p2 <- doesFileExist (sp </> "spill_plate2.scad")
+      mf <- readFile (sp </> "spill_manifest.json")
+      assertT t "design stage: multi-plate spill" (p1 && p2 && "\"plate\": 2" `isInfixOf` mf && "\"count\": 2" `isInfixOf` mf) (show (p1, p2))
+  -- `coscad stl` end to end
+  st <- tempDir "stl"
+  writeFile (st </> "p.coscad") "r = 5\nmain = ● r\n"
+  rs <- try (renderPart (st </> "p.coscad") Nothing) :: IO (Either SomeException ())
+  case rs of
+    Left e -> failT t "coscad stl renders a part" (show e)
+    Right () -> do
+      tris <- parseStlAscii <$> readFile (st </> "p.stl")
+      let v = meshVolume tris
+      assertT t "coscad stl renders a part" (abs (v - 4 / 3 * pi * 125) < 0.03 * (4 / 3 * pi * 125)) (printf "sphere volume %.2f" v)
+  -- toolchain probes used by `coscad doctor`
+  ov <- openscadVersion
+  assertT t "openscad --version is parsed" (maybe False (not . null) ov) (show ov)
+  bv <- bosl2Version dir
+  assertT t "BOSL2 answers the version probe" (either (const False) (not . null) bv) (show bv)
   t1 <- getCurrentTime
   printf "(geometry tier: %.1fs)\n" (realToFrac (diffUTCTime t1 t0) :: Double)
   where
@@ -352,6 +392,7 @@ tempDir name = do
 
 main :: IO ()
 main = do
+  setLocaleEncoding utf8
   hSetEncoding stdout utf8
   hSetBuffering stdout LineBuffering
   t <- T <$> newIORef 0 <*> newIORef []

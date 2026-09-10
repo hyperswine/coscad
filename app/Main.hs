@@ -1,125 +1,91 @@
 -- | CLI entry point. All real logic lives in the Coscad.* library
--- modules; this file only dispatches and prints usage.
+-- modules; this file only parses arguments and dispatches.
 module Main (main) where
 
-import Control.Exception (SomeException, catch)
 import Coscad.Assemble (processAssemble)
-import Coscad.Codegen (writeScad)
+import Coscad.Check (processCheckWith)
+import Coscad.Doctor (runDoctor)
 import Coscad.Next (processNext)
-import Coscad.Check (processCheck)
-import Coscad.Parser (parseProgramNamed)
+import Coscad.Part (compilePart, renderPart)
+import Data.Version (showVersion)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
-import System.Directory (doesFileExist)
+import Paths_coscad (version)
 import System.Environment (getArgs)
 import System.Exit (exitFailure, exitSuccess)
-import System.FilePath (dropExtension, takeExtension)
-import System.IO (hPutStrLn, stderr)
+import System.FilePath (takeExtension)
+import System.IO (hPutStrLn, hSetEncoding, stderr, stdout)
 
 main :: IO ()
 main = do
   setLocaleEncoding utf8
+  hSetEncoding stdout utf8
+  hSetEncoding stderr utf8
   args <- getArgs
   case args of
-    ["next", inputFile] -> processNext inputFile
-    ["check", inputFile] -> processCheck inputFile
-    [inputFile] -> processFile inputFile
-    _ -> do
-      hPutStrLn stderr "Usage: coscad <input.coscad>"
-      hPutStrLn stderr "Converts a .coscad file to .scad format"
-      hPutStrLn stderr ""
-      hPutStrLn stderr "Variable Syntax:"
-      hPutStrLn stderr "  c₁ = ■ 10           -- cube variable"
-      hPutStrLn stderr "  s₁ = ● 15           -- sphere variable"
-      hPutStrLn stderr "  main = c₁ ⊕ s₁      -- main variable (gets rendered)"
-      hPutStrLn stderr ""
-      hPutStrLn stderr "Basic Shapes:"
-      hPutStrLn stderr "  ■ 10           -- cube (10x10x10)"
-      hPutStrLn stderr "  ● 15           -- sphere (radius 15)"
-      hPutStrLn stderr "  ◎ 5 10         -- cylinder (radius 5, height 10)"
-      hPutStrLn stderr "  ▻ 8 12         -- cone (radius 8, height 12)"
-      hPutStrLn stderr "  ▬ 5 10 15      -- rectangle (5x10x15)"
-      hPutStrLn stderr "  ⎏ 6 8 12       -- prism (6-sides, radius 8, height 12)"
-      hPutStrLn stderr ""
-      hPutStrLn stderr "BOSL2 Shapes (centered; emit include <BOSL2/std.scad>):"
-      hPutStrLn stderr "  ▣ 20 15 10 2   -- cuboid 20x15x10, chamfer 2 (0 = plain)"
-      hPutStrLn stderr "  ◙ 20 15 10 3   -- cuboid 20x15x10, rounding 3"
-      hPutStrLn stderr "  ⌭ 5 20 1       -- cylinder r5 h20, chamfered ends 1"
-      hPutStrLn stderr "  ⌽ 5 20 2       -- cylinder r5 h20, rounded ends 2"
-      hPutStrLn stderr "  xcyl 5 20      -- cylinder r5 l20 along X (also ycyl, zcyl)"
-      hPutStrLn stderr "  ⊚ 10 6 25      -- tube outer-r 10, inner-r 6, h 25"
-      hPutStrLn stderr "  ⏢ 24 24 10 10 18 -- prismoid base 24x24 top 10x10 h 18"
-      hPutStrLn stderr "  ◉ 12 4         -- torus major-r 12, minor-r 4"
-      hPutStrLn stderr "  ⊿ 20 20 15     -- wedge (vertical face at -X)"
-      hPutStrLn stderr ""
-      hPutStrLn stderr "2D Profiles:"
-      hPutStrLn stderr "  △ 10           -- triangle profile (radius 10)"
-      hPutStrLn stderr "  ⬠ 8            -- pentagon profile (radius 8)"
-      hPutStrLn stderr "  ⭘ 6            -- circle profile (radius 6)"
-      hPutStrLn stderr ""
-      hPutStrLn stderr "Boolean Operations:"
-      hPutStrLn stderr "  ● 15 ⊖ ◎ 5 10   -- difference (sphere minus cylinder)"
-      hPutStrLn stderr "  ● 15 ⊝ ◎ 5 10   -- difference (alternative glyph)"
-      hPutStrLn stderr "  ■ 10 ⊕ ● 5     -- union (cube plus sphere)"
-      hPutStrLn stderr "  ■ 10 ⊛ ● 5     -- union (alternative glyph)"
-      hPutStrLn stderr ""
-      hPutStrLn stderr "Advanced Operations:"
-      hPutStrLn stderr "  ■ 10 ⇓ ● 5     -- hull (convex hull of cube and sphere)"
-      hPutStrLn stderr "  ■ 10 ⊞ ● 5     -- minkowski sum (cube and sphere)"
-      hPutStrLn stderr "  △ 8 ↯ ● 2      -- offset (offset triangle by sphere radius)"
-      hPutStrLn stderr ""
-      hPutStrLn stderr "Transformations:"
-      hPutStrLn stderr "  χ 5 (● 3)       -- translate X by 5"
-      hPutStrLn stderr "  ψ 10 (■ 4)      -- translate Y by 10"
-      hPutStrLn stderr "  ζ 8 (● 2)       -- translate Z by 8"
-      hPutStrLn stderr "  θ 45 (▬ 10 5 2) -- rotate X by 45 degrees"
-      hPutStrLn stderr "  ϕ 90 (● 5)      -- rotate Y by 90 degrees"
-      hPutStrLn stderr "  ω 30 (■ 6)      -- rotate Z by 30 degrees"
-      hPutStrLn stderr "  ⬈ 2 1.5 0.5 (● 5) -- scale by (2, 1.5, 0.5)"
-      hPutStrLn stderr "  ⇋ 1 0 0 (● 5)   -- mirror across plane with normal (1,0,0)"
-      hPutStrLn stderr "  ⮕ 15 (△ 8)      -- extrude triangle by height 15"
-      exitFailure
+    [] -> usage >> exitFailure
+    (a : _) | a `elem` ["--help", "-h", "help"] -> usage >> exitSuccess
+    (a : _) | a `elem` ["--version", "-V", "version"] -> putStrLn ("coscad " ++ showVersion version)
+    ["doctor"] -> runDoctor
+    ("stl" : rest) -> withInOut "stl" rest renderPart
+    ["next", f] -> needExt ".assemble" f >> processNext f
+    ("check" : rest) -> do
+      let keep = "--keep-temp" `elem` rest
+      case filter (/= "--keep-temp") rest of
+        [f] -> needExt ".assemble" f >> processCheckWith keep f
+        _ -> bad "check takes one .assemble file (and optionally --keep-temp)"
+    [f] | takeExtension f == ".assemble" -> processAssemble f
+    rest -> withInOut "compile" rest compilePart
 
-processFile :: FilePath -> IO ()
-processFile inputFile
-  | takeExtension inputFile == ".assemble" = processAssemble inputFile
-processFile inputFile = do
-  -- Check if input file exists
-  exists <- doesFileExist inputFile
-  if not exists
-    then do
-      hPutStrLn stderr $ "Error: File " ++ inputFile ++ " does not exist"
-      exitFailure
-    else do
-      -- Check if input file has .coscad extension
-      if takeExtension inputFile /= ".coscad"
-        then do
-          hPutStrLn stderr "Error: Input file must have .coscad extension"
-          exitFailure
-        else do
-          -- Generate output filename
-          let outputFile = dropExtension inputFile ++ ".scad"
+-- | `<file> [-o out]` in either order.
+withInOut :: String -> [String] -> (FilePath -> Maybe FilePath -> IO ()) -> IO ()
+withInOut what rest run = case rest of
+  [f] -> go f Nothing
+  [f, "-o", o] -> go f (Just o)
+  ["-o", o, f] -> go f (Just o)
+  _ -> bad (what ++ " takes one .coscad file and an optional -o <output>")
+  where
+    go f o = needExt ".coscad" f >> run f o
 
-          -- Try to process the file
-          result <- catch (processFileContents inputFile outputFile) handleError
-          case result of
-            Right _ -> do
-              putStrLn $ "Successfully converted " ++ inputFile ++ " to " ++ outputFile
-              exitSuccess
-            Left errMsg -> do
-              hPutStrLn stderr $ "Error: " ++ errMsg
-              exitFailure
+needExt :: String -> FilePath -> IO ()
+needExt ext f
+  | takeExtension f == ext = return ()
+  | otherwise = bad ("expected a " ++ ext ++ " file, got " ++ f ++ " (see coscad --help)")
 
-processFileContents :: FilePath -> FilePath -> IO (Either String ())
-processFileContents inputFile outputFile = do
-  -- Read the .coscad file
-  contents <- readFile inputFile
+bad :: String -> IO ()
+bad msg = hPutStrLn stderr ("Error: " ++ msg) >> exitFailure
 
-  -- Parse the program with variables
-  case parseProgramNamed inputFile contents of
-    Right (_, mainShape) -> do
-      writeScad mainShape outputFile
-      return $ Right ()
-    Left err -> return $ Left err
-
-handleError :: SomeException -> IO (Either String ())
-handleError e = return $ Left $ "IO Error: " ++ show e
+usage :: IO ()
+usage =
+  mapM_
+    putStrLn
+    [ "coscad " ++ showVersion version ++ " - glyph/pipeline CAD language -> OpenSCAD -> STL"
+    , ""
+    , "Usage:"
+    , "  coscad <part.coscad> [-o part.scad]     compile one part to OpenSCAD"
+    , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"
+    , "  coscad <spec.assemble>                  design stage: assembled view, packed plate(s), manifest"
+    , "  coscad next <spec.assemble>             manufacturing: orient, pack beds, bedN.stl + manifest"
+    , "  coscad check <spec.assemble> [--keep-temp]"
+    , "                                          interference / clearance check on real meshes"
+    , "  coscad doctor                           verify OpenSCAD + BOSL2 + an end-to-end render"
+    , "  coscad --version | --help"
+    , ""
+    , "Environment:"
+    , "  COSCAD_OPENSCAD  OpenSCAD binary or wrapper script (else PATH, then the app bundle)"
+    , "  COSCAD_BOSL2     BOSL2 checkout directory (else the OpenSCAD library folders)"
+    , ""
+    , "Language (one definition per line; `main` is rendered; // comments):"
+    , "  numbers      w = 20      t = w / 5 - 1      box w (w / 2) t      χ -r part"
+    , "  shapes       ■ s  ▬ x y z  ● r  ◎ r h  ▻ r h  ⎏ n r h            (OpenSCAD, corner/bottom anchored)"
+    , "               ▣ x y z c  ◙ x y z r  ⌭ r h c  ⌽ r h r2  ⊚ or ir h  ⏢ x1 y1 x2 y2 h  ◉ R r  ⊿ x y z"
+    , "               cube s  box x y z  sphere r  cyl r h  xcyl/ycyl/zcyl r l  tube or ir h  torus R r  wedge x y z"
+    , "  2D           △ r  ⬠ r  ⭘ r  ✎ x y x y ... (bezier)     extrude: ⮕ h p  |> extrude h"
+    , "  loft         loft z0 p0 z1 p1 ...   ⟰ ...   p0 |> loft z1 p1      (2D profiles -> solid)"
+    , "  booleans     ⊕ union  ⊖ difference  ∩ intersection  ⇓ hull  ⊞ minkowski  ↯ offset(2D)"
+    , "  transforms   χ ψ ζ d (translate)  θ ϕ ω deg (rotate)  ⬈ sx sy sz  ⇋ nx ny nz (mirror)  ⚓ anchor"
+    , "  pipelines    a |> add b |> cut c |> x 5 |> rotz 90 |> at top [dx dy dz] b |> on rt b |> cutat top 0 0 -2 c"
+    , "  anchors      top bot lft rt fwd bak ctr, combinable: top+rt  lft+fwd   (a ⌖ top b, a ⋈ rt b)"
+    , "  modes        first line !glyph or !simple (ASCII words: Box, Translate.x, Hull, * union, - difference)"
+    , ""
+    , "Docs: docs/LANGEXTENSION.md, docs/TOPOLOGICAL.md, docs/MANUFACTURING.md"
+    ]

@@ -5,12 +5,14 @@
 -- (assembled view, packed plate, per-variant scads, manifest).
 module Coscad.Assemble (module Coscad.Assemble) where
 
+import Control.Monad (when)
 import Coscad.Codegen
 import Coscad.Geometry
+import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Parser
 import Coscad.Shape
 import Data.Char (isAlphaNum, isSpace)
-import Data.List (foldl', intercalate)
+import Data.List (foldl', intercalate, sortBy)
 import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
 import System.Directory (doesFileExist)
@@ -75,17 +77,23 @@ data AsmResult = AsmResult
 asmProgram :: Parser [AsmStmt]
 asmProgram = many asmStmt
 
+-- Each alternative decides with lookahead only, then commits, so an
+-- error inside a statement is reported where it happened.
 asmStmt :: Parser AsmStmt
-asmStmt = try plateStmt <|> try clearanceStmt <|> try partStmt <|> (ADef <$> variableDefinition)
+asmStmt =
+  plateStmt
+    <|> clearanceStmt
+    <|> (lookAhead (try (identifier *> symbol "←")) *> partStmt)
+    <|> (ADef <$> variableDefinition)
 
 clearanceStmt :: Parser AsmStmt
 clearanceStmt = do
-  keyword "clearance"
+  _ <- try (keyword "clearance" <* lookAhead double)
   AClearance <$> double
 
 plateStmt :: Parser AsmStmt
 plateStmt = do
-  keyword "plate"
+  _ <- try (keyword "plate" <* lookAhead double)
   w <- double
   d <- double
   m <- double <|> pure 6
@@ -141,7 +149,7 @@ loadAssembleFile visited path
       if not exists
         then return (Left ("File not found: " ++ path))
         else do
-          contents <- readFile path
+          contents <- readFileUtf8 path
           let (fmode, fbody) = splitPragma contents
           case parse (sc *> asmProgram <* eof) path fbody of
             Left err -> return (Left (errorBundlePretty err))
@@ -180,7 +188,7 @@ loadRef visited dir (APart name rel cnt down hints) = do
       if not exists
         then return (Left ("Part file not found: " ++ p))
         else do
-          c <- readFile p
+          c <- readFileUtf8 p
           case parseProgramNamed p c of
             Left err -> return (Left err)
             Right (_, shape) ->
@@ -234,22 +242,28 @@ sanitize = map (\c -> if isAlphaNum c then c else '_')
 instId :: FlatPart -> Int -> String
 instId fp i = intercalate "/" (fpTrail fp ++ [fpName fp]) ++ "_" ++ show i
 
--- | Shelf packing in declaration order; margin around and between.
-packShelf ::
+-- | Shelf-pack footprints onto as many plates as needed, largest
+-- first; margin around and between. Shared by the design stage
+-- (`coscad foo.assemble`) and the manufacturing stage (`coscad next`).
+packBeds ::
   (Double, Double, Double) ->
   [(String, VKey, (Double, Double))] ->
-  Either String [(String, VKey, (Double, Double), (Double, Double))]
-packShelf (pw, pd, m) = go m m 0
+  Either String [[(String, VKey, (Double, Double), (Double, Double))]]
+packBeds (pw, pd, m) items0 = go (sortBy bigger items0)
   where
-    go _ _ _ [] = Right []
-    go x y rowD (item@(iid, k, (w, d)) : rest)
+    bigger (_, _, (w1, d1)) (_, _, (w2, d2)) = compare (w2 * d2) (w1 * d1)
+    go [] = Right []
+    go xs = do
+      (placed, rest) <- fitOne xs
+      (placed :) <$> go rest
+    fitOne = fit m m 0 []
+    fit _ _ _ acc [] = Right (reverse acc, [])
+    fit x y rowD acc (item@(iid, k, (w, d)) : rest)
       | w > pw - 2 * m || d > pd - 2 * m =
-          Left (iid ++ " footprint " ++ show w ++ "x" ++ show d ++ " exceeds the plate")
-      | x + w > pw - m = go m (y + rowD + m) 0 (item : rest)
-      | y + d > pd - m =
-          Left ("Plate overflow at " ++ iid ++ " — parts do not fit on one plate")
-      | otherwise =
-          ((iid, k, (w, d), (x, y)) :) <$> go (x + w + m) y (max rowD d) rest
+          Left (iid ++ " footprint " ++ show w ++ "x" ++ show d ++ " exceeds the " ++ show pw ++ "x" ++ show pd ++ " plate with " ++ show m ++ " margin")
+      | x + w > pw - m = fit m (y + rowD + m) 0 acc (item : rest)
+      | y + d > pd - m = Right (reverse acc, item : rest)
+      | otherwise = fit (x + w + m) y (max rowD d) ((iid, k, (w, d), (x, y)) : acc) rest
 
 jstr :: String -> String
 jstr s = "\"" ++ concatMap esc s ++ "\""
@@ -270,18 +284,19 @@ manifestJson ::
   String ->
   (Double, Double, Double) ->
   [(VKey, FlatPart, Shape, (Double, Double, Double), String)] ->
-  [(String, VKey, (Double, Double), (Double, Double))] ->
+  [[(String, VKey, (Double, Double), (Double, Double))]] ->
   [FlatPart] ->
   String
-manifestJson src base (pw, pd, m) variants placed asmOnly =
+manifestJson src base (pw, pd, m) variants plates asmOnly =
   "{\n"
     ++ ("  \"source\": " ++ jstr src ++ ",\n")
-    ++ ("  \"plate\": {\"w\": " ++ jnum pw ++ ", \"d\": " ++ jnum pd ++ ", \"margin\": " ++ jnum m ++ "},\n")
+    ++ ("  \"plate\": {\"w\": " ++ jnum pw ++ ", \"d\": " ++ jnum pd ++ ", \"margin\": " ++ jnum m ++ ", \"count\": " ++ show (length plates) ++ "},\n")
     ++ ("  \"variants\": [\n" ++ intercalate ",\n" (map vj variants) ++ "\n  ],\n")
-    ++ ("  \"placements\": [\n" ++ intercalate ",\n" (map pj placed) ++ "\n  ],\n")
+    ++ ("  \"placements\": [\n" ++ intercalate ",\n" [pj i p | (i, ps) <- zip [(1 :: Int) ..] plates, p <- ps] ++ "\n  ],\n")
     ++ ("  \"assembly_only\": [" ++ intercalate ", " (map aj asmOnly) ++ "]\n")
     ++ "}\n"
   where
+    placed = concat plates
     vj (k@(srcf, dk), fp, _, (w, d, h), vname) =
       "    {\"id\": " ++ jstr vname ++ ", \"part\": " ++ jstr (fpName fp)
         ++ ", \"source\": " ++ jstr srcf
@@ -290,8 +305,9 @@ manifestJson src base (pw, pd, m) variants placed asmOnly =
         ++ ", \"footprint\": [" ++ jnum w ++ ", " ++ jnum d ++ ", " ++ jnum h ++ "]"
         ++ ", \"scad\": " ++ jstr (base ++ "_part_" ++ vname ++ ".scad")
         ++ ", \"hints\": {" ++ intercalate ", " [jstr hk ++ ": " ++ jstr hv | (hk, hv) <- fpHints fp] ++ "}}"
-    pj (iid, k, (w, d), (x, y)) =
+    pj i (iid, k, (w, d), (x, y)) =
       "    {\"instance\": " ++ jstr iid ++ ", \"variant\": " ++ jstr (vnameOfK k)
+        ++ ", \"plate\": " ++ show i
         ++ ", \"x\": " ++ jnum x ++ ", \"y\": " ++ jnum y
         ++ ", \"w\": " ++ jnum w ++ ", \"d\": " ++ jnum d ++ "}"
     vnameOfK k = head [vn | (k', _, _, _, vn) <- variants, k' == k]
@@ -335,15 +351,23 @@ processAssemble inputFile = do
       let footOf k = head [(w, d) | (k', _, _, (w, d, _), _) <- variants, k' == k]
           normOf k = head [n | (k', _, n, _, _) <- variants, k' == k]
           instances = [(instId fp i, vkey fp) | fp <- printable, i <- [1 .. fpCount fp]]
-      case packShelf plate [(iid, k, footOf k) | (iid, k) <- instances] of
+      case packBeds plate [(iid, k, footOf k) | (iid, k) <- instances] of
         Left err -> do
           hPutStrLn stderr ("Error: " ++ err)
           exitFailure
-        Right placed -> do
-          let slab = Translate (0, 0, -0.8) (Rectangle pw pd 0.6)
-              plateShape = Union (slab : [Translate (x, y, 0) (normOf k) | (_, k, _, (x, y)) <- placed])
-          writeScad plateShape (base ++ "_plate.scad")
-          putStrLn ("Wrote " ++ base ++ "_plate.scad")
-          writeFile (base ++ "_manifest.json") (manifestJson inputFile baseName plate variants placed asmOnly)
+        Right plates -> do
+          let nPlates = length plates
+              plateFile i = base ++ (if nPlates == 1 then "_plate" else "_plate" ++ show i) ++ ".scad"
+          mapM_
+            ( \(i, placed) -> do
+                let slab = Translate (0, 0, -0.8) (Rectangle pw pd 0.6)
+                    plateShape = Union (slab : [Translate (x, y, 0) (normOf k) | (_, k, _, (x, y)) <- placed])
+                writeScad plateShape (plateFile i)
+                putStrLn ("Wrote " ++ plateFile i ++ " (" ++ show (length placed) ++ " parts)")
+            )
+            (zip [(1 :: Int) ..] plates)
+          when (nPlates > 1) $
+            putStrLn ("(" ++ show (length instances) ++ " parts need " ++ show nPlates ++ " plates of " ++ jnum pw ++ "x" ++ jnum pd ++ ")")
+          writeFileUtf8 (base ++ "_manifest.json") (manifestJson inputFile baseName plate variants plates asmOnly)
           putStrLn ("Wrote " ++ base ++ "_manifest.json")
 

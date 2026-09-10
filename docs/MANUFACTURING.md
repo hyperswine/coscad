@@ -20,8 +20,11 @@ asm = center ⊕ (larch |> move 55 -13 -7) ⊕ ...
 - The `asm` expression is ordinary CoScad over the part names — poses
   are the one legitimate home for absolute `move`s.
 - Running `coscad foo.assemble` emits: `foo_asm.scad` (view),
-  `foo_plate.scad` (packed check), `foo_part_<variant>.scad`
-  (print-oriented, at origin), and `foo_manifest.json`.
+  `foo_plate.scad` (packed check; `foo_plate1.scad`, `foo_plate2.scad`,
+  ... when the parts need more than one plate), `foo_part_<variant>.scad`
+  (print-oriented, at origin), and `foo_manifest.json` (each placement
+  carries its `plate` index). A part whose footprint exceeds the plate
+  is an error naming the part and the plate.
 
 ## coscad next (manufacturing stage)
 
@@ -42,7 +45,11 @@ asm = center ⊕ (larch |> move 55 -13 -7) ⊕ ...
    solid, every placement inside margins.
 
 `COSCAD_OPENSCAD` overrides the OpenSCAD binary (point it at an
-`xvfb-run -a openscad "$@"` wrapper on headless machines).
+`xvfb-run -a openscad "$@"` wrapper on headless machines);
+`COSCAD_BOSL2` points at a BOSL2 checkout outside the library folders.
+`coscad doctor` verifies both. OpenSCAD warnings during a render fail the
+stage: a bed built from a part whose include did not resolve is not a
+bed you want to print.
 
 ## Known limitations / roadmap
 

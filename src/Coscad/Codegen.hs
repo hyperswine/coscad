@@ -4,93 +4,108 @@
 module Coscad.Codegen (module Coscad.Codegen) where
 
 import Coscad.Geometry
+import Coscad.IO (writeFileUtf8)
 import Coscad.Shape
 import Data.List (intercalate)
+
+-- | Numbers as OpenSCAD reads them: rounded to 1e-9 (rotation noise
+-- like 3.06e-16 becomes 0), integers without a trailing ".0", no "-0".
+showD :: Double -> String
+showD x
+  | isNaN x || isInfinite x = show x
+  | otherwise =
+      let r = fromIntegral (round (x * 1e9) :: Integer) / 1e9 :: Double
+          r' = if r == 0 then 0 else r
+          i = round r' :: Integer
+       in if fromIntegral i == r' then show i else show r'
 
 -- | Helper function for polygon conversion
 showPoints points = "[" ++ intercalate ", " (map showPoint points) ++ "]"
   where
-    showPoint (x, y) = "[" ++ show x ++ ", " ++ show y ++ "]"
+    showPoint (x, y) = "[" ++ showD x ++ ", " ++ showD y ++ "]"
 
 -- | Helper function for polygon conversion
 showPaths paths = "[" ++ intercalate ", " (map showPath paths) ++ "]"
   where
-    showPath path = "[" ++ intercalate ", " (map show path) ++ "]"
+    showPath path = "[" ++ intercalate ", " (map showD path) ++ "]"
 
 indent = unlines . map ("  " ++) . lines
 
 -- | Emit optional BOSL2 chamfer/rounding arguments
 boslMod ch ro =
-  (if ch /= 0 then ", chamfer = " ++ show ch else "")
-    ++ (if ro /= 0 then ", rounding = " ++ show ro else "")
+  (if ch /= 0 then ", chamfer = " ++ showD ch else "")
+    ++ (if ro /= 0 then ", rounding = " ++ showD ro else "")
 
 gen Empty = "union() { }"
-gen (Rectangle x y z) = "cube(" ++ "[" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ "]" ++ ");"
-gen (Sphere r) = "sphere(" ++ show r ++ ");"
+gen (Rectangle x y z) = "cube(" ++ "[" ++ showD x ++ ", " ++ showD y ++ ", " ++ showD z ++ "]" ++ ");"
+gen (Sphere r) = "sphere(" ++ showD r ++ ");"
 gen (Shape2D n r) =
-  "circle(r = " ++ show r ++ ", $fn = " ++ show n ++ ");"
+  "circle(r = " ++ showD r ++ ", $fn = " ++ show n ++ ");"
 gen (Cylinder r h) =
-  "cylinder(h = " ++ show h ++ ", r = " ++ show r ++ ");"
+  "cylinder(h = " ++ showD h ++ ", r = " ++ showD r ++ ");"
 gen (Cone r h) =
-  "cylinder(h = " ++ show h ++ ", r1 = " ++ show r ++ ", r2 = 0);"
+  "cylinder(h = " ++ showD h ++ ", r1 = " ++ showD r ++ ", r2 = 0);"
 gen (Frustum h r1 r2) =
-  "cylinder(h = " ++ show h ++ ", r1 = " ++ show r1 ++ ", r2 = " ++ show r2 ++ ");"
+  "cylinder(h = " ++ showD h ++ ", r1 = " ++ showD r1 ++ ", r2 = " ++ showD r2 ++ ");"
 gen (Prism n r h) =
-  "cylinder(h = " ++ show h ++ ", r = " ++ show r ++ ", $fn = " ++ show n ++ ");"
+  "cylinder(h = " ++ showD h ++ ", r = " ++ showD r ++ ", $fn = " ++ show n ++ ");"
 gen (Poly (PD points [])) =
   "polygon(points = " ++ showPoints points ++ ");"
 gen (Poly (PD points paths)) =
   "polygon(points = " ++ showPoints points ++ ", paths = " ++ showPaths paths ++ ");"
 -- BOSL2 primitives (all centered at origin, BOSL2 default anchoring)
 gen (Cuboid (x, y, z) ch ro) =
-  "cuboid([" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ "]" ++ boslMod ch ro ++ ");"
+  "cuboid([" ++ showD x ++ ", " ++ showD y ++ ", " ++ showD z ++ "]" ++ boslMod ch ro ++ ");"
 gen (Cyl r h ch ro) =
-  "cyl(r = " ++ show r ++ ", h = " ++ show h ++ boslMod ch ro ++ ");"
+  "cyl(r = " ++ showD r ++ ", h = " ++ showD h ++ boslMod ch ro ++ ");"
 gen (XCyl r l) =
-  "xcyl(r = " ++ show r ++ ", l = " ++ show l ++ ");"
+  "xcyl(r = " ++ showD r ++ ", l = " ++ showD l ++ ");"
 gen (YCyl r l) =
-  "ycyl(r = " ++ show r ++ ", l = " ++ show l ++ ");"
+  "ycyl(r = " ++ showD r ++ ", l = " ++ showD l ++ ");"
 gen (ZCyl r l) =
-  "zcyl(r = " ++ show r ++ ", l = " ++ show l ++ ");"
+  "zcyl(r = " ++ showD r ++ ", l = " ++ showD l ++ ");"
 gen (Tube ro ri h) =
-  "tube(h = " ++ show h ++ ", or = " ++ show ro ++ ", ir = " ++ show ri ++ ");"
+  "tube(h = " ++ showD h ++ ", or = " ++ showD ro ++ ", ir = " ++ showD ri ++ ");"
 gen (Prismoid (x1, y1) (x2, y2) h) =
-  "prismoid(size1 = [" ++ show x1 ++ ", " ++ show y1 ++ "], size2 = [" ++ show x2 ++ ", " ++ show y2 ++ "], h = " ++ show h ++ ", anchor = CENTER);"
+  "prismoid(size1 = [" ++ showD x1 ++ ", " ++ showD y1 ++ "], size2 = [" ++ showD x2 ++ ", " ++ showD y2 ++ "], h = " ++ showD h ++ ", anchor = CENTER);"
 gen (Torus rj rn) =
-  "torus(r_maj = " ++ show rj ++ ", r_min = " ++ show rn ++ ");"
+  "torus(r_maj = " ++ showD rj ++ ", r_min = " ++ showD rn ++ ");"
 gen (Wedge (x, y, z)) =
-  "wedge([" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ "], anchor = CENTER);"
+  "wedge([" ++ showD x ++ ", " ++ showD y ++ ", " ++ showD z ++ "], anchor = CENTER);"
 -- Transforms
 gen (Tx dx s) =
-  "translate([" ++ show dx ++ ", 0, 0]) {\n" ++ indent (gen s) ++ "}"
+  "translate([" ++ showD dx ++ ", 0, 0]) {\n" ++ indent (gen s) ++ "}"
 gen (Ty dy s) =
-  "translate([0, " ++ show dy ++ ", 0]) {\n" ++ indent (gen s) ++ "}"
+  "translate([0, " ++ showD dy ++ ", 0]) {\n" ++ indent (gen s) ++ "}"
 gen (Tz dz s) =
-  "translate([0, 0, " ++ show dz ++ "]) {\n" ++ indent (gen s) ++ "}"
+  "translate([0, 0, " ++ showD dz ++ "]) {\n" ++ indent (gen s) ++ "}"
 gen (Rx ax s) =
-  "rotate([" ++ show ax ++ ", 0, 0]) {\n" ++ indent (gen s) ++ "}"
+  "rotate([" ++ showD ax ++ ", 0, 0]) {\n" ++ indent (gen s) ++ "}"
 gen (Ry ay s) =
-  "rotate([0, " ++ show ay ++ ", 0]) {\n" ++ indent (gen s) ++ "}"
+  "rotate([0, " ++ showD ay ++ ", 0]) {\n" ++ indent (gen s) ++ "}"
 gen (Rz az s) =
-  "rotate([0, 0, " ++ show az ++ "]) {\n" ++ indent (gen s) ++ "}"
+  "rotate([0, 0, " ++ showD az ++ "]) {\n" ++ indent (gen s) ++ "}"
 gen (Scale (sx, sy, sz) s) =
-  "scale([" ++ show sx ++ ", " ++ show sy ++ ", " ++ show sz ++ "]) {\n" ++ indent (gen s) ++ "}"
+  "scale([" ++ showD sx ++ ", " ++ showD sy ++ ", " ++ showD sz ++ "]) {\n" ++ indent (gen s) ++ "}"
 gen (Mirror (mx, my, mz) s) =
-  "mirror([" ++ show mx ++ ", " ++ show my ++ ", " ++ show mz ++ "]) {\n" ++ indent (gen s) ++ "}"
+  "mirror([" ++ showD mx ++ ", " ++ showD my ++ ", " ++ showD mz ++ "]) {\n" ++ indent (gen s) ++ "}"
+-- identity transforms (from attachment desugaring) are elided
+gen (Translate (0, 0, 0) s) = gen s
+gen (RotAxis 0 _ s) = gen s
 gen (Translate (x, y, z) s) =
-  "translate([" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ "]) {\n" ++ indent (gen s) ++ "}"
+  "translate([" ++ showD x ++ ", " ++ showD y ++ ", " ++ showD z ++ "]) {\n" ++ indent (gen s) ++ "}"
 gen (RotAxis a (x, y, z) s) =
-  "rotate(a = " ++ show a ++ ", v = [" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ "]) {\n" ++ indent (gen s) ++ "}"
+  "rotate(a = " ++ showD a ++ ", v = [" ++ showD x ++ ", " ++ showD y ++ ", " ++ showD z ++ "]) {\n" ++ indent (gen s) ++ "}"
 -- attachment sugar should be resolved before codegen; desugar defensively
 gen s@(Anchor {}) = gen (resolve s)
 gen s@(Position {}) = gen (resolve s)
 gen s@(AttachTo {}) = gen (resolve s)
 gen s@(CutAt {}) = gen (resolve s)
 gen (Extrude h s) =
-  "linear_extrude(height = " ++ show h ++ ") {\n" ++ indent (gen s) ++ "}"
+  "linear_extrude(height = " ++ showD h ++ ") {\n" ++ indent (gen s) ++ "}"
 gen (Loft ps) =
   "skin([" ++ intercalate ", " (map (either error id . pathOf . snd) ps) ++ "], z = ["
-    ++ intercalate ", " (map (show . fst) ps) ++ "], slices = 0, method = \"" ++ loftMethod (map snd ps) ++ "\");"
+    ++ intercalate ", " (map (showD . fst) ps) ++ "], slices = 0, method = \"" ++ loftMethod (map snd ps) ++ "\");"
 gen (Diff a b) =
   "difference() {\n" ++ indent (gen a) ++ indent (gen b) ++ "}"
 gen (Union shapes) =
@@ -102,7 +117,7 @@ gen (Hull shapes) =
 gen (Minkowski shapes) =
   "minkowski() {\n" ++ concatMap (indent . gen) shapes ++ "}"
 gen (Offset r s) =
-  "offset(r = " ++ show r ++ ") {\n" ++ indent (gen s) ++ "}"
+  "offset(r = " ++ showD r ++ ") {\n" ++ indent (gen s) ++ "}"
 
 -- | A 2D profile as a BOSL2 *path expression* (a list of points), for
 -- use inside skin(). Only single closed outlines qualify: the 2D
@@ -110,17 +125,17 @@ gen (Offset r s) =
 -- them. Booleans between profiles have no single-outline path.
 pathOf :: Shape -> Either String String
 pathOf s = case s of
-  Shape2D n r -> Right ("circle(r = " ++ show r ++ ", $fn = " ++ show n ++ ")")
+  Shape2D n r -> Right ("circle(r = " ++ showD r ++ ", $fn = " ++ show n ++ ")")
   Poly (PD pts []) -> Right ("ccw_polygon(" ++ showPoints pts ++ ")")
   Poly _ -> Left "a polygon with holes cannot be a loft profile"
-  Tx d p -> wrap ("move([" ++ show d ++ ", 0], p = ") p
-  Ty d p -> wrap ("move([0, " ++ show d ++ "], p = ") p
-  Translate (x, y, _) p -> wrap ("move([" ++ show x ++ ", " ++ show y ++ "], p = ") p
-  Rz a p -> wrap ("zrot(" ++ show a ++ ", p = ") p
-  RotAxis a (0, 0, az) p | az /= 0 -> wrap ("zrot(" ++ show (if az > 0 then a else -a) ++ ", p = ") p
-  Scale (sx, sy, _) p -> wrap ("scale([" ++ show sx ++ ", " ++ show sy ++ "], p = ") p
-  Mirror (nx, ny, _) p -> wrap ("mirror([" ++ show nx ++ ", " ++ show ny ++ "], p = ") p
-  Offset r p -> (\q -> "offset(" ++ q ++ ", r = " ++ show r ++ ", closed = true)") <$> pathOf p
+  Tx d p -> wrap ("move([" ++ showD d ++ ", 0], p = ") p
+  Ty d p -> wrap ("move([0, " ++ showD d ++ "], p = ") p
+  Translate (x, y, _) p -> wrap ("move([" ++ showD x ++ ", " ++ showD y ++ "], p = ") p
+  Rz a p -> wrap ("zrot(" ++ showD a ++ ", p = ") p
+  RotAxis a (0, 0, az) p | az /= 0 -> wrap ("zrot(" ++ showD (if az > 0 then a else -a) ++ ", p = ") p
+  Scale (sx, sy, _) p -> wrap ("scale([" ++ showD sx ++ ", " ++ showD sy ++ "], p = ") p
+  Mirror (nx, ny, _) p -> wrap ("mirror([" ++ showD nx ++ ", " ++ showD ny ++ "], p = ") p
+  Offset r p -> (\q -> "offset(" ++ q ++ ", r = " ++ showD r ++ ", closed = true)") <$> pathOf p
   Tz _ _ -> Left "a loft profile cannot be moved in Z (ζ); give the loft its z value instead"
   Rx _ _ -> Left "a loft profile must stay in the XY plane (no θ rotation)"
   Ry _ _ -> Left "a loft profile must stay in the XY plane (no ϕ rotation)"
@@ -239,7 +254,7 @@ renderScad shape = header ++ fn50 (gen shape')
     header = if usesBosl2 shape' then "include <BOSL2/std.scad>\n\n" else ""
 
 writeScad :: Shape -> FilePath -> IO ()
-writeScad shape filename = writeFile filename (renderScad shape)
+writeScad shape filename = writeFileUtf8 filename (renderScad shape)
 
 
 fn50 x = x ++ "\n$fn = 50;"

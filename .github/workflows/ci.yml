@@ -1,0 +1,66 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: haskell-actions/setup@v2
+        id: hs
+        with:
+          ghc-version: "9.8"
+          cabal-version: "3.12"
+
+      - name: Cache cabal store
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ steps.hs.outputs.cabal-store }}
+            dist-newstyle
+          key: ${{ runner.os }}-cabal-${{ hashFiles('coscad.cabal', 'cabal.project') }}
+          restore-keys: ${{ runner.os }}-cabal-
+
+      # --- OpenSCAD + BOSL2 (the geometry tier renders every example) ---
+      - name: OpenSCAD + BOSL2 (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad xvfb
+          printf '#!/bin/sh\nexec xvfb-run -a openscad "$@"\n' | sudo tee /usr/local/bin/openscad-headless >/dev/null
+          sudo chmod +x /usr/local/bin/openscad-headless
+          echo "COSCAD_OPENSCAD=/usr/local/bin/openscad-headless" >> "$GITHUB_ENV"
+          git clone --depth 1 https://github.com/BelfrySCAD/BOSL2 "$HOME/BOSL2"
+          echo "COSCAD_BOSL2=$HOME/BOSL2" >> "$GITHUB_ENV"
+
+      - name: OpenSCAD + BOSL2 (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install --cask openscad
+          git clone --depth 1 https://github.com/BelfrySCAD/BOSL2 "$HOME/BOSL2"
+          echo "COSCAD_BOSL2=$HOME/BOSL2" >> "$GITHUB_ENV"
+
+      - name: OpenSCAD + BOSL2 (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          choco install openscad --no-progress -y
+          git clone --depth 1 https://github.com/BelfrySCAD/BOSL2 "$env:USERPROFILE\BOSL2"
+          "COSCAD_BOSL2=$env:USERPROFILE\BOSL2" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - run: cabal update
+      - run: cabal build all
+      - name: coscad doctor
+        run: cabal run coscad -- doctor
+      - name: tests (diagnostics, examples, snapshots, geometry)
+        run: cabal test --test-show-details=direct

@@ -20,18 +20,18 @@ module Coscad.Check (module Coscad.Check) where
 
 import Coscad.Assemble
 import Coscad.Codegen
-import Coscad.Next (Tri, findOpenscad, openscadStlArgs, parseStlAscii, runOpenscad)
+import Coscad.Mesh (Tri, meshVolume, parseStlAscii)
+import Coscad.OpenScad (openscadStlArgs, renderStlFile, runOpenscadRaw)
 import Coscad.Parser
 import Coscad.Shape
-import Control.Monad (forM, forM_, unless)
+import Control.Monad (forM, forM_, unless, when)
 import Data.IORef
 import Data.List (foldl', intercalate)
 import qualified Data.Map as Map
-import System.Exit (exitFailure)
-import System.Exit (ExitCode (..))
-import System.FilePath (dropExtension)
+import System.Directory (createDirectoryIfMissing, getTemporaryDirectory, removePathForcibly)
+import System.Exit (ExitCode (..), exitFailure)
+import System.FilePath (takeBaseName, (</>))
 import System.IO (hPutStrLn, stderr)
-import System.Process (readProcessWithExitCode)
 
 type V3 = (Double, Double, Double)
 
@@ -190,9 +190,6 @@ polyScad ts =
         ++ intercalate "," (map face ts)
         ++ "]);"
 
-meshVolume :: [Tri] -> Double
-meshVolume = abs . sum . map (\(a, b, c) -> vdot3 a (vcross3 b c) / 6)
-
 -- far-away marker: keeps OpenSCAD from failing on empty exports
 marker :: String
 marker = "translate([99999,99999,99999]) cube(0.001);"
@@ -202,27 +199,37 @@ marker = "translate([99999,99999,99999]) cube(0.001);"
 -- fallback (often the first operand), so the exit code alone lies.
 runOpenscadChecked :: FilePath -> FilePath -> IO (Either String Bool)
 runOpenscadChecked scadF stlF = do
-  bin <- maybe "openscad" id <$> findOpenscad
-  (code, out, err) <- readProcessWithExitCode bin (openscadStlArgs stlF scadF) ""
-  let cgalBad = any (\l -> contains "CGAL error" l || contains "assertion" l) (lines err ++ lines out)
-  return $ case code of
-    ExitSuccess -> Right cgalBad
-    ExitFailure n -> Left ("openscad exit " ++ show n ++ ": " ++ take 300 err)
+  r <- runOpenscadRaw (openscadStlArgs stlF scadF)
+  return $ case r of
+    Left e -> Left e
+    Right (code, out, err) ->
+      let cgalBad = any (\l -> contains "CGAL error" l || contains "assertion" l) (lines err ++ lines out)
+       in case code of
+            ExitSuccess -> Right cgalBad
+            ExitFailure n -> Left ("openscad exit " ++ show n ++ ": " ++ take 300 err)
   where
     contains pat l = pat `isInfixOfS` l
     isInfixOfS pat l = any (\i -> take (length pat) (drop i l) == pat) [0 .. length l - length pat]
 
 -- ------------------------------------------------------------------
 processCheck :: FilePath -> IO ()
-processCheck path = do
+processCheck = processCheckWith False
+
+-- | Scratch renders go to a per-assembly folder under the system temp
+-- directory and are deleted afterwards unless `keepTemp` (--keep-temp).
+processCheckWith :: Bool -> FilePath -> IO ()
+processCheckWith keepTemp path = do
+  tmpRoot <- getTemporaryDirectory
+  let dir = tmpRoot </> "coscad-check" </> takeBaseName path
+  removePathForcibly dir
+  createDirectoryIfMissing True dir
   res <- loadAssembleFile [] path
   case res of
     Left err -> hPutStrLn stderr ("Error: " ++ err) >> exitFailure
     Right ar -> case arAsm ar of
       Nothing -> hPutStrLn stderr "Error: check needs an `asm = ...` definition." >> exitFailure
       Just _ -> do
-        let base = dropExtension path
-            clr = arClearance ar
+        let clr = arClearance ar
             names = map fst (arParts ar)
         putStrLn ("check: " ++ show (length names) ++ " parts, clearance = " ++ show clr ++ "mm")
         -- 1. isolate each part inside the asm expression
@@ -233,15 +240,14 @@ processCheck path = do
             Right table -> case Map.lookup "asm" table of
               Nothing -> return (pn, [])
               Just asmS -> do
-                let scadF = base ++ "_chk_" ++ pn ++ ".scad"
-                    stlF = base ++ "_chk_" ++ pn ++ ".stl"
+                let scadF = dir </> ("chk_" ++ pn ++ ".scad")
+                    stlF = dir </> ("chk_" ++ pn ++ ".stl")
                 writeScad asmS scadF
                 appendFile scadF ("\n" ++ marker ++ "\n")
-                r <- runOpenscad scadF stlF
+                r <- renderStlFile scadF stlF
                 case r of
                   Left err -> hPutStrLn stderr ("Error rendering " ++ pn ++ ": " ++ err) >> exitFailure >> return (pn, [])
-                  Right () -> do
-                    tris <- parseStlAscii <$> readFile stlF
+                  Right tris -> do
                     let real = [b | b <- splitBodies tris, farFromMarker b]
                     return (pn, real)
         let insts =
@@ -260,8 +266,8 @@ processCheck path = do
             then return ()
             else do
               -- exact overlap via OpenSCAD boolean
-              let scadF = base ++ "_chk_pair" ++ show i ++ ".scad"
-                  stlF = base ++ "_chk_pair" ++ show i ++ ".stl"
+              let scadF = dir </> ("chk_pair" ++ show i ++ ".scad")
+                  stlF = dir </> ("chk_pair" ++ show i ++ ".stl")
               let emit x y = writeFile scadF ("intersection() {\n union() { " ++ polyScad x ++ marker ++ " }\n union() { " ++ polyScad y ++ marker ++ " }\n}\n")
                   measure = do
                     tris <- parseStlAscii <$> readFile stlF
@@ -295,7 +301,8 @@ processCheck path = do
         no <- readIORef overlapsR
         nw <- readIORef warnsR
         putStrLn ("check: " ++ show no ++ " overlaps, " ++ show nw ++ " clearance warnings")
-        unless (no == 0) exitFailure
+        if keepTemp then putStrLn ("scratch renders kept in " ++ dir) else removePathForcibly dir
+        when (no > 0) exitFailure
   where
     rnd x = fromIntegral (round (x * 1000) :: Integer) / 1000 :: Double
     tails' [] = []

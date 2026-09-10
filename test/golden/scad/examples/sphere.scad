@@ -1,2 +1,2 @@
-sphere(15.0);
+sphere(15);
 $fn = 50;

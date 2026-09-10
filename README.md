@@ -12,23 +12,51 @@ computed here so the emitted OpenSCAD (and the downstream slicer) stay dumb.
 .assemble ─coscad next▶ bedN.stl + manifest             (manufacturing)
 ```
 
+## Install
+
+Prebuilt binaries for macOS, Linux, and Windows are attached to each
+GitHub release (`coscad-<os>-<arch>.tar.gz` / `.zip`); put `coscad` on
+your PATH. Or build from source with GHC 9.4+:
+
+```sh
+cabal install exe:coscad     # or: stack install  (binary lands in bin/)
+```
+
+Rendering needs [OpenSCAD](https://openscad.org) 2021.01 or newer and a
+[BOSL2](https://github.com/BelfrySCAD/BOSL2) checkout in an OpenSCAD
+library folder (`~/Documents/OpenSCAD/libraries` on macOS,
+`~/.local/share/OpenSCAD/libraries` on Linux, `Documents\OpenSCAD\libraries`
+on Windows) — or anywhere, with `COSCAD_BOSL2=/path/to/BOSL2`. Check the
+whole chain with:
+
+```sh
+coscad doctor
+```
+
+which reports the OpenSCAD and BOSL2 versions it found and renders a
+boolean test part against a known volume.
+
 ## Quick start
 
 ```sh
-stack build            # or: ghc --make app/Main.hs -isrc -o coscad
-coscad part.coscad     # -> part.scad (render with OpenSCAD; BOSL2
-                       #    checkout must sit next to the .scad)
-coscad frame.assemble  # -> _asm.scad, _plate.scad, per-part scads, manifest
+coscad part.coscad           # -> part.scad
+coscad stl part.coscad       # -> part.scad + part.stl, prints volume + bounds
+coscad frame.assemble        # -> _asm view, packed _plate(N) scads, manifest
 coscad next frame.assemble   # -> frame_bed1.stl ... + manifest
-                             # (set COSCAD_OPENSCAD to a wrapper, e.g.
-                             #  xvfb-run, on headless machines)
 coscad check frame.assemble  # interference / clearance check on real meshes
+coscad --help                # command + language cheat sheet
 ```
+
+`COSCAD_OPENSCAD` points at the OpenSCAD binary or a wrapper script
+(e.g. `xvfb-run -a openscad "$@"` on a headless machine); otherwise
+PATH and the usual install locations are searched.
 
 Errors carry `file:line:col` and quote the offending line — an unknown
 name, a stray glyph, a circular definition, a duplicate, or a 2D/3D
 mismatch (extruding a solid, offsetting a cube, unioning a profile with
 a box) all fail at compile time instead of rendering silently wrong.
+OpenSCAD warnings during a render (a missing include, a dropped child)
+are treated as failures too.
 
 ## Two syntaxes, one language
 
@@ -67,7 +95,8 @@ A line starting with `|>` continues the previous definition.
   (part, orientation) variant once, searches FFF print orientation
   where undeclared, packs beds largest-first with spill, and emits
   per-bed STLs plus a variants+placements manifest for slice-once /
-  stamp-many slicing. See docs/MANUFACTURING.md.
+  stamp-many slicing; `coscad check` verifies fits on the real meshes.
+  See docs/MANUFACTURING.md.
 
 ## Module map
 
@@ -77,10 +106,17 @@ src/Coscad/Geometry.hs  vectors, bboxes, anchors, attachment resolve
 src/Coscad/Codegen.hs   OpenSCAD emission
 src/Coscad/Dsl.hs       Haskell-embedded glyph DSL
 src/Coscad/Parser.hs    .coscad parser (glyphs, words, pipelines)
-src/Coscad/Assemble.hs  .assemble design stage
+src/Coscad/Dim.hs       2D/3D dimensionality check
+src/Coscad/Assemble.hs  .assemble design stage (+ plate packing)
 src/Coscad/Next.hs      manufacturing stage (orientation, beds, manifest)
-src/Lib.hs              backwards-compatible re-export shim
+src/Coscad/Check.hs     assembly interference / clearance checker
+src/Coscad/Mesh.hs      ASCII STL in/out, volume, bounds
+src/Coscad/OpenScad.hs  finding + running OpenSCAD and BOSL2
+src/Coscad/Part.hs      single-part compile / stl commands
+src/Coscad/Doctor.hs    `coscad doctor`
+src/Lib.hs              re-export shim for the embedded Haskell DSL
 app/Main.hs             CLI dispatch only
+examples/haskell/       embedded-DSL samples (not built)
 ```
 
 ## Docs

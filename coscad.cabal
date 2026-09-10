@@ -1,18 +1,18 @@
-cabal-version: 1.12
+cabal-version: 2.2
 
 -- This file has been generated from package.yaml by hpack version 0.39.6.
 --
 -- see: https://github.com/sol/hpack
 
 name:           coscad
-version:        1.0.0.0
+version:        1.1.0.0
 description:    Please see the README on GitHub at <https://github.com/hyperswine/coscad#readme>
 homepage:       https://github.com/hyperswine/coscad#readme
 bug-reports:    https://github.com/hyperswine/coscad/issues
 author:         Jasen Qin
 maintainer:     jasen.qin33@gmail.com
 copyright:      2025 Jasen Qin
-license:        GPL3
+license:        GPL-3.0-only
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
@@ -29,17 +29,20 @@ library
       Coscad.Check
       Coscad.Codegen
       Coscad.Dim
+      Coscad.Doctor
       Coscad.Dsl
       Coscad.Geometry
+      Coscad.IO
+      Coscad.Mesh
       Coscad.Next
+      Coscad.OpenScad
       Coscad.Parser
+      Coscad.Part
       Coscad.Shape
-      ExampleBookend
-      ExampleBookend2
-      ExampleGear
-      ExampleZigZag
       Lib
   other-modules:
+      Paths_coscad
+  autogen-modules:
       Paths_coscad
   hs-source-dirs:
       src
@@ -56,6 +59,8 @@ library
 executable coscad
   main-is: Main.hs
   other-modules:
+      Paths_coscad
+  autogen-modules:
       Paths_coscad
   hs-source-dirs:
       app
@@ -76,6 +81,8 @@ test-suite coscad-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Paths_coscad
+  autogen-modules:
       Paths_coscad
   hs-source-dirs:
       test

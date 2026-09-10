@@ -1,4 +1,4 @@
 include <BOSL2/std.scad>
 
-cuboid([40.0, 16.0, 10.0]);
+cuboid([40, 16, 10]);
 $fn = 50;

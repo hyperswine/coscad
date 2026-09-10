@@ -6,13 +6,13 @@ module Coscad.Next (module Coscad.Next) where
 import Coscad.Assemble
 import Coscad.Codegen
 import Coscad.Geometry
-import Data.List (foldl', intercalate, sortBy)
-import System.Directory (doesFileExist, findExecutable)
-import System.Environment (lookupEnv)
-import System.Exit (ExitCode (..), exitFailure)
+import Coscad.IO (writeFileUtf8)
+import Coscad.Mesh
+import Coscad.OpenScad (renderStlFile)
+import Data.List (foldl', intercalate)
+import System.Exit (exitFailure)
 import System.FilePath (dropExtension)
 import System.IO (hPutStrLn, stderr)
-import System.Process (readProcessWithExitCode)
 
 -- ============================================================
 -- COSCAD NEXT — manufacturing stage (`coscad next foo.assemble`)
@@ -32,48 +32,6 @@ import System.Process (readProcessWithExitCode)
 -- normals recomputed), and foo_manifest.json recording per-variant
 -- chosen orientation + per-bed placements — the slicer slices each
 -- variant once and stamps it at the recorded offsets.
-
-type Tri = ((Double, Double, Double), (Double, Double, Double), (Double, Double, Double))
-
-parseStlAscii :: String -> [Tri]
-parseStlAscii s = group3 verts
-  where
-    verts =
-      [ toV (map read (take 3 (drop 1 ws)))
-        | l <- lines s
-        , let ws = words l
-        , take 1 ws == ["vertex"]
-      ]
-    toV [x, y, z] = (x, y, z)
-    toV _ = (0, 0, 0)
-    group3 (a : b : c : r) = (a, b, c) : group3 r
-    group3 _ = []
-
-triNormal :: Tri -> (Double, Double, Double)
-triNormal (a, b, c) = vnormed (cross (vsub b a) (vsub c a))
-
-triArea :: Tri -> Double
-triArea (a, b, c) = vlen (cross (vsub b a) (vsub c a)) / 2
-
-meshMap :: ((Double, Double, Double) -> (Double, Double, Double)) -> [Tri] -> [Tri]
-meshMap f = map (\(a, b, c) -> (f a, f b, f c))
-
-meshBounds :: [Tri] -> BBox
-meshBounds tris = fromCorners [v | (a, b, c) <- tris, v <- [a, b, c]]
-
-stlAscii :: String -> [Tri] -> String
-stlAscii name tris =
-  "solid " ++ name ++ "\n"
-    ++ concatMap facet tris
-    ++ ("endsolid " ++ name ++ "\n")
-  where
-    facet t@(a, b, c) =
-      let (nx, ny, nz) = triNormal t
-       in "  facet normal " ++ unwords (map show [nx, ny, nz]) ++ "\n"
-            ++ "    outer loop\n"
-            ++ concatMap vtx [a, b, c]
-            ++ "    endloop\n  endfacet\n"
-    vtx (x, y, z) = "      vertex " ++ unwords (map show [x, y, z]) ++ "\n"
 
 -- | Rotation matrix taking direction v to straight down.
 downMat :: (Double, Double, Double) -> M3
@@ -142,59 +100,6 @@ chooseOrientation maxZ Nothing tris =
           let (sc, m, lbl) = foldl1 (\a@(s1, _, _) b@(s2, _, _) -> if s2 > s1 then b else a) scored
            in Right (m, lbl, "auto", sc)
 
--- | Pack onto as many beds as needed, largest footprint first.
-packBeds ::
-  (Double, Double, Double) ->
-  [(String, VKey, (Double, Double))] ->
-  Either String [[(String, VKey, (Double, Double), (Double, Double))]]
-packBeds plate@(pw, pd, m) items0 = go (sortBy bigger items0)
-  where
-    bigger (_, _, (w1, d1)) (_, _, (w2, d2)) = compare (w2 * d2) (w1 * d1)
-    go [] = Right []
-    go xs = do
-      (placed, rest) <- fitOne xs
-      (placed :) <$> go rest
-    fitOne = fit m m 0 []
-    fit _ _ _ acc [] = Right (reverse acc, [])
-    fit x y rowD acc (item@(iid, k, (w, d)) : rest)
-      | w > pw - 2 * m || d > pd - 2 * m =
-          Left (iid ++ " footprint " ++ show w ++ "x" ++ show d ++ " exceeds the bed")
-      | x + w > pw - m = fit m (y + rowD + m) 0 acc (item : rest)
-      | y + d > pd - m = Right (reverse acc, item : rest)
-      | otherwise = fit (x + w + m) y (max rowD d) ((iid, k, (w, d), (x, y)) : acc) rest
-
--- | Locate the OpenSCAD binary: $COSCAD_OPENSCAD wins (may be a wrapper
--- such as xvfb-run), then `openscad` on PATH, then the macOS app bundle.
--- Nothing = not found (callers report; the test suite skips rendering).
-findOpenscad :: IO (Maybe FilePath)
-findOpenscad = do
-  env <- lookupEnv "COSCAD_OPENSCAD"
-  case env of
-    Just b | not (null b) -> return (Just b)
-    _ -> do
-      onPath <- findExecutable "openscad"
-      case onPath of
-        Just b -> return (Just b)
-        Nothing -> do
-          let mac = "/Applications/OpenSCAD.app/Contents/MacOS/openscad"
-          hasMac <- doesFileExist mac
-          return (if hasMac then Just mac else Nothing)
-
--- | Arguments for a headless STL export. ASCII is requested explicitly:
--- the downstream mesh reader is ASCII-only and OpenSCAD's default
--- format depends on version and preferences.
-openscadStlArgs :: FilePath -> FilePath -> [String]
-openscadStlArgs stlF scadF = ["-o", stlF, "--export-format", "asciistl", scadF]
-
-runOpenscad :: FilePath -> FilePath -> IO (Either String ())
-runOpenscad scadF stlF = do
-  found <- findOpenscad
-  bin <- maybe (return "openscad") return found
-  (code, _, err) <- readProcessWithExitCode bin (openscadStlArgs stlF scadF) ""
-  case code of
-    ExitSuccess -> return (Right ())
-    ExitFailure n -> return (Left ("openscad failed (" ++ show n ++ ") on " ++ scadF ++ ":\n" ++ err))
-
 processNext :: FilePath -> IO ()
 processNext inputFile = do
   r <- loadAssembleFile [] inputFile
@@ -215,11 +120,10 @@ processNext inputFile = do
                 scadF = base ++ "_next_" ++ vname ++ ".scad"
                 stlF = base ++ "_next_" ++ vname ++ ".stl"
             writeScad (resolve (fpShape fp)) scadF
-            ro <- runOpenscad scadF stlF
+            ro <- renderStlFile scadF stlF
             case ro of
               Left err -> return (Left err)
-              Right () -> do
-                mesh <- parseStlAscii <$> readFile stlF
+              Right mesh -> do
                 case chooseOrientation bedZ (fpDown fp) mesh of
                   Left err -> return (Left (vname ++ ": " ++ err))
                   Right (m, lbl, mode, sc) -> do
@@ -248,7 +152,7 @@ processNext inputFile = do
                     putStrLn ("Wrote " ++ f ++ " (" ++ show (length placed) ++ " parts)")
                 )
                 (zip [(1 :: Int) ..] beds)
-              writeFile (base ++ "_manifest.json") (nextManifest inputFile base (pw, pd, marg) bedZ variants beds asmOnly)
+              writeFileUtf8 (base ++ "_manifest.json") (nextManifest inputFile base (pw, pd, marg) bedZ variants beds asmOnly)
               putStrLn ("Wrote " ++ base ++ "_manifest.json")
 
 nextManifest ::

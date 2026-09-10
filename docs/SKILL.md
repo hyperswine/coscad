@@ -20,18 +20,18 @@ ever disagree; this file can drift, the compiler cannot.
 
 ## Before writing any .coscad
 
-1. Locate the compiler (`Main.hs`, `Lib.hs`) and the `BOSL2/` checkout —
-   ask for their paths or check the conversation/project files if not
-   obvious. There is no installed `coscad` binary by default; it must be
-   built with GHC (`ghc --make Main.hs -o coscad`, needs `megaparsec`,
-   `directory`, `filepath` — on Debian/Ubuntu: `apt-get install ghc
-   libghc-megaparsec-dev`).
-2. `BOSL2/` must be a sibling of (or symlinked next to) the `.scad` output
-   file, since generated files that use BOSL2 shapes emit
-   `include <BOSL2/std.scad>` as a relative path.
-3. Build once per session, then convert with `./coscad file.coscad` →
-   produces `file.scad` next to it. Non-zero exit / stderr message means
-   a parse error (megaparsec's error, often points at the exact glyph).
+1. Get a `coscad` binary: a release download, or `cabal install
+   exe:coscad` / `stack install` from the repo (on this project's macOS
+   box, `DEVELOPER_DIR=/Library/Developer/CommandLineTools` may be
+   needed to link). Run `coscad doctor` first: it reports the OpenSCAD
+   and BOSL2 it will use and renders a test part; if BOSL2 lives
+   outside the OpenSCAD library folders set `COSCAD_BOSL2`.
+2. Generated files `include <BOSL2/std.scad>`, resolved through the
+   OpenSCAD library path (not relative to the .scad), so any folder
+   works once `doctor` is green.
+3. `coscad file.coscad` → `file.scad`; `coscad stl file.coscad` →
+   `file.stl` plus volume and bounds. Errors carry `file:line:col` and
+   quote the line; OpenSCAD warnings during a render are failures.
 
 ## Core syntax rules
 

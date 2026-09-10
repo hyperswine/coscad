@@ -1,7 +1,7 @@
 name:                coscad
-version:             1.0.0.0
+version:             1.1.0.0
 github:              "hyperswine/coscad"
-license:             GPL3
+license:             GPL-3.0-only
 author:              "Jasen Qin"
 maintainer:          "jasen.qin33@gmail.com"
 copyright:           "2025 Jasen Qin"
