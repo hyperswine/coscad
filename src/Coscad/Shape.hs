@@ -6,7 +6,8 @@ type D = Double
 type I = Int
 
 data Shape
-  = Empty -- renders nothing; used by the checker to isolate one part
+  = Empty -- renders nothing
+  | Hidden Shape -- checker-only: retain geometry for anchors, emit no solid
   | Rectangle D D D
   | Sphere D
   | Cylinder D D

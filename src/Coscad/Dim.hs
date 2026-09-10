@@ -13,6 +13,7 @@ data Dim = D2 | D3 | DAny deriving (Eq, Show)
 dimOf :: Shape -> Either String Dim
 dimOf s = case s of
   Empty -> Right DAny
+  Hidden x -> dimOf x
   Shape2D {} -> Right D2
   Poly {} -> Right D2
   Extrude _ x -> do

@@ -37,6 +37,7 @@ boslMod ch ro =
     ++ (if ro /= 0 then ", rounding = " ++ showD ro else "")
 
 gen Empty = "union() { }"
+gen (Hidden _) = gen Empty
 gen (Rectangle x y z) = "cube(" ++ "[" ++ showD x ++ ", " ++ showD y ++ ", " ++ showD z ++ "]" ++ ");"
 gen (Sphere r) = "sphere(" ++ showD r ++ ");"
 gen (Shape2D n r) =
@@ -130,10 +131,14 @@ pathOf s = case s of
   Poly _ -> Left "a polygon with holes cannot be a loft profile"
   Tx d p -> wrap ("move([" ++ showD d ++ ", 0], p = ") p
   Ty d p -> wrap ("move([0, " ++ showD d ++ "], p = ") p
+  Translate (_, _, z) _ | z /= 0 -> Left "a loft profile cannot be moved in Z; give the loft its z value instead"
   Translate (x, y, _) p -> wrap ("move([" ++ showD x ++ ", " ++ showD y ++ "], p = ") p
   Rz a p -> wrap ("zrot(" ++ showD a ++ ", p = ") p
   RotAxis a (0, 0, az) p | az /= 0 -> wrap ("zrot(" ++ showD (if az > 0 then a else -a) ++ ", p = ") p
   Scale (sx, sy, _) p -> wrap ("scale([" ++ showD sx ++ ", " ++ showD sy ++ "], p = ") p
+  Mirror (0, 0, nz) p | nz /= 0 -> pathOf p -- reflection in XY leaves a 2D path unchanged
+  Mirror (_, _, nz) _ | nz /= 0 -> Left "a loft profile must stay in the XY plane (mirror normal must be in XY or along Z)"
+  Mirror (0, 0, 0) _ -> Left "a loft profile mirror needs a nonzero normal"
   Mirror (nx, ny, _) p -> wrap ("mirror([" ++ showD nx ++ ", " ++ showD ny ++ "], p = ") p
   Offset r p -> (\q -> "offset(" ++ q ++ ", r = " ++ showD r ++ ", closed = true)") <$> pathOf p
   Tz _ _ -> Left "a loft profile cannot be moved in Z (ζ); give the loft its z value instead"

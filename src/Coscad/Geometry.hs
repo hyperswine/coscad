@@ -115,6 +115,7 @@ xformBBox m = fromCorners . map (mApply m) . bcorners
 bbox :: Shape -> BBox
 bbox s = case s of
   Empty -> ((0, 0, 0), (0, 0, 0))
+  Hidden x -> bbox x
   Rectangle x y z -> ((0, 0, 0), (x, y, z))
   Sphere r -> ((-r, -r, -r), (r, r, r))
   Cylinder r h -> ((-r, -r, 0), (r, r, h))
@@ -164,6 +165,7 @@ bbox s = case s of
 -- | Desugar attachment operations into plain transforms (bottom-up)
 resolve :: Shape -> Shape
 resolve s = case s of
+  Hidden x -> Hidden (resolve x)
   Anchor v x ->
     let x' = resolve x
      in Translate (vneg (anchorPt (bbox x') v)) x'

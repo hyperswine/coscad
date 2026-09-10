@@ -3,7 +3,8 @@
 --
 -- Method:
 --   1. For each top-level part, re-resolve the asm expression with every
---      OTHER part bound to Empty: the render is that part exactly as
+--      OTHER part hidden but retaining its bounding geometry for
+--      attachment resolution: the render is that part exactly as
 --      placed by the assembly (all instances, e.g. a mirrored pair).
 --   2. Split each render into connected bodies (instances).
 --   3. Pair up bodies across (and within) parts; prune by clearance-
@@ -234,7 +235,7 @@ processCheckWith keepTemp path = do
         putStrLn ("check: " ++ show (length names) ++ " parts, clearance = " ++ show clr ++ "mm")
         -- 1. isolate each part inside the asm expression
         bodiesPer <- forM (arParts ar) $ \(pn, ps) -> do
-          let table0 = Map.fromList [(n, if n == pn then s else Empty) | (n, s) <- arParts ar]
+          let table0 = Map.fromList [(n, if n == pn then s else Hidden s) | (n, s) <- arParts ar]
           case resolveVariables (arMode ar) (arDefs ar) table0 of
             Left err -> hPutStrLn stderr ("Error isolating " ++ pn ++ ": " ++ err) >> exitFailure >> return (pn, [])
             Right table -> case Map.lookup "asm" table of

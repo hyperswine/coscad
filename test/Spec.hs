@@ -21,7 +21,7 @@ module Main (main) where
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
 import Coscad.Assemble (loadAssembleFile, packBeds, processAssemble)
-import Coscad.Check (processCheckWith)
+import Coscad.Check (processCheckWith, splitBodies)
 import Coscad.Codegen (renderScad, showD)
 import Coscad.Geometry (bbox, resolve)
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
@@ -37,7 +37,7 @@ import Data.Time.Clock (diffUTCTime, getCurrentTime)
 import GHC.IO.Encoding (setLocaleEncoding)
 import System.Directory
 import System.Environment (lookupEnv)
-import System.Exit (exitFailure)
+import System.Exit (ExitCode (..), exitFailure)
 import System.FilePath
 import System.IO
 import Text.Printf (printf)
@@ -149,6 +149,20 @@ diagnostics t = do
     (p "main = loft 0 (⭘ 3)\n") ["at least two profiles"] []
   expectErr t "loft profile rotated out of plane"
     (p "main = loft 0 (θ 90 (⭘ 3)) 10 (⭘ 5)\n") ["XY plane"] []
+  expectErr t "loft rejects vector Z translation"
+    (p "main = loft 0 (⭘ 3 |> move 0 0 7) 10 (⭘ 5)\n") ["t.coscad:1:8", "cannot be moved in Z"] []
+  expectErr t "loft rejects simple vector Z translation"
+    (p "!simple\nmain = Loft 0 (Translate (0, 0, 7) (Circle 3)) 10 (Circle 5)\n") ["cannot be moved in Z"] []
+  expectErr t "loft rejects oblique reflection"
+    (p "main = loft 0 (⭘ 3 |> mirror 1 0 1) 10 (⭘ 5)\n") ["XY plane"] []
+  expectErr t "loft rejects zero mirror normal"
+    (p "main = loft 0 (⭘ 3 |> mirror 0 0 0) 10 (⭘ 5)\n") ["nonzero normal"] []
+  expectGen t "loft preserves XY translation"
+    (p "main = loft 0 (⭘ 3 |> move 2 4 0) 10 (⭘ 5)\n") "move([2, 4], p = circle(r = 3"
+  expectGen t "loft preserves XY reflection"
+    (p "main = loft 0 (△ 3 |> mirror 1 0 0) 10 (⭘ 5)\n") "mirror([1, 0], p = circle(r = 3"
+  expectGen t "loft reflection in XY is identity"
+    (p "main = loft 0 (△ 3 |> mirror 0 0 1) 10 (⭘ 5)\n") "skin([circle(r = 3, $fn = 3), circle(r = 5"
   -- success paths
   case p "main = box 2 2 2 // base\n  |> at top (box 1 1 1)\n" of
     Left e -> failT t "trailing comment does not swallow continuation lines" e
@@ -344,6 +358,34 @@ geometry t update bin = do
   assertT t "coscad check bow3: no overlaps" (either (const False) (const True) rc) (either show (const "") rc)
   leftovers <- filter ("chk" `isInfixOf`) <$> listDirectory bow
   assertT t "coscad check leaves no scratch files next to the assembly" (null leftovers) (show leftovers)
+  -- Hidden parts must retain their anchors during isolation, including
+  -- chained attachments and transformed assemblies. Verify the rendered
+  -- isolated child's actual bounds, not the bbox containing hidden parts.
+  rel <- tempDir "relational-check"
+  writeFile (rel </> "a.coscad") "main = box 20 20 20\n"
+  writeFile (rel </> "b.coscad") "main = box 4 4 4\n"
+  forM_ [ ("top", "a |> at top b", 10, 14)
+        , ("on", "a |> on top b", 10, 14)
+        , ("chain", "a |> at top b |> at top b", 10, 18)
+        , ("moved", "(a |> at top b) |> z 30", 40, 44)
+        , ("anchor", "(a |> at top b) |> anchor bot", 20, 24)
+        ] $ \(name, expr, zlo, zhi) -> do
+    let f = rel </> (name ++ ".assemble")
+    writeFile f ("a ← a.coscad ×1\nb ← b.coscad ×1\nasm = " ++ expr ++ "\n")
+    result <- try (processCheckWith True f) :: IO (Either SomeException ())
+    case result of
+      Left e -> failT t ("relational check " ++ name) (show e)
+      Right () -> do
+        tmp <- getTemporaryDirectory
+        tris <- parseStlAscii <$> readFile (tmp </> "coscad-check" </> name </> "chk_b.stl")
+        let bodies = filter (\body -> let ((x, _, _), _) = meshBounds body in x < 90000) (splitBodies tris)
+            ((_, _, lo), (_, _, hi)) = meshBounds (concat bodies)
+        assertT t ("relational check " ++ name) (abs (lo - zlo) < 1e-6 && abs (hi - zhi) < 1e-6)
+          (show (lo, hi))
+  let overlapF = rel </> "overlap.assemble"
+  writeFile overlapF "a ← a.coscad ×1\nb ← b.coscad ×1\nasm = a |> at top 0 0 -1 b\n"
+  overlap <- try (processCheckWith False overlapF) :: IO (Either ExitCode ())
+  assertT t "relational check still detects real overlap" (overlap == Left (ExitFailure 1)) (show overlap)
   -- design stage spills across plates instead of failing
   sp <- tempDir "spill"
   copyFile "examples/assemble/spill.assemble" (sp </> "spill.assemble")

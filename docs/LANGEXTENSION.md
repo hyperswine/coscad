@@ -70,7 +70,9 @@ loft with `p0` at z = 0; further `|> loft z p` stages append profiles.
 
 Profiles must be single closed outlines: the 2D primitives, `✎`
 beziers, and in-plane transforms of them (`χ ψ ω ⬈ ⇋`, `↯` offset,
-anchors). Booleans between profiles, `ζ`, and `θ`/`ϕ` rotations are
+anchors). Vector translations must have zero Z. Mirror normals must
+lie in XY or point along Z (reflection in XY leaves the profile unchanged);
+zero normals are rejected. Booleans between profiles, `ζ`, and `θ`/`ϕ` rotations are
 rejected at compile time. Profiles are emitted as BOSL2 path
 expressions (`circle()`, `move(p=)`, `zrot(p=)`, `offset()`), never as
 modules.

@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## Unreleased
+
+- Assembly checks retain hidden parts as anchor references, preserving
+  relational placements during isolation, including chained attachments.
+- Loft profiles reject vector Z translations and oblique or zero mirror
+  normals instead of silently dropping components; Z-normal reflection
+  correctly leaves an XY profile unchanged.
+
 ## 1.1.0.0 - 2026-09-10
 
 - CLI: `--help` (with a language cheat sheet), `--version`, `-o` for
