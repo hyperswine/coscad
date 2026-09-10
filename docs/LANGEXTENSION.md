@@ -39,6 +39,42 @@ bezier outline, 3k+1 control points as bare pairs, evaluated in the
 compiler to a plain closed polygon (24 samples/segment). Extrude with
 `⮕ h shape` or `|> extrude h`.
 
+## Numbers
+
+A definition whose right-hand side is arithmetic is a numeric binding,
+usable wherever a number is expected:
+
+```
+w = 20
+t = w / 5 - 1          // + - * / and parens; numbers may reference numbers
+main = box w (w / 2) t |> cutat top 0 0 (-t / 2) (zcyl 1 50)
+```
+
+Argument positions take a single atom — a literal, a name, `-name`, or a
+parenthesized expression — so `box w h t` stays unambiguous; write
+`(w / 2)` for arithmetic inline. Numbers are resolved before shapes and
+can only depend on numbers. Using a number where a shape is expected (or
+vice versa) is a compile error that names the binding.
+
+## Lofts
+
+`loft z0 p0 z1 p1 [z2 p2 ...]` (glyph `⟰`, `Loft` in !simple) skins 2D
+profiles at ascending z into one solid via BOSL2 `skin()`. The
+compiler picks `method="reindex"` when every profile has the same
+vertex count and `method="distance"` otherwise, so circle-to-triangle
+is fine — but note "distance" is an O(n·m) search in the OpenSCAD
+interpreter: two 100-point circles take ~30 s, a circle and a triangle
+are instant. Keep mismatched-count lofts to small profiles, or match
+counts (e.g. `⭘` to `⭘`). Pipeline form: `p0 |> loft z1 p1` starts a
+loft with `p0` at z = 0; further `|> loft z p` stages append profiles.
+
+Profiles must be single closed outlines: the 2D primitives, `✎`
+beziers, and in-plane transforms of them (`χ ψ ω ⬈ ⇋`, `↯` offset,
+anchors). Booleans between profiles, `ζ`, and `θ`/`ϕ` rotations are
+rejected at compile time. Profiles are emitted as BOSL2 path
+expressions (`circle()`, `move(p=)`, `zrot(p=)`, `offset()`), never as
+modules.
+
 ## Booleans (left-assoc, one precedence level)
 
 `⊕`/`⊛` union · `⊖`/`⊝` difference · `∩` intersection · `⇓` hull ·
@@ -48,7 +84,7 @@ silently defaults to 1.0).
 
 ## Transforms (prefix, apply to the next primary expression)
 
-`χ ψ ζ` translate x/y/z · `θ ϕ ω` rotate about x/y/z (degrees, about
+`χ ψ ζ` translate x/y/z · `⟰`/`loft` (see Lofts above) · `θ ϕ ω` rotate about x/y/z (degrees, about
 the **origin** — rotated cut geometry gets pulled toward the origin;
 compose inner translates or verify numerically) · `⬈ sx sy sz` scale ·
 `⇋ nx ny nz` mirror · `⚓ anchor` re-origin at own anchor.

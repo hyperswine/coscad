@@ -7,7 +7,7 @@ import Coscad.Assemble (processAssemble)
 import Coscad.Codegen (writeScad)
 import Coscad.Next (processNext)
 import Coscad.Check (processCheck)
-import Coscad.Parser (parseProgram)
+import Coscad.Parser (parseProgramNamed)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import System.Directory (doesFileExist)
 import System.Environment (getArgs)
@@ -115,7 +115,7 @@ processFileContents inputFile outputFile = do
   contents <- readFile inputFile
 
   -- Parse the program with variables
-  case parseProgram contents of
+  case parseProgramNamed inputFile contents of
     Right (_, mainShape) -> do
       writeScad mainShape outputFile
       return $ Right ()

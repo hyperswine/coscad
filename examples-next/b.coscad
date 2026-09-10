@@ -1,0 +1,4 @@
+!simple
+// `coscad check` demo, part B: identical block, placed 18 mm along X by the
+// assembly (2 mm gap to A: ok)
+main = Box 16 16 10

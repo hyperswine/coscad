@@ -6,8 +6,8 @@ module Coscad.Next (module Coscad.Next) where
 import Coscad.Assemble
 import Coscad.Codegen
 import Coscad.Geometry
-import Coscad.Shape
 import Data.List (foldl', intercalate, sortBy)
+import System.Directory (doesFileExist, findExecutable)
 import System.Environment (lookupEnv)
 import System.Exit (ExitCode (..), exitFailure)
 import System.FilePath (dropExtension)
@@ -163,10 +163,34 @@ packBeds plate@(pw, pd, m) items0 = go (sortBy bigger items0)
       | y + d > pd - m = Right (reverse acc, item : rest)
       | otherwise = fit (x + w + m) y (max rowD d) ((iid, k, (w, d), (x, y)) : acc) rest
 
+-- | Locate the OpenSCAD binary: $COSCAD_OPENSCAD wins (may be a wrapper
+-- such as xvfb-run), then `openscad` on PATH, then the macOS app bundle.
+-- Nothing = not found (callers report; the test suite skips rendering).
+findOpenscad :: IO (Maybe FilePath)
+findOpenscad = do
+  env <- lookupEnv "COSCAD_OPENSCAD"
+  case env of
+    Just b | not (null b) -> return (Just b)
+    _ -> do
+      onPath <- findExecutable "openscad"
+      case onPath of
+        Just b -> return (Just b)
+        Nothing -> do
+          let mac = "/Applications/OpenSCAD.app/Contents/MacOS/openscad"
+          hasMac <- doesFileExist mac
+          return (if hasMac then Just mac else Nothing)
+
+-- | Arguments for a headless STL export. ASCII is requested explicitly:
+-- the downstream mesh reader is ASCII-only and OpenSCAD's default
+-- format depends on version and preferences.
+openscadStlArgs :: FilePath -> FilePath -> [String]
+openscadStlArgs stlF scadF = ["-o", stlF, "--export-format", "asciistl", scadF]
+
 runOpenscad :: FilePath -> FilePath -> IO (Either String ())
 runOpenscad scadF stlF = do
-  bin <- maybe "openscad" id <$> lookupEnv "COSCAD_OPENSCAD"
-  (code, _, err) <- readProcessWithExitCode bin ["-o", stlF, scadF] ""
+  found <- findOpenscad
+  bin <- maybe (return "openscad") return found
+  (code, _, err) <- readProcessWithExitCode bin (openscadStlArgs stlF scadF) ""
   case code of
     ExitSuccess -> return (Right ())
     ExitFailure n -> return (Left ("openscad failed (" ++ show n ++ ") on " ++ scadF ++ ":\n" ++ err))

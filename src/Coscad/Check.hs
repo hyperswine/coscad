@@ -20,7 +20,7 @@ module Coscad.Check (module Coscad.Check) where
 
 import Coscad.Assemble
 import Coscad.Codegen
-import Coscad.Next (parseStlAscii, runOpenscad, Tri)
+import Coscad.Next (Tri, findOpenscad, openscadStlArgs, parseStlAscii, runOpenscad)
 import Coscad.Parser
 import Coscad.Shape
 import Control.Monad (forM, forM_, unless)
@@ -28,7 +28,6 @@ import Data.IORef
 import Data.List (foldl', intercalate)
 import qualified Data.Map as Map
 import System.Exit (exitFailure)
-import System.Environment (lookupEnv)
 import System.Exit (ExitCode (..))
 import System.FilePath (dropExtension)
 import System.IO (hPutStrLn, stderr)
@@ -203,8 +202,8 @@ marker = "translate([99999,99999,99999]) cube(0.001);"
 -- fallback (often the first operand), so the exit code alone lies.
 runOpenscadChecked :: FilePath -> FilePath -> IO (Either String Bool)
 runOpenscadChecked scadF stlF = do
-  bin <- maybe "openscad" id <$> lookupEnv "COSCAD_OPENSCAD"
-  (code, out, err) <- readProcessWithExitCode bin ["-o", stlF, scadF] ""
+  bin <- maybe "openscad" id <$> findOpenscad
+  (code, out, err) <- readProcessWithExitCode bin (openscadStlArgs stlF scadF) ""
   let cgalBad = any (\l -> contains "CGAL error" l || contains "assertion" l) (lines err ++ lines out)
   return $ case code of
     ExitSuccess -> Right cgalBad

@@ -138,7 +138,23 @@ at the bbox's back face at bbox mid-height, which may be empty air on
 an irregular shape. When that matters, attach to the sub-part *before*
 unioning it into the composite, or nudge afterward with `χ`/`ψ`/`ζ`.
 
+### Numbers and lofts
+- `w = 20` is a numeric binding; arithmetic is `+ - * /` with parens.
+  In argument position use one atom: `box w (w / 2) t`, `χ -r part`.
+- `loft z0 p0 z1 p1 ...` / `p0 |> loft z1 p1` skins 2D profiles
+  with BOSL2 `skin()`: `method="reindex"` when all profiles share a
+  vertex count (fast), `method="distance"` otherwise (fine for a
+  100-gon vs a triangle; ~30 s for two mismatched 100-gons — avoid).
+  Profiles: single outlines only — `⭘ △ ⬠ ✎` and their in-plane
+  transforms/offset; no booleans, no `ζ`, no `θ`/`ϕ`.
+
 ## Known gotchas (verified by hand, worth re-checking after any edit)
+
+- **2D/3D mismatches are compile errors** (since the dimensionality
+  pass): `⮕ h (● r)` (extruding a solid), `■ 10 ↯ ● 2` (offsetting a
+  solid), `⭘ 3 ⊕ ■ 2` (profile unioned with a solid), or a 2D `main`
+  all fail with `file:line:col: in '<name>': ...`. Use `⭘`/`△`/`⬠`/`✎`
+  for anything you extrude or offset.
 
 - **`⊿` wedge orientation**: profile is in the YZ plane, not XZ — a
   bare `⊿ x y z` has its right-angle edge along Y at -Y,-Z. Confirmed

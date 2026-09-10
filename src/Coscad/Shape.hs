@@ -43,6 +43,7 @@ data Shape
   | CutAt (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, cutter: SUBTRACT cutter centered there
   | Diff Shape Shape
   | Extrude D Shape
+  | Loft [(D, Shape)] -- (z, 2D profile) pairs, skinned bottom to top (BOSL2 skin)
   | Union [Shape]
   | Intersection [Shape]
   | Hull [Shape]

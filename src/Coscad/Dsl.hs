@@ -31,6 +31,10 @@ cutAt v = CutAt v (0, 0, 0)
 
 -- | anchorAt v shape: re-origin shape at its own anchor point (glyph ⚓)
 anchorAt = Anchor
+
+-- | loft [(z, profile), ...]: skin 2D profiles into a solid (word `loft`, glyph ⟰)
+loft :: [(D, Shape)] -> Shape
+loft = Loft
 -- ACTUAL LANGUAGE
 -- Glyph-style aliases
 

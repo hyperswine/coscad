@@ -88,6 +88,9 @@ gen s@(AttachTo {}) = gen (resolve s)
 gen s@(CutAt {}) = gen (resolve s)
 gen (Extrude h s) =
   "linear_extrude(height = " ++ show h ++ ") {\n" ++ indent (gen s) ++ "}"
+gen (Loft ps) =
+  "skin([" ++ intercalate ", " (map (either error id . pathOf . snd) ps) ++ "], z = ["
+    ++ intercalate ", " (map (show . fst) ps) ++ "], slices = 0, method = \"" ++ loftMethod (map snd ps) ++ "\");"
 gen (Diff a b) =
   "difference() {\n" ++ indent (gen a) ++ indent (gen b) ++ "}"
 gen (Union shapes) =
@@ -100,6 +103,96 @@ gen (Minkowski shapes) =
   "minkowski() {\n" ++ concatMap (indent . gen) shapes ++ "}"
 gen (Offset r s) =
   "offset(r = " ++ show r ++ ") {\n" ++ indent (gen s) ++ "}"
+
+-- | A 2D profile as a BOSL2 *path expression* (a list of points), for
+-- use inside skin(). Only single closed outlines qualify: the 2D
+-- primitives, bezier polygons, and in-plane transforms/offsets of
+-- them. Booleans between profiles have no single-outline path.
+pathOf :: Shape -> Either String String
+pathOf s = case s of
+  Shape2D n r -> Right ("circle(r = " ++ show r ++ ", $fn = " ++ show n ++ ")")
+  Poly (PD pts []) -> Right ("ccw_polygon(" ++ showPoints pts ++ ")")
+  Poly _ -> Left "a polygon with holes cannot be a loft profile"
+  Tx d p -> wrap ("move([" ++ show d ++ ", 0], p = ") p
+  Ty d p -> wrap ("move([0, " ++ show d ++ "], p = ") p
+  Translate (x, y, _) p -> wrap ("move([" ++ show x ++ ", " ++ show y ++ "], p = ") p
+  Rz a p -> wrap ("zrot(" ++ show a ++ ", p = ") p
+  RotAxis a (0, 0, az) p | az /= 0 -> wrap ("zrot(" ++ show (if az > 0 then a else -a) ++ ", p = ") p
+  Scale (sx, sy, _) p -> wrap ("scale([" ++ show sx ++ ", " ++ show sy ++ "], p = ") p
+  Mirror (nx, ny, _) p -> wrap ("mirror([" ++ show nx ++ ", " ++ show ny ++ "], p = ") p
+  Offset r p -> (\q -> "offset(" ++ q ++ ", r = " ++ show r ++ ", closed = true)") <$> pathOf p
+  Tz _ _ -> Left "a loft profile cannot be moved in Z (ζ); give the loft its z value instead"
+  Rx _ _ -> Left "a loft profile must stay in the XY plane (no θ rotation)"
+  Ry _ _ -> Left "a loft profile must stay in the XY plane (no ϕ rotation)"
+  RotAxis {} -> Left "a loft profile must stay in the XY plane (rotate only about Z)"
+  Anchor {} -> pathOf (resolve s)
+  Position {} -> pathOf (resolve s)
+  AttachTo {} -> pathOf (resolve s)
+  CutAt {} -> pathOf (resolve s)
+  Union _ -> boolErr
+  Diff _ _ -> boolErr
+  Intersection _ -> boolErr
+  Hull _ -> boolErr
+  Minkowski _ -> boolErr
+  Empty -> Left "an empty shape cannot be a loft profile"
+  _ -> Left "a loft profile must be a 2D outline (△ ⬠ ⭘ ✎, Circle/Triangle/Pentagon/Bezier), not a 3D solid"
+  where
+    wrap pre p = (\q -> pre ++ q ++ ")") <$> pathOf p
+    boolErr = Left "a loft profile must be a single closed outline: booleans (⊕ ⊖ ∩ ⇓ ⊞) between profiles are not supported"
+
+-- | Vertex count of a profile path when it is known at compile time
+-- (offset may add vertices, so it is unknown).
+profileVerts :: Shape -> Maybe Int
+profileVerts s = case s of
+  Shape2D n _ -> Just n
+  Poly (PD pts _) -> Just (length pts)
+  Tx _ p -> profileVerts p
+  Ty _ p -> profileVerts p
+  Translate _ p -> profileVerts p
+  Rz _ p -> profileVerts p
+  RotAxis _ _ p -> profileVerts p
+  Scale _ p -> profileVerts p
+  Mirror _ p -> profileVerts p
+  Anchor {} -> profileVerts (resolve s)
+  Position {} -> profileVerts (resolve s)
+  _ -> Nothing
+
+-- | BOSL2 skin() method: "reindex" when every profile has the same
+-- known vertex count (cheap, exact correspondence), otherwise
+-- "distance", which handles mismatched counts but runs an O(n*m)
+-- dynamic program per profile pair in the OpenSCAD interpreter
+-- (two 100-gons: ~30 s; a 100-gon and a triangle: instant).
+loftMethod :: [Shape] -> String
+loftMethod ps = case mapM profileVerts ps of
+  Just (n : ns) | all (== n) ns -> "reindex"
+  _ -> "distance"
+
+-- | First reason (if any) that a shape tree's lofts cannot be emitted.
+loftErrors :: Shape -> Either String ()
+loftErrors s = case s of
+  Loft ps -> mapM_ (\(_, p) -> either (\e -> Left ("in loft profile: " ++ e)) (const (Right ())) (pathOf p)) ps
+  Tx _ x -> loftErrors x
+  Ty _ x -> loftErrors x
+  Tz _ x -> loftErrors x
+  Rx _ x -> loftErrors x
+  Ry _ x -> loftErrors x
+  Rz _ x -> loftErrors x
+  Scale _ x -> loftErrors x
+  Mirror _ x -> loftErrors x
+  Translate _ x -> loftErrors x
+  RotAxis _ _ x -> loftErrors x
+  Anchor _ x -> loftErrors x
+  Position _ _ a b -> loftErrors a >> loftErrors b
+  AttachTo _ _ a b -> loftErrors a >> loftErrors b
+  CutAt _ _ a b -> loftErrors a >> loftErrors b
+  Extrude _ x -> loftErrors x
+  Offset _ x -> loftErrors x
+  Diff a b -> loftErrors a >> loftErrors b
+  Union xs -> mapM_ loftErrors xs
+  Intersection xs -> mapM_ loftErrors xs
+  Hull xs -> mapM_ loftErrors xs
+  Minkowski xs -> mapM_ loftErrors xs
+  _ -> Right ()
 
 -- | Does the shape tree use any BOSL2 primitives?
 usesBosl2 :: Shape -> Bool
@@ -128,6 +221,7 @@ usesBosl2 s = case s of
   AttachTo _ _ a b -> usesBosl2 a || usesBosl2 b
   CutAt _ _ a b -> usesBosl2 a || usesBosl2 b
   Extrude _ x -> usesBosl2 x
+  Loft _ -> True
   Offset _ x -> usesBosl2 x
   Diff a b -> usesBosl2 a || usesBosl2 b
   Union xs -> any usesBosl2 xs
@@ -136,10 +230,16 @@ usesBosl2 s = case s of
   Minkowski xs -> any usesBosl2 xs
   _ -> False
 
-writeScad shape filename = writeFile filename (header ++ fn50 (gen shape'))
+-- | Full .scad text for a shape: attachments resolved, BOSL2 include
+-- prepended when needed, $fn footer appended.
+renderScad :: Shape -> String
+renderScad shape = header ++ fn50 (gen shape')
   where
     shape' = resolve shape
     header = if usesBosl2 shape' then "include <BOSL2/std.scad>\n\n" else ""
+
+writeScad :: Shape -> FilePath -> IO ()
+writeScad shape filename = writeFile filename (renderScad shape)
 
 
 fn50 x = x ++ "\n$fn = 50;"

@@ -1,0 +1,3 @@
+// 2020 aluminium extrusion, 120 mm along Z. Assembly-only stand-in
+// (referenced with ×0): a plain centered bar, T-slot profile not modelled.
+main = box 20 20 120

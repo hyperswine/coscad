@@ -19,6 +19,8 @@ The pragma line is blanked, not stripped, so error line numbers stay right.
   may be `$ <rest of expression>`. Works after glyph transforms (`χ 5 $ a ⊕ b`),
   word transforms (`Translate.x 5 $ a * b`), and pipe stages (`|> cut $ ...`)
 - lowercase primitive words: `xcyl ycyl zcyl cube box sphere cyl tube torus wedge`
+- numeric bindings (`w = 20`, `r = w / 2`) and `loft z p z p ...` (see
+  docs/LANGEXTENSION.md)
 - anchor words: `top bot lft rt fwd bak ctr` (+ combos like `top+rt`)
 
 ## !simple vocabulary
@@ -29,6 +31,7 @@ Rotate (x, y, z) obj           Rotate.z n obj      (tuple order: x then y then z
 Scale (x, y, z) obj            Scale.x n obj
 Mirror (x, y, z) obj           Mirror.x obj        (no number)
 Extrude h obj                  Anchor top obj
+Loft z0 p0 z1 p1 ...           (2D profiles -> solid)
 ```
 Combinators (prefix, two shape args; second may be `$`):
 ```
@@ -45,8 +48,10 @@ All centered (BOSL2 family). Note `Box` is centered, unlike legacy `▬`.
 ## Known limits / notes
 - Keywords win over identifiers: you can't name a variable exactly `Translate`
   (but `Translate2`, `myTranslate` are fine — same rule as `xcyl` today).
-- Mode errors currently surface as the generic "Cannot resolve variables"
-  message; per-line diagnostics would need the resolver to keep parse errors.
+- Errors are reported at `file:line:col` with the offending line quoted;
+  a name that is not defined anywhere is an "undefined variable", names
+  that depend on each other are a "circular dependency" (only the cycle
+  members are listed), and 2D/3D mismatches are compile errors.
 - `Rotate (x, y, z)` composes as Rz . Ry . Rx (OpenSCAD rotate([x,y,z]) order).
 - `Translate (x,y,z)` emits one translate() vs three nested for χψζ chains —
   same geometry, cleaner scad.

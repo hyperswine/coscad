@@ -11,6 +11,7 @@ import Coscad.Parser
 import Coscad.Shape
 import Data.Char (isAlphaNum, isSpace)
 import Data.List (foldl', intercalate)
+import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
 import System.Directory (doesFileExist)
 import System.Exit (exitFailure)
@@ -49,7 +50,7 @@ data AsmStmt
   = APart String FilePath Int (Maybe ((Double, Double, Double), String)) [(String, String)]
   | APlate Double Double Double
   | AClearance Double
-  | ADef (VarName, String)
+  | ADef Def
 
 data FlatPart = FlatPart
   { fpTrail :: [String]
@@ -67,7 +68,7 @@ data AsmResult = AsmResult
   , arFlat :: [FlatPart]
   , arMode :: SynMode           -- pragma of this .assemble file
   , arClearance :: Double       -- required clearance for `coscad check` (0 = contacts only)
-  , arDefs :: [(VarName, String)] -- raw asm-side defs (re-resolvable with substitutions)
+  , arDefs :: [Def]             -- raw asm-side defs (re-resolvable with substitutions)
   , arParts :: [(String, Shape)]  -- top-level part name -> resolved shape
   }
 
@@ -90,14 +91,21 @@ plateStmt = do
   m <- double <|> pure 6
   return (APlate w d m)
 
+-- | `name ← file.coscad ×n ▽anchor key=value ...`. The rest of the line
+-- is re-parsed as a unit so a stray token is reported at its real
+-- file position instead of derailing the statement parser.
 partStmt :: Parser AsmStmt
 partStmt = do
   name <- identifier
   symbol "←"
+  off <- getOffset
   rest <- expressionString
   case parse (sc *> partOpts name <* eof) "" rest of
-    Left e -> fail (errorBundlePretty e)
+    Left e -> parseError (shiftErr off (NE.head (bundleErrors e)))
     Right st -> return st
+  where
+    shiftErr k (TrivialError o u e) = TrivialError (o + k) u e
+    shiftErr k (FancyError o e) = FancyError (o + k) e
 
 partOpts :: String -> Parser AsmStmt
 partOpts name = do
@@ -173,8 +181,8 @@ loadRef visited dir (APart name rel cnt down hints) = do
         then return (Left ("Part file not found: " ++ p))
         else do
           c <- readFile p
-          case parseProgram c of
-            Left err -> return (Left ("In " ++ p ++ ":\n" ++ err))
+          case parseProgramNamed p c of
+            Left err -> return (Left err)
             Right (_, shape) ->
               return (Right (name, shape, [FlatPart [] name p cnt down hints shape]))
     ".assemble" -> do

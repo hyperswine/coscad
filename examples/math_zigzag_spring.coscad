@@ -11,8 +11,8 @@
 spring_body = ▬ 20 5 2
 
 // Holes at the ends
-left_hole = ● 1
-right_hole = ● 1
+left_hole = ⭘ 1
+right_hole = ⭘ 1
 
 // Position holes
 left_hole_pos = χ 2 (ψ 2.5 (⮕ 2 left_hole))

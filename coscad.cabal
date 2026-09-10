@@ -28,6 +28,7 @@ library
       Coscad.Assemble
       Coscad.Check
       Coscad.Codegen
+      Coscad.Dim
       Coscad.Dsl
       Coscad.Geometry
       Coscad.Next
@@ -87,4 +88,5 @@ test-suite coscad-test
     , filepath
     , megaparsec
     , process
+    , time
   default-language: Haskell2010

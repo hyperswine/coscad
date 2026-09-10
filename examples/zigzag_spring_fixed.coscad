@@ -7,13 +7,13 @@
 // For now, let's create a simplified version using basic shapes
 // Left end square
 left_square = ▬ 4 5 2
-left_hole = ● 1
+left_hole = ⭘ 1
 left_hole_positioned = χ 2 (ψ 2.5 (⮕ 2 left_hole))
 left_end = left_square ⊖ left_hole_positioned
 
 // Right end square
 right_square = ▬ 4 5 2
-right_hole = ● 1
+right_hole = ⭘ 1
 right_hole_positioned = χ 18 (ψ 2.5 (⮕ 2 right_hole))
 right_end = χ 16 right_square ⊖ right_hole_positioned
 
