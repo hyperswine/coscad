@@ -34,8 +34,9 @@ and this project adheres to the
   desugaring are elided.
 - Source files are read and written as UTF-8 regardless of locale.
 - Embedded-DSL sample modules moved from `src/` to `examples/haskell/`.
-- CI on Linux/macOS/Windows (build, `coscad doctor`, full test suite
-  with OpenSCAD + BOSL2) and tagged releases with prebuilt binaries.
+- CI on Linux/macOS/Windows with Stack (build, `coscad doctor`, full
+  test suite with OpenSCAD + BOSL2) and tagged releases with prebuilt
+  binaries.
 - License id corrected to `GPL-3.0-only`.
 
 - Numeric bindings: `w = 20`, `r = w / 2 - 1` (arithmetic with parens,

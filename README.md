@@ -16,10 +16,23 @@ computed here so the emitted OpenSCAD (and the downstream slicer) stay dumb.
 
 Prebuilt binaries for macOS, Linux, and Windows are attached to each
 GitHub release (`coscad-<os>-<arch>.tar.gz` / `.zip`); put `coscad` on
-your PATH. Or build from source with GHC 9.4+:
+your PATH. Or build from source with [Stack](https://haskellstack.org)
+(the snapshot pins GHC 9.8.2; `stack.yaml` uses the system GHC, so have
+9.8.2 installed, e.g. via ghcup):
 
 ```sh
-cabal install exe:coscad     # or: stack install  (binary lands in bin/)
+stack install                # binary lands in bin/
+```
+
+macOS note: ghcup's GHC links against the Command Line Tools SDK. If a
+CLT update leaves that SDK newer than Xcode's linker, linking fails with
+`tapi error ... unknown architecture arm64e.x1-macos`. Until Xcode and
+the CLT match again, tell Stack to link with the CLT toolchain by adding
+to `~/.stack/config.yaml`:
+
+```yaml
+ghc-options:
+  "$locals": -pgml /Library/Developer/CommandLineTools/usr/bin/clang
 ```
 
 Rendering needs [OpenSCAD](https://openscad.org) 2021.01 or newer and a

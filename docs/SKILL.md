@@ -20,10 +20,10 @@ ever disagree; this file can drift, the compiler cannot.
 
 ## Before writing any .coscad
 
-1. Get a `coscad` binary: a release download, or `cabal install
-   exe:coscad` / `stack install` from the repo (on this project's macOS
-   box, `DEVELOPER_DIR=/Library/Developer/CommandLineTools` may be
-   needed to link). Run `coscad doctor` first: it reports the OpenSCAD
+1. Get a `coscad` binary: a release download, or `stack install` from
+   the repo (GHC 9.8.2 via the system; see the README's macOS linker
+   note if `stack build` fails with a tapi "unknown architecture"
+   error). Run `coscad doctor` first: it reports the OpenSCAD
    and BOSL2 it will use and renders a test part; if BOSL2 lives
    outside the OpenSCAD library folders set `COSCAD_BOSL2`.
 2. Generated files `include <BOSL2/std.scad>`, resolved through the

@@ -16,20 +16,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # stack.yaml uses system-ghc, so install the snapshot's GHC here.
       - uses: haskell-actions/setup@v2
         id: hs
         with:
-          ghc-version: "9.8"
-          cabal-version: "3.12"
+          ghc-version: "9.8.2"
+          enable-stack: true
+          stack-version: "latest"
 
-      - name: Cache cabal store
+      - name: Cache stack
         uses: actions/cache@v4
         with:
           path: |
-            ${{ steps.hs.outputs.cabal-store }}
-            dist-newstyle
-          key: ${{ runner.os }}-cabal-${{ hashFiles('coscad.cabal', 'cabal.project') }}
-          restore-keys: ${{ runner.os }}-cabal-
+            ${{ steps.hs.outputs.stack-root }}
+            .stack-work
+          key: ${{ runner.os }}-stack-${{ hashFiles('stack.yaml.lock', 'package.yaml') }}
+          restore-keys: ${{ runner.os }}-stack-
 
       # --- OpenSCAD + BOSL2 (the geometry tier renders every example) ---
       - name: OpenSCAD + BOSL2 (Linux)
@@ -58,9 +60,8 @@ jobs:
           git clone --depth 1 https://github.com/BelfrySCAD/BOSL2 "$env:USERPROFILE\BOSL2"
           "COSCAD_BOSL2=$env:USERPROFILE\BOSL2" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      - run: cabal update
-      - run: cabal build all
+      - run: stack build --test --no-run-tests
       - name: coscad doctor
-        run: cabal run coscad -- doctor
+        run: stack exec coscad -- doctor
       - name: tests (diagnostics, examples, snapshots, geometry)
-        run: cabal test --test-show-details=direct
+        run: stack test
