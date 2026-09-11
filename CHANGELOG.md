@@ -14,6 +14,14 @@ and this project adheres to the
   normals instead of silently dropping components; Z-normal reflection
   correctly leaves an XY profile unchanged.
 
+## Unreleased
+
+- `man coscad`: full manual page (commands, environment, language cheat
+  sheet, assemblies, examples), shipped in release tarballs.
+- Homebrew formula in `Formula/` (tap this repository; builds with Stack
+  and Homebrew's ghc@9.8; installs the man page, docs, and examples) and
+  `scripts/update-formula.sh` to pin it to a tagged release.
+
 ## 1.1.0.0 - 2026-09-10
 
 - CLI: `--help` (with a language cheat sheet), `--version`, `-o` for

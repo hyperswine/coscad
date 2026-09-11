@@ -186,6 +186,10 @@ diagnostics t = do
   case packBeds (100, 100, 6) [("big", ("b", "top"), (200, 10))] of
     Left e -> assertT t "packBeds rejects an oversized footprint with a clear message" ("exceeds the 100.0x100.0 plate" `isInfixOf` e) e
     Right _ -> failT t "packBeds rejects an oversized footprint with a clear message" "packed"
+  -- the manual must mention every command, flag, and environment variable
+  manPage <- readFile "man/coscad.1"
+  let manMissing = [w | w <- ["Cm stl", "Cm next", "Cm check", "Cm doctor", "keep-temp", "Fl -version", "Fl -help", "COSCAD_OPENSCAD", "COSCAD_BOSL2", "loft", "cutat", "Fl o"], not (w `isInfixOf` manPage)]
+  assertT t "man/coscad.1 documents every command, flag, and env var" (null manMissing) (show manMissing)
   -- .assemble diagnostics
   tmp <- tempDir "asm-diag"
   let asm1 = tmp </> "d1.assemble"

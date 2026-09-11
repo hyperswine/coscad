@@ -14,9 +14,22 @@ computed here so the emitted OpenSCAD (and the downstream slicer) stay dumb.
 
 ## Install
 
+Homebrew (macOS and Linux), from this repository's tap:
+
+```sh
+brew tap hyperswine/coscad https://github.com/hyperswine/coscad
+brew install coscad          # tagged release; --HEAD for current main
+```
+
+That installs `coscad`, `man coscad`, the docs under
+`$(brew --prefix)/share/doc/coscad`, and the examples under
+`$(brew --prefix)/share/coscad/examples`.
+
 Prebuilt binaries for macOS, Linux, and Windows are attached to each
-GitHub release (`coscad-<os>-<arch>.tar.gz` / `.zip`); put `coscad` on
-your PATH. Or build from source with [Stack](https://haskellstack.org)
+GitHub release (`coscad-<os>-<arch>.tar.gz` / `.zip`) with the man page
+and examples; put `coscad` on your PATH and, if you want `man coscad`,
+copy `man/coscad.1` into a `man1` directory on your MANPATH. Or build
+from source with [Stack](https://haskellstack.org)
 (the snapshot pins GHC 9.8.2; `stack.yaml` uses the system GHC, so have
 9.8.2 installed, e.g. via ghcup):
 
@@ -131,6 +144,19 @@ src/Lib.hs              re-export shim for the embedded Haskell DSL
 app/Main.hs             CLI dispatch only
 examples/haskell/       embedded-DSL samples (not built)
 ```
+
+## Manual
+
+`man coscad` (source: `man/coscad.1`) covers every command, the
+environment variables, a language cheat sheet, the assembly format, and
+worked examples. `coscad --help` is the short form.
+
+## Releasing
+
+1. Bump `version` in `package.yaml` and the CHANGELOG, commit, tag
+   `v<version>`, push the tag: the release workflow attaches binaries.
+2. `scripts/update-formula.sh <version>` rewrites the formula's `url` and
+   `sha256` for that tag; commit `Formula/coscad.rb`.
 
 ## Docs
 

@@ -87,5 +87,5 @@ usage =
     , "  anchors      top bot lft rt fwd bak ctr, combinable: top+rt  lft+fwd   (a ⌖ top b, a ⋈ rt b)"
     , "  modes        first line !glyph or !simple (ASCII words: Box, Translate.x, Hull, * union, - difference)"
     , ""
-    , "Docs: docs/LANGEXTENSION.md, docs/TOPOLOGICAL.md, docs/MANUFACTURING.md"
+    , "Manual: man coscad   Docs: docs/LANGEXTENSION.md, docs/TOPOLOGICAL.md, docs/MANUFACTURING.md"
     ]

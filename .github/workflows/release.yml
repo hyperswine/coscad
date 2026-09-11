@@ -33,6 +33,8 @@ jobs:
           mkdir -p "${{ matrix.artifact }}"
           cp dist-bin/coscad* README.md LICENSE CHANGELOG.md "${{ matrix.artifact }}/"
           cp -r docs "${{ matrix.artifact }}/docs"
+          cp -r man "${{ matrix.artifact }}/man"
+          cp -r examples "${{ matrix.artifact }}/examples"
           if [ "${{ runner.os }}" = "Windows" ]; then
             7z a "${{ matrix.artifact }}.zip" "${{ matrix.artifact }}"
           else
