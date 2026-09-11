@@ -1,0 +1,371 @@
+.\" coscad(1) - CoScad compiler manual page (mdoc)
+.Dd September 11, 2026
+.Dt COSCAD 1
+.Os
+.Sh NAME
+.Nm coscad
+.Nd glyph/pipeline CAD language compiler: .coscad and .assemble to OpenSCAD, STL, and print beds
+.Sh SYNOPSIS
+.Nm
+.Ar part.coscad
+.Op Fl o Ar part.scad
+.Nm
+.Cm stl
+.Ar part.coscad
+.Op Fl o Ar part.stl
+.Nm
+.Ar spec.assemble
+.Nm
+.Cm next
+.Ar spec.assemble
+.Nm
+.Cm check
+.Ar spec.assemble
+.Op Fl -keep-temp
+.Nm
+.Cm doctor
+.Nm
+.Fl -version | Fl -help
+.Sh DESCRIPTION
+.Nm
+compiles CoScad part files to OpenSCAD source and, with OpenSCAD and the
+BOSL2 library installed, renders them to STL.
+A
+.Pa .coscad
+file is a list of definitions, one per line; the definition named
+.Ql main
+is the rendered shape.
+An
+.Pa .assemble
+file declares physically separate parts, how many to print, and how they
+sit together; the manufacturing stage orients and packs them onto print
+beds.
+.Pp
+Anchors, attachments, bezier outlines, lofts, fit checks, print orientation,
+and bed packing are all computed in the compiler, so the emitted OpenSCAD
+stays plain
+.Pq translate , rotate , union , difference , BOSL2 primitives
+and any expression, including composites, can be attached to again.
+.Sh COMMANDS
+.Bl -tag -width Ds
+.It Nm Ar part.coscad Op Fl o Ar out.scad
+Compile one part to OpenSCAD.
+Writes
+.Pa part.scad
+next to the input unless
+.Fl o
+is given.
+.It Nm Cm stl Ar part.coscad Op Fl o Ar out.stl
+Compile and render to an ASCII STL through OpenSCAD, then print the triangle
+count, volume, and bounding box.
+The intermediate
+.Pa .scad
+is kept beside the STL.
+.It Nm Ar spec.assemble
+Design stage.
+Emits the assembled view
+.Pq Pa spec_asm.scad ,
+one print-oriented
+.Pa spec_part_<variant>.scad
+per unique (part, orientation), the packed plate(s)
+.Pq Pa spec_plate.scad , or Pa spec_plate1.scad , Pa spec_plate2.scad ... ,
+and
+.Pa spec_manifest.json .
+.It Nm Cm next Ar spec.assemble
+Manufacturing stage.
+Renders each variant once, chooses a print orientation where none was
+declared (scoring bed contact, overhang, height, and slenderness on the real
+mesh), packs instances largest-first across as many beds as needed, and
+writes
+.Pa spec_bed<N>.stl
+plus a manifest recording per-variant orientation and per-instance
+placements for slice-once, stamp-many slicing.
+.It Nm Cm check Ar spec.assemble Op Fl -keep-temp
+Interference and clearance check on real meshes.
+Every part is rendered as placed by the
+.Ql asm
+expression; close pairs are intersected exactly by OpenSCAD.
+Reports
+.Ql OVERLAP
+with its volume,
+.Ql contact
+for touching faces, and
+.Ql WARN
+for gaps below the declared
+.Ql clearance .
+Exit status 1 if any overlap.
+Scratch renders go to the system temp directory and are removed unless
+.Fl -keep-temp .
+.It Nm Cm doctor
+Report the OpenSCAD binary and BOSL2 checkout that will be used, their
+versions, and the result of an end-to-end test render against a known
+volume.
+Exit status 1 if anything is missing.
+.It Fl -version , Fl -help
+Print the version, or the command list with a language cheat sheet.
+.El
+.Sh ENVIRONMENT
+.Bl -tag -width COSCAD_OPENSCAD
+.It Ev COSCAD_OPENSCAD
+The OpenSCAD binary, or a wrapper script such as
+.Ql xvfb-run -a openscad "$@"
+on a headless machine.
+Otherwise
+.Ql openscad
+on
+.Ev PATH
+is used, then the usual install locations
+.Pq the macOS app bundle, Program Files on Windows .
+.It Ev COSCAD_BOSL2
+A BOSL2 checkout outside the OpenSCAD library folders; its parent is
+prepended to
+.Ev OPENSCADPATH
+when OpenSCAD runs.
+Otherwise the library folders are searched
+.Pq Pa ~/Documents/OpenSCAD/libraries , Pa ~/.local/share/OpenSCAD/libraries , ... .
+.El
+.Sh LANGUAGE
+One definition per line,
+.Ql name = expression .
+Definitions resolve by dependency, not order.
+Comments start with
+.Ql // .
+A line beginning with
+.Ql |>
+continues the previous definition.
+The first code line may select a vocabulary:
+.Ql !glyph
+(glyph operators),
+.Ql !simple
+(ASCII words such as
+.Ql Box ,
+.Ql Translate.x ,
+.Ql Hull ,
+.Ql *
+for union and
+.Ql -
+for difference), or neither, which accepts both.
+.Ss Numbers
+A definition whose right-hand side is arithmetic is a numeric binding.
+Numbers may reference numbers, in any order, and are usable wherever a
+number goes.
+Argument positions take one atom
+.Pq a literal, a name, Ql -name , or a parenthesized expression
+so juxtaposed arguments stay unambiguous:
+.Bd -literal -offset indent
+w = 20
+t = w / 5 - 1
+main = box w (w / 2) t |> cutat top 0 0 (-t / 2) (zcyl 1 50)
+.Ed
+.Ss Shapes
+.Bl -column "▬ x y z / box x y z" "description" -offset indent -compact
+.It Sy syntax Ta Sy shape
+.It ■ s Ta cube, corner at the origin (OpenSCAD)
+.It ▬ x y z Ta box, corner at the origin
+.It ● r Ta sphere
+.It ◎ r h Ta cylinder, z from 0 to h
+.It ▻ r h Ta cone
+.It ⎏ n r h Ta n-sided prism
+.It cube s / box x y z Ta centered cuboid (BOSL2)
+.It sphere r / cyl r h Ta centered sphere, cylinder
+.It xcyl r l / ycyl / zcyl Ta axis-aligned centered cylinders
+.It tube or ir h Ta centered tube
+.It torus R r Ta torus
+.It wedge x y z Ta right-triangular prism, profile in the YZ plane
+.It ▣ x y z c Ta cuboid, chamfer c
+.It ◙ x y z r Ta cuboid, rounding r (< half the smallest dimension)
+.It ⌭ r h c / ⌽ r h r2 Ta cylinder with chamfered / rounded ends
+.It ⊚ or ir h Ta tube
+.It ⏢ x1 y1 x2 y2 h Ta prismoid
+.It ◉ R r Ta torus
+.It ⊿ x y z Ta wedge
+.El
+.Ss 2D profiles
+.Ql △ r ,
+.Ql ⬠ r ,
+.Ql ⭘ r
+(triangle, pentagon, circle) and
+.Ql ✎ x0 y0 x1 y1 ...
+(a closed piecewise-cubic bezier outline, 3k+1 control points, evaluated by
+the compiler).
+Extrude with
+.Ql ⮕ h profile
+or
+.Ql |> extrude h ;
+offset with
+.Ql profile ↯ ● r .
+A profile used where a solid is expected, or the reverse, is a compile
+error.
+.Ss Lofts
+.Ql loft z0 p0 z1 p1 ...
+(glyph
+.Ql ⟰ ,
+.Ql Loft
+in !simple) skins 2D profiles at ascending z into one solid through BOSL2
+.Fn skin .
+Profiles may differ in vertex count.
+.Ql p0 |> loft z1 p1
+starts a loft with
+.Ql p0
+at z = 0; further
+.Ql |> loft z p
+stages append.
+Profiles must be single closed outlines: the 2D primitives, beziers, and
+their in-plane transforms
+.Pq χ ψ ω ⬈ ⇋ ↯ ;
+booleans between profiles, ζ, θ, and ϕ are rejected.
+.Ss Booleans
+.Ql ⊕
+union,
+.Ql ⊖
+difference (left minus right),
+.Ql ∩
+intersection,
+.Ql ⇓
+hull,
+.Ql ⊞
+minkowski.
+Left-associative, one precedence level.
+.Ss Transforms
+.Ql χ ψ ζ d
+translate along x/y/z;
+.Ql θ ϕ ω deg
+rotate about x/y/z (about the origin);
+.Ql ⬈ sx sy sz
+scale;
+.Ql ⇋ nx ny nz
+mirror;
+.Ql ⚓ anchor
+re-origin a shape at one of its own anchors.
+A transform applies to the next primary expression; use parentheses or
+.Ql $
+.Pq Ql χ 5 $ a ⊕ b
+for a compound argument.
+.Ss Pipelines and anchors
+.Ql a |> stage |> stage ...
+applies postfix stages:
+.Ql x y z d ,
+.Ql move dx dy dz ,
+.Ql rotx roty rotz deg ,
+.Ql scale ,
+.Ql mirror ,
+.Ql extrude h ,
+.Ql loft z p ,
+.Ql anchor v ,
+.Ql add cut isect hull mink shape ,
+and the relational stages
+.Ql at v [dx dy dz] child
+(union; the child's opposite anchor meets anchor v),
+.Ql on v [dx dy dz] child
+(union; child rotated so +Z points along v, bottom mated there), and
+.Ql cutat v [dx dy dz] cutter
+(difference; the cutter is centered at the anchor).
+Anchors are bounding-box points of the shape so far:
+.Ql top bot lft rt fwd bak ctr ,
+combinable as
+.Ql top+rt
+or
+.Ql lft+fwd .
+Glyph forms:
+.Ql a ⌖ v b
+positions,
+.Ql a ⋈ v b
+attaches.
+.Sh ASSEMBLIES
+.Bd -literal -offset indent
+plate 250 250 6                      // bed width depth [margin]
+clearance 0.15                       // minimum gap for `coscad check`
+gap = 2                              // numbers work here too
+center ← center.coscad ×1
+larch  ← l_arch.coscad ×1 ▽top seam=rear
+rail   ← rail.coscad ×0              // ×0: premade, assembly-only
+corner ← corner.assemble ×2          // recursive subassembly
+asm = center ⊕ (larch |> move (55 + gap) -13 -7) ⊕ rail
+.Ed
+.Pp
+.Ql ▽anchor
+declares which face goes on the bed; undeclared parts get the automatic
+orientation search in
+.Cm next .
+.Ql key=value
+entries are free hints carried into the manifest.
+.Sh EXIT STATUS
+.Ex -std
+.Cm check
+exits 1 when any overlap is found,
+.Cm doctor
+when OpenSCAD, BOSL2, or the test render fails.
+.Sh EXAMPLES
+A bracket built relationally, then rendered:
+.Bd -literal -offset indent
+// bracket.coscad
+plate  = box 5 15 20
+flange = box 16 15 5
+main = plate
+  |> at top 5.5 0 -5 flange
+  |> cutat lft 3.5 0 0 (xcyl 2.7 12)      // M5 clearance
+  |> cutat top 2.5 0 -4 (zcyl 1.4 10)     // M3 pilot
+
+$ coscad stl bracket.coscad
+Wrote bracket.scad
+Wrote bracket.stl: 664 triangles, volume 2638.931 mm^3, bounds ...
+.Ed
+.Pp
+A funnel from numeric bindings and lofts:
+.Bd -literal -offset indent
+r_top = 20
+r_bot = 8
+h = 40
+wall = 2
+outer = loft 0 (⭘ r_bot) h (⭘ r_top)
+inner = loft -1 (⭘ (r_bot - wall)) (h + 1) (⭘ (r_top - wall))
+main = outer ⊖ inner
+.Ed
+.Pp
+Manufacture a three-part assembly and check its fits:
+.Bd -literal -offset indent
+$ coscad next bow3.assemble
+Wrote bow3_bed1.stl (3 parts)
+Wrote bow3_manifest.json
+$ coscad check bow3.assemble
+check: 3 parts, clearance = 0.0mm
+contact  center x larch
+contact  center x rarch
+check: 0 overlaps, 0 clearance warnings
+.Ed
+.Pp
+Verify the toolchain on a new machine:
+.Bd -literal -offset indent
+$ coscad doctor
+OpenSCAD    ok       /opt/homebrew/bin/openscad (2025.05.16)
+BOSL2       ok       /Users/me/Documents/OpenSCAD/libraries/BOSL2 (2.0.754)
+round trip  ok       box 10 10 10 ⊖ zcyl 2 20 -> 874.67 mm^3 (expected 874.67)
+.Ed
+.Sh DIAGNOSTICS
+Errors carry
+.Ql file:line:col
+and quote the offending line.
+Distinguished cases: syntax errors, undefined names, circular dependencies
+(only the cycle is listed), duplicate definitions, a number used as a shape
+or a shape as a number, 2D/3D mismatches (extruding a solid, offsetting a
+solid, combining a profile with a solid, a 2D
+.Ql main ) ,
+and invalid loft profiles.
+OpenSCAD warnings during a render
+.Pq a missing include, a dropped child
+are treated as failures.
+.Sh SEE ALSO
+.Xr openscad 1
+.Pp
+The full language reference, the topological-modelling guide, and the
+manufacturing guide ship as
+.Pa LANGEXTENSION.md ,
+.Pa TOPOLOGICAL.md ,
+and
+.Pa MANUFACTURING.md
+under the documentation directory
+.Pq Pa share/doc/coscad with Homebrew .
+BOSL2:
+.Lk https://github.com/BelfrySCAD/BOSL2 .
+.Sh AUTHORS
+.An Jasen Qin
