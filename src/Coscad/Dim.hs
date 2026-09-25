@@ -45,6 +45,7 @@ dimOf s = case s of
   Translate _ x -> dimOf x
   RotAxis _ _ x -> dimOf x
   Anchor _ x -> dimOf x
+  Tag _ x -> dimOf x
   Position _ _ a b -> same "position (⌖ / at)" [a, b]
   AttachTo _ _ a b -> same "attach (⋈ / on)" [a, b]
   CutAt _ _ a b -> same "cutat" [a, b]

@@ -8,6 +8,25 @@ and this project adheres to the
 
 ## Unreleased
 
+- `coscad plan foo.assemble [--png]`: assembly instruction generator.
+  `fastener spec clamped host face [×n at= nut= head= through= torque=]`
+  lines and part hints (`profile=2020`, `material=`, `ends=`, `mass=`,
+  `torque=`) describe the joints; the planner derives the requires-before
+  graph (nut-first, slot-end sealing, host and clamp before screw), checks
+  support, balance, driver access, and nut entry on every step, searches
+  rest-face phases with a cost table (flip, rail not flat, driver off
+  vertical, shrinking support, sibling screw, loose parts), and writes
+  `_plan.md` (BOM, T-nut preload sheet, numbered steps with torque),
+  `_plan.json`, and `_stepN.scad` scenes (`--png` renders them). Design
+  errors: colliding screws, too little thread reach, a clamp that does
+  not sit on its host face. Fixtures under `examples/assemble/plan/`.
+- `coscad site DIR spec.assemble ...`: static phone-first companion site
+  from the build plans (per-build step pages with images and torque, an
+  index with search across builds).
+- Assembly and part files: expression continuation lines may start with a
+  boolean glyph (`⊕ ...`), and comment-only lines may sit between
+  continuation lines.
+
 - Assembly checks retain hidden parts as anchor references, preserving
   relational placements during isolation, including chained attachments.
 - Loft profiles reject vector Z translations and oblique or zero mirror

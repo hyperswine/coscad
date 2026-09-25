@@ -1,0 +1,13 @@
+// The design document's example: railA lying flat, railB standing on its
+// top face at 380 mm, one inside-corner bracket with a screw into each rail.
+// Word shapes are centered, so `move` places each part's center.
+railA ← rail2020.coscad ×0 profile=2020 material=aluminium
+railB ← rail2020_300.coscad ×0 profile=2020 material=printed
+br1   ← corner_inside.coscad ×1
+
+asm = (railA |> move 200 10 10)               // x 0..400, y 0..20, z 0..20
+  ⊕ (railB |> roty 90 |> move 380 10 170)     // vertical: x 370..390, z 20..320
+  ⊕ (br1 |> move 360 10 30)                   // x 350..370, z 20..40: on railA's top, against railB's -X face
+
+fastener M5x10 br1 railA top through=6   // counterbored: 6 mm of bracket under the head
+fastener M5x10 br1 railB lft through=6

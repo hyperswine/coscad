@@ -52,7 +52,23 @@ data AsmStmt
   = APart String FilePath Int (Maybe ((Double, Double, Double), String)) [(String, String)]
   | APlate Double Double Double
   | AClearance Double
+  | AFastener FastDecl
+  | APlan [(String, String)]
   | ADef Def
+
+-- | `fastener M5x8 bracket railA top ×2 nut=dropin at=350,370`: a screw
+-- (spec) through the clamped instance into a slot/hole on the host
+-- instance's named face (world-frame anchor word). Consumed by `coscad plan`.
+data FastDecl = FastDecl
+  { fdSpec :: String
+  , fdClamped :: String
+  , fdHost :: String
+  , fdFace :: String
+  , fdCount :: Int
+  , fdOpts :: [(String, String)]
+  , fdLine :: Int
+  }
+  deriving (Show)
 
 data FlatPart = FlatPart
   { fpTrail :: [String]
@@ -72,6 +88,9 @@ data AsmResult = AsmResult
   , arClearance :: Double       -- required clearance for `coscad check` (0 = contacts only)
   , arDefs :: [Def]             -- raw asm-side defs (re-resolvable with substitutions)
   , arParts :: [(String, Shape)]  -- top-level part name -> resolved shape
+  , arPartMeta :: [(String, (Int, [(String, String)]))] -- top-level part name -> (count, hints)
+  , arFasteners :: [FastDecl]   -- `fastener` lines, for `coscad plan`
+  , arPlanOpts :: [(String, String)] -- `plan key=value ...` line
   }
 
 asmProgram :: Parser [AsmStmt]
@@ -83,8 +102,32 @@ asmStmt :: Parser AsmStmt
 asmStmt =
   plateStmt
     <|> clearanceStmt
+    <|> fastenerStmt
+    <|> planStmt
     <|> (lookAhead (try (identifier *> symbol "←")) *> partStmt)
     <|> (ADef <$> variableDefinition)
+
+-- a bare word (instance names may carry `#2`, specs like M5x8)
+word :: Parser String
+word = lexeme (some (satisfy (\c -> not (isSpace c) && c /= '=' && c /= '×')))
+
+fastenerStmt :: Parser AsmStmt
+fastenerStmt = do
+  pos <- getSourcePos
+  _ <- try (keyword "fastener" <* notFollowedBy (symbol "="))
+  spec <- word
+  clamped <- word
+  host <- word
+  face <- word
+  opts <- many partOpt
+  let cnt = last (1 : [n | OCount n <- opts])
+  return (AFastener (FastDecl spec clamped host face cnt [h | OHint h <- opts] (unPos (sourceLine pos))))
+
+planStmt :: Parser AsmStmt
+planStmt = do
+  _ <- try (keyword "plan" <* notFollowedBy (symbol "="))
+  opts <- many partOpt
+  return (APlan [h | OHint h <- opts])
 
 clearanceStmt :: Parser AsmStmt
 clearanceStmt = do
@@ -176,6 +219,9 @@ loadAssembleFile visited path
                             , arClearance = clr
                             , arDefs = defs
                             , arParts = [(n, s) | (n, s, _) <- entries]
+                            , arPartMeta = [(n, (c, h)) | APart n _ c _ h <- partsS]
+                            , arFasteners = [f | AFastener f <- stmts]
+                            , arPlanOpts = concat [o | APlan o <- stmts]
                             , arFlat = concat [f | (_, _, f) <- entries]
                             }
 

@@ -7,6 +7,8 @@ import Coscad.Check (processCheckWith)
 import Coscad.Doctor (runDoctor)
 import Coscad.Next (processNext)
 import Coscad.Part (compilePart, renderPart)
+import Coscad.Plan (processPlan)
+import Coscad.Site (processSite)
 import Data.Version (showVersion)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import Paths_coscad (version)
@@ -28,6 +30,14 @@ main = do
     ["doctor"] -> runDoctor
     ("stl" : rest) -> withInOut "stl" rest renderPart
     ["next", f] -> needExt ".assemble" f >> processNext f
+    ("site" : rest) -> case rest of
+      (dir : specs) | not (null specs) -> mapM_ (needExt ".assemble") specs >> processSite dir specs
+      _ -> bad "site takes an output directory and one or more .assemble files"
+    ("plan" : rest) -> do
+      let png = "--png" `elem` rest
+      case filter (/= "--png") rest of
+        [f] -> needExt ".assemble" f >> processPlan png f
+        _ -> bad "plan takes one .assemble file (and optionally --png)"
     ("check" : rest) -> do
       let keep = "--keep-temp" `elem` rest
       case filter (/= "--keep-temp") rest of
@@ -65,6 +75,8 @@ usage =
     , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"
     , "  coscad <spec.assemble>                  design stage: assembled view, packed plate(s), manifest"
     , "  coscad next <spec.assemble>             manufacturing: orient, pack beds, bedN.stl + manifest"
+    , "  coscad plan <spec.assemble> [--png]     build instructions: ordered steps, preload sheet, BOM"
+    , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
     , "  coscad check <spec.assemble> [--keep-temp]"
     , "                                          interference / clearance check on real meshes"
     , "  coscad doctor                           verify OpenSCAD + BOSL2 + an end-to-end render"

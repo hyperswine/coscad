@@ -246,7 +246,7 @@ variableDefinition = do
 
 -- | The raw source text of an expression, for later parsing with
 -- context: the rest of the line, plus any following lines that begin
--- with |> (multi-line pipelines). Newlines are preserved so error
+-- with |> (multi-line pipelines) or a boolean glyph (⊕ ⊖ ∩ ...). Newlines are preserved so error
 -- positions inside the expression map back to real file lines, and
 -- a trailing // comment cannot swallow the continuation lines.
 expressionString :: Parser String
@@ -254,9 +254,15 @@ expressionString = lexeme (dropWhileEnd isSpace . fst <$> match (firstLine *> ma
   where
     eol = try (void newline) <|> eof
     firstLine = manyTill anySingle eol
-    contLine = try $ do
+    -- comment-only lines may sit between continuation lines
+    commentLine = try $ do
       _ <- many (char ' ' <|> char '\t')
-      _ <- lookAhead (string "|>")
+      _ <- string "//"
+      manyTill anySingle eol
+    contLine = try $ do
+      _ <- many commentLine
+      _ <- many (char ' ' <|> char '\t')
+      _ <- lookAhead (string "|>" <|> (pure <$> oneOf "⊕⊛⊖⊝∩⇓⊞↯"))
       manyTill anySingle eol
 
 -- Parse an expression with variable context

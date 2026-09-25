@@ -150,6 +150,7 @@ bbox s = case s of
   Diff a _ -> bbox a
   Extrude h x -> let ((x0, y0, _), (x1, y1, _)) = bbox x in ((x0, y0, 0), (x1, y1, h))
   Loft ps -> fromCorners [(px, py, z) | (z, p) <- ps, (px, py, _) <- bcorners (bbox p)]
+  Tag _ x -> bbox x
   Offset r x -> let ((x0, y0, z0), (x1, y1, z1)) = bbox x in ((x0 - r, y0 - r, z0), (x1 + r, y1 + r, z1))
   Union xs -> foldr1 bmerge (map bbox xs)
   Intersection xs -> foldr1 boverlap (map bbox xs)
@@ -211,6 +212,7 @@ resolve s = case s of
   Mirror n x -> Mirror n (resolve x)
   Extrude h x -> Extrude h (resolve x)
   Loft ps -> Loft [(z, resolve p) | (z, p) <- ps]
+  Tag n x -> Tag n (resolve x)
   Offset r x -> Offset r (resolve x)
   Diff a b -> Diff (resolve a) (resolve b)
   Union xs -> Union (map resolve xs)

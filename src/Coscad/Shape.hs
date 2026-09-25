@@ -45,6 +45,7 @@ data Shape
   | Diff Shape Shape
   | Extrude D Shape
   | Loft [(D, Shape)] -- (z, 2D profile) pairs, skinned bottom to top (BOSL2 skin)
+  | Tag String Shape -- named subtree (an assembly part instance); identity for geometry
   | Union [Shape]
   | Intersection [Shape]
   | Hull [Shape]

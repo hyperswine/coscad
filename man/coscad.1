@@ -23,6 +23,14 @@
 .Ar spec.assemble
 .Op Fl -keep-temp
 .Nm
+.Cm plan
+.Ar spec.assemble
+.Op Fl -png
+.Nm
+.Cm site
+.Ar dir
+.Ar spec.assemble ...
+.Nm
 .Cm doctor
 .Nm
 .Fl -version | Fl -help
@@ -96,6 +104,46 @@ for gaps below the declared
 Exit status 1 if any overlap.
 Scratch renders go to the system temp directory and are removed unless
 .Fl -keep-temp .
+.It Nm Cm plan Ar spec.assemble Op Fl -png
+Assembly instruction generator.
+From the
+.Ql asm
+placement, part hints, and
+.Ql fastener
+lines, derives the requires-before graph (T-nuts before the slot they
+need is covered, host and clamped part before each screw, slide-in nuts
+before anything sealing a slot end), checks every step for support,
+balance, driver access, and nut entry, and searches rest-face phases with
+a cost table so the build needs few flips, rails lie flat while nuts are
+started, and drivers stay vertical.
+Writes
+.Pa spec_plan.md
+(bill of materials, T-nut preload sheet, numbered steps with torque per
+host material),
+.Pa spec_plan.json ,
+and one
+.Pa spec_stepN.scad
+scene per step
+.Pq this step orange, earlier parts grey, screw heads red, bench translucent ;
+.Fl -png
+also renders them through OpenSCAD.
+Design errors (colliding screws, too little thread reach, a clamp not on
+its host face) are reported and exit 1.
+See
+.Sx ASSEMBLIES .
+.It Nm Cm site Ar dir Ar spec.assemble ...
+Companion site: runs
+.Cm plan
+with renders for every assembly and writes a static, phone-first site
+under
+.Ar dir :
+one page per build (step cards with images, rest face, parts, T-nut
+preloads, screws with torque, warnings; prev/next navigation, filter
+within the build) and an index that searches across builds by name,
+part, material, or screw spec.
+Plain HTML, no server needed: open
+.Pa dir/index.html
+from a file or host the folder anywhere.
 .It Nm Cm doctor
 Report the OpenSCAD binary and BOSL2 checkout that will be used, their
 versions, and the result of an end-to-end test render against a known
@@ -289,6 +337,46 @@ orientation search in
 .Cm next .
 .Ql key=value
 entries are free hints carried into the manifest.
+For
+.Cm plan ,
+the hints
+.Ql profile=2020
+(a T-slot rail: four slot faces, ends open unless
+.Ql ends=open,blocked ) ,
+.Ql material=aluminium|printed|steel
+(torque class; printed parts default to printed, premade
+.Ql ×0
+parts to aluminium),
+.Ql torque=Nm ,
+and
+.Ql mass=g
+describe the parts, and one line per screw group describes the joints:
+.Bd -literal -offset indent
+fastener M5x10 br#1 rx#1 bot at=30          // spec clamped host face
+fastener M5x10 px ry#2 rt ×2                // two screws along the overlap
+fastener M5x10 br1 railA top through=6      // counterbored: 6 mm under the head
+plan beam=30 rest=bot,top                   // optional search settings
+.Ed
+.Pp
+Instance names take
+.Ql #n
+when a part is placed more than once.
+Options:
+.Ql ×n ,
+.Ql at=mm[,mm]
+(from the host's marked end),
+.Ql nut=dropin|slidein ,
+.Ql head=button|socket ,
+.Ql through=mm ,
+.Ql torque=Nm .
+The
+.Ql plan
+line takes
+.Ql beam=N
+(search width, default 30),
+.Ql rest=faces ,
+and the cost weights
+.Ql flip vertical driver shrink sibling loose .
 .Sh EXIT STATUS
 .Ex -std
 .Cm check
@@ -320,6 +408,14 @@ wall = 2
 outer = loft 0 (⭘ r_bot) h (⭘ r_top)
 inner = loft -1 (⭘ (r_bot - wall)) (h + 1) (⭘ (r_top - wall))
 main = outer ⊖ inner
+.Ed
+.Pp
+Generate build instructions for a 2020 frame:
+.Bd -literal -offset indent
+$ coscad plan cube.assemble --png
+plan: 29 part instances, 38 fasteners on 12 hosts
+Wrote cube_plan.md (29 steps, 4 flips, cost 183)
+Wrote cube_step1..29.scad and .png
 .Ed
 .Pp
 Manufacture a three-part assembly and check its fits:

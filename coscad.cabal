@@ -38,7 +38,9 @@ library
       Coscad.OpenScad
       Coscad.Parser
       Coscad.Part
+      Coscad.Plan
       Coscad.Shape
+      Coscad.Site
       Lib
   other-modules:
       Paths_coscad

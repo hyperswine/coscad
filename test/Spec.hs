@@ -29,6 +29,8 @@ import Coscad.Next (processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadVersion, renderStlFile)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Part (renderPart)
+import Coscad.Plan (PlanSummary (..), StepSummary (..), planSummary)
+import Coscad.Site (buildPageHtml, indexHtml)
 import Coscad.Shape (Shape)
 import Data.IORef
 import Data.List (isInfixOf, isPrefixOf, sort)
@@ -74,6 +76,62 @@ expectGen :: T -> String -> Either String (a, Shape) -> String -> IO ()
 expectGen t name r frag = case r of
   Left e -> failT t name e
   Right (_, m) -> assertT t name (frag `isInfixOf` renderScad m) ("wanted fragment: " ++ frag ++ "\n" ++ renderScad m)
+
+-- ------------------------------------------------------------------
+-- build plans (coscad plan): pure, no OpenSCAD needed
+
+planTier :: T -> IO ()
+planTier t = do
+  section "build plans"
+  -- the design document's two-rail corner
+  rc <- planSummary "examples/assemble/plan/corner_pair.assemble"
+  case rc of
+    Left e -> failT t "plan corner_pair" e
+    Right ps -> do
+      assertT t "corner_pair: 3 parts, 2 fasteners, no design errors" (length (psParts ps) == 3 && psFastenerCount ps == 2 && null (psDesignErrors ps)) (show ps)
+      checkInvariants t "corner_pair" ps
+      assertT t "corner_pair: both screws driven, no flips" (sum (map (length . ssFasteners) (psSteps ps)) == 2 && not (any ssFlip (psSteps ps))) (show (psSteps ps))
+  -- the 2020 cube: rails, brackets, panel
+  tmp <- tempDir "plan-cube"
+  src <- readFile "examples/assemble/plan/cube.assemble"
+  writeFile (tmp </> "cube.assemble") (src ++ "\nplan beam=10\n") -- narrow beam keeps the test fast
+  forM_ ["rail200.coscad", "rail160.coscad", "flat90.coscad", "panel190.coscad"] $ \f -> copyFile ("examples/assemble/plan" </> f) (tmp </> f)
+  rq <- planSummary (tmp </> "cube.assemble")
+  case rq of
+    Left e -> failT t "plan cube" e
+    Right ps -> do
+      assertT t "cube: 29 instances, 38 fasteners, no design errors" (length (psParts ps) == 29 && psFastenerCount ps == 38 && null (psDesignErrors ps)) (show (length (psParts ps), psFastenerCount ps, psDesignErrors ps))
+      checkInvariants t "cube" ps
+      assertT t "cube: every fastener driven" (sum (map (length . ssFasteners) (psSteps ps)) == 38) (show (sum (map (length . ssFasteners) (psSteps ps))))
+      assertT t "cube: a handful of flips, not one per bracket" (length (filter ssFlip (psSteps ps)) <= 8) (show (length (filter ssFlip (psSteps ps))))
+  -- design errors are reported: two screws at the same spot
+  let bad = src ++ "\nfastener M5x10 br#1 rx#1 bot at=30\n"
+  writeFile (tmp </> "bad.assemble") bad
+  rb <- planSummary (tmp </> "bad.assemble")
+  assertT t "plan: colliding screws are a design error" (either (const False) (any ("collide" `isInfixOf`) . psDesignErrors) rb) (either id (show . psDesignErrors) rb)
+  -- the companion site pages embed the plan and reference the step images
+  let page = buildPageHtml "cube" "{\"steps\": []}" "cube_step" 3
+      idx = indexHtml [("cube", "cube", ["M5x10", "material=printed"], 29, 38, 29)]
+  assertT t "site: build page embeds plan JSON, images, safe-area header, both themes"
+    (all (`isInfixOf` page) ["const PLAN = {\"steps\": []}", "cube_step", "NSTEPS = 3", "env(safe-area-inset-top", "data-theme=dark", "prefers-color-scheme:dark"]) (take 400 page)
+  assertT t "site: index lists builds with searchable tags" (all (`isInfixOf` idx) ["\"cube\"", "M5x10 material=printed", "steps:29"]) (take 400 idx)
+  -- an assembly without fasteners still gets an order (the bow)
+  rw <- planSummary "examples/assemble/bow3/bow3.assemble"
+  assertT t "plan: bow3 (no fasteners) places all three parts" (either (const False) (\ps -> sum (map (length . ssParts) (psSteps ps)) == 3) rw) (either id show rw)
+
+-- nut-first, host-and-clamp-before-screw, every part exactly once
+checkInvariants :: T -> String -> PlanSummary -> IO ()
+checkInvariants t name ps = do
+  let steps = zip [1 :: Int ..] (psSteps ps)
+      stepOfPart p = head ([k | (k, s) <- steps, p `elem` ssParts s] ++ [maxBound])
+      stepOfPreload h = head ([k | (k, s) <- steps, h `elem` ssPreload s] ++ [maxBound])
+      screws = [(k, f) | (k, s) <- steps, f <- ssFasteners s]
+      lateHost = [f | (k, f@(_, c, h)) <- screws, stepOfPart h > k || stepOfPart c > k]
+      lateNut = [f | (k, f@(_, _, h)) <- screws, stepOfPreload h > k]
+      placedTwice = [p | p <- psParts ps, length [() | (_, s) <- steps, p `elem` ssParts s] /= 1]
+  assertT t (name ++ ": host and clamped part are placed before each screw") (null lateHost) (show lateHost)
+  assertT t (name ++ ": every rail is preloaded before its first screw (nut-first)") (null lateNut) (show lateNut)
+  assertT t (name ++ ": every part placed exactly once") (null placedTwice) (show placedTwice)
 
 section :: String -> IO ()
 section s = putStrLn ("\n== " ++ s)
@@ -188,7 +246,7 @@ diagnostics t = do
     Right _ -> failT t "packBeds rejects an oversized footprint with a clear message" "packed"
   -- the manual must mention every command, flag, and environment variable
   manPage <- readFile "man/coscad.1"
-  let manMissing = [w | w <- ["Cm stl", "Cm next", "Cm check", "Cm doctor", "keep-temp", "Fl -version", "Fl -help", "COSCAD_OPENSCAD", "COSCAD_BOSL2", "loft", "cutat", "Fl o"], not (w `isInfixOf` manPage)]
+  let manMissing = [w | w <- ["Cm stl", "Cm next", "Cm check", "Cm doctor", "Cm plan", "Cm site", "keep-temp", "Fl -png", "Fl -version", "Fl -help", "COSCAD_OPENSCAD", "COSCAD_BOSL2", "loft", "cutat", "fastener", "Fl o"], not (w `isInfixOf` manPage)]
   assertT t "man/coscad.1 documents every command, flag, and env var" (null manMissing) (show manMissing)
   -- .assemble diagnostics
   tmp <- tempDir "asm-diag"
@@ -445,6 +503,7 @@ main = do
   update <- (== Just "1") <$> lookupEnv "COSCAD_UPDATE_GOLDEN"
   diagnostics t
   examples t update
+  planTier t
   render <- lookupEnv "COSCAD_RENDER"
   bin <- findOpenscad
   case (render, bin) of

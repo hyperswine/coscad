@@ -1,0 +1,5 @@
+// Inside corner bracket for 2020: sits in the corner between a rail's top
+// face and the side face of a rail standing on it. One M5 into each rail.
+main = box 20 20 20
+  |> cutat top 0 0 0 (zcyl 2.75 30)
+  |> cutat lft 0 0 0 (xcyl 2.75 30)

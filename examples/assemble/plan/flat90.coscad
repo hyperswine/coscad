@@ -1,0 +1,6 @@
+// Flat 90-degree bracket, 40 x 40 x 6, lies on the face plane across two
+// rails meeting at a corner. Two M5 clearance holes, one per leg.
+main = box 40 40 6
+  |> cut (box 28 28 8 |> move 6 6 0)
+  |> cutat top 10 -12 0 (zcyl 2.75 10)
+  |> cutat top -12 10 0 (zcyl 2.75 10)

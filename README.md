@@ -70,6 +70,8 @@ coscad stl part.coscad       # -> part.scad + part.stl, prints volume + bounds
 coscad frame.assemble        # -> _asm view, packed _plate(N) scads, manifest
 coscad next frame.assemble   # -> frame_bed1.stl ... + manifest
 coscad check frame.assemble  # interference / clearance check on real meshes
+coscad plan frame.assemble   # numbered build steps, preload sheet, BOM, step scenes
+coscad site out/ *.assemble  # phone-first static site: step images, search across builds
 coscad --help                # command + language cheat sheet
 ```
 
@@ -117,6 +119,13 @@ A line starting with `|>` continues the previous definition.
 - **Assemblies**: `.assemble` files declare physically separate parts
   (recursive references, counts, print orientation `▽`, free hints).
   Union = one solid; separate reference = separate object.
+- **Build plans**: `coscad plan` orders an assembly for a human — nuts
+  before the slot they need is covered, every screw driven with the
+  driver clear, each step on a stable rest face, torque per host
+  material — from `fastener` lines and a few part hints. Emits the
+  step list, preload sheet, BOM, and per-step renders; `coscad site`
+  turns the plans of several assemblies into a static companion site
+  you can read on a phone. See docs/PLAN.md.
 - **Manufacturing**: `coscad next` compiles each unique
   (part, orientation) variant once, searches FFF print orientation
   where undeclared, packs beds largest-first with spill, and emits
@@ -163,6 +172,7 @@ worked examples. `coscad --help` is the short form.
 - docs/LANGEXTENSION.md — full language reference
 - docs/TOPOLOGICAL.md — anchors, pipelines, and the stable-datum rule
 - docs/MANUFACTURING.md — .assemble and coscad next
+- docs/PLAN.md — fasteners, material hints, and coscad plan
 - docs/EXAMPLES.md — index of the examples tree
 - docs/SKILL.md — agent skill file (gotchas + verification workflow)
 
