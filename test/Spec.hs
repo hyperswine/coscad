@@ -20,18 +20,18 @@ module Main (main) where
 
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
-import Coscad.Assemble (loadAssembleFile, packBeds, processAssemble)
+import Coscad.Assemble (AsmResult (..), loadAssembleFile, packBeds, processAssemble)
 import Coscad.Check (processCheckWith, splitBodies)
-import Coscad.Codegen (renderScad, showD)
+import Coscad.Codegen (gen, renderScad, showD)
 import Coscad.Geometry (bbox, resolve)
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
 import Coscad.Next (processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadVersion, renderStlFile)
-import Coscad.Parser (parseProgramNamed)
+import Coscad.Parser (parseProgramNamed, resolveVariables)
 import Coscad.Part (renderPart)
 import Coscad.Plan (PlanSummary (..), StepSummary (..), planSummary)
 import Coscad.Site (buildPageHtml, indexHtml)
-import Coscad.Shape (Shape)
+import Coscad.Shape (Shape (..))
 import Data.IORef
 import Data.List (isInfixOf, isPrefixOf, sort)
 import qualified Data.Map as Map
@@ -377,6 +377,31 @@ geometry t update bin = do
       merged = if update then Map.union table golden else Map.union golden table
   when (update || Map.size merged /= Map.size golden) $
     writeFile goldenF (unlines ["# path volume xmin ymin zmin xmax ymax zmax (regenerate: COSCAD_UPDATE_GOLDEN=1 stack test)"] ++ unlines [f ++ " " ++ showGeo g | (f, g) <- Map.toList merged])
+  -- Check actual bracket material, not the planner's axis-aligned boxes.
+  -- Independent world-space probes cover all 16 corners and 32 rail bores.
+  cube <- loadAssembleFile [] "examples/assemble/plan/cube.assemble"
+  case cube of
+    Left e -> failT t "cube bracket geometry" e
+    Right ar -> do
+      let parts = Map.fromList [(n, if n == "br" then sh else Hidden sh) | (n, sh) <- arParts ar]
+      case resolveVariables (arMode ar) (arDefs ar) parts >>= \tab -> maybe (Left "missing asm") Right (Map.lookup "asm" tab) of
+        Left e -> failT t "cube bracket geometry" e
+        Right brackets -> do
+          let corners = [(x,y,z) | x <- [10,190], y <- [10,190], z <- [-3,203]]
+                     ++ [(x,y,z) | x <- [10,190], y <- [-3,203], z <- [10,190]]
+              inward v = if v == 10 then 30 else 170
+              ringHoles = concat [[(inward x,y,z),(x,inward y,z)] | x <- [10,190], y <- [10,190], z <- [-3,203]]
+              sideHoles = concat [[(inward x,y,z),(x,y,inward z)] | x <- [10,190], y <- [-3,203], z <- [10,190]]
+              probe dims (x,y,z) = "translate(" ++ show [x,y,z] ++ ") cube(" ++ show dims ++ ",center=true);"
+              checkProbes name probes want = do
+                let scad = "include <BOSL2/std.scad>\n$fn=50;\nunion(){translate([-1000,-1000,-1000]) cube(1); intersection(){" ++ gen brackets ++ "union(){" ++ concat probes ++ "}}}"
+                r <- renderMesh bin dir scad
+                case r of
+                  Left e -> failT t name e
+                  Right tris -> assertT t name (abs (meshVolume tris - want) < 0.01) (show (meshVolume tris, want))
+          checkProbes "cube: material at all 16 bracket corners" (map (probe [2,2,2]) corners) 129
+          checkProbes "cube: all 32 rail-aligned holes pass through brackets"
+            (map (probe [2,2,8]) ringHoles ++ map (probe [2,8,2]) sideHoles) 1
   -- cross-check: the topological bracket is the coordinate bracket
   case (Map.lookup "examples/bracket.coscad" table, Map.lookup "examples/topological/tbracket.coscad" table) of
     (Just (v1, lo1, hi1), Just (v2, lo2, hi2)) ->

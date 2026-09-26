@@ -1,0 +1,7 @@
+{
+  "source": "examples/assemble/bow3/bow3.assemble",
+  "design_errors": [],
+  "steps": [
+    {"step": 1, "rest": "bottom (-Z) face", "flip": false, "parts": ["center", "larch", "rarch"], "preload": [], "fasteners": [], "warnings": []}
+  ]
+}

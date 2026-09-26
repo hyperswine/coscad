@@ -22,7 +22,7 @@ examples/assemble/bow3/r_arch3.coscad 62324.724 -207.252 -1.000 0.000 26.000 88.
 examples/assemble/bracket90.coscad 5268.865 -9.000 -8.982 -1.500 34.000 34.000 5.000
 examples/assemble/inner90.coscad 10301.762 -1.500 -10.000 -1.500 32.000 10.000 32.000
 examples/assemble/plan/corner_inside.coscad 7399.605 -10.000 -10.000 -10.000 10.000 10.000 10.000
-examples/assemble/plan/flat90.coscad 4659.042 -20.000 -20.000 -3.000 20.000 20.000 3.000
+examples/assemble/plan/flat90.coscad 6915.650 -20.000 -20.000 -3.000 20.000 20.000 3.000
 examples/assemble/plan/panel190.coscad 108015.650 -95.000 -95.000 -1.500 95.000 95.000 1.500
 examples/assemble/plan/rail160.coscad 64000.000 -80.000 -10.000 -10.000 80.000 10.000 10.000
 examples/assemble/plan/rail200.coscad 80000.000 -100.000 -10.000 -10.000 100.000 10.000 10.000

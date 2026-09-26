@@ -160,6 +160,13 @@ examples/haskell/       embedded-DSL samples (not built)
 environment variables, a language cheat sheet, the assembly format, and
 worked examples. `coscad --help` is the short form.
 
+## Manual site
+
+`scripts/build-manual.sh DIR` renders this documentation, the man page,
+and the example build plans into a static site (needs pandoc, mandoc,
+OpenSCAD). manual.cswine.cloud rebuilds it from `main` automatically; see
+`deploy/README.md`.
+
 ## Releasing
 
 1. Bump `version` in `package.yaml` and the CHANGELOG, commit, tag

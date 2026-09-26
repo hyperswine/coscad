@@ -18,16 +18,17 @@ asm = (rx |> move 100 10 10) ⊕ (rx |> move 100 190 10)
   ⊕ (ry |> rotz 90 |> move 10 100 190) ⊕ (ry |> rotz 90 |> move 190 100 190)
   ⊕ (rz |> roty 90 |> move 10 10 100) ⊕ (rz |> roty 90 |> move 190 10 100)
   ⊕ (rz |> roty 90 |> move 10 190 100) ⊕ (rz |> roty 90 |> move 190 190 100)
+  // Rotate each L in its face plane so both legs follow their rails.
   // bottom ring corner brackets, under the ring (z -6..0)
-  ⊕ (br |> move 20 20 -3) ⊕ (br |> move 180 20 -3) ⊕ (br |> move 20 180 -3) ⊕ (br |> move 180 180 -3)
+  ⊕ (br |> move 20 20 -3) ⊕ (br |> rotz 90 |> move 180 20 -3) ⊕ (br |> rotz -90 |> move 20 180 -3) ⊕ (br |> rotz 180 |> move 180 180 -3)
   // top ring corner brackets, on top of the ring (z 200..206)
-  ⊕ (br |> move 20 20 203) ⊕ (br |> move 180 20 203) ⊕ (br |> move 20 180 203) ⊕ (br |> move 180 180 203)
+  ⊕ (br |> move 20 20 203) ⊕ (br |> rotz 90 |> move 180 20 203) ⊕ (br |> rotz -90 |> move 20 180 203) ⊕ (br |> rotz 180 |> move 180 180 203)
   // verticals braced to the bottom X rails, on the outer -Y / +Y faces
-  ⊕ (br |> rotx 90 |> move 20 -3 20) ⊕ (br |> rotx 90 |> move 180 -3 20)
-  ⊕ (br |> rotx 90 |> move 20 203 20) ⊕ (br |> rotx 90 |> move 180 203 20)
+  ⊕ (br |> rotx 90 |> move 20 -3 20) ⊕ (br |> rotz 90 |> rotx 90 |> move 180 -3 20)
+  ⊕ (br |> rotx 90 |> move 20 203 20) ⊕ (br |> rotz 90 |> rotx 90 |> move 180 203 20)
   // verticals braced to the top X rails
-  ⊕ (br |> rotx 90 |> move 20 -3 180) ⊕ (br |> rotx 90 |> move 180 -3 180)
-  ⊕ (br |> rotx 90 |> move 20 203 180) ⊕ (br |> rotx 90 |> move 180 203 180)
+  ⊕ (br |> rotz -90 |> rotx 90 |> move 20 -3 180) ⊕ (br |> rotz 180 |> rotx 90 |> move 180 -3 180)
+  ⊕ (br |> rotz -90 |> rotx 90 |> move 20 203 180) ⊕ (br |> rotz 180 |> rotx 90 |> move 180 203 180)
   // +X panel (x 200..203), on the Y rails' and verticals' +X faces
   ⊕ (px |> roty 90 |> move 201.5 100 100)
 

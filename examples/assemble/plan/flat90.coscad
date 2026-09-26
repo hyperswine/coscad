@@ -1,6 +1,7 @@
-// Flat 90-degree bracket, 40 x 40 x 6, lies on the face plane across two
-// rails meeting at a corner. Two M5 clearance holes, one per leg.
+// Flat 90-degree bracket, 40 x 40 x 6, with 20 mm wide legs.
+// The missing quadrant is +X,+Y; holes align with 2020 rail centres.
+// Centred cutters extend past both faces to make true through holes.
 main = box 40 40 6
-  |> cut (box 28 28 8 |> move 6 6 0)
-  |> cutat top 10 -12 0 (zcyl 2.75 10)
-  |> cutat top -12 10 0 (zcyl 2.75 10)
+  |> cut (box 20 20 8 |> move 10 10 0)
+  |> cut (zcyl 2.75 10 |> move 10 -10 0)
+  |> cut (zcyl 2.75 10 |> move -10 10 0)

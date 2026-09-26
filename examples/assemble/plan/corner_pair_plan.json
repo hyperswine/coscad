@@ -1,0 +1,9 @@
+{
+  "source": "examples/assemble/plan/corner_pair.assemble",
+  "design_errors": [],
+  "steps": [
+    {"step": 1, "rest": "front (-Y) face", "flip": false, "parts": ["railA"], "preload": ["railA"], "fasteners": [], "warnings": []},
+    {"step": 2, "rest": "front (-Y) face", "flip": false, "parts": ["railB"], "preload": ["railB"], "fasteners": [], "warnings": []},
+    {"step": 3, "rest": "front (-Y) face", "flip": false, "parts": ["br1"], "preload": [], "fasteners": [{"spec": "M5x10", "head": "button", "nut": "DropIn", "clamped": "br1", "host": "railA", "face": "top", "at_mm": 360, "torque_nm": 3}, {"spec": "M5x10", "head": "button", "nut": "DropIn", "clamped": "br1", "host": "railB", "face": "lft", "at_mm": 10, "torque_nm": 0.6}], "warnings": ["driver axis is not vertical here (top face of railA); keep the driver square to the bracket", "driver axis is not vertical here (lft face of railB); keep the driver square to the bracket"]}
+  ]
+}
