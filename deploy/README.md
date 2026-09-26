@@ -16,5 +16,5 @@ rebuilds the compiler (`stack install`), and rebuilds the site atomically.
 **Public host** (Linode): nginx terminates TLS for manual.cswine.cloud and
 proxies to the mini over Tailscale (`proxy_pass http://100.107.153.43:6210`).
 
-Pushing to `main` therefore updates the manual within about five minutes plus
+Pushing to `main` updates https://manual.cswine.cloud within about five minutes plus
 build time (a minute or two: the plan renders go through OpenSCAD).
