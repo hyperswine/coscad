@@ -87,7 +87,11 @@ The script flattens Bambu Studio's own system presets before loading them:
 the CLI does not resolve `inherits`, and an unflattened filament preset
 silently slices with density 0, flow limit 2 mm³/s and a 200 °C nozzle
 (the bracket example took 17 min that way and 11 min with the real
-profile).
+profile). It also merges the printer's `<printer> template <key>.json`
+files (start, end, filament-change, layer-change and timelapse gcode),
+which the GUI adds and the CLI does not: without them the print runs a
+generic placeholder start sequence that never loads filament, so the
+head moves and nothing comes out (the first ball attempt).
 
 `--print N` uploads bed N to the printer's SD card over implicit FTPS and
 starts it over MQTT (`project_file` command). It needs a printer in LAN

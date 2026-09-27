@@ -17,8 +17,9 @@ and this project adheres to the
   `examples/assemble/ball/`: a bolted 40 mm ball (two hemisphere shells,
   core disc) that runs the full chain to a sliced bed.
 - `scripts/bambu-slice.py manifest.json [--print N]`: slice the beds from
-  `coscad next` with Bambu Studio's CLI (system presets flattened so
-  filament settings apply), write `_bedN.gcode.3mf` and `_print.json`,
+  `coscad next` with Bambu Studio's CLI (system presets flattened and the
+  printer's template gcode files merged so filament settings and the real
+  start/end sequences apply), write `_bedN.gcode.3mf` and `_print.json`,
   optionally upload and start a bed on a LAN-mode Bambu printer.
 - `scripts/bambu-print-run.py foo.assemble [--dry-run]`: unattended run:
   camera photo, coscad → next → plan → slice → print, watch to the end,

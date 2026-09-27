@@ -37,12 +37,40 @@ def flatten(kind, name):
     return base
 
 
+def machine_with_templates(printer):
+    """Bambu keeps a printer's start/end/filament-change/layer-change/timelapse
+    gcode in `<printer> template <key>.json` files next to the preset, which
+    the GUI merges in and the CLI does not. Without them the print runs the
+    generic placeholder start gcode, which never loads filament (a print that
+    moves but extrudes nothing)."""
+    m = flatten("machine", printer)
+    tdir = os.path.join(SYSTEM, "machine")
+    names = [printer]
+    parts = printer.rsplit(" ", 2)  # "... 0.6 nozzle" → also try the 0.4 nozzle templates
+    if len(parts) == 3 and parts[2] == "nozzle" and parts[1] != "0.4":
+        names.append(parts[0] + " 0.4 nozzle")
+    found = 0
+    for n in names:
+        for f in sorted(os.listdir(tdir)):
+            if f.startswith(n + " template ") and f.endswith(".json"):
+                d = json.load(open(os.path.join(tdir, f)))
+                for k, v in d.items():
+                    if k.endswith("_gcode"):
+                        m[k] = v
+                        found += 1
+        if found:
+            break
+    if not found:
+        print(f"warning: no gcode templates found for '{printer}'; using the preset's inline gcode", file=sys.stderr)
+    return m
+
+
 def write_presets(printer, process, filament, bed):
     pdir = tempfile.mkdtemp(prefix="coscad-presets-")
     proc = flatten("process", process)
     proc["curr_bed_type"] = bed
     files = {}
-    for kind, name, data in (("machine", printer, flatten("machine", printer)),
+    for kind, name, data in (("machine", printer, machine_with_templates(printer)),
                              ("process", process, proc),
                              ("filament", filament, flatten("filament", filament))):
         f = os.path.join(pdir, kind + ".json")
