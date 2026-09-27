@@ -32,14 +32,20 @@ def load_env_file():
                 os.environ.setdefault(k.strip(), v.strip().strip('"'))
 
 
-def discover(seconds=20):
-    """First LAN-mode printer heard on UDP 2021 → (ip, serial, name)."""
+MODEL_PRESET = {"N2S": "Bambu Lab A1 0.4 nozzle", "N1": "Bambu Lab A1 mini 0.4 nozzle", "C12": "Bambu Lab P1S 0.4 nozzle",
+                "C11": "Bambu Lab P1P 0.4 nozzle", "BL-P001": "Bambu Lab X1 Carbon 0.4 nozzle", "BL-P002": "Bambu Lab X1 0.4 nozzle"}
+
+
+def discover(want=None, seconds=20):
+    """LAN-mode printers heard on UDP 2021 → the one whose name or model
+    contains `want` (case-insensitive); with several and no `want`, stop and list them."""
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     if hasattr(socket, "SO_REUSEPORT"):
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
     s.bind(("", 2021)); s.settimeout(1)
     end = time.time() + seconds
+    found = {}
     while time.time() < end:
         try:
             data, (ip, _) = s.recvfrom(4096)
@@ -50,8 +56,15 @@ def discover(seconds=20):
             continue
         h = dict(l.split(": ", 1) for l in text.splitlines() if ": " in l)
         if h.get("DevConnect.bambu.com") == "lan":
-            return ip, h.get("USN"), h.get("DevName.bambu.com")
-    sys.exit("no LAN-mode Bambu printer heard in %ds; set BAMBU_HOST and BAMBU_SERIAL" % seconds)
+            found[ip] = (ip, h.get("USN"), h.get("DevName.bambu.com", ""), h.get("DevModel.bambu.com", ""))
+            if want and want.lower() in (found[ip][2] + " " + found[ip][3]).lower():
+                break
+    hits = [f for f in found.values() if not want or want.lower() in (f[2] + " " + f[3]).lower()]
+    if len(hits) == 1:
+        return hits[0]
+    if not hits:
+        sys.exit("no LAN-mode Bambu printer%s heard in %ds; set BAMBU_HOST and BAMBU_SERIAL" % (f" matching '{want}'" if want else "", seconds))
+    sys.exit("several LAN-mode printers heard, pass --device: " + ", ".join(f"{f[2]} ({f[3]}) at {f[0]}" for f in hits))
 
 
 def capture(outdir):
@@ -200,6 +213,8 @@ def main():
     ap.add_argument("--dry-run", action="store_true", help="run the modelling and slicing stages only")
     ap.add_argument("--coscad", default=os.environ.get("COSCAD", "coscad"), help="coscad binary")
     ap.add_argument("--slice-arg", action="append", default=[], help="extra argument for bambu-slice.py (repeatable)")
+    ap.add_argument("--device", default=os.environ.get("BAMBU_DEVICE"), help="which printer, by name or model (A1, P1S, ...), when several are on the LAN")
+    ap.add_argument("--printer", default=None, help="Bambu Studio machine preset; default: from the discovered model")
     ap.add_argument("--spool", default=None, help="external or ams0..ams3; default: whatever is loaded, else the one AMS slot with the right material")
     a = ap.parse_args()
 
@@ -214,9 +229,14 @@ def main():
         if not os.environ.get("BAMBU_ACCESS_CODE"):
             sys.exit("BAMBU_ACCESS_CODE is not set (printer screen: Settings > LAN Only Mode); put it in ~/.config/bambu/a1.env")
         if not (os.environ.get("BAMBU_HOST") and os.environ.get("BAMBU_SERIAL")):
-            ip, serial, name = discover()
+            ip, serial, name, model = discover(a.device)
             os.environ["BAMBU_HOST"], os.environ["BAMBU_SERIAL"] = ip, serial
-            print(f"printer: {name} at {ip}")
+            print(f"printer: {name} ({model}) at {ip}")
+            if not a.printer and model in MODEL_PRESET:
+                a.printer = MODEL_PRESET[model]
+                print("machine preset:", a.printer)
+        if a.printer:
+            a.slice_arg += ["--printer", a.printer]
         # 1. before: state + photo; refuse to start on a busy printer
         printer = Printer()
         before = printer.summary()
