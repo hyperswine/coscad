@@ -117,8 +117,18 @@ def slice_bed(stl, out3mf, presets, extra):
     return info
 
 
-def lan_print(threemf, name):
+def spool_mapping(spool):
+    """'external' → the spool holder (tray 254, no AMS); 'amsN' → AMS slot N (0-3)."""
+    if spool in (None, "", "external"):
+        return False, [254]
+    if spool.startswith("ams") and spool[3:].isdigit():
+        return True, [int(spool[3:])]
+    sys.exit(f"--spool must be external or ams0..ams3, not '{spool}'")
+
+
+def lan_print(threemf, name, spool="external"):
     """Upload to the printer's SD card over FTPS and start it over MQTT."""
+    use_ams, mapping = spool_mapping(spool)
     lan = os.environ.get("BAMBU_LAN_DIR", os.path.expanduser("~/Documents/GitHub/3d-models/bambu-lan"))
     sys.path.insert(0, lan)
     for v in ("BAMBU_HOST", "BAMBU_SERIAL", "BAMBU_ACCESS_CODE"):
@@ -137,7 +147,8 @@ def lan_print(threemf, name):
                      "project_id": "0", "profile_id": "0", "task_id": "0", "subtask_id": "0",
                      "subtask_name": os.path.splitext(name)[0], "url": f"file:///sdcard/{name}", "md5": "",
                      "timelapse": False, "bed_type": "auto", "bed_levelling": True, "flow_cali": True,
-                     "vibration_cali": True, "layer_inspect": True, "use_ams": False, "ams_mapping": [0]}}
+                     "vibration_cali": True, "layer_inspect": True, "use_ams": use_ams, "ams_mapping": mapping}}
+    print(f"filament from {'AMS slot %d' % (mapping[0] + 1) if use_ams else 'the external spool'}")
     reply = {}
     c = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=f"coscad-{os.getpid()}")
     c.username_pw_set("bblp", code)
@@ -172,7 +183,9 @@ def main():
     ap.add_argument("--bed", type=int, default=None, help="only this bed index")
     ap.add_argument("--print", dest="print_bed", type=int, metavar="N", help="after slicing, upload bed N and start printing it")
     ap.add_argument("--slicer-arg", action="append", default=[], help="extra Bambu Studio CLI argument (repeatable)")
+    ap.add_argument("--spool", default="external", help="with --print: external (spool holder, default) or ams0..ams3 (AMS slot 1..4)")
     a = ap.parse_args()
+    spool_mapping(a.spool)
 
     if not os.path.exists(APP):
         sys.exit(f"Bambu Studio not found at {APP} (set BAMBU_STUDIO)")
@@ -225,7 +238,7 @@ def main():
         hit = [b for b in summary["beds"] if b["index"] == a.print_bed]
         if not hit:
             sys.exit(f"bed {a.print_bed} was not sliced")
-        lan_print(hit[0]["3mf"], os.path.basename(hit[0]["3mf"]))
+        lan_print(hit[0]["3mf"], os.path.basename(hit[0]["3mf"]), a.spool)
 
 
 if __name__ == "__main__":

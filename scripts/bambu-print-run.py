@@ -130,21 +130,20 @@ class Printer:
         return {k: s.get(k) for k in ("gcode_state", "mc_percent", "layer_num", "total_layer_num", "mc_remaining_time",
                                       "gcode_file", "subtask_name", "nozzle_temper", "bed_temper", "print_error")}
 
-    def start(self, name):
-        cmd = {"print": {"sequence_id": "1", "command": "project_file", "param": "Metadata/plate_1.gcode",
-                         "project_id": "0", "profile_id": "0", "task_id": "0", "subtask_id": "0",
-                         "subtask_name": os.path.splitext(os.path.splitext(name)[0])[0], "url": f"file:///sdcard/{name}",
-                         "md5": "", "timelapse": False, "bed_type": "auto", "bed_levelling": True, "flow_cali": True,
-                         "vibration_cali": True, "layer_inspect": True, "use_ams": False, "ams_mapping": [0]}}
-        n = len(self.replies)
-        self.send(cmd)
-        t0 = time.time()
-        while time.time() - t0 < 20:
-            for r in self.replies[n:]:
-                if r.get("command") == "project_file":
-                    return r
-            time.sleep(0.2)
-        return None
+    def spools(self):
+        """What filament the printer has: [(spool, type, colour, loaded)]."""
+        ams = self.state.get("ams") or {}
+        now = str(ams.get("tray_now", "255"))
+        out = []
+        for unit in ams.get("ams", []):
+            for t in unit.get("tray", []):
+                if t.get("tray_type"):
+                    tid = int(t.get("id", 0))
+                    out.append((f"ams{tid}", t["tray_type"], t.get("tray_color", ""), now == str(tid)))
+        vt = self.state.get("vt_tray") or {}
+        if vt.get("tray_type"):
+            out.append(("external", vt["tray_type"], vt.get("tray_color", ""), now == "254"))
+        return out
 
     def wait_until_done(self, started_at, log_every=60):
         """Block until the print leaves RUNNING/PREPARE; log progress."""
@@ -201,6 +200,7 @@ def main():
     ap.add_argument("--dry-run", action="store_true", help="run the modelling and slicing stages only")
     ap.add_argument("--coscad", default=os.environ.get("COSCAD", "coscad"), help="coscad binary")
     ap.add_argument("--slice-arg", action="append", default=[], help="extra argument for bambu-slice.py (repeatable)")
+    ap.add_argument("--spool", default=None, help="external or ams0..ams3; default: whatever is loaded, else the one AMS slot with the right material")
     a = ap.parse_args()
 
     spec = os.path.abspath(a.assemble)
@@ -226,6 +226,19 @@ def main():
         before_photo = capture(cwd)
         print("photo before:", before_photo)
         report.update(before=before, photo_before=before_photo)
+        # which spool: the loaded one, else the single AMS slot with the material,
+        # else the external spool (the printer will ask for the filament to be fed)
+        spools = printer.spools()
+        print("spools:", ", ".join(f"{s} {t} {c}{' (loaded)' if l else ''}" for s, t, c, l in spools) or "none reported")
+        if not a.spool:
+            loaded = [s for s, _, _, l in spools if l]
+            material = (a.slice_arg[a.slice_arg.index("--filament") + 1].split()[1] if "--filament" in a.slice_arg else "PLA").upper()
+            same = [s for s, t, _, _ in spools if s.startswith("ams") and t.upper().startswith(material)]
+            a.spool = loaded[0] if loaded else same[0] if len(same) == 1 else "external"
+            if a.spool == "external" and not any(s == "external" for s, _, _, _ in spools):
+                sys.exit("no filament loaded, no single matching AMS slot and no external spool reported; pass --spool")
+        print("using spool:", a.spool)
+        report["spool"] = a.spool
 
     # 2. the coscad chain
     for stage in (["%s" % base + ".assemble"], ["next", base + ".assemble"], ["plan", base + ".assemble"]):
@@ -233,7 +246,7 @@ def main():
         report["steps"].append(" ".join(stage))
     slice_cmd = [sys.executable, os.path.join(HERE, "bambu-slice.py"), base + "_manifest.json", "--bed", str(a.bed)] + a.slice_arg
     if not a.dry_run:
-        slice_cmd += ["--print", str(a.bed)]
+        slice_cmd += ["--print", str(a.bed), "--spool", a.spool]
     run(slice_cmd, cwd)
     print_info = json.load(open(os.path.join(cwd, base + "_print.json")))
     bed = next(b for b in print_info["beds"] if b["index"] == a.bed)
