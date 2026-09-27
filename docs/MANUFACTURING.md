@@ -96,6 +96,17 @@ mode with developer mode on, `BAMBU_HOST`, `BAMBU_SERIAL` and
 scripts (`BAMBU_LAN_DIR`) for the FTPS client with the printer's TLS
 quirks. Nothing is sent without `--print`.
 
+`scripts/bambu-print-run.py foo.assemble` does the whole thing unattended:
+it photographs the printer (`<timestamp>-a1-printer-capture.png`, from the
+printer's own camera), refuses to start if a print is running, runs
+`coscad`, `coscad next`, `coscad plan` and `bambu-slice.py --print`,
+watches the print over MQTT with a progress line a minute, photographs it
+again when it stops, and writes `foo_run.json` with both photos, the
+printer's state before and after and an OK/FAILED verdict (state FINISH,
+no print error, our file). `--dry-run` stops after slicing. The access
+code is read from `~/.config/bambu/a1.env` (`BAMBU_ACCESS_CODE=...`); host
+and serial are discovered on the LAN when not given.
+
 Worked example, `examples/assemble/ball/`: a 40 mm ball from two printed
 hemisphere shells and a core disc with two captive M5 hex nuts. The whole
 chain is

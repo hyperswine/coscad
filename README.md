@@ -74,6 +74,7 @@ coscad check frame.assemble  # interference / clearance check on real meshes
 coscad plan frame.assemble   # numbered build steps, preload sheet, BOM, step scenes
 coscad site out/ *.assemble  # phone-first static site: step images, search across builds
 scripts/bambu-slice.py frame_manifest.json [--print 1]  # slice beds with Bambu Studio, optionally print over LAN
+scripts/bambu-print-run.py frame.assemble  # photo, model → slice → print, watch, photo, verdict
 coscad --help                # command + language cheat sheet
 ```
 

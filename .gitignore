@@ -34,3 +34,5 @@ NOTES.txt
 *.gcode
 *_print.json
 __pycache__/
+*_run.json
+*-a1-printer-capture.*

@@ -20,6 +20,9 @@ and this project adheres to the
   `coscad next` with Bambu Studio's CLI (system presets flattened so
   filament settings apply), write `_bedN.gcode.3mf` and `_print.json`,
   optionally upload and start a bed on a LAN-mode Bambu printer.
+- `scripts/bambu-print-run.py foo.assemble [--dry-run]`: unattended run:
+  camera photo, coscad → next → plan → slice → print, watch to the end,
+  photo, `foo_run.json` with a verdict.
 - `coscad plan foo.assemble [--png]`: assembly instruction generator.
   `fastener spec clamped host face [×n at= nut= head= through= torque=]`
   lines and part hints (`profile=2020`, `material=`, `ends=`, `mass=`,
