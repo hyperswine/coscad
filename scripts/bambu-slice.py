@@ -136,8 +136,8 @@ def lan_print(threemf, name):
     cmd = {"print": {"sequence_id": "1", "command": "project_file", "param": "Metadata/plate_1.gcode",
                      "project_id": "0", "profile_id": "0", "task_id": "0", "subtask_id": "0",
                      "subtask_name": os.path.splitext(name)[0], "url": f"file:///sdcard/{name}", "md5": "",
-                     "timelapse": False, "bed_type": "auto", "bed_levelling": True, "flow_cali": False,
-                     "vibration_cali": True, "layer_inspect": False, "use_ams": False, "ams_mapping": [0]}}
+                     "timelapse": False, "bed_type": "auto", "bed_levelling": True, "flow_cali": True,
+                     "vibration_cali": True, "layer_inspect": True, "use_ams": False, "ams_mapping": [0]}}
     reply = {}
     c = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=f"coscad-{os.getpid()}")
     c.username_pw_set("bblp", code)
