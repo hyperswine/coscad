@@ -168,6 +168,25 @@ class Printer:
         self.c.loop_stop(); self.c.disconnect()
 
 
+def error_text(code):
+    """Bambu Studio's own error table (hms/hms_en.json) → intro text for print_error."""
+    try:
+        d = json.load(open(os.path.expanduser("~/Library/Application Support/BambuStudio/hms/hms_en.json")))
+        want = "%08X" % int(code)
+        stack = [d]
+        while stack:
+            o = stack.pop()
+            if isinstance(o, dict):
+                if str(o.get("ecode", "")).upper() == want:
+                    return o.get("intro", "")
+                stack.extend(o.values())
+            elif isinstance(o, list):
+                stack.extend(o)
+    except Exception:
+        pass
+    return ""
+
+
 def run(cmd, cwd):
     print("$", " ".join(cmd), flush=True)
     r = subprocess.run(cmd, cwd=cwd)
@@ -241,7 +260,7 @@ def main():
     ran_ours = expected.split(".")[0] in str(after.get("gcode_file") or "") + str(after.get("subtask_name") or "")
     ok = final == "FINISH" and (after.get("print_error") in (0, None)) and ran_ours
     verdict = ("OK: printed %s in %dm %02ds, finished with no error" % (expected, took // 60, took % 60)) if ok else \
-              f"FAILED: final state {final}, print_error {after.get('print_error')}, file {after.get('gcode_file')} (expected {expected})"
+              f"FAILED: final state {final}, print_error {after.get('print_error')} ({error_text(after.get('print_error') or 0) or 'unknown'}), file {after.get('gcode_file') or after.get('subtask_name')} (expected {expected})"
     report.update(after=after, photo_after=after_photo, final_state=final, seconds=took, verdict=verdict,
                   finished=time.strftime("%Y-%m-%dT%H:%M:%S"))
     json.dump(report, open(report_path, "w"), indent=2)
