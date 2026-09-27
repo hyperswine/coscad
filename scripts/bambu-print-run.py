@@ -67,7 +67,7 @@ def discover(want=None, seconds=20):
     sys.exit("several LAN-mode printers heard, pass --device: " + ", ".join(f"{f[2]} ({f[3]}) at {f[0]}" for f in hits))
 
 
-def capture(outdir):
+def capture(outdir, tag="a1"):
     """One camera frame (port 6000, JPEG) → <timestamp>-a1-printer-capture.png."""
     host, code = os.environ["BAMBU_HOST"], os.environ["BAMBU_ACCESS_CODE"]
     auth = struct.pack("<IIII", 0x40, 0x3000, 0, 0) + b"bblp".ljust(32, b"\0") + code.encode().ljust(32, b"\0")
@@ -88,8 +88,8 @@ def capture(outdir):
     if jpg[:2] != b"\xff\xd8":
         sys.exit("camera did not return a JPEG")
     stamp = time.strftime("%Y%m%d-%H%M%S")
-    jpg_path = os.path.join(outdir, f"{stamp}-a1-printer-capture.jpg")
-    png_path = os.path.join(outdir, f"{stamp}-a1-printer-capture.png")
+    jpg_path = os.path.join(outdir, f"{stamp}-{tag}-printer-capture.jpg")
+    png_path = os.path.join(outdir, f"{stamp}-{tag}-printer-capture.png")
     open(jpg_path, "wb").write(jpg)
     r = subprocess.run(["sips", "-s", "format", "png", jpg_path, "--out", png_path], capture_output=True)
     if r.returncode == 0 and os.path.exists(png_path):
@@ -231,6 +231,7 @@ def main():
         if not (os.environ.get("BAMBU_HOST") and os.environ.get("BAMBU_SERIAL")):
             ip, serial, name, model = discover(a.device)
             os.environ["BAMBU_HOST"], os.environ["BAMBU_SERIAL"] = ip, serial
+            tag = (name.split()[0] if name else model or "printer").lower()
             print(f"printer: {name} ({model}) at {ip}")
             if not a.printer and model in MODEL_PRESET:
                 a.printer = MODEL_PRESET[model]
@@ -238,12 +239,13 @@ def main():
         if a.printer:
             a.slice_arg += ["--printer", a.printer]
         # 1. before: state + photo; refuse to start on a busy printer
+        tag = locals().get("tag") or (a.device or "printer").lower()
         printer = Printer()
         before = printer.summary()
         print("printer before:", json.dumps(before))
         if before["gcode_state"] in ("RUNNING", "PREPARE", "PAUSE"):
             sys.exit(f"printer is busy ({before['gcode_state']}, {before['mc_percent']}%); not starting another print")
-        before_photo = capture(cwd)
+        before_photo = capture(cwd, tag)
         print("photo before:", before_photo)
         report.update(before=before, photo_before=before_photo)
         # which spool: the loaded one, else the single AMS slot with the material,
@@ -285,7 +287,7 @@ def main():
     after = printer.summary()
     took = int(time.time() - started)
     print("printer after:", json.dumps(after))
-    after_photo = capture(cwd)
+    after_photo = capture(cwd, tag)
     print("photo after:", after_photo)
 
     # 4. verdict
