@@ -34,13 +34,25 @@ plan beam=30 rest=bot,top,fwd,bak             // optional planner settings
   the bare name when once); `face` is the host face the screw enters
   (`top bot lft rt fwd bak`, world frame). Options: `×n` screws spaced
   along the overlap, `at=mm[,mm]` positions from the host's marked end,
-  `nut=dropin|slidein`, `head=button|socket`, `through=mm` (material
+  `nut=dropin|slidein|hex`, `head=button|socket`, `through=mm` (material
   under the head when the clamped part is thinner at the hole than its
   bounding box, e.g. counterbored), `torque=Nm`.
+- `nut=hex pocket=face`: the host is not a rail; the screw meets a plain
+  hex nut captive in a pocket that opens on that host face. Nuts still go
+  in before the part that covers them, the pocket face may not be on the
+  bench or under another part while they go in, and the plan says
+  "hex nut into the pocket on the top face" instead of slot positions.
+  `examples/assemble/ball/` (two hemisphere shells bolted to a core disc)
+  is the worked example.
 - `plan` options: `beam=N` (search width; 30 default, wider is slower
   and better), `rest=faces` to restrict allowed rest faces, cost weights
   `flip vertical driver shrink sibling loose`, `astar=N` to try exact
   search with an expansion cap first.
+
+Accessibility is judged on bounding boxes: a driver is blocked only when
+its cylinder really enters another part's box (touching does not count),
+so a shell whose box brushes the neighbouring shell's box, as in the ball,
+does not block the screw on the other side.
 
 The planner derives the driver axis (the host face's outward normal), the
 screw positions (centre of the overlap between clamped part and host

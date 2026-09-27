@@ -70,3 +70,40 @@ topologically-modelled arches + through-bolted center with captive-nut
 pockets). All joints, bolt paths, and nut fits verified at 0.00 mm³
 interference; `coscad next` packs all three on one 250×250 bed with
 auto-chosen orientations.
+
+## Slicing and printing: Bambu Studio CLI
+
+`scripts/bambu-slice.py foo_manifest.json` takes the beds from `coscad
+next` through Bambu Studio's command-line slicer (`BambuStudio.app`,
+`BAMBU_STUDIO` overrides the path) and writes `foo_bedN.gcode.3mf`, the
+file a Bambu printer accepts, plus `foo_print.json` with print time and
+filament per bed. Options: `--printer` (machine preset, default
+`Bambu Lab A1 0.4 nozzle`), `--process` (default: the printer's default
+profile), `--filament` (default: from the parts' `material=` hint, else
+the printer's default), `--plate textured|cool|engineering|hightemp`,
+`--bed N` for one bed, `--slicer-arg` to pass anything else through.
+
+The script flattens Bambu Studio's own system presets before loading them:
+the CLI does not resolve `inherits`, and an unflattened filament preset
+silently slices with density 0, flow limit 2 mm³/s and a 200 °C nozzle
+(the bracket example took 17 min that way and 11 min with the real
+profile).
+
+`--print N` uploads bed N to the printer's SD card over implicit FTPS and
+starts it over MQTT (`project_file` command). It needs a printer in LAN
+mode with developer mode on, `BAMBU_HOST`, `BAMBU_SERIAL` and
+`BAMBU_ACCESS_CODE` in the environment, `paho-mqtt`, and the bambu-lan
+scripts (`BAMBU_LAN_DIR`) for the FTPS client with the printer's TLS
+quirks. Nothing is sent without `--print`.
+
+Worked example, `examples/assemble/ball/`: a 40 mm ball from two printed
+hemisphere shells and a core disc with two captive M5 hex nuts. The whole
+chain is
+
+```
+coscad ball.assemble                     # views, plate, manifest
+coscad check ball.assemble               # 0 overlaps, 0.17 mm gap shell/core
+coscad next ball.assemble                # ball_bed1.stl: 3 parts on one bed
+coscad plan --png ball.assemble          # 3 steps, 2 flips, hex-nut preload
+scripts/bambu-slice.py ball_manifest.json   # ball_bed1.gcode.3mf, 43 min, 17.6 g PLA
+```

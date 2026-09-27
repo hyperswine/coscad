@@ -10,6 +10,7 @@ computed here so the emitted OpenSCAD (and the downstream slicer) stay dumb.
 .coscad  ──compile──▶  .scad ──openscad──▶ .stl        (one part)
 .assemble ─coscad───▶  asm view + plate + manifest      (design stage)
 .assemble ─coscad next▶ bedN.stl + manifest             (manufacturing)
+manifest  ─bambu-slice▶ bedN.gcode.3mf → printer        (scripts/bambu-slice.py)
 ```
 
 ## Install
@@ -72,6 +73,7 @@ coscad next frame.assemble   # -> frame_bed1.stl ... + manifest
 coscad check frame.assemble  # interference / clearance check on real meshes
 coscad plan frame.assemble   # numbered build steps, preload sheet, BOM, step scenes
 coscad site out/ *.assemble  # phone-first static site: step images, search across builds
+scripts/bambu-slice.py frame_manifest.json [--print 1]  # slice beds with Bambu Studio, optionally print over LAN
 coscad --help                # command + language cheat sheet
 ```
 

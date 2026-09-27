@@ -30,3 +30,7 @@ bin/
 output.txt
 .vscode/settings.json
 NOTES.txt
+*.3mf
+*.gcode
+*_print.json
+__pycache__/

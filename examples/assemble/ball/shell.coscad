@@ -1,0 +1,12 @@
+// Hemisphere shell for the bolted ball: flat equator at z=0, dome up.
+// A thicker equatorial band (inner r 15) gives the M5 bolt a wall to
+// bear on and locates the core. One radial bore on the +X side, with a
+// spot face so the screw head seats flat on the sphere.
+R    = 20
+wall = 2.4
+band = 8
+dome = (sphere R ⊖ sphere (R - wall)) ∩ (box 50 50 50 |> move 0 0 25)
+ring = (tube R 15 band |> move 0 0 (band / 2)) ∩ sphere R
+main = dome ⊕ ring
+  |> cutat rt 0 0 -6 (xcyl 2.75 50)      // bore at z = 4, through the band on +X
+  |> cutat rt 2.5 0 -6 (xcyl 5 10)       // spot face: flat at x = 17.5 for the head

@@ -8,6 +8,18 @@ and this project adheres to the
 
 ## Unreleased
 
+- `fastener ... nut=hex pocket=face`: captive hex nuts in a pocket of a
+  non-rail host. Preload, BOM and step wording follow (no T-slot
+  positions), the pocket face may not be on the bench or covered while
+  the nuts go in. Driver access now requires the driver to really enter
+  another part's box, not merely touch it. When the beam search runs out
+  of states the error lists what the last states could not do.
+  `examples/assemble/ball/`: a bolted 40 mm ball (two hemisphere shells,
+  core disc) that runs the full chain to a sliced bed.
+- `scripts/bambu-slice.py manifest.json [--print N]`: slice the beds from
+  `coscad next` with Bambu Studio's CLI (system presets flattened so
+  filament settings apply), write `_bedN.gcode.3mf` and `_print.json`,
+  optionally upload and start a bed on a LAN-mode Bambu printer.
 - `coscad plan foo.assemble [--png]`: assembly instruction generator.
   `fastener spec clamped host face [×n at= nut= head= through= torque=]`
   lines and part hints (`profile=2020`, `material=`, `ends=`, `mass=`,

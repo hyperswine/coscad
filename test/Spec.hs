@@ -118,6 +118,22 @@ planTier t = do
   -- an assembly without fasteners still gets an order (the bow)
   rw <- planSummary "examples/assemble/bow3/bow3.assemble"
   assertT t "plan: bow3 (no fasteners) places all three parts" (either (const False) (\ps -> sum (map (length . ssParts) (psSteps ps)) == 3) rw) (either id show rw)
+  -- the bolted ball: enclosing shells, captive hex nuts in pockets
+  rl <- planSummary "examples/assemble/ball/ball.assemble"
+  case rl of
+    Left e -> failT t "plan ball" e
+    Right ps -> do
+      assertT t "ball: 3 parts, 2 fasteners, no design errors" (length (psParts ps) == 3 && psFastenerCount ps == 2 && null (psDesignErrors ps)) (show ps)
+      checkInvariants t "ball" ps
+      assertT t "ball: both screws driven" (sum (map (length . ssFasteners) (psSteps ps)) == 2) (show (psSteps ps))
+  ballMd <- readFile "examples/assemble/ball/ball_plan.md"
+  assertT t "ball: plan speaks of hex nuts and pockets, not T-slots" (all (`isInfixOf` ballMd) ["M5 hex nut", "pocket on the top face", "socket head through shell#1"] && not ("T-nut" `isInfixOf` ballMd)) (take 600 ballMd)
+  ballSrc <- readFile "examples/assemble/ball/ball.assemble"
+  tmpB <- tempDir "plan-ball"
+  forM_ ["shell.coscad", "core.coscad"] $ \f -> copyFile ("examples/assemble/ball" </> f) (tmpB </> f)
+  writeFile (tmpB </> "bad.assemble") (ballSrc ++ "\nfastener M5x20 shell#1 core rt pocket=top\n")
+  rp <- planSummary (tmpB </> "bad.assemble")
+  assertT t "plan: pocket= without nut=hex is an error" (either ("pocket= only applies to nut=hex" `isInfixOf`) (const False) rp) (either id show rp)
 
 -- nut-first, host-and-clamp-before-screw, every part exactly once
 checkInvariants :: T -> String -> PlanSummary -> IO ()

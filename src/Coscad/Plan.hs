@@ -102,7 +102,9 @@ data Inst = Inst
   , iMass :: Double -- grams
   }
 
-data NutKind = DropIn | SlideIn deriving (Eq, Show)
+-- | DropIn / SlideIn are T-nuts in a rail slot; Hex is a plain nut captive
+-- in a pocket of the host (`nut=hex pocket=<face>`: the face the pocket opens on).
+data NutKind = DropIn | SlideIn | Hex deriving (Eq, Show)
 
 data Fast = Fast
   { fId :: Int
@@ -115,6 +117,7 @@ data Fast = Fast
   , fFaceName :: String
   , fFace :: V3 -- outward normal of the host face = driver axis (head outward)
   , fNut :: NutKind
+  , fPocket :: Maybe (String, V3) -- hex nuts: the host face the pocket opens on
   , fPos :: V3 -- point on the host face
   , fAlong :: Double -- mm from the host's marked end (min end along its axis)
   , fTorque :: Double
@@ -243,7 +246,7 @@ defaultTorque mat d = case mat of
 
 torqueWords :: Material -> Double -> String
 torqueWords mat nm = case mat of
-  Printed -> printf "%.1f Nm (printed lips: finger tight + ¼ turn, no power driver)" nm
+  Printed -> printf "%.1f Nm (printed part: finger tight + ¼ turn, no power driver)" nm
   _ -> printf "%.1f Nm" nm
 
 parseSpec :: String -> Maybe (Double, Double)
@@ -292,6 +295,8 @@ mkFasteners insts decls = concat <$> mapM one (zip [1 ..] decls)
           nutKind = case map toLower <$> lookup "nut" (fdOpts fd) of
             Just "slidein" -> SlideIn
             Just "slide-in" -> SlideIn
+            Just "hex" -> Hex
+            Just "captive" -> Hex
             _ -> DropIn
           hd = fromMaybe "button" (lookup "head" (fdOpts fd))
           count = max 1 (fdCount fd)
@@ -299,13 +304,18 @@ mkFasteners insts decls = concat <$> mapM one (zip [1 ..] decls)
             Just s | Just ps <- mapM readD (splitOn ',' s) -> map (+ hostMin) ps
             _ -> [l0 + (l1 - l0) * (fromIntegral i - 0.5) / fromIntegral count | i <- [1 .. count]]
           torque = fromMaybe (fromMaybe (defaultTorque (iMat host) d) (iTorque host)) (lookup "torque" (fdOpts fd) >>= readD)
+      pocket <- case lookup "pocket" (fdOpts fd) of
+        Nothing -> Right Nothing
+        Just pf -> maybe (Left (at ++ "unknown pocket face '" ++ pf ++ "' (top bot lft rt fwd bak)")) (Right . Just . (,) pf) (anchorDir pf)
+      when (nutKind /= Hex && pocket /= Nothing) $ Left (at ++ "pocket= only applies to nut=hex")
+      let
           thickness = fromMaybe (cMax - max cMin facePlane) (lookup "through" (fdOpts fd) >>= readD)
           mkF (j, p) =
             let pos = vadd (vscale p along) (vadd (vscale ((o0 + o1) / 2) other) (vscale facePlane n))
              in Fast
                   { fId = k * 100 + j, fSpec = fdSpec fd, fDiam = d, fLen = l, fHead = hd
                   , fClamped = iName clamped, fHost = iName host, fFaceName = fdFace fd, fFace = n
-                  , fNut = nutKind, fPos = pos, fAlong = p - hostMin, fTorque = torque
+                  , fNut = nutKind, fPocket = pocket, fPos = pos, fAlong = p - hostMin, fTorque = torque
                   , fDriverLen = 45, fDriverRad = headRadius hd d + 2, fReach = l - thickness
                   }
       Right (map mkF (zip [1 ..] positions))
@@ -444,15 +454,33 @@ driverBox byName f =
 
 accessible :: Map.Map String Inst -> [Inst] -> Fast -> Maybe String
 accessible byName placed f =
-  let db = driverBox byName f
+  -- the driver must really enter another part's box, not merely touch it:
+  -- a hemisphere shell whose box brushes the neighbouring shell's box
+  -- (the ball example) does not put that shell in the driver's way.
+  -- bIntersects itself allows eps of slack, so shrink by twice that.
+  let db = bExpand (negate (2 * eps)) (driverBox byName f)
       hits = [iName i | i <- placed, iName i /= fClamped f, iName i /= fHost f, bIntersects (iBox i) db]
    in if null hits then Nothing else Just (head hits)
 
-nutCanEnter :: Map.Map String Inst -> [Inst] -> [Fast] -> String -> Maybe String
-nutCanEnter byName placed fasts h =
+nutCanEnter :: Map.Map String Inst -> Maybe V3 -> [Inst] -> [Fast] -> String -> Maybe String
+nutCanEnter byName rest placed fasts h =
   let host = byName Map.! h
       here = [f | f <- fasts, fHost f == h]
       others = [i | i <- placed, iName i /= h]
+      -- a hex nut drops into its pocket from the pocket face: that face
+      -- must not be on the bench, and nothing may cover it there
+      hexBlocked f = case fPocket f of
+        Nothing -> Nothing
+        Just (pf, n)
+          | Just d <- rest, vdot n d > 0.5 -> Just ("the " ++ pf ++ " face of " ++ h ++ " (its nut pocket) is on the bench")
+          | otherwise ->
+              let (u, v) = basis n
+                  plane = snd (extentAlong n (iBox host))
+                  base = vadd (fPos f) (vscale (plane - vdot (fPos f) n) n)
+                  box = fromCorners [vadd base (vadd (vscale a u) (vadd (vscale b v) (vscale c n))) | a <- [-6, 6], b <- [-6, 6], c <- [0, 3]]
+               in case [iName i | i <- others, bIntersects (iBox i) box] of
+                    (b : _) -> Just ("the " ++ pf ++ " face of " ++ h ++ " (its nut pocket) is already covered by " ++ b)
+                    [] -> Nothing
       dropInOk f =
         let n = fFace f
             (u, v) = basis n
@@ -460,9 +488,11 @@ nutCanEnter byName placed fasts h =
          in [iName i | i <- others, bIntersects (iBox i) box]
       endOpen (open, cap) = open && not (any (bIntersects cap . iBox) others)
       slideOk = or (zipWith (curry endOpen) [fst (iEnds host), snd (iEnds host)] (endCaps host))
-   in case [b | f <- here, fNut f == DropIn, b <- take 1 (dropInOk f)] of
-        (b : _) -> Just ("the " ++ fFaceName (head here) ++ " slot of " ++ h ++ " is already covered by " ++ b)
-        [] -> if any ((== SlideIn) . fNut) here && not slideOk then Just ("both ends of " ++ h ++ " are sealed; slide-in nuts cannot enter") else Nothing
+   in case [why | f <- here, fNut f == Hex, Just why <- [hexBlocked f]] of
+        (why : _) -> Just why
+        [] -> case [b | f <- here, fNut f == DropIn, b <- take 1 (dropInOk f)] of
+          (b : _) -> Just ("the " ++ fFaceName (head here) ++ " slot of " ++ h ++ " is already covered by " ++ b)
+          [] -> if any ((== SlideIn) . fNut) here && not slideOk then Just ("both ends of " ++ h ++ " are sealed; slide-in nuts cannot enter") else Nothing
 
 -- ------------------------------------------------------------------
 -- search
@@ -504,7 +534,7 @@ tryPlace m st node = case sRest st of
         Right ( (if null vertical && not standing then 0 else wVertical w) + (if shrink then wShrink w else 0)
               , [h ++ " is not lying flat in this step; hold its T-nut with a finger while starting the screw" | h <- vertical]
                   ++ [n ++ " stands on end in this step; steady it until it is braced" | standing] )
-      NNuts h -> case nutCanEnter (mByName m) placed (mFasts m) h of
+      NNuts h -> case nutCanEnter (mByName m) (Just d) placed (mFasts m) h of
         Just why -> Left why
         Nothing -> Right (0, [])
       NFast i -> do
@@ -657,15 +687,17 @@ phaseSuccessors m st = concatMap afterFlip flips ++ expensive st
     expensive s = [phaseGreedy m tau x | x <- take 3 (sortOn sCost (macroPlacements m s)), sCost x > sCost s + tau]
 
 beamSearch :: Model -> Int -> Either [String] St
-beamSearch m width = go (0 :: Int) [St Set.empty Nothing 0 []] Nothing
+beamSearch m width = go (0 :: Int) [St Set.empty Nothing 0 []] [] Nothing
   where
     total = length (mNodes m)
     complete s = Set.size (sPlaced s) == total
     key s = (Set.toList (sPlaced s), sRest s)
     dedupe = Map.elems . Map.fromListWith (\a b -> if sCost a <= sCost b then a else b) . map (\s -> (key s, s))
-    go round' beam best
+    -- `prev` is the last non-empty beam: when every state dies, the
+    -- explanation comes from what those states could not do
+    go round' beam prev best
       | round' > total * 2 + 20 = maybe (Left (stuck round' beam)) Right best
-      | null beam = maybe (Left (["no states left"])) Right best
+      | null beam = maybe (Left ("no states left" : stuck round' prev)) Right best
       | otherwise =
           let next = dedupe (concatMap (phaseSuccessors m) beam)
               (done, todo) = (filter complete next, filter (not . complete) next)
@@ -673,7 +705,8 @@ beamSearch m width = go (0 :: Int) [St Set.empty Nothing 0 []] Nothing
               pruned = take width (sortOn (\s -> (sCost s + heuristic m s, negate (Set.size (sPlaced s)))) todo)
            in case best' of
                 Just b | all (\s -> sCost s >= sCost b) pruned -> Right b
-                _ -> go (round' + 1) pruned best'
+                _ -> go (round' + 1) pruned beam best'
+    stuck _ [] = []
     stuck round' beam =
       let s = head (sortOn (negate . Set.size . sPlaced) beam)
        in ("planner stuck after placing " ++ show (Set.size (sPlaced s)) ++ " of " ++ show total ++ " nodes on the " ++ maybe "?" dirName (sRest s) ++ " (round " ++ show round' ++ ", beam " ++ show (length beam) ++ ")")
@@ -719,22 +752,26 @@ planMarkdown title m steps designErrors = unlines $
   , "" ]
   ++ (if null designErrors then [] else "## Design errors" : "" : map ("- " ++) designErrors ++ [""])
   ++ ["## Before you start", "", "### Bill of materials", ""] ++ bom ++ [""]
-  ++ ["### Preload sheet (T-nuts)", ""] ++ preload ++ [""]
+  ++ ["### Preload sheet (nuts)", ""] ++ preload ++ [""]
   ++ ["## Steps", ""] ++ concat (zipWith stepMd [1 :: Int ..] steps)
   where
     byId = mFastById m
     bom =
       [ printf "- %d × %s %s head screw" c s h | ((s, h), c) <- Map.toList (Map.fromListWith (+) [((fSpec f, fHead f), 1 :: Int) | f <- mFasts m]) ]
-      ++ [ printf "- %d × M%s %s T-nut" c (showD d) (if k then "drop-in" else "slide-in") | ((d, k), c) <- Map.toList (Map.fromListWith (+) [((fDiam f, fNut f == DropIn), 1 :: Int) | f <- mFasts m]) ]
+      ++ [ printf "- %d × M%s %s" c (showD d) (nutName k) | ((d, k), c) <- Map.toList (Map.fromListWith (+) [((fDiam f, show (fNut f)), 1 :: Int) | f <- mFasts m]) ]
       ++ [ printf "- %d × %s (%s)" c p (matName (iMat i)) | (p, (c, i)) <- Map.toList (Map.fromListWith (\(a, x) (b, _) -> (a + b, x)) [(iPart i, (1 :: Int, i)) | i <- mInsts m]) ]
     matName mt = case mt of Aluminium -> "aluminium"; Printed -> "printed"; Steel -> "steel"
     preload =
       let hosts = Map.fromListWith (++) [(fHost f, [f]) | f <- mFasts m]
-       in if Map.null hosts then ["(no T-nuts)"] else
-            [ printf "- **%s**: %d nut%s — %s. Mark the %s end; positions are mm from the mark." h (length fs) (if length fs == 1 then "" else "s")
-                (intercalate "; " [printf "%s slot: %s" face (intercalate ", " (map (fmtMm . fAlong) gs)) | (face, gs) <- Map.toList (Map.fromListWith (flip (++)) [(fFaceName f, [f]) | f <- fs])])
-                (markedEnd h)
+       in if Map.null hosts then ["(no nuts)"] else
+            [ if all ((== Hex) . fNut) fs
+                then printf "- **%s**: %d hex nut%s — %s." h (length fs) (if length fs == 1 then "" else "s")
+                       (intercalate "; " [pocketWords f | f <- fs])
+                else printf "- **%s**: %d nut%s — %s. Mark the %s end; positions are mm from the mark." h (length fs) (if length fs == 1 then "" else "s")
+                       (intercalate "; " [printf "%s slot: %s" face (intercalate ", " (map (fmtMm . fAlong) gs)) | (face, gs) <- Map.toList (Map.fromListWith (flip (++)) [(fFaceName f, [f]) | f <- fs])])
+                       (markedEnd h)
             | (h, fs) <- Map.toList hosts ]
+    pocketWords f = "M" ++ showD (fDiam f) ++ " into the pocket " ++ maybe "" (\(pf, _) -> "on the " ++ pf ++ " face ") (fPocket f) ++ "for the " ++ fFaceName f ++ " screw (" ++ fClamped f ++ ")"
     markedEnd h = case Map.lookup h (mByName m) of
       Just i -> case iAxis i of (1, 0, 0) -> "-X (left)"; (0, 1, 0) -> "-Y (front)"; _ -> "-Z (bottom)"
       Nothing -> "lower"
@@ -743,14 +780,21 @@ planMarkdown title m steps designErrors = unlines $
       [ printf "### Step %d — %s down%s" k (dirName (stRest s)) (if stFlip s then " (flip the assembly)" else "" :: String) ]
       ++ [ "- Place: " ++ p ++ hostsNote p | p <- stParts s ]
       ++ [ "- Preload: " ++ h ++ " — " ++ nutsOn h | h <- stNuts s ]
-      ++ [ printf "- Tighten: %s %s head into %s T-nut on %s %s slot at %s mm — %s" (fSpec f) (fHead f) (nutWord f) (fHost f) (fFaceName f) (fmtMm (fAlong f)) (torqueWords (hostMat f) (fTorque f))
+      ++ [ if fNut f == Hex
+             then printf "- Tighten: %s %s head through %s into the hex nut in %s (%s face) — %s" (fSpec f) (fHead f) (fClamped f) (fHost f) (fFaceName f) (torqueWords (hostMat f) (fTorque f))
+             else printf "- Tighten: %s %s head into %s T-nut on %s %s slot at %s mm — %s" (fSpec f) (fHead f) (nutWord f) (fHost f) (fFaceName f) (fmtMm (fAlong f)) (torqueWords (hostMat f) (fTorque f))
          | i <- stFasts s, let f = byId Map.! i ]
       ++ [ "- Note: " ++ w | w <- nub (stWarn s) ]
       ++ [""]
     hostsNote p = let hs = nub [fHost f | f <- mFasts m, fClamped f == p] in if null hs then "" else " (on " ++ intercalate ", " hs ++ ")"
     nutsOn :: String -> String
-    nutsOn h = let fs = [f | f <- mFasts m, fHost f == h] in printf "%d × M%s %s nut%s (%s)" (length fs) (showD (fDiam (head fs))) (nutWord (head fs)) (if length fs == 1 then "" else "s" :: String) (intercalate ", " [fFaceName f ++ " @ " ++ fmtMm (fAlong f) | f <- fs])
-    nutWord f = if fNut f == DropIn then "drop-in" else "slide-in"
+    nutsOn h = let fs = [f | f <- mFasts m, fHost f == h] in
+      if all ((== Hex) . fNut) fs
+        then printf "%d × M%s hex nut%s into the pocket%s %s" (length fs) (showD (fDiam (head fs))) (if length fs == 1 then "" else "s" :: String) (if length fs == 1 then "" else "s" :: String)
+               (intercalate ", " [maybe ("for the " ++ fFaceName f ++ " screw") (\(pf, _) -> "on the " ++ pf ++ " face") (fPocket f) | f <- fs])
+        else printf "%d × M%s %s nut%s (%s)" (length fs) (showD (fDiam (head fs))) (nutWord (head fs)) (if length fs == 1 then "" else "s" :: String) (intercalate ", " [fFaceName f ++ " @ " ++ fmtMm (fAlong f) | f <- fs])
+    nutWord f = case fNut f of DropIn -> "drop-in"; SlideIn -> "slide-in"; Hex -> "hex"
+    nutName k = case k of "DropIn" -> "drop-in T-nut"; "SlideIn" -> "slide-in T-nut"; _ -> "hex nut"
     hostMat f = maybe Aluminium iMat (Map.lookup (fHost f) (mByName m))
 
 planJson :: String -> Model -> [Step] -> [String] -> String
@@ -764,7 +808,7 @@ planJson src m steps errs =
         ++ ", \"preload\": [" ++ intercalate ", " (map jstr (stNuts s)) ++ "]"
         ++ ", \"fasteners\": [" ++ intercalate ", " [fj (mFastById m Map.! i) | i <- stFasts s] ++ "]"
         ++ ", \"warnings\": [" ++ intercalate ", " (map jstr (nub (stWarn s))) ++ "]}"
-    fj f = "{\"spec\": " ++ jstr (fSpec f) ++ ", \"head\": " ++ jstr (fHead f) ++ ", \"nut\": " ++ jstr (show (fNut f)) ++ ", \"clamped\": " ++ jstr (fClamped f)
+    fj f = "{\"spec\": " ++ jstr (fSpec f) ++ ", \"head\": " ++ jstr (fHead f) ++ ", \"nut\": " ++ jstr (show (fNut f)) ++ maybe "" (\(pf, _) -> ", \"pocket\": " ++ jstr pf) (fPocket f) ++ ", \"clamped\": " ++ jstr (fClamped f)
       ++ ", \"host\": " ++ jstr (fHost f) ++ ", \"face\": " ++ jstr (fFaceName f) ++ ", \"at_mm\": " ++ jnum (fAlong f) ++ ", \"torque_nm\": " ++ jnum (fTorque f) ++ "}"
 
 -- per-step OpenSCAD scene: everything placed so far, this step highlighted,
@@ -816,7 +860,7 @@ downMat v =
 -- design errors that are properties of the model, reported before planning
 designErrors :: [Inst] -> [Fast] -> [String]
 designErrors _ fasts =
-  [ printf "%s through %s into %s: only %s mm of thread reaches the T-nut (screw length minus the clamped part's thickness); use a longer screw" (fSpec f) (fClamped f) (fHost f) (fmtMm (fReach f))
+  [ printf "%s through %s into %s: only %s mm of thread reaches the nut (screw length minus the clamped part's thickness); use a longer screw" (fSpec f) (fClamped f) (fHost f) (fmtMm (fReach f))
   | f <- fasts, fReach f < 3 ] ++
   [ printf "screws collide: %s into %s (%s @ %s mm) and %s into %s (%s @ %s mm) share the same spot" (fSpec a) (fHost a) (fFaceName a) (fmtMm (fAlong a)) (fSpec b) (fHost b) (fFaceName b) (fmtMm (fAlong b))
   | (a, b) <- pairs fasts, fHost a == fHost b, fFace a == fFace b, vlen (vsub (fPos a) (fPos b)) < (fDiam a + fDiam b) / 2 ]

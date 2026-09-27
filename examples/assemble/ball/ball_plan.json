@@ -1,0 +1,9 @@
+{
+  "source": "ball.assemble",
+  "design_errors": [],
+  "steps": [
+    {"step": 1, "rest": "left (-X) face", "flip": false, "parts": ["core"], "preload": ["core"], "fasteners": [], "warnings": []},
+    {"step": 2, "rest": "top (+Z) face", "flip": true, "parts": ["shell#2"], "preload": [], "fasteners": [{"spec": "M5x20", "head": "socket", "nut": "Hex", "pocket": "bot", "clamped": "shell#2", "host": "core", "face": "bak", "at_mm": 14.8, "torque_nm": 0.6}], "warnings": ["driver axis is not vertical here (bak face of core); keep the driver square to the bracket"]},
+    {"step": 3, "rest": "left (-X) face", "flip": true, "parts": ["shell#1"], "preload": [], "fasteners": [{"spec": "M5x20", "head": "socket", "nut": "Hex", "pocket": "top", "clamped": "shell#1", "host": "core", "face": "rt", "at_mm": 14.8, "torque_nm": 0.6}], "warnings": []}
+  ]
+}

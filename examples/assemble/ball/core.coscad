@@ -1,0 +1,13 @@
+// Core disc joining the two shells: sits inside both equatorial bands
+// (0.2 mm radial clearance). Two M5 bores at right angles, one per
+// shell, each with a captive hex-nut slot open on the face that shell
+// covers, so the nuts cannot fall out once the shell is on.
+r    = 14.8
+h    = 16
+nutAF = 8.4
+nutT  = 4.4
+main = cyl r h
+  |> cutat ctr 0 0 4 (xcyl 2.75 40)               // top shell bolt, along X at z = +4
+  |> cutat ctr 6 0 3.825 (box nutT nutAF 9.35)    // its nut slot, open on the top face
+  |> cutat ctr 0 0 -4 (ycyl 2.75 40)              // bottom shell bolt, along Y at z = -4
+  |> cutat ctr 0 6 -3.825 (box nutAF nutT 9.35)   // its nut slot, open on the bottom face
