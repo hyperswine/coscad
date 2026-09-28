@@ -1,12 +1,13 @@
-// Tesseract: a 100 mm wire-frame cube (8 corner blocks, 12 bars, M3
-// screws threading into the bar ends) with a 30 mm cube suspended at its
-// centre by 8 diagonal friction pegs, one to each corner block.
-// Corner blocks are one part rotated into each corner; the bars and struts
-// are one part each. Screws: 24 x M3x10 socket head, no nuts.
+// Tesseract, second cut: a 100 mm wire-frame cube (8 corner blocks, 12
+// bars, one M3x16 + hex nut per bar end) with a 30 mm cube suspended at
+// its centre by 8 diagonal friction pegs. Corner blocks are one part rotated
+// into each corner; every screw enters an outer face of its block and finds
+// its nut in a pocket on the opposite face. Screws: 24 x M3x16 socket head,
+// 24 x M3 hex nut.
 plate 256 256 6
 corner ← corner.coscad ×8 ▽bot
 bar    ← bar.coscad ×12
-strut  ← strut.coscad ×8
+strut  ← strut.coscad ×8 ▽bot
 inner  ← inner.coscad ×1 ▽bot
 
 asm = (corner |> move 0 0 0)
@@ -17,70 +18,70 @@ asm = (corner |> move 0 0 0)
   ⊕ (corner |> rotx 180 |> rotz 180 |> move 100 0 100)
   ⊕ (corner |> rotx 180 |> rotz 270 |> move 100 100 100)
   ⊕ (corner |> rotx 180 |> move 0 100 100)
-  ⊕ (bar |> move 50 11 11)
-  ⊕ (bar |> move 50 89 11)
-  ⊕ (bar |> move 50 11 89)
-  ⊕ (bar |> move 50 89 89)
-  ⊕ (bar |> rotz 90 |> move 11 50 11)
-  ⊕ (bar |> rotz 90 |> move 89 50 11)
-  ⊕ (bar |> rotz 90 |> move 11 50 89)
-  ⊕ (bar |> rotz 90 |> move 89 50 89)
-  ⊕ (bar |> roty 90 |> move 11 11 50)
-  ⊕ (bar |> roty 90 |> move 89 11 50)
-  ⊕ (bar |> roty 90 |> move 89 89 50)
-  ⊕ (bar |> roty 90 |> move 11 89 50)
-  ⊕ (strut |> roty 54.7356 |> rotz 45 |> move 29.36 29.36 29.36)
-  ⊕ (strut |> roty 54.7356 |> rotz 135 |> move 70.64 29.36 29.36)
-  ⊕ (strut |> roty 54.7356 |> rotz 225 |> move 70.64 70.64 29.36)
-  ⊕ (strut |> roty 54.7356 |> rotz 315 |> move 29.36 70.64 29.36)
-  ⊕ (strut |> roty 54.7356 |> rotz 225 |> move 29.36 29.36 70.64)
-  ⊕ (strut |> roty 54.7356 |> rotz 315 |> move 70.64 29.36 70.64)
-  ⊕ (strut |> roty 54.7356 |> rotz 45 |> move 70.64 70.64 70.64)
-  ⊕ (strut |> roty 54.7356 |> rotz 135 |> move 29.36 70.64 70.64)
+  ⊕ (bar |> move 50 9.5 9.5)
+  ⊕ (bar |> move 50 90.5 9.5)
+  ⊕ (bar |> move 50 9.5 90.5)
+  ⊕ (bar |> move 50 90.5 90.5)
+  ⊕ (bar |> rotz 90 |> move 9.5 50 9.5)
+  ⊕ (bar |> rotz 90 |> move 90.5 50 9.5)
+  ⊕ (bar |> rotz 90 |> move 9.5 50 90.5)
+  ⊕ (bar |> rotz 90 |> move 90.5 50 90.5)
+  ⊕ (bar |> roty 90 |> move 9.5 9.5 50)
+  ⊕ (bar |> roty 90 |> move 90.5 9.5 50)
+  ⊕ (bar |> roty 90 |> move 90.5 90.5 50)
+  ⊕ (bar |> roty 90 |> move 9.5 90.5 50)
+  ⊕ (strut |> roty -35.2644 |> rotz 45 |> move 28.52 28.52 28.52)
+  ⊕ (strut |> roty -35.2644 |> rotz 135 |> move 71.48 28.52 28.52)
+  ⊕ (strut |> roty -35.2644 |> rotz 225 |> move 71.48 71.48 28.52)
+  ⊕ (strut |> roty -35.2644 |> rotz 315 |> move 28.52 71.48 28.52)
+  ⊕ (strut |> roty -35.2644 |> rotz 225 |> move 28.52 28.52 71.48)
+  ⊕ (strut |> roty -35.2644 |> rotz 315 |> move 71.48 28.52 71.48)
+  ⊕ (strut |> roty -35.2644 |> rotz 45 |> move 71.48 71.48 71.48)
+  ⊕ (strut |> roty -35.2644 |> rotz 135 |> move 28.52 71.48 71.48)
   ⊕ (inner |> move 50 50 50)
 
-// bars into corner sockets: M3 through the corner wall into the bar end
-fastener M3x10 corner#1 bar#1 top head=socket nut=none through=5
-fastener M3x10 corner#2 bar#1 top head=socket nut=none through=5
-fastener M3x10 corner#4 bar#2 top head=socket nut=none through=5
-fastener M3x10 corner#3 bar#2 top head=socket nut=none through=5
-fastener M3x10 corner#5 bar#3 top head=socket nut=none through=5
-fastener M3x10 corner#6 bar#3 top head=socket nut=none through=5
-fastener M3x10 corner#8 bar#4 top head=socket nut=none through=5
-fastener M3x10 corner#7 bar#4 top head=socket nut=none through=5
-fastener M3x10 corner#1 bar#5 top head=socket nut=none through=5
-fastener M3x10 corner#4 bar#5 top head=socket nut=none through=5
-fastener M3x10 corner#2 bar#6 top head=socket nut=none through=5
-fastener M3x10 corner#3 bar#6 top head=socket nut=none through=5
-fastener M3x10 corner#5 bar#7 top head=socket nut=none through=5
-fastener M3x10 corner#8 bar#7 top head=socket nut=none through=5
-fastener M3x10 corner#6 bar#8 top head=socket nut=none through=5
-fastener M3x10 corner#7 bar#8 top head=socket nut=none through=5
-fastener M3x10 corner#1 bar#9 rt head=socket nut=none through=5
-fastener M3x10 corner#5 bar#9 bak head=socket nut=none through=5
-fastener M3x10 corner#2 bar#10 bak head=socket nut=none through=5
-fastener M3x10 corner#6 bar#10 lft head=socket nut=none through=5
-fastener M3x10 corner#3 bar#11 lft head=socket nut=none through=5
-fastener M3x10 corner#7 bar#11 fwd head=socket nut=none through=5
-fastener M3x10 corner#4 bar#12 fwd head=socket nut=none through=5
-fastener M3x10 corner#8 bar#12 rt head=socket nut=none through=5
+// bar ends into corner sockets: M3x16 through the block wall and the bar end into a nut on the far wall
+fastener M3x16 corner#1 bar#1 bot head=socket nut=hex pocket=clamped.top
+fastener M3x16 corner#2 bar#6 bot head=socket nut=hex pocket=clamped.top
+fastener M3x16 corner#3 bar#2 bot head=socket nut=hex pocket=clamped.top
+fastener M3x16 corner#4 bar#5 bot head=socket nut=hex pocket=clamped.top
+fastener M3x16 corner#5 bar#7 top head=socket nut=hex pocket=clamped.bot
+fastener M3x16 corner#6 bar#3 top head=socket nut=hex pocket=clamped.bot
+fastener M3x16 corner#7 bar#8 top head=socket nut=hex pocket=clamped.bot
+fastener M3x16 corner#8 bar#4 top head=socket nut=hex pocket=clamped.bot
+fastener M3x16 corner#1 bar#5 lft head=socket nut=hex pocket=clamped.rt
+fastener M3x16 corner#2 bar#1 fwd head=socket nut=hex pocket=clamped.bak
+fastener M3x16 corner#3 bar#6 rt head=socket nut=hex pocket=clamped.lft
+fastener M3x16 corner#4 bar#2 bak head=socket nut=hex pocket=clamped.fwd
+fastener M3x16 corner#5 bar#3 fwd head=socket nut=hex pocket=clamped.bak
+fastener M3x16 corner#6 bar#8 rt head=socket nut=hex pocket=clamped.lft
+fastener M3x16 corner#7 bar#4 bak head=socket nut=hex pocket=clamped.fwd
+fastener M3x16 corner#8 bar#7 lft head=socket nut=hex pocket=clamped.rt
+fastener M3x16 corner#1 bar#9 fwd head=socket nut=hex pocket=clamped.bak
+fastener M3x16 corner#2 bar#10 rt head=socket nut=hex pocket=clamped.lft
+fastener M3x16 corner#3 bar#11 bak head=socket nut=hex pocket=clamped.fwd
+fastener M3x16 corner#4 bar#12 lft head=socket nut=hex pocket=clamped.rt
+fastener M3x16 corner#5 bar#9 lft head=socket nut=hex pocket=clamped.rt
+fastener M3x16 corner#6 bar#10 fwd head=socket nut=hex pocket=clamped.bak
+fastener M3x16 corner#7 bar#11 rt head=socket nut=hex pocket=clamped.lft
+fastener M3x16 corner#8 bar#12 bak head=socket nut=hex pocket=clamped.fwd
 
-// diagonal struts: pegs into the corner blocks and into the inner cube
+// diagonal struts: pegs into the corner blocks, then the inner cube pushed onto the struts
 fastener peg strut#1 corner#1 rt
-fastener peg strut#1 inner lft
+fastener peg inner strut#1 rt
 fastener peg strut#2 corner#2 lft
-fastener peg strut#2 inner rt
+fastener peg inner strut#2 lft
 fastener peg strut#3 corner#3 lft
-fastener peg strut#3 inner rt
+fastener peg inner strut#3 lft
 fastener peg strut#4 corner#4 rt
-fastener peg strut#4 inner lft
+fastener peg inner strut#4 rt
 fastener peg strut#5 corner#5 rt
-fastener peg strut#5 inner lft
+fastener peg inner strut#5 rt
 fastener peg strut#6 corner#6 lft
-fastener peg strut#6 inner rt
+fastener peg inner strut#6 lft
 fastener peg strut#7 corner#7 lft
-fastener peg strut#7 inner rt
+fastener peg inner strut#7 lft
 fastener peg strut#8 corner#8 rt
-fastener peg strut#8 inner lft
+fastener peg inner strut#8 rt
 
 plan beam=20

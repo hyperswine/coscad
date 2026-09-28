@@ -1,3 +1,4 @@
-// Diagonal strut: a 5 mm peg, 44 long, friction fit about 9 mm into the
-// inner cube's corner hole and 9 mm into a corner block's diagonal socket.
-main = cyl 2.5 44
+// Diagonal strut, 46 long: a 5 mm peg with one flat face (1 mm off the
+// round) so it prints lying on that face. Friction fit into the inner
+// cube's corner hole and a corner block's diagonal socket.
+main = xcyl 2.5 46 ⊖ (box 50 8 8 |> move 0 0 -5.5)

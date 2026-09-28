@@ -8,6 +8,10 @@ and this project adheres to the
 
 ## Unreleased
 
+- Plan: `pocket=clamped.face` for a hex nut pocket in the clamped part;
+  a driver that would come up through the bench is a hard block (flip),
+  not a cost. The tesseract example's second cut: 19 mm corner blocks,
+  M3x16 + hex nut per bar end, D-profile struts that print on their flat.
 - Plan: `nut=none` (screw threads into the host) and `fastener peg ...`
   (friction joints: no screw, driver or torque). Driver clearance is
   tested against each part's oriented box, a part can be placed held

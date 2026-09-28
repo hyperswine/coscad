@@ -1,15 +1,11 @@
 include <BOSL2/std.scad>
 
 $vpr = [55, 0, 35];
-$vpt = [50, 50, 11];
-$vpd = 422.118045787;
+$vpt = [0.5, 0.5, 0.5];
+$vpd = 54.5033321;
 
 multmatrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) {
-  color("Orange") multmatrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) { difference() { difference() { difference() { difference() { difference() { difference() { difference() { translate([11, 11, 11]) { cuboid([22, 22, 22]); } translate([19.6, 11, 11]) { cuboid([5.6, 6.4, 6.4]); } } translate([11, 19.6, 11]) { cuboid([6.4, 5.6, 6.4]); } } translate([11, 11, 19.6]) { cuboid([6.4, 6.4, 5.6]); } } translate([19.5, 11, 11]) { zcyl(r = 1.7, l = 30); } } translate([11, 19.5, 11]) { zcyl(r = 1.7, l = 30); } } translate([11, 11, 19.5]) { xcyl(r = 1.7, l = 30); } } translate([19, 19, 19]) { rotate([0, 0, 45]) { rotate([0, 54.7356, 0]) { zcyl(r = 2.65, l = 12); } } } } }
-  color("Orange") multmatrix([[0, -1, 0, 100], [1, 0, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) { difference() { difference() { difference() { difference() { difference() { difference() { difference() { translate([11, 11, 11]) { cuboid([22, 22, 22]); } translate([19.6, 11, 11]) { cuboid([5.6, 6.4, 6.4]); } } translate([11, 19.6, 11]) { cuboid([6.4, 5.6, 6.4]); } } translate([11, 11, 19.6]) { cuboid([6.4, 6.4, 5.6]); } } translate([19.5, 11, 11]) { zcyl(r = 1.7, l = 30); } } translate([11, 19.5, 11]) { zcyl(r = 1.7, l = 30); } } translate([11, 11, 19.5]) { xcyl(r = 1.7, l = 30); } } translate([19, 19, 19]) { rotate([0, 0, 45]) { rotate([0, 54.7356, 0]) { zcyl(r = 2.65, l = 12); } } } } }
-  color("Orange") multmatrix([[-1, 0, 0, 100], [0, -1, 0, 100], [0, 0, 1, 0], [0, 0, 0, 1]]) { difference() { difference() { difference() { difference() { difference() { difference() { difference() { translate([11, 11, 11]) { cuboid([22, 22, 22]); } translate([19.6, 11, 11]) { cuboid([5.6, 6.4, 6.4]); } } translate([11, 19.6, 11]) { cuboid([6.4, 5.6, 6.4]); } } translate([11, 11, 19.6]) { cuboid([6.4, 6.4, 5.6]); } } translate([19.5, 11, 11]) { zcyl(r = 1.7, l = 30); } } translate([11, 19.5, 11]) { zcyl(r = 1.7, l = 30); } } translate([11, 11, 19.5]) { xcyl(r = 1.7, l = 30); } } translate([19, 19, 19]) { rotate([0, 0, 45]) { rotate([0, 54.7356, 0]) { zcyl(r = 2.65, l = 12); } } } } }
-  color("Orange") multmatrix([[0, 1, 0, 0], [-1, 0, 0, 100], [0, 0, 1, 0], [0, 0, 0, 1]]) { difference() { difference() { difference() { difference() { difference() { difference() { difference() { translate([11, 11, 11]) { cuboid([22, 22, 22]); } translate([19.6, 11, 11]) { cuboid([5.6, 6.4, 6.4]); } } translate([11, 19.6, 11]) { cuboid([6.4, 5.6, 6.4]); } } translate([11, 11, 19.6]) { cuboid([6.4, 6.4, 5.6]); } } translate([19.5, 11, 11]) { zcyl(r = 1.7, l = 30); } } translate([11, 19.5, 11]) { zcyl(r = 1.7, l = 30); } } translate([11, 11, 19.5]) { xcyl(r = 1.7, l = 30); } } translate([19, 19, 19]) { rotate([0, 0, 45]) { rotate([0, 54.7356, 0]) { zcyl(r = 2.65, l = 12); } } } } }
 }
 // the bench, under the rest face (scene coordinates: rest face is -Z)
-%translate([-20, -20, -2]) cube([140, 140, 2]);
+%translate([-20, -20, -2]) cube([41, 41, 2]);
 $fn = 24;

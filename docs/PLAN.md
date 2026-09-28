@@ -44,6 +44,11 @@ plan beam=30 rest=bot,top,fwd,bak             // optional planner settings
   "hex nut into the pocket on the top face" instead of slot positions.
   `examples/assemble/ball/` (two hemisphere shells bolted to a core disc)
   is the worked example.
+- `pocket=clamped.face`: the nut pocket is in the clamped part, not the
+  host (a corner block whose screw crosses it into a bar end and finds
+  its nut on the block's far face). The nut goes in with the part in
+  hand, so nothing can cover it; if that face points down when the screw
+  is driven the step says to hold the nut in.
 - `nut=none`: the screw threads into the host itself (a printed bar, a
   tapped block); nothing to preload, the reach check still applies.
 - `fastener peg clamped host face`: a friction joint (a peg in a hole,
@@ -85,7 +90,7 @@ placed parts and balance on that support (a part about to be screwed may
 be held against its host); nothing may reach under the partial assembly
 (flip instead); the assembly's centre of mass stays over its bench
 contact; a screw's driver cylinder is clear of everything but its own
-parts; T-nuts can still enter (drop-in: the slot face is exposed;
+parts and does not come up through the bench; T-nuts can still enter (drop-in: the slot face is exposed;
 slide-in: an end is open and unsealed).
 
 Costs (weights in the `plan` line): flip 10, host rail not lying flat
