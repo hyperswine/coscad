@@ -8,6 +8,13 @@ and this project adheres to the
 
 ## Unreleased
 
+- Plan: `nut=none` (screw threads into the host) and `fastener peg ...`
+  (friction joints: no screw, driver or torque). Driver clearance is
+  tested against each part's oriented box, a part can be placed held
+  against anything it will be joined to, slender parts stood on end are
+  penalised like rails, and a clamped part resting on the bench no longer
+  counts as loose. `examples/assemble/tesseract/`: a 100 mm wire-frame
+  cube with a 30 mm cube hung on eight diagonal pegs, 29 parts on one bed.
 - `fastener ... nut=hex pocket=face`: captive hex nuts in a pocket of a
   non-rail host. Preload, BOM and step wording follow (no T-slot
   positions), the pocket face may not be on the bench or covered while

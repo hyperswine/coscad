@@ -1,0 +1,8 @@
+// Frame bar, 6 x 6 x 66: sits 5 mm deep in a corner socket at each end.
+// M3 tapping holes 2.5 mm from each end, through in both directions, so
+// the same bar serves horizontal and vertical edges.
+main = box 66 6 6
+  |> cutat lft 2.5 0 0 (zcyl 1.3 20)
+  |> cutat lft 2.5 0 0 (ycyl 1.3 20)
+  |> cutat rt -2.5 0 0 (zcyl 1.3 20)
+  |> cutat rt -2.5 0 0 (ycyl 1.3 20)

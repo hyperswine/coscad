@@ -1,0 +1,19 @@
+// Inner cube, 30 mm, printed on its bottom face. Each vertical edge is
+// fluted (a 7 mm round groove) so the diagonal peg holes at the corners
+// leave no fragile tip and no overhang; each corner is drilled 13 mm
+// along its body diagonal for a strut peg. A cylinder rotated by 54.7356
+// about Y then phi about Z lies along the body diagonal (±1, ±1, 1).
+d = 54.7356
+main = box 30 30 30
+  |> cutat top+rt+bak 0 0 -15 (zcyl 3.5 32)
+  |> cutat top+lft+bak 0 0 -15 (zcyl 3.5 32)
+  |> cutat top+lft+fwd 0 0 -15 (zcyl 3.5 32)
+  |> cutat top+rt+fwd 0 0 -15 (zcyl 3.5 32)
+  |> cutat top+rt+bak 0 0 0 (zcyl 2.65 26 |> roty d |> rotz 45)
+  |> cutat top+lft+bak 0 0 0 (zcyl 2.65 26 |> roty d |> rotz 135)
+  |> cutat top+lft+fwd 0 0 0 (zcyl 2.65 26 |> roty d |> rotz 225)
+  |> cutat top+rt+fwd 0 0 0 (zcyl 2.65 26 |> roty d |> rotz 315)
+  |> cutat bot+rt+bak 0 0 0 (zcyl 2.65 26 |> roty d |> rotz 225)
+  |> cutat bot+lft+bak 0 0 0 (zcyl 2.65 26 |> roty d |> rotz 315)
+  |> cutat bot+lft+fwd 0 0 0 (zcyl 2.65 26 |> roty d |> rotz 45)
+  |> cutat bot+rt+fwd 0 0 0 (zcyl 2.65 26 |> roty d |> rotz 135)

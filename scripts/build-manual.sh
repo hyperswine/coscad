@@ -37,8 +37,8 @@ rm -f "$tmp/man.body" "$tmp/nav.html" "$tmp/foot.html"
 
 # build plans with renders, from a scratch copy of the example assemblies
 work=$(mktemp -d)
-cp -R examples/assemble/plan "$work/plan"; cp -R examples/assemble/bow3 "$work/bow3"; cp -R examples/assemble/ball "$work/ball"
-coscad site "$tmp/builds" "$work/plan/corner_pair.assemble" "$work/plan/cube.assemble" "$work/bow3/bow3.assemble" "$work/ball/ball.assemble"
+cp -R examples/assemble/plan "$work/plan"; cp -R examples/assemble/bow3 "$work/bow3"; cp -R examples/assemble/ball "$work/ball"; cp -R examples/assemble/tesseract "$work/tesseract"
+coscad site "$tmp/builds" "$work/plan/corner_pair.assemble" "$work/plan/cube.assemble" "$work/bow3/bow3.assemble" "$work/ball/ball.assemble" "$work/tesseract/tesseract.assemble"
 rm -rf "$work"
 echo "{\"commit\": \"$commit\", \"built\": \"$stamp\"}" > "$tmp/version.json"
 

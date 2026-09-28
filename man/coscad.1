@@ -355,6 +355,8 @@ describe the parts, and one line per screw group describes the joints:
 fastener M5x10 br#1 rx#1 bot at=30          // spec clamped host face
 fastener M5x10 px ry#2 rt ×2                // two screws along the overlap
 fastener M5x10 br1 railA top through=6      // counterbored: 6 mm under the head
+fastener M3x10 corner#1 bar#1 top nut=none  // threads into the printed bar
+fastener peg strut#1 corner#1 rt            // friction joint, no screw
 plan beam=30 rest=bot,top                   // optional search settings
 .Ed
 .Pp
@@ -365,7 +367,7 @@ Options:
 .Ql ×n ,
 .Ql at=mm[,mm]
 (from the host's marked end),
-.Ql nut=dropin|slidein|hex ,
+.Ql nut=dropin|slidein|hex|none ,
 .Ql pocket=face
 (hex nuts: the host face the nut pocket opens on),
 .Ql head=button|socket ,

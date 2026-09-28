@@ -44,15 +44,27 @@ plan beam=30 rest=bot,top,fwd,bak             // optional planner settings
   "hex nut into the pocket on the top face" instead of slot positions.
   `examples/assemble/ball/` (two hemisphere shells bolted to a core disc)
   is the worked example.
+- `nut=none`: the screw threads into the host itself (a printed bar, a
+  tapped block); nothing to preload, the reach check still applies.
+- `fastener peg clamped host face`: a friction joint (a peg in a hole,
+  a bar in a socket) with no screw: no driver, no torque, no nut, but
+  the same ordering and support rules, and "Push ... until it seats" in
+  the steps. `examples/assemble/tesseract/` (a wire-frame cube whose
+  inner cube hangs on eight diagonal pegs) uses both.
 - `plan` options: `beam=N` (search width; 30 default, wider is slower
   and better), `rest=faces` to restrict allowed rest faces, cost weights
   `flip vertical driver shrink sibling loose`, `astar=N` to try exact
   search with an expansion cap first.
 
-Accessibility is judged on bounding boxes: a driver is blocked only when
-its cylinder really enters another part's box (touching does not count),
-so a shell whose box brushes the neighbouring shell's box, as in the ball,
-does not block the screw on the other side.
+Accessibility is judged on boxes: a driver is blocked only when its
+cylinder really enters another part's *oriented* box (the part's own box
+under its placement, so a diagonal strut is a thin rod, not the block its
+axis-aligned box would be), and touching does not count, so a shell whose
+box brushes the neighbouring shell's box, as in the ball, does not block
+the screw on the other side. A part may be placed "held" against anything
+already placed that it will be joined to, on either side of the joint. A
+slender part (three times longer than wide) stood on end costs the same
+as a rail stood on end and gets the same warning.
 
 The planner derives the driver axis (the host face's outward normal), the
 screw positions (centre of the overlap between clamped part and host

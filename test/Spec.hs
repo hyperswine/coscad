@@ -134,6 +134,18 @@ planTier t = do
   writeFile (tmpB </> "bad.assemble") (ballSrc ++ "\nfastener M5x20 shell#1 core rt pocket=top\n")
   rp <- planSummary (tmpB </> "bad.assemble")
   assertT t "plan: pocket= without nut=hex is an error" (either ("pocket= only applies to nut=hex" `isInfixOf`) (const False) rp) (either id show rp)
+  -- the tesseract: screws threading into printed bars (no nuts), friction pegs, diagonal parts
+  rt <- planSummary "examples/assemble/tesseract/tesseract.assemble"
+  case rt of
+    Left e -> failT t "plan tesseract" e
+    Right ps -> do
+      assertT t "tesseract: 29 parts, 40 joints, no design errors" (length (psParts ps) == 29 && psFastenerCount ps == 40 && null (psDesignErrors ps)) (show (length (psParts ps), psFastenerCount ps, psDesignErrors ps))
+      checkInvariants t "tesseract" ps
+      assertT t "tesseract: every joint made, nothing preloaded" (sum (map (length . ssFasteners) (psSteps ps)) == 40 && all (null . ssPreload) (psSteps ps)) (show (psSteps ps))
+      assertT t "tesseract: starts with the corner blocks on the bench" (take 4 (concatMap ssParts (psSteps ps)) == ["corner#1", "corner#2", "corner#3", "corner#4"]) (show (take 6 (concatMap ssParts (psSteps ps))))
+      assertT t "tesseract: at most 2 flips" (length (filter ssFlip (psSteps ps)) <= 2) (show (length (filter ssFlip (psSteps ps))))
+  tessMd <- readFile "examples/assemble/tesseract/tesseract_plan.md"
+  assertT t "tesseract: plan speaks of pegs and threads, no nuts" (all (`isInfixOf` tessMd) ["Push: strut#1 into", "threads into the part", "(no nuts to preload)"] && not ("T-nut" `isInfixOf` tessMd)) (take 500 tessMd)
 
 -- nut-first, host-and-clamp-before-screw, every part exactly once
 checkInvariants :: T -> String -> PlanSummary -> IO ()
@@ -142,8 +154,8 @@ checkInvariants t name ps = do
       stepOfPart p = head ([k | (k, s) <- steps, p `elem` ssParts s] ++ [maxBound])
       stepOfPreload h = head ([k | (k, s) <- steps, h `elem` ssPreload s] ++ [maxBound])
       screws = [(k, f) | (k, s) <- steps, f <- ssFasteners s]
-      lateHost = [f | (k, f@(_, c, h)) <- screws, stepOfPart h > k || stepOfPart c > k]
-      lateNut = [f | (k, f@(_, _, h)) <- screws, stepOfPreload h > k]
+      lateHost = [f | (k, f@(_, c, h, _)) <- screws, stepOfPart h > k || stepOfPart c > k]
+      lateNut = [f | (k, f@(_, _, h, nut)) <- screws, nut /= "NoNut", stepOfPreload h > k]
       placedTwice = [p | p <- psParts ps, length [() | (_, s) <- steps, p `elem` ssParts s] /= 1]
   assertT t (name ++ ": host and clamped part are placed before each screw") (null lateHost) (show lateHost)
   assertT t (name ++ ": every rail is preloaded before its first screw (nut-first)") (null lateNut) (show lateNut)

@@ -1,0 +1,17 @@
+// Corner block of the outer frame: a 22 mm cube with three square sockets
+// (one per axis, 5.2 deep) for the 6 mm bars, an M3 clearance hole through
+// both walls over each socket so a screw can thread into the bar end from
+// either side, and a diagonal socket on the inner corner for the strut
+// that suspends the inner cube. Local frame: the outer corner is at the
+// origin, the bars leave along +X, +Y, +Z.
+C    = 22
+bar  = 6.4
+deep = 5.6
+main = box C C C |> move (C / 2) (C / 2) (C / 2)
+  |> cutat lft+fwd+bot 19.6 11 11 (box deep bar bar)     // +X socket
+  |> cutat lft+fwd+bot 11 19.6 11 (box bar deep bar)     // +Y socket
+  |> cutat lft+fwd+bot 11 11 19.6 (box bar bar deep)     // +Z socket
+  |> cutat lft+fwd+bot 19.5 11 11 (zcyl 1.7 30)          // M3 through the walls over the +X socket
+  |> cutat lft+fwd+bot 11 19.5 11 (zcyl 1.7 30)          // over the +Y socket
+  |> cutat lft+fwd+bot 11 11 19.5 (xcyl 1.7 30)          // through the walls beside the +Z socket
+  |> cutat lft+fwd+bot 19 19 19 (zcyl 2.65 12 |> roty 54.7356 |> rotz 45)   // diagonal strut socket
