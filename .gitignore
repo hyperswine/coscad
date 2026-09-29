@@ -36,3 +36,5 @@ NOTES.txt
 __pycache__/
 *_run.json
 *-a1-printer-capture.*
+result.json
+examples/assemble/tesseract/tesseract_step29.png
