@@ -40,8 +40,8 @@ ever disagree; this file can drift, the compiler cannot.
 - Forward references are fine; variables resolve by dependency, not by
   order. Circular references fail with a clear error.
 - `//` line comments only, no block comments.
-- Whitespace-separated glyph + numeric arguments, e.g. `● 15` (sphere,
-  radius 15), not `●(15)` or `●15`.
+- Prefer spaced glyph + numeric arguments, e.g. `● 15` (sphere,
+  radius 15). `●(15)` and `●15` also parse.
 - Parens group sub-expressions: `χ 5 (● 3 ⊕ ◎ 2 10)`.
 - All shapes are 3D solids or (for the small 2D set) profiles meant to be
   extruded — there's no 2D-only pipeline beyond that.
@@ -141,6 +141,13 @@ unioning it into the composite, or nudge afterward with `χ`/`ψ`/`ζ`.
 ### Numbers and lofts
 - `w = 20` is a numeric binding; arithmetic is `+ - * /` with parens.
   In argument position use one atom: `box w (w / 2) t`, `χ -r part`.
+  Unary minus must touch its operand there: `-2`, not `- 2`. Use
+  `(w - 2)` for subtraction. Non-finite bindings/arguments are errors.
+- Active shape/prefix-transform keywords cannot be definition names;
+  pipeline-only and anchor words (`x`, `top`) can still be bindings.
+- Anchor combinations take at most one direction per axis. Repeated
+  aliases (`top+up`), opposites (`lft+rt`), or `ctr+top` are errors;
+  `ctr` alone is valid.
 - `loft z0 p0 z1 p1 ...` / `p0 |> loft z1 p1` skins 2D profiles
   with BOSL2 `skin()`: `method="reindex"` when all profiles share a
   vertex count (fast), `method="distance"` otherwise (fine for a

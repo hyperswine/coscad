@@ -8,6 +8,18 @@ and this project adheres to the
 
 ## Unreleased
 
+- CI: temporarily remove the macOS test job because Homebrew's OpenSCAD
+  cask is disabled by Gatekeeper. Refresh the bow3 limb geometry goldens
+  after the paddle-tip/string-groove redesign and record missing ball
+  and tesseract baselines; Linux and Windows retain the full rendering tests.
+
+- Language: reject spaced unary minus in numeric argument positions with
+  a subtraction/negation hint; reject non-finite numeric bindings and
+  arguments before geometry evaluation. Reject opposing/repeated anchor
+  directions and combinations with the center anchor. Active shape and
+  prefix-transform keywords cannot be definition names; stage-only words
+  such as `x` remain usable. Clarify compact glyph argument syntax.
+
 - Plan: `pocket=clamped.face` for a hex nut pocket in the clamped part;
   a driver that would come up through the bench is a hard block (flip),
   not a cost. The tesseract example's second cut: 19 mm corner blocks,

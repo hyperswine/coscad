@@ -12,7 +12,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # OpenSCAD's Homebrew cask is disabled by Gatekeeper; restore macOS
+        # when a supported CI installation is available.
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
 
@@ -42,13 +44,6 @@ jobs:
           printf '#!/bin/sh\nexec xvfb-run -a openscad "$@"\n' | sudo tee /usr/local/bin/openscad-headless >/dev/null
           sudo chmod +x /usr/local/bin/openscad-headless
           echo "COSCAD_OPENSCAD=/usr/local/bin/openscad-headless" >> "$GITHUB_ENV"
-          git clone --depth 1 https://github.com/BelfrySCAD/BOSL2 "$HOME/BOSL2"
-          echo "COSCAD_BOSL2=$HOME/BOSL2" >> "$GITHUB_ENV"
-
-      - name: OpenSCAD + BOSL2 (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          brew install --cask openscad
           git clone --depth 1 https://github.com/BelfrySCAD/BOSL2 "$HOME/BOSL2"
           echo "COSCAD_BOSL2=$HOME/BOSL2" >> "$GITHUB_ENV"
 

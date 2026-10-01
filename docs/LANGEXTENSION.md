@@ -3,7 +3,8 @@
 One definition per line: `name = expression`. `main` is rendered.
 Definitions resolve by dependency, not order; `//` line comments; a line
 beginning with `|>` continues the previous definition. Glyphs take
-whitespace-separated numeric args (`● 15`, not `●(15)`); parens group.
+numeric arguments (`● 15` is the readable style; `●15` and `●(15)`
+also work). Parens group expressions.
 
 ## Shapes
 
@@ -54,7 +55,13 @@ Argument positions take a single atom — a literal, a name, `-name`, or a
 parenthesized expression — so `box w h t` stays unambiguous; write
 `(w / 2)` for arithmetic inline. Numbers are resolved before shapes and
 can only depend on numbers. Using a number where a shape is expected (or
-vice versa) is a compile error that names the binding.
+vice versa) is a compile error that names the binding. Numeric bindings
+and arguments must be finite; non-finite results from division by zero or
+overflow are compile errors.
+In argument positions, unary minus must touch its operand (`-2`, `-w`,
+`-(w / 2)`). `box w - 2 3` is rejected: write `box (w - 2) 3 4` for
+subtraction. Spaces around minus remain valid in numeric bindings and
+inside parentheses.
 
 ## Lofts
 
@@ -104,10 +111,16 @@ compose inner translates or verify numerically) · `⬈ sx sy sz` scale ·
 
 Anchor vocabulary: `top bot lft rt fwd bak ctr` (+ aliases
 up/down/left/right/front/back/center), combinable: `top+rt`, `lft+fwd`.
+Choose at most one direction per axis: opposing directions, repeated
+aliases (`top+up`), and combinations with `ctr`/`center` are errors.
+`ctr` alone is valid.
 
-Word stages/shapes are reserved only when followed by their arguments —
-`x = ● 5` still defines a variable `x` — but avoiding them as names is
-kinder to readers.
+Shape and prefix-transform keywords active in the selected syntax mode
+are reserved as definition names (`cube`, `loft`, and, in legacy/simple
+mode, `Box`, `Translate`, etc.). Pipeline-only stages and anchor words
+can still be bindings: `x = 2`, `top = 3`. Keyword prefixes such as
+`cube2` are ordinary names. Capitalized simple-mode keywords are ordinary
+names in `!glyph` mode.
 
 ## .assemble / coscad next
 

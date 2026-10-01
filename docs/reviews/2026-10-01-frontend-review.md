@@ -97,3 +97,106 @@ with the fastener's line.
    empty result. (The box model itself can stay; the surprise is in the
    silence.)
 7. The message fixes in section 4, and the `●15` doc line.
+
+## 7. Source follow-up and implementation, 1 October 2026
+
+The original probe results above describe commit 3020e8c and are retained
+as a baseline. A source pass confirms the main diagnosis: tighten silent
+fallbacks before changing operator precedence or the bounding-box model.
+The initial implementation below changes some of those baseline outcomes.
+
+### Refinements to the proposed fixes
+
+- **Validate before geometry, not only at codegen.** Numeric arguments can
+  reach `round` (prism side counts), bezier evaluation, and attachment/bbox
+  arithmetic before emission. Non-finite bindings and arguments should
+  fail during front-end resolution. This does not yet protect shapes
+  constructed directly through the embedded Haskell DSL, nor arithmetic
+  overflow introduced later by geometry calculations.
+- **Counts currently describe manufacturing quantities.** `Next` packs
+  `fpCount`; the planner obtains instances from tagged occurrences in
+  `asm`. `×0` explicitly means a premade part, which can still be placed,
+  and recursive subassembly counts multiply. A blanket equality rule
+  would reject those cases and assemblies that intentionally print spares
+  or omit an assembled view. Specify print quantity versus placed quantity
+  first; a consistency diagnostic should account for premade parts,
+  subassemblies, and explicit spares.
+- **Keep free manufacturing hints.** They are documented metadata forwarded
+  to manifests, e.g. `seam=rear`. Validate the keys/values consumed by the
+  planner (`material`, `profile`, `ends`, `mass`, `torque`), and reject
+  unknown fastener/plan options. Closing every part-hint key would remove
+  the extension mechanism. Duplicate keys/options also need a policy:
+  counts currently choose the last occurrence, but hints use `lookup`
+  and choose the first.
+- **A box cannot tell whether a face contains material.** A difference
+  deliberately preserves the positive's bbox; rotations produce an AABB.
+  Exact removed-face/empty-result warnings need CSG or mesh analysis.
+  A conservative warning that an anchor depends on a cut/rotated bbox is
+  possible, but needs a warning channel and careful noise control. Keep
+  the stable-datum guidance while designing that separately.
+- **Precedence is a compatibility decision.** The flat boolean level,
+  loose pipelines, and `$` scope are documented and exercised by models.
+  Improve diagnostics and examples first; do not silently change the
+  geometry of existing files to match mathematical intuition.
+
+### Additional findings from the source pass
+
+- `getOffsetValue` defaults to **1** for an unsupported right operand of
+  `↯`. It recognizes `Sphere`, plain `Cylinder`, and `Shape2D`, but not
+  the centered `Cyl` used by word `cyl`. Thus `△ 10 ↯ (cyl 4 2)` offsets
+  by 1, not 4. Prefer an explicit numeric offset, or reject unsupported
+  radius carriers instead of silently substituting 1.
+- Numeric option typos also trigger defaults: an unreadable fastener
+  `at=` falls back to evenly spaced positions; malformed `through=` or
+  `torque=` falls back to geometry/default torque. Unknown `nut=` values
+  become drop-in nuts. These deserve validation before plan search.
+- `instancesOf` traverses **both sides of a difference** and treats tags
+  under hull/intersection/minkowski as placed physical parts. A referenced
+  cutter can therefore become a part in the build plan. Define which
+  assembly expression operations preserve physical instances and reject
+  or diagnose the others; checking counts alone will not fix this.
+- Part-reference names bypass `variableDefinition`, so the keyword-name
+  check added below does not yet reject `cube ← file.coscad`. Part names
+  also enter a `Map.fromList`, which can collapse duplicate declarations.
+  Both should be checked at the declaration site in a later assembly pass.
+- Numeric ranges need operation-specific rules: negative scale is useful
+  reflection, zero chamfer/rounding means disabled, and zero inner tube
+  radius can be meaningful. Avoid a universal “all numbers positive”
+  rule; validate primitive dimensions, profile side counts, scale axes,
+  mirror normals, and related dimensions individually.
+
+### First implemented increment
+
+- Reject whitespace immediately after unary `-` in numeric argument
+  positions. The message suggests `-2`/`-w` for negation and `(w - 2)`
+  for subtraction. Spaced arithmetic in bindings and parentheses stays
+  valid, as do tight negative offsets.
+- Reject NaN/infinite numeric bindings (including unused definitions) and
+  numeric arguments before they reach geometry. Errors name the binding
+  or report the argument's source position.
+- Reject opposing/repeated directions on an anchor axis, including aliases
+  such as `top+up`; require `ctr`/`center` to stand alone. Valid corner,
+  edge, and center anchors retain their previous geometry.
+- Reject active shape/prefix-transform keywords as definition names.
+  Pipeline-only and anchor words (`x`, `top`) remain available; simple
+  capitalized keywords are reserved only in legacy/simple mode.
+- Correct the reference and agent documentation: `●15` and `●(15)` both
+  work; spaces are a readability convention, not a syntax restriction.
+
+The next increment should validate primitive dimensions and scale/mirror
+parameters, then validate planner-consumed metadata and fastener/plan
+options. Manufacturing/placement count semantics and warnings about
+surface material remain explicit design work.
+
+Validation: `COSCAD_RENDER=0 stack test` passes **190 tests**, up from
+155 in the baseline. The 35 added checks cover the new diagnostics and
+valid syntax across modes, forward/unused numeric bindings, and assembly
+orientation/helper errors. All existing example `.scad` snapshots match
+without updates; the geometry/render tier was not run for this increment.
+
+Subsequent CI follow-up: the full `stack test` run passes **271 tests**,
+including geometry and assembly checks. The bow3 limb geometry goldens
+were stale after commit 3020e8c's tip redesign; both refreshed values
+match an independent local render. Six missing ball/tesseract geometry
+baselines are now recorded. The macOS CI test job is temporarily removed
+because its OpenSCAD Homebrew cask installation fails before coscad runs.

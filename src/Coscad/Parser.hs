@@ -148,14 +148,22 @@ double = lexeme $ L.signed sc (try L.float <|> fromIntegral <$> L.decimal)
 -- or on the right-hand side of a numeric definition, so juxtaposed
 -- arguments stay unambiguous.
 num :: Ctx -> Parser Double
-num ctx =
-  choice
-    [ try double
+num ctx = do
+  o <- getOffset
+  v <- choice
+    [ do
+        _ <- char '-'
+        spaced <- optional (lookAhead spaceChar)
+        case spaced of
+          Just _ -> setOffset o *> fail "a negative argument must touch its operand: use -2 or -w; write (w - 2) for subtraction"
+          Nothing -> negate <$> num ctx
+    , try double
     , try (between (symbol "(") (symbol ")") (numExpr ctx))
-    , try (symbol "-" *> (negate <$> num ctx))
     , try (numName ctx)
-    ]
-    <?> "a number (literal, numeric binding, or parenthesized arithmetic)"
+    ] <?> "a number (literal, numeric binding, or parenthesized arithmetic)"
+  if isNaN v || isInfinite v
+    then setOffset o *> fail "numeric argument must be finite (check division by zero or overflow)"
+    else return v
 
 numExpr :: Ctx -> Parser Double
 numExpr ctx = do
@@ -369,11 +377,15 @@ booleanExpression ctx = do
 -- with '+', e.g. "top+rt" for the top-right edge.
 anchorVec :: Parser (Double, Double, Double)
 anchorVec = do
+  o <- getOffset
   ws <- sepBy1 anchorWord (symbol "+")
   let (xs, ys, zs) = unzip3 ws
-  return (cl (sum xs), cl (sum ys), cl (sum zs))
+      repeatedAxis vs = length (filter (/= 0) vs) > 1
+      invalid = any repeatedAxis [xs, ys, zs] || (length ws > 1 && (0, 0, 0) `elem` ws)
+  if invalid
+    then setOffset o *> fail "invalid anchor combination: choose at most one direction per axis; use ctr alone"
+    else return (sum xs, sum ys, sum zs)
   where
-    cl = max (-1) . min 1
     anchorWord =
       choice
         [ (0, 0, 1) <$ (keyword "top" <|> keyword "up"),
@@ -733,7 +745,8 @@ bezierBody ctx = do
 resolveVariables :: SynMode -> [Def] -> VarTable -> Either String VarTable
 resolveVariables mode defs table0 = do
   checkDuplicates
-  let (nums, shapeDefs) = numPhase Map.empty defs
+  checkReserved
+  (nums, shapeDefs) <- numPhase Map.empty defs
   go shapeDefs table0 nums
   where
     known = Set.fromList (map defName defs ++ Map.keys table0)
@@ -748,8 +761,16 @@ resolveVariables mode defs table0 = do
           results = map step remaining
           found = rights results
        in if null found
-            then (nums, remaining)
-            else numPhase (foldl' (\acc (n, v) -> Map.insert n v acc) nums found) (lefts results)
+            then Right (nums, remaining)
+            else case [d | d <- remaining, Just v <- [lookup (defName d) found], isNaN v || isInfinite v] of
+              (d : _) -> Left (sourcePosPretty (defPos d) ++ ": in '" ++ defName d ++ "': numeric binding must be finite (check division by zero or overflow)")
+              [] -> numPhase (foldl' (\acc (n, v) -> Map.insert n v acc) nums found) (lefts results)
+
+    -- Only names dispatched as prefix expressions are reserved. Pipeline
+    -- stages and anchor words remain usable as bindings (e.g. x, top).
+    checkReserved = case [d | d <- defs, defName d `elem` reservedNames mode] of
+      (d : _) -> Left (sourcePosPretty (defPos d) ++ ": reserved word '" ++ defName d ++ "' cannot be a definition name; pick another name")
+      [] -> Right ()
 
     checkDuplicates =
       case [(a, b) | (i, a) <- zip [(0 :: Int) ..] defs, b <- drop (i + 1) defs, defName a == defName b] of
@@ -789,6 +810,17 @@ resolveVariables mode defs table0 = do
         circularMsg =
           "circular dependency: these definitions refer to each other and can never be resolved:\n"
             ++ intercalate "\n" ["  " ++ defName d ++ "  (" ++ sourcePosPretty (defPos d) ++ ")" | d <- members]
+
+-- | Keywords that take precedence over variable lookup in this mode.
+reservedNames :: SynMode -> [String]
+reservedNames mode =
+  ["cube", "box", "sphere", "cyl", "tube", "torus", "wedge", "xcyl", "ycyl", "zcyl", "loft"]
+    ++ if mode == ModeGlyph then [] else
+      [ "Sphere", "Cube", "Box", "Cylinder", "Cone", "Tube", "Torus", "Wedge"
+      , "Prismoid", "Circle", "Triangle", "Pentagon", "Bezier"
+      , "Translate", "Rotate", "Scale", "Mirror", "Extrude", "Loft", "Anchor"
+      , "Hull", "Union", "Intersect", "Minkowski", "Offset"
+      ]
 
 -- Utility functions
 trim :: String -> String

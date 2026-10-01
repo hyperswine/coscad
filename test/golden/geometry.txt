@@ -16,9 +16,11 @@ examples-next/rail_x180.coscad 42066.362 -90.000 -10.000 -10.000 90.000 10.000 1
 examples-next/rail_y420.coscad 98154.844 -10.000 -210.000 -10.000 10.000 210.000 10.000
 examples-next/tnut_m5.coscad 216.782 -1.150 -5.000 -4.500 2.050 5.000 4.500
 examples/advanced.coscad 9637.734 -8.000 0.000 -7.984 20.000 22.984 20.000
+examples/assemble/ball/core.coscad 9140.931 -14.800 -14.771 -8.000 14.800 14.771 8.000
+examples/assemble/ball/shell.coscad 6685.238 -20.000 -19.961 0.000 19.749 19.961 19.961
 examples/assemble/bow3/center3.coscad 34399.580 -55.000 -15.000 -7.000 55.000 15.000 7.000
-examples/assemble/bow3/l_arch3.coscad 62324.724 -26.000 -1.000 0.000 207.252 88.556 14.000
-examples/assemble/bow3/r_arch3.coscad 62324.724 -207.252 -1.000 0.000 26.000 88.556 14.000
+examples/assemble/bow3/l_arch3.coscad 59796.670 -26.000 -1.000 0.000 207.748 87.531 14.000
+examples/assemble/bow3/r_arch3.coscad 59796.670 -207.748 -1.000 0.000 26.000 87.531 14.000
 examples/assemble/bracket90.coscad 5268.865 -9.000 -8.982 -1.500 34.000 34.000 5.000
 examples/assemble/inner90.coscad 10301.762 -1.500 -10.000 -1.500 32.000 10.000 32.000
 examples/assemble/plan/corner_inside.coscad 7399.605 -10.000 -10.000 -10.000 10.000 10.000 10.000
@@ -30,6 +32,10 @@ examples/assemble/plan/rail2020.coscad 160000.000 -200.000 -10.000 -10.000 200.0
 examples/assemble/plan/rail2020_300.coscad 120000.000 -150.000 -10.000 -10.000 150.000 10.000 10.000
 examples/assemble/rail120.coscad 48000.000 -10.000 -10.000 -60.000 10.000 10.000 60.000
 examples/assemble/rail200.coscad 80000.000 -100.000 -10.000 -10.000 100.000 10.000 10.000
+examples/assemble/tesseract/bar.coscad 2480.871 -36.750 -3.000 -3.000 36.750 3.000 3.000
+examples/assemble/tesseract/corner.coscad 5286.706 0.000 0.000 0.000 19.000 19.000 19.000
+examples/assemble/tesseract/inner.coscad 24263.663 -15.000 -15.000 -15.000 15.000 15.000 15.000
+examples/assemble/tesseract/strut.coscad 772.930 -23.000 -2.495 -1.500 23.000 2.495 2.500
 examples/attach_demo.coscad 30993.846 -58.000 -30.000 -10.000 87.425 30.000 46.990
 examples/bow.coscad 105539.119 -246.227 -8.000 0.000 246.227 59.879 14.000
 examples/bracket.coscad 2638.930 -1.000 -7.500 0.000 16.000 7.500 20.000

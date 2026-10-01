@@ -215,6 +215,50 @@ diagnostics t = do
     (p "a = b * 2 + 1\nb = 3\nmain = χ -a (● 1)\n") "translate([-7, 0, 0])"
   expectGen t "numeric offset in a pipeline stage (identity translate elided)"
     (p "t = 4\nmain = box 20 20 t |> cutat top 0 0 (-t / 2) (zcyl 1 50)\n") "difference() {\n  cuboid([20, 20, 4]);\n  zcyl(r = 1, l = 50);"
+  -- front-end review: reject silent reinterpretation without changing arithmetic
+  expectErr t "spaced minus in primitive arguments"
+    (p "w = 10\nmain = box w - 2 3\n") ["t.coscad:2:14:", "negative argument", "(w - 2)"] ["circular"]
+  expectErr t "spaced minus in pipeline arguments"
+    (p "main = box 1 1 1\n  |> move - 2 0 0\n") ["t.coscad:2:11:", "negative argument"] []
+  expectErr t "tab after unary minus"
+    (p "main = χ -\t2 (sphere 1)\n") ["negative argument"] []
+  expectGen t "tight negation and spaced arithmetic remain valid"
+    (p "w = 10\nk = - 2\nmain = box (w - 2) 3 4 |> move -w k -(w / 2)\n")
+    "translate([-10, -2, -5])"
+  expectGen t "compact glyph and parenthesized argument"
+    (p "main = ●15 ⊕ ●(2 + 3)\n") "sphere(15);"
+  forM_ [("division by zero", "10 / 0"), ("NaN", "0 / 0"), ("overflow", "1e308 * 10")] $ \(label, rhs) -> do
+    expectErr t ("non-finite numeric binding: " ++ label)
+      (p ("r = " ++ rhs ++ "\nmain = sphere r\n")) ["t.coscad:1:5", "in 'r'", "numeric binding must be finite"] ["circular", "undefined"]
+    expectErr t ("non-finite argument: " ++ label)
+      (p ("main = sphere (" ++ rhs ++ ")\n")) ["t.coscad:1:15", "numeric argument must be finite"] []
+  expectErr t "non-finite forward dependency names the originating binding"
+    (p "a = b * 2\nb = 1 / 0\nmain = sphere a\n") ["in 'b'", "must be finite"] ["circular"]
+  expectErr t "unused non-finite binding is still an error"
+    (p "bad = 0 / 0\nmain = sphere 1\n") ["in 'bad'", "must be finite"] []
+  expectErr t "overflowing literal before prism side-count conversion"
+    (p "main = ⎏ 1e999 2 3\n") ["must be finite"] []
+  forM_ ["lft+rt", "top+top", "top+up", "ctr+top", "center+ctr"] $ \anchor ->
+    expectErr t ("invalid anchor: " ++ anchor)
+      (p ("main = box 10 10 10 |> at " ++ anchor ++ " (box 1 1 1)\n"))
+      ["t.coscad:1:27:", "invalid anchor combination", "one direction per axis"] []
+  expectGen t "three-axis anchor with aliases"
+    (p "main = box 10 10 10 |> at up+right+front (box 2 2 2)\n") "translate([6, -6, 6])"
+  expectGen t "center remains a valid anchor"
+    (p "main = box 10 10 10 |> at ctr (box 2 2 2)\n") "cuboid([2, 2, 2]);"
+  forM_ ["cube", "sphere", "xcyl", "loft", "Box", "Translate", "Offset"] $ \name ->
+    expectErr t ("reserved definition: " ++ name)
+      (p (name ++ " = 2\nmain = sphere 1\n")) ["t.coscad:1:", "reserved word '" ++ name ++ "'", "definition name"] []
+  expectGen t "stage, anchor, and keyword-prefix bindings remain usable"
+    (p "x = 2\ntop = 3\ncube2 = 4\nmain = box x top cube2\n") "cuboid([2, 3, 4]);"
+  expectGen t "inactive simple keyword can be a glyph-mode binding"
+    (p "!glyph\nBox = 2\nmain = sphere Box\n") "sphere(2);"
+  expectErr t "simple-mode definition keyword is reserved"
+    (p "!simple\nBox = 2\nmain = Sphere 1\n") ["t.coscad:2:", "reserved word 'Box'"] []
+  expectErr t "glyph-mode common shape keyword is reserved"
+    (p "!glyph\nsphere = 2\nmain = ● 1\n") ["reserved word 'sphere'"] []
+  expectErr t "non-finite transform tuple argument"
+    (p "!simple\nmain = Translate (0, (1 / 0), 0) (Sphere 1)\n") ["t.coscad:2:22", "numeric argument must be finite"] []
   -- lofts
   expectGen t "loft prefix form emits skin"
     (p "main = loft 0 (⭘ 10) 30 (⭘ 5)\n") "skin([circle(r = 10, $fn = 100), circle(r = 5, $fn = 100)], z = [0, 30], slices = 0, method = \"reindex\");"
@@ -287,6 +331,14 @@ diagnostics t = do
   writeFile asm2 "asm = q ⊕ ● 1\n"
   r2 <- loadAssembleFile [] asm2
   expectErr t "assemble: undefined part name" r2 ["d2.assemble:1:7:", "undefined variable 'q'"] ["circular"]
+  writeFile asm1 "p ← x.coscad ×2 ▽top+up\nasm = p\n"
+  r3 <- loadAssembleFile [] asm1
+  expectErr t "assemble: invalid print-orientation anchor at declaration" r3
+    ["d1.assemble:1:18:", "invalid anchor combination"] []
+  writeFile asm2 "cube = box 1 1 1\nasm = cube\n"
+  r4 <- loadAssembleFile [] asm2
+  expectErr t "assemble: reserved helper name" r4 ["reserved word 'cube'"] []
+
 
 -- ------------------------------------------------------------------
 -- 2. examples + snapshots
