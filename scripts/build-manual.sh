@@ -13,7 +13,7 @@ cd "$repo"
 commit=$(git rev-parse --short HEAD 2>/dev/null || echo dev)
 stamp=$(date -u +"%Y-%m-%d %H:%MZ")
 
-pages=(README:Overview docs/LANGEXTENSION:Language docs/TOPOLOGICAL:Topological docs/MANUFACTURING:Manufacturing docs/PLAN:Build-plans docs/SYNTAX:Syntax-modes docs/EXAMPLES:Examples CHANGELOG:Changelog)
+pages=(README:Overview docs/LANGEXTENSION:Language docs/TOPOLOGICAL:Topological docs/MANUFACTURING:Manufacturing docs/PLAN:Build-plans docs/LESSONS:Lessons docs/SYNTAX:Syntax-modes docs/EXAMPLES:Examples CHANGELOG:Changelog)
 nav="$tmp/nav.html"
 {
   echo '<nav class="top"><a class="brand" href="index.html">CoScad manual</a>'

@@ -10,9 +10,9 @@
 - 1 × larch (printed)
 - 1 × rarch (printed)
 
-### Preload sheet (T-nuts)
+### Preload sheet (nuts)
 
-(no T-nuts)
+(no nuts to preload)
 
 ## Steps
 
