@@ -1,18 +1,21 @@
 // Recurve bow arch, topological build. Root thickness = full
-// tab width (26), tapering along the limb to an ~8 mm stalk that recurves
-// at the tip. The tip is a solid rounded paddle (about 12 mm across) in
-// place of the old curl-and-knob; the string loop sits in a 2.6 mm wide
-// groove cut round the paddle's end and down both flanks, mid-thickness,
-// down to a 7 mm post, so the pull goes into the paddle in compression
-// and the lips above and below keep the loop from sliding off. The
-// groove covers the half of the tip that faces the pull (the other limb)
-// and the end; the neck is left solid. Through-bolted: 2x M4 clearance
-// holes in the flange tab (heads counterbored on top; nuts live in hex
-// pockets under the center piece).
+// tab width (26), tapering along the limb to an ~8 mm stalk. The last
+// 8 mm of the stalk are cut off square and replaced by a hook: a 130
+// degree arc of ring (radius 3 to 10.31, the stalk's width at the cut,
+// centred on the cut line) that carries the limb over
+// the top and back down, so the tip ends pointing away from the other
+// limb and the string's pull drags the loop into the hook, not off it.
+// The nock is a groove round the hook's girth at 45 degrees on the arc:
+// 2.6 mm wide, 1.5 mm into each flat face and 2 mm into the back, with
+// the belly left smooth for the string to lie on. The string runs along
+// the belly, over the top of the hook, and the eye wraps the girth in the
+// groove. Through-bolted: 2x M4 clearance holes in the flange tab (heads
+// counterbored on top; nuts live in hex pockets under the center piece).
 limb2d = ✎ 0 0 70 2 140 16 185 40 202 51 212 66 206 80 205 82.3 201.5 88 198.5 87.5 195 87 191.8 83.5 192.5 79.5 193.2 77.5 197 76.5 199.5 74.5 204 66.9 195.8 57.5 179.8 49.1 135.3 30.2 67.5 23.9 0 26
-limb   = limb2d |> extrude 14
-groove = (tube 20 3.5 2.6 ∩ (box 40 40 4 |> move 20 0 0 |> rotz 60)) |> move 199 81 7
-main = limb ⊖ groove
+stalk  = (limb2d |> extrude 14) ∩ (box 400 400 20 |> move -200 0 0 |> rotz 60 |> move 203.5 60 7)
+hook   = (tube 10.31 3 14 ∩ (box 40 40 20 |> move 0 20 0 |> rotz 20) ∩ (box 40 40 20 |> move 0 20 0 |> rotz -30)) |> move 207.03 57.96 7
+nock   = ((box 16 2.6 20 |> move 8 0 0 |> rotz 45) ∩ ((box 60 60 1.5 |> move 0 0 6.25) ⊕ (box 60 60 1.5 |> move 0 0 -6.25) ⊕ zcyl 5 14)) |> move 207.03 57.96 7
+main = (stalk ⊕ hook ⊖ nock)
   |> at lft+fwd 0 27 3.5 (box 26 28 7)
   |> cutat lft+fwd 13 6 0 (zcyl 2.15 20)
   |> cutat lft+fwd 13 22 0 (zcyl 2.15 20)

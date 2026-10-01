@@ -1,4 +1,4 @@
-plate 250 250 6
+plate 256 256 4
 center ← center3.coscad ×1
 larch  ← l_arch3.coscad ×1
 rarch  ← r_arch3.coscad ×1
