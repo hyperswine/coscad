@@ -521,7 +521,7 @@ geometry t update bin = do
       assertT t "coscad next: bed volume == sum of variant volumes" (abs (vb - vp) < 1e-6 * vp) (printf "bed %.3f parts %.3f" vb vp)
       -- the bed and margin come from the fixture's `plate` line, via the manifest
       manifest <- readFile (bow </> "bow3_manifest.json")
-      let num key = case dropWhile (/= key) (tails manifest) of
+      let num key = case dropWhile (not . isPrefixOf key) (tails manifest) of
             (m : _) -> read (takeWhile (`elem` "0123456789.") (dropWhile (`elem` "\": ") (drop (length key) m))) :: Double
             [] -> error ("manifest lacks " ++ key)
           (pw, pd, marg) = (num "\"w\"", num "\"d\"", num "\"margin\"")
