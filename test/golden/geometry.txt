@@ -19,8 +19,8 @@ examples/advanced.coscad 9637.734 -8.000 0.000 -7.984 20.000 22.984 20.000
 examples/assemble/ball/core.coscad 9140.931 -14.800 -14.771 -8.000 14.800 14.771 8.000
 examples/assemble/ball/shell.coscad 6685.238 -20.000 -19.961 0.000 19.749 19.961 19.961
 examples/assemble/bow3/center3.coscad 34399.580 -55.000 -15.000 -7.000 55.000 15.000 7.000
-examples/assemble/bow3/l_arch3.coscad 59796.670 -26.000 -1.000 0.000 207.748 87.531 14.000
-examples/assemble/bow3/r_arch3.coscad 59796.670 -207.748 -1.000 0.000 26.000 87.531 14.000
+examples/assemble/bow3/l_arch3.coscad 57896.612 -26.000 -1.000 0.000 216.705 68.250 14.000
+examples/assemble/bow3/r_arch3.coscad 57896.612 -216.705 -1.000 0.000 26.000 68.250 14.000
 examples/assemble/bracket90.coscad 5268.865 -9.000 -8.982 -1.500 34.000 34.000 5.000
 examples/assemble/inner90.coscad 10301.762 -1.500 -10.000 -1.500 32.000 10.000 32.000
 examples/assemble/plan/corner_inside.coscad 7399.605 -10.000 -10.000 -10.000 10.000 10.000 10.000

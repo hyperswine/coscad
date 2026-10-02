@@ -33,7 +33,7 @@ import Coscad.Plan (PlanSummary (..), StepSummary (..), planSummary)
 import Coscad.Site (buildPageHtml, indexHtml)
 import Coscad.Shape (Shape (..))
 import Data.IORef
-import Data.List (isInfixOf, isPrefixOf, sort)
+import Data.List (isInfixOf, isPrefixOf, sort, tails)
 import qualified Data.Map as Map
 import Data.Time.Clock (diffUTCTime, getCurrentTime)
 import GHC.IO.Encoding (setLocaleEncoding)
@@ -519,9 +519,15 @@ geometry t update bin = do
           vp = sum (map meshVolume parts)
           ((x0, y0, z0), (x1, y1, _)) = meshBounds bed
       assertT t "coscad next: bed volume == sum of variant volumes" (abs (vb - vp) < 1e-6 * vp) (printf "bed %.3f parts %.3f" vb vp)
-      assertT t "coscad next: placements inside 250x250 bed with 6mm margin, on z=0"
-        (x0 >= 6 - 1e-6 && y0 >= 6 - 1e-6 && x1 <= 244 + 1e-6 && y1 <= 244 + 1e-6 && abs z0 < 1e-6)
-        (show (meshBounds bed))
+      -- the bed and margin come from the fixture's `plate` line, via the manifest
+      manifest <- readFile (bow </> "bow3_manifest.json")
+      let num key = case dropWhile (/= key) (tails manifest) of
+            (m : _) -> read (takeWhile (`elem` "0123456789.") (dropWhile (`elem` "\": ") (drop (length key) m))) :: Double
+            [] -> error ("manifest lacks " ++ key)
+          (pw, pd, marg) = (num "\"w\"", num "\"d\"", num "\"margin\"")
+      assertT t (printf "coscad next: placements inside the %.0fx%.0f bed with %.0fmm margin, on z=0" pw pd marg)
+        (x0 >= marg - 1e-6 && y0 >= marg - 1e-6 && x1 <= pw - marg + 1e-6 && y1 <= pd - marg + 1e-6 && abs z0 < 1e-6)
+        (show (meshBounds bed, pw, pd, marg))
   rc <- try (processCheckWith False (bow </> "bow3.assemble")) :: IO (Either SomeException ())
   assertT t "coscad check bow3: no overlaps" (either (const False) (const True) rc) (either show (const "") rc)
   leftovers <- filter ("chk" `isInfixOf`) <$> listDirectory bow
