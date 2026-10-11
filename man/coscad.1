@@ -363,6 +363,10 @@ plan beam=30 rest=bot,top                   // optional search settings
 Instance names take
 .Ql #n
 when a part is placed more than once.
+The part hint
+.Ql after=instance[,instance...]
+requires those instances to be placed first (for example, before a cap
+covers a rotor's entry). Unknown, ambiguous, and cyclic references are errors.
 Options:
 .Ql ×n ,
 .Ql at=mm[,mm]
@@ -374,6 +378,8 @@ Options:
 for a pocket in the clamped part),
 .Ql head=button|socket ,
 .Ql through=mm ,
+.Ql inset=mm
+(peg joints only: seating plane this far inward from the named host face),
 .Ql torque=Nm .
 The
 .Ql plan

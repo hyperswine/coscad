@@ -147,6 +147,41 @@ planTier t = do
       assertT t "tesseract: at most 2 flips" (length (filter ssFlip (psSteps ps)) <= 2) (show (length (filter ssFlip (psSteps ps))))
   tessMd <- readFile "examples/assemble/tesseract/tesseract_plan.md"
   assertT t "tesseract: plan speaks of pegs and nut pockets in the blocks, no T-nuts" (all (`isInfixOf` tessMd) ["Push: strut#1 into", "24 × M3 hex nut", "into the pocket on the top face"] && not ("T-nut" `isInfixOf` tessMd)) (take 500 tessMd)
+  -- A rotor must enter its recessed journal before the next axle captures it.
+  ro <- planSummary "models/orbit-tower/orbit-tower.assemble"
+  case ro of
+    Left e -> failT t "plan orbit tower" e
+    Right ps -> do
+      checkInvariants t "orbit tower" ps
+      let steps = zip [1 :: Int ..] (psSteps ps)
+          stepOf p = head ([k | (k, s) <- steps, p `elem` ssParts s] ++ [maxBound])
+          joints = concatMap ssFasteners (psSteps ps)
+      assertT t "orbit tower: 20 parts and all 19 peg joints, no hardware or errors"
+        (length (psParts ps) == 20 && length joints == 19 && all (\(s, _, _, n) -> s == "peg" && n == "NoNut") joints && null (psDesignErrors ps) && all (null . ssPreload) (psSteps ps)) (show ps)
+      assertT t "orbit tower: stays upright throughout assembly"
+        (all (\s -> ssRest s == "bottom (-Z) face" && not (ssFlip s)) (psSteps ps)) (show (psSteps ps))
+      assertT t "orbit tower: every rotor enters before the axle or cap that captures it"
+        (and [stepOf ("rotor#" ++ show k) < stepOf (if k == 6 then "cap" else "axle" ++ show (k + 1)) | k <- [1 .. 6 :: Int]]) (show (psSteps ps))
+      assertT t "orbit tower: each rotor and satellite follows its supporting part"
+        (and [stepOf ("axle" ++ show k) < stepOf ("rotor#" ++ show k) && stepOf ("rotor#" ++ show k) < stepOf ("satellite#" ++ show k) | k <- [1 .. 6 :: Int]]) (show (psSteps ps))
+  orbitSrc <- readFile "models/orbit-tower/orbit-tower.assemble"
+  tmpO <- tempDir "plan-orbit"
+  forM_ ["base.coscad", "axle.coscad", "rotor.coscad", "satellite.coscad", "cap.coscad"] $ \f -> copyFile ("models/orbit-tower" </> f) (tmpO </> f)
+  let withBaseHint hint = unlines [if "base ←" `isPrefixOf` l then l ++ " after=" ++ hint else l | l <- lines orbitSrc]
+      invalidPlans =
+        [ ("unknown after reference", withBaseHint "missing", "unknown part 'missing'")
+        , ("ambiguous after reference", withBaseHint "rotor", "multiple instances")
+        , ("self after cycle", withBaseHint "base", "cyclic after= ordering")
+        , ("two-part after cycle", withBaseHint "axle1", "cyclic after= ordering")
+        , ("negative peg inset", orbitSrc ++ "\nfastener peg rotor#1 axle1 top inset=-1\n", "inset= must lie within the host")
+        , ("peg inset beyond host", orbitSrc ++ "\nfastener peg rotor#1 axle1 top inset=25\n", "inset= must lie within the host")
+        , ("invalid peg inset", orbitSrc ++ "\nfastener peg rotor#1 axle1 top inset=bad\n", "inset= needs a distance")
+        , ("screw with peg inset", orbitSrc ++ "\nfastener M4x10 rotor#1 axle1 top inset=1\n", "inset= only applies to peg joints")
+        ]
+  forM_ invalidPlans $ \(name, source, message) -> do
+    writeFile (tmpO </> "bad.assemble") source
+    result <- planSummary (tmpO </> "bad.assemble")
+    assertT t ("plan: " ++ name ++ " is rejected") (either (message `isInfixOf`) (const False) result) (either id show result)
 
 -- nut-first, host-and-clamp-before-screw, every part exactly once
 checkInvariants :: T -> String -> PlanSummary -> IO ()

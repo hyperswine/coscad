@@ -13,10 +13,11 @@ cd "$repo"
 commit=$(git rev-parse --short HEAD 2>/dev/null || echo dev)
 stamp=$(date -u +"%Y-%m-%d %H:%MZ")
 
-pages=(README:Overview docs/ORBIT-TOWER:Orbit-Tower docs/LANGEXTENSION:Language docs/TOPOLOGICAL:Topological docs/MANUFACTURING:Manufacturing docs/PLAN:Build-plans docs/LESSONS:Lessons docs/SYNTAX:Syntax-modes docs/EXAMPLES:Examples CHANGELOG:Changelog)
+pages=(README:Overview docs/ORBIT-TOWER:Orbit-Tower-notes docs/LANGEXTENSION:Language docs/TOPOLOGICAL:Topological docs/MANUFACTURING:Manufacturing docs/PLAN:Build-plans docs/LESSONS:Lessons docs/SYNTAX:Syntax-modes docs/EXAMPLES:Examples CHANGELOG:Changelog)
 nav="$tmp/nav.html"
 {
   echo '<nav class="top"><a class="brand" href="index.html">CoScad manual</a>'
+  echo '<a href="builds/orbit-tower/index.html">Orbit Tower instructions</a>'
   for p in "${pages[@]}"; do f=${p%%:*}; t=${p##*:}; n=$(basename "$f" | tr 'A-Z' 'a-z'); [ "$n" = readme ] && n=index; echo "<a href=\"$n.html\">${t//-/ }</a>"; done
   echo '<a href="man.html">man coscad</a><a href="builds/index.html">Builds</a></nav>'
 } > "$nav"
@@ -40,7 +41,9 @@ rm -f "$tmp/man.body" "$tmp/nav.html" "$tmp/foot.html"
 # build plans with renders, from a scratch copy of the example assemblies
 work=$(mktemp -d)
 cp -R examples/assemble/plan "$work/plan"; cp -R examples/assemble/bow3 "$work/bow3"; cp -R examples/assemble/ball "$work/ball"; cp -R examples/assemble/tesseract "$work/tesseract"
-coscad site "$tmp/builds" "$work/plan/corner_pair.assemble" "$work/plan/cube.assemble" "$work/bow3/bow3.assemble" "$work/ball/ball.assemble" "$work/tesseract/tesseract.assemble"
+mkdir -p "$work/orbit-tower"
+cp models/orbit-tower/*.coscad models/orbit-tower/orbit-tower.assemble "$work/orbit-tower/"
+coscad site "$tmp/builds" "$work/plan/corner_pair.assemble" "$work/plan/cube.assemble" "$work/bow3/bow3.assemble" "$work/ball/ball.assemble" "$work/tesseract/tesseract.assemble" "$work/orbit-tower/orbit-tower.assemble"
 rm -rf "$work"
 echo "{\"commit\": \"$commit\", \"built\": \"$stamp\"}" > "$tmp/version.json"
 

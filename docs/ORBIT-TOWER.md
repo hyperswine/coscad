@@ -1,4 +1,8 @@
-# Orbit Tower assembly guide
+# Orbit Tower: hand-written guide
+
+For the instruction generator's step-by-step renders, use the
+[generated Orbit Tower instructions](builds/orbit-tower/index.html).
+This separate guide adds practical assembly, handling and print notes.
 
 Build a small desktop sculpture with six arms that spin independently. The
 20 printed pieces fit together by hand with loose peg-and-socket connections;

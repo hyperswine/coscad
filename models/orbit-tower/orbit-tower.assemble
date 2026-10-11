@@ -1,15 +1,15 @@
 // 20 physical pieces. All parts have their intended print face declared.
 plate 256 256 7
 base ← base.coscad ×1 ▽bot material=pla
-axle1 ← axle.coscad ×1 ▽bot material=pla
-axle2 ← axle.coscad ×1 ▽bot material=pla
-axle3 ← axle.coscad ×1 ▽bot material=pla
-axle4 ← axle.coscad ×1 ▽bot material=pla
-axle5 ← axle.coscad ×1 ▽bot material=pla
-axle6 ← axle.coscad ×1 ▽bot material=pla
+axle1 ← axle.coscad ×1 ▽bot material=pla after=base
+axle2 ← axle.coscad ×1 ▽bot material=pla after=rotor#1
+axle3 ← axle.coscad ×1 ▽bot material=pla after=rotor#2
+axle4 ← axle.coscad ×1 ▽bot material=pla after=rotor#3
+axle5 ← axle.coscad ×1 ▽bot material=pla after=rotor#4
+axle6 ← axle.coscad ×1 ▽bot material=pla after=rotor#5
 rotor ← rotor.coscad ×6 ▽bot material=pla
 satellite ← satellite.coscad ×6 ▽bot material=pla
-cap ← cap.coscad ×1 ▽bot material=pla
+cap ← cap.coscad ×1 ▽bot material=pla after=rotor#6
 asm = base
   ⊕ (axle1 |> move 0 0 6)
   ⊕ (rotor |> move 0 0 13)
@@ -30,3 +30,27 @@ asm = base
   ⊕ (rotor |> rotz 300 |> move 0 0 88)
   ⊕ (satellite |> rotx 180 |> move 24 0 0 |> rotz 300 |> move 0 0 99.5)
   ⊕ (cap |> move 0 0 96)
+
+// The rotor seats on an internal shoulder, 13 mm below the axle's top.
+// The next axle captures it; after= above keeps that entry open.
+fastener peg axle1 base top
+fastener peg rotor#1 axle1 top inset=13
+fastener peg satellite#1 rotor#1 top
+fastener peg axle2 axle1 top
+fastener peg rotor#2 axle2 top inset=13
+fastener peg satellite#2 rotor#2 top
+fastener peg axle3 axle2 top
+fastener peg rotor#3 axle3 top inset=13
+fastener peg satellite#3 rotor#3 top
+fastener peg axle4 axle3 top
+fastener peg rotor#4 axle4 top inset=13
+fastener peg satellite#4 rotor#4 top
+fastener peg axle5 axle4 top
+fastener peg rotor#5 axle5 top inset=13
+fastener peg satellite#5 rotor#5 top
+fastener peg axle6 axle5 top
+fastener peg rotor#6 axle6 top inset=13
+fastener peg satellite#6 rotor#6 top
+fastener peg cap axle6 top
+
+plan rest=bot

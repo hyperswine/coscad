@@ -10,7 +10,7 @@
 -- driver accessible, nut can enter); a cost table picks among the
 -- remaining linear extensions via beam search; consecutive moves on
 -- one rest face merge into numbered steps.
-module Coscad.Plan (processPlan, planSummary, PlanSummary (..), StepSummary (..)) where
+module Coscad.Plan (processPlan, processPlanSummary, planSummary, PlanSummary (..), StepSummary (..)) where
 
 import Control.Monad (forM_, unless, when)
 import Coscad.Assemble
@@ -21,6 +21,7 @@ import Coscad.OpenScad (runOpenscadRaw)
 import Coscad.Parser (resolveVariables)
 import Coscad.Shape
 import Data.Char (isDigit, toLower)
+import Data.Graph (SCC (..), stronglyConnComp)
 import Data.List (foldl', intercalate, nub, sort, sortBy, sortOn)
 import qualified Data.Map as Map
 import Data.Maybe (fromMaybe, mapMaybe)
@@ -117,6 +118,7 @@ data Fast = Fast
   , fClamped :: String
   , fHost :: String
   , fFaceName :: String
+  , fInset :: Double -- peg seating plane below the named outer face
   , fFace :: V3 -- outward normal of the host face = driver axis (head outward)
   , fNut :: NutKind
   , fPocket :: Maybe (String, V3) -- hex nuts: the face the pocket opens on
@@ -279,10 +281,16 @@ mkFasteners insts decls = concat <$> mapM one (zip [1 ..] decls)
       clamped <- either (Left . (at ++)) Right (find (fdClamped fd))
       host <- either (Left . (at ++)) Right (find (fdHost fd))
       n <- maybe (Left (at ++ "unknown face '" ++ fdFace fd ++ "' (top bot lft rt fwd bak)")) Right (anchorDir (fdFace fd))
+      inset <- case lookup "inset" (fdOpts fd) of
+        Nothing -> Right 0
+        Just s -> maybe (Left (at ++ "inset= needs a distance in mm")) Right (readD s)
       let hb = iBox host
           cb = iBox clamped
-          facePlane = snd (extentAlong n hb) -- coordinate of the host face along n
+          (hostLo, hostHi) = extentAlong n hb
+          facePlane = hostHi - inset
           (cMin, cMax) = extentAlong n cb
+      when (inset < 0 || inset > hostHi - hostLo) $ Left (at ++ "inset= must lie within the host")
+      when (inset /= 0 && l > 0) $ Left (at ++ "inset= only applies to peg joints")
       when (cMin > facePlane + 1.5 || cMax < facePlane - 1.5) $
         Left (at ++ iName clamped ++ " does not sit on the " ++ fdFace fd ++ " face of " ++ iName host)
       -- overlap rectangle in the two in-plane axes
@@ -324,8 +332,8 @@ mkFasteners insts decls = concat <$> mapM one (zip [1 ..] decls)
             let pos = vadd (vscale p along) (vadd (vscale ((o0 + o1) / 2) other) (vscale facePlane n))
              in Fast
                   { fId = k * 100 + j, fSpec = fdSpec fd, fDiam = d, fLen = l, fHead = hd
-                  , fClamped = iName clamped, fHost = iName host, fFaceName = fdFace fd, fFace = n
-                  , fNut = nutKind, fPocket = pocket, fPocketInClamped = pocketInClamped, fPos = pos, fAlong = p - hostMin, fTorque = torque
+                  , fClamped = iName clamped, fHost = iName host, fFaceName = fdFace fd, fInset = inset, fFace = n
+                  , fNut = nutKind, fPocket = pocket, fPocketInClamped = pocketInClamped, fPos = pos, fAlong = p - hostMin, fTorque = if isPeg then 0 else torque
                   , fDriverLen = if isPeg then 0 else 45, fDriverRad = if isPeg then 0 else headRadius hd d + 2
                   , fReach = if isPeg then 0 else l - thickness
                   }
@@ -335,6 +343,30 @@ mkFasteners insts decls = concat <$> mapM one (zip [1 ..] decls)
 -- requires-before graph
 
 type Preds = Map.Map Node [Node]
+
+-- Explicit capture/access ordering that boxes cannot infer, e.g. an arm
+-- must enter a journal before the next axle covers its open end.
+partPreds :: AsmResult -> [Inst] -> Either String Preds
+partPreds ar insts = do
+  pairs <- mapM one insts
+  let edges = [(iName i, ps) | (i, ps) <- pairs]
+      cycles = [ns | CyclicSCC ns <- stronglyConnComp [(n, n, ps) | (n, ps) <- edges]]
+  unless (null cycles) $ Left ("cyclic after= ordering: " ++ intercalate "; " (map (intercalate ", ") cycles))
+  Right (Map.fromList [(NPart (iName i), map NPart ps) | (i, ps) <- pairs])
+  where
+    one i = do
+      let (_, hints) = fromMaybe (1, []) (lookup (iPart i) (arPartMeta ar))
+      ps <- case lookup "after" hints of
+        Nothing -> Right []
+        Just "" -> Left ("after= for " ++ iName i ++ " needs an instance name")
+        Just s -> mapM (find (iName i)) (splitOn ',' s)
+      Right (i, ps)
+    find who name = case [iName i | i <- insts, iName i == name] of
+      [n] -> Right n
+      _ -> case [iName i | i <- insts, iPart i == name] of
+        [n] -> Right n
+        [] -> Left ("after= for " ++ who ++ ": unknown part '" ++ name ++ "'")
+        ns -> Left ("after= for " ++ who ++ ": '" ++ name ++ "' has multiple instances; use " ++ intercalate ", " ns)
 
 buildPreds :: [Inst] -> [Fast] -> Preds
 buildPreds insts fasts = Map.fromListWith (++) (parts ++ nuts ++ screws ++ blockers)
@@ -862,7 +894,8 @@ planMarkdown title m steps designErrors = unlines $
       ++ [ "- Place: " ++ p ++ hostsNote p | p <- stParts s ]
       ++ [ "- Preload: " ++ h ++ " — " ++ nutsOn h | h <- stNuts s ]
       ++ [ if isPegF f
-             then printf "- Push: %s into %s (%s face) until it seats" (fClamped f) (fHost f) (fFaceName f)
+             then printf "- Push: %s into %s (%s entry%s) until it seats" (fClamped f) (fHost f) (fFaceName f)
+                    (if fInset f == 0 then "" else ", seat " ++ fmtMm (fInset f) ++ " mm below the face")
            else if fNut f == NoNut
              then printf "- Tighten: %s %s head through %s into %s (%s face, threads into the part) — %s" (fSpec f) (fHead f) (fClamped f) (fHost f) (fFaceName f) (torqueWords (hostMat f) (fTorque f))
            else if fNut f == Hex
@@ -884,9 +917,11 @@ planMarkdown title m steps designErrors = unlines $
 
 planJson :: String -> Model -> [Step] -> [String] -> String
 planJson src m steps errs =
-  "{\n  \"source\": " ++ jstr src ++ ",\n  \"design_errors\": [" ++ intercalate ", " (map jstr errs) ++ "],\n  \"steps\": [\n"
+  "{\n  \"source\": " ++ jstr src ++ ",\n  \"parts\": [" ++ intercalate ", " (map partJ (mInsts m)) ++ "],\n  \"design_errors\": [" ++ intercalate ", " (map jstr errs) ++ "],\n  \"steps\": [\n"
     ++ intercalate ",\n" (zipWith stepJ [1 :: Int ..] steps) ++ "\n  ]\n}\n"
   where
+    partJ i = "{\"name\": " ++ jstr (iName i) ++ ", \"part\": " ++ jstr (iPart i) ++ ", \"material\": "
+      ++ jstr (case iMat i of Aluminium -> "aluminium"; Printed -> "printed"; Steel -> "steel") ++ "}"
     stepJ k s =
       "    {\"step\": " ++ show k ++ ", \"rest\": " ++ jstr (dirName (stRest s)) ++ ", \"flip\": " ++ (if stFlip s then "true" else "false")
         ++ ", \"parts\": [" ++ intercalate ", " (map jstr (stParts s)) ++ "]"
@@ -894,14 +929,16 @@ planJson src m steps errs =
         ++ ", \"fasteners\": [" ++ intercalate ", " [fj (mFastById m Map.! i) | i <- stFasts s] ++ "]"
         ++ ", \"warnings\": [" ++ intercalate ", " (map jstr (nub (stWarn s))) ++ "]}"
     fj f = "{\"spec\": " ++ jstr (fSpec f) ++ ", \"head\": " ++ jstr (fHead f) ++ ", \"nut\": " ++ jstr (show (fNut f)) ++ maybe "" (\(pf, _) -> ", \"pocket\": " ++ jstr ((if fPocketInClamped f then "clamped." else "") ++ pf)) (fPocket f) ++ ", \"clamped\": " ++ jstr (fClamped f)
-      ++ ", \"host\": " ++ jstr (fHost f) ++ ", \"face\": " ++ jstr (fFaceName f) ++ ", \"at_mm\": " ++ jnum (fAlong f) ++ ", \"torque_nm\": " ++ jnum (fTorque f) ++ "}"
+      ++ ", \"host\": " ++ jstr (fHost f) ++ ", \"face\": " ++ jstr (fFaceName f) ++ ", \"inset_mm\": " ++ jnum (fInset f) ++ ", \"at_mm\": " ++ jnum (fAlong f) ++ ", \"torque_nm\": " ++ jnum (fTorque f) ++ "}"
 
 -- per-step OpenSCAD scene: everything placed so far, this step highlighted,
 -- the bench under the rest face, scene rotated so the rest face is down.
 stepScad :: Model -> [Step] -> Int -> String
 stepScad m steps k =
   (if any (usesBosl2 . iShape) (mInsts m) then "include <BOSL2/std.scad>\n\n" else "")
-    ++ "$vpr = [55, 0, 35];\n$vpt = [" ++ showV c ++ "];\n$vpd = " ++ showD (2.6 * vlen (vsub hi lo) + 50) ++ ";\n\n"
+    -- Fit the bounding sphere within the narrower vertical field of view
+    -- of the 1200 x 900 renders, including tall final assemblies.
+    ++ "$vpr = [55, 0, 35];\n$vpt = [" ++ showV c ++ "];\n$vpd = " ++ showD (3.5 * vlen (vsub hi lo) + 50) ++ ";\n\n"
     ++ "multmatrix(" ++ mat4 (rot, (0, 0, 0)) ++ ") {\n"
     ++ concat [ "  color(\"" ++ col ++ "\") " ++ instScad i | (i, col) <- zip prev (repeat "LightGray") ++ zip now (repeat "Orange") ]
     ++ concat [ "  color(\"" ++ col ++ "\") " ++ fastScad f | (f, col) <- zip prevF (repeat "DarkRed") ++ zip nowF (repeat "Red"), not (isPegF f) ]
@@ -970,6 +1007,7 @@ buildModel ar = do
   asmS <- maybe (Left "no asm") Right (Map.lookup "asm" table)
   insts <- mkInstances ar asmS
   fasts <- mkFasteners insts (arFasteners ar)
+  ordered <- partPreds ar insts
   let byName = Map.fromList [(iName i, i) | i <- insts]
       errs = designErrors insts fasts
       restDirs = case lookup "rest" (arPlanOpts ar) of
@@ -977,7 +1015,7 @@ buildModel ar = do
         Nothing -> [(0, 0, -1), (0, 0, 1), (-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 1, 0)]
       wOpt k def = fromMaybe def (lookup k (arPlanOpts ar) >>= readD)
       weights = Weights (wOpt "flip" 10) (wOpt "vertical" 6) (wOpt "driver" 3) (wOpt "shrink" 2) (wOpt "sibling" 1) (wOpt "loose" 1)
-      preds = buildPreds insts fasts
+      preds = Map.unionWith (++) (buildPreds insts fasts) ordered
       nodes = [NPart (iName i) | i <- insts] ++ [NNuts h | h <- nutHosts fasts] ++ [NFast (fId f) | f <- fasts]
   Right (Model insts byName fasts (Map.fromList [(fId f, f) | f <- fasts]) preds nodes restDirs weights Nothing, errs)
 
@@ -1014,14 +1052,23 @@ planSummary path = do
     ar <- res
     (model, errs) <- buildModel ar
     st <- either (Left . unlines) Right (runSearch ar model)
-    let steps = toSteps (reverse (sMoves st))
-        summ s = StepSummary (dirName (stRest s)) (stFlip s) (stParts s) (stNuts s)
-          [(fSpec f, fClamped f, fHost f, show (fNut f)) | i <- stFasts s, let f = mFastById model Map.! i]
-    Right (PlanSummary (map iName (mInsts model)) (length (mFasts model)) errs (map summ steps) (sCost st))
+    Right (summarise model errs st)
+
+summarise :: Model -> [String] -> St -> PlanSummary
+summarise model errs st =
+  let steps = toSteps (reverse (sMoves st))
+      summ s = StepSummary (dirName (stRest s)) (stFlip s) (stParts s) (stNuts s)
+        [(fSpec f, fClamped f, fHost f, show (fNut f)) | i <- stFasts s, let f = mFastById model Map.! i]
+   in PlanSummary (map iName (mInsts model)) (length (mFasts model)) errs (map summ steps) (sCost st)
 
 -- ------------------------------------------------------------------
 processPlan :: Bool -> FilePath -> IO ()
-processPlan png path = do
+processPlan png path = processPlanSummary png path >> return ()
+
+-- Also return the plan metadata so site counts use physical instances and
+-- actual steps, rather than declarations or stale image files.
+processPlanSummary :: Bool -> FilePath -> IO PlanSummary
+processPlanSummary png path = do
   res <- loadAssembleFile [] path
   ar <- either (\e -> hPutStrLn stderr ("Error: " ++ e) >> exitFailure) return res
   (model, errs) <- either (\e -> hPutStrLn stderr ("Error: " ++ e) >> exitFailure) return (buildModel ar)
@@ -1052,3 +1099,4 @@ processPlan png path = do
             Left e -> hPutStrLn stderr ("warning: " ++ e)
       putStrLn ("Wrote " ++ base ++ "_step1.." ++ show (length steps) ++ ".scad" ++ (if png then " and .png" else ""))
       unless (null errs) exitFailure
+      return (summarise model errs st)

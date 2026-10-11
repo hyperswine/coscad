@@ -29,6 +29,11 @@ plan beam=30 rest=bot,top,fwd,bak             // optional planner settings
   by this assembly (`×n`, n > 0) default to `printed`, premade (`×0`)
   parts to `aluminium`. `torque=` on a part or a fastener overrides.
   `mass=` (grams) overrides the volume-based estimate.
+- `after=instance[,instance...]` on a part declares placement prerequisites
+  that the box model cannot discover. For example,
+  `axle2 ← axle.coscad ×1 after=rotor#1` keeps a rotor's entry open until
+  it is installed. Use numbered names for repeated instances. Unknown,
+  ambiguous and cyclic references are errors.
 - `fastener spec clamped host face`: `spec` is `M<d>x<len>`; `clamped` and
   `host` are instance names (`br#3` when a part is placed more than once,
   the bare name when once); `face` is the host face the screw enters
@@ -56,6 +61,12 @@ plan beam=30 rest=bot,top,fwd,bak             // optional planner settings
   the same ordering and support rules, and "Push ... until it seats" in
   the steps. `examples/assemble/tesseract/` (a wire-frame cube whose
   inner cube hangs on eight diagonal pegs) uses both.
+- `inset=mm` on a peg joint moves its seating plane inward from the named
+  host face, for an internal shoulder or recessed socket. For example,
+  `fastener peg rotor#1 axle1 top inset=13` seats the rotor on a shoulder
+  13 mm below the axle's top. The inset must be within the host and is not
+  supported for screws. This describes the joint seat, not a checked
+  collision-free insertion path.
 - `plan` options: `beam=N` (search width; 30 default, wider is slower
   and better), `rest=faces` to restrict allowed rest faces, cost weights
   `flip vertical driver shrink sibling loose`, `astar=N` to try exact
@@ -148,3 +159,7 @@ plan cost was 208 / 183 / 179 / 167 at beam 10 / 30 / 80 / 200, in 3 / 10
 - Sub-assemblies are not discovered; each recursive `.assemble` is a part.
 - Fixtures, clamps, and third hands are not modelled: a warning asks you
   to steady a rail stood on end.
+- Internal peg seats and capture order need `inset=` and `after=` hints;
+  the planner does not discover them from the solid geometry. The
+  [Orbit Tower](https://manual.cswine.cloud/builds/orbit-tower/index.html) is a worked
+  example: 20 pieces, 19 peg joints, assembled upright without flips.
