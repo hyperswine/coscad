@@ -13,6 +13,7 @@ import Data.List (intercalate)
 showD :: Double -> String
 showD x
   | isNaN x || isInfinite x = show x
+  | abs x > 1e299 = show x -- avoid overflow in the decimal-rounding step
   | otherwise =
       let r = fromIntegral (round (x * 1e9) :: Integer) / 1e9 :: Double
           r' = if r == 0 then 0 else r

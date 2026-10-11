@@ -149,11 +149,20 @@ unioning it into the composite, or nudge afterward with `χ`/`ψ`/`ζ`.
   aliases (`top+up`), opposites (`lft+rt`), or `ctr+top` are errors;
   `ctr` alone is valid.
 - `loft z0 p0 z1 p1 ...` / `p0 |> loft z1 p1` skins 2D profiles
+  at finite, strictly increasing heights (no equal or descending Z values)
   with BOSL2 `skin()`: `method="reindex"` when all profiles share a
   vertex count (fast), `method="distance"` otherwise (fine for a
   100-gon vs a triangle; ~30 s for two mismatched 100-gons — avoid).
   Profiles: single outlines only — `⭘ △ ⬠ ✎` and their in-plane
   transforms/offset; no booleans, no `ζ`, no `θ`/`ϕ`.
+- Box dimensions, primitive heights, and non-tapered radii must be finite
+  and positive. A frustum may have one zero-radius end. Tube inner
+  radius may be zero, but must be smaller than its outer radius. Prismoids
+  may taper to a zero-sized apex. Prism side counts must be whole numbers
+  from 3 to 4096; fractional counts are errors, not rounded.
+- Scale factors must be nonzero on the shape's axes; negative factors are
+  valid reflections. Z scale may be zero for a 2D profile. Mirror normals
+  must be nonzero. Overflowing geometry bounds are compile errors.
 
 ## Known gotchas (verified by hand, worth re-checking after any edit)
 
@@ -169,11 +178,11 @@ unioning it into the composite, or nudge afterward with `χ`/`ψ`/`ζ`.
   centroid offset before trusting an assumed orientation in a
   composite. Get this wrong and volumes silently come out ~5-10% off
   with no error — always sanity-check volume/bounds after using `⊿`.
-- **BOSL2 rounding limit**: `rounding` on `◙`/`⌽` must be less than
-  half the smallest relevant dimension or OpenSCAD hard-errors at
-  render time — CoScad does not validate this at compile time, so a
-  thin panel (e.g. 2.5mm thick) with rounding 2 will fail; use
-  rounding ≤ ~1 for thin stock.
+- **Chamfer/rounding limits are compile checked**: values must be
+  non-negative. On `▣`/`◙`, the maximum is half the smallest box
+  dimension; on `⌭`/`⌽`, it is the smaller of the radius and half the
+  height. Equality is allowed and zero disables the feature. A 2.5 mm
+  panel with rounding 2 is rejected; use at most 1.25 mm.
 - **`ζ` vs `ψ`**: easy to mistype/misremember since both are
   translate-family glyphs on nearby axes — `ψ` is Y, `ζ` is Z. (This
   was actually swapped once in an earlier version of Lib.hs and

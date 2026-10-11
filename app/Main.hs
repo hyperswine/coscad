@@ -9,6 +9,7 @@ import Coscad.Next (processNext)
 import Coscad.Part (compilePart, renderPart)
 import Coscad.Plan (processPlan)
 import Coscad.Site (processSite)
+import Data.List (isInfixOf)
 import Data.Version (showVersion)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import Paths_coscad (version)
@@ -16,9 +17,18 @@ import System.Environment (getArgs)
 import System.Exit (exitFailure, exitSuccess)
 import System.FilePath (takeExtension)
 import System.IO (hPutStrLn, hSetEncoding, stderr, stdout)
+import System.IO.Error (catchIOError, ioeGetFileName)
 
 main :: IO ()
-main = do
+main = runCLI `catchIOError` reportIO
+  where
+    reportIO err
+      | "cannot decode byte sequence" `isInfixOf` show err =
+          bad (maybe "source" id (ioeGetFileName err) ++ ": source is not valid UTF-8; save .coscad and .assemble files as UTF-8")
+      | otherwise = bad (show err)
+
+runCLI :: IO ()
+runCLI = do
   setLocaleEncoding utf8
   hSetEncoding stdout utf8
   hSetEncoding stderr utf8
@@ -29,7 +39,9 @@ main = do
     (a : _) | a `elem` ["--version", "-V", "version"] -> putStrLn ("coscad " ++ showVersion version)
     ["doctor"] -> runDoctor
     ("stl" : rest) -> withInOut "stl" rest renderPart
-    ["next", f] -> needExt ".assemble" f >> processNext f
+    ("next" : rest) -> case rest of
+      [f] -> needExt ".assemble" f >> processNext f
+      _ -> bad "next needs one .assemble file. Usage: coscad next model.assemble"
     ("site" : rest) -> case rest of
       (dir : specs) | not (null specs) -> mapM_ (needExt ".assemble") specs >> processSite dir specs
       _ -> bad "site takes an output directory and one or more .assemble files"

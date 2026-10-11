@@ -7,6 +7,7 @@ import Control.Monad (void)
 import Coscad.Codegen (loftErrors)
 import Coscad.Dim (Dim (..), dimOf)
 import Coscad.Shape
+import Coscad.Validate (maxSides, suggestion, validateShape)
 import Data.Char (isSpace)
 import Data.Either (lefts, rights)
 import Data.List (dropWhileEnd, foldl', intercalate, isPrefixOf)
@@ -95,7 +96,7 @@ runAt pos prefix input p = snd (runParser' p st)
 tryResolveVar :: SynMode -> VarTable -> NumTable -> Def -> Either (Def, Failure) (VarName, Shape)
 tryResolveVar mode table nums d =
   case runAt (defPos d) (defPrefix d) (defExpr d) (sc *> expression (Ctx mode table nums) <* eof) of
-    Right shape -> case dimOf shape >> loftErrors shape of
+    Right shape -> case dimOf shape >> loftErrors shape >> validateShape shape of
       Right _ -> Right (defName d, shape)
       Left msg -> Left (d, FSyntax (sourcePosPretty (defPos d) ++ ": in '" ++ defName d ++ "': " ++ msg))
     Left err -> case undefinedVarIn err of
@@ -150,6 +151,10 @@ double = lexeme $ L.signed sc (try L.float <|> fromIntegral <$> L.decimal)
 num :: Ctx -> Parser Double
 num ctx = do
   o <- getOffset
+  unicodeMinus <- optional (lookAhead (char '−'))
+  case unicodeMinus of
+    Just _ -> fail "Unicode minus U+2212 is not a numeric sign; replace it with '-'"
+    Nothing -> return ()
   v <- choice
     [ do
         _ <- char '-'
@@ -198,10 +203,36 @@ numName ctx = do
 -- Parse a complete program (file name is used in error messages)
 parseProgramNamed :: FilePath -> String -> Either String (VarTable, Shape)
 parseProgramNamed file input =
-  let (mode, body) = splitPragma input
-   in case parse (sc *> program file mode <* eof) file body of
+  case checkedPragma file input of
+    Left err -> Left err
+    Right (mode, body) -> case parse (sc *> program file mode <* eof) file body of
         Left err -> Left (errorBundlePretty err)
         Right result -> result
+
+checkedPragma :: FilePath -> String -> Either String (SynMode, String)
+checkedPragma file input = do
+  check False 0 (lines input)
+  Right (splitPragma input)
+  where
+    check _ _ [] = Right ()
+    check seen off (line : rest)
+      | null code = check seen (off + length line + 1) rest
+      | take 1 code == "!" =
+          if code `notElem` ["!simple", "!glyph"]
+            then err ("unknown syntax mode '" ++ code ++ "'; choose !simple or !glyph as the first directive")
+            else if seen
+              then err "only one syntax mode directive is allowed, before all definitions"
+              else check True (off + length line + 1) rest
+      | otherwise = check True (off + length line + 1) rest
+      where
+        code = trim (takeComment line)
+        at = off + length (takeWhile isSpace line)
+        err msg = case parse (takeP Nothing at *> fail msg :: Parser ()) file input of
+          Left e -> Left (errorBundlePretty e)
+          Right _ -> Right ()
+    takeComment ('/' : '/' : _) = []
+    takeComment (x : xs) = x : takeComment xs
+    takeComment [] = []
 
 parseProgram :: String -> Either String (VarTable, Shape)
 parseProgram = parseProgramNamed "<input>"
@@ -215,8 +246,8 @@ splitPragma input = go [] (lines input)
     go _ [] = (ModeLegacy, input)
     go acc (l : rest)
       | blank l = go (acc ++ [l]) rest
-      | trim l == "!simple" = (ModeSimple, unlines (acc ++ ("" : rest)))
-      | trim l == "!glyph" = (ModeGlyph, unlines (acc ++ ("" : rest)))
+      | trim (takeWhile (/= '/') l) == "!simple" = (ModeSimple, unlines (acc ++ ("" : rest)))
+      | trim (takeWhile (/= '/') l) == "!glyph" = (ModeGlyph, unlines (acc ++ ("" : rest)))
       | otherwise = (ModeLegacy, input)
     blank l = let t = trim l in null t || take 2 t == "//"
 
@@ -247,8 +278,13 @@ linePrefix start matched = replicate (unPos (sourceColumn start) - 1) ' ' ++ mat
 variableDefinition :: Parser Def
 variableDefinition = do
   start <- getSourcePos
-  (pre, name) <- match (identifier <* symbol "=")
+  -- '=' must not consume the next definition as its missing expression.
+  (pre, name) <- match (identifier <* char '=' <* hspace)
   pos <- getSourcePos
+  emptyExpr <- optional (lookAhead (void newline <|> eof <|> void (string "//")))
+  case emptyExpr of
+    Just _ -> fail ("missing expression after '=' in '" ++ name ++ "'; write " ++ name ++ " = <shape or number>")
+    Nothing -> return ()
   expr <- expressionString
   return (Def name expr pos (linePrefix start pre))
 
@@ -279,6 +315,16 @@ parseExpression ctx input =
   case parse (sc *> expression ctx <* eof) "" input of
     Left err -> Left (errorBundlePretty err)
     Right shape -> Right shape
+
+-- Name a missing parameter, while preserving undefined-name and numeric errors.
+arg :: Ctx -> String -> String -> Parser Double
+arg ctx form param = do
+  off <- getOffset
+  result <- observing (num ctx)
+  case result of
+    Right n -> return n
+    Left e@FancyError {} -> parseError e
+    Left _ -> setOffset off *> fail (form ++ " is missing or has an invalid " ++ param ++ " argument")
 
 -- Parse an expression (pipelines bind loosest)
 expression :: Ctx -> Parser Shape
@@ -321,8 +367,13 @@ pipeStage ctx =
     , bin "isect" (\p s -> Intersection [p, s])
     , bin "hull" (\p s -> Hull [p, s])
     , bin "mink" (\p s -> Minkowski [p, s])
+    , do
+        off <- getOffset
+        name <- identifier
+        setOffset off *> fail ("unknown pipeline stage '" ++ name ++ "'" ++ suggestion stages name ++ "; use e.g. |> move x y z")
     ]
   where
+    stages = ["x", "y", "z", "rotx", "roty", "rotz", "extrude", "move", "scale", "mirror", "anchor", "loft", "at", "on", "cutat", "add", "cut", "isect", "hull", "mink"]
     -- `keyword` backtracks by itself when the word does not match; the
     -- stage body is deliberately NOT under `try`, so an error inside a
     -- stage is reported where it happened (megaparsec >= 9.7 reports a
@@ -332,7 +383,9 @@ pipeStage ctx =
     rel w f = do
       keyword w
       v <- anchorVec
-      off <- option (0, 0, 0) (try ((,,) <$> num ctx <*> num ctx <*> num ctx))
+      off <- option (0, 0, 0) $ do
+        _ <- lookAhead (try (num ctx))
+        (,,) <$> arg ctx w "first offset x" <*> arg ctx w "second offset y" <*> arg ctx w "third offset z (three offsets followed by a child shape are required)"
       child <- shapeArg ctx
       return (\p -> f v off p child)
     bin w f = do
@@ -550,14 +603,14 @@ primaryExpression ctx =
         Just shape -> return shape
         Nothing
           | Map.member name (cNums ctx) -> setOffset o *> fail ("'" ++ name ++ "' is a number, not a shape (numbers are used as arguments: ● " ++ name ++ ", box " ++ name ++ " ...)")
-          | otherwise -> setOffset o *> fail (undefPfx ++ "'" ++ name ++ "'")
+          | otherwise -> setOffset o *> fail (undefPfx ++ "'" ++ name ++ "'" ++ suggestion (Map.keys varTable ++ reservedNames (cMode ctx)) name)
 
     -- !simple capitalized shape words
     simpleShape =
       choice
         [ keyword "Sphere" *> (Sphere <$> num ctx)
         , keyword "Cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> num ctx)
-        , keyword "Box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> num ctx <*> num ctx <*> num ctx)
+        , keyword "Box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> arg ctx "Box" "width" <*> arg ctx "Box" "depth" <*> arg ctx "Box" "height")
         , keyword "Cylinder" *> ((\r h -> Cyl r h 0 0) <$> num ctx <*> num ctx)
         , keyword "Cone" *> (Cone <$> num ctx <*> num ctx)
         , keyword "Tube" *> (Tube <$> num ctx <*> num ctx <*> num ctx)
@@ -595,13 +648,17 @@ primaryExpression ctx =
 
     rectangle = do
       symbol "▬"
-      x <- num ctx
-      y <- num ctx
-      Rectangle x y <$> num ctx
+      x <- arg ctx "box / ▬" "width"
+      y <- arg ctx "box / ▬" "depth"
+      Rectangle x y <$> arg ctx "box / ▬" "height"
 
     prism = do
       symbol "⎏"
+      off <- getOffset
       n <- num ctx
+      if n >= 3 && n <= fromIntegral maxSides && n == fromInteger (truncate n)
+        then return ()
+        else setOffset off *> fail ("prism side count must be a whole number from 3 to " ++ show maxSides)
       radius <- num ctx
       Prism (round n) radius <$> num ctx
 
@@ -696,7 +753,7 @@ primaryExpression ctx =
         , ycylShape
         , zcylShape
         , keyword "cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> num ctx)
-        , keyword "box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> num ctx <*> num ctx <*> num ctx)
+        , keyword "box" *> ((\a b c -> Cuboid (a, b, c) 0 0) <$> arg ctx "box" "width" <*> arg ctx "box" "depth" <*> arg ctx "box" "height")
         , keyword "sphere" *> (Sphere <$> num ctx)
         , keyword "cyl" *> ((\r h -> Cyl r h 0 0) <$> num ctx <*> num ctx)
         , keyword "tube" *> (Tube <$> num ctx <*> num ctx <*> num ctx)

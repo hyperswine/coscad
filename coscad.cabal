@@ -41,6 +41,7 @@ library
       Coscad.Plan
       Coscad.Shape
       Coscad.Site
+      Coscad.Validate
       Lib
   other-modules:
       Paths_coscad

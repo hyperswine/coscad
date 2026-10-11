@@ -19,6 +19,7 @@ import Coscad.Geometry
 import Coscad.IO (writeFileUtf8)
 import Coscad.OpenScad (runOpenscadRaw)
 import Coscad.Parser (resolveVariables)
+import Coscad.Validate (finite, readFinite, maxQuantity)
 import Coscad.Shape
 import Data.Char (isDigit, toLower)
 import Data.Graph (SCC (..), stronglyConnComp)
@@ -195,12 +196,11 @@ materialOf cnt hints = case map toLower <$> lookup "material" hints of
   Just "aluminum" -> Aluminium
   Just "printed" -> Printed
   Just "steel" -> Steel
+  Just m | m `elem` ["printed", "pla", "petg", "abs", "asa", "tpu", "nylon", "pc"] -> Printed
   _ -> if cnt > 0 then Printed else Aluminium
 
 readD :: String -> Maybe Double
-readD s = case reads (if take 1 s == "." then '0' : s else s) of
-  [(v, "")] -> Just v
-  _ -> Nothing
+readD = readFinite
 
 splitOn :: Char -> String -> [String]
 splitOn c s = case break (== c) s of
@@ -226,13 +226,15 @@ mkInstances ar asmShape = do
           (_, axis) = last (sortOn fst dims)
           isRail = lookup "profile" hints == Just "2020"
           ends = case lookup "ends" hints of
-            Just e -> let ws = splitOn ',' e in (take 1 ws /= ["blocked"], take 1 (drop 1 ws) /= ["blocked"])
+            Just e -> let ws = map (map toLower) (splitOn ',' e) in (take 1 ws /= ["blocked"], take 1 (drop 1 ws) /= ["blocked"])
             Nothing -> (True, True)
           mat = materialOf cnt hints
           vol = (x1 - x0) * (y1 - y0) * (z1 - z0)
           density = case mat of Aluminium -> 0.0027; Printed -> 0.00125; Steel -> 0.0079
           fill = if isRail then 0.37 else if mat == Printed then 0.3 else 1
           mass = fromMaybe (vol * density * fill) (lookup "mass" hints >>= readD)
+      mapM_ validatePartHint hints
+      when (not (finite mass) || mass <= 0) $ Left ("part '" ++ nm ++ "': mass estimate must be finite and greater than zero; reduce dimensions or supply mass= in grams")
       Right Inst
         { iName = nm, iPart = part, iAff = aff, iShape = sh, iBox = bb, iMat = mat, iRail = isRail
         , iAxis = axis, iEnds = ends, iTorque = lookup "torque" hints >>= readD, iMass = mass
@@ -258,14 +260,21 @@ parseSpec :: String -> Maybe (Double, Double)
 parseSpec s = case map toLower s of
   "peg" -> Just (0, 0) -- friction joint: no screw, no nut, no driver
   ('m' : rest) -> case break (== 'x') rest of
-    (d, 'x' : l) | all isDigitOrDot d, all isDigitOrDot l, not (null d), not (null l) -> (,) <$> readD d <*> readD l
+    (d, 'x' : l) | all isDigitOrDot d, all isDigitOrDot l, not (null d), not (null l) -> do
+      diameter <- readD d
+      len <- readD l
+      if diameter > 0 && len > 0 then Just (diameter, len) else Nothing
     _ -> Nothing
   _ -> Nothing
   where
     isDigitOrDot c = isDigit c || c == '.'
 
 mkFasteners :: [Inst] -> [FastDecl] -> Either String [Fast]
-mkFasteners insts decls = concat <$> mapM one (zip [1 ..] decls)
+mkFasteners insts decls = do
+  fs <- concat <$> mapM one (zip [1 ..] decls)
+  when (length fs > maxQuantity) $ Left ("total fastener count is too large; maximum is " ++ show maxQuantity)
+  -- IDs must remain unique when one declaration expands to 100+ joints.
+  Right [f {fId = i} | (i, f) <- zip [1 ..] fs]
   where
     byName = Map.fromList [(iName i, i) | i <- insts]
     byPart = Map.fromListWith (++) [(iPart i, [i]) | i <- insts]
@@ -277,7 +286,9 @@ mkFasteners insts decls = concat <$> mapM one (zip [1 ..] decls)
         Nothing -> Left ("unknown part '" ++ who ++ "' (not placed in asm)")
     one (k, fd) = do
       let at = "fastener line " ++ show (fdLine fd) ++ ": "
-      (d, l) <- maybe (Left (at ++ "cannot read screw spec '" ++ fdSpec fd ++ "' (expected e.g. M5x8)")) Right (parseSpec (fdSpec fd))
+      mapM_ (either (Left . (at ++)) Right . validateFastenerHint) (fdOpts fd)
+      when (fdCount fd < 1 || fdCount fd > maxQuantity) $ Left (at ++ "fastener count must be from 1 to " ++ show maxQuantity)
+      (d, l) <- maybe (Left (at ++ "cannot read screw spec '" ++ fdSpec fd ++ "'; screw diameter and length must be positive (expected e.g. M5x8, or use peg for a peg joint)")) Right (parseSpec (fdSpec fd))
       clamped <- either (Left . (at ++)) Right (find (fdClamped fd))
       host <- either (Left . (at ++)) Right (find (fdHost fd))
       n <- maybe (Left (at ++ "unknown face '" ++ fdFace fd ++ "' (top bot lft rt fwd bak)")) Right (anchorDir (fdFace fd))
@@ -312,8 +323,8 @@ mkFasteners insts decls = concat <$> mapM one (zip [1 ..] decls)
             Just "none" -> NoNut
             _ -> if isPeg then NoNut else DropIn
           isPeg = l <= 0
-          hd = if isPeg then "peg" else fromMaybe "button" (lookup "head" (fdOpts fd))
-          count = max 1 (fdCount fd)
+          hd = if isPeg then "peg" else map toLower (fromMaybe "button" (lookup "head" (fdOpts fd)))
+          count = fdCount fd
           positions = case lookup "at" (fdOpts fd) of
             Just s | Just ps <- mapM readD (splitOn ',' s) -> map (+ hostMin) ps
             _ -> [l0 + (l1 - l0) * (fromIntegral i - 0.5) / fromIntegral count | i <- [1 .. count]]
@@ -337,6 +348,8 @@ mkFasteners insts decls = concat <$> mapM one (zip [1 ..] decls)
                   , fDriverLen = if isPeg then 0 else 45, fDriverRad = if isPeg then 0 else headRadius hd d + 2
                   , fReach = if isPeg then 0 else l - thickness
                   }
+      when (length positions > maxQuantity) $ Left (at ++ "at= contains too many positions; maximum is " ++ show maxQuantity)
+      when (any (not . finite) positions) $ Left (at ++ "fastener positions overflowed; reduce at= distances or host dimensions")
       Right (map mkF (zip [1 ..] positions))
 
 -- ------------------------------------------------------------------

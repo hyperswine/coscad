@@ -1,0 +1,1781 @@
+[
+  {
+    "id": "glyph-basic",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "main = ■ 10\n"
+  },
+  {
+    "id": "simple-basic",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "!simple\nmain = Box 10 20 5\n"
+  },
+  {
+    "id": "compact-glyph",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "main = ●(2+3)\n"
+  },
+  {
+    "id": "negative-transform",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "main = χ -2 (■ 10)\n"
+  },
+  {
+    "id": "forward-number",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "main = cube width\nwidth = (h * 2)\nh = 5\n"
+  },
+  {
+    "id": "multiline-pipeline",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "main = ■ 10 // comment\n  |> move 1 2 3\n  |> anchor top\n"
+  },
+  {
+    "id": "anchor-aliases",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "main = ⚓ right+back+up (■ 10)\n"
+  },
+  {
+    "id": "numeric-subtraction",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "w = (10 - 2)\nmain = cube w\n"
+  },
+  {
+    "id": "multiline-glyph-boolean",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "main = ■ 10\n  ⊕ χ 10 (● 4)\n"
+  },
+  {
+    "id": "keyword-prefix-name",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "cube2 = ■ 5\nmain = cube2\n"
+  },
+  {
+    "id": "crlf",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "main = ■ 10\r\n"
+  },
+  {
+    "id": "no-final-newline",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "main = ■ 10"
+  },
+  {
+    "id": "loft-valid",
+    "category": "valid control",
+    "expect": "accept",
+    "source": "main = loft 0 (⭘ 5) 10 (△ 3)\n"
+  },
+  {
+    "id": "empty",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": ""
+  },
+  {
+    "id": "comments-only",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "// nothing\n"
+  },
+  {
+    "id": "missing-equals",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main ■ 10\n"
+  },
+  {
+    "id": "double-equals",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main == ■ 10\n"
+  },
+  {
+    "id": "wrong-assignment",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main := ■ 10\n"
+  },
+  {
+    "id": "missing-expression",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main =\n",
+    "messages": [
+      "missing expression after"
+    ]
+  },
+  {
+    "id": "missing-expression-followed",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "a =\nmain = ■ 10\n",
+    "messages": [
+      "missing expression after"
+    ]
+  },
+  {
+    "id": "missing-main",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "body = ■ 10\n"
+  },
+  {
+    "id": "main-capitalized",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "Main = ■ 10\n"
+  },
+  {
+    "id": "duplicate-main",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10\nmain = ● 5\n"
+  },
+  {
+    "id": "unknown-pragma",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "!simpel\nmain = cube 10\n",
+    "messages": [
+      "unknown syntax mode"
+    ]
+  },
+  {
+    "id": "second-pragma",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "!simple\n!glyph\nmain = cube 10\n",
+    "messages": [
+      "only one syntax mode"
+    ]
+  },
+  {
+    "id": "inactive-glyph",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "!simple\nmain = ■ 10\n"
+  },
+  {
+    "id": "inactive-simple",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "!glyph\nmain = Box 1 2 3\n"
+  },
+  {
+    "id": "block-comment",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "/* comment */\nmain = ■ 10\n"
+  },
+  {
+    "id": "hash-comment",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "# comment\nmain = ■ 10\n"
+  },
+  {
+    "id": "semicolon",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10;\n"
+  },
+  {
+    "id": "one-line-two-defs",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "a = ■ 10 main = a\n"
+  },
+  {
+    "id": "numeric-main",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = 10\n"
+  },
+  {
+    "id": "numeric-expression-main",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = (2+3)\n"
+  },
+  {
+    "id": "undefined",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = cuube 10\n"
+  },
+  {
+    "id": "wrong-case-shape",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = CUBE 10\n"
+  },
+  {
+    "id": "wrong-case-anchor",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ⚓ Top (■ 10)\n"
+  },
+  {
+    "id": "cycle",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "a = b\nb = a\nmain = a\n"
+  },
+  {
+    "id": "mixed-cycle",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "a = (b+1)\nb = a\nmain = cube a\n"
+  },
+  {
+    "id": "missing-cube-size",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■\n"
+  },
+  {
+    "id": "missing-box-height",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = box 10 20\n",
+    "messages": [
+      "height argument"
+    ]
+  },
+  {
+    "id": "extra-box-size",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = box 10 20 30 40\n"
+  },
+  {
+    "id": "named-args",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = box x=10 y=20 z=30\n"
+  },
+  {
+    "id": "commas-in-args",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = box 10,20,30\n"
+  },
+  {
+    "id": "decimal-comma",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ● 1,5\n"
+  },
+  {
+    "id": "radius-units",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ● 5mm\n"
+  },
+  {
+    "id": "double-decimal",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ● 1.2.3\n"
+  },
+  {
+    "id": "unfinished-exponent",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ● 1e\n"
+  },
+  {
+    "id": "infinite-literal",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ● 1e999\n"
+  },
+  {
+    "id": "division-zero",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "r = (1/0)\nmain = ● r\n"
+  },
+  {
+    "id": "shape-number",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "r = ■ 5\nmain = ● r\n"
+  },
+  {
+    "id": "spaced-minus",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = box 10 - 2 5\n"
+  },
+  {
+    "id": "bare-arithmetic",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = box 10+2 5 5\n"
+  },
+  {
+    "id": "missing-close",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = (■ 10\n"
+  },
+  {
+    "id": "extra-close",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10)\n"
+  },
+  {
+    "id": "split-parentheses",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = (\n ■ 10\n)\n"
+  },
+  {
+    "id": "missing-right-boolean",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10 ⊕\n"
+  },
+  {
+    "id": "wrong-boolean",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10 + ● 5\n"
+  },
+  {
+    "id": "pipeline-empty",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10 |>\n"
+  },
+  {
+    "id": "pipeline-typo",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10 |> mov 1 2 3\n",
+    "messages": [
+      "did you mean 'move'?"
+    ]
+  },
+  {
+    "id": "pipeline-missing-number",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10 |> move 1 2\n"
+  },
+  {
+    "id": "partial-relative-offset",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10 |> at top 1 2 (● 3)\n",
+    "messages": [
+      "third offset z"
+    ]
+  },
+  {
+    "id": "unknown-anchor",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10 |> at tpo (● 3)\n"
+  },
+  {
+    "id": "conflicting-anchors",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ⚓ top+bot (■ 10)\n"
+  },
+  {
+    "id": "center-plus-face",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ⚓ ctr+top (■ 10)\n"
+  },
+  {
+    "id": "transform-wrong-axis",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = Translate.w 5 (■ 10)\n"
+  },
+  {
+    "id": "tuple-missing-comma",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = Translate (1 2,3) (■ 10)\n"
+  },
+  {
+    "id": "tuple-extra-coordinate",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = Translate (1,2,3,4) (■ 10)\n"
+  },
+  {
+    "id": "extrude-solid",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ⮕ 10 (■ 5)\n"
+  },
+  {
+    "id": "union-dimensions",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 10 ⊕ ⭘ 5\n"
+  },
+  {
+    "id": "2d-main",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ⭘ 5\n"
+  },
+  {
+    "id": "loft-single",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = loft 0 (⭘ 5)\n"
+  },
+  {
+    "id": "loft-solid",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = loft 0 (■ 5) 10 (⭘ 3)\n"
+  },
+  {
+    "id": "bezier-odd",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ⮕ 2 (✎ 0 0 1 0 1 1 0)\n"
+  },
+  {
+    "id": "null-byte",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = ■ 1\u0000\n"
+  },
+  {
+    "id": "unicode-minus",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = χ −2 (■ 5)\n",
+    "messages": [
+      "Unicode minus U+2212"
+    ]
+  },
+  {
+    "id": "unicode-equals",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main ＝ ■ 5\n"
+  },
+  {
+    "id": "zero-width-space",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "main = cu​be 10\n"
+  },
+  {
+    "id": "utf8-bom",
+    "category": "shape syntax / resolution",
+    "expect": "reject",
+    "source": "﻿main = ■ 10\n"
+  },
+  {
+    "id": "invalid-encoding",
+    "category": "file handling",
+    "expect": "reject",
+    "source": "",
+    "encoding": "invalid-utf8",
+    "messages": [
+      "not valid UTF-8"
+    ]
+  },
+  {
+    "id": "negative-radius",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = ● -5\n",
+    "messages": [
+      "sphere radius"
+    ]
+  },
+  {
+    "id": "zero-box",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = box 0 10 10\n",
+    "messages": [
+      "box width"
+    ]
+  },
+  {
+    "id": "negative-box",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = box -1 10 10\n",
+    "messages": [
+      "box width"
+    ]
+  },
+  {
+    "id": "tube-inverted",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = tube 3 5 10\n",
+    "messages": [
+      "inner radius must be smaller"
+    ]
+  },
+  {
+    "id": "tube-negative-height",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = tube 5 3 -10\n",
+    "messages": [
+      "tube outer radius and height"
+    ]
+  },
+  {
+    "id": "rounding-too-large",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = ◙ 10 10 1 5\n",
+    "messages": [
+      "rounding is too large"
+    ]
+  },
+  {
+    "id": "prism-too-few-sides",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = ⎏ 2 5 10\n",
+    "messages": [
+      "side count must be a whole number"
+    ]
+  },
+  {
+    "id": "prism-fractional-sides",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = ⎏ 3.5 5 10\n",
+    "messages": [
+      "side count must be a whole number"
+    ]
+  },
+  {
+    "id": "prism-huge-sides",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = ⎏ 1e100 5 10\n",
+    "messages": [
+      "4096"
+    ]
+  },
+  {
+    "id": "zero-mirror",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = ⇋ 0 0 0 (■ 10)\n",
+    "messages": [
+      "nonzero normal"
+    ]
+  },
+  {
+    "id": "zero-scale",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = ⬈ 1 1 0 (■ 10)\n",
+    "messages": [
+      "scale factors must be nonzero"
+    ]
+  },
+  {
+    "id": "negative-scale",
+    "category": "geometry boundary",
+    "expect": "observe",
+    "source": "main = ⬈ -1 1 1 (■ 10)\n"
+  },
+  {
+    "id": "huge-finite-transform",
+    "category": "geometry boundary",
+    "expect": "observe",
+    "source": "main = χ 1e308 (■ 10)\n"
+  },
+  {
+    "id": "loft-descending",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = loft 10 (⭘ 5) 0 (⭘ 3)\n",
+    "messages": [
+      "strictly increasing"
+    ]
+  },
+  {
+    "id": "loft-same-height",
+    "category": "geometry boundary",
+    "expect": "reject",
+    "source": "main = loft 0 (⭘ 5) 0 (⭘ 3)\n",
+    "messages": [
+      "strictly increasing"
+    ]
+  },
+  {
+    "id": "assembly-valid",
+    "category": "assembly",
+    "expect": "accept",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "plan-valid",
+    "category": "planner",
+    "expect": "accept",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "missing-part",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← absent.coscad\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "part-wrong-ext",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← shape.scad\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "part-missing-path",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ←\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "wrong-reference-arrow",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a <- part.coscad\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "count-negative",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← part.coscad ×-1\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "count-fractional",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← part.coscad ×1.5\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "count-overflow",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← part.coscad ×18446744073709551616\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ],
+    "messages": [
+      "count is too large"
+    ]
+  },
+  {
+    "id": "missing-count",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← part.coscad ×\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "bad-orientation",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← part.coscad ▽tpo\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "missing-hint-value",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← part.coscad seam=\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ],
+    "messages": [
+      "missing value after 'seam='"
+    ]
+  },
+  {
+    "id": "duplicate-part",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← part.coscad\na ← part.coscad\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ],
+    "messages": [
+      "duplicate part declaration"
+    ]
+  },
+  {
+    "id": "duplicate-part-and-def",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← part.coscad\na = ■ 5\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "plate-typo-number",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "plate wide 220 6\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "plate-negative",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "plate -220 220 6\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "plate-infinite",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "plate 1e999 220 6\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ],
+    "messages": [
+      "plate width must be a finite"
+    ]
+  },
+  {
+    "id": "plate-negative-margin",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "plate 220 220 -6\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ],
+    "messages": [
+      "plate margin must be a finite"
+    ]
+  },
+  {
+    "id": "plate-excess-margin",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "plate 220 220 120\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "clearance-negative",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "clearance -1\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ],
+    "messages": [
+      "clearance must be a finite"
+    ]
+  },
+  {
+    "id": "clearance-infinite",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "clearance 1e999\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ],
+    "messages": [
+      "clearance must be a finite"
+    ]
+  },
+  {
+    "id": "reference-cycle",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← child.assemble\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ],
+    "files": {
+      "child.assemble": "b ← case.assemble\nasm = b\n"
+    }
+  },
+  {
+    "id": "subassembly-no-asm",
+    "category": "assembly",
+    "expect": "reject",
+    "source": "a ← child.assemble\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "case.assemble"
+    ],
+    "files": {
+      "child.assemble": "b ← part.coscad\n"
+    }
+  },
+  {
+    "id": "beam-zero",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan beam=0\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nut=none\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "positive whole number"
+    ]
+  },
+  {
+    "id": "beam-negative",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan beam=-2\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nut=none\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "positive whole number"
+    ]
+  },
+  {
+    "id": "beam-fractional",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan beam=0.1\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nut=none\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "positive whole number"
+    ]
+  },
+  {
+    "id": "beam-nonnumeric",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan beam=oops\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nut=none\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "positive whole number"
+    ]
+  },
+  {
+    "id": "beam-nan",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan beam=NaN\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nut=none\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "positive whole number"
+    ]
+  },
+  {
+    "id": "beam-infinity",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan beam=Infinity\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nut=none\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "positive whole number"
+    ]
+  },
+  {
+    "id": "beam-overflow",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan beam=1e100\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nut=none\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "positive whole number"
+    ]
+  },
+  {
+    "id": "astar-negative",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan astar=-1\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nut=none\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "positive whole number"
+    ]
+  },
+  {
+    "id": "astar-nan",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan astar=NaN\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nut=none\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "positive whole number"
+    ]
+  },
+  {
+    "id": "rest-typo",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan rest=bto\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "unknown rest face"
+    ]
+  },
+  {
+    "id": "rest-partially-bad",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan rest=bot,tpo\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "unknown rest face"
+    ]
+  },
+  {
+    "id": "flip-negative",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan flip=-10\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "finite, non-negative cost weight"
+    ]
+  },
+  {
+    "id": "flip-nan",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan flip=NaN\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "finite, non-negative cost weight"
+    ]
+  },
+  {
+    "id": "flip-nonnumeric",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan flip=oops\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "finite, non-negative cost weight"
+    ]
+  },
+  {
+    "id": "plan-key-typo",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan beem=30\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "unknown plan option 'beem'"
+    ]
+  },
+  {
+    "id": "plan-bare-count",
+    "category": "planner",
+    "expect": "reject",
+    "source": "plan ×5\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "plan takes key=value"
+    ]
+  },
+  {
+    "id": "mass-negative",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad mass=-5\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "mass=-5"
+    ]
+  },
+  {
+    "id": "mass-nan",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad mass=NaN\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "mass=NaN"
+    ]
+  },
+  {
+    "id": "mass-nonnumeric",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad mass=oops\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "mass=oops"
+    ]
+  },
+  {
+    "id": "material-typo",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad material=stel\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "unknown material 'stel'"
+    ]
+  },
+  {
+    "id": "ends-typo",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad ends=blockd,open\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "unknown rail end 'blockd'"
+    ]
+  },
+  {
+    "id": "unknown-part-hint",
+    "category": "planner",
+    "expect": "observe",
+    "source": "a ← part.coscad materail=steel\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "duplicate-hint",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad mass=1 mass=2\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "duplicate part option"
+    ]
+  },
+  {
+    "id": "screw-zero",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M0x0 b a top\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "diameter and length must be positive"
+    ]
+  },
+  {
+    "id": "screw-uppercase-control",
+    "category": "planner",
+    "expect": "accept",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4X20 b a top\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "screw-bad-number",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4..0x20 b a top\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "unknown-fastener-part",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener peg absent a top\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "fastener-face-typo",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener peg b a tpo\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "inset-negative",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener peg b a top inset=-1\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "inset-nan",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener peg b a top inset=NaN\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "inset= needs a distance"
+    ]
+  },
+  {
+    "id": "inset-nonnumeric",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener peg b a top inset=oops\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "fastener-count-zero",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener peg b a top ×0\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "count must be at least 1"
+    ]
+  },
+  {
+    "id": "fastener-count-overflow",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener peg b a top ×18446744073709551616\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "count is too large"
+    ]
+  },
+  {
+    "id": "fastener-at-nonnumeric",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener peg b a top at=oops\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "at=oops: expected a finite"
+    ]
+  },
+  {
+    "id": "fastener-at-nan",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener peg b a top at=NaN\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "at=NaN: expected a finite"
+    ]
+  },
+  {
+    "id": "fastener-torque-negative",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top torque=-2\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "torque=-2: expected a finite"
+    ]
+  },
+  {
+    "id": "fastener-torque-nonnumeric",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top torque=oops\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "torque=oops: expected a finite"
+    ]
+  },
+  {
+    "id": "fastener-nut-typo",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nut=drpin\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "did you mean 'dropin'?"
+    ]
+  },
+  {
+    "id": "fastener-head-typo",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top head=buton\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "did you mean 'button'?"
+    ]
+  },
+  {
+    "id": "fastener-through-nonnumeric",
+    "category": "planner",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top through=oops\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ],
+    "messages": [
+      "through=oops: expected a finite"
+    ]
+  },
+  {
+    "id": "cli-no-args",
+    "category": "CLI",
+    "expect": "reject",
+    "source": "main = ■ 10\n",
+    "args": []
+  },
+  {
+    "id": "cli-unknown-command",
+    "category": "CLI",
+    "expect": "reject",
+    "source": "main = ■ 10\n",
+    "args": [
+      "frobnicate"
+    ]
+  },
+  {
+    "id": "cli-next-no-file",
+    "category": "CLI",
+    "expect": "reject",
+    "source": "main = ■ 10\n",
+    "args": [
+      "next"
+    ],
+    "messages": [
+      "next needs one .assemble file"
+    ]
+  },
+  {
+    "id": "cli-next-extra",
+    "category": "CLI",
+    "expect": "reject",
+    "source": "main = ■ 10\n",
+    "args": [
+      "next",
+      "case.assemble",
+      "extra"
+    ]
+  },
+  {
+    "id": "cli-plan-no-file",
+    "category": "CLI",
+    "expect": "reject",
+    "source": "main = ■ 10\n",
+    "args": [
+      "plan"
+    ]
+  },
+  {
+    "id": "cli-plan-unknown-flag",
+    "category": "CLI",
+    "expect": "reject",
+    "source": "main = ■ 10\n",
+    "args": [
+      "plan",
+      "--pnq",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "cli-missing-file",
+    "category": "CLI",
+    "expect": "reject",
+    "source": "main = ■ 10\n",
+    "args": [
+      "absent.coscad"
+    ]
+  },
+  {
+    "id": "cli-output-missing-value",
+    "category": "CLI",
+    "expect": "reject",
+    "source": "main = ■ 10\n",
+    "args": [
+      "case.coscad",
+      "-o"
+    ]
+  },
+  {
+    "id": "nested-256",
+    "category": "bounded stress",
+    "expect": "accept",
+    "source": "main = ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((■ 1))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))\n"
+  },
+  {
+    "id": "nested-256-unclosed",
+    "category": "bounded stress",
+    "expect": "reject",
+    "source": "main = ((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((■ 1)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))\n"
+  },
+  {
+    "id": "identifier-512",
+    "category": "bounded stress",
+    "expect": "reject",
+    "source": "main = aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"
+  },
+  {
+    "id": "numeric-512-digits",
+    "category": "bounded stress",
+    "expect": "reject",
+    "source": "main = ● 99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999\n"
+  },
+  {
+    "id": "bad-chamfer",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "main = ▣ 10 10 1 5\n",
+    "messages": [
+      "chamfer is too large"
+    ]
+  },
+  {
+    "id": "cylinder-rounding",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "main = ⌽ 2 4 3\n",
+    "messages": [
+      "rounding is too large"
+    ]
+  },
+  {
+    "id": "bounds-overflow",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "main = ■ 1 |> scale 1e308 1e308 1e308 |> scale 10 10 10\n",
+    "messages": [
+      "bounds overflowed"
+    ]
+  },
+  {
+    "id": "prism-limit",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "main = ⎏ 4097 5 10\n",
+    "messages": [
+      "4096"
+    ]
+  },
+  {
+    "id": "zero-extrusion",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "main = ⮕ 0 (⭘ 5)\n",
+    "messages": [
+      "extrusion height"
+    ]
+  },
+  {
+    "id": "tube-solid-control",
+    "category": "remaining-issue regression",
+    "expect": "accept",
+    "source": "main = tube 5 0 10\n"
+  },
+  {
+    "id": "apex-control",
+    "category": "remaining-issue regression",
+    "expect": "accept",
+    "source": "main = ⏢ 10 10 0 0 5\n"
+  },
+  {
+    "id": "rounding-boundary-control",
+    "category": "remaining-issue regression",
+    "expect": "accept",
+    "source": "main = ◙ 10 10 2 1\n"
+  },
+  {
+    "id": "mirror-huge-normal-control",
+    "category": "remaining-issue regression",
+    "expect": "accept",
+    "source": "main = ■ 10 |> mirror 1e200 1 0\n"
+  },
+  {
+    "id": "prism-boundary-control",
+    "category": "remaining-issue regression",
+    "expect": "accept",
+    "source": "main = ⎏ 4096 5 10\n"
+  },
+  {
+    "id": "profile-zero-z-control",
+    "category": "remaining-issue regression",
+    "expect": "accept",
+    "source": "main = ⮕ 2 (⭘ 5 |> scale 1 1 0)\n"
+  },
+  {
+    "id": "pragma-comment-control",
+    "category": "remaining-issue regression",
+    "expect": "accept",
+    "source": "!simple // mode\nmain = Box 10 20 5\n"
+  },
+  {
+    "id": "fastener-key-typo",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top nutt=hex\n",
+    "messages": [
+      "unknown fastener option 'nutt'"
+    ],
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "fastener-duplicate-key",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top head=button head=socket\n",
+    "messages": [
+      "duplicate fastener option"
+    ],
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "fastener-line-isolation",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "fastener peg b a\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\n",
+    "messages": [
+      "host face"
+    ],
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "duplicate-plan-lines",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "plan beam=10\na ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nplan beam=20\n",
+    "messages": [
+      "duplicate plan option"
+    ],
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "reserved-part",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "cube ← part.coscad\nasm = cube\n",
+    "messages": [
+      "cannot be a part name"
+    ],
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "part-count-budget",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "a ← part.coscad ×10001\nasm = a\n",
+    "messages": [
+      "count is too large"
+    ],
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "total-count-budget",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "a ← part.coscad ×6000\nb ← part.coscad ×6000\nasm = a ⌖ top b\n",
+    "messages": [
+      "total expanded print count"
+    ],
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "profile-typo",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "a ← part.coscad profile=202O\nasm = a\n",
+    "messages": [
+      "unknown profile"
+    ],
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "recursive-count-budget",
+    "category": "remaining-issue regression",
+    "expect": "reject",
+    "source": "child ← child.assemble ×10000\nasm = child\n",
+    "files": {
+      "child.assemble": "a ← part.coscad ×10000\nasm = a\n"
+    },
+    "messages": [
+      "expanded print count"
+    ],
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "premade-pla-control",
+    "category": "remaining-issue regression",
+    "expect": "accept",
+    "source": "a ← part.coscad ×0 material=PLA seam=rear custom=retained\nasm = a\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "enum-case-control",
+    "category": "remaining-issue regression",
+    "expect": "accept",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener M4x20 b a top head=SOCKET nut=NONE through=0 torque=1\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  },
+  {
+    "id": "many-fasteners-control",
+    "category": "remaining-issue regression",
+    "expect": "accept",
+    "source": "a ← part.coscad\nb ← part.coscad\nasm = a ⌖ top b\nfastener peg b a top ×101\nfastener peg b a top\n",
+    "filename": "case.assemble",
+    "args": [
+      "plan",
+      "case.assemble"
+    ]
+  }
+]

@@ -25,10 +25,14 @@ plan beam=30 rest=bot,top,fwd,bak             // optional planner settings
 
 - `profile=2020` marks a rail: all four long faces are T-slots, both ends
   open unless `ends=open,blocked` (min end, max end along the rail).
-- `material=aluminium|printed|steel` sets the torque class; parts printed
+- `material=aluminium|printed|steel` sets the torque class; `aluminum` is
+  also accepted. `pla`, `petg`, `abs`, `asa`, `tpu`, `nylon`, and `pc` use
+  the printed class, including premade `×0` parts. Values are case insensitive.
+  Parts printed
   by this assembly (`×n`, n > 0) default to `printed`, premade (`×0`)
   parts to `aluminium`. `torque=` on a part or a fastener overrides.
-  `mass=` (grams) overrides the volume-based estimate.
+  `mass=` (grams) overrides the volume-based estimate. Mass and torque
+  overrides must be finite and greater than zero.
 - `after=instance[,instance...]` on a part declares placement prerequisites
   that the box model cannot discover. For example,
   `axle2 ← axle.coscad ×1 after=rotor#1` keeps a rotor's entry open until
@@ -39,7 +43,8 @@ plan beam=30 rest=bot,top,fwd,bak             // optional planner settings
   the bare name when once); `face` is the host face the screw enters
   (`top bot lft rt fwd bak`, world frame). Options: `×n` screws spaced
   along the overlap, `at=mm[,mm]` positions from the host's marked end,
-  `nut=dropin|slidein|hex`, `head=button|socket`, `through=mm` (material
+  `nut=dropin|slidein|hex|none` (`drop-in`, `slide-in`, and `captive` for
+  `hex` are also accepted), `head=button|socket`, `through=mm` (material
   under the head when the clamped part is thinner at the hole than its
   bounding box, e.g. counterbored), `torque=Nm`.
 - `nut=hex pocket=face`: the host is not a rail; the screw meets a plain
@@ -71,6 +76,27 @@ plan beam=30 rest=bot,top,fwd,bak             // optional planner settings
   and better), `rest=faces` to restrict allowed rest faces, cost weights
   `flip vertical driver shrink sibling loose`, `astar=N` to try exact
   search with an expansion cap first.
+  `beam` and `astar` must be positive whole numbers; cost weights must be
+  finite and non-negative. Unknown plan options and invalid rest faces are
+  errors, and each option may appear only once across all `plan` lines.
+
+Part names must be unique. Repeated options on a part or fastener are errors,
+including repeated `×count` or `▽orientation`. Unknown fastener options are
+errors; unknown part hints such as `seam=rear` remain available as metadata.
+Recognized hints are checked before planning: `profile` must be `2020`, and
+`ends` must contain exactly two `open` or `blocked` values.
+
+Distances in `at=`, `through=`, and `inset=` must be finite and non-negative.
+Screw diameter and length must be positive; write `peg` for a friction joint.
+Fastener quantities are from 1 to 10,000. Part print quantities are from 0 to
+10,000, with a total expanded print quantity of at most 10,000 across recursive
+assemblies. Expanded fasteners also total at most 10,000, including explicit
+`at=` positions. These are input limits, not a promise that planning a large
+assembly will be fast.
+
+`plate width depth [margin]` requires finite positive dimensions and a finite,
+non-negative margin that leaves usable space on both axes; the default margin
+is 6 mm. `clearance mm` requires a finite, non-negative distance.
 
 Accessibility is judged on boxes: a driver is blocked only when its
 cylinder really enters another part's *oriented* box (the part's own box

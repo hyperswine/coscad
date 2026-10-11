@@ -28,7 +28,11 @@ vlen :: V3 -> D
 vlen (a, b, c) = sqrt (a * a + b * b + c * c)
 
 vnormed :: V3 -> V3
-vnormed v@(a, b, c) = let l = vlen v in if l == 0 then (0, 0, 1) else (a / l, b / l, c / l)
+vnormed (a, b, c) =
+  let m = maximum [abs a, abs b, abs c]
+      (x, y, z) = (a / m, b / m, c / m)
+      l = sqrt (x * x + y * y + z * z)
+   in if m == 0 then (0, 0, 1) else (x / l, y / l, z / l)
 
 vclamp :: V3 -> V3
 vclamp (a, b, c) = (cl a, cl b, cl c)
