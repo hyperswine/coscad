@@ -1,0 +1,30 @@
+{
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 250,
+    "total_layer_num": 250,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "coin-weight-cylinder_bed1.gcode",
+    "nozzle_temper": 54.46875,
+    "bed_temper": 47.5,
+    "print_error": 0
+  },
+  "raised_z": 128,
+  "return_z": 148,
+  "raised": true,
+  "returned": true,
+  "after": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 250,
+    "total_layer_num": 250,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "coin-weight-cylinder_bed1.gcode",
+    "nozzle_temper": 52.21875,
+    "bed_temper": 47.15625,
+    "print_error": 0
+  }
+}

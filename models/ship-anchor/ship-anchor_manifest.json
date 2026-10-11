@@ -1,0 +1,1 @@
+{"bed": {"w": 256, "d": 256}, "variants": [{"hints": {"material": "pla"}}], "beds": [{"index": 1, "stl": "ship-anchor.stl", "placements": [{"instance": "ship-anchor"}]}]}

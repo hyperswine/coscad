@@ -1,0 +1,24 @@
+{
+  "bed": {
+    "w": 256,
+    "d": 256
+  },
+  "variants": [
+    {
+      "hints": {
+        "material": "pla"
+      }
+    }
+  ],
+  "beds": [
+    {
+      "index": 1,
+      "stl": "bow-center.stl",
+      "placements": [
+        {
+          "instance": "bow-center"
+        }
+      ]
+    }
+  ]
+}

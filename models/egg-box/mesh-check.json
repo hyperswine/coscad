@@ -1,0 +1,24 @@
+{
+  "triangles": 1036,
+  "closed_manifold": true,
+  "connected_components": 1,
+  "bounds": [
+    [
+      0.0,
+      0.007892608642578125,
+      0.0
+    ],
+    [
+      127.19999694824219,
+      127.19210815429688,
+      78.0
+    ]
+  ],
+  "cell_clear_mm": [
+    60,
+    60,
+    75
+  ],
+  "floor_mm": 3,
+  "wall_mm": 2.4
+}

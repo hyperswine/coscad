@@ -1,0 +1,30 @@
+{
+  "plate_clear_confirmed_by_user": true,
+  "spool": "ams2",
+  "file": "egg-box_bed1.gcode.3mf",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 30,
+    "total_layer_num": 30,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "ship-anchor_bed1.gcode",
+    "nozzle_temper": 24.8125,
+    "bed_temper": 24.21875,
+    "print_error": 0
+  },
+  "accepted": true,
+  "started": {
+    "gcode_state": "PREPARE",
+    "mc_percent": 100,
+    "layer_num": 30,
+    "total_layer_num": 30,
+    "mc_remaining_time": 0,
+    "gcode_file": "egg-box_bed1.gcode.3mf",
+    "subtask_name": "egg-box_bed1.gcode",
+    "nozzle_temper": 24.8125,
+    "bed_temper": 24.21875,
+    "print_error": 0
+  }
+}

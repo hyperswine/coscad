@@ -1,0 +1,29 @@
+// Open egg box: 2 columns by 2 rows.
+// Regenerate grid using generate.py; geometry is entirely CoScad.
+columns = 2
+rows = 2
+cell = 60
+wall = 2.4
+floor = 3
+clear_depth = 75
+height = floor + clear_depth
+pitch = cell + wall
+width = columns * cell + (columns + 1) * wall
+depth = rows * cell + (rows + 1) * wall
+outer_radius = 4
+inner_radius = 6
+outer_a = χ outer_radius (ψ outer_radius (◎ outer_radius height))
+outer_b = χ (width - outer_radius) (ψ outer_radius (◎ outer_radius height))
+outer_c = χ outer_radius (ψ (depth - outer_radius) (◎ outer_radius height))
+outer_d = χ (width - outer_radius) (ψ (depth - outer_radius) (◎ outer_radius height))
+body = outer_a ⇓ outer_b ⇓ outer_c ⇓ outer_d
+hole_a = χ inner_radius (ψ inner_radius (◎ inner_radius (clear_depth + 1)))
+hole_b = χ (cell - inner_radius) (ψ inner_radius (◎ inner_radius (clear_depth + 1)))
+hole_c = χ inner_radius (ψ (cell - inner_radius) (◎ inner_radius (clear_depth + 1)))
+hole_d = χ (cell - inner_radius) (ψ (cell - inner_radius) (◎ inner_radius (clear_depth + 1)))
+hole = hole_a ⇓ hole_b ⇓ hole_c ⇓ hole_d
+cell_0_0 = χ (wall + 0 * pitch) (ψ (wall + 0 * pitch) (ζ floor hole))
+cell_1_0 = χ (wall + 1 * pitch) (ψ (wall + 0 * pitch) (ζ floor hole))
+cell_0_1 = χ (wall + 0 * pitch) (ψ (wall + 1 * pitch) (ζ floor hole))
+cell_1_1 = χ (wall + 1 * pitch) (ψ (wall + 1 * pitch) (ζ floor hole))
+main = body ⊖ cell_0_0 ⊖ cell_1_0 ⊖ cell_0_1 ⊖ cell_1_1

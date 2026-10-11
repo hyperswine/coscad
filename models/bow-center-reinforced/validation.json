@@ -1,0 +1,11 @@
+{
+  "closed_manifold": true,
+  "connected_components": 1,
+  "triangles": 1156,
+  "probes": {
+    "m4_bolt_paths": "zero interference",
+    "m4_nut_seats": "zero interference",
+    "arm_pockets": "zero interference",
+    "top_recess": "zero interference"
+  }
+}

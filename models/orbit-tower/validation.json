@@ -1,0 +1,46 @@
+{
+  "one_bed": true,
+  "physical_parts": 20,
+  "bed": {
+    "components": 20,
+    "triangles": 12904,
+    "volume_mm3": 51249.51085434963
+  },
+  "variants": {
+    "base_bot": {
+      "components": 1,
+      "triangles": 352,
+      "volume_mm3": 14973.566235844004
+    },
+    "axle1_bot": {
+      "components": 1,
+      "triangles": 468,
+      "volume_mm3": 2288.1765287572725
+    },
+    "rotor_bot": {
+      "components": 1,
+      "triangles": 876,
+      "volume_mm3": 2560.481042068852
+    },
+    "satellite_bot": {
+      "components": 1,
+      "triangles": 696,
+      "volume_mm3": 860.4228606702745
+    },
+    "cap_bot": {
+      "components": 1,
+      "triangles": 312,
+      "volume_mm3": 2021.462029527292
+    }
+  },
+  "fits_and_motion": {
+    "square_socket": "zero interference",
+    "square_socket_shifted": 6.1200226592991385,
+    "journal": "zero interference",
+    "journal_shifted": 4.992627745259256,
+    "satellite_socket": "zero interference",
+    "satellite_socket_shifted": 1.8234474435412267,
+    "full_rotation_envelope": "zero interference"
+  },
+  "minimum_vertical_gap_between_satellite_and_next_arm_mm": 3.5
+}

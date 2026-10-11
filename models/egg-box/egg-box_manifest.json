@@ -1,0 +1,24 @@
+{
+  "bed": {
+    "w": 256,
+    "d": 256
+  },
+  "variants": [
+    {
+      "hints": {
+        "material": "pla"
+      }
+    }
+  ],
+  "beds": [
+    {
+      "index": 1,
+      "stl": "egg-box.stl",
+      "placements": [
+        {
+          "instance": "egg-box"
+        }
+      ]
+    }
+  ]
+}

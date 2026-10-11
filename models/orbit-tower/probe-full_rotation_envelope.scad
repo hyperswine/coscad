@@ -1,0 +1,1 @@
+intersection(){union(){import("orbit-tower_next_axle1_bot.stl");translate([0,0,15]){import("orbit-tower_next_axle1_bot.stl");}}union(){translate([0,0,7.05])difference(){cylinder(r=31,h=4.5,$fn=100);translate([0,0,-0.1])cylinder(r=5.15,h=4.7,$fn=100);}translate([0,0,11.55])difference(){cylinder(r=31,h=7,$fn=100);translate([0,0,-0.1])cylinder(r=17.4,h=7.2,$fn=100);}}}

@@ -1,0 +1,9 @@
+{
+  "status": "restored",
+  "duration_seconds": 600,
+  "restore_speed": 0,
+  "started_at": "2026-10-05T01:11:58+1100",
+  "restore_at": "2026-10-05T01:21:58+1100",
+  "reported_chamber_fan_speed": "9",
+  "restored_at": "2026-10-05T01:21:58+1100"
+}

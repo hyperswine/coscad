@@ -1,0 +1,17 @@
+// Decorative ship anchor, approximately 100 mm long x 74 mm wide x 6 mm thick.
+// Print flat at Z=0. Pure CoScad primitives; no support or assembly required.
+// Round eye, straight shank, transverse stock, curved arms and rounded flukes.
+thickness = 6
+shank = χ -5 (ψ 4 (▬ 10 76 thickness))
+stock = (χ -23 (ψ 69 (◎ 3 thickness))) ⇓ (χ 23 (ψ 69 (◎ 3 thickness)))
+eye_outer = ψ 88 (◎ 12 thickness)
+eye_hole = ψ 88 (ζ -1 (◎ 7 (thickness + 2)))
+eye = eye_outer ⊖ eye_hole
+arm_outer = ψ 34 (◎ 34 thickness)
+arm_inner = ψ 34 (ζ -1 (◎ 25 (thickness + 2)))
+upper_trim = χ -40 (ψ 34 (ζ -1 (▬ 80 80 (thickness + 2))))
+arms = (arm_outer ⊖ arm_inner) ⊖ upper_trim
+// Hulls of three small round pads give each fluke a printable, blunt tip.
+left_fluke = (χ -36 (ψ 40 (◎ 1 thickness))) ⇓ (χ -18 (ψ 33 (◎ 1 thickness))) ⇓ (χ -32 (ψ 23 (◎ 1 thickness)))
+right_fluke = ⇋ 1 0 0 left_fluke
+main = shank ⊕ stock ⊕ eye ⊕ arms ⊕ left_fluke ⊕ right_fluke

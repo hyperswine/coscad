@@ -1,0 +1,36 @@
+{
+  "source": "models/orbit-tower/orbit-tower.assemble",
+  "bed": {"w": 256, "d": 256, "margin": 7, "max_z": 250},
+  "variants": [
+    {"id": "base_bot", "part": "base", "source": "models/orbit-tower/base.coscad", "down": "bot", "orientation_mode": "declared", "fff_score": 0.37, "footprint": [58, 57.886, 11], "mesh": "models/orbit-tower/orbit-tower_next_base_bot.stl", "hints": {"material": "pla"}},
+    {"id": "axle1_bot", "part": "axle1", "source": "models/orbit-tower/axle.coscad", "down": "bot", "orientation_mode": "declared", "fff_score": -0.243, "footprint": [18, 17.964, 20], "mesh": "models/orbit-tower/orbit-tower_next_axle1_bot.stl", "hints": {"material": "pla"}},
+    {"id": "rotor_bot", "part": "rotor", "source": "models/orbit-tower/rotor.coscad", "down": "bot", "orientation_mode": "declared", "fff_score": 0.261, "footprint": [59, 20.959, 4.5], "mesh": "models/orbit-tower/orbit-tower_next_rotor_bot.stl", "hints": {"material": "pla"}},
+    {"id": "satellite_bot", "part": "satellite", "source": "models/orbit-tower/satellite.coscad", "down": "bot", "orientation_mode": "declared", "fff_score": 2.0e-3, "footprint": [13, 12.974, 10.8], "mesh": "models/orbit-tower/orbit-tower_next_satellite_bot.stl", "hints": {"material": "pla"}},
+    {"id": "cap_bot", "part": "cap", "source": "models/orbit-tower/cap.coscad", "down": "bot", "orientation_mode": "declared", "fff_score": -0.111, "footprint": [18, 17.964, 11], "mesh": "models/orbit-tower/orbit-tower_next_cap_bot.stl", "hints": {"material": "pla"}}
+  ],
+  "beds": [
+    {"index": 1, "stl": "models/orbit-tower/orbit-tower_bed1.stl", "placements": [
+      {"instance": "base_1", "variant": "base_bot", "x": 7, "y": 7, "w": 58, "d": 57.886},
+      {"instance": "rotor_1", "variant": "rotor_bot", "x": 72, "y": 7, "w": 59, "d": 20.959},
+      {"instance": "rotor_2", "variant": "rotor_bot", "x": 138, "y": 7, "w": 59, "d": 20.959},
+      {"instance": "rotor_3", "variant": "rotor_bot", "x": 7, "y": 71.886, "w": 59, "d": 20.959},
+      {"instance": "rotor_4", "variant": "rotor_bot", "x": 73, "y": 71.886, "w": 59, "d": 20.959},
+      {"instance": "rotor_5", "variant": "rotor_bot", "x": 139, "y": 71.886, "w": 59, "d": 20.959},
+      {"instance": "rotor_6", "variant": "rotor_bot", "x": 7, "y": 99.844, "w": 59, "d": 20.959},
+      {"instance": "axle1_1", "variant": "axle1_bot", "x": 73, "y": 99.844, "w": 18, "d": 17.964},
+      {"instance": "axle2_1", "variant": "axle1_bot", "x": 98, "y": 99.844, "w": 18, "d": 17.964},
+      {"instance": "axle3_1", "variant": "axle1_bot", "x": 123, "y": 99.844, "w": 18, "d": 17.964},
+      {"instance": "axle4_1", "variant": "axle1_bot", "x": 148, "y": 99.844, "w": 18, "d": 17.964},
+      {"instance": "axle5_1", "variant": "axle1_bot", "x": 173, "y": 99.844, "w": 18, "d": 17.964},
+      {"instance": "axle6_1", "variant": "axle1_bot", "x": 198, "y": 99.844, "w": 18, "d": 17.964},
+      {"instance": "cap_1", "variant": "cap_bot", "x": 223, "y": 99.844, "w": 18, "d": 17.964},
+      {"instance": "satellite_1", "variant": "satellite_bot", "x": 7, "y": 127.803, "w": 13, "d": 12.974},
+      {"instance": "satellite_2", "variant": "satellite_bot", "x": 27, "y": 127.803, "w": 13, "d": 12.974},
+      {"instance": "satellite_3", "variant": "satellite_bot", "x": 47, "y": 127.803, "w": 13, "d": 12.974},
+      {"instance": "satellite_4", "variant": "satellite_bot", "x": 67, "y": 127.803, "w": 13, "d": 12.974},
+      {"instance": "satellite_5", "variant": "satellite_bot", "x": 87, "y": 127.803, "w": 13, "d": 12.974},
+      {"instance": "satellite_6", "variant": "satellite_bot", "x": 107, "y": 127.803, "w": 13, "d": 12.974}
+    ]}
+  ],
+  "assembly_only": []
+}
