@@ -1,0 +1,6 @@
+// Orbit Tower: stable foot, square peg upward. Print on the broad bottom.
+plate = ◎ 29 4
+// Circular taper avoids unsupported lips; peg has a small entry chamfer.
+taper = (▻ 29 (29 / 3)) ∩ (◎ 29 2)
+peg = ▣ 6 6 5.2 0.3 |> move 0 0 8.4
+main = plate ⊕ (taper |> move 0 0 4) ⊕ peg

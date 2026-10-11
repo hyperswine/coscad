@@ -1,0 +1,32 @@
+// 20 physical pieces. All parts have their intended print face declared.
+plate 256 256 7
+base ← base.coscad ×1 ▽bot material=pla
+axle1 ← axle.coscad ×1 ▽bot material=pla
+axle2 ← axle.coscad ×1 ▽bot material=pla
+axle3 ← axle.coscad ×1 ▽bot material=pla
+axle4 ← axle.coscad ×1 ▽bot material=pla
+axle5 ← axle.coscad ×1 ▽bot material=pla
+axle6 ← axle.coscad ×1 ▽bot material=pla
+rotor ← rotor.coscad ×6 ▽bot material=pla
+satellite ← satellite.coscad ×6 ▽bot material=pla
+cap ← cap.coscad ×1 ▽bot material=pla
+asm = base
+  ⊕ (axle1 |> move 0 0 6)
+  ⊕ (rotor |> move 0 0 13)
+  ⊕ (satellite |> rotx 180 |> move 24 0 24.5)
+  ⊕ (axle2 |> move 0 0 21)
+  ⊕ (rotor |> rotz 60 |> move 0 0 28)
+  ⊕ (satellite |> rotx 180 |> move 24 0 0 |> rotz 60 |> move 0 0 39.5)
+  ⊕ (axle3 |> move 0 0 36)
+  ⊕ (rotor |> rotz 120 |> move 0 0 43)
+  ⊕ (satellite |> rotx 180 |> move 24 0 0 |> rotz 120 |> move 0 0 54.5)
+  ⊕ (axle4 |> move 0 0 51)
+  ⊕ (rotor |> rotz 180 |> move 0 0 58)
+  ⊕ (satellite |> rotx 180 |> move 24 0 0 |> rotz 180 |> move 0 0 69.5)
+  ⊕ (axle5 |> move 0 0 66)
+  ⊕ (rotor |> rotz 240 |> move 0 0 73)
+  ⊕ (satellite |> rotx 180 |> move 24 0 0 |> rotz 240 |> move 0 0 84.5)
+  ⊕ (axle6 |> move 0 0 81)
+  ⊕ (rotor |> rotz 300 |> move 0 0 88)
+  ⊕ (satellite |> rotx 180 |> move 24 0 0 |> rotz 300 |> move 0 0 99.5)
+  ⊕ (cap |> move 0 0 96)

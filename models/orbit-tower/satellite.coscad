@@ -1,0 +1,10 @@
+// Six identical plug-in satellites. Print broad face down, peg up.
+// Turn over for assembly: the 4.8 mm peg enters a 5.5 mm hole.
+disc = ◎ 6.5 4
+neck = ζ 4 ((▻ 6.5 7.8) ∩ (◎ 6.5 3))
+// The neck tapers inward without requiring supports.
+peg = ζ 6.8 (◎ 2.4 3.6)
+// Keep the peg circular all the way to its small tapered tip.
+// Overlap the shaft by 0.1 mm for a single closed mesh.
+tip = ζ 10.3 ((▻ 2.4 2.4) ∩ (◎ 2.4 0.5))
+main = disc ⊕ neck ⊕ peg ⊕ tip

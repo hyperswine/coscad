@@ -1,0 +1,5 @@
+// Top finial: same forgiving 6.6 mm square socket as every axle section.
+body = ◎ 9 7
+roof = ζ 7 ((▻ 9 6) ∩ (◎ 9 4))
+socket = ▬ 6.6 6.6 5.8 |> move -3.3 -3.3 -0.2
+main = (body ⊕ roof) ⊖ socket

@@ -1,0 +1,9 @@
+// Six identical arms; 10.4 mm bore turns on a 9.6 mm journal.
+// Both faces are flat. Satellite plugs into the hole on one end.
+hub = ◎ 10.5 4.5
+arm = (χ -24 (◎ 4 4.5)) ⇓ (χ 24 (◎ 4 4.5))
+counterweight = χ -24 (◎ 6 4.5)
+socket_pad = χ 24 (◎ 5 4.5)
+bearing = ζ -0.2 (◎ 5.2 4.9)
+satellite_socket = χ 24 (ζ -0.2 (◎ 2.75 4.9))
+main = (hub ⊕ arm ⊕ counterweight ⊕ socket_pad) ⊖ bearing ⊖ satellite_socket

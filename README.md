@@ -165,6 +165,9 @@ worked examples. `coscad --help` is the short form.
 
 ## Manual site
 
+The [Orbit Tower assembly guide](https://manual.cswine.cloud/orbit-tower.html)
+walks through building the 20-piece spinning desktop kit.
+
 `scripts/build-manual.sh DIR` renders this documentation, the man page,
 and the example build plans into a static site (needs pandoc, mandoc,
 OpenSCAD). manual.cswine.cloud rebuilds it from `main` automatically; see

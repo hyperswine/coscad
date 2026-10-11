@@ -13,7 +13,7 @@ cd "$repo"
 commit=$(git rev-parse --short HEAD 2>/dev/null || echo dev)
 stamp=$(date -u +"%Y-%m-%d %H:%MZ")
 
-pages=(README:Overview docs/LANGEXTENSION:Language docs/TOPOLOGICAL:Topological docs/MANUFACTURING:Manufacturing docs/PLAN:Build-plans docs/LESSONS:Lessons docs/SYNTAX:Syntax-modes docs/EXAMPLES:Examples CHANGELOG:Changelog)
+pages=(README:Overview docs/ORBIT-TOWER:Orbit-Tower docs/LANGEXTENSION:Language docs/TOPOLOGICAL:Topological docs/MANUFACTURING:Manufacturing docs/PLAN:Build-plans docs/LESSONS:Lessons docs/SYNTAX:Syntax-modes docs/EXAMPLES:Examples CHANGELOG:Changelog)
 nav="$tmp/nav.html"
 {
   echo '<nav class="top"><a class="brand" href="index.html">CoScad manual</a>'
@@ -21,6 +21,8 @@ nav="$tmp/nav.html"
   echo '<a href="man.html">man coscad</a><a href="builds/index.html">Builds</a></nav>'
 } > "$nav"
 cp deploy/manual.css "$tmp/manual.css"
+mkdir -p "$tmp/assets/orbit-tower"
+cp models/orbit-tower/assembled.png models/orbit-tower/bed.png "$tmp/assets/orbit-tower/"
 foot="$tmp/foot.html"
 echo "<footer>coscad $commit · built $stamp · <a href=\"https://github.com/hyperswine/coscad\">source</a></footer>" > "$foot"
 
