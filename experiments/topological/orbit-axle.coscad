@@ -1,0 +1,16 @@
+// Stacked journal/peg, and a bottom-referenced socket with fixed depth.
+foot_height = 7
+journal_height = 8.2
+peg_height = 5.2
+overlap = 0.2
+socket_width = 6.6
+socket_depth = 5.6
+overcut = 0.2
+foot = ◎ 9 foot_height
+journal = ◎ 4.8 journal_height
+peg = ▣ 6 6 peg_height 0.3
+socket = box socket_width socket_width (socket_depth + overcut)
+main = foot
+  |> at top 0 0 -overlap journal
+  |> at top 0 0 -overlap peg
+  |> cutat bot 0 0 ((socket_depth - overcut) / 2) socket

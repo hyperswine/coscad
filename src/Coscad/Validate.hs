@@ -101,6 +101,7 @@ validateShape s = do
       RotAxis a v x -> nums "rotation" (a : vec v) >> check x
       Anchor v x -> nums "anchor" (vec v) >> check x
       Tag _ x -> check x
+      Datum _ p x -> nums "datum point" (vec p) >> check x
       Position v off a b -> nums "position" (vec v ++ vec off) >> check a >> check b
       AttachTo v off a b -> nums "attachment" (vec v ++ vec off) >> check a >> check b
       CutAt v off a b -> nums "cutat" (vec v ++ vec off) >> check a >> check b

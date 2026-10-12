@@ -8,6 +8,13 @@ and this project adheres to the
 
 ## Unreleased
 
+- Language: named construction datums (`|> datum name ref`, `@name`),
+  child-only placement against a separate shape (`|> place parent target own`),
+  bounded rectangular feature grids (`|> grid n m pitch_x pitch_y`), and unary
+  pipeline hull (`|> hull`). Datums follow transforms; unknown, duplicate and
+  ambiguous references have explicit errors. Existing attachment and binary
+  hull semantics are preserved. See `docs/TOPOLOGICAL.md`.
+
 - CI: temporarily remove the macOS test job because Homebrew's OpenSCAD
   cask is disabled by Gatekeeper. Refresh the bow3 limb geometry goldens
   after the paddle-tip/string-groove redesign and record missing ball

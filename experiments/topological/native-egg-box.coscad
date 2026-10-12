@@ -1,0 +1,23 @@
+// Native N x M version of models/egg-box. Change these two bindings only.
+columns = 2
+rows = 2
+cell = 60
+wall = 2.4
+floor = 3
+clear_depth = 75
+height = floor + clear_depth
+pitch = cell + wall
+width = columns * cell + (columns + 1) * wall
+depth = rows * cell + (rows + 1) * wall
+outer_radius = 4
+inner_radius = 6
+body = ◎ outer_radius height
+  |> grid 2 2 (width - 2 * outer_radius) (depth - 2 * outer_radius)
+  |> hull |> anchor bot+lft+fwd
+  |> datum first_cell bot+lft+fwd wall wall floor
+cell_tool = ◎ inner_radius (clear_depth + 1)
+  |> grid 2 2 (cell - 2 * inner_radius) (cell - 2 * inner_radius)
+  |> hull |> anchor bot+lft+fwd
+cells = cell_tool |> grid columns rows pitch pitch
+  |> place body @first_cell bot+lft+fwd
+main = body |> cut cells

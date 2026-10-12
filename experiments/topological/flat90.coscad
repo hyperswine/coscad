@@ -1,0 +1,10 @@
+// Keep the mounting holes a half-leg width from their two outer edges.
+span = 40
+leg = 20
+thickness = 6
+hole_radius = 2.75
+missing = span - leg
+main = box span span thickness
+  |> cutat rt+bak (-missing / 2) (-missing / 2) 0 (box missing missing (thickness + 2))
+  |> cutat rt+fwd (-leg / 2) (leg / 2) 0 (zcyl hole_radius (thickness + 4))
+  |> cutat lft+bak (leg / 2) (-leg / 2) 0 (zcyl hole_radius (thickness + 4))

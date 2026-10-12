@@ -122,6 +122,58 @@ can still be bindings: `x = 2`, `top = 3`. Keyword prefixes such as
 `cube2` are ordinary names. Capitalized simple-mode keywords are ordinary
 names in `!glyph` mode.
 
+## Named datums, placement and grids
+
+These word pipeline stages work in legacy, `!glyph` and `!simple` modes.
+
+| Stage | Meaning |
+|---|---|
+| `s \|> datum name ref [dx dy dz]` | Save a construction point at `ref` on the shape built so far; emit the same solid |
+| `s \|> anchor @name` | Move a saved point to the origin |
+| `child \|> place parent target own [dx dy dz]` | Translate `own` on the child to `target` on the parent, plus offset; return only the child |
+| `s \|> grid columns rows pitch_x pitch_y` | Union copies at `(i*pitch_x, j*pitch_y, 0)`, starting with the original at `(0,0,0)` |
+| `s \|> hull` | Convex hull of the whole piped group; `s \|> hull other` keeps its binary meaning |
+
+`ref`, `target` and `own` accept the usual bounding-box anchor words or
+`@name`. Named points form a separate namespace from bindings. Parent
+expressions with pipelines or booleans need parentheses. Offsets are optional
+but must contain all three numbers when present; they use the current XYZ
+axes. Placement translates only, so rotate the child beforehand if needed.
+The parent is validated even though it is not emitted. It can have a different
+dimension from the child: it supplies a point, while the result has the
+child's dimension.
+
+```
+plate = box 40 30 4 |> datum hole top+lft 8 0 0
+blank = plate |> at rt (box 20 10 4)
+tool = zcyl 2 6 |> place blank @hole ctr 0 0 -2
+main = blank |> cut tool
+```
+
+The saved hole follows its plate through translations, rotations, scales,
+mirrors and attachments. Adding the ear does not recalculate it against the
+new bounding box. Datums are construction points, not automatically tracked
+surfaces or oriented mating frames. Booleans retain points from all operands,
+including cutters; removing material does not remove a datum. Extrusion keeps
+profile points on their original plane; loft places each profile's points at
+its specified Z layer. Datums do not change bounds, dimensions or output solids.
+
+Defining a name already present on that shape is an error. Combining or
+repeating shapes can produce several points with the same name; selecting
+such a name is an ambiguity error. Select/place individual features before
+combining them, or give the result a new datum name. A missing name is an
+error listing the available names.
+
+Grid counts must be whole numbers from 1 to 10000, with at most 10000 copies
+and at most 10000 expanded primitive leaves, including nested grids. Pitches
+must be finite and nonzero on repeated axes; negative pitches are allowed.
+A one-copy axis may use zero pitch. Copies retain the input's orientation and
+dimension. Use grids for features inside a part; assembly instances still use
+`.assemble` part counts/poses and their distinct identities.
+
+See [datum-plate.coscad](../examples/topological/datum-plate.coscad) for a
+mounting grid positioned against a saved corner datum.
+
 ## .assemble / coscad next
 
 See docs/MANUFACTURING.md.

@@ -32,6 +32,8 @@ def mutations(count):
         "!glyph\nmain = (■ 10 ⊖ ◎ 2 20) |> at top 0 0 0 (● 3)\n",
         "main = ⮕ 4 (⭘ 10 ⊖ ⭘ 6)\n",
         "main = loft 0 (⭘ 5) 10 (△ 3)\n",
+        "plate = box 30 20 4 |> datum hole top+lft 5 0 0\nmain = zcyl 2 6 |> place plate @hole ctr 0 0 -2\n",
+        "main = box 2 2 2 |> grid 3 2 5 6 |> hull |> anchor bot\n",
     ]
     seen = set()
     punctuation = "()=,|>+-*/$!▽←×;[]{}\x00\u200b\u2212\uff1d"

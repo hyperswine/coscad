@@ -1,0 +1,13 @@
+// Hole insets are measured from the corresponding panel edge.
+width = 210
+depth = 210
+thickness = 2.5
+rounding = 1
+interior_inset = 20
+perimeter_inset = 30
+hole = zcyl 1.7 (thickness + 5.5)
+main = ◙ width depth thickness rounding
+  |> cutat lft interior_inset 0 0 hole
+  |> cutat rt -perimeter_inset 0 0 hole
+  |> cutat fwd 0 interior_inset 0 hole
+  |> cutat bak 0 -perimeter_inset 0 hole

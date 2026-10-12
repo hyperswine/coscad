@@ -1,0 +1,11 @@
+// Same print frame and nominal solid as models/coin-weight-cylinder.
+// The pocket follows the top face when height changes.
+height = 50
+radius = 15
+slot_length = 25.6
+slot_width = 3.6
+slot_depth = 26
+overcut = 1
+slot = box slot_length slot_width (slot_depth + overcut)
+main = ◎ radius height
+  |> cutat top 0 0 ((overcut - slot_depth) / 2) slot

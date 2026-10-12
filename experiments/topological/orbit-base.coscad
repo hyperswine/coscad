@@ -1,0 +1,9 @@
+// Attach each level to the preceding top; preserve the 0.2 mm peg overlap.
+radius = 29
+plate_height = 4
+taper_height = 2
+overlap = 0.2
+plate = ◎ radius plate_height
+taper = (▻ radius (radius / 3)) ∩ (◎ radius taper_height)
+peg = ▣ 6 6 5.2 0.3
+main = plate |> at top taper |> at top 0 0 -overlap peg

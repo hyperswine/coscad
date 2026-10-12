@@ -1,0 +1,16 @@
+// Each bore belongs to the symmetric feature it passes through.
+// Drill both hub and arm before adding the asymmetric end pads.
+span = 48
+thickness = 4.5
+end_radius = 4
+counterweight_radius = 6
+pad_radius = 5
+bore = zcyl 5.2 (thickness + 0.4)
+end = ◎ end_radius thickness
+capsule = ((end |> at rt (span - 2 * end_radius) 0 0 end) ⇓ end) |> anchor ctr |> anchor bot
+hub = ◎ 10.5 thickness |> cutat ctr bore
+arm = capsule |> cutat ctr bore
+  |> at lft (end_radius + counterweight_radius) 0 0 (cyl counterweight_radius thickness)
+  |> at rt (-end_radius - pad_radius) 0 0 (cyl pad_radius thickness)
+  |> cutat rt -pad_radius 0 0 (zcyl 2.75 (thickness + 0.4))
+main = hub ⊕ arm

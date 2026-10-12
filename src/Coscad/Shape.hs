@@ -46,12 +46,43 @@ data Shape
   | Extrude D Shape
   | Loft [(D, Shape)] -- (z, 2D profile) pairs, skinned bottom to top (BOSL2 skin)
   | Tag String Shape -- named subtree (an assembly part instance); identity for geometry
+  | Datum String (D, D, D) Shape -- named construction point in this subtree's coordinates
   | Union [Shape]
   | Intersection [Shape]
   | Hull [Shape]
   | Minkowski [Shape]
   | Offset D Shape
   deriving (Show)
+
+-- | Direct children, including non-rendering metadata wrappers.
+shapeChildren :: Shape -> [Shape]
+shapeChildren s = case s of
+  Hidden x -> [x]
+  Tx _ x -> [x]
+  Ty _ x -> [x]
+  Tz _ x -> [x]
+  Rx _ x -> [x]
+  Ry _ x -> [x]
+  Rz _ x -> [x]
+  Scale _ x -> [x]
+  Mirror _ x -> [x]
+  Translate _ x -> [x]
+  RotAxis _ _ x -> [x]
+  Anchor _ x -> [x]
+  Position _ _ a b -> [a, b]
+  AttachTo _ _ a b -> [a, b]
+  CutAt _ _ a b -> [a, b]
+  Diff a b -> [a, b]
+  Extrude _ x -> [x]
+  Loft ps -> map snd ps
+  Tag _ x -> [x]
+  Datum _ _ x -> [x]
+  Union xs -> xs
+  Intersection xs -> xs
+  Hull xs -> xs
+  Minkowski xs -> xs
+  Offset _ x -> [x]
+  _ -> []
 
 -- | Polygon Data
 data PD = PD [(D, D)] [[D]] deriving (Show)

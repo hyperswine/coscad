@@ -4,6 +4,7 @@
 module Coscad.Geometry (module Coscad.Geometry) where
 
 import Coscad.Shape
+import qualified Data.Map.Strict as Map
 
 -- ANCHOR / ATTACHMENT ENGINE -----------------------------------
 -- Anchors are BOSL2-style unit-ish vectors on the bounding box:
@@ -15,6 +16,44 @@ import Coscad.Shape
 type V3 = (D, D, D)
 
 type BBox = (V3, V3) -- (min corner, max corner)
+
+-- | A bounding-box anchor or a named construction point. Named points have
+-- no orientation: placing at one requires an explicit child anchor.
+data PointRef = BoxPoint V3 | NamedPoint String deriving (Show)
+
+pointOf :: PointRef -> Shape -> Either String V3
+pointOf (BoxPoint v) s = Right (anchorPt (bbox s) v)
+pointOf (NamedPoint name) s = case Map.lookup name points of
+  Nothing -> Left ("unknown datum '@" ++ name ++ "'; available datums: " ++ available)
+  Just [p] -> Right p
+  Just ps -> Left ("ambiguous datum '@" ++ name ++ "': " ++ show (length ps) ++ " copies; select a single feature before combining or repeating it, or define a new datum on the result")
+  where
+    points = datumPoints s
+    available = case Map.keys points of [] -> "none"; ns -> unwords (map ('@' :) ns)
+
+-- | Datums follow transforms, including transforms produced by attachments.
+-- CSG retains construction points from all operands, even when material is
+-- removed. Repeated names deliberately remain ambiguous, rather than picking
+-- an arbitrary copy. Extrusion retains the profile's plane; loft lifts each
+-- profile's points to its specified layer.
+datumPoints :: Shape -> Map.Map String [V3]
+datumPoints = Map.fromListWith (++) . map (\(n, p) -> (n, [p])) . go . resolve
+  where
+    moved f = map (\(n, p) -> (n, f p))
+    go s = case s of
+      Datum n p x -> (n, p) : go x
+      Tx d x -> moved (vadd (d, 0, 0)) (go x)
+      Ty d x -> moved (vadd (0, d, 0)) (go x)
+      Tz d x -> moved (vadd (0, 0, d)) (go x)
+      Translate v x -> moved (vadd v) (go x)
+      Rx a x -> moved (mApply (rodMat a (1, 0, 0))) (go x)
+      Ry a x -> moved (mApply (rodMat a (0, 1, 0))) (go x)
+      Rz a x -> moved (mApply (rodMat a (0, 0, 1))) (go x)
+      RotAxis a v x -> moved (mApply (rodMat a v)) (go x)
+      Scale v x -> moved (vmul v) (go x)
+      Mirror n x -> moved (mApply (mirrorMat n)) (go x)
+      Loft ps -> concat [moved (\(a, b, _) -> (a, b, z)) (go p) | (z, p) <- ps]
+      _ -> concatMap go (shapeChildren s)
 
 vadd, vsub, vmul :: V3 -> V3 -> V3
 vadd (a, b, c) (x, y, z) = (a + x, b + y, c + z)
@@ -155,6 +194,7 @@ bbox s = case s of
   Extrude h x -> let ((x0, y0, _), (x1, y1, _)) = bbox x in ((x0, y0, 0), (x1, y1, h))
   Loft ps -> fromCorners [(px, py, z) | (z, p) <- ps, (px, py, _) <- bcorners (bbox p)]
   Tag _ x -> bbox x
+  Datum _ _ x -> bbox x
   Offset r x -> let ((x0, y0, z0), (x1, y1, z1)) = bbox x in ((x0 - r, y0 - r, z0), (x1 + r, y1 + r, z1))
   Union xs -> foldr1 bmerge (map bbox xs)
   Intersection xs -> foldr1 boverlap (map bbox xs)
@@ -217,6 +257,7 @@ resolve s = case s of
   Extrude h x -> Extrude h (resolve x)
   Loft ps -> Loft [(z, resolve p) | (z, p) <- ps]
   Tag n x -> Tag n (resolve x)
+  Datum n p x -> Datum n p (resolve x)
   Offset r x -> Offset r (resolve x)
   Diff a b -> Diff (resolve a) (resolve b)
   Union xs -> Union (map resolve xs)

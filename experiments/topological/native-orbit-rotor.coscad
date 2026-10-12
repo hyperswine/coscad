@@ -1,0 +1,19 @@
+// Capture the two bore locations before the asymmetric pads grow the bbox.
+half_span = 24
+thickness = 4.5
+end_radius = 4
+counterweight_radius = 6
+pad_radius = 5
+end = ◎ end_radius thickness
+arm = end |> grid 2 1 (2 * half_span) 0 |> hull
+  |> anchor ctr |> anchor bot
+  |> datum axle ctr
+  |> datum satellite rt -end_radius 0 0
+hub = ◎ 10.5 thickness
+counterweight = cyl counterweight_radius thickness
+  |> place arm lft ctr end_radius 0 0
+pad = cyl pad_radius thickness |> place arm @satellite ctr
+blank = arm |> add hub |> add counterweight |> add pad
+bearing = zcyl 5.2 (thickness + 0.4) |> place blank @axle ctr
+socket = zcyl 2.75 (thickness + 0.4) |> place blank @satellite ctr
+main = blank |> cut bearing |> cut socket

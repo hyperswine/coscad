@@ -52,6 +52,37 @@ Also remember ordering: anchors are evaluated against the shape built
 when you can (cuts don't change the bbox — `Diff` keeps the positive's
 box — so hole order never matters).
 
+## Named feature points and separate construction geometry
+
+Capture a stable point before adding geometry that could move its bounding
+box. `@name` selects that point later, including after transforms:
+
+```
+plate = box 40 30 4 |> datum hole top+lft 8 0 0
+blank = plate |> at rt (box 20 10 4)
+tool = zcyl 2 6 |> place blank @hole ctr 0 0 -2
+main = blank |> cut tool
+```
+
+`place` explicitly names the parent target and the child's own point. It
+returns only the translated child, making it suitable for cutters and hull
+endpoints. It does not union the construction parent or rotate the child.
+`|> anchor @hole` can also re-origin a shape at its saved point.
+
+Datums are named construction points, not discovered surfaces or oriented
+frames. They remain after Boolean cuts. Copies retain their names, so a
+reference duplicated by a union or grid is ambiguous and rejected; use a
+single feature as the datum or define a new named point on the combined
+result. See the [language reference](LANGEXTENSION.md#named-datums-placement-and-grids)
+for transform, extrusion and loft behaviour.
+
+`|> grid n m pitch_x pitch_y` repeats a feature with its first copy unchanged.
+Re-origin at a suitable corner, grid the cutters, then `place` that group
+against the box's saved first-cell point. `|> hull` takes the convex hull of a
+whole group without repeating one member. The native egg-box pilot in
+`experiments/topological/native-egg-box.coscad` combines these operations;
+its N×M layout needs only numeric bindings, with no Python generation.
+
 ## Worked example
 
 `examples/topological/tbracket.coscad` rebuilds the project's seam

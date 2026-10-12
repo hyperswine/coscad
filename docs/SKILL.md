@@ -214,6 +214,20 @@ Critical semantics: `at`/`on` mate the CHILD'S OPPOSITE anchor to the
 parent anchor (stacking); `cutat` CENTERS the cutter at the anchor
 point. Confusing the two shifts geometry by half the child's size.
 
+New authoring helpers: `|> datum name ref [dx dy dz]` saves a named point;
+`@name` selects it in `|> anchor` and
+`child |> place parent target own [dx dy dz]`. `place` returns only the
+translated child and takes explicit parent/child points, useful for cutters
+against a separate construction datum. Named points follow transforms and
+survive Boolean cuts; duplicated names after copies/unions are ambiguous.
+They are points, not oriented mating frames. `|> grid n m pitch_x pitch_y`
+unions a rectangular grid starting at the original, with whole positive
+counts and a 10000 expanded-primitive budget (nested grids included).
+`|> hull` hulls the complete group; binary `|> hull child` still works.
+See `docs/LANGEXTENSION.md` for complete semantics and
+`examples/topological/datum-plate.coscad` for a mounting grid whose saved
+datum is unaffected by an asymmetric ear.
+
 ## .assemble and coscad next
 
 `.assemble` = separate physical parts (recursive refs, `×N` counts,

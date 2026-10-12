@@ -1,0 +1,13 @@
+[
+  {"name":"coin-weight-cylinder", "original":"models/coin-weight-cylinder/coin-weight-cylinder.coscad"},
+  {"name":"flat90", "original":"examples/assemble/plan/flat90.coscad"},
+  {"name":"panel_corner", "original":"examples-next/panel_corner.coscad"},
+  {"name":"bow-center", "original":"examples/assemble/bow3/center3.coscad"},
+  {"name":"orbit-base", "original":"models/orbit-tower/base.coscad"},
+  {"name":"orbit-axle", "original":"models/orbit-tower/axle.coscad"},
+  {"name":"orbit-cap", "original":"models/orbit-tower/cap.coscad"},
+  {"name":"orbit-satellite", "original":"models/orbit-tower/satellite.coscad"},
+  {"name":"orbit-rotor", "original":"models/orbit-tower/rotor.coscad"},
+  {"name":"native-orbit-rotor", "original":"models/orbit-tower/rotor.coscad"},
+  {"name":"native-egg-box", "original":"models/egg-box/egg-box.coscad", "containment_tolerance_mm":0.00001}
+]

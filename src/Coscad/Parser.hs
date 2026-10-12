@@ -3,11 +3,12 @@
 -- continuation. Also the variable-resolution pass.
 module Coscad.Parser (module Coscad.Parser) where
 
-import Control.Monad (void)
+import Control.Monad (foldM, void, when)
 import Coscad.Codegen (loftErrors)
 import Coscad.Dim (Dim (..), dimOf)
+import Coscad.Geometry (PointRef (..), datumPoints, pointOf, vadd, vneg, vsub)
 import Coscad.Shape
-import Coscad.Validate (maxSides, suggestion, validateShape)
+import Coscad.Validate (maxQuantity, maxSides, suggestion, validateShape)
 import Data.Char (isSpace)
 import Data.Either (lefts, rights)
 import Data.List (dropWhileEnd, foldl', intercalate, isPrefixOf)
@@ -341,39 +342,108 @@ shapeArg ctx = (symbol "$" *> expression ctx) <|> primaryExpression ctx
 pipeExpression :: Ctx -> Parser Shape
 pipeExpression ctx = do
   left <- booleanExpression ctx
-  rest <- many (symbol "|>" *> pipeStage ctx)
-  return (foldl (flip ($)) left rest)
-
-pipeStage :: Ctx -> Parser (Shape -> Shape)
-pipeStage ctx =
-  choice
-    [ num1 "x" Tx
-    , num1 "y" Ty
-    , num1 "z" Tz
-    , num1 "rotx" Rx
-    , num1 "roty" Ry
-    , num1 "rotz" Rz
-    , num1 "extrude" Extrude
-    , num3 "move" Translate
-    , num3 "scale" Scale
-    , num3 "mirror" Mirror
-    , keyword "anchor" *> (Anchor <$> anchorVec)
-    , keyword "loft" *> (loftStage <$> num ctx <*> primaryExpression ctx)
-    , rel "at" Position
-    , rel "on" AttachTo
-    , rel "cutat" CutAt
-    , bin "add" (\p s -> Union [p, s])
-    , bin "cut" Diff
-    , bin "isect" (\p s -> Intersection [p, s])
-    , bin "hull" (\p s -> Hull [p, s])
-    , bin "mink" (\p s -> Minkowski [p, s])
-    , do
-        off <- getOffset
-        name <- identifier
-        setOffset off *> fail ("unknown pipeline stage '" ++ name ++ "'" ++ suggestion stages name ++ "; use e.g. |> move x y z")
-    ]
+  rest <- many $ do
+    _ <- symbol "|>"
+    off <- getOffset
+    stage <- pipeStage ctx
+    return (off, stage)
+  foldM apply left rest
   where
-    stages = ["x", "y", "z", "rotx", "roty", "rotz", "extrude", "move", "scale", "mirror", "anchor", "loft", "at", "on", "cutat", "add", "cut", "isect", "hull", "mink"]
+    apply s (off, stage) = either (\e -> setOffset off *> fail e) return (stage s)
+
+pipeStage :: Ctx -> Parser (Shape -> Either String Shape)
+pipeStage ctx = choice
+  [ datumStage
+  , placeStage
+  , gridStage
+  , anchorStage
+  , fmap (\f s -> Right (f s)) plainStage
+  ]
+  where
+    plainStage = choice
+      [ num1 "x" Tx
+      , num1 "y" Ty
+      , num1 "z" Tz
+      , num1 "rotx" Rx
+      , num1 "roty" Ry
+      , num1 "rotz" Rz
+      , num1 "extrude" Extrude
+      , num3 "move" Translate
+      , num3 "scale" Scale
+      , num3 "mirror" Mirror
+      , keyword "loft" *> (loftStage <$> num ctx <*> primaryExpression ctx)
+      , rel "at" Position
+      , rel "on" AttachTo
+      , rel "cutat" CutAt
+      , bin "add" (\p s -> Union [p, s])
+      , bin "cut" Diff
+      , bin "isect" (\p s -> Intersection [p, s])
+      , do
+          _ <- keyword "hull"
+          child <- optional (shapeArg ctx)
+          return (\p -> Hull (p : maybe [] (: []) child))
+      , bin "mink" (\p s -> Minkowski [p, s])
+      , do
+          off <- getOffset
+          name <- identifier
+          setOffset off *> fail ("unknown pipeline stage '" ++ name ++ "'" ++ suggestion stages name ++ "; use e.g. |> move x y z")
+      ]
+    stages = ["x", "y", "z", "rotx", "roty", "rotz", "extrude", "move", "scale", "mirror", "anchor", "datum", "place", "grid", "loft", "at", "on", "cutat", "add", "cut", "isect", "hull", "mink"]
+    anchorStage = do
+      _ <- keyword "anchor"
+      ref <- pointRef
+      return $ \p -> case ref of
+        BoxPoint v -> Right (Anchor v p)
+        NamedPoint _ -> (\v -> Translate (vneg v) p) <$> pointOf ref p
+    datumStage = do
+      _ <- keyword "datum"
+      name <- identifier
+      ref <- pointRef
+      off <- pointOffsets "datum"
+      return $ \p -> do
+        when (Map.member name (datumPoints p)) (Left ("duplicate datum '@" ++ name ++ "'; choose a new name"))
+        pt <- pointOf ref p
+        return (Datum name (vadd pt off) p)
+    -- Only the piped child is returned; the separate datum solid never enters
+    -- the emitted CSG or assembly instance graph. Both points are explicit.
+    placeStage = do
+      _ <- keyword "place"
+      parent <- primaryExpression ctx
+      target <- pointRef
+      own <- pointRef
+      off <- pointOffsets "place"
+      return $ \child -> do
+        _ <- dimOf parent
+        loftErrors parent
+        validateShape parent
+        pa <- pointOf target parent
+        ca <- pointOf own child
+        return (Translate (vsub (vadd pa off) ca) child)
+    gridStage = do
+      _ <- keyword "grid"
+      nx <- gridCount "column count"
+      ny <- gridCount "row count"
+      when (nx * ny > maxQuantity) (fail ("grid copy count exceeds " ++ show maxQuantity ++ "; reduce columns or rows"))
+      px <- arg ctx "grid" "column pitch"
+      py <- arg ctx "grid" "row pitch"
+      when ((nx > 1 && px == 0) || (ny > 1 && py == 0)) (fail "grid pitch must be nonzero on each repeated axis; negative pitch is allowed")
+      return $ \child -> do
+        -- Stop counting at the budget before allocating repeated subtrees.
+        -- This bounds nested grids, not just one expansion at a time.
+        let leaves = length (take (maxQuantity + 1) (leafShapes child))
+        when (nx * ny * leaves > maxQuantity) (Left ("grid expanded geometry exceeds " ++ show maxQuantity ++ " primitive copies (including nested grids); reduce repetition"))
+        return (Union
+          [ if i == 0 && j == 0 then child
+            else Translate (fromIntegral i * px, fromIntegral j * py, 0) child
+          | j <- [0 .. ny - 1], i <- [0 .. nx - 1]
+          ])
+    leafShapes s = case shapeChildren s of [] -> [s]; xs -> concatMap leafShapes xs
+    gridCount param = do
+      off <- getOffset
+      n <- arg ctx "grid" param
+      if n >= 1 && n <= fromIntegral maxQuantity && n == fromInteger (truncate n)
+        then return (round n :: Int)
+        else setOffset off *> fail ("grid " ++ param ++ " must be a whole number from 1 to " ++ show maxQuantity)
     -- `keyword` backtracks by itself when the word does not match; the
     -- stage body is deliberately NOT under `try`, so an error inside a
     -- stage is reported where it happened (megaparsec >= 9.7 reports a
@@ -383,11 +453,17 @@ pipeStage ctx =
     rel w f = do
       keyword w
       v <- anchorVec
-      off <- option (0, 0, 0) $ do
-        _ <- lookAhead (try (num ctx))
-        (,,) <$> arg ctx w "first offset x" <*> arg ctx w "second offset y" <*> arg ctx w "third offset z (three offsets followed by a child shape are required)"
+      off <- offsets w
       child <- shapeArg ctx
       return (\p -> f v off p child)
+    offsets w = option (0, 0, 0) $ do
+      _ <- lookAhead (try (num ctx))
+      vectorArgs w "third offset z (three offsets followed by a child shape are required)"
+    -- These stages have no trailing child argument. Only a stage/expression
+    -- boundary omits offsets; a misspelled numeric binding must stay an error.
+    pointOffsets w = ((0, 0, 0) <$ lookAhead (void (symbol "|>") <|> void (symbol ")") <|> eof))
+      <|> vectorArgs w "third offset z (three offsets are required)"
+    vectorArgs w third = (,,) <$> arg ctx w "first offset x" <*> arg ctx w "second offset y" <*> arg ctx w third
     bin w f = do
       keyword w
       s <- shapeArg ctx
@@ -449,6 +525,11 @@ anchorVec = do
           (0, 1, 0) <$ (keyword "bak" <|> keyword "back"),
           (0, 0, 0) <$ (keyword "ctr" <|> keyword "center")
         ]
+
+-- Named references are explicit, so bindings and anchor words keep their
+-- existing meanings in all syntax modes.
+pointRef :: Parser PointRef
+pointRef = (symbol "@" *> (NamedPoint <$> identifier)) <|> (BoxPoint <$> anchorVec)
 
 -- Parse attachment expressions: bind tighter than boolean ops.
 --   a ⌖ top b   -- position: b's bottom snapped to a's top (translate only)

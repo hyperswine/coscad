@@ -1,0 +1,10 @@
+body_height = 7
+roof_height = 4
+socket_width = 6.6
+socket_depth = 5.6
+overcut = 0.2
+body = ◎ 9 body_height
+roof = (▻ 9 6) ∩ (◎ 9 roof_height)
+socket = box socket_width socket_width (socket_depth + overcut)
+main = body |> at top roof
+  |> cutat bot 0 0 ((socket_depth - overcut) / 2) socket

@@ -1,0 +1,37 @@
+// Preserve the reinforced elastic-cord toy centre and all M4 interfaces.
+body_length = 110
+body_height = 14
+pocket_width = 28.5
+cheek = 3.75
+body_width = pocket_width + 2 * cheek
+root_inset = 13
+pocket_length = 27.5
+pocket_depth = 7.2
+pocket_overcut = 1
+bolt_offset = 8
+bolt_radius = 2.15
+nut_radius = 4.25
+nut_height = 3.4
+nut_overcut = 0.1
+recess_length = 40
+recess_radius = 7
+recess_depth = 1.2
+recess_overcut = 1
+recess_end = zcyl recess_radius (recess_depth + recess_overcut)
+// Binary hull repeats the first end; anchor ctr makes a reusable local tool.
+recess = ((recess_end |> at rt (recess_length - 4 * recess_radius) 0 0 recess_end) ⇓ recess_end) |> anchor ctr
+pocket = box pocket_length pocket_width (pocket_depth + pocket_overcut)
+bolt = zcyl bolt_radius (body_height + 6)
+nut = ⎏ 6 nut_radius nut_height
+main = box body_length body_width body_height
+  |> cutat top+rt -root_inset 0 ((pocket_overcut - pocket_depth) / 2) pocket
+  |> cutat top+lft root_inset 0 ((pocket_overcut - pocket_depth) / 2) pocket
+  |> cutat rt -root_inset bolt_offset 0 bolt
+  |> cutat rt -root_inset -bolt_offset 0 bolt
+  |> cutat lft root_inset bolt_offset 0 bolt
+  |> cutat lft root_inset -bolt_offset 0 bolt
+  |> cutat bot+rt -root_inset bolt_offset (nut_height / 2 - nut_overcut) nut
+  |> cutat bot+rt -root_inset -bolt_offset (nut_height / 2 - nut_overcut) nut
+  |> cutat bot+lft root_inset bolt_offset (nut_height / 2 - nut_overcut) nut
+  |> cutat bot+lft root_inset -bolt_offset (nut_height / 2 - nut_overcut) nut
+  |> cutat top 0 0 ((recess_overcut - recess_depth) / 2) recess

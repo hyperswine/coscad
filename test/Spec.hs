@@ -23,7 +23,7 @@ import Control.Monad (forM, forM_, unless, when)
 import Coscad.Assemble (AsmResult (..), loadAssembleFile, packBeds, processAssemble)
 import Coscad.Check (processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
-import Coscad.Geometry (bbox, resolve)
+import Coscad.Geometry (PointRef (..), bbox, pointOf, resolve)
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
 import Coscad.Next (processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadVersion, renderStlFile)
@@ -80,6 +80,105 @@ expectGen t name r frag = case r of
 
 -- ------------------------------------------------------------------
 -- build plans (coscad plan): pure, no OpenSCAD needed
+
+topologyTier :: T -> IO ()
+topologyTier t = do
+  section "named datums, child-only placement, grids and unary hull"
+  let p = parseProgramNamed "topology.coscad"
+      near (a,b,c) (x,y,z) = all (< 1e-8) [abs (a-x), abs (b-y), abs (c-z)]
+      bounds name source (lo, hi) = case p source of
+        Left e -> failT t name e
+        Right (_, s) -> let (a, b) = bbox s in assertT t name (near lo a && near hi b) (show (a, b))
+      base = "base = box 20 10 4 |> datum p top+rt 1 2 3\n"
+  forM_ [ ("move 3 -2 7", (14,0,12))
+        , ("rotx 90", (11,-5,2))
+        , ("roty 90", (5,2,-11))
+        , ("rotz 90", (-2,11,5))
+        , ("scale -2 3 4", (-22,6,20))
+        , ("mirror 1 0 0", (-11,2,5))
+        , ("anchor bot", (11,2,7))
+        , ("anchor @p", (0,0,0))
+        ] $ \(stage, want) -> case p (base ++ "main = base |> " ++ stage ++ "\n") of
+    Left e -> failT t ("datum follows " ++ stage) e
+    Right (_, s) -> case pointOf (NamedPoint "p") s of
+      Left e -> failT t ("datum follows " ++ stage) e
+      Right got -> assertT t ("datum follows " ++ stage) (near got want) (show got)
+  let stable = "plate = box 20 10 4 |> datum hole top\ngrown = plate |> at rt (box 80 10 4)\n"
+  bounds "datum survives unrelated growth; parent is not emitted"
+    (stable ++ "main = box 2 2 2 |> place grown @hole bot\n") ((-1,-1,2),(1,1,4))
+  bounds "place has explicit target/child anchors and offsets"
+    "main = box 2 4 6 |> place (box 20 10 4) top+rt bot+lft 1 2 3\n" ((11,0,5),(13,4,11))
+  bounds "place supports a child's named point and forward definitions"
+    "main = child |> place parent @p @q\nchild = box 2 2 2 |> datum q top\nparent = box 20 20 4 |> datum p top\n" ((-1,-1,0),(1,1,2))
+  bounds "datum may be derived from another datum"
+    "main = box 2 2 2 |> datum a top |> datum b @a 0 0 2 |> anchor @b\n" ((-1,-1,-4),(1,1,-2))
+  bounds "box-anchor placement does not rotate the child"
+    "main = box 2 4 6 |> place (box 20 10 4) rt bot\n" ((9,-2,0),(11,2,6))
+  forM_ [("at top", (11,2,12)), ("on rt", (12,2,-11))] $ \(op, want) ->
+    case p (base ++ "main = box 10 10 10 |> " ++ op ++ " base\n") of
+      Left e -> failT t ("datum through " ++ op) e
+      Right (_, s) -> assertT t ("datum through " ++ op)
+        (either (const False) (`near` want) (pointOf (NamedPoint "p") s)) (show (pointOf (NamedPoint "p") s))
+  expectGen t "datums preserve BOSL2 inclusion" (p "main = box 2 2 2 |> datum p ctr\n") "include <BOSL2/std.scad>"
+  expectGen t "datum metadata works in loft profiles"
+    (p "profile = ⭘ 2 |> datum axis ctr\nmain = loft 0 profile 5 profile\n") "method = \"reindex\""
+  forM_ [ ("loft 0 (⭘ 2) 5 (⭘ 3 |> datum p rt)", (3,0,5))
+        , ("(⭘ 3 |> datum p rt) |> extrude 5", (3,0,0))
+        ] $ \(expr, want) -> case p ("main = " ++ expr ++ "\n") of
+    Left e -> failT t ("profile datum: " ++ expr) e
+    Right (_, s) -> assertT t ("profile datum: " ++ expr)
+      (either (const False) (`near` want) (pointOf (NamedPoint "p") s)) (show s)
+  bounds "2D construction datum can position a 3D child"
+    "main = box 2 2 2 |> place (⭘ 10) rt ctr\n" ((9,-1,-1),(11,1,1))
+  case p "tool = zcyl 1 8 |> datum bore ctr\nmain = box 10 10 4 |> cut tool\n" of
+    Left e -> failT t "cutters retain construction datums" e
+    Right (_, s) -> assertT t "cutters retain construction datums" (pointOf (NamedPoint "bore") s == Right (0,0,0)) (show s)
+  forM_ [ ("main = box 2 2 2 |> anchor @missing\n", ["unknown datum '@missing'", "available datums: none"])
+        , ("main = box 2 2 2 |> datum a ctr |> datum a top\n", ["duplicate datum '@a'"])
+        , ("a = box 2 2 2 |> datum p ctr\nmain = (a ⊕ a) |> anchor @p\n", ["ambiguous datum '@p'", "2 copies"])
+        , ("a = box 2 2 2 |> datum p ctr |> grid 2 1 3 0\nmain = sphere 1 |> place a @p ctr\n", ["ambiguous datum '@p'", "2 copies"])
+        , ("main = sphere 1 |> place (box -2 2 2) top ctr\n", ["box width, depth and height"])
+        , ("main = box 2 2 2\n  |> datum p @missing\n", ["topology.coscad:2:6:", "unknown datum"])
+        , ("main = box 2 2 2 |> datum p ctr 1 2\n", ["datum", "third offset z"])
+        , ("main = box 2 2 2 |> datum p ctr offset 0 0\n", ["undefined variable 'offset'"])
+        , ("main = box 2 2 2 |> place (box 4 4 4) top bot offset 0 0\n", ["undefined variable 'offset'"])
+        , ("main = box 2 2 2 |> place (box 4 4 4) top\n", ["topology.coscad:1:", "end of input"])
+        , ("main = box 2 2 2 |> datum\n", ["topology.coscad:1:", "end of input"])
+        ] $ \(source, fragments) -> expectErr t ("datum diagnostic: " ++ take 70 source) (p source) fragments ["circular dependency"]
+  bounds "grid pitch and origin" "main = box 2 4 6 |> grid 3 2 10 20\n" ((-1,-2,-3),(21,22,3))
+  bounds "grid permits negative pitch" "main = box 2 4 6 |> grid 3 2 -10 -20\n" ((-21,-22,-3),(1,2,3))
+  bounds "single grid copy permits zero pitch" "main = box 2 4 6 |> grid 1 1 0 0\n" ((-1,-2,-3),(1,2,3))
+  bounds "2D grid remains extrudable" "main = (⭘ 1 |> grid 2 2 5 6) |> extrude 3\n" ((-1,-1,0),(6,7,3))
+  bounds "numeric grid dimensions resolve forward" "main = box 2 2 2 |> grid n 1 pitch 0\nn = 2\npitch = 4\n" ((-1,-1,-1),(5,1,1))
+  forM_ [ ("grid 0 2 5 5", "column count must be a whole number")
+        , ("grid 2 -1 5 5", "row count must be a whole number")
+        , ("grid 2.5 2 5 5", "column count must be a whole number")
+        , ("grid 2 10001 5 5", "row count must be a whole number")
+        , ("grid 100 101 5 5", "grid copy count exceeds 10000")
+        , ("grid 2 2 0 5", "pitch must be nonzero")
+        , ("grid 2 2 5 0", "pitch must be nonzero")
+        , ("grid 2 2 5", "row pitch")
+        , ("grid 2 2 1e309 5", "finite")
+        , ("grid 3 2 1e308 5", "translation must be finite")
+        , ("grid 100 100 5 5 |> grid 2 1 1000 0", "including nested grids")
+        ] $ \(stage, fragment) -> expectErr t ("grid diagnostic: " ++ stage) (p ("main = box 2 2 2 |> " ++ stage ++ "\n")) [fragment] ["circular dependency"]
+  expectGen t "unary hull in a continued pipeline"
+    (p "main = (box 2 2 2 |> at rt (box 2 2 2))\n  |> hull\n  |> anchor bot\n") "hull()"
+  expectGen t "binary hull syntax remains accepted" (p "main = box 2 2 2 |> hull (sphere 2)\n") "sphere(2)"
+  expectErr t "unary hull does not swallow malformed child"
+    (p "main = box 2 2 2 |> hull missing\n") ["undefined variable 'missing'"] ["circular dependency"]
+  forM_ ["", "!simple\n", "!glyph\n"] $ \pragma ->
+    bounds ("new stages in mode " ++ show pragma)
+      (pragma ++ "a = box 4 4 4 |> datum p top\nmain = box 2 2 2 |> grid 2 1 3 0 |> hull |> place a @p bot\n") ((-2.5,-1,2),(2.5,1,4))
+  tmp <- tempDir "datum-plan"
+  writeFile (tmp </> "a.coscad") "main = box 20 20 4\n"
+  writeFile (tmp </> "b.coscad") "main = box 4 4 4\n"
+  writeFile (tmp </> "test.assemble") "a ← a.coscad ×1\nb ← b.coscad ×1\nasm = (a |> datum mount top) |> add (b |> place a top bot)\n"
+  planned <- planSummary (tmp </> "test.assemble")
+  assertT t "datums preserve part identities; placement datum is not an instance"
+    (either (const False) (\ps -> length (psParts ps) == 2 && sum (map (length . ssParts) (psSteps ps)) == 2) planned)
+    (either id show planned)
+
 
 planTier :: T -> IO ()
 planTier t = do
@@ -735,6 +834,7 @@ geometry t update bin = do
         , ("chain", "a |> at top b |> at top b", 10, 18)
         , ("moved", "(a |> at top b) |> z 30", 40, 44)
         , ("anchor", "(a |> at top b) |> anchor bot", 20, 24)
+        , ("datum", "(a |> datum mount top) |> add (b |> place (a |> datum mount top) @mount bot)", 10, 14)
         ] $ \(name, expr, zlo, zhi) -> do
     let f = rel </> (name ++ ".assemble")
     writeFile f ("a ← a.coscad ×1\nb ← b.coscad ×1\nasm = " ++ expr ++ "\n")
@@ -807,6 +907,7 @@ main = do
   update <- (== Just "1") <$> lookupEnv "COSCAD_UPDATE_GOLDEN"
   diagnostics t
   remainingDiagnostics t
+  topologyTier t
   examples t update
   planTier t
   render <- lookupEnv "COSCAD_RENDER"

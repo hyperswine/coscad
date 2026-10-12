@@ -1,0 +1,15 @@
+// A mounting grid stays on its plate when an asymmetric ear is added.
+columns = 3
+rows = 2
+pitch = 16
+inset = 8
+thickness = 4
+width = (columns - 1) * pitch + 2 * inset
+depth = (rows - 1) * pitch + 2 * inset
+plate = box width depth thickness
+  |> datum first_hole bot+lft+fwd inset inset 0
+ear = box 12 12 thickness |> place plate rt lft
+blank = plate |> add ear
+holes = zcyl 2 (thickness + 2) |> grid columns rows pitch pitch
+  |> place blank @first_hole bot 0 0 -1
+main = blank |> cut holes |> anchor bot

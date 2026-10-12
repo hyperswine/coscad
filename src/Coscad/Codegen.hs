@@ -104,6 +104,7 @@ gen s@(Position {}) = gen (resolve s)
 gen s@(AttachTo {}) = gen (resolve s)
 gen s@(CutAt {}) = gen (resolve s)
 gen (Tag _ s) = gen s
+gen (Datum _ _ s) = gen s
 gen (Extrude h s) =
   "linear_extrude(height = " ++ showD h ++ ") {\n" ++ indent (gen s) ++ "}"
 gen (Loft ps) =
@@ -148,6 +149,7 @@ pathOf s = case s of
   Ry _ _ -> Left "a loft profile must stay in the XY plane (no ϕ rotation)"
   RotAxis {} -> Left "a loft profile must stay in the XY plane (rotate only about Z)"
   Tag _ p -> pathOf p
+  Datum _ _ p -> pathOf p
   Anchor {} -> pathOf (resolve s)
   Position {} -> pathOf (resolve s)
   AttachTo {} -> pathOf (resolve s)
@@ -177,6 +179,7 @@ profileVerts s = case s of
   Scale _ p -> profileVerts p
   Mirror _ p -> profileVerts p
   Tag _ p -> profileVerts p
+  Datum _ _ p -> profileVerts p
   Anchor {} -> profileVerts (resolve s)
   Position {} -> profileVerts (resolve s)
   _ -> Nothing
@@ -207,6 +210,7 @@ loftErrors s = case s of
   RotAxis _ _ x -> loftErrors x
   Anchor _ x -> loftErrors x
   Tag _ x -> loftErrors x
+  Datum _ _ x -> loftErrors x
   Position _ _ a b -> loftErrors a >> loftErrors b
   AttachTo _ _ a b -> loftErrors a >> loftErrors b
   CutAt _ _ a b -> loftErrors a >> loftErrors b
@@ -243,6 +247,7 @@ usesBosl2 s = case s of
   RotAxis _ _ x -> usesBosl2 x
   Anchor _ x -> usesBosl2 x
   Tag _ x -> usesBosl2 x
+  Datum _ _ x -> usesBosl2 x
   Position _ _ a b -> usesBosl2 a || usesBosl2 b
   AttachTo _ _ a b -> usesBosl2 a || usesBosl2 b
   CutAt _ _ a b -> usesBosl2 a || usesBosl2 b

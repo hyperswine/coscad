@@ -66,6 +66,7 @@ instancesOf = go (identity, (0, 0, 0))
   where
     go aff s = case s of
       Tag n x -> [(n, aff, x)]
+      Datum _ _ x -> go aff x
       Tx d x -> go (affCompose aff (identity, (d, 0, 0))) x
       Ty d x -> go (affCompose aff (identity, (0, d, 0))) x
       Tz d x -> go (affCompose aff (identity, (0, 0, d))) x
