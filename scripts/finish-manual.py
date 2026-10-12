@@ -2,6 +2,7 @@
 """Add shared navigation and contained content to every generated manual page."""
 import argparse
 import html
+import json
 from pathlib import Path
 import re
 import posixpath
@@ -23,6 +24,14 @@ def navigation(prefix):
 
 
 def finish(root):
+    # A missing render must fail before the atomic directory swap.
+    for plan in (root / 'builds').glob('*/*_plan.json'):
+        data = json.loads(plan.read_text())
+        name = plan.name.removesuffix('_plan.json')
+        for step in range(1, len(data['steps']) + 1):
+            image = plan.with_name(f'{name}_step{step}.png')
+            if not image.is_file() or image.stat().st_size == 0:
+                raise ValueError(f'Missing instruction image: {image}')
     for path in root.rglob('*.html'):
         relative = path.relative_to(root)
         prefix = '../' * (len(relative.parts) - 1)

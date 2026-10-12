@@ -43,6 +43,8 @@ work=$(mktemp -d)
 cp -R examples/assemble/plan "$work/plan"; cp -R examples/assemble/bow3 "$work/bow3"; cp -R examples/assemble/ball "$work/ball"; cp -R examples/assemble/tesseract "$work/tesseract"
 mkdir -p "$work/orbit-tower"
 cp models/orbit-tower/*.coscad models/orbit-tower/orbit-tower.assemble "$work/orbit-tower/"
+# Never let a failed render silently reuse a checked-in preview.
+find "$work" -name '*.png' -delete
 coscad site "$tmp/builds" "$work/plan/corner_pair.assemble" "$work/plan/cube.assemble" "$work/bow3/bow3.assemble" "$work/ball/ball.assemble" "$work/tesseract/tesseract.assemble" "$work/orbit-tower/orbit-tower.assemble"
 rm -rf "$work"
 python3 scripts/finish-manual.py "$tmp"

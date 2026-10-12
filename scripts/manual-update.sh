@@ -7,6 +7,10 @@ REPO=${REPO:-$HOME/srv/coscad}
 WWW=${WWW:-$HOME/srv/manual-www}
 BIN=${BIN:-$HOME/srv/bin}
 export PATH="$BIN:/opt/homebrew/bin:$HOME/.ghcup/bin:/Applications/OpenSCAD.app/Contents/MacOS:/usr/local/bin:$PATH"
+# SSH and launchd do not necessarily inherit the same shell environment.
+if [ -z "${COSCAD_BOSL2:-}" ] && [ -f "$HOME/srv/BOSL2/std.scad" ]; then
+  export COSCAD_BOSL2="$HOME/srv/BOSL2"
+fi
 lock="$REPO/.update-lock"
 mkdir "$lock" 2>/dev/null || { echo "$(date -u +%FT%TZ) another update is running"; exit 0; }
 trap 'rmdir "$lock"' EXIT
@@ -18,6 +22,6 @@ echo "$(date -u +%FT%TZ) updating ${local_rev:0:7} -> ${remote_rev:0:7}"
 git reset -q --hard origin/main
 mkdir -p "$BIN"
 stack --no-terminal install --local-bin-path "$BIN" 2>&1 | tail -3
-coscad doctor || echo "doctor reported problems; renders may be missing"
+coscad doctor
 scripts/build-manual.sh "$WWW"
 echo "$(date -u +%FT%TZ) done"

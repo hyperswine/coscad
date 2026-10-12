@@ -113,3 +113,9 @@ screw lengths, driver locations or a complete fastening guide for it.
   completion edits without doubled `@`, semantic tokens and unsaved frame
   changes. Compiler diagnostics use `validate` on parts and assemblies;
   source/frame existence and graph solving remain compiler-authoritative.
+
+
+The deployed updater now explicitly discovers the server's `~/srv/BOSL2`
+checkout, fails if `coscad doctor` fails, and removes copied previews before
+rendering. The manual postprocessor verifies every expected step image exists
+before the atomic publish, so a failed renderer cannot reuse old previews.
