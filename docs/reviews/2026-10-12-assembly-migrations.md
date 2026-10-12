@@ -78,6 +78,11 @@ All six published build pages regenerate with no planner design errors:
 | tesseract | 29 | 28 | 40 |
 | Orbit Tower | 20 | 19 | 19 |
 
+All twelve non-packing migrated assemblies were also compared with their
+coordinate-reference planner outcomes. Eleven produced plans with the same
+declared joints and each instance placed once; the 49-part enclosure produces
+15 steps. The twelfth retains its pre-existing rejection, described below.
+
 A broader fixture check also reproduced the old `corner.assemble` planner
 rejection, with the same messages after alias renaming: one bracket would
 float and another would be placed underneath the current assembly. Its

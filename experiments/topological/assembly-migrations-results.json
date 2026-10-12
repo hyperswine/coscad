@@ -88,5 +88,76 @@
     "corpus_files": 94,
     "hover_positions": 11944,
     "stdio_integration_passed": true
-  }
+  },
+  "extended_plan_checks": [
+    {
+      "assembly": "examples/assemble/frame.assemble",
+      "parts": 2,
+      "steps": 1,
+      "joints_preserved": true
+    },
+    {
+      "assembly": "examples/assemble/plan/corner_pair.assemble",
+      "parts": 3,
+      "steps": 3,
+      "joints_preserved": true
+    },
+    {
+      "assembly": "examples/assemble/ball/ball.assemble",
+      "parts": 3,
+      "steps": 3,
+      "joints_preserved": true
+    },
+    {
+      "assembly": "examples/assemble/bow3/bow3.assemble",
+      "parts": 3,
+      "steps": 1,
+      "joints_preserved": true
+    },
+    {
+      "assembly": "examples/assemble/tesseract/tesseract.assemble",
+      "parts": 29,
+      "steps": 28,
+      "joints_preserved": true
+    },
+    {
+      "assembly": "models/orbit-tower/orbit-tower.assemble",
+      "parts": 20,
+      "steps": 19,
+      "joints_preserved": true
+    },
+    {
+      "assembly": "examples/bow.assemble",
+      "parts": 1,
+      "steps": 1,
+      "joints_preserved": true
+    },
+    {
+      "assembly": "examples-next/bow2.assemble",
+      "parts": 3,
+      "steps": 1,
+      "joints_preserved": true
+    },
+    {
+      "assembly": "examples-next/enclosure2x2.assemble",
+      "parts": 49,
+      "steps": 15,
+      "joints_preserved": true
+    },
+    {
+      "assembly": "examples-next/example_check.assemble",
+      "parts": 3,
+      "steps": 1,
+      "joints_preserved": true
+    },
+    {
+      "assembly": "examples-next/greaser-example/greaser.assemble",
+      "parts": 1,
+      "steps": 1,
+      "joints_preserved": true
+    }
+  ],
+  "preserved_plan_rejections": [
+    "examples/assemble/corner.assemble"
+  ]
 }
