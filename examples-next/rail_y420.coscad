@@ -12,3 +12,16 @@ main = r
   |> cutat ctr 0 0 6.8 (box 9.5 422 2.8)
   |> cutat ctr 0 0 -6.8 (box 9.5 422 2.8)
   |> cutat ctr (ycyl 2.1 422)
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame butt_railX1 ctr rt top 10 -200 0
+  |> frame butt_railX3 ctr rt top 10 0 0
+  |> frame butt_railX5 ctr rt top 10 200 0
+  |> frame butt_railX1_2 ctr lft top -10 -200 0
+  |> frame slot_mount_bracket1 ctr rt top 10 105 0
+  |> frame slot_mount_bracket2 ctr rt top 10 -105 0
+  |> frame slot_mount_bracket3 ctr lft top -10 105 0
+  |> frame slot_mount_bracket4 ctr lft top -10 -105 0
+  |> frame corner_seat_corner1 ctr rt top -18.5 188 0
+  |> frame corner_seat_corner2 ctr rt top 12 181.5 0
+  |> frame corner_seat_corner3 ctr rt top 18.5 -188 0
+  |> frame corner_seat_corner4 ctr rt top -12 -181.5 0

@@ -1,0 +1,4 @@
+// Coordinate reference for migration tests; part geometry is shared.
+plate 120 120 6
+br ← ../../../../../examples/assemble/bracket90.coscad ×7 ▽top
+asm = br

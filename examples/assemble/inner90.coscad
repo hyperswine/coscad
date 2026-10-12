@@ -35,3 +35,6 @@ relief = ycyl 3 24
 
 solid = foot ⊕ vplate ⊕ web ⊕ spkA ⊕ spkB ⊕ spkC ⊕ spkD
 main  = solid ⊖ holeF ⊖ holeV ⊖ boreF ⊖ boreV ⊖ relief
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame foot_railH ctr bot bak 4.75 0 -15.25
+  |> frame side_railV ctr lft top -15.25 0 4.75

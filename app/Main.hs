@@ -2,13 +2,15 @@
 -- modules; this file only parses arguments and dispatches.
 module Main (main) where
 
-import Coscad.Assemble (processAssemble)
+import Coscad.Assemble (processAssemble, loadAssembleFile)
 import Coscad.Check (processCheckWith)
 import Coscad.Doctor (runDoctor)
 import Coscad.Next (processNext)
 import Coscad.Part (compilePart, renderPart)
 import Coscad.Plan (processPlan)
 import Coscad.Site (processSite)
+import Coscad.Parser (parseProgramNamed)
+import Coscad.IO (readFileUtf8)
 import Data.List (isInfixOf)
 import Data.Version (showVersion)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
@@ -38,6 +40,11 @@ runCLI = do
     (a : _) | a `elem` ["--help", "-h", "help"] -> usage >> exitSuccess
     (a : _) | a `elem` ["--version", "-V", "version"] -> putStrLn ("coscad " ++ showVersion version)
     ["doctor"] -> runDoctor
+    ["validate", f] -> case takeExtension f of
+      ".assemble" -> loadAssembleFile [] f >>= either bad (const (putStrLn "Valid assembly"))
+      ".coscad" -> readFileUtf8 f >>= either bad (const (putStrLn "Valid part")) . parseProgramNamed f
+      _ -> bad "validate needs a .coscad or .assemble file"
+    ("validate" : _) -> bad "validate needs one .coscad or .assemble file"
     ("stl" : rest) -> withInOut "stl" rest renderPart
     ("next" : rest) -> case rest of
       [f] -> needExt ".assemble" f >> processNext f
@@ -84,6 +91,7 @@ usage =
     , ""
     , "Usage:"
     , "  coscad <part.coscad> [-o part.scad]     compile one part to OpenSCAD"
+    , "  coscad validate <part.coscad|spec.assemble>  validate source and mating constraints without writing artifacts"
     , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"
     , "  coscad <spec.assemble>                  design stage: assembled view, packed plate(s), manifest"
     , "  coscad next <spec.assemble>             manufacturing: orient, pack beds, bedN.stl + manifest"

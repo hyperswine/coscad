@@ -14,3 +14,6 @@ arm = capsule |> cutat ctr bore
   |> at rt (-end_radius - pad_radius) 0 0 (cyl pad_radius thickness)
   |> cutat rt -pad_radius 0 0 (zcyl 2.75 (thickness + 0.4))
 main = hub ⊕ arm
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame peg_seat_axle1 ctr bot bak 0.5 0 -2.25
+  |> frame peg_seat_satellite1 ctr top bak 24.5 0 2.25

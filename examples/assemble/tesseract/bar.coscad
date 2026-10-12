@@ -7,3 +7,6 @@ main = box 73.5 6 6
   |> cutat lft 2.9 0 0 (ycyl 1.7 20)
   |> cutat rt -2.9 0 0 (zcyl 1.7 20)
   |> cutat rt -2.9 0 0 (ycyl 1.7 20)
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame bar_socket_corner1 ctr lft top -36.75 0 0
+  |> frame bar_socket_corner3 ctr rt top 36.75 0 0

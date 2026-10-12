@@ -8,3 +8,5 @@ roof = (▻ 9 6) ∩ (◎ 9 roof_height)
 socket = box socket_width socket_width (socket_depth + overcut)
 main = body |> at top roof
   |> cutat bot 0 0 ((socket_depth - overcut) / 2) socket
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame peg_seat_axle6 ctr bot bak 0 0 -5.5

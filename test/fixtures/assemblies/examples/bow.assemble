@@ -1,0 +1,4 @@
+// Coordinate reference for migration tests; part geometry is shared.
+plate 520 120 8
+bow ← ../../../../examples/bow.coscad ×1
+asm = bow

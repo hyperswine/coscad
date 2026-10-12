@@ -10,3 +10,5 @@ ring = (tube R 15 band |> move 0 0 (band / 2)) ∩ sphere R
 main = dome ⊕ ring
   |> cutat rt 0 0 -6 (xcyl 2.75 50)      // bore at z = 4, through the band on +X
   |> cutat rt 2.5 0 -6 (xcyl 5 10)       // spot face: flat at x = 17.5 for the head
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame upper_equator_core ctr bot bak 0 0 -10

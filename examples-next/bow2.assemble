@@ -1,5 +1,11 @@
+// Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
 plate 250 250 6
 center ← center.coscad ×1
-larch  ← l_arch.coscad ×1
-rarch  ← r_arch.coscad ×1
-asm = center ⊕ larch ⊕ rarch
+larch ← l_arch.coscad ×1
+rarch ← r_arch.coscad ×1
+
+fixed center 0 0 0 0 0 0
+mate larch @root_bore_m2_center center @root_bore_m2_larch
+mate larch @root_bore_14_center center @root_bore_14_larch
+mate rarch @root_bore_m2_center center @root_bore_m2_rarch
+mate rarch @root_bore_14_center center @root_bore_14_rarch

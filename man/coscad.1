@@ -10,6 +10,9 @@
 .Ar part.coscad
 .Op Fl o Ar part.scad
 .Nm
+.Cm validate
+.Ar part.coscad | spec.assemble
+.Nm
 .Cm stl
 .Ar part.coscad
 .Op Fl o Ar part.stl
@@ -35,6 +38,11 @@
 .Nm
 .Fl -version | Fl -help
 .Sh DESCRIPTION
+.Cm validate
+checks a .coscad or .assemble file, including recursive part sources and
+rigid mating constraints, without writing output files or rendering meshes.
+It is suitable for editor diagnostics. It does not run interference or
+instruction-access checks.
 .Nm
 compiles CoScad part files to OpenSCAD source and, with OpenSCAD and the
 BOSL2 library installed, renders them to STL.

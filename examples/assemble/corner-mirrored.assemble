@@ -1,0 +1,3 @@
+// Reflection is geometry, not a rigid mating pose.
+corner ← corner.assemble ×1
+asm = corner |> mirror 0 1 0

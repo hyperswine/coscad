@@ -10,3 +10,12 @@ main = r
   |> cutat ctr 0 0 6.8 (box 182 9.5 2.8)
   |> cutat ctr 0 0 -6.8 (box 182 9.5 2.8)
   |> cutat ctr (xcyl 2.1 182)
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame butt_railY1 ctr lft top -90 0 0
+  |> frame butt_railY2 ctr rt top 90 0 0
+  |> frame slot_mount_bracket9 ctr bak top 5 10 0
+  |> frame slot_mount_bracket10 ctr bak top -5 10 0
+  |> frame slot_mount_bracket11 ctr fwd top 5 -10 0
+  |> frame slot_mount_bracket12 ctr fwd top -5 -10 0
+  |> frame panel_support_panel1 ctr top bak 5 0 10
+  |> frame panel_support_panel2 ctr top bak -5 0 10

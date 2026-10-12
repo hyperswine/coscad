@@ -1,0 +1,4 @@
+// Coordinate reference for migration tests; part geometry is shared.
+plate 220 220 5                 // the tool is 208.5 long: 5 mm margins fit a 220 bed
+tool ← ../../../../../examples-next/greaser-example/greaser.coscad ×1
+asm = tool

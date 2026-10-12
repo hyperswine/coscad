@@ -2,7 +2,7 @@ include <BOSL2/std.scad>
 
 $vpr = [55, 0, 35];
 $vpt = [0, -0.433012702, 35.5];
-$vpd = 341.339315941;
+$vpd = 442.18754069;
 
 multmatrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) {
   color("LightGray") multmatrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) { union() { union() { cylinder(h = 4, r = 29); translate([0, 0, 4]) { intersection() { cylinder(h = 9.666666667, r1 = 29, r2 = 0); cylinder(h = 2, r = 29); } } } translate([0, 0, 8.4]) { cuboid([6, 6, 5.2], chamfer = 0.3); } } }

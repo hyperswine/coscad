@@ -8,6 +8,16 @@ and this project adheres to the
 
 ## Unreleased
 
+- Examples: migrate fourteen remaining assembly and packing examples to
+  `fixed` / `mate` authoring, with independent coordinate fixtures and
+  per-instance orientation probes. Preserve print quantities and instruction
+  joints, including the tesseract's closed loops and Orbit Tower capture order.
+- Manual: responsive content and cards, contained tables/code, and persistent
+  navigation shared across documentation, build indexes and instruction pages.
+  Keyboard step navigation ignores typing in search fields.
+- CLI: `coscad validate file.coscad|file.assemble` validates source and solves
+  constraints without producing artifacts, for editor diagnostics.
+
 - Examples/planner: convert the 200 mm 2020 cube to named mating frames and
   rigid assembly constraints. Verify all 16 bracket poses and 32 bores against
   the coordinate reference, and regenerate its 28-step instructions. Replace
@@ -96,6 +106,16 @@ and this project adheres to the
   correctly leaves an XY profile unchanged.
 
 ## Unreleased
+
+- Examples: migrate fourteen remaining assembly and packing examples to
+  `fixed` / `mate` authoring, with independent coordinate fixtures and
+  per-instance orientation probes. Preserve print quantities and instruction
+  joints, including the tesseract's closed loops and Orbit Tower capture order.
+- Manual: responsive content and cards, contained tables/code, and persistent
+  navigation shared across documentation, build indexes and instruction pages.
+  Keyboard step navigation ignores typing in search fields.
+- CLI: `coscad validate file.coscad|file.assemble` validates source and solves
+  constraints without producing artifacts, for editor diagnostics.
 
 - `man coscad`: full manual page (commands, environment, language cheat
   sheet, assemblies, examples), shipped in release tarballs.

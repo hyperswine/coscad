@@ -1,5 +1,16 @@
+// Packing fixture: extra print copies intentionally share the display pose.
+// Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
 plate 220 220 6
-flatbr ← bracket90.coscad ×2
-innerbr ← inner90.coscad ×2
-seambr ← ../bracket.coscad ×2
-asm = flatbr ⊕ χ 70 innerbr ⊕ χ 130 seambr
+flatbr ← bracket90.coscad ×1
+innerbr ← inner90.coscad ×1
+seambr ← ../bracket.coscad ×1
+flatbr_print2 ← bracket90.coscad ×1
+innerbr_print2 ← inner90.coscad ×1
+seambr_print2 ← ../bracket.coscad ×1
+
+fixed flatbr 0 0 0 0 0 0
+fixed innerbr 70 0 0 0 0 0
+fixed seambr 130 0 0 0 0 0
+fixed flatbr_print2 0 0 0 0 0 0
+fixed innerbr_print2 70 0 0 0 0 0
+fixed seambr_print2 130 0 0 0 0 0

@@ -8,3 +8,5 @@ peg = ζ 6.8 (◎ 2.4 3.6)
 // Overlap the shaft by 0.1 mm for a single closed mesh.
 tip = ζ 10.3 ((▻ 2.4 2.4) ∩ (◎ 2.4 0.5))
 main = disc ⊕ neck ⊕ peg ⊕ tip
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame peg_seat_rotor1 ctr top bak 0 0 1.6

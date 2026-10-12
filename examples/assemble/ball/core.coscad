@@ -11,3 +11,6 @@ main = cyl r h
   |> cutat ctr 6 0 3.825 (box nutT nutAF 9.35)    // its nut slot, open on the top face
   |> cutat ctr 0 0 -4 (ycyl 2.75 40)              // bottom shell bolt, along Y at z = -4
   |> cutat ctr 0 6 -3.825 (box nutAF nutT 9.35)   // its nut slot, open on the bottom face
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame upper_equator_shell1 ctr top bak 0 0 0
+  |> frame lower_equator_shell2 ctr bot bak 0 0 0

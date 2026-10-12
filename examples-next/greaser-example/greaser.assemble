@@ -1,3 +1,5 @@
+// Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
 plate 220 220 5                 // the tool is 208.5 long: 5 mm margins fit a 220 bed
 tool ← greaser.coscad ×1
-asm = tool
+
+fixed tool 0 0 0 0 0 0

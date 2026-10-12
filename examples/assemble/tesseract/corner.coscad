@@ -28,3 +28,8 @@ main = box C C C |> move (C / 2) (C / 2) (C / 2)
   |> cutat lft+fwd+bot 9.5 19 16.1 (⎏ 6 hexr 8 |> rotx 90)
   // strut peg socket down the body diagonal from the inner corner
   |> cutat lft+fwd+bot 18 18 18 (zcyl 2.65 10 |> roty 54.7356 |> rotz 45)
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame bar_socket_bar1 ctr rt top 3.75 0 0
+  |> frame bar_socket_bar5 ctr bak top 0 3.75 0
+  |> frame bar_socket_bar9 ctr top bak 0 0 3.75
+  |> frame diagonal_socket_strut1 ctr rt+bak+top top 8.5 8.5 8.5

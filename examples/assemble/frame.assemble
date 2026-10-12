@@ -1,3 +1,6 @@
-// recursion test: two corner subassemblies
-corner ← corner.assemble ×2
-asm = corner ⊕ ψ 300 (⇋ 0 1 0 corner)
+// Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
+corner1 ← corner.assemble ×1
+corner2 ← corner-mirrored.assemble ×1
+
+fixed corner1 0 0 0 0 0 0
+fixed corner2 0 300 0 0 0 0

@@ -14,8 +14,18 @@
 - 1 × axle6 (printed)
 - 1 × base (printed)
 - 1 × cap (printed)
-- 6 × rotor (printed)
-- 6 × satellite (printed)
+- 1 × rotor1 (printed)
+- 1 × rotor2 (printed)
+- 1 × rotor3 (printed)
+- 1 × rotor4 (printed)
+- 1 × rotor5 (printed)
+- 1 × rotor6 (printed)
+- 1 × satellite1 (printed)
+- 1 × satellite2 (printed)
+- 1 × satellite3 (printed)
+- 1 × satellite4 (printed)
+- 1 × satellite5 (printed)
+- 1 × satellite6 (printed)
 
 ### Preload sheet (nuts)
 
@@ -29,72 +39,72 @@
 - Push: axle1 into base (top entry) until it seats
 
 ### Step 2 — bottom (-Z) face down
-- Place: rotor#1 (on axle1)
-- Push: rotor#1 into axle1 (top entry, seat 13 mm below the face) until it seats
+- Place: rotor1 (on axle1)
+- Push: rotor1 into axle1 (top entry, seat 13 mm below the face) until it seats
 
 ### Step 3 — bottom (-Z) face down
-- Place: satellite#1 (on rotor#1)
-- Push: satellite#1 into rotor#1 (top entry) until it seats
+- Place: satellite1 (on rotor1)
+- Push: satellite1 into rotor1 (top entry) until it seats
 
 ### Step 4 — bottom (-Z) face down
 - Place: axle2 (on axle1)
 - Push: axle2 into axle1 (top entry) until it seats
 
 ### Step 5 — bottom (-Z) face down
-- Place: rotor#2 (on axle2)
-- Push: rotor#2 into axle2 (top entry, seat 13 mm below the face) until it seats
+- Place: rotor2 (on axle2)
+- Push: rotor2 into axle2 (top entry, seat 13 mm below the face) until it seats
 
 ### Step 6 — bottom (-Z) face down
-- Place: satellite#2 (on rotor#2)
-- Push: satellite#2 into rotor#2 (top entry) until it seats
+- Place: satellite2 (on rotor2)
+- Push: satellite2 into rotor2 (top entry) until it seats
 
 ### Step 7 — bottom (-Z) face down
 - Place: axle3 (on axle2)
 - Push: axle3 into axle2 (top entry) until it seats
 
 ### Step 8 — bottom (-Z) face down
-- Place: rotor#3 (on axle3)
-- Push: rotor#3 into axle3 (top entry, seat 13 mm below the face) until it seats
+- Place: rotor3 (on axle3)
+- Push: rotor3 into axle3 (top entry, seat 13 mm below the face) until it seats
 
 ### Step 9 — bottom (-Z) face down
-- Place: satellite#3 (on rotor#3)
-- Push: satellite#3 into rotor#3 (top entry) until it seats
+- Place: satellite3 (on rotor3)
+- Push: satellite3 into rotor3 (top entry) until it seats
 
 ### Step 10 — bottom (-Z) face down
 - Place: axle4 (on axle3)
 - Push: axle4 into axle3 (top entry) until it seats
 
 ### Step 11 — bottom (-Z) face down
-- Place: rotor#4 (on axle4)
-- Push: rotor#4 into axle4 (top entry, seat 13 mm below the face) until it seats
+- Place: rotor4 (on axle4)
+- Push: rotor4 into axle4 (top entry, seat 13 mm below the face) until it seats
 
 ### Step 12 — bottom (-Z) face down
-- Place: satellite#4 (on rotor#4)
-- Push: satellite#4 into rotor#4 (top entry) until it seats
+- Place: satellite4 (on rotor4)
+- Push: satellite4 into rotor4 (top entry) until it seats
 
 ### Step 13 — bottom (-Z) face down
 - Place: axle5 (on axle4)
 - Push: axle5 into axle4 (top entry) until it seats
 
 ### Step 14 — bottom (-Z) face down
-- Place: rotor#5 (on axle5)
-- Push: rotor#5 into axle5 (top entry, seat 13 mm below the face) until it seats
+- Place: rotor5 (on axle5)
+- Push: rotor5 into axle5 (top entry, seat 13 mm below the face) until it seats
 
 ### Step 15 — bottom (-Z) face down
-- Place: satellite#5 (on rotor#5)
-- Push: satellite#5 into rotor#5 (top entry) until it seats
+- Place: satellite5 (on rotor5)
+- Push: satellite5 into rotor5 (top entry) until it seats
 
 ### Step 16 — bottom (-Z) face down
 - Place: axle6 (on axle5)
 - Push: axle6 into axle5 (top entry) until it seats
 
 ### Step 17 — bottom (-Z) face down
-- Place: rotor#6 (on axle6)
-- Push: rotor#6 into axle6 (top entry, seat 13 mm below the face) until it seats
+- Place: rotor6 (on axle6)
+- Push: rotor6 into axle6 (top entry, seat 13 mm below the face) until it seats
 
 ### Step 18 — bottom (-Z) face down
-- Place: satellite#6 (on rotor#6)
-- Push: satellite#6 into rotor#6 (top entry) until it seats
+- Place: satellite6 (on rotor6)
+- Push: satellite6 into rotor6 (top entry) until it seats
 
 ### Step 19 — bottom (-Z) face down
 - Place: cap (on axle6)

@@ -10,3 +10,8 @@ insB  = χ 42 (ψ 14 (ζ 3.6 (zcyl 2.8 6.6)))
 insC  = χ -42 (ψ -2 (ζ 3.6 (zcyl 2.8 6.6)))
 insD  = χ -42 (ψ 14 (ζ 3.6 (zcyl 2.8 6.6)))
 main  = body ⊖ pockR ⊖ pockL ⊖ insA ⊖ insB ⊖ insC ⊖ insD
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame root_bore_m2_larch ctr top bak 42 -8 0
+  |> frame root_bore_14_larch ctr top bak 42 8 0
+  |> frame root_bore_m2_rarch ctr top bak -42 -8 0
+  |> frame root_bore_14_rarch ctr top bak -42 8 0

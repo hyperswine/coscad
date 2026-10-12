@@ -4,3 +4,5 @@ plate = ◎ 29 4
 taper = (▻ 29 (29 / 3)) ∩ (◎ 29 2)
 peg = ▣ 6 6 5.2 0.3 |> move 0 0 8.4
 main = plate ⊕ (taper |> move 0 0 4) ⊕ peg
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame peg_seat_axle1 ctr top bak 0 0 0.5

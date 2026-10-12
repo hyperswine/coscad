@@ -45,6 +45,7 @@ mkdir -p "$work/orbit-tower"
 cp models/orbit-tower/*.coscad models/orbit-tower/orbit-tower.assemble "$work/orbit-tower/"
 coscad site "$tmp/builds" "$work/plan/corner_pair.assemble" "$work/plan/cube.assemble" "$work/bow3/bow3.assemble" "$work/ball/ball.assemble" "$work/tesseract/tesseract.assemble" "$work/orbit-tower/orbit-tower.assemble"
 rm -rf "$work"
+python3 scripts/finish-manual.py "$tmp"
 echo "{\"commit\": \"$commit\", \"built\": \"$stamp\"}" > "$tmp/version.json"
 
 rm -rf "${out%/}.old"; [ -d "$out" ] && mv "$out" "${out%/}.old"; mv "$tmp" "$out"; rm -rf "${out%/}.old"

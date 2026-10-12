@@ -11,3 +11,6 @@ cbA    = χ 42 (ψ -2 (ζ 13.1 (zcyl 3.8 3)))
 cbB    = χ 42 (ψ 14 (ζ 13.1 (zcyl 3.8 3)))
 part   = (arch ⊕ tab) ⊖ holeA ⊖ holeB ⊖ cbA ⊖ cbB
 main   = ⇋ 1 0 0 part
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame root_bore_m2_center ctr bot bak 96.5700882523 -27.9392722801 0
+  |> frame root_bore_14_center ctr bot bak 96.5700882523 -11.9392722801 0

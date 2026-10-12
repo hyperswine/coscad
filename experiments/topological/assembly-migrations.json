@@ -1,0 +1,254 @@
+[
+  {
+    "assembly": "examples/assemble/autotest.assemble",
+    "reference": "test/fixtures/assemblies/examples/assemble/autotest.assemble",
+    "aliases": {
+      "flatbr": "flatbr",
+      "innerbr": "innerbr",
+      "seambr": "seambr"
+    },
+    "parts": 6,
+    "mates": 0,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples/assemble/corner.assemble",
+    "reference": "test/fixtures/assemblies/examples/assemble/corner.assemble",
+    "aliases": {
+      "railH": "railH",
+      "railV": "railV",
+      "inner": "inner",
+      "bracket#1": "bracket1",
+      "bracket#2": "bracket2"
+    },
+    "parts": 5,
+    "mates": 5,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples/assemble/frame.assemble",
+    "reference": "test/fixtures/assemblies/examples/assemble/frame.assemble",
+    "aliases": {
+      "corner#1": "corner1",
+      "corner#2": "corner2"
+    },
+    "parts": 2,
+    "mates": 0,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples/assemble/spill.assemble",
+    "reference": "test/fixtures/assemblies/examples/assemble/spill.assemble",
+    "aliases": {
+      "br": "br"
+    },
+    "parts": 7,
+    "mates": 0,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples/assemble/plan/corner_pair.assemble",
+    "reference": "test/fixtures/assemblies/examples/assemble/plan/corner_pair.assemble",
+    "aliases": {
+      "railA": "railA",
+      "railB": "railB",
+      "br1": "br1"
+    },
+    "parts": 3,
+    "mates": 3,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples/assemble/ball/ball.assemble",
+    "reference": "test/fixtures/assemblies/examples/assemble/ball/ball.assemble",
+    "aliases": {
+      "shell#1": "shell1",
+      "core": "core",
+      "shell#2": "shell2"
+    },
+    "parts": 3,
+    "mates": 2,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples/assemble/bow3/bow3.assemble",
+    "reference": "test/fixtures/assemblies/examples/assemble/bow3/bow3.assemble",
+    "aliases": {
+      "center": "center",
+      "larch": "larch",
+      "rarch": "rarch"
+    },
+    "parts": 3,
+    "mates": 4,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples/assemble/tesseract/tesseract.assemble",
+    "reference": "test/fixtures/assemblies/examples/assemble/tesseract/tesseract.assemble",
+    "aliases": {
+      "corner#1": "corner1",
+      "corner#2": "corner2",
+      "corner#3": "corner3",
+      "corner#4": "corner4",
+      "corner#5": "corner5",
+      "corner#6": "corner6",
+      "corner#7": "corner7",
+      "corner#8": "corner8",
+      "bar#1": "bar1",
+      "bar#2": "bar2",
+      "bar#3": "bar3",
+      "bar#4": "bar4",
+      "bar#5": "bar5",
+      "bar#6": "bar6",
+      "bar#7": "bar7",
+      "bar#8": "bar8",
+      "bar#9": "bar9",
+      "bar#10": "bar10",
+      "bar#11": "bar11",
+      "bar#12": "bar12",
+      "strut#1": "strut1",
+      "strut#2": "strut2",
+      "strut#3": "strut3",
+      "strut#4": "strut4",
+      "strut#5": "strut5",
+      "strut#6": "strut6",
+      "strut#7": "strut7",
+      "strut#8": "strut8",
+      "inner": "inner"
+    },
+    "parts": 29,
+    "mates": 40,
+    "geometry_tolerance_mm": 0.0001
+  },
+  {
+    "assembly": "models/orbit-tower/orbit-tower.assemble",
+    "reference": "test/fixtures/assemblies/models/orbit-tower/orbit-tower.assemble",
+    "aliases": {
+      "base": "base",
+      "axle1": "axle1",
+      "rotor#1": "rotor1",
+      "satellite#1": "satellite1",
+      "axle2": "axle2",
+      "rotor#2": "rotor2",
+      "satellite#2": "satellite2",
+      "axle3": "axle3",
+      "rotor#3": "rotor3",
+      "satellite#3": "satellite3",
+      "axle4": "axle4",
+      "rotor#4": "rotor4",
+      "satellite#4": "satellite4",
+      "axle5": "axle5",
+      "rotor#5": "rotor5",
+      "satellite#5": "satellite5",
+      "axle6": "axle6",
+      "rotor#6": "rotor6",
+      "satellite#6": "satellite6",
+      "cap": "cap"
+    },
+    "parts": 20,
+    "mates": 19,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples/bow.assemble",
+    "reference": "test/fixtures/assemblies/examples/bow.assemble",
+    "aliases": {
+      "bow": "bow"
+    },
+    "parts": 1,
+    "mates": 0,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples-next/bow2.assemble",
+    "reference": "test/fixtures/assemblies/examples-next/bow2.assemble",
+    "aliases": {
+      "center": "center",
+      "larch": "larch",
+      "rarch": "rarch"
+    },
+    "parts": 3,
+    "mates": 4,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples-next/enclosure2x2.assemble",
+    "reference": "test/fixtures/assemblies/examples-next/enclosure2x2.assemble",
+    "aliases": {
+      "railY#1": "railY1",
+      "railY#2": "railY2",
+      "railY#3": "railY3",
+      "railX#1": "railX1",
+      "railX#2": "railX2",
+      "railX#3": "railX3",
+      "railX#4": "railX4",
+      "railX#5": "railX5",
+      "railX#6": "railX6",
+      "bracket#1": "bracket1",
+      "bracket#2": "bracket2",
+      "bracket#3": "bracket3",
+      "bracket#4": "bracket4",
+      "bracket#5": "bracket5",
+      "bracket#6": "bracket6",
+      "bracket#7": "bracket7",
+      "bracket#8": "bracket8",
+      "bracket#9": "bracket9",
+      "bracket#10": "bracket10",
+      "bracket#11": "bracket11",
+      "bracket#12": "bracket12",
+      "bracket#13": "bracket13",
+      "bracket#14": "bracket14",
+      "bracket#15": "bracket15",
+      "bracket#16": "bracket16",
+      "tnut#1": "tnut1",
+      "tnut#2": "tnut2",
+      "tnut#3": "tnut3",
+      "tnut#4": "tnut4",
+      "tnut#5": "tnut5",
+      "tnut#6": "tnut6",
+      "tnut#7": "tnut7",
+      "tnut#8": "tnut8",
+      "tnut#9": "tnut9",
+      "tnut#10": "tnut10",
+      "tnut#11": "tnut11",
+      "tnut#12": "tnut12",
+      "tnut#13": "tnut13",
+      "tnut#14": "tnut14",
+      "tnut#15": "tnut15",
+      "tnut#16": "tnut16",
+      "corner#1": "corner1",
+      "corner#2": "corner2",
+      "corner#3": "corner3",
+      "corner#4": "corner4",
+      "panel#1": "panel1",
+      "panel#2": "panel2",
+      "panel#3": "panel3",
+      "panel#4": "panel4"
+    },
+    "parts": 49,
+    "mates": 48,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples-next/example_check.assemble",
+    "reference": "test/fixtures/assemblies/examples-next/example_check.assemble",
+    "aliases": {
+      "partA": "partA",
+      "partB": "partB",
+      "partC": "partC"
+    },
+    "parts": 3,
+    "mates": 0,
+    "geometry_tolerance_mm": 1e-06
+  },
+  {
+    "assembly": "examples-next/greaser-example/greaser.assemble",
+    "reference": "test/fixtures/assemblies/examples-next/greaser-example/greaser.assemble",
+    "aliases": {
+      "tool": "tool"
+    },
+    "parts": 1,
+    "mates": 0,
+    "geometry_tolerance_mm": 1e-06
+  }
+]

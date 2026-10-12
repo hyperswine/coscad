@@ -1,9 +1,10 @@
 {
-  "source": "ball.assemble",
+  "source": "examples/assemble/ball/ball.assemble",
+  "parts": [{"name": "shell1", "part": "shell1", "material": "printed"}, {"name": "core", "part": "core", "material": "printed"}, {"name": "shell2", "part": "shell2", "material": "printed"}],
   "design_errors": [],
   "steps": [
     {"step": 1, "rest": "left (-X) face", "flip": false, "parts": ["core"], "preload": ["core"], "fasteners": [], "warnings": []},
-    {"step": 2, "rest": "top (+Z) face", "flip": true, "parts": ["shell#2"], "preload": [], "fasteners": [{"spec": "M5x20", "head": "socket", "nut": "Hex", "pocket": "bot", "clamped": "shell#2", "host": "core", "face": "bak", "at_mm": 14.8, "torque_nm": 0.6}], "warnings": ["driver axis is not vertical here (bak face of core); keep the driver square to the bracket"]},
-    {"step": 3, "rest": "left (-X) face", "flip": true, "parts": ["shell#1"], "preload": [], "fasteners": [{"spec": "M5x20", "head": "socket", "nut": "Hex", "pocket": "top", "clamped": "shell#1", "host": "core", "face": "rt", "at_mm": 14.8, "torque_nm": 0.6}], "warnings": []}
+    {"step": 2, "rest": "top (+Z) face", "flip": true, "parts": ["shell2"], "preload": [], "fasteners": [{"spec": "M5x20", "head": "socket", "nut": "Hex", "pocket": "bot", "clamped": "shell2", "host": "core", "face": "bak", "position_mm": [0, 14.8, -4], "inset_mm": 0, "at_mm": 14.8, "torque_nm": 0.6}], "warnings": ["driver axis is not vertical here (bak face of core); keep the driver square to the bracket"]},
+    {"step": 3, "rest": "left (-X) face", "flip": true, "parts": ["shell1"], "preload": [], "fasteners": [{"spec": "M5x20", "head": "socket", "nut": "Hex", "pocket": "top", "clamped": "shell1", "host": "core", "face": "rt", "position_mm": [14.8, 0, 4], "inset_mm": 0, "at_mm": 14.8, "torque_nm": 0.6}], "warnings": []}
   ]
 }

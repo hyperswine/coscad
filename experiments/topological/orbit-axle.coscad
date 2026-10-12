@@ -14,3 +14,7 @@ main = foot
   |> at top 0 0 -overlap journal
   |> at top 0 0 -overlap peg
   |> cutat bot 0 0 ((socket_depth - overcut) / 2) socket
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame peg_seat_base ctr bot bak 0 0 -10
+  |> frame peg_seat_rotor1 ctr top bak 0 0 -3
+  |> frame peg_seat_axle2 ctr top bak 0 0 5

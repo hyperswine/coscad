@@ -12,3 +12,20 @@ footer{max-width:780px;margin:40px auto 24px;padding:0 16px;color:var(--muted);f
 header#title-block-header{display:none}
 img{max-width:100%;height:auto;border-radius:10px}
 table.head,table.foot{display:table;width:100%;color:var(--muted);font-size:13px}div.manual-text{max-width:780px;margin:0 auto;padding:0 16px}dl dt{font-weight:600;margin-top:10px}dd{margin-left:1.2em}
+/* One contained layout and navigation for docs, indexes and instruction guides. */
+body{overflow-wrap:anywhere;min-width:0}main{width:100%;min-width:0}main>*{min-width:0;max-width:100%}
+.manual-content{width:100%;max-width:860px;margin:0 auto;padding:20px clamp(14px,3vw,28px);min-width:0}
+.manual-content>header,.manual-content>section,.manual-content>div{min-width:0;max-width:100%}
+.manual-content h1,.manual-content h2,.manual-content h3{scroll-margin-top:calc(var(--nav-height,64px) + 16px)}
+pre,table,details,.body{min-width:0;max-width:100%}pre{overflow:auto;white-space:pre}code{overflow-wrap:anywhere}
+img,svg,video,iframe{max-width:100%;height:auto}input,button,select{max-width:100%;min-width:0}
+nav.top{display:block;position:sticky;top:0;z-index:20;padding:0;width:100%;max-width:none;isolation:isolate}
+.nav-inner{width:100%;max-width:1180px;margin:auto;display:flex;align-items:center;gap:16px;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px;min-width:0}
+nav.top a.brand{font-size:18px;flex:0 0 auto}.nav-menu{margin:0 0 0 auto;padding:0;border:0;border-radius:0;background:none;position:relative;overflow:visible}
+.nav-menu summary{cursor:pointer;color:var(--muted);font-weight:500;list-style:none;padding:2px 8px}.nav-menu summary::-webkit-details-marker{display:none}
+.nav-menu summary::after{content:' ▾'}.nav-menu[open] summary::after{content:' ▴'}
+.nav-links{position:absolute;right:0;top:calc(100% + 12px);width:min(22rem,calc(100vw - 32px));max-height:70vh;overflow:auto;display:grid;gap:4px;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px #0002}
+.nav-links a{padding:7px 10px;border-radius:6px}.nav-links a:hover{background:var(--line)}
+nav#bar{width:100%;max-width:860px;margin:auto;z-index:10}nav#bar button{min-width:0}
+li.step{scroll-margin-top:calc(var(--nav-height,64px) + 16px)}
+@media(max-width:480px){.nav-inner{gap:12px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px}body{font-size:15px}.manual-content{padding:16px 14px}main:not(.manual-content){padding-left:12px;padding-right:12px}.body{padding:10px 12px}th,td{padding:6px 8px}}

@@ -18,6 +18,9 @@ hook   = (tube 10.31 3 14 ∩ (box 40 40 20 |> move 0 20 0 |> rotz 20) ∩ (box 
 nock   = ((box 16 3.4 20 |> move 8 0 0 |> rotz 45) ∩ ((box 60 60 2 |> move 0 0 6) ⊕ (box 60 60 2 |> move 0 0 -6) ⊕ zcyl 5.5 14)) |> move 207.03 57.96 7
 hole   = zcyl 1.75 20 |> move 211.74 62.67 7
 main = part |> mirror 1 0 0
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame root_bore_m8_center ctr bot bak 108.67 -38.2654513889 0
+  |> frame root_bore_8_center ctr bot bak 108.67 -22.2654513889 0
 part = (stalk ⊕ hook ⊖ nock ⊖ hole)
   |> at lft+fwd 0 27 3.5 (box 26 28 7)
   |> cutat lft+fwd 13 6 0 (zcyl 2.15 20)

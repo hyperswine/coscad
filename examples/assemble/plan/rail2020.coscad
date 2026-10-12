@@ -1,3 +1,6 @@
 // 2020 extrusion stand-in, 400 mm along X (T-slot profile not modelled).
 len = 400
 main = box len 20 20
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame upright_railB ctr top bak 180 0 10
+  |> frame foot_br1 ctr top bak 160 0 10

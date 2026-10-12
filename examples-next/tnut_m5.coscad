@@ -11,3 +11,6 @@ neck = box 0.9 10 6
 main = base
   |> at rt neck
   |> cutat ctr 0.4 0 0 (xcyl 2.1 6)
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame nut_seat_bracket1 ctr rt top 2.6 0 0
+  |> frame nut_seat_bracket5 ctr lft top 382.6 0 0

@@ -1,9 +1,12 @@
-// 40 mm bolted ball: two printed hemisphere shells joined by a core disc.
-// Each shell is held by one M5x20 into a hex nut captive in the core.
-// The lower shell is flipped and turned 90 degrees so the two bolts cross.
+// Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
 plate 256 256 6
-shell ← shell.coscad ×2 ▽bot
-core  ← core.coscad ×1
-asm = shell ⊕ core ⊕ (shell |> rotx 180 |> rotz 90)
-fastener M5x20 shell#1 core rt  head=socket nut=hex pocket=top
-fastener M5x20 shell#2 core bak head=socket nut=hex pocket=bot
+shell1 ← shell.coscad ×1 ▽bot
+core ← core.coscad ×1
+shell2 ← shell.coscad ×1 ▽bot
+
+fixed core 0 0 0 0 0 0
+mate shell1 @upper_equator_core core @upper_equator_shell1
+mate shell2 @upper_equator_core core @lower_equator_shell2 roll=90
+
+fastener M5x20 shell1 core rt  head=socket nut=hex pocket=top
+fastener M5x20 shell2 core bak head=socket nut=hex pocket=bot

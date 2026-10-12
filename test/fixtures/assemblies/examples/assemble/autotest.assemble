@@ -1,0 +1,6 @@
+// Coordinate reference for migration tests; part geometry is shared.
+plate 220 220 6
+flatbr ← ../../../../../examples/assemble/bracket90.coscad ×2
+innerbr ← ../../../../../examples/assemble/inner90.coscad ×2
+seambr ← ../../../../../examples/bracket.coscad ×2
+asm = flatbr ⊕ χ 70 innerbr ⊕ χ 130 seambr

@@ -1,0 +1,92 @@
+{
+  "baseline": "c6a8496",
+  "identical_solid_codegen": [
+    "examples-next/bracket_seam.coscad",
+    "examples-next/center.coscad",
+    "examples-next/corner_90.coscad",
+    "examples-next/l_arch.coscad",
+    "examples-next/panel_corner.coscad",
+    "examples-next/r_arch.coscad",
+    "examples-next/rail_x180.coscad",
+    "examples-next/rail_y420.coscad",
+    "examples-next/tnut_m5.coscad",
+    "examples/assemble/ball/core.coscad",
+    "examples/assemble/ball/shell.coscad",
+    "examples/assemble/bow3/center3.coscad",
+    "examples/assemble/bow3/l_arch3.coscad",
+    "examples/assemble/bow3/r_arch3.coscad",
+    "examples/assemble/bracket90.coscad",
+    "examples/assemble/inner90.coscad",
+    "examples/assemble/plan/corner_inside.coscad",
+    "examples/assemble/plan/rail2020.coscad",
+    "examples/assemble/plan/rail2020_300.coscad",
+    "examples/assemble/rail120.coscad",
+    "examples/assemble/rail200.coscad",
+    "examples/assemble/tesseract/bar.coscad",
+    "examples/assemble/tesseract/corner.coscad",
+    "examples/assemble/tesseract/inner.coscad",
+    "examples/assemble/tesseract/strut.coscad",
+    "experiments/topological/native-orbit-rotor.coscad",
+    "experiments/topological/orbit-axle.coscad",
+    "experiments/topological/orbit-base.coscad",
+    "experiments/topological/orbit-cap.coscad",
+    "experiments/topological/orbit-rotor.coscad",
+    "experiments/topological/orbit-satellite.coscad",
+    "models/orbit-tower/axle.coscad",
+    "models/orbit-tower/base.coscad",
+    "models/orbit-tower/cap.coscad",
+    "models/orbit-tower/rotor.coscad",
+    "models/orbit-tower/satellite.coscad"
+  ],
+  "regression": {
+    "passed": 777,
+    "failed": 0,
+    "geometry_enabled": true
+  },
+  "oblique_solid_differences": [
+    {
+      "assembly": "examples_assemble_tesseract_tesseract.assemble",
+      "backend": "Manifold",
+      "warnings": [],
+      "symmetric_difference_mm3": 0.0076503523837914145,
+      "limit_mm3": 0.02
+    },
+    {
+      "assembly": "models_orbit-tower_orbit-tower.assemble",
+      "backend": "Manifold",
+      "warnings": [],
+      "symmetric_difference_mm3": 8.796875306416041e-06,
+      "limit_mm3": 0.002
+    }
+  ],
+  "cli_probes": {
+    "total": 468,
+    "statuses": {
+      "accepted": 69,
+      "rejected": 399
+    },
+    "asserted": {
+      "accepted": 32,
+      "rejected": 183
+    },
+    "expectation_failures": 0
+  },
+  "manual_layout": {
+    "pages": 18,
+    "widths": [
+      320,
+      375,
+      768,
+      1440
+    ],
+    "checks_passed": 72,
+    "long_names": true,
+    "images_loaded": true
+  },
+  "lsp": {
+    "version": "0.3.0",
+    "corpus_files": 94,
+    "hover_positions": 11944,
+    "stdio_integration_passed": true
+  }
+}

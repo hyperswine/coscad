@@ -10,3 +10,5 @@ tip = (▻ 2.4 2.4) ∩ (◎ 2.4 0.5)
 main = disc |> at top neck
   |> at top 0 0 -peg_overlap peg
   |> at top 0 0 -tip_overlap tip
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame peg_seat_rotor1 ctr top bak 0 0 1.6

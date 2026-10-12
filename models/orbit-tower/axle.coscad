@@ -5,3 +5,7 @@ journal = ζ 6.8 (◎ 4.8 8.2)
 peg = ▣ 6 6 5.2 0.3 |> move 0 0 17.4
 socket = ▬ 6.6 6.6 5.8 |> move -3.3 -3.3 -0.2
 main = (foot ⊕ journal ⊕ peg) ⊖ socket
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame peg_seat_base ctr bot bak 0 0 -10
+  |> frame peg_seat_rotor1 ctr top bak 0 0 -3
+  |> frame peg_seat_axle2 ctr top bak 0 0 5

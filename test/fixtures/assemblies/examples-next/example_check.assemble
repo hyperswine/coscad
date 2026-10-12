@@ -1,0 +1,9 @@
+// Coordinate reference for migration tests; part geometry is shared.
+!simple
+
+plate 250 250 1
+clearance 0.3
+partA ← ../../../../examples-next/a.coscad ×1
+partB ← ../../../../examples-next/b.coscad ×1
+partC ← ../../../../examples-next/c.coscad ×1
+asm = partA * (Translate.x 18 partB) * (Translate.z 10.2 partC)

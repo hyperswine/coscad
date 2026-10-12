@@ -17,3 +17,6 @@ blank = arm |> add hub |> add counterweight |> add pad
 bearing = zcyl 5.2 (thickness + 0.4) |> place blank @axle ctr
 socket = zcyl 2.75 (thickness + 0.4) |> place blank @satellite ctr
 main = blank |> cut bearing |> cut socket
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame peg_seat_axle1 ctr bot bak 0.5 0 -2.25
+  |> frame peg_seat_satellite1 ctr top bak 24.5 0 2.25

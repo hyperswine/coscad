@@ -111,6 +111,18 @@ loops. All 16 bracket poses match an independent coordinate reference;
 the [verification report](reviews/2026-10-12-cube-constraints.md) records mesh,
 hole, screw-position and instruction checks.
 
+The remaining canonical assemblies now use the same constraint style: the
+ball, three-piece bows, corner pair, tesseract, enclosure and Orbit Tower.
+Packing and collision fixtures use fixed independent roots rather than
+invented connections. A reflected recursive frame retains its reflection
+inside a separate part definition, because a rigid mate cannot mirror a part.
+The [migration report](reviews/2026-10-12-assembly-migrations.md) describes the
+retained geometry references, instruction checks and numerical tolerances.
+
+`coscad validate file.assemble` checks part sources and solves the rigid graph
+without creating artifacts. It is intended for editor diagnostics; hardware
+access and interference remain separate `plan` and `check` operations.
+
 ## Worked example
 
 `examples/topological/tbracket.coscad` rebuilds the project's seam

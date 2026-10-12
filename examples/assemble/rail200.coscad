@@ -1,3 +1,8 @@
 // 2020 aluminium extrusion, 200 mm along X. Assembly-only stand-in
 // (referenced with ×0): a plain centered bar, T-slot profile not modelled.
 main = box 200 20 20
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame rail_end_railV ctr lft top -100 0 10
+  |> frame foot_inner ctr top bak -80 0 10
+  |> frame outer_bore_bracket1 ctr bak top -88 10 0
+  |> frame outer_bore_bracket2 ctr fwd top -88 -10 0

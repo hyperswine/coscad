@@ -7,3 +7,8 @@ main = legA
   |> at rt -4 -4.5 0 legB
   |> cutat ctr -1.5 4.5 0 (ycyl 2.75 8)
   |> cutat ctr 6.5 -3.5 0 (xcyl 2.75 8)
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame corner_seat_railY3 ctr lft top 0 4.5 0
+  |> frame corner_seat_railY1 ctr bak top 0 4.5 0
+  |> frame corner_seat_railY1_2 ctr rt top 0 4.5 0
+  |> frame corner_seat_railY3_2 ctr fwd top 0 4.5 0

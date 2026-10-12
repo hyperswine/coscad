@@ -2,3 +2,8 @@
 // round) so it prints lying on that face. Friction fit into the inner
 // cube's corner hole and a corner block's diagonal socket.
 main = xcyl 2.5 46 ⊖ (box 50 8 8 |> move 0 0 -5.5)
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame diagonal_socket_corner1 ctr lft top -18.2211744956 0 0
+  |> frame inner_socket_inner ctr rt top 11.223689233 0 0
+  |> frame diagonal_socket_corner5 ctr rt top 18.2211744956 0 0
+  |> frame inner_socket_inner_2 ctr rt top -11.223689233 0 0

@@ -1,83 +1,102 @@
-// ============================================================
-// 2x2 panel enclosure face on 2020 T-slot, 420 x 420 outer.
-// ------------------------------------------------------------
-// Frame: 3 full Y rails (x = -200, 0, 200) + 6 X segments (180mm)
-// butted between them at y = -200, 0, 200. Rails sit z 0..20.
-//
-// Panel sizing rule (opening = 180 between rail faces):
-//   interior edge  -> +10  (reaches the shared slot centerline)
-//   perimeter edge -> +20  (covers the rail to its outer edge)
-//   center 200x200 | edge 210x200 | corner 210x210 | 1x1 lid 220x220
-// In a 2x2 every panel is a corner panel (210x210); the square part
-// rotates 0/90/180/270 to serve all four quadrants, and the four
-// outer corners land exactly on the frame's outer edge (420 = 2*210).
-//
-// One seam bracket at the midpoint of every panel edge (16), each
-// with an M5 drop-in T-nut in the side slot behind it. Bracket pose:
-// rotate to face, translate face axis by (face_plane + 2.5), lift z 10.
-// T-nut pose: same rotation, translate by (rail_center +- 6.95).
-// 90-deg corner connectors tie the four outer butt joints.
-// ============================================================
+// Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
 plate 250 250 6
 clearance 0.05
+railY1 ← rail_y420.coscad ×0
+railY2 ← rail_y420.coscad ×0
+railY3 ← rail_y420.coscad ×0
+railX1 ← rail_x180.coscad ×0
+railX2 ← rail_x180.coscad ×0
+railX3 ← rail_x180.coscad ×0
+railX4 ← rail_x180.coscad ×0
+railX5 ← rail_x180.coscad ×0
+railX6 ← rail_x180.coscad ×0
+bracket1 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket2 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket3 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket4 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket5 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket6 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket7 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket8 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket9 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket10 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket11 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket12 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket13 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket14 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket15 ← bracket_seam.coscad ×1 ▽fwd material=petg
+bracket16 ← bracket_seam.coscad ×1 ▽fwd material=petg
+tnut1 ← tnut_m5.coscad ×0
+tnut2 ← tnut_m5.coscad ×0
+tnut3 ← tnut_m5.coscad ×0
+tnut4 ← tnut_m5.coscad ×0
+tnut5 ← tnut_m5.coscad ×0
+tnut6 ← tnut_m5.coscad ×0
+tnut7 ← tnut_m5.coscad ×0
+tnut8 ← tnut_m5.coscad ×0
+tnut9 ← tnut_m5.coscad ×0
+tnut10 ← tnut_m5.coscad ×0
+tnut11 ← tnut_m5.coscad ×0
+tnut12 ← tnut_m5.coscad ×0
+tnut13 ← tnut_m5.coscad ×0
+tnut14 ← tnut_m5.coscad ×0
+tnut15 ← tnut_m5.coscad ×0
+tnut16 ← tnut_m5.coscad ×0
+corner1 ← corner_90.coscad ×0
+corner2 ← corner_90.coscad ×0
+corner3 ← corner_90.coscad ×0
+corner4 ← corner_90.coscad ×0
+panel1 ← panel_corner.coscad ×1 ▽bot material=petg
+panel2 ← panel_corner.coscad ×1 ▽bot material=petg
+panel3 ← panel_corner.coscad ×1 ▽bot material=petg
+panel4 ← panel_corner.coscad ×1 ▽bot material=petg
 
-railY   ← rail_y420.coscad ×0
-railX   ← rail_x180.coscad ×0
-bracket ← bracket_seam.coscad ×16 ▽fwd material=petg
-tnut    ← tnut_m5.coscad ×0
-corner  ← corner_90.coscad ×0
-panel   ← panel_corner.coscad ×4 ▽bot material=petg
-
-// Pose blocks below, in order: rails, brackets (center Y rail both
-// faces; perimeter Y rails inward; center X rails both faces; perimeter
-// X rails inward), T-nuts mirroring the bracket block, the four corner
-// connectors, then the four rotated panels on the rail tops.
-asm = ζ 10 (χ -200 railY)
-  |> add (ζ 10 railY)
-  |> add $ ζ 10 (χ 200 railY)
-  |> add $ ζ 10 (ψ -200 (χ -100 railX))
-  |> add $ ζ 10 (ψ -200 (χ 100 railX))
-  |> add $ ζ 10 (χ -100 railX)
-  |> add $ ζ 10 (χ 100 railX)
-  |> add $ ζ 10 (ψ 200 (χ -100 railX))
-  |> add $ ζ 10 (ψ 200 (χ 100 railX))
-  |> add $ ζ 10 (ψ 105 (χ 12.5 bracket))
-  |> add $ ζ 10 (ψ -105 (χ 12.5 bracket))
-  |> add $ ζ 10 (ψ 105 (χ -12.5 (ω 180 bracket)))
-  |> add $ ζ 10 (ψ -105 (χ -12.5 (ω 180 bracket)))
-  |> add $ ζ 10 (ψ 105 (χ -187.5 bracket))
-  |> add $ ζ 10 (ψ -105 (χ -187.5 bracket))
-  |> add $ ζ 10 (ψ 105 (χ 187.5 (ω 180 bracket)))
-  |> add $ ζ 10 (ψ -105 (χ 187.5 (ω 180 bracket)))
-  |> add $ ζ 10 (χ 105 (ψ 12.5 (ω 90 bracket)))
-  |> add $ ζ 10 (χ -105 (ψ 12.5 (ω 90 bracket)))
-  |> add $ ζ 10 (χ 105 (ψ -12.5 (ω 270 bracket)))
-  |> add $ ζ 10 (χ -105 (ψ -12.5 (ω 270 bracket)))
-  |> add $ ζ 10 (χ 105 (ψ -187.5 (ω 90 bracket)))
-  |> add $ ζ 10 (χ -105 (ψ -187.5 (ω 90 bracket)))
-  |> add $ ζ 10 (χ 105 (ψ 187.5 (ω 270 bracket)))
-  |> add $ ζ 10 (χ -105 (ψ 187.5 (ω 270 bracket)))
-  |> add $ ζ 10 (ψ 105 (χ 6.95 tnut))
-  |> add $ ζ 10 (ψ -105 (χ 6.95 tnut))
-  |> add $ ζ 10 (ψ 105 (χ -6.95 (ω 180 tnut)))
-  |> add $ ζ 10 (ψ -105 (χ -6.95 (ω 180 tnut)))
-  |> add $ ζ 10 (ψ 105 (χ 193.05 (ω 180 tnut)))
-  |> add $ ζ 10 (ψ -105 (χ 193.05 (ω 180 tnut)))
-  |> add $ ζ 10 (ψ 105 (χ -193.05 tnut))
-  |> add $ ζ 10 (ψ -105 (χ -193.05 tnut))
-  |> add $ ζ 10 (χ 105 (ψ 6.95 (ω 90 tnut)))
-  |> add $ ζ 10 (χ -105 (ψ 6.95 (ω 90 tnut)))
-  |> add $ ζ 10 (χ 105 (ψ -6.95 (ω 270 tnut)))
-  |> add $ ζ 10 (χ -105 (ψ -6.95 (ω 270 tnut)))
-  |> add $ ζ 10 (χ 105 (ψ -193.05 (ω 90 tnut)))
-  |> add $ ζ 10 (χ -105 (ψ -193.05 (ω 90 tnut)))
-  |> add $ ζ 10 (χ 105 (ψ 193.05 (ω 270 tnut)))
-  |> add $ ζ 10 (χ -105 (ψ 193.05 (ω 270 tnut)))
-  |> add $ ζ 10 (χ 181.5 (ψ 188 corner))
-  |> add $ ζ 10 (χ -188 (ψ 181.5 (ω 90 corner)))
-  |> add $ ζ 10 (χ -181.5 (ψ -188 (ω 180 corner)))
-  |> add $ ζ 10 (χ 188 (ψ -181.5 (ω 270 corner)))
-  |> add $ ζ 21.25 (χ 105 (ψ 105 panel))
-  |> add $ ζ 21.25 (χ -105 (ψ 105 (ω 90 panel)))
-  |> add $ ζ 21.25 (χ -105 (ψ -105 (ω 180 panel)))
-  |> add $ ζ 21.25 (χ 105 (ψ -105 (ω 270 panel)))
+fixed railY1 -200 0 10 0 0 0
+mate railX1 @butt_railY1 railY1 @butt_railX1
+mate railX2 @butt_railY1 railY2 @butt_railX1
+mate railX3 @butt_railY1 railY1 @butt_railX3
+mate railX4 @butt_railY1 railY2 @butt_railX3
+mate railX5 @butt_railY1 railY1 @butt_railX5
+mate railX6 @butt_railY1 railY2 @butt_railX5
+mate railY2 @butt_railX1_2 railX1 @butt_railY2
+mate railY3 @butt_railX1_2 railX2 @butt_railY2
+mate bracket1 @slot_mount_railY2 railY2 @slot_mount_bracket1
+mate tnut1 @nut_seat_bracket1 bracket1 @slot_mount_railY2
+mate bracket2 @slot_mount_railY2 railY2 @slot_mount_bracket2
+mate tnut2 @nut_seat_bracket1 bracket2 @slot_mount_railY2
+mate bracket3 @slot_mount_railY2 railY2 @slot_mount_bracket3
+mate tnut3 @nut_seat_bracket1 bracket3 @slot_mount_railY2
+mate bracket4 @slot_mount_railY2 railY2 @slot_mount_bracket4
+mate tnut4 @nut_seat_bracket1 bracket4 @slot_mount_railY2
+mate bracket5 @slot_mount_railY2 railY1 @slot_mount_bracket1
+mate tnut5 @nut_seat_bracket5 bracket5 @slot_mount_railY2
+mate bracket6 @slot_mount_railY2 railY1 @slot_mount_bracket2
+mate tnut6 @nut_seat_bracket5 bracket6 @slot_mount_railY2
+mate bracket7 @slot_mount_railY2 railY3 @slot_mount_bracket3
+mate tnut7 @nut_seat_bracket5 bracket7 @slot_mount_railY2
+mate bracket8 @slot_mount_railY2 railY3 @slot_mount_bracket4
+mate tnut8 @nut_seat_bracket5 bracket8 @slot_mount_railY2
+mate bracket9 @slot_mount_railY2 railX4 @slot_mount_bracket9
+mate tnut9 @nut_seat_bracket1 bracket9 @slot_mount_railY2
+mate bracket10 @slot_mount_railY2 railX3 @slot_mount_bracket10
+mate tnut10 @nut_seat_bracket1 bracket10 @slot_mount_railY2
+mate bracket11 @slot_mount_railY2 railX4 @slot_mount_bracket11
+mate tnut11 @nut_seat_bracket1 bracket11 @slot_mount_railY2
+mate bracket12 @slot_mount_railY2 railX3 @slot_mount_bracket12
+mate tnut12 @nut_seat_bracket1 bracket12 @slot_mount_railY2
+mate bracket13 @slot_mount_railY2 railX2 @slot_mount_bracket9
+mate tnut13 @nut_seat_bracket1 bracket13 @slot_mount_railY2
+mate bracket14 @slot_mount_railY2 railX1 @slot_mount_bracket10
+mate tnut14 @nut_seat_bracket1 bracket14 @slot_mount_railY2
+mate bracket15 @slot_mount_railY2 railX6 @slot_mount_bracket11
+mate tnut15 @nut_seat_bracket1 bracket15 @slot_mount_railY2
+mate bracket16 @slot_mount_railY2 railX5 @slot_mount_bracket12
+mate tnut16 @nut_seat_bracket1 bracket16 @slot_mount_railY2
+mate corner1 @corner_seat_railY3 railY3 @corner_seat_corner1
+mate corner2 @corner_seat_railY1 railY1 @corner_seat_corner2
+mate corner3 @corner_seat_railY1_2 railY1 @corner_seat_corner3
+mate corner4 @corner_seat_railY3_2 railY3 @corner_seat_corner4
+mate panel1 @panel_support_railX6 railX6 @panel_support_panel1
+mate panel2 @panel_support_railX5 railX5 @panel_support_panel2 roll=90
+mate panel3 @panel_support_railX6 railX1 @panel_support_panel2 roll=180
+mate panel4 @panel_support_railX5 railX2 @panel_support_panel1 roll=-90

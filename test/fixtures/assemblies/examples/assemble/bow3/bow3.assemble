@@ -1,0 +1,6 @@
+// Coordinate reference for migration tests; part geometry is shared.
+plate 256 256 4
+center ← ../../../../../../examples/assemble/bow3/center3.coscad ×1
+larch  ← ../../../../../../examples/assemble/bow3/l_arch3.coscad ×1
+rarch  ← ../../../../../../examples/assemble/bow3/r_arch3.coscad ×1
+asm = center ⊕ (larch |> move 55 -13 -7) ⊕ (rarch |> move -55 -13 -7)

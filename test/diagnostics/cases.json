@@ -2007,5 +2007,86 @@
     "files": {
       "part.coscad": "main = box 2 4 6 |> frame foot bot bot bak |> frame head top top bak\n"
     }
+  },
+  {
+    "id": "validate-part",
+    "args": [
+      "validate",
+      "case.coscad"
+    ],
+    "source": "main = box 20 30 4 |> frame socket top top bak\n",
+    "expect": "accept",
+    "messages": [
+      "Valid part"
+    ],
+    "no_generated_files": true
+  },
+  {
+    "id": "validate-assembly",
+    "filename": "case.assemble",
+    "args": [
+      "validate",
+      "case.assemble"
+    ],
+    "source": "base ← part.coscad ×1\nchild ← part.coscad ×1\nfixed base\nmate child @foot base @socket\n",
+    "files": {
+      "part.coscad": "main = box 10 10 10 |> frame socket top top bak |> frame foot bot bot bak\n"
+    },
+    "expect": "accept",
+    "messages": [
+      "Valid assembly"
+    ],
+    "no_generated_files": true
+  },
+  {
+    "id": "validate-unknown-frame",
+    "filename": "case.assemble",
+    "args": [
+      "validate",
+      "case.assemble"
+    ],
+    "source": "base ← part.coscad ×1\nchild ← part.coscad ×1\nfixed base\nmate child @foot base @socket\n",
+    "expect": "reject",
+    "messages": [
+      "unknown frame '@foot'",
+      "case.assemble:4:1:"
+    ],
+    "no_generated_files": true
+  },
+  {
+    "id": "validate-invalid-part",
+    "args": [
+      "validate",
+      "case.coscad"
+    ],
+    "source": "main = box 2 2 2 |> frame bad top top bot\n",
+    "expect": "reject",
+    "messages": [
+      "must not be parallel"
+    ],
+    "no_generated_files": true
+  },
+  {
+    "id": "validate-missing-file",
+    "args": [
+      "validate",
+      "missing.assemble"
+    ],
+    "expect": "reject",
+    "messages": [
+      "not found"
+    ],
+    "no_generated_files": true
+  },
+  {
+    "id": "validate-arity",
+    "args": [
+      "validate"
+    ],
+    "expect": "reject",
+    "messages": [
+      "needs one .coscad or .assemble file"
+    ],
+    "no_generated_files": true
   }
 ]

@@ -1,0 +1,4 @@
+// Coordinate reference for migration tests; part geometry is shared.
+// recursion test: two corner subassemblies
+corner ← ../../../../../examples/assemble/corner.assemble ×2
+asm = corner ⊕ ψ 300 (⇋ 0 1 0 corner)

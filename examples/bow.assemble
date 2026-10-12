@@ -1,3 +1,5 @@
+// Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
 plate 520 120 8
 bow ← bow.coscad ×1
-asm = bow
+
+fixed bow 0 0 0 0 0 0

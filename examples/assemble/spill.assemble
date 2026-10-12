@@ -1,3 +1,18 @@
+// Packing fixture: extra print copies intentionally share the display pose.
+// Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
 plate 120 120 6
-br ← bracket90.coscad ×7 ▽top
-asm = br
+br ← bracket90.coscad ×1 ▽top
+br_print2 ← bracket90.coscad ×1 ▽top
+br_print3 ← bracket90.coscad ×1 ▽top
+br_print4 ← bracket90.coscad ×1 ▽top
+br_print5 ← bracket90.coscad ×1 ▽top
+br_print6 ← bracket90.coscad ×1 ▽top
+br_print7 ← bracket90.coscad ×1 ▽top
+
+fixed br 0 0 0 0 0 0
+fixed br_print2 0 0 0 0 0 0
+fixed br_print3 0 0 0 0 0 0
+fixed br_print4 0 0 0 0 0 0
+fixed br_print5 0 0 0 0 0 0
+fixed br_print6 0 0 0 0 0 0
+fixed br_print7 0 0 0 0 0 0

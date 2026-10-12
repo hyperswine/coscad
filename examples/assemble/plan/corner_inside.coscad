@@ -3,3 +3,6 @@
 main = box 20 20 20
   |> cutat top 0 0 0 (zcyl 2.75 30)
   |> cutat lft 0 0 0 (xcyl 2.75 30)
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame foot_railA ctr bot bak 0 0 -10
+  |> frame side_railB ctr rt top 10 0 0

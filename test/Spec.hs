@@ -20,21 +20,22 @@ module Main (main) where
 
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
-import Coscad.Assemble (AsmResult (..), loadAssembleFile, packBeds, processAssemble, resolveAssembly)
+import Coscad.Assemble (AsmResult (..), FlatPart (..), loadAssembleFile, packBeds, processAssemble, resolveAssembly)
 import Coscad.Check (processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
-import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3, vsub, scale3)
+import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3, vsub, scale3, vadd, vmul, rodMat, mirrorMat)
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
 import Coscad.Next (processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadVersion, renderStlFile)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Part (renderPart)
 import Coscad.Plan (PlanSummary (..), StepSummary (..), planSummary)
+import MigrationCases (migrationCases)
 import Coscad.Site (buildPageHtml, indexHtml)
-import Coscad.Shape (Shape (..))
+import Coscad.Shape (Shape (..), shapeChildren)
 import Data.IORef
 import Data.List (isInfixOf, isPrefixOf, sort, tails)
-import Data.Maybe (isJust)
+import Data.Maybe (isJust, fromMaybe)
 import qualified Data.Map as Map
 import Data.Time.Clock (diffUTCTime, getCurrentTime)
 import GHC.IO.Encoding (setLocaleEncoding)
@@ -141,6 +142,76 @@ cubeTier t = do
     Left e -> failT t "cube bracket thickness resize" e
     Right s -> let (lo,hi) = bbox s in assertT t "cube bracket thickness resize keeps all mates closed"
       (near lo (0,-8,-8) && near hi (203,208,208)) (show (lo,hi))
+
+-- Probe the origin and three non-collinear axis points of each physical
+-- instance, independently of its mating-frame metadata. This detects a flipped
+-- symmetric part even when its assembled union and bounds look unchanged.
+migrationPoses :: AsmResult -> Either String (Map.Map String [(Double,Double,Double)])
+migrationPoses ar = do
+  table <- resolveAssembly ar (Map.fromList [(n,Tag n sh) | (n,sh) <- arParts ar])
+  asm <- maybe (Left "missing asm") Right (Map.lookup "asm" table)
+  let occurrences = go id (resolve asm)
+      counts = Map.fromListWith (+) [(n,1::Int) | (n,_) <- occurrences]
+      named = snd $ foldl (\(seen,acc) (n,ps) ->
+        let i = Map.findWithDefault 0 n seen + 1
+            key = if counts Map.! n > 1 then n ++ "#" ++ show i else n
+        in (Map.insert n i seen, acc ++ [(key,ps)])) (Map.empty,[]) occurrences
+  return (Map.fromList named)
+  where
+    go f sh = case sh of
+      -- A reflected recursive fixture has moved reflection into its part
+      -- definition, because reflection cannot be encoded by a rigid pose.
+      Tag n x -> let local = case x of Mirror v _ -> mApply (mirrorMat v); _ -> id
+                 in [(n,map (f . local) [(0,0,0),(100,0,0),(0,100,0),(0,0,100)])]
+      Tx d x -> go (f . vadd (d,0,0)) x
+      Ty d x -> go (f . vadd (0,d,0)) x
+      Tz d x -> go (f . vadd (0,0,d)) x
+      Translate v x -> go (f . vadd v) x
+      Rx a x -> go (f . mApply (rodMat a (1,0,0))) x
+      Ry a x -> go (f . mApply (rodMat a (0,1,0))) x
+      Rz a x -> go (f . mApply (rodMat a (0,0,1))) x
+      RotAxis a v x -> go (f . mApply (rodMat a v)) x
+      Transform3 m v x -> go (f . vadd v . mApply m) x
+      Scale v x -> go (f . vmul v) x
+      Mirror v x -> go (f . mApply (mirrorMat v)) x
+      _ -> concatMap (go f) (shapeChildren sh)
+
+migrationTier :: T -> IO ()
+migrationTier t = do
+  section "all assembly migrations: bounds, quantities, constraints and instruction joints"
+  forM_ migrationCases $ \(file,ref,tolerance,aliases) -> do
+    a <- loadAssembleFile [] file
+    b <- loadAssembleFile [] ref
+    case (a,b) of
+      (Right actual,Right original) -> do
+        let Just sh = arAsm actual
+            Just old = arAsm original
+            (lo,hi) = bbox sh
+            (ol,oh) = bbox old
+            near (x,y,z) (u,v,w) = maximum [abs(x-u),abs(y-v),abs(z-w)] <= tolerance
+        assertT t (file ++ ": bounds preserved") (near lo ol && near hi oh) (show (bbox sh,bbox old))
+        assertT t (file ++ ": manufacturing count preserved")
+          (sum(map fpCount(arFlat actual)) == sum(map fpCount(arFlat original))) (show (map fpCount(arFlat actual),map fpCount(arFlat original)))
+        assertT t (file ++ ": uses constraints") (not(null(arConstraints actual))) "missing constraints"
+        case (migrationPoses actual,migrationPoses original) of
+          (Right ap,Right op) -> forM_ aliases $ \(oldName,newName) ->
+            assertT t (file ++ ": pose of " ++ newName)
+              (case (Map.lookup newName ap,Map.lookup oldName op) of
+                (Just ps,Just qs) -> and (zipWith near ps qs)
+                _ -> False) (show (Map.lookup newName ap,Map.lookup oldName op))
+          _ -> failT t (file ++ ": instance pose comparison") "cannot resolve tagged instances"
+
+        when (file `elem` ["examples/assemble/ball/ball.assemble","examples/assemble/bow3/bow3.assemble","examples/assemble/tesseract/tesseract.assemble","examples/assemble/plan/corner_pair.assemble","models/orbit-tower/orbit-tower.assemble"]) $ do
+          pa <- planSummary file
+          pb <- planSummary ref
+          case (pa,pb) of
+            (Right p,Right q) -> do
+              let rename n = fromMaybe n (lookup n aliases)
+                  joints = sort . concatMap (map (\(spec,c,h,nut)->(spec,rename c,rename h,nut)) . ssFasteners) . psSteps
+              assertT t (file ++ ": instruction joints preserved") (joints q == sort(concatMap ssFasteners(psSteps p)) && null(psDesignErrors p)) (show (psDesignErrors p))
+              assertT t (file ++ ": all instances placed once") (sort(concatMap ssParts(psSteps p)) == sort(psParts p)) (show(psParts p))
+            _ -> failT t (file ++ ": instruction comparison") (show (pa,pb))
+      _ -> failT t (file ++ ": migration loads") (either id (const "ok") a ++ " / " ++ either id (const "ok") b)
 
 frameTier :: T -> IO ()
 frameTier t = do
@@ -391,11 +462,11 @@ planTier t = do
       checkInvariants t "ball" ps
       assertT t "ball: both screws driven" (sum (map (length . ssFasteners) (psSteps ps)) == 2) (show (psSteps ps))
   ballMd <- readFile "examples/assemble/ball/ball_plan.md"
-  assertT t "ball: plan speaks of hex nuts and pockets, not T-slots" (all (`isInfixOf` ballMd) ["M5 hex nut", "pocket on the top face", "socket head through shell#1"] && not ("T-nut" `isInfixOf` ballMd)) (take 600 ballMd)
+  assertT t "ball: plan speaks of hex nuts and pockets, not T-slots" (all (`isInfixOf` ballMd) ["M5 hex nut", "pocket on the top face", "socket head through shell1"] && not ("T-nut" `isInfixOf` ballMd)) (take 600 ballMd)
   ballSrc <- readFile "examples/assemble/ball/ball.assemble"
   tmpB <- tempDir "plan-ball"
   forM_ ["shell.coscad", "core.coscad"] $ \f -> copyFile ("examples/assemble/ball" </> f) (tmpB </> f)
-  writeFile (tmpB </> "bad.assemble") (ballSrc ++ "\nfastener M5x20 shell#1 core rt pocket=top\n")
+  writeFile (tmpB </> "bad.assemble") (ballSrc ++ "\nfastener M5x20 shell1 core rt pocket=top\n")
   rp <- planSummary (tmpB </> "bad.assemble")
   assertT t "plan: pocket= without nut=hex is an error" (either ("pocket= only applies to nut=hex" `isInfixOf`) (const False) rp) (either id show rp)
   -- the tesseract: screws threading into printed bars (no nuts), friction pegs, diagonal parts
@@ -405,12 +476,12 @@ planTier t = do
     Right ps -> do
       assertT t "tesseract: 29 parts, 40 joints, no design errors" (length (psParts ps) == 29 && psFastenerCount ps == 40 && null (psDesignErrors ps)) (show (length (psParts ps), psFastenerCount ps, psDesignErrors ps))
       checkInvariants t "tesseract" ps
-      assertT t "tesseract: every joint made, every block preloaded with its nuts" (sum (map (length . ssFasteners) (psSteps ps)) == 40 && sort (concatMap ssPreload (psSteps ps)) == sort ["corner#" ++ show i | i <- [1 .. 8 :: Int]]) (show (psSteps ps))
-      assertT t "tesseract: starts with the corner blocks on the bench" (take 4 (concatMap ssParts (psSteps ps)) == ["corner#1", "corner#2", "corner#3", "corner#4"]) (show (take 6 (concatMap ssParts (psSteps ps))))
+      assertT t "tesseract: every joint made, every block preloaded with its nuts" (sum (map (length . ssFasteners) (psSteps ps)) == 40 && sort (concatMap ssPreload (psSteps ps)) == sort ["corner" ++ show i | i <- [1 .. 8 :: Int]]) (show (psSteps ps))
+      assertT t "tesseract: starts with the corner blocks on the bench" (take 4 (concatMap ssParts (psSteps ps)) == ["corner1", "corner2", "corner3", "corner4"]) (show (take 6 (concatMap ssParts (psSteps ps))))
       assertT t "tesseract: no screw is driven up through the bench" (all (\st -> ssRest st /= "bottom (-Z) face" || null [f | f@(_, _, _, _) <- ssFasteners st, False]) (psSteps ps)) "n/a"
       assertT t "tesseract: at most 2 flips" (length (filter ssFlip (psSteps ps)) <= 2) (show (length (filter ssFlip (psSteps ps))))
   tessMd <- readFile "examples/assemble/tesseract/tesseract_plan.md"
-  assertT t "tesseract: plan speaks of pegs and nut pockets in the blocks, no T-nuts" (all (`isInfixOf` tessMd) ["Push: strut#1 into", "24 × M3 hex nut", "into the pocket on the top face"] && not ("T-nut" `isInfixOf` tessMd)) (take 500 tessMd)
+  assertT t "tesseract: plan speaks of pegs and nut pockets in the blocks, no T-nuts" (all (`isInfixOf` tessMd) ["Push: strut1 into", "24 × M3 hex nut", "into the pocket on the top face"] && not ("T-nut" `isInfixOf` tessMd)) (take 500 tessMd)
   -- A rotor must enter its recessed journal before the next axle captures it.
   ro <- planSummary "models/orbit-tower/orbit-tower.assemble"
   case ro of
@@ -425,22 +496,22 @@ planTier t = do
       assertT t "orbit tower: stays upright throughout assembly"
         (all (\s -> ssRest s == "bottom (-Z) face" && not (ssFlip s)) (psSteps ps)) (show (psSteps ps))
       assertT t "orbit tower: every rotor enters before the axle or cap that captures it"
-        (and [stepOf ("rotor#" ++ show k) < stepOf (if k == 6 then "cap" else "axle" ++ show (k + 1)) | k <- [1 .. 6 :: Int]]) (show (psSteps ps))
+        (and [stepOf ("rotor" ++ show k) < stepOf (if k == 6 then "cap" else "axle" ++ show (k + 1)) | k <- [1 .. 6 :: Int]]) (show (psSteps ps))
       assertT t "orbit tower: each rotor and satellite follows its supporting part"
-        (and [stepOf ("axle" ++ show k) < stepOf ("rotor#" ++ show k) && stepOf ("rotor#" ++ show k) < stepOf ("satellite#" ++ show k) | k <- [1 .. 6 :: Int]]) (show (psSteps ps))
+        (and [stepOf ("axle" ++ show k) < stepOf ("rotor" ++ show k) && stepOf ("rotor" ++ show k) < stepOf ("satellite" ++ show k) | k <- [1 .. 6 :: Int]]) (show (psSteps ps))
   orbitSrc <- readFile "models/orbit-tower/orbit-tower.assemble"
   tmpO <- tempDir "plan-orbit"
   forM_ ["base.coscad", "axle.coscad", "rotor.coscad", "satellite.coscad", "cap.coscad"] $ \f -> copyFile ("models/orbit-tower" </> f) (tmpO </> f)
   let withBaseHint hint = unlines [if "base ←" `isPrefixOf` l then l ++ " after=" ++ hint else l | l <- lines orbitSrc]
       invalidPlans =
         [ ("unknown after reference", withBaseHint "missing", "unknown part 'missing'")
-        , ("ambiguous after reference", withBaseHint "rotor", "multiple instances")
+        , ("unknown group after reference", withBaseHint "rotor", "unknown part")
         , ("self after cycle", withBaseHint "base", "cyclic after= ordering")
         , ("two-part after cycle", withBaseHint "axle1", "cyclic after= ordering")
-        , ("negative peg inset", orbitSrc ++ "\nfastener peg rotor#1 axle1 top inset=-1\n", "inset= must lie within the host")
-        , ("peg inset beyond host", orbitSrc ++ "\nfastener peg rotor#1 axle1 top inset=25\n", "inset= must lie within the host")
-        , ("invalid peg inset", orbitSrc ++ "\nfastener peg rotor#1 axle1 top inset=bad\n", "inset= needs a distance")
-        , ("screw with peg inset", orbitSrc ++ "\nfastener M4x10 rotor#1 axle1 top inset=1\n", "inset= only applies to peg joints")
+        , ("negative peg inset", orbitSrc ++ "\nfastener peg rotor1 axle1 top inset=-1\n", "inset= must lie within the host")
+        , ("peg inset beyond host", orbitSrc ++ "\nfastener peg rotor1 axle1 top inset=25\n", "inset= must lie within the host")
+        , ("invalid peg inset", orbitSrc ++ "\nfastener peg rotor1 axle1 top inset=bad\n", "inset= needs a distance")
+        , ("screw with peg inset", orbitSrc ++ "\nfastener M4x10 rotor1 axle1 top inset=1\n", "inset= only applies to peg joints")
         ]
   forM_ invalidPlans $ \(name, source, message) -> do
     writeFile (tmpO </> "bad.assemble") source
@@ -962,6 +1033,23 @@ geometry t update bin = do
               r <- renderMesh bin dir scad
               assertT t "cube: all six panel bores match rail slot centres"
                 (either (const False) (\tris -> abs(meshVolume tris-1) < 1e-7) r) (either id (show . meshVolume) r)
+  -- Compare actual assembled solids, independently of mating metadata.
+  -- Oblique rotations leave non-manifold zero-thickness slivers in CGAL
+  -- subtraction. Their origins and all three axes are checked above instead;
+  -- all individual printable parts still go through strict STL rendering.
+  forM_ [c | c@(file,_,_,_) <- migrationCases, not (any (`isInfixOf` file) ["tesseract","orbit-tower"])] $ \(file,ref,_,_) -> do
+    a <- loadAssembleFile [] file
+    b <- loadAssembleFile [] ref
+    case (a >>= maybe (Left "no asm") Right . arAsm, b >>= maybe (Left "no reference asm") Right . arAsm) of
+      (Right actual,Right expected) -> do
+        let x = gen actual
+            y = gen expected
+            scad = "include <BOSL2/std.scad>\nunion(){translate([-1000,-1000,-1000])cube(1);difference(){"++x++y++"}difference(){"++y++x++"}}"
+            limit = 0.00001
+        result <- renderMesh bin dir scad
+        assertT t (file ++ ": assembled solid equivalence")
+          (either (const False) (\tris -> abs(meshVolume tris-1) <= limit) result) (either id (\tris -> "symmetric difference mm3: "++show(abs(meshVolume tris-1))) result)
+      _ -> failT t (file ++ ": geometry comparison") "cannot load migration pair"
   -- cross-check: the topological bracket is the coordinate bracket
   case (Map.lookup "examples/bracket.coscad" table, Map.lookup "examples/topological/tbracket.coscad" table) of
     (Just (v1, lo1, hi1), Just (v2, lo2, hi2)) ->
@@ -1128,6 +1216,7 @@ main = do
   topologyTier t
   frameTier t
   cubeTier t
+  migrationTier t
   examples t update
   planTier t
   render <- lookupEnv "COSCAD_RENDER"

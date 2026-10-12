@@ -1,0 +1,1183 @@
+{
+  "source_head": "c6a8496c4ee9c9f07aca2f5eefd7d8ae232a5703",
+  "source_worktree_dirty": true,
+  "coscad_binary_sha256": "94e3168fbb94ce7900bedd4d7cd9ab7344ce4f0347f2f1d2f21e6175fcc1f2df",
+  "openscad": "OpenSCAD version 2025.05.16",
+  "inventory": {
+    "method": "Lexical inventory; stable datums require semantic review.",
+    "counts": {
+      "coordinates": 38,
+      "anchors": 14,
+      "mixed": 7,
+      "no placement": 18
+    },
+    "files": [
+      {
+        "file": "examples/advanced.coscad",
+        "coordinate_placements": 1,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/assemble/ball/core.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 4,
+        "style": "anchors"
+      },
+      {
+        "file": "examples/assemble/ball/shell.coscad",
+        "coordinate_placements": 2,
+        "anchor_operations": 2,
+        "style": "mixed"
+      },
+      {
+        "file": "examples/assemble/bow3/center3.coscad",
+        "coordinate_placements": 2,
+        "anchor_operations": 10,
+        "style": "mixed"
+      },
+      {
+        "file": "examples/assemble/bow3/l_arch3.coscad",
+        "coordinate_placements": 10,
+        "anchor_operations": 5,
+        "style": "mixed"
+      },
+      {
+        "file": "examples/assemble/bow3/r_arch3.coscad",
+        "coordinate_placements": 10,
+        "anchor_operations": 5,
+        "style": "mixed"
+      },
+      {
+        "file": "examples/assemble/bracket90.coscad",
+        "coordinate_placements": 9,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/assemble/constraints/base.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/assemble/constraints/post.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/assemble/inner90.coscad",
+        "coordinate_placements": 22,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/assemble/plan/corner_inside.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 2,
+        "style": "anchors"
+      },
+      {
+        "file": "examples/assemble/plan/flat90.coscad",
+        "coordinate_placements": 3,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/assemble/plan/panel190.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 6,
+        "style": "anchors"
+      },
+      {
+        "file": "examples/assemble/plan/rail160.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/assemble/plan/rail200.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/assemble/plan/rail2020.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/assemble/plan/rail2020_300.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/assemble/rail120.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/assemble/rail200.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/assemble/tesseract/bar.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 4,
+        "style": "anchors"
+      },
+      {
+        "file": "examples/assemble/tesseract/corner.coscad",
+        "coordinate_placements": 1,
+        "anchor_operations": 13,
+        "style": "mixed"
+      },
+      {
+        "file": "examples/assemble/tesseract/inner.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 12,
+        "style": "anchors"
+      },
+      {
+        "file": "examples/assemble/tesseract/strut.coscad",
+        "coordinate_placements": 1,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/attach_demo.coscad",
+        "coordinate_placements": 2,
+        "anchor_operations": 10,
+        "style": "mixed"
+      },
+      {
+        "file": "examples/bow.coscad",
+        "coordinate_placements": 2,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/bracket.coscad",
+        "coordinate_placements": 14,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/complex.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/cone.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/cylinder.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/demo.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/extrusion.coscad",
+        "coordinate_placements": 3,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/gear_test.coscad",
+        "coordinate_placements": 12,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/glider.coscad",
+        "coordinate_placements": 23,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/grease_claw.coscad",
+        "coordinate_placements": 7,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/loft.coscad",
+        "coordinate_placements": 2,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/math_zigzag_spring.coscad",
+        "coordinate_placements": 4,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/offset_demo.coscad",
+        "coordinate_placements": 2,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/panel.coscad",
+        "coordinate_placements": 8,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/simple_transform.coscad",
+        "coordinate_placements": 1,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/sphere.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/topological/datum-plate.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 4,
+        "style": "anchors"
+      },
+      {
+        "file": "examples/topological/mating-corner.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/topological/pipeline_basics.coscad",
+        "coordinate_placements": 2,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/topological/tbracket.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 6,
+        "style": "anchors"
+      },
+      {
+        "file": "examples/topological/topo_tour.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 6,
+        "style": "anchors"
+      },
+      {
+        "file": "examples/transformations.coscad",
+        "coordinate_placements": 3,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/union.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples/waterbottle.coscad",
+        "coordinate_placements": 4,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/waterbottle_advanced.coscad",
+        "coordinate_placements": 4,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/zigzag_spring_fixed.coscad",
+        "coordinate_placements": 13,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples/zoo.coscad",
+        "coordinate_placements": 11,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples-next/a.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples-next/b.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples-next/bracket_seam.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 6,
+        "style": "anchors"
+      },
+      {
+        "file": "examples-next/c.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 0,
+        "style": "no placement"
+      },
+      {
+        "file": "examples-next/center.coscad",
+        "coordinate_placements": 20,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples-next/corner_90.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 3,
+        "style": "anchors"
+      },
+      {
+        "file": "examples-next/frame.coscad",
+        "coordinate_placements": 30,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples-next/greaser-example/greaser.coscad",
+        "coordinate_placements": 4,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples-next/l_arch.coscad",
+        "coordinate_placements": 15,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples-next/panel_center.coscad",
+        "coordinate_placements": 4,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples-next/panel_corner.coscad",
+        "coordinate_placements": 4,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples-next/panel_edge.coscad",
+        "coordinate_placements": 4,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples-next/r_arch.coscad",
+        "coordinate_placements": 15,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "examples-next/rail_x180.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 9,
+        "style": "anchors"
+      },
+      {
+        "file": "examples-next/rail_y420.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 9,
+        "style": "anchors"
+      },
+      {
+        "file": "examples-next/tnut_m5.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 2,
+        "style": "anchors"
+      },
+      {
+        "file": "models/bow-center-reinforced/bow-center.coscad",
+        "coordinate_placements": 2,
+        "anchor_operations": 10,
+        "style": "mixed"
+      },
+      {
+        "file": "models/bow-center-reinforced/center3-original.coscad",
+        "coordinate_placements": 0,
+        "anchor_operations": 10,
+        "style": "anchors"
+      },
+      {
+        "file": "models/coin-weight-cylinder/coin-weight-cylinder.coscad",
+        "coordinate_placements": 3,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "models/egg-box/egg-box.coscad",
+        "coordinate_placements": 28,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "models/orbit-tower/axle.coscad",
+        "coordinate_placements": 3,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "models/orbit-tower/base.coscad",
+        "coordinate_placements": 2,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "models/orbit-tower/cap.coscad",
+        "coordinate_placements": 2,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "models/orbit-tower/rotor.coscad",
+        "coordinate_placements": 7,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "models/orbit-tower/satellite.coscad",
+        "coordinate_placements": 3,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      },
+      {
+        "file": "models/ship-anchor/ship-anchor.coscad",
+        "coordinate_placements": 21,
+        "anchor_operations": 0,
+        "style": "coordinates"
+      }
+    ]
+  },
+  "equivalence": [
+    {
+      "name": "coin-weight-cylinder",
+      "original": "models/coin-weight-cylinder/coin-weight-cylinder.coscad",
+      "original_mesh": {
+        "triangles": 212,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 32853.810091,
+        "bounds": [
+          [
+            -15.0,
+            -14.9704008102417,
+            0.0
+          ],
+          [
+            15.0,
+            14.9704008102417,
+            50.0
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 212,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 32853.810091,
+        "bounds": [
+          [
+            -15.0,
+            -14.9704008102417,
+            0.0
+          ],
+          [
+            15.0,
+            14.9704008102417,
+            50.0
+          ]
+        ]
+      },
+      "symmetric_difference": {
+        "empty": true,
+        "residual_volume_mm3": 0
+      }
+    },
+    {
+      "name": "flat90",
+      "original": "examples/assemble/plan/flat90.coscad",
+      "original_mesh": {
+        "triangles": 428,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 6915.650234,
+        "bounds": [
+          [
+            -20.0,
+            -20.0,
+            -3.0
+          ],
+          [
+            20.0,
+            20.0,
+            3.0
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 428,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 6915.650234,
+        "bounds": [
+          [
+            -20.0,
+            -20.0,
+            -3.0
+          ],
+          [
+            20.0,
+            20.0,
+            3.0
+          ]
+        ]
+      },
+      "symmetric_difference": {
+        "empty": true,
+        "residual_volume_mm3": 0
+      }
+    },
+    {
+      "name": "panel_corner",
+      "original": "examples-next/panel_corner.coscad",
+      "original_mesh": {
+        "triangles": 2492,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 109794.889192,
+        "bounds": [
+          [
+            -105.0,
+            -105.0,
+            -1.25
+          ],
+          [
+            105.0,
+            105.0,
+            1.25
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 2492,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 109794.889192,
+        "bounds": [
+          [
+            -105.0,
+            -105.0,
+            -1.25
+          ],
+          [
+            105.0,
+            105.0,
+            1.25
+          ]
+        ]
+      },
+      "symmetric_difference": {
+        "empty": true,
+        "residual_volume_mm3": 0
+      }
+    },
+    {
+      "name": "bow-center",
+      "original": "examples/assemble/bow3/center3.coscad",
+      "original_mesh": {
+        "triangles": 1156,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 43019.402039,
+        "bounds": [
+          [
+            -55.0,
+            -18.0,
+            -7.0
+          ],
+          [
+            55.0,
+            18.0,
+            7.0
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 1206,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 43019.402212,
+        "bounds": [
+          [
+            -55.0,
+            -18.0,
+            -7.0
+          ],
+          [
+            55.0,
+            18.0,
+            7.0
+          ]
+        ]
+      },
+      "symmetric_difference": {
+        "empty": false,
+        "residual_volume_mm3": 0.000173,
+        "minimum_extent_mm": 9.5367431640625e-07,
+        "within_numeric_tolerance": true
+      }
+    },
+    {
+      "name": "orbit-base",
+      "original": "models/orbit-tower/base.coscad",
+      "original_mesh": {
+        "triangles": 352,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 14973.566236,
+        "bounds": [
+          [
+            -29.0,
+            -28.94277572631836,
+            0.0
+          ],
+          [
+            29.0,
+            28.94277572631836,
+            11.0
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 352,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 14973.566236,
+        "bounds": [
+          [
+            -29.0,
+            -28.94277572631836,
+            0.0
+          ],
+          [
+            29.0,
+            28.94277572631836,
+            11.0
+          ]
+        ]
+      },
+      "symmetric_difference": {
+        "empty": true,
+        "residual_volume_mm3": 0
+      }
+    },
+    {
+      "name": "orbit-axle",
+      "original": "models/orbit-tower/axle.coscad",
+      "original_mesh": {
+        "triangles": 468,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 2288.176529,
+        "bounds": [
+          [
+            -9.0,
+            -8.982239723205566,
+            0.0
+          ],
+          [
+            9.0,
+            8.982239723205566,
+            20.0
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 468,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 2288.176529,
+        "bounds": [
+          [
+            -9.0,
+            -8.982239723205566,
+            0.0
+          ],
+          [
+            9.0,
+            8.982239723205566,
+            20.0
+          ]
+        ]
+      },
+      "symmetric_difference": {
+        "empty": true,
+        "residual_volume_mm3": 0
+      }
+    },
+    {
+      "name": "orbit-cap",
+      "original": "models/orbit-tower/cap.coscad",
+      "original_mesh": {
+        "triangles": 312,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 2021.46203,
+        "bounds": [
+          [
+            -9.0,
+            -8.982239723205566,
+            0.0
+          ],
+          [
+            9.0,
+            8.982239723205566,
+            11.0
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 312,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 2021.46203,
+        "bounds": [
+          [
+            -9.0,
+            -8.982239723205566,
+            0.0
+          ],
+          [
+            9.0,
+            8.982239723205566,
+            11.0
+          ]
+        ]
+      },
+      "symmetric_difference": {
+        "empty": true,
+        "residual_volume_mm3": 0
+      }
+    },
+    {
+      "name": "orbit-satellite",
+      "original": "models/orbit-tower/satellite.coscad",
+      "original_mesh": {
+        "triangles": 696,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 860.422861,
+        "bounds": [
+          [
+            -6.5,
+            -6.487173080444336,
+            0.0
+          ],
+          [
+            6.5,
+            6.487173080444336,
+            10.800000190734863
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 696,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 860.422861,
+        "bounds": [
+          [
+            -6.5,
+            -6.487173080444336,
+            0.0
+          ],
+          [
+            6.5,
+            6.487173080444336,
+            10.800000190734863
+          ]
+        ]
+      },
+      "symmetric_difference": {
+        "empty": true,
+        "residual_volume_mm3": 0
+      }
+    },
+    {
+      "name": "orbit-rotor",
+      "original": "models/orbit-tower/rotor.coscad",
+      "original_mesh": {
+        "triangles": 876,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 2560.481042,
+        "bounds": [
+          [
+            -30.0,
+            -10.479280471801758,
+            0.0
+          ],
+          [
+            29.0,
+            10.479280471801758,
+            4.5
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 876,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 2560.481042,
+        "bounds": [
+          [
+            -30.0,
+            -10.479280471801758,
+            0.0
+          ],
+          [
+            29.0,
+            10.479280471801758,
+            4.5
+          ]
+        ]
+      },
+      "symmetric_difference": {
+        "empty": true,
+        "residual_volume_mm3": 0
+      }
+    },
+    {
+      "name": "native-orbit-rotor",
+      "original": "models/orbit-tower/rotor.coscad",
+      "original_mesh": {
+        "triangles": 876,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 2560.481042,
+        "bounds": [
+          [
+            -30.0,
+            -10.479280471801758,
+            0.0
+          ],
+          [
+            29.0,
+            10.479280471801758,
+            4.5
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 876,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 2560.481042,
+        "bounds": [
+          [
+            -30.0,
+            -10.479280471801758,
+            0.0
+          ],
+          [
+            29.0,
+            10.479280471801758,
+            4.5
+          ]
+        ]
+      },
+      "symmetric_difference": {
+        "empty": true,
+        "residual_volume_mm3": 0
+      }
+    },
+    {
+      "name": "native-egg-box",
+      "original": "models/egg-box/egg-box.coscad",
+      "containment_tolerance_mm": 1e-05,
+      "original_mesh": {
+        "triangles": 1036,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 190500.08475,
+        "bounds": [
+          [
+            0.0,
+            0.007892608642578125,
+            0.0
+          ],
+          [
+            127.19999694824219,
+            127.19210815429688,
+            78.0
+          ]
+        ]
+      },
+      "pilot_mesh": {
+        "triangles": 1036,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 190500.087175,
+        "bounds": [
+          [
+            0.0,
+            0.007893562316894531,
+            0.0
+          ],
+          [
+            127.19999694824219,
+            127.19210815429688,
+            78.0
+          ]
+        ]
+      },
+      "bidirectional_containment": {
+        "tolerance_per_axis_mm": 1e-05,
+        "both_residuals_empty": true
+      }
+    }
+  ],
+  "resizing": [
+    {
+      "name": "coin-weight-cylinder",
+      "bindings": {
+        "height": 70
+      },
+      "mesh": {
+        "triangles": 212,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 46953.797664,
+        "bounds": [
+          [
+            -15.0,
+            -14.9704008102417,
+            0.0
+          ],
+          [
+            15.0,
+            14.9704008102417,
+            70.0
+          ]
+        ]
+      },
+      "material_probes_passed": 2
+    },
+    {
+      "name": "bow-center",
+      "bindings": {
+        "body_height": 18,
+        "cheek": 6.75
+      },
+      "mesh": {
+        "triangles": 1206,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 70507.659594,
+        "bounds": [
+          [
+            -55.0,
+            -21.0,
+            -9.0
+          ],
+          [
+            55.0,
+            21.0,
+            9.0
+          ]
+        ]
+      },
+      "material_probes_passed": 6
+    },
+    {
+      "name": "flat90",
+      "bindings": {
+        "span": 50
+      },
+      "mesh": {
+        "triangles": 428,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 9315.650232,
+        "bounds": [
+          [
+            -25.0,
+            -25.0,
+            -3.0
+          ],
+          [
+            25.0,
+            25.0,
+            3.0
+          ]
+        ]
+      },
+      "material_probes_passed": 3
+    },
+    {
+      "name": "panel_corner",
+      "bindings": {
+        "width": 250,
+        "depth": 230
+      },
+      "mesh": {
+        "triangles": 2492,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 143242.925993,
+        "bounds": [
+          [
+            -125.0,
+            -115.0,
+            -1.25
+          ],
+          [
+            125.0,
+            115.0,
+            1.25
+          ]
+        ]
+      },
+      "material_probes_passed": 5
+    },
+    {
+      "name": "orbit-axle",
+      "bindings": {
+        "foot_height": 10
+      },
+      "mesh": {
+        "triangles": 468,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 3049.575821,
+        "bounds": [
+          [
+            -9.0,
+            -8.982239723205566,
+            0.0
+          ],
+          [
+            9.0,
+            8.982239723205566,
+            23.0
+          ]
+        ]
+      },
+      "material_probes_passed": 2
+    },
+    {
+      "name": "orbit-satellite",
+      "bindings": {
+        "disc_height": 6
+      },
+      "mesh": {
+        "triangles": 696,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 1125.189254,
+        "bounds": [
+          [
+            -6.5,
+            -6.487173080444336,
+            0.0
+          ],
+          [
+            6.5,
+            6.487173080444336,
+            12.800000190734863
+          ]
+        ]
+      },
+      "material_probes_passed": 0
+    },
+    {
+      "name": "native-orbit-rotor",
+      "bindings": {
+        "half_span": 30,
+        "thickness": 6,
+        "counterweight_radius": 9
+      },
+      "mesh": {
+        "triangles": 892,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 4682.985025,
+        "bounds": [
+          [
+            -39.0,
+            -10.479280471801758,
+            0.0
+          ],
+          [
+            35.0,
+            10.479280471801758,
+            6.0
+          ]
+        ]
+      },
+      "material_probes_passed": 4
+    },
+    {
+      "name": "native-egg-box",
+      "bindings": {
+        "columns": 3,
+        "rows": 1
+      },
+      "mesh": {
+        "triangles": 828,
+        "closed_manifold": true,
+        "components": 1,
+        "volume_mm3": 154284.801722,
+        "bounds": [
+          [
+            0.0,
+            0.007893562316894531,
+            0.0
+          ],
+          [
+            189.60000610351562,
+            64.79210662841797,
+            78.0
+          ]
+        ]
+      },
+      "material_probes_passed": 6
+    }
+  ],
+  "assembly": {
+    "name": "Orbit Tower",
+    "plan_equal_except_source_path": true,
+    "parts": 20,
+    "fasteners": 19,
+    "steps": 19,
+    "design_errors": []
+  }
+}

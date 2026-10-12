@@ -67,6 +67,8 @@ boolean test part against a known volume.
 
 ```sh
 coscad part.coscad           # -> part.scad
+coscad validate part.coscad # source checks, no output files
+coscad validate model.assemble # source + rigid constraint checks
 coscad stl part.coscad       # -> part.scad + part.stl, prints volume + bounds
 coscad frame.assemble        # -> _asm view, packed _plate(N) scads, manifest
 coscad next frame.assemble   # -> frame_bed1.stl ... + manifest

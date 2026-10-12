@@ -7,3 +7,6 @@ socket_pad = χ 24 (◎ 5 4.5)
 bearing = ζ -0.2 (◎ 5.2 4.9)
 satellite_socket = χ 24 (ζ -0.2 (◎ 2.75 4.9))
 main = (hub ⊕ arm ⊕ counterweight ⊕ socket_pad) ⊖ bearing ⊖ satellite_socket
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame peg_seat_axle1 ctr bot bak 0.5 0 -2.25
+  |> frame peg_seat_satellite1 ctr top bak 24.5 0 2.25

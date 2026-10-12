@@ -12,3 +12,5 @@ hole   = χ 22 (ζ 2.5 (zcyl 2.75 12))
 arm    = (plate ⊕ spikeA ⊕ spikeB) ⊖ hole
 hub    = ζ 2.5 (⌭ 9 5 0.5)
 main   = arm ⊕ ω 90 arm ⊕ hub
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame outer_bore_railH ctr bot bak 9.5 -12.5 -1.75

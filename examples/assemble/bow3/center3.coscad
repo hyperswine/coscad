@@ -21,3 +21,8 @@ main = box 110 body_width 14
   |> cutat bot -42 8 1.6 (⎏ 6 4.25 3.4)
   |> cutat bot -42 -8 1.6 (⎏ 6 4.25 3.4)
   |> cut recess
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame root_bore_m8_larch ctr top bak 42 -8 0
+  |> frame root_bore_8_larch ctr top bak 42 8 0
+  |> frame root_bore_m8_rarch ctr top bak -42 -8 0
+  |> frame root_bore_8_rarch ctr top bak -42 8 0

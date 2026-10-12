@@ -7,3 +7,5 @@ plate = ◎ radius plate_height
 taper = (▻ radius (radius / 3)) ∩ (◎ radius taper_height)
 peg = ▣ 6 6 5.2 0.3
 main = plate |> at top taper |> at top 0 0 -overlap peg
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame peg_seat_axle1 ctr top bak 0 0 0.5

@@ -85,6 +85,7 @@ test-suite coscad-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      MigrationCases
       Paths_coscad
   autogen-modules:
       Paths_coscad
