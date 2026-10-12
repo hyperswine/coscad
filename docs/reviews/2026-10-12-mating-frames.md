@@ -79,5 +79,6 @@ All mates fix six degrees of freedom. This is not a solver for hinges,
 sliders, distances, flexible bodies, collision avoidance or automatic surface
 recognition. Geometric mates do not infer hardware or assembly precedence;
 existing fastener declarations still describe those joints. The full cube
-has not been converted to constraint authoring, and canonical migration or
-changing the default style remains separate work.
+was outside this initial increment. The subsequent
+[cube conversion and verification](2026-10-12-cube-constraints.md) now covers
+that canonical assembly. Changing the default style remains separate work.

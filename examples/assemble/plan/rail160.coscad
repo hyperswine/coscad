@@ -1,2 +1,16 @@
+// 160 mm rail, along local X. Frames add no material.
 len = 160
 main = box len 20 20
+  |> frame end_low lft lft top
+  |> frame end_high rt rt top
+  |> frame bolt_top_low top+lft top rt 10 0 0
+  |> frame bolt_top_high top+rt top lft -10 0 0
+  |> frame bolt_bot_low bot+lft bot rt 10 0 0
+  |> frame bolt_bot_high bot+rt bot lft -10 0 0
+  |> frame bolt_fwd_low fwd+lft fwd rt 10 0 0
+  |> frame bolt_fwd_high fwd+rt fwd lft -10 0 0
+  |> frame bolt_bak_low bak+lft bak rt 10 0 0
+  |> frame bolt_bak_high bak+rt bak lft -10 0 0
+  |> frame panel_low fwd+lft fwd top 40 0 0
+  |> frame panel_high fwd+rt fwd top -40 0 0
+  |> frame panel_middle bot bot rt

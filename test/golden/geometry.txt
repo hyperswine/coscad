@@ -27,7 +27,7 @@ examples/assemble/constraints/post.coscad 1200.000 -3.000 -5.000 -10.000 3.000 5
 examples/assemble/inner90.coscad 10301.762 -1.500 -10.000 -1.500 32.000 10.000 32.000
 examples/assemble/plan/corner_inside.coscad 7399.605 -10.000 -10.000 -10.000 10.000 10.000 10.000
 examples/assemble/plan/flat90.coscad 6915.650 -20.000 -20.000 -3.000 20.000 20.000 3.000
-examples/assemble/plan/panel190.coscad 108015.650 -95.000 -95.000 -1.500 95.000 95.000 1.500
+examples/assemble/plan/panel190.coscad 107873.475 -95.000 -95.000 -1.500 95.000 95.000 1.500
 examples/assemble/plan/rail160.coscad 64000.000 -80.000 -10.000 -10.000 80.000 10.000 10.000
 examples/assemble/plan/rail200.coscad 80000.000 -100.000 -10.000 -10.000 100.000 10.000 10.000
 examples/assemble/plan/rail2020.coscad 160000.000 -200.000 -10.000 -10.000 200.000 10.000 10.000

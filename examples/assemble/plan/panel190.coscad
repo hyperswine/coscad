@@ -1,6 +1,15 @@
-// 3 mm side panel, 190 x 190, four M5 clearance holes near the corners.
+// 190 x 190 x 3 panel. Six M5 bores match the cube rail slot centres.
+// Local -X is up after mating to the cube right side.
 main = box 190 190 3
-  |> cutat top 80 80 0 (zcyl 2.75 10)
-  |> cutat top -80 80 0 (zcyl 2.75 10)
-  |> cutat top 80 -80 0 (zcyl 2.75 10)
-  |> cutat top -80 -80 0 (zcyl 2.75 10)
+  |> cutat ctr 90 -40 0 (zcyl 2.75 10)
+  |> cutat ctr 90 40 0 (zcyl 2.75 10)
+  |> cutat ctr -90 -40 0 (zcyl 2.75 10)
+  |> cutat ctr -90 40 0 (zcyl 2.75 10)
+  |> cutat ctr 0 -90 0 (zcyl 2.75 10)
+  |> cutat ctr 0 90 0 (zcyl 2.75 10)
+  |> frame lower_front bot bot lft 90 -40 0
+  |> frame lower_back bot bot lft 90 40 0
+  |> frame upper_front bot bot lft -90 -40 0
+  |> frame upper_back bot bot lft -90 40 0
+  |> frame side_front bot bot lft 0 -90 0
+  |> frame side_back bot bot lft 0 90 0

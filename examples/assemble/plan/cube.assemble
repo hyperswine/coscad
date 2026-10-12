@@ -1,75 +1,139 @@
-// Small 2020 cube, 200 mm outside. Bottom ring at z 0..20, top ring at
-// z 180..200, verticals standing on the ring corners. Ring corners are
-// joined by flat 90-degree brackets on the ring's outer face (under the
-// bottom ring, on top of the top ring); verticals are braced to the X
-// rails with flat brackets on the outer -Y/+Y faces; one panel mounts on
-// the free +X face. Word shapes are centered: `move` places centers.
+// 200 mm outside cube: twelve 2020 rails, sixteen flat L brackets, one panel.
+// One grounded rail; every other pose follows interfaces. Both holes of each
+// bracket are constrained, closing loops across its two supporting rails.
 !glyph
 plate 250 250 6
-rx ← rail200.coscad ×0 profile=2020 material=aluminium   // along X, 200
-ry ← rail160.coscad ×0 profile=2020 material=aluminium   // along Y, 160, between the X rails
-rz ← rail160.coscad ×0 profile=2020 material=printed     // verticals, 160, printed lips
-br ← flat90.coscad ×16
-px ← panel190.coscad ×1                                   // +X side panel
+bottom_front ← rail200.coscad ×0 profile=2020 material=aluminium
+bottom_back ← rail200.coscad ×0 profile=2020 material=aluminium
+bottom_left ← rail160.coscad ×0 profile=2020 material=aluminium
+bottom_right ← rail160.coscad ×0 profile=2020 material=aluminium
+top_front ← rail200.coscad ×0 profile=2020 material=aluminium
+top_back ← rail200.coscad ×0 profile=2020 material=aluminium
+top_left ← rail160.coscad ×0 profile=2020 material=aluminium
+top_right ← rail160.coscad ×0 profile=2020 material=aluminium
+upright_fl ← rail160.coscad ×0 profile=2020 material=printed
+upright_fr ← rail160.coscad ×0 profile=2020 material=printed
+upright_bl ← rail160.coscad ×0 profile=2020 material=printed
+upright_br ← rail160.coscad ×0 profile=2020 material=printed
+br_bottom_fl ← flat90.coscad ×1
+br_bottom_fr ← flat90.coscad ×1
+br_bottom_bl ← flat90.coscad ×1
+br_bottom_br ← flat90.coscad ×1
+br_top_fl ← flat90.coscad ×1
+br_top_fr ← flat90.coscad ×1
+br_top_bl ← flat90.coscad ×1
+br_top_br ← flat90.coscad ×1
+br_front_low_left ← flat90.coscad ×1
+br_front_low_right ← flat90.coscad ×1
+br_back_low_left ← flat90.coscad ×1
+br_back_low_right ← flat90.coscad ×1
+br_front_high_left ← flat90.coscad ×1
+br_front_high_right ← flat90.coscad ×1
+br_back_high_left ← flat90.coscad ×1
+br_back_high_right ← flat90.coscad ×1
+panel ← panel190.coscad ×1
 
-asm = (rx |> move 100 10 10) ⊕ (rx |> move 100 190 10)
-  ⊕ (ry |> rotz 90 |> move 10 100 10) ⊕ (ry |> rotz 90 |> move 190 100 10)
-  ⊕ (rx |> move 100 10 190) ⊕ (rx |> move 100 190 190)
-  ⊕ (ry |> rotz 90 |> move 10 100 190) ⊕ (ry |> rotz 90 |> move 190 100 190)
-  ⊕ (rz |> roty 90 |> move 10 10 100) ⊕ (rz |> roty 90 |> move 190 10 100)
-  ⊕ (rz |> roty 90 |> move 10 190 100) ⊕ (rz |> roty 90 |> move 190 190 100)
-  // Rotate each L in its face plane so both legs follow their rails.
-  // bottom ring corner brackets, under the ring (z -6..0)
-  ⊕ (br |> move 20 20 -3) ⊕ (br |> rotz 90 |> move 180 20 -3) ⊕ (br |> rotz -90 |> move 20 180 -3) ⊕ (br |> rotz 180 |> move 180 180 -3)
-  // top ring corner brackets, on top of the ring (z 200..206)
-  ⊕ (br |> move 20 20 203) ⊕ (br |> rotz 90 |> move 180 20 203) ⊕ (br |> rotz -90 |> move 20 180 203) ⊕ (br |> rotz 180 |> move 180 180 203)
-  // verticals braced to the bottom X rails, on the outer -Y / +Y faces
-  ⊕ (br |> rotx 90 |> move 20 -3 20) ⊕ (br |> rotz 90 |> rotx 90 |> move 180 -3 20)
-  ⊕ (br |> rotx 90 |> move 20 203 20) ⊕ (br |> rotz 90 |> rotx 90 |> move 180 203 20)
-  // verticals braced to the top X rails
-  ⊕ (br |> rotz -90 |> rotx 90 |> move 20 -3 180) ⊕ (br |> rotz 180 |> rotx 90 |> move 180 -3 180)
-  ⊕ (br |> rotz -90 |> rotx 90 |> move 20 203 180) ⊕ (br |> rotz 180 |> rotx 90 |> move 180 203 180)
-  // +X panel (x 200..203), on the Y rails' and verticals' +X faces
-  ⊕ (px |> roty 90 |> move 201.5 100 100)
+fixed bottom_front 100 10 10 0 0 0
 
-// bottom ring (from below)
-fastener M5x10 br#1 rx#1 bot at=30
-fastener M5x10 br#1 ry#1 bot at=10
-fastener M5x10 br#2 rx#1 bot at=170
-fastener M5x10 br#2 ry#2 bot at=10
-fastener M5x10 br#3 rx#2 bot at=30
-fastener M5x10 br#3 ry#1 bot at=150
-fastener M5x10 br#4 rx#2 bot at=170
-fastener M5x10 br#4 ry#2 bot at=150
-// top ring (from above)
-fastener M5x10 br#5 rx#3 top at=30
-fastener M5x10 br#5 ry#3 top at=10
-fastener M5x10 br#6 rx#3 top at=170
-fastener M5x10 br#6 ry#4 top at=10
-fastener M5x10 br#7 rx#4 top at=30
-fastener M5x10 br#7 ry#3 top at=150
-fastener M5x10 br#8 rx#4 top at=170
-fastener M5x10 br#8 ry#4 top at=150
-// verticals to the bottom X rails
-fastener M5x10 br#9 rx#1 fwd at=30
-fastener M5x10 br#9 rz#1 fwd at=10
-fastener M5x10 br#10 rx#1 fwd at=170
-fastener M5x10 br#10 rz#2 fwd at=10
-fastener M5x10 br#11 rx#2 bak at=30
-fastener M5x10 br#11 rz#3 bak at=10
-fastener M5x10 br#12 rx#2 bak at=170
-fastener M5x10 br#12 rz#4 bak at=10
-// verticals to the top X rails
-fastener M5x10 br#13 rx#3 fwd at=30
-fastener M5x10 br#13 rz#1 fwd at=150
-fastener M5x10 br#14 rx#3 fwd at=170
-fastener M5x10 br#14 rz#2 fwd at=150
-fastener M5x10 br#15 rx#4 bak at=30
-fastener M5x10 br#15 rz#3 bak at=150
-fastener M5x10 br#16 rx#4 bak at=170
-fastener M5x10 br#16 rz#4 bak at=150
-// +X panel: two screws into each Y rail, one into each vertical
-fastener M5x10 px ry#2 rt ×2
-fastener M5x10 px ry#4 rt ×2
-fastener M5x10 px rz#2 rt
-fastener M5x10 px rz#4 rt
+// Bottom ring: both Y rails close the front/back loop.
+mate bottom_left @end_low bottom_front @join_back_left
+mate bottom_right @end_low bottom_front @join_back_right
+mate bottom_back @join_front_left bottom_left @end_high
+mate bottom_back @join_front_right bottom_right @end_high
+
+// Uprights and top ring; redundant interfaces check height and squareness.
+mate upright_fl @end_low bottom_front @upright_up_left
+mate top_front @upright_down_left upright_fl @end_high
+mate upright_fr @end_low bottom_front @upright_up_right
+mate top_front @upright_down_right upright_fr @end_high
+mate upright_bl @end_low bottom_back @upright_up_left
+mate top_back @upright_down_left upright_bl @end_high
+mate upright_br @end_low bottom_back @upright_up_right
+mate top_back @upright_down_right upright_br @end_high
+mate top_left @end_low top_front @join_back_left
+mate top_right @end_low top_front @join_back_right
+mate top_back @join_front_left top_left @end_high
+mate top_back @join_front_right top_right @end_high
+
+// Ring brackets: leg directions point into the ring from each corner.
+mate br_bottom_fl @a_top bottom_front @bolt_bot_low
+mate br_bottom_fl @b_top bottom_left @bolt_bot_low
+mate br_bottom_fr @b_top bottom_front @bolt_bot_high
+mate br_bottom_fr @a_top bottom_right @bolt_bot_low
+mate br_bottom_bl @b_top bottom_back @bolt_bot_low
+mate br_bottom_bl @a_top bottom_left @bolt_bot_high
+mate br_bottom_br @a_top bottom_back @bolt_bot_high
+mate br_bottom_br @b_top bottom_right @bolt_bot_high
+mate br_top_fl @a_bot top_front @bolt_top_low
+mate br_top_fl @b_bot top_left @bolt_top_low
+mate br_top_fr @b_bot top_front @bolt_top_high
+mate br_top_fr @a_bot top_right @bolt_top_low
+mate br_top_bl @b_bot top_back @bolt_top_low
+mate br_top_bl @a_bot top_left @bolt_top_high
+mate br_top_br @a_bot top_back @bolt_top_high
+mate br_top_br @b_bot top_right @bolt_top_high
+
+// Side brackets: local contact face differs on the front and back.
+mate br_front_low_left @a_bot bottom_front @bolt_fwd_low
+mate br_front_low_left @b_bot upright_fl @bolt_fwd_low
+mate br_front_low_right @b_bot bottom_front @bolt_fwd_high
+mate br_front_low_right @a_bot upright_fr @bolt_fwd_low
+mate br_back_low_left @a_top bottom_back @bolt_bak_low
+mate br_back_low_left @b_top upright_bl @bolt_bak_low
+mate br_back_low_right @b_top bottom_back @bolt_bak_high
+mate br_back_low_right @a_top upright_br @bolt_bak_low
+mate br_front_high_left @b_bot top_front @bolt_fwd_low
+mate br_front_high_left @a_bot upright_fl @bolt_fwd_high
+mate br_front_high_right @a_bot top_front @bolt_fwd_high
+mate br_front_high_right @b_bot upright_fr @bolt_fwd_high
+mate br_back_high_left @b_top top_back @bolt_bak_low
+mate br_back_high_left @a_top upright_bl @bolt_bak_high
+mate br_back_high_right @a_top top_back @bolt_bak_high
+mate br_back_high_right @b_top upright_br @bolt_bak_high
+
+// All six panel bores close onto the intended rail slot centres.
+mate panel @lower_front bottom_right @panel_low
+mate panel @lower_back bottom_right @panel_high
+mate panel @upper_front top_right @panel_low
+mate panel @upper_back top_right @panel_high
+mate panel @side_front upright_fr @panel_middle
+mate panel @side_back upright_br @panel_middle
+
+// Hardware declarations remain separate from rigid geometric mates.
+fastener M5x10 br_bottom_fl bottom_front bot at=30
+fastener M5x10 br_bottom_fl bottom_left bot at=10
+fastener M5x10 br_bottom_fr bottom_front bot at=170
+fastener M5x10 br_bottom_fr bottom_right bot at=10
+fastener M5x10 br_bottom_bl bottom_back bot at=30
+fastener M5x10 br_bottom_bl bottom_left bot at=150
+fastener M5x10 br_bottom_br bottom_back bot at=170
+fastener M5x10 br_bottom_br bottom_right bot at=150
+fastener M5x10 br_top_fl top_front top at=30
+fastener M5x10 br_top_fl top_left top at=10
+fastener M5x10 br_top_fr top_front top at=170
+fastener M5x10 br_top_fr top_right top at=10
+fastener M5x10 br_top_bl top_back top at=30
+fastener M5x10 br_top_bl top_left top at=150
+fastener M5x10 br_top_br top_back top at=170
+fastener M5x10 br_top_br top_right top at=150
+fastener M5x10 br_front_low_left bottom_front fwd at=30
+fastener M5x10 br_front_low_left upright_fl fwd at=10
+fastener M5x10 br_front_low_right bottom_front fwd at=170
+fastener M5x10 br_front_low_right upright_fr fwd at=10
+fastener M5x10 br_back_low_left bottom_back bak at=30
+fastener M5x10 br_back_low_left upright_bl bak at=10
+fastener M5x10 br_back_low_right bottom_back bak at=170
+fastener M5x10 br_back_low_right upright_br bak at=10
+fastener M5x10 br_front_high_left top_front fwd at=30
+fastener M5x10 br_front_high_left upright_fl fwd at=150
+fastener M5x10 br_front_high_right top_front fwd at=170
+fastener M5x10 br_front_high_right upright_fr fwd at=150
+fastener M5x10 br_back_high_left top_back bak at=30
+fastener M5x10 br_back_high_left upright_bl bak at=150
+fastener M5x10 br_back_high_right top_back bak at=170
+fastener M5x10 br_back_high_right upright_br bak at=150
+// Panel screw distances are measured from each host rail minimum end.
+fastener M5x10 panel bottom_right rt ×2 at=40,120
+fastener M5x10 panel top_right rt ×2 at=40,120
+fastener M5x10 panel upright_fr rt at=80
+fastener M5x10 panel upright_br rt at=80

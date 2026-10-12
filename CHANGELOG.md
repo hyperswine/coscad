@@ -8,6 +8,14 @@ and this project adheres to the
 
 ## Unreleased
 
+- Examples/planner: convert the 200 mm 2020 cube to named mating frames and
+  rigid assembly constraints. Verify all 16 bracket poses and 32 bores against
+  the coordinate reference, and regenerate its 28-step instructions. Replace
+  the panel's mismatched four-hole pattern with six rail-aligned bores. Keep
+  side-face screws on 2020 slot centres when a panel only partly covers the
+  rail face; reject clamps that miss the slot. Plan JSON now includes each
+  fastener's assembled host-face `position_mm`.
+
 - Language/assembly: oriented construction frames (`|> frame`) and child-only
   rigid mating (`|> mate`) with explicit normal, up, roll and gap. Declarative
   `.assemble` `fixed` / `mate` constraints propagate poses in both directions,

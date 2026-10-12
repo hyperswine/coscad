@@ -103,6 +103,14 @@ and `examples/assemble/constraints/frame-stand.assemble`. This first increment
 supports rigid mates; it does not infer hardware, solve moving joints or
 establish interference-free fit without `coscad check`.
 
+The canonical [200 mm 2020 cube](../examples/assemble/plan/cube.assemble)
+now uses one fixed rail and 54 mates for its 29 physical parts. Each bracket
+mates through both bores, so the second interface checks its corner rotation
+and contact face. Redundant rail and panel interfaces also check closed
+loops. All 16 bracket poses match an independent coordinate reference;
+the [verification report](reviews/2026-10-12-cube-constraints.md) records mesh,
+hole, screw-position and instruction checks.
+
 ## Worked example
 
 `examples/topological/tbracket.coscad` rebuilds the project's seam

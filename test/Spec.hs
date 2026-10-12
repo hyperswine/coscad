@@ -23,11 +23,11 @@ import Control.Monad (forM, forM_, unless, when)
 import Coscad.Assemble (AsmResult (..), loadAssembleFile, packBeds, processAssemble, resolveAssembly)
 import Coscad.Check (processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
-import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3)
+import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3, vsub, scale3)
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
 import Coscad.Next (processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadVersion, renderStlFile)
-import Coscad.Parser (parseProgramNamed, resolveVariables)
+import Coscad.Parser (parseProgramNamed)
 import Coscad.Part (renderPart)
 import Coscad.Plan (PlanSummary (..), StepSummary (..), planSummary)
 import Coscad.Site (buildPageHtml, indexHtml)
@@ -80,6 +80,67 @@ expectGen t name r frag = case r of
 
 -- ------------------------------------------------------------------
 -- build plans (coscad plan): pure, no OpenSCAD needed
+
+cubeTier :: T -> IO ()
+cubeTier t = do
+  section "2020 cube: independent bracket poses and closed interfaces"
+  loaded <- loadAssembleFile [] "examples/assemble/plan/cube.assemble"
+  let near (a,b,c) (x,y,z) = all (< 1e-7) [abs(a-x),abs(b-y),abs(c-z)]
+  case loaded of
+    Left e -> failT t "constrained cube loads" e
+    Right ar -> case arAsm ar of
+      Just (Union shapes) -> do
+        let placed = Map.fromList (zip (map fst (arParts ar)) shapes)
+            brackets = [(n,s) | (n,s) <- Map.toList placed, "br_" `isPrefixOf` n]
+            rails = [(n,s) | (n,s) <- Map.toList placed, n /= "panel", not ("br_" `isPrefixOf` n)]
+            -- World-space measurements, independent of the mating statements.
+            ring ringName z =
+              [("br_"++ringName++"_fl",(20,20,z),(30,10,z),(10,30,z),(0,0,1))
+              ,("br_"++ringName++"_fr",(180,20,z),(190,30,z),(170,10,z),(0,0,1))
+              ,("br_"++ringName++"_bl",(20,180,z),(10,170,z),(30,190,z),(0,0,1))
+              ,("br_"++ringName++"_br",(180,180,z),(170,190,z),(190,170,z),(0,0,1))]
+            side face y =
+              [("br_"++face++"_low_left",(20,y,20),(30,y,10),(10,y,30),(0,-1,0))
+              ,("br_"++face++"_low_right",(180,y,20),(190,y,30),(170,y,10),(0,-1,0))
+              ,("br_"++face++"_high_left",(20,y,180),(10,y,170),(30,y,190),(0,-1,0))
+              ,("br_"++face++"_high_right",(180,y,180),(170,y,190),(190,y,170),(0,-1,0))]
+            expected = ring "bottom" (-3) ++ ring "top" 203 ++ side "front" (-3) ++ side "back" 203
+        assertT t "cube: 12 rails, 16 distinct brackets, 1 panel, 54 mates and 1 root"
+          (length shapes == 29 && length rails == 12 && length brackets == 16 && Map.member "panel" placed && length (arConstraints ar) == 55) (show (Map.keys placed))
+        forM_ expected $ \(n,centre,a,b,normal) -> case Map.lookup n placed of
+          Nothing -> failT t ("cube bracket " ++ n) "missing bracket"
+          Just s -> do
+            assertT t ("cube bracket centre " ++ n) (near (bcenter (bbox s)) centre) (show (bbox s))
+            forM_ [("a_top",a),("b_top",b)] $ \(f,want) -> case frameOf f s of
+              Left e -> failT t ("cube bracket frame " ++ n ++ " @" ++ f) e
+              Right (MatingFrame p basis) -> do
+                let nz = mApply basis (0,0,1)
+                    mid = vsub p (scale3 3 nz)
+                assertT t ("cube bore and normal " ++ n ++ " @" ++ f) (near mid want && near nz normal) (show (mid,nz))
+        forM_ [("lower_front",(200,60,10)),("lower_back",(200,140,10)),("upper_front",(200,60,190)),("upper_back",(200,140,190)),("side_front",(200,10,100)),("side_back",(200,190,100))] $ \(f,p) ->
+          case Map.lookup "panel" placed >>= either (const Nothing) Just . frameOf f of
+            Nothing -> failT t ("cube panel bore " ++ f) "missing panel interface"
+            Just (MatingFrame got b) -> assertT t ("cube panel bore " ++ f) (near got p && near (mApply b (0,0,1)) (-1,0,0)) (show (got,b))
+      _ -> failT t "constrained cube generates one union" "no generated assembly"
+  dir <- tempDir "cube-constraints"
+  forM_ ["rail200.coscad","rail160.coscad","flat90.coscad","panel190.coscad"] $ \f -> copyFile ("examples/assemble/plan" </> f) (dir </> f)
+  src <- readFile "examples/assemble/plan/cube.assemble"
+  let spec = dir </> "cube.assemble"
+      replace old new = unlines . map (\line -> if line == old then new else line) . lines
+  forM_ [("wrong corner leg", "mate br_bottom_fr @b_top bottom_front @bolt_bot_high", "mate br_bottom_fr @a_top bottom_front @bolt_bot_high")
+        ,("flipped bracket face", "mate br_bottom_fl @a_top bottom_front @bolt_bot_low", "mate br_bottom_fl @a_bot bottom_front @bolt_bot_low")
+        ,("wrong rear bracket rotation", "mate br_back_high_right @a_top top_back @bolt_bak_high", "mate br_back_high_right @b_top top_back @bolt_bak_high")] $ \(label,old,new) -> do
+    writeFile spec (replace old new src)
+    r <- loadAssembleFile [] spec
+    expectErr t ("cube rejects " ++ label) r ["conflicting assembly constraints"] []
+  bracket <- readFile (dir </> "flat90.coscad")
+  length bracket `seq` writeFile (dir </> "flat90.coscad") (replace "main = box 40 40 6" "main = box 40 40 8" bracket)
+  writeFile spec src
+  resized <- loadAssembleFile [] spec
+  case resized >>= maybe (Left "missing asm") Right . arAsm of
+    Left e -> failT t "cube bracket thickness resize" e
+    Right s -> let (lo,hi) = bbox s in assertT t "cube bracket thickness resize keeps all mates closed"
+      (near lo (0,-8,-8) && near hi (203,208,208)) (show (lo,hi))
 
 frameTier :: T -> IO ()
 frameTier t = do
@@ -304,10 +365,14 @@ planTier t = do
       assertT t "cube: every fastener driven" (sum (map (length . ssFasteners) (psSteps ps)) == 38) (show (sum (map (length . ssFasteners) (psSteps ps))))
       assertT t "cube: a handful of flips, not one per bracket" (length (filter ssFlip (psSteps ps)) <= 8) (show (length (filter ssFlip (psSteps ps))))
   -- design errors are reported: two screws at the same spot
-  let bad = src ++ "\nfastener M5x10 br#1 rx#1 bot at=30\n"
+  let bad = src ++ "\nfastener M5x10 br_bottom_fl bottom_front bot at=30\n"
   writeFile (tmp </> "bad.assemble") bad
   rb <- planSummary (tmp </> "bad.assemble")
   assertT t "plan: colliding screws are a design error" (either (const False) (any ("collide" `isInfixOf`) . psDesignErrors) rb) (either id (show . psDesignErrors) rb)
+  writeFile (tmp </> "clamp.coscad") "main = box 5 2 5\n"
+  writeFile (tmp </> "miss-slot.assemble") "rail ← rail200.coscad ×0 profile=2020\nclamp ← clamp.coscad ×1\nasm = (rail |> move 100 10 10) ⊕ (clamp |> move 100 -1 18)\nfastener M5x10 clamp rail fwd at=100\n"
+  miss <- planSummary (tmp </> "miss-slot.assemble")
+  expectErr t "plan: partial overlap cannot move a screw off the rail slot" miss ["does not cover the 2020 slot centre"] []
   -- the companion site pages embed the plan and reference the step images
   let page = buildPageHtml "cube" "{\"steps\": []}" "cube_step" 3
       idx = indexHtml [("cube", "cube", ["M5x10", "material=printed"], 29, 38, 29)]
@@ -854,8 +919,8 @@ geometry t update bin = do
   case cube of
     Left e -> failT t "cube bracket geometry" e
     Right ar -> do
-      let parts = Map.fromList [(n, if n == "br" then sh else Hidden sh) | (n, sh) <- arParts ar]
-      case resolveVariables (arMode ar) (arDefs ar) parts >>= \tab -> maybe (Left "missing asm") Right (Map.lookup "asm" tab) of
+      let parts = Map.fromList [(n, if "br_" `isPrefixOf` n then sh else Hidden sh) | (n, sh) <- arParts ar]
+      case resolveAssembly ar parts >>= \tab -> maybe (Left "missing asm") Right (Map.lookup "asm" tab) of
         Left e -> failT t "cube bracket geometry" e
         Right brackets -> do
           let corners = [(x,y,z) | x <- [10,190], y <- [10,190], z <- [-3,203]]
@@ -873,6 +938,30 @@ geometry t update bin = do
           checkProbes "cube: material at all 16 bracket corners" (map (probe [2,2,2]) corners) 129
           checkProbes "cube: all 32 rail-aligned holes pass through brackets"
             (map (probe [2,2,8]) ringHoles ++ map (probe [2,8,2]) sideHoles) 1
+          baseline <- loadAssembleFile [] "test/fixtures/cube-coordinate.assemble"
+          case baseline of
+            Left e -> failT t "cube coordinate pose baseline" e
+            Right ref -> do
+              let hidden = Map.fromList [(n, if n == "br" then sh else Hidden sh) | (n,sh) <- arParts ref]
+              case resolveAssembly ref hidden >>= maybe (Left "missing baseline asm") Right . Map.lookup "asm" of
+                Left e -> failT t "cube bracket pose equivalence" e
+                Right original -> do
+                  let actual = gen brackets
+                      expected = gen original
+                      sym = "include <BOSL2/std.scad>\nunion(){translate([-1000,-1000,-1000]) cube(1);difference(){"++actual++expected++"}difference(){"++expected++actual++"}}"
+                  r <- renderMesh bin dir sym
+                  assertT t "cube: all 16 bracket poses match coordinate reference exactly"
+                    (either (const False) (\tris -> abs(meshVolume tris-1) < 1e-7 && length (splitBodies tris) == 1) r) (either id (show . meshVolume) r)
+          let panelOnly = Map.fromList [(n,if n == "panel" then sh else Hidden sh) | (n,sh) <- arParts ar]
+          case resolveAssembly ar panelOnly >>= maybe (Left "missing panel") Right . Map.lookup "asm" of
+            Left e -> failT t "cube panel geometry" e
+            Right panel -> do
+              let bores = [(60,10),(140,10),(60,190),(140,190),(10,100),(190,100)] :: [(Double,Double)]
+                  probes = concat ["translate([201.5,"++show y++","++show z++"]) cube([5,2,2],center=true);" | (y,z) <- bores]
+                  scad = "include <BOSL2/std.scad>\nunion(){translate([-1000,-1000,-1000]) cube(1);intersection(){"++gen panel++"union(){"++probes++"}}}"
+              r <- renderMesh bin dir scad
+              assertT t "cube: all six panel bores match rail slot centres"
+                (either (const False) (\tris -> abs(meshVolume tris-1) < 1e-7) r) (either id (show . meshVolume) r)
   -- cross-check: the topological bracket is the coordinate bracket
   case (Map.lookup "examples/bracket.coscad" table, Map.lookup "examples/topological/tbracket.coscad" table) of
     (Just (v1, lo1, hi1), Just (v2, lo2, hi2)) ->
@@ -1038,6 +1127,7 @@ main = do
   remainingDiagnostics t
   topologyTier t
   frameTier t
+  cubeTier t
   examples t update
   planTier t
   render <- lookupEnv "COSCAD_RENDER"

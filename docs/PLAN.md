@@ -9,8 +9,10 @@ instruction generator design note; this file is the working reference.
 
 ## What you write
 
-Everything the planner needs beyond the existing `asm` placement is a few
-part hints and one `fastener` line per screw group:
+Placement can come from an `asm` expression or from `fixed` / `mate`
+constraints. The planner uses the same solved poses as the assembly loader
+and checker. Beyond placement, it needs a few part hints and one `fastener`
+line per screw group:
 
 ```
 rx ← rail200.coscad ×0 profile=2020 material=aluminium
@@ -109,9 +111,17 @@ slender part (three times longer than wide) stood on end costs the same
 as a rail stood on end and gets the same warning.
 
 The planner derives the driver axis (the host face's outward normal), the
-screw positions (centre of the overlap between clamped part and host
-face, or `at=`), the thread reach (length minus material under the head),
-and the T-nut preload sheet.
+screw positions, the thread reach (length minus material under the head),
+and the T-nut preload sheet. Along the host, positions use the overlap or
+explicit `at=` distances. Across a `profile=2020` side face, they stay on
+the host's slot centre even when an inset panel covers only part of the
+face. A clamped part that does not cover that centre is rejected. Other
+hosts and rail end faces use the transverse overlap centre.
+
+The [200 mm cube](../examples/assemble/plan/cube.assemble) is a worked
+constraint-based assembly: both holes of each of its 16 brackets are mated
+to rail interfaces, and its six panel bores match explicit screw distances.
+See the [geometry and hardware verification](reviews/2026-10-12-cube-constraints.md).
 
 ## What it checks
 
@@ -141,7 +151,10 @@ yet.
 - `foo_plan.md`: bill of materials, T-nut preload sheet (nuts per rail,
   slot, mm from the marked end), then numbered steps: rest face, parts
   placed, rails preloaded, screws tightened with torque, warnings.
-- `foo_plan.json`: the same as data.
+- `foo_plan.json`: the same as data. Each fastener's `position_mm: [x,y,z]`
+  is its host-face contact point in the assembled world frame, in millimetres
+  (including `inset=` for a recessed peg seat), before the instruction step's
+  bench rotation. It is not the screw head position.
 - `foo_stepN.scad`: the scene after step N, rest face down, this step's
   parts orange, earlier parts grey, screw heads red, the bench as a
   translucent slab. `--png` also renders `foo_stepN.png` through OpenSCAD.

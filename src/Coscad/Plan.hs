@@ -317,6 +317,10 @@ mkFasteners insts decls = do
           (l0, l1) = overlap along
           (o0, o1) = overlap other
           (hostMin, _) = extentAlong along hb
+          -- A 2020 side slot is centred on the host cross-section. Cropping
+          -- the overlap with an inset panel must not move the screw off it.
+          otherPos = if iRail host && abs (vdot (iAxis host) n) < 0.5
+            then vdot (bcenter hb) other else (o0 + o1) / 2
           nutKind = case map toLower <$> lookup "nut" (fdOpts fd) of
             Just "slidein" -> SlideIn
             Just "slide-in" -> SlideIn
@@ -342,7 +346,7 @@ mkFasteners insts decls = do
       let
           thickness = fromMaybe (cMax - max cMin facePlane) (lookup "through" (fdOpts fd) >>= readD)
           mkF (j, p) =
-            let pos = vadd (vscale p along) (vadd (vscale ((o0 + o1) / 2) other) (vscale facePlane n))
+            let pos = vadd (vscale p along) (vadd (vscale otherPos other) (vscale facePlane n))
              in Fast
                   { fId = k * 100 + j, fSpec = fdSpec fd, fDiam = d, fLen = l, fHead = hd
                   , fClamped = iName clamped, fHost = iName host, fFaceName = fdFace fd, fInset = inset, fFace = n
@@ -351,6 +355,7 @@ mkFasteners insts decls = do
                   , fReach = if isPeg then 0 else l - thickness
                   }
       when (length positions > maxQuantity) $ Left (at ++ "at= contains too many positions; maximum is " ++ show maxQuantity)
+      when (otherPos < o0 - 1e-6 || otherPos > o1 + 1e-6) $ Left (at ++ iName clamped ++ " does not cover the 2020 slot centre of " ++ iName host)
       when (any (not . finite) positions) $ Left (at ++ "fastener positions overflowed; reduce at= distances or host dimensions")
       Right (map mkF (zip [1 ..] positions))
 
@@ -935,6 +940,7 @@ planJson src m steps errs =
   "{\n  \"source\": " ++ jstr src ++ ",\n  \"parts\": [" ++ intercalate ", " (map partJ (mInsts m)) ++ "],\n  \"design_errors\": [" ++ intercalate ", " (map jstr errs) ++ "],\n  \"steps\": [\n"
     ++ intercalate ",\n" (zipWith stepJ [1 :: Int ..] steps) ++ "\n  ]\n}\n"
   where
+    positionJ (x,y,z) = intercalate ", " (map jnum [x,y,z])
     partJ i = "{\"name\": " ++ jstr (iName i) ++ ", \"part\": " ++ jstr (iPart i) ++ ", \"material\": "
       ++ jstr (case iMat i of Aluminium -> "aluminium"; Printed -> "printed"; Steel -> "steel") ++ "}"
     stepJ k s =
@@ -944,7 +950,7 @@ planJson src m steps errs =
         ++ ", \"fasteners\": [" ++ intercalate ", " [fj (mFastById m Map.! i) | i <- stFasts s] ++ "]"
         ++ ", \"warnings\": [" ++ intercalate ", " (map jstr (nub (stWarn s))) ++ "]}"
     fj f = "{\"spec\": " ++ jstr (fSpec f) ++ ", \"head\": " ++ jstr (fHead f) ++ ", \"nut\": " ++ jstr (show (fNut f)) ++ maybe "" (\(pf, _) -> ", \"pocket\": " ++ jstr ((if fPocketInClamped f then "clamped." else "") ++ pf)) (fPocket f) ++ ", \"clamped\": " ++ jstr (fClamped f)
-      ++ ", \"host\": " ++ jstr (fHost f) ++ ", \"face\": " ++ jstr (fFaceName f) ++ ", \"inset_mm\": " ++ jnum (fInset f) ++ ", \"at_mm\": " ++ jnum (fAlong f) ++ ", \"torque_nm\": " ++ jnum (fTorque f) ++ "}"
+      ++ ", \"host\": " ++ jstr (fHost f) ++ ", \"face\": " ++ jstr (fFaceName f) ++ ", \"position_mm\": [" ++ positionJ (fPos f) ++ "]" ++ ", \"inset_mm\": " ++ jnum (fInset f) ++ ", \"at_mm\": " ++ jnum (fAlong f) ++ ", \"torque_nm\": " ++ jnum (fTorque f) ++ "}"
 
 -- per-step OpenSCAD scene: everything placed so far, this step highlighted,
 -- the bench under the rest face, scene rotated so the rest face is down.

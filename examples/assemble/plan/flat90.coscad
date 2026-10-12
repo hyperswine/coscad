@@ -5,3 +5,8 @@ main = box 40 40 6
   |> cut (box 20 20 8 |> move 10 10 0)
   |> cut (zcyl 2.75 10 |> move 10 -10 0)
   |> cut (zcyl 2.75 10 |> move -10 10 0)
+// Through-hole centres, with up pointing along each positive local leg.
+  |> frame a_top top top rt 10 -10 0
+  |> frame b_top top top bak -10 10 0
+  |> frame a_bot bot bot rt 10 -10 0
+  |> frame b_bot bot bot bak -10 10 0

@@ -2,7 +2,8 @@
 
 Nine original migration pilots plus two using the new
 [datum, placement, grid and hull operations](../../docs/TOPOLOGICAL.md).
-The canonical models and compiler defaults are unchanged.
+These pilots leave canonical models and compiler defaults unchanged. The
+subsequent canonical cube conversion is described separately below.
 The findings and migration proposal are in the
 [review](../../docs/reviews/2026-10-12-topological-migration.md).
 
@@ -65,3 +66,21 @@ partial results. Scratch files are removed on success and retained on failure.
 
 The lexical inventory is a way to find candidates, not proof of stable design
 intent. The pilots are outside the normal example scan and are not yet in CI.
+
+## Canonical cube conversion
+
+The [2020 cube](../../examples/assemble/plan/cube.assemble) now uses rigid
+mating constraints. Its bracket pose equivalence and bore probes run in
+`stack test`. To additionally audit all 29 checker meshes and all 38 actual
+planned screw coordinates, run from the repository root:
+
+```sh
+coscad check examples/assemble/plan/cube.assemble --keep-temp > /tmp/cube-check.log
+coscad plan examples/assemble/plan/cube.assemble
+python3 experiments/topological/verify-cube.py --check-log /tmp/cube-check.log
+```
+
+[cube-results.json](cube-results.json) records that audit. World bounds and
+screw positions are specified independently of the mating declarations.
+The [report](../../docs/reviews/2026-10-12-cube-constraints.md) explains the
+panel-hole and planner corrections and the validation boundaries.
