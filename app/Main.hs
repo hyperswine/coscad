@@ -7,7 +7,7 @@ import Coscad.Check (processCheckWith)
 import Coscad.Doctor (runDoctor)
 import Coscad.Next (processNext)
 import Coscad.Part (compilePart, renderPart)
-import Coscad.Plan (processPlan)
+import Coscad.Plan (processPlan, validateHardware)
 import Coscad.Site (processSite)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.IO (readFileUtf8)
@@ -41,7 +41,7 @@ runCLI = do
     (a : _) | a `elem` ["--version", "-V", "version"] -> putStrLn ("coscad " ++ showVersion version)
     ["doctor"] -> runDoctor
     ["validate", f] -> case takeExtension f of
-      ".assemble" -> loadAssembleFile [] f >>= either bad (const (putStrLn "Valid assembly"))
+      ".assemble" -> loadAssembleFile [] f >>= either bad (either bad (const (putStrLn "Valid assembly")) . validateHardware)
       ".coscad" -> readFileUtf8 f >>= either bad (const (putStrLn "Valid part")) . parseProgramNamed f
       _ -> bad "validate needs a .coscad or .assemble file"
     ("validate" : _) -> bad "validate needs one .coscad or .assemble file"
@@ -91,7 +91,7 @@ usage =
     , ""
     , "Usage:"
     , "  coscad <part.coscad> [-o part.scad]     compile one part to OpenSCAD"
-    , "  coscad validate <part.coscad|spec.assemble>  validate source and mating constraints without writing artifacts"
+    , "  coscad validate <part.coscad|spec.assemble>  validate source, mating constraints and hardware without writing artifacts"
     , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"
     , "  coscad <spec.assemble>                  design stage: assembled view, packed plate(s), manifest"
     , "  coscad next <spec.assemble>             manufacturing: orient, pack beds, bedN.stl + manifest"

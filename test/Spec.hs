@@ -23,13 +23,13 @@ import Control.Monad (forM, forM_, unless, when)
 import Coscad.Assemble (AsmResult (..), FlatPart (..), loadAssembleFile, packBeds, processAssemble, resolveAssembly)
 import Coscad.Check (processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
-import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3, vsub, scale3, vadd, vmul, rodMat, mirrorMat)
+import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3, vlen, vsub, scale3, vadd, vmul, rodMat, mirrorMat)
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
 import Coscad.Next (processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadVersion, renderStlFile)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Part (renderPart)
-import Coscad.Plan (PlanSummary (..), StepSummary (..), planSummary)
+import Coscad.Plan (PlanSummary (..), StepSummary (..), FastenerSummary (..), planSummary)
 import MigrationCases (migrationCases)
 import Coscad.Site (buildPageHtml, indexHtml)
 import Coscad.Shape (Shape (..), shapeChildren)
@@ -201,7 +201,7 @@ migrationTier t = do
                 _ -> False) (show (Map.lookup newName ap,Map.lookup oldName op))
           _ -> failT t (file ++ ": instance pose comparison") "cannot resolve tagged instances"
 
-        when (file `elem` ["examples/assemble/ball/ball.assemble","examples/assemble/bow3/bow3.assemble","examples/assemble/tesseract/tesseract.assemble","examples/assemble/plan/corner_pair.assemble","models/orbit-tower/orbit-tower.assemble"]) $ do
+        when (file `elem` ["examples/assemble/ball/ball.assemble","examples/assemble/tesseract/tesseract.assemble","examples/assemble/plan/corner_pair.assemble","models/orbit-tower/orbit-tower.assemble"]) $ do
           pa <- planSummary file
           pb <- planSummary ref
           case (pa,pb) of
@@ -450,9 +450,9 @@ planTier t = do
   assertT t "site: build page embeds plan JSON, images, safe-area header, both themes"
     (all (`isInfixOf` page) ["const PLAN = {\"steps\": []}", "cube_step", "NSTEPS = 3", "env(safe-area-inset-top", "data-theme=dark", "prefers-color-scheme:dark"]) (take 400 page)
   assertT t "site: index lists builds with searchable tags" (all (`isInfixOf` idx) ["\"cube\"", "M5x10 material=printed", "steps:29"]) (take 400 idx)
-  -- an assembly without fasteners still gets an order (the bow)
+  -- The bow now describes all four real bolts and captive nuts.
   rw <- planSummary "examples/assemble/bow3/bow3.assemble"
-  assertT t "plan: bow3 (no fasteners) places all three parts" (either (const False) (\ps -> sum (map (length . ssParts) (psSteps ps)) == 3) rw) (either id show rw)
+  assertT t "plan: bow3 places all three parts and makes all four M4 joints" (either (const False) (\ps -> sum (map (length . ssParts) (psSteps ps)) == 3 && psFastenerCount ps == 4 && null (psDesignErrors ps)) rw) (either id show rw)
   -- the bolted ball: enclosing shells, captive hex nuts in pockets
   rl <- planSummary "examples/assemble/ball/ball.assemble"
   case rl of
@@ -517,6 +517,122 @@ planTier t = do
     writeFile (tmpO </> "bad.assemble") source
     result <- planSummary (tmpO </> "bad.assemble")
     assertT t ("plan: " ++ name ++ " is rejected") (either (message `isInfixOf`) (const False) result) (either id show result)
+
+-- Independent synthetic joints: positions, directions and reach must follow
+-- arbitrary rigid poses and renamed parts, rather than an example name.
+framedFastenerTier :: T -> IO ()
+framedFastenerTier t = do
+  section "frame-based hardware geometry and diagnostics"
+  dir <- tempDir "framed-fasteners"
+  let host = "main = box 20 20 10 |> frame hole top top bak -4 -4 0 |> frame nut bot bot bak -4 -4 3\n"
+      clamp = "main = box 20 20 4 |> frame head top top bak -4 -4 0\n"
+      joint = "fastener M4x16 lid block @hole seat=@head head=socket nut=hex pocket=@nut\n"
+      src = "block ← block.coscad ×1 preload=hand\nlid ← lid.coscad ×1\nasm = block ⊕ (lid |> move 0 0 7)\n" ++ joint
+      run source = writeFile (dir </> "test.assemble") source >> planSummary (dir </> "test.assemble")
+      near a b = vlen (vsub a b) < 1e-6
+      writeParts h c = writeFile (dir </> "block.coscad") h >> writeFile (dir </> "lid.coscad") c
+  writeParts host clamp
+  good <- run src
+  case good of
+    Left e -> failT t "framed joint plans" e
+    Right ps -> do
+      checkInvariants t "framed joint" ps
+      assertT t "framed joint: measured grip and nut reach"
+        (case psFasteners ps of [f] -> near (fsPosition f) (-4,-4,5) && near (fsHeadPosition f) (-4,-4,9) && maybe False (`near` (-4,-4,-2)) (fsNutSeat f) && abs(fsThreadReach f - 5) < 1e-7; _ -> False) (show ps)
+      assertT t "framed joint: in-hand preload precedes the host placement"
+        (take 1 (concatMap ssPreload (psSteps ps)) == ["block"] && null (ssParts (head (psSteps ps)))) (show (psSteps ps))
+      assertT t "framed joint: preload preparation warning survives step grouping"
+        (any ("in hand" `isInfixOf`) (concatMap ssWarnings (psSteps ps))) (show(psSteps ps))
+  let transform = " |> rotx 23 |> rotz 37 |> move 31 -17 9"
+      rotated = "block ← block.coscad ×1 preload=hand\nlid ← lid.coscad ×1\nasm = (block ⊕ (lid |> move 0 0 7))" ++ transform ++ "\n" ++ joint
+      move p = vadd (31,-17,9) (mApply (rodMat 37 (0,0,1)) (mApply (rodMat 23 (1,0,0)) p))
+      axis = mApply (rodMat 37 (0,0,1)) (mApply (rodMat 23 (1,0,0)) (0,0,1))
+  tilted <- run rotated
+  assertT t "framed joint: arbitrary rotations carry hole, head, nut and axis"
+    (either (const False) (\ps -> case psFasteners ps of [f] -> near (fsPosition f) (move (-4,-4,5)) && near (fsHeadPosition f) (move (-4,-4,9)) && near (fsAxis f) axis && maybe False (`near` move (-4,-4,-2)) (fsNutSeat f) && maybe False (`near` move (-4,-4,-5)) (fsNutEntry f) && abs(fsThreadReach f-5) < 1e-7; _ -> False) tilted) (either id show tilted)
+  renamed <- run "core ← block.coscad ×1 preload=hand\ncover ← lid.coscad ×1\nasm = core ⊕ (cover |> move 0 0 7)\nfastener M4x16 cover core @hole seat=@head head=socket nut=hex pocket=@nut\n"
+  assertT t "framed joint: aliases do not affect hardware placement"
+    (either (const False) (\ps -> case psFasteners ps of [f] -> near (fsPosition f) (-4,-4,5) && abs(fsThreadReach f-5) < 1e-7; _ -> False) renamed) (either id show renamed)
+  writeParts "main = box 20 20 16 |> frame hole top top bak -4 -4 0 |> frame nut bot bot bak -4 -4 3\n" clamp
+  resized <- run "block ← block.coscad ×1 preload=hand\nlid ← lid.coscad ×1\nasm = block ⊕ (lid |> move 0 0 10)\nfastener M4x22 lid block @hole seat=@head head=socket nut=hex pocket=@nut\n"
+  assertT t "framed joint: resized host updates both bearing planes and grip"
+    (either (const False) (\ps -> case psFasteners ps of [f] -> near (fsPosition f) (-4,-4,8) && near (fsHeadPosition f) (-4,-4,12) && maybe False (`near` (-4,-4,-5)) (fsNutSeat f) && abs(fsThreadReach f-5) < 1e-7; _ -> False) resized) (either id show resized)
+  writeParts "main = box 60 20 10 |> frame hole top top bak -4 0 0\n" "main = box 20 20 4 |> frame head top top bak -4 0 0\n"
+  let railSrc = "block ← block.coscad ×0 profile=2020 preload=hand\nlid ← lid.coscad ×1\nasm = (block ⊕ (lid |> move 0 0 7))" ++ transform ++ "\nfastener M4x10 lid block @hole seat=@head\n"
+  rail <- run railSrc
+  assertT t "framed rail: slot checks use part coordinates under arbitrary rotation"
+    (either (const False) (\ps -> case psFasteners ps of [f] -> near (fsPosition f) (move (-4,0,5)) && near (fsAxis f) axis && null(psDesignErrors ps); _ -> False) rail) (either id show rail)
+  writeParts "main = box 60 20 10 |> frame hole top top bak -4 2 0\n" "main = box 20 20 4 |> frame head top top bak -4 2 0\n"
+  offSlot <- run railSrc
+  expectErr t "framed rail: an off-centre hole remains invalid after rotation" offSlot ["2020 slot centre"] []
+  writeParts host clamp
+  -- Longer solid above the counterbore must not change the bearing seat or
+  -- produce a phantom driver collision with an object behind that seat.
+  let recessed = "main = box 20 20 4 |> frame head ctr top bak -4 -4 0\n"
+  writeParts host recessed
+  recess <- run src
+  assertT t "framed joint: recessed head uses its seat, not the outside box"
+    (either (const False) (\ps -> case psFasteners ps of [f] -> near (fsHeadPosition f) (-4,-4,7) && abs(fsThreadReach f-7) < 1e-7; _ -> False) recess) (either id show recess)
+  writeParts host clamp
+  let invalid =
+        [ ("missing head seat", "fastener M4x16 lid block @hole nut=hex pocket=@nut\n", "needs seat=@frame")
+        , ("unknown hole", "fastener M4x16 lid block @missing seat=@head nut=hex pocket=@nut\n", "unknown frame '@missing'")
+        , ("missing nut seat", "fastener M4x16 lid block @hole seat=@head nut=hex\n", "needs pocket=@frame")
+        , ("mixed offset conventions", "fastener M4x16 lid block @hole seat=@head at=4 nut=hex pocket=@nut\n", "omit ×count/at=")
+        , ("group at one hole", "fastener M4x16 lid block @hole ×2 seat=@head nut=hex pocket=@nut\n", "locates one fastener")
+        , ("mixed grip conventions", "fastener M4x16 lid block @hole seat=@head through=4 nut=hex pocket=@nut\n", "omit inset=/through=")
+        , ("frame option with old face", "fastener M4x16 lid block top seat=@head nut=hex pocket=@nut\n", "requires a host @frame")
+        , ("frame peg", "fastener peg lid block @hole seat=@head\n", "currently describe screws")
+        ]
+      base = unlines (take 3 (lines src))
+  forM_ invalid $ \(name,line,msg) -> do
+    r <- run (base ++ line)
+    expectErr t ("framed joint: " ++ name) r [msg] []
+  forM_ [ ("misaligned head", "main = box 20 20 4 |> frame head top top bak -3 -4 0\n", "must be coaxial")
+        , ("reversed head", "main = box 20 20 4 |> frame head top bot bak -4 -4 0\n", "matching outward normals")
+        , ("head outside solid", "main = box 20 20 4 |> frame head top top bak 40 0 0\n", "outside part")
+        , ("point instead of frame", "main = box 20 20 4 |> datum head top -4 -4 0\n", "point datum")
+        , ("ambiguous frame", "main = (box 20 20 4 |> frame head top top bak -4 -4 0) ⊕ (box 20 20 4 |> frame head top top bak 4 4 0)\n", "ambiguous frame")
+        ] $ \(name,c,msg) -> do
+    writeParts host c
+    r <- run src
+    expectErr t ("framed joint: " ++ name) r [msg] []
+  writeParts "main = box 20 20 10 |> frame hole top top bak -4 -4 0 |> frame nut bot top bak -4 -4 3\n" clamp
+  wrongNut <- run src
+  expectErr t "framed joint: nut bearing normal must oppose the head" wrongNut ["opposing outward normals"] []
+  writeParts host clamp
+  short <- run (base ++ "fastener M4x12 lid block @hole seat=@head nut=hex pocket=@nut\n")
+  assertT t "framed joint: short screw checks actual distance to the nut seat"
+    (either (const False) (any ("only 1 mm" `isInfixOf`) . psDesignErrors) short) (either id show short)
+  duplicate <- run (src ++ joint)
+  assertT t "framed joint: duplicate hole is a hardware collision"
+    (either (const False) (any ("collide" `isInfixOf`) . psDesignErrors) duplicate) (either id show duplicate)
+  -- A driver obstruction must remain an error, even though a frame can
+  -- locate a recessed seat independently of the clamped part's outside box.
+  writeFile (dir </> "obstacle.coscad") "main = box 2 2 30 |> move -4 -4 10\n"
+  blocked <- run ("block ← block.coscad ×1 preload=hand\nlid ← lid.coscad ×1 after=obstacle\nobstacle ← obstacle.coscad ×1\nasm = block ⊕ (lid |> move 0 0 7) ⊕ obstacle\n" ++ joint)
+  expectErr t "framed joint: another part can block the actual driver path" blocked ["blocked by obstacle"] []
+  originalCorner <- readFile "examples/assemble/corner.assemble"
+  forM_ ["rail200.coscad","rail120.coscad","inner90.coscad","bracket90.coscad"] $ \file -> copyFile ("examples/assemble" </> file) (dir </> file)
+  let wrongCorner = unlines [if "mate bracket1 @other_bore railH" `isPrefixOf` line
+                             then "mate bracket1 @outer_bore_railH railH @outer_bore_bracket1 roll=180"
+                             else line | line <- lines originalCorner]
+  badRotation <- run wrongCorner
+  expectErr t "corner: closing both bracket bores rejects its original wrong rotation" badRotation ["conflicting assembly constraints"] []
+  bow <- planSummary "examples/assemble/bow3/bow3.assemble"
+  case bow of
+    Left e -> failT t "bow frame hardware" e
+    Right ps -> do
+      checkInvariants t "bow hardware" ps
+      assertT t "bow: four distinct holes, recessed heads, 4 mm nut reach"
+        (sort (map fsPosition (psFasteners ps)) == sort [(x,y,0) | x <- [-42,42], y <- [-8,8]] && all (\f -> abs(fsThreadReach f-4) < 1e-7) (psFasteners ps) && null(psDesignErrors ps)) (show ps)
+  corner <- planSummary "examples/assemble/corner.assemble"
+  case corner of
+    Left e -> failT t "corner frame hardware" e
+    Right ps -> do
+      checkInvariants t "corner hardware" ps
+      assertT t "corner: all six screws planned, clear of each other"
+        (psFastenerCount ps == 6 && sum(map(length . ssFasteners)(psSteps ps)) == 6 && null(psDesignErrors ps)) (show ps)
 
 -- nut-first, host-and-clamp-before-screw, every part exactly once
 checkInvariants :: T -> String -> PlanSummary -> IO ()
@@ -1219,6 +1335,7 @@ main = do
   migrationTier t
   examples t update
   planTier t
+  framedFastenerTier t
   render <- lookupEnv "COSCAD_RENDER"
   bin <- findOpenscad
   case (render, bin) of

@@ -1,8 +1,8 @@
 // Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
 !glyph
 plate 220 220 6
-railH ← rail200.coscad ×0
-railV ← rail120.coscad ×0
+railH ← rail200.coscad ×0 profile=2020 material=aluminium preload=hand
+railV ← rail120.coscad ×0 profile=2020 material=aluminium preload=hand
 inner ← inner90.coscad ×1 ▽bak
 bracket1 ← bracket90.coscad ×1 ▽top seam=rear material=petg
 bracket2 ← bracket90.coscad ×1 ▽top seam=rear material=petg
@@ -11,5 +11,15 @@ fixed railH 100 0 -10 0 0 0
 mate railV @rail_end_railH railH @rail_end_railV
 mate inner @foot_railH railH @foot_inner
 mate inner @side_railV railV @side_inner
-mate bracket1 @outer_bore_railH railH @outer_bore_bracket1 roll=180
+mate bracket1 @other_bore railH @outer_bore_bracket1
+mate bracket1 @outer_bore_railH railV @outer_bracket1
 mate bracket2 @outer_bore_railH railH @outer_bore_bracket2
+mate bracket2 @other_bore railV @outer_bracket2
+
+// Explicit hardware, using the same local interfaces as the constraints.
+fastener M5x10 inner railH @foot_inner seat=@head_foot head=socket
+fastener M5x10 inner railV @side_inner seat=@head_side head=socket
+fastener M5x10 bracket1 railH @outer_bore_bracket1 seat=@head_other head=socket
+fastener M5x10 bracket1 railV @outer_bracket1 seat=@head_outer head=socket
+fastener M5x10 bracket2 railH @outer_bore_bracket2 seat=@head_outer head=socket
+fastener M5x10 bracket2 railV @outer_bracket2 seat=@head_other head=socket

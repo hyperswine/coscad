@@ -397,6 +397,30 @@ line takes
 .Ql rest=faces ,
 and the cost weights
 .Ql flip vertical driver shrink sibling loose .
+.Pp
+For a screw located by model frames, replace the host face with
+.Ql @hole
+and use
+.Ql seat=@head_seat
+on the clamped part. The hole and head frames must be coaxial, with
+matching outward normals. With
+.Ql nut=hex ,
+.Ql pocket=@nut_seat
+names the host nut bearing seat (or
+.Ql pocket=clamped.@nut_seat
+for a seat in the clamped part), with its normal opposing the head.
+Thread reach is computed from the distance between bearing seats.
+Frame-based joints take one screw per declaration, without
+.Ql at= ,
+.Ql through= ,
+or
+.Ql inset= .
+.Pp
+The part hint
+.Ql preload=hand
+loads nuts into the independent part before placing it. The default
+.Ql preload=placed
+loads nuts after placement and checks access against the bench and other parts.
 .Sh EXIT STATUS
 .Ex -std
 .Cm check

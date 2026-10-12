@@ -11,6 +11,7 @@ tmp=$(mktemp -d "${out%/}.tmp.XXXX")
 trap 'rm -rf "$tmp"' EXIT
 cd "$repo"
 commit=$(git rev-parse --short HEAD 2>/dev/null || echo dev)
+if ! git diff --quiet || ! git diff --cached --quiet; then commit="$commit-dirty"; fi
 stamp=$(date -u +"%Y-%m-%d %H:%MZ")
 
 pages=(README:Overview docs/ORBIT-TOWER:Orbit-Tower-notes docs/LANGEXTENSION:Language docs/TOPOLOGICAL:Topological docs/MANUFACTURING:Manufacturing docs/PLAN:Build-plans docs/LESSONS:Lessons docs/SYNTAX:Syntax-modes docs/EXAMPLES:Examples CHANGELOG:Changelog)
@@ -41,11 +42,13 @@ rm -f "$tmp/man.body" "$tmp/nav.html" "$tmp/foot.html"
 # build plans with renders, from a scratch copy of the example assemblies
 work=$(mktemp -d)
 cp -R examples/assemble/plan "$work/plan"; cp -R examples/assemble/bow3 "$work/bow3"; cp -R examples/assemble/ball "$work/ball"; cp -R examples/assemble/tesseract "$work/tesseract"
+mkdir -p "$work/corner"
+cp examples/assemble/*.coscad examples/assemble/corner.assemble "$work/corner/"
 mkdir -p "$work/orbit-tower"
 cp models/orbit-tower/*.coscad models/orbit-tower/orbit-tower.assemble "$work/orbit-tower/"
 # Never let a failed render silently reuse a checked-in preview.
 find "$work" -name '*.png' -delete
-coscad site "$tmp/builds" "$work/plan/corner_pair.assemble" "$work/plan/cube.assemble" "$work/bow3/bow3.assemble" "$work/ball/ball.assemble" "$work/tesseract/tesseract.assemble" "$work/orbit-tower/orbit-tower.assemble"
+coscad site "$tmp/builds" "$work/plan/corner_pair.assemble" "$work/corner/corner.assemble" "$work/plan/cube.assemble" "$work/bow3/bow3.assemble" "$work/ball/ball.assemble" "$work/tesseract/tesseract.assemble" "$work/orbit-tower/orbit-tower.assemble"
 rm -rf "$work"
 python3 scripts/finish-manual.py "$tmp"
 echo "{\"commit\": \"$commit\", \"built\": \"$stamp\"}" > "$tmp/version.json"

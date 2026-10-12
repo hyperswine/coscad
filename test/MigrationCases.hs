@@ -4,7 +4,7 @@ module MigrationCases (migrationCases) where
 migrationCases :: [(FilePath, FilePath, Double, [(String,String)])]
 migrationCases =
   [ ("examples/assemble/autotest.assemble","test/fixtures/assemblies/examples/assemble/autotest.assemble",1e-06,[("flatbr","flatbr"),("innerbr","innerbr"),("seambr","seambr")])
-  , ("examples/assemble/corner.assemble","test/fixtures/assemblies/examples/assemble/corner.assemble",1e-06,[("railH","railH"),("railV","railV"),("inner","inner"),("bracket#1","bracket1"),("bracket#2","bracket2")])
+  , ("examples/assemble/corner.assemble","test/fixtures/assemblies/examples/assemble/corner-repaired.assemble",1e-06,[("railH","railH"),("railV","railV"),("inner","inner"),("bracket#1","bracket1"),("bracket#2","bracket2")])
   , ("examples/assemble/frame.assemble","test/fixtures/assemblies/examples/assemble/frame.assemble",1e-06,[("corner#1","corner1"),("corner#2","corner2")])
   , ("examples/assemble/spill.assemble","test/fixtures/assemblies/examples/assemble/spill.assemble",1e-06,[("br","br")])
   , ("examples/assemble/plan/corner_pair.assemble","test/fixtures/assemblies/examples/assemble/plan/corner_pair.assemble",1e-06,[("railA","railA"),("railB","railB"),("br1","br1")])

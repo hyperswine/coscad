@@ -14,3 +14,8 @@ hub    = ζ 2.5 (⌭ 9 5 0.5)
 main   = arm ⊕ ω 90 arm ⊕ hub
 // Oriented joint interfaces; construction metadata does not add material.
   |> frame outer_bore_railH ctr bot bak 9.5 -12.5 -1.75
+// The two bores have different in-plane up axes so either leg can be
+// selected without mirroring the solid. Heads bear on the 5 mm plates.
+  |> frame other_bore ctr bot rt -12.5 9.5 -1.75
+  |> frame head_outer @outer_bore_railH top bak 0 0 5
+  |> frame head_other @other_bore top rt 0 0 5

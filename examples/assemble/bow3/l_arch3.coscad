@@ -12,6 +12,9 @@
 // cord can be threaded and knotted instead of looped. The cord runs along
 // the belly, over the top of the hook, and round the girth in the groove. Through-bolted: 2x M4 clearance holes in the flange tab (heads
 // counterbored on top; nuts live in hex pockets under the center piece).
+counterbore_center = 5.8
+counterbore_depth = 3
+head_seat_z = counterbore_center - counterbore_depth / 2
 limb2d = ✎ 0 0 70 2 140 16 185 40 202 51 212 66 206 80 205 82.3 201.5 88 198.5 87.5 195 87 191.8 83.5 192.5 79.5 193.2 77.5 197 76.5 199.5 74.5 204 66.9 195.8 57.5 179.8 49.1 135.3 30.2 67.5 23.9 0 26
 stalk  = (limb2d |> extrude 14) ∩ (box 400 400 20 |> move -200 0 0 |> rotz 60 |> move 203.5 60 7)
 hook   = (tube 10.31 3 14 ∩ (box 40 40 20 |> move 0 20 0 |> rotz 20) ∩ (box 40 40 20 |> move 0 20 0 |> rotz -30)) |> move 207.03 57.96 7
@@ -21,8 +24,10 @@ main = (stalk ⊕ hook ⊖ nock ⊖ hole)
   |> at lft+fwd 0 27 3.5 (box 26 28 7)
   |> cutat lft+fwd 13 6 0 (zcyl 2.15 20)
   |> cutat lft+fwd 13 22 0 (zcyl 2.15 20)
-  |> cutat lft+fwd 13 6 5.8 (zcyl 3.8 3)
-  |> cutat lft+fwd 13 22 5.8 (zcyl 3.8 3)
+  |> cutat lft+fwd 13 6 counterbore_center (zcyl 3.8 counterbore_depth)
+  |> cutat lft+fwd 13 22 counterbore_center (zcyl 3.8 counterbore_depth)
 // Oriented joint interfaces; construction metadata does not add material.
   |> frame root_bore_m8_center ctr bot bak -108.67 -38.2654513889 0
   |> frame root_bore_8_center ctr bot bak -108.67 -22.2654513889 0
+  |> frame head_m8 @root_bore_m8_center top bak 0 0 head_seat_z
+  |> frame head_8 @root_bore_8_center top bak 0 0 head_seat_z

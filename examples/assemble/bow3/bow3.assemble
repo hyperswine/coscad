@@ -1,6 +1,6 @@
 // Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
 plate 256 256 4
-center ← center3.coscad ×1
+center ← center3.coscad ×1 preload=hand
 larch ← l_arch3.coscad ×1
 rarch ← r_arch3.coscad ×1
 
@@ -9,3 +9,10 @@ mate larch @root_bore_m8_center center @root_bore_m8_larch
 mate larch @root_bore_8_center center @root_bore_8_larch
 mate rarch @root_bore_m8_center center @root_bore_m8_rarch
 mate rarch @root_bore_8_center center @root_bore_8_rarch
+
+// Head seat 4.3, nut bearing seat -3.7: 8 mm grip, 4 mm reach with M4x12.
+// Nuts are preloaded from the underside before the planner seats the arms.
+fastener M4x12 larch center @root_bore_m8_larch seat=@head_m8 head=socket nut=hex pocket=@nut_larch_m8
+fastener M4x12 larch center @root_bore_8_larch seat=@head_8 head=socket nut=hex pocket=@nut_larch_8
+fastener M4x12 rarch center @root_bore_m8_rarch seat=@head_m8 head=socket nut=hex pocket=@nut_rarch_m8
+fastener M4x12 rarch center @root_bore_8_rarch seat=@head_8 head=socket nut=hex pocket=@nut_rarch_8

@@ -123,6 +123,55 @@ constraint-based assembly: both holes of each of its 16 brackets are mated
 to rail interfaces, and its six panel bores match explicit screw distances.
 See the [geometry and hardware verification](reviews/2026-10-12-cube-constraints.md).
 
+## Frame-based screws and bearing seats
+
+Use a named host frame instead of a world face when the joint has an
+explicit bore. Each line describes one physical screw:
+
+```coscad
+fastener M4x12 arm center @root_hole seat=@head_seat head=socket nut=hex pocket=@nut_seat
+```
+
+The host frame origin is the hole's interface point; its outward +Z axis
+points toward the screw head. `seat=@head_seat` selects a frame on the
+clamped part at the underside of the head, including any counterbore.
+Its normal points in the same direction. `pocket=@nut_seat` selects the
+nut's bearing seat on the host, with its normal pointing away from the
+head. `pocket=clamped.@nut_seat` selects a seat on the clamped part instead.
+These are bearing surfaces, not the centres of the screw head or nut.
+
+The solved part poses carry every point and direction into world coordinates.
+The planner checks that the frames are coaxial, their normals agree, and
+seats lie within their parts' bounds. Screw reach is the screw length minus
+the distance between the head and nut bearing seats. For a T-nut or threaded
+host, it measures from the head seat to the host interface. Existing
+minimum-reach checks still apply. Frame-based rail holes must lie on the
+2020 slot centre and outer face. `at=`, `×count`, `through=` and `inset=`
+cannot be combined with a host frame; they would provide a second source
+of placement or seating information. Pegs retain their face/inset syntax.
+
+`preload=hand` on a part prepares its nuts while it is independent, before
+placing that part. This is useful for opposing rail slots or underside
+pockets: turn the loose part to reach them and retain the nuts during
+placement. The default `preload=placed` keeps the existing access checks
+against the bench and previously placed parts. This hint declares a
+preparation operation, not a fixed assembly order.
+
+The generated JSON includes `axis`, `head_position_mm`, `thread_reach_mm`,
+and, for a framed nut pocket, `nut_seat_mm`, alongside `position_mm`.
+Step renders and driver-clearance checks start at the same head seat.
+No model names, coordinates, screw counts or assembly sequences are built
+into the planner. Bore and seat frames and hardware specifications are
+explicit design metadata; the planner does not infer threads or discover
+holes from arbitrary boolean geometry. Bounds checks are not proof that
+a bore is empty or that a real tool fits: verify the part geometry too.
+
+Worked examples: the [repaired rail corner](../examples/assemble/corner.assemble)
+uses two closed mounting interfaces per outer bracket and six M5 screws;
+the [elastic-cord toy bow](../examples/assemble/bow3/bow3.assemble) uses four
+M4x12 screws, four captive nuts and recessed head seats. The bow's 8 mm
+bearing-seat distance leaves 4 mm of screw past the nut bearing face.
+
 ## What it checks
 
 Design errors (reported, and the run exits 1):

@@ -14,18 +14,15 @@
 foot   = χ 16 (ζ 2.5 (▣ 32 20 5 0.5))
 vplate = χ 2.5 (ζ 16 (▣ 5 20 32 0.5))
 web    = χ 17.5 (ζ 17.5 (ω -90 (⊿ 20 25 25)))
-
 // nut-capture spikes: two on the foot underside (slot along X),
 // two on the vertical plate back (slot along Z, so spin them ϕ 90)
 spkA = χ 13.3 (ζ -0.6 (⏢ 2.2 5.4 3 5.8 1.8))
 spkB = χ 26.7 (ζ -0.6 (⏢ 2.2 5.4 3 5.8 1.8))
 spkC = χ -0.6 (ζ 13.3 (ϕ 90 (⏢ 2.2 5.4 3 5.8 1.8)))
 spkD = χ -0.6 (ζ 26.7 (ϕ 90 (⏢ 2.2 5.4 3 5.8 1.8)))
-
 // M5 clearance holes at slot centerlines, 20mm from the corner
 holeF = χ 20 (ζ 2.5 (zcyl 2.75 12))
 holeV = χ 2.5 (ζ 20 (xcyl 2.75 12))
-
 // d10 driver/head access bores through the web (head seats at
 // the plate surface, recessed 0.1 to avoid coplanar-face issues)
 boreF = χ 20 (ζ 15.9 (zcyl 5 22))
@@ -38,3 +35,6 @@ main  = solid ⊖ holeF ⊖ holeV ⊖ boreF ⊖ boreV ⊖ relief
 // Oriented joint interfaces; construction metadata does not add material.
   |> frame foot_railH ctr bot bak 4.75 0 -15.25
   |> frame side_railV ctr lft top -15.25 0 4.75
+// Access bores start at 4.9 mm, just below the nominal 5 mm plate top.
+  |> frame head_foot @foot_railH top bak 0 0 4.9
+  |> frame head_side @side_railV rt top 4.9 0 0

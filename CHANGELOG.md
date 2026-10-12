@@ -8,6 +8,17 @@ and this project adheres to the
 
 ## Unreleased
 
+- Planner: locate screws with host `@frame`, clamped `seat=@frame` and hex
+  nut `pocket=@frame` bearing seats. Derive transformed axes, head positions,
+  thread reach and access from those declarations. Add `preload=hand` for
+  independent nut preparation, and validate hardware without artifacts via
+  `coscad validate`. Keep existing face/distance declarations supported.
+- Examples: repair the old corner's reversed outer bracket, constrain both
+  bores of each outer bracket, and describe all six M5 screws. Complete the
+  toy bow's hardware metadata with four M4x12 screws and captive nuts.
+  Generate both instruction guides from the planner; include the repaired
+  corner in the manual site build.
+
 - Examples: migrate fourteen remaining assembly and packing examples to
   `fixed` / `mate` authoring, with independent coordinate fixtures and
   per-instance orientation probes. Preserve print quantities and instruction

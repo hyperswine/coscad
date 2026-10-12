@@ -13,7 +13,7 @@ import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Parser
 import Coscad.Shape
 import Coscad.Validate (finite, readFinite, suggestion, maxQuantity)
-import Data.Char (isAlphaNum, isSpace, toLower)
+import Data.Char (isAlphaNum, isLetter, isSpace, toLower)
 import Data.List (foldl', intercalate, sortBy)
 import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
@@ -143,7 +143,8 @@ fastenerStmt = do
     spec <- word <?> "screw specification (M5x8 or peg)"
     clamped <- word <?> "clamped part instance"
     host <- word <?> "host part instance"
-    face <- word <?> "host face (top bot lft rt fwd bak)"
+    face <- word <?> "host face (top bot lft rt fwd bak) or @frame"
+    when (take 1 face == "@") $ either fail return (validFrameOption face)
     opts <- options "fastener" $ \opt -> case opt of
       OHint h -> validateFastenerHint h
       OCount n | n < 1 -> Left "fastener count must be at least 1; remove the declaration to omit the joint"
@@ -244,6 +245,7 @@ validatePartHint :: (String, String) -> Either String ()
 validatePartHint (key, raw) = case key of
   "material" -> enum "material" ["printed", "pla", "petg", "abs", "asa", "tpu", "nylon", "pc", "aluminium", "aluminum", "steel"] raw
   "profile" -> enum "profile" ["2020"] raw
+  "preload" -> enum "preload mode" ["hand", "placed"] raw
   "ends" -> if length (splitComma raw) == 2
     then mapM_ (enum "rail end" ["open", "blocked"]) (splitComma raw)
     else Left "ends= expects two values: open,blocked (min end, max end)"
@@ -255,6 +257,7 @@ validateFastenerHint :: (String, String) -> Either String ()
 validateFastenerHint (key, raw) = case key of
   "nut" -> enum "nut kind" ["dropin", "drop-in", "slidein", "slide-in", "hex", "captive", "none"] raw
   "head" -> enum "head" ["button", "socket"] raw
+  "seat" -> validFrameOption raw
   "at" -> mapM_ (numberHint key "distance in mm" (>= 0) "non-negative") (splitComma raw)
   "through" -> numberHint key "thickness in mm" (>= 0) "non-negative" raw
   "torque" -> numberHint key "torque in Nm" (> 0) "greater than zero" raw
@@ -262,8 +265,13 @@ validateFastenerHint (key, raw) = case key of
     Nothing -> Left "inset= needs a distance in mm (finite and non-negative)"
     Just n | n < 0 -> Left "inset= must lie within the host (a non-negative distance in mm)"
     Just _ -> Right ()
-  "pocket" -> validFace (case break (== '.') raw of ("host", '.' : f) -> f; ("clamped", '.' : f) -> f; _ -> raw)
-  _ -> Left ("unknown fastener option '" ++ key ++ "'" ++ suggestion ["at", "nut", "head", "through", "torque", "pocket", "inset"] key ++ "; choose at, nut, head, through, torque, pocket, or inset")
+  "pocket" -> let ref = case break (== '.') raw of ("host", '.' : f) -> f; ("clamped", '.' : f) -> f; _ -> raw
+              in if take 1 ref == "@" then validFrameOption ref else validFace ref
+  _ -> Left ("unknown fastener option '" ++ key ++ "'" ++ suggestion ["at", "nut", "head", "seat", "through", "torque", "pocket", "inset"] key ++ "; choose at, nut, head, seat, through, torque, pocket, or inset")
+
+validFrameOption :: String -> Either String ()
+validFrameOption ('@':c:n) | isLetter c, all (\x -> isAlphaNum x || x == '_') n = Right ()
+validFrameOption raw = Left ("expected a named frame @name, got '" ++ raw ++ "'")
 
 numberHint :: String -> String -> (Double -> Bool) -> String -> String -> Either String ()
 numberHint key units valid range raw = case readFinite raw of

@@ -4,3 +4,5 @@ main = box 20 20 120
 // Oriented joint interfaces; construction metadata does not add material.
   |> frame rail_end_railH ctr rt top 10 0 -60
   |> frame side_inner ctr rt top 10 0 -40
+  |> frame outer_bracket1 ctr bak rt 0 10 -48
+  |> frame outer_bracket2 ctr fwd rt 0 -10 -48

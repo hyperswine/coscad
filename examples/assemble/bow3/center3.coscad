@@ -6,23 +6,32 @@
 pocket_width = 28.5
 cheek = 3.75
 body_width = pocket_width + 2 * cheek
+body_height = 14
+nut_pocket_depth = 3.4
+nut_pocket_center = 1.6
+nut_seat_z = -body_height / 2 + nut_pocket_center + nut_pocket_depth / 2
 // Rounded 40 x 14 mm grip recess, 1.2 mm deep in the broad +Z face.
 // Kept between the arm pockets, clear of every bolt and nut seat.
 recess = (zcyl 7 2.2 |> move -13 0 6.9) ⇓ (zcyl 7 2.2 |> move 13 0 6.9)
-main = box 110 body_width 14
+main = box 110 body_width body_height
   |> cutat rt -13 0 3.9 (box 27.5 pocket_width 8.2)
   |> cutat lft 13 0 3.9 (box 27.5 pocket_width 8.2)
   |> cutat rt -13 8 0 (zcyl 2.15 20)
   |> cutat rt -13 -8 0 (zcyl 2.15 20)
   |> cutat lft 13 8 0 (zcyl 2.15 20)
   |> cutat lft 13 -8 0 (zcyl 2.15 20)
-  |> cutat bot 42 8 1.6 (⎏ 6 4.25 3.4)
-  |> cutat bot 42 -8 1.6 (⎏ 6 4.25 3.4)
-  |> cutat bot -42 8 1.6 (⎏ 6 4.25 3.4)
-  |> cutat bot -42 -8 1.6 (⎏ 6 4.25 3.4)
+  |> cutat bot 42 8 nut_pocket_center (⎏ 6 4.25 nut_pocket_depth)
+  |> cutat bot 42 -8 nut_pocket_center (⎏ 6 4.25 nut_pocket_depth)
+  |> cutat bot -42 8 nut_pocket_center (⎏ 6 4.25 nut_pocket_depth)
+  |> cutat bot -42 -8 nut_pocket_center (⎏ 6 4.25 nut_pocket_depth)
   |> cut recess
 // Oriented joint interfaces; construction metadata does not add material.
   |> frame root_bore_m8_larch ctr top bak 42 -8 0
   |> frame root_bore_8_larch ctr top bak 42 8 0
   |> frame root_bore_m8_rarch ctr top bak -42 -8 0
   |> frame root_bore_8_rarch ctr top bak -42 8 0
+// The nut bearing faces, not the outside of the centre's bounding box.
+  |> frame nut_larch_m8 @root_bore_m8_larch bot bak 0 0 nut_seat_z
+  |> frame nut_larch_8 @root_bore_8_larch bot bak 0 0 nut_seat_z
+  |> frame nut_rarch_m8 @root_bore_m8_rarch bot bak 0 0 nut_seat_z
+  |> frame nut_rarch_8 @root_bore_8_rarch bot bak 0 0 nut_seat_z
