@@ -44,9 +44,11 @@ dimOf s = case s of
   Mirror _ x -> dimOf x
   Translate _ x -> dimOf x
   RotAxis _ _ x -> dimOf x
+  Transform3 _ _ x -> solid "mate" x
   Anchor _ x -> dimOf x
   Tag _ x -> dimOf x
   Datum _ _ x -> dimOf x
+  Frame _ _ _ x -> solid "frame" x
   Position _ _ a b -> same "position (⌖ / at)" [a, b]
   AttachTo _ _ a b -> same "attach (⋈ / on)" [a, b]
   CutAt _ _ a b -> same "cutat" [a, b]
@@ -57,6 +59,9 @@ dimOf s = case s of
   Minkowski xs -> same "minkowski" xs
   _ -> Right D3
   where
+    solid op x = do
+      d <- dimOf x
+      if d == D3 then Right D3 else Left (op ++ " needs a 3D solid; extrude a 2D profile first")
     same op xs = do
       ds <- mapM dimOf xs
       let concrete = filter (/= DAny) ds

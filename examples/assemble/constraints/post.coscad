@@ -1,0 +1,2 @@
+// A rectangular post makes a quarter-turn of roll visible.
+main = box 6 10 20 |> frame foot bot bot bak |> frame tip top top bak

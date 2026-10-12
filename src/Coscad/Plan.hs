@@ -18,7 +18,6 @@ import Coscad.Codegen (gen, renderScad, showD, usesBosl2)
 import Coscad.Geometry
 import Coscad.IO (writeFileUtf8)
 import Coscad.OpenScad (runOpenscadRaw)
-import Coscad.Parser (resolveVariables)
 import Coscad.Validate (finite, readFinite, maxQuantity)
 import Coscad.Shape
 import Data.Char (isDigit, toLower)
@@ -67,6 +66,7 @@ instancesOf = go (identity, (0, 0, 0))
     go aff s = case s of
       Tag n x -> [(n, aff, x)]
       Datum _ _ x -> go aff x
+      Frame _ _ _ x -> go aff x
       Tx d x -> go (affCompose aff (identity, (d, 0, 0))) x
       Ty d x -> go (affCompose aff (identity, (0, d, 0))) x
       Tz d x -> go (affCompose aff (identity, (0, 0, d))) x
@@ -75,6 +75,7 @@ instancesOf = go (identity, (0, 0, 0))
       Ry a x -> go (affCompose aff (rodMat a (0, 1, 0), (0, 0, 0))) x
       Rz a x -> go (affCompose aff (rodMat a (0, 0, 1), (0, 0, 0))) x
       RotAxis a v x -> go (affCompose aff (rodMat a v, (0, 0, 0))) x
+      Transform3 m t x -> go (affCompose aff (m,t)) x
       Scale v x -> go (affCompose aff (diag v, (0, 0, 0))) x
       Mirror n x -> go (affCompose aff (mirrorMat n, (0, 0, 0))) x
       Diff a b -> go aff a ++ go aff b
@@ -1017,7 +1018,7 @@ buildModel ar = do
   asmDef <- maybe (Left "plan needs an `asm = ...` definition (it gives every part its place)") Right (arAsm ar)
   let _ = asmDef
       table0 = Map.fromList [(n, Tag n s) | (n, s) <- arParts ar]
-  table <- resolveVariables (arMode ar) (arDefs ar) table0
+  table <- resolveAssembly ar table0
   asmS <- maybe (Left "no asm") Right (Map.lookup "asm" table)
   insts <- mkInstances ar asmS
   fasts <- mkFasteners insts (arFasteners ar)

@@ -1,0 +1,6 @@
+// Explicit face normal and up direction prevent ambiguous bracket rotation.
+base = box 20 20 4 |> frame deck top top bak |> frame side rt rt top
+arm = box 2 4 6 |> frame root bot bot bak
+upright = arm |> mate base @deck @root
+sideways = arm |> mate base @side @root
+main = base |> add upright |> add sideways

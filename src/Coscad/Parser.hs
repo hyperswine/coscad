@@ -6,7 +6,7 @@ module Coscad.Parser (module Coscad.Parser) where
 import Control.Monad (foldM, void, when)
 import Coscad.Codegen (loftErrors)
 import Coscad.Dim (Dim (..), dimOf)
-import Coscad.Geometry (PointRef (..), datumPoints, pointOf, vadd, vneg, vsub)
+import Coscad.Geometry (PointRef (..), MatingFrame (..), datumPoints, pointOf, vadd, vneg, vsub, makeFrame, frameOf, matingPose)
 import Coscad.Shape
 import Coscad.Validate (maxQuantity, maxSides, suggestion, validateShape)
 import Data.Char (isSpace)
@@ -354,6 +354,8 @@ pipeExpression ctx = do
 pipeStage :: Ctx -> Parser (Shape -> Either String Shape)
 pipeStage ctx = choice
   [ datumStage
+  , frameStage
+  , mateStage
   , placeStage
   , gridStage
   , anchorStage
@@ -388,7 +390,7 @@ pipeStage ctx = choice
           name <- identifier
           setOffset off *> fail ("unknown pipeline stage '" ++ name ++ "'" ++ suggestion stages name ++ "; use e.g. |> move x y z")
       ]
-    stages = ["x", "y", "z", "rotx", "roty", "rotz", "extrude", "move", "scale", "mirror", "anchor", "datum", "place", "grid", "loft", "at", "on", "cutat", "add", "cut", "isect", "hull", "mink"]
+    stages = ["x", "y", "z", "rotx", "roty", "rotz", "extrude", "move", "scale", "mirror", "anchor", "datum", "frame", "mate", "place", "grid", "loft", "at", "on", "cutat", "add", "cut", "isect", "hull", "mink"]
     anchorStage = do
       _ <- keyword "anchor"
       ref <- pointRef
@@ -404,6 +406,37 @@ pipeStage ctx = choice
         when (Map.member name (datumPoints p)) (Left ("duplicate datum '@" ++ name ++ "'; choose a new name"))
         pt <- pointOf ref p
         return (Datum name (vadd pt off) p)
+    frameStage = do
+      _ <- keyword "frame"
+      name <- identifier
+      ref <- pointRef
+      normal <- anchorVec <?> "frame outward normal (top bot rt lft fwd bak)"
+      up <- anchorVec <?> "frame in-plane up direction"
+      off <- pointOffsets "frame"
+      return $ \p -> do
+        requireSolid "frame" p
+        when (Map.member name (datumPoints p)) (Left ("duplicate datum or frame '@" ++ name ++ "'; choose a new name"))
+        pt <- pointOf ref p
+        MatingFrame origin basis <- makeFrame (vadd pt off) normal up
+        return (Frame name origin basis p)
+    mateStage = do
+      _ <- keyword "mate"
+      parent <- primaryExpression ctx
+      target <- frameRef
+      own <- frameRef
+      (roll, gap) <- ((0,0) <$ stageEnd) <|> ((,) <$> arg ctx "mate" "roll in degrees" <*> arg ctx "mate" "gap in mm (roll and gap are both required)")
+      return $ \child -> do
+        requireSolid "mate parent" parent
+        requireSolid "mate child" child
+        loftErrors parent
+        validateShape parent
+        pf <- frameOf target parent
+        cf <- frameOf own child
+        let (r,t) = matingPose pf cf roll gap
+        return (Transform3 r t child)
+    requireSolid context s = do
+      d <- dimOf s
+      when (d /= D3) (Left (context ++ " needs a 3D solid; extrude a 2D profile first"))
     -- Only the piped child is returned; the separate datum solid never enters
     -- the emitted CSG or assembly instance graph. Both points are explicit.
     placeStage = do
@@ -461,7 +494,8 @@ pipeStage ctx = choice
       vectorArgs w "third offset z (three offsets followed by a child shape are required)"
     -- These stages have no trailing child argument. Only a stage/expression
     -- boundary omits offsets; a misspelled numeric binding must stay an error.
-    pointOffsets w = ((0, 0, 0) <$ lookAhead (void (symbol "|>") <|> void (symbol ")") <|> eof))
+    stageEnd = lookAhead (void (symbol "|>") <|> void (symbol ")") <|> eof)
+    pointOffsets w = ((0, 0, 0) <$ stageEnd)
       <|> vectorArgs w "third offset z (three offsets are required)"
     vectorArgs w third = (,,) <$> arg ctx w "first offset x" <*> arg ctx w "second offset y" <*> arg ctx w third
     bin w f = do
@@ -530,6 +564,9 @@ anchorVec = do
 -- existing meanings in all syntax modes.
 pointRef :: Parser PointRef
 pointRef = (symbol "@" *> (NamedPoint <$> identifier)) <|> (BoxPoint <$> anchorVec)
+
+frameRef :: Parser String
+frameRef = symbol "@" *> identifier <?> "oriented frame reference (@name)"
 
 -- Parse attachment expressions: bind tighter than boolean ops.
 --   a ⌖ top b   -- position: b's bottom snapped to a's top (translate only)

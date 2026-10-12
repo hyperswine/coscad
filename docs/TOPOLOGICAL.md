@@ -83,6 +83,26 @@ whole group without repeating one member. The native egg-box pilot in
 `experiments/topological/native-egg-box.coscad` combines these operations;
 its N×M layout needs only numeric bindings, with no Python generation.
 
+## Oriented interfaces and constrained assemblies
+
+Save an interface's outward normal and in-plane up direction explicitly:
+`|> frame socket top top bak`. A child with
+`|> frame foot bot bot bak` can then use
+`|> mate parent @socket @foot`. Normals oppose and up directions agree;
+optional `roll gap` controls rotation about the parent normal and separation.
+The parent supplies the reference and is not included in the result.
+Unlike a point datum, an oriented frame fully specifies the rigid placement.
+
+In `.assemble`, declare separate aliases for each physical copy, fix a root,
+and connect the interfaces with `mate` statements. The solver creates the
+assembled view, handles edges in either direction, and diagnoses floating
+components and contradictory closed loops. The checker and planner reuse
+those same placements. Existing coordinate assemblies remain supported.
+See the [frame and constraint reference](LANGEXTENSION.md#oriented-mating-frames)
+and `examples/assemble/constraints/frame-stand.assemble`. This first increment
+supports rigid mates; it does not infer hardware, solve moving joints or
+establish interference-free fit without `coscad check`.
+
 ## Worked example
 
 `examples/topological/tbracket.coscad` rebuilds the project's seam

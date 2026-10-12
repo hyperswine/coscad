@@ -3,7 +3,7 @@ module Coscad.Validate (finite, readFinite, suggestion, maxQuantity, maxSides, v
 
 import Control.Monad (unless, when)
 import Coscad.Dim (Dim (D2), dimOf)
-import Coscad.Geometry (bbox)
+import Coscad.Geometry (bbox, rigidFrameBasis)
 import Coscad.Shape
 import Data.List (sortOn)
 
@@ -44,6 +44,7 @@ validateShape s = do
     nonneg name xs = unless (all (\v -> finite v && v >= 0) xs) (Left (name ++ " must be finite and non-negative"))
     nums name xs = unless (all finite xs) (Left (name ++ " must be finite"))
     vec (a, b, c) = [a, b, c]
+    rows (a, b, c) = [a, b, c]
     sides n = unless (n >= 3 && n <= maxSides) (Left ("profile/prism side count must be a whole number from 3 to " ++ show maxSides))
     edge name limit value = do
       nonneg name [value]
@@ -99,9 +100,15 @@ validateShape s = do
       Rz v x -> nums "rotation" [v] >> check x
       Translate v x -> nums "translation" (vec v) >> check x
       RotAxis a v x -> nums "rotation" (a : vec v) >> check x
+      Transform3 m t x -> do
+        nums "rigid transform" (concatMap vec (rows m) ++ vec t)
+        b <- rigidFrameBasis m
+        when (maximum (map abs (zipWith (-) (concatMap vec (rows m)) (concatMap vec (rows b)))) > 1e-8) (Left "mate transform must be rigid (unit axes, no scale)")
+        check x
       Anchor v x -> nums "anchor" (vec v) >> check x
       Tag _ x -> check x
       Datum _ p x -> nums "datum point" (vec p) >> check x
+      Frame _ p b x -> nums "frame" (vec p ++ concatMap vec (rows b)) >> rigidFrameBasis b >> check x
       Position v off a b -> nums "position" (vec v ++ vec off) >> check a >> check b
       AttachTo v off a b -> nums "attachment" (vec v ++ vec off) >> check a >> check b
       CutAt v off a b -> nums "cutat" (vec v ++ vec off) >> check a >> check b

@@ -23,7 +23,6 @@ import Coscad.Assemble
 import Coscad.Codegen
 import Coscad.Mesh (Tri, meshVolume, parseStlAscii)
 import Coscad.OpenScad (openscadStlArgs, renderStlFile, runOpenscadRaw)
-import Coscad.Parser
 import Coscad.Shape
 import Control.Monad (forM, forM_, unless, when)
 import Data.IORef
@@ -236,7 +235,7 @@ processCheckWith keepTemp path = do
         -- 1. isolate each part inside the asm expression
         bodiesPer <- forM (arParts ar) $ \(pn, ps) -> do
           let table0 = Map.fromList [(n, if n == pn then s else Hidden s) | (n, s) <- arParts ar]
-          case resolveVariables (arMode ar) (arDefs ar) table0 of
+          case resolveAssembly ar table0 of
             Left err -> hPutStrLn stderr ("Error isolating " ++ pn ++ ": " ++ err) >> exitFailure >> return (pn, [])
             Right table -> case Map.lookup "asm" table of
               Nothing -> return (pn, [])

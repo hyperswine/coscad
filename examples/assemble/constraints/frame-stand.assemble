@@ -1,0 +1,8 @@
+// Each alias is a physical instance, even when it uses the same part file.
+base ← base.coscad ×1
+left_post ← post.coscad ×1
+right_post ← post.coscad ×1
+
+fixed base
+mate left_post @foot base @left_mount
+mate right_post @foot base @right_mount roll=90

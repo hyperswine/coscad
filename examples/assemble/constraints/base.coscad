@@ -1,0 +1,4 @@
+// Capture two interfaces on the simple plate, before adding other features.
+main = box 40 30 4
+  |> frame left_mount top top bak -10 0 0
+  |> frame right_mount top top bak 10 0 0

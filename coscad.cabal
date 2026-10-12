@@ -28,6 +28,7 @@ library
       Coscad.Assemble
       Coscad.Check
       Coscad.Codegen
+      Coscad.Constraint
       Coscad.Dim
       Coscad.Doctor
       Coscad.Dsl

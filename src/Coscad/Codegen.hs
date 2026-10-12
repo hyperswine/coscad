@@ -98,6 +98,9 @@ gen (Translate (x, y, z) s) =
   "translate([" ++ showD x ++ ", " ++ showD y ++ ", " ++ showD z ++ "]) {\n" ++ indent (gen s) ++ "}"
 gen (RotAxis a (x, y, z) s) =
   "rotate(a = " ++ showD a ++ ", v = [" ++ showD x ++ ", " ++ showD y ++ ", " ++ showD z ++ "]) {\n" ++ indent (gen s) ++ "}"
+gen (Transform3 (a,b,c) (x,y,z) s) =
+  "multmatrix([" ++ intercalate ", " [row a x, row b y, row c z, "[0, 0, 0, 1]"] ++ "]) {\n" ++ indent (gen s) ++ "}"
+  where row (i,j,k) t = "[" ++ intercalate ", " (map showD [i,j,k,t]) ++ "]"
 -- attachment sugar should be resolved before codegen; desugar defensively
 gen s@(Anchor {}) = gen (resolve s)
 gen s@(Position {}) = gen (resolve s)
@@ -105,6 +108,7 @@ gen s@(AttachTo {}) = gen (resolve s)
 gen s@(CutAt {}) = gen (resolve s)
 gen (Tag _ s) = gen s
 gen (Datum _ _ s) = gen s
+gen (Frame _ _ _ s) = gen s
 gen (Extrude h s) =
   "linear_extrude(height = " ++ showD h ++ ") {\n" ++ indent (gen s) ++ "}"
 gen (Loft ps) =
@@ -208,9 +212,11 @@ loftErrors s = case s of
   Mirror _ x -> loftErrors x
   Translate _ x -> loftErrors x
   RotAxis _ _ x -> loftErrors x
+  Transform3 _ _ x -> loftErrors x
   Anchor _ x -> loftErrors x
   Tag _ x -> loftErrors x
   Datum _ _ x -> loftErrors x
+  Frame _ _ _ x -> loftErrors x
   Position _ _ a b -> loftErrors a >> loftErrors b
   AttachTo _ _ a b -> loftErrors a >> loftErrors b
   CutAt _ _ a b -> loftErrors a >> loftErrors b
@@ -245,9 +251,11 @@ usesBosl2 s = case s of
   Mirror _ x -> usesBosl2 x
   Translate _ x -> usesBosl2 x
   RotAxis _ _ x -> usesBosl2 x
+  Transform3 _ _ x -> usesBosl2 x
   Anchor _ x -> usesBosl2 x
   Tag _ x -> usesBosl2 x
   Datum _ _ x -> usesBosl2 x
+  Frame _ _ _ x -> usesBosl2 x
   Position _ _ a b -> usesBosl2 a || usesBosl2 b
   AttachTo _ _ a b -> usesBosl2 a || usesBosl2 b
   CutAt _ _ a b -> usesBosl2 a || usesBosl2 b

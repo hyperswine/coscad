@@ -20,10 +20,10 @@ module Main (main) where
 
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
-import Coscad.Assemble (AsmResult (..), loadAssembleFile, packBeds, processAssemble)
+import Coscad.Assemble (AsmResult (..), loadAssembleFile, packBeds, processAssemble, resolveAssembly)
 import Coscad.Check (processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
-import Coscad.Geometry (PointRef (..), bbox, pointOf, resolve)
+import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3)
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
 import Coscad.Next (processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadVersion, renderStlFile)
@@ -80,6 +80,105 @@ expectGen t name r frag = case r of
 
 -- ------------------------------------------------------------------
 -- build plans (coscad plan): pure, no OpenSCAD needed
+
+frameTier :: T -> IO ()
+frameTier t = do
+  section "oriented mating frames and rigid assembly constraints"
+  let p = parseProgramNamed "frames.coscad"
+      near (a,b,c) (x,y,z) = all (< 1e-8) [abs (a-x), abs (b-y), abs (c-z)]
+      bounds name src (lo,hi) = case p src of
+        Left e -> failT t name e
+        Right (_,s) -> let (a,b) = bbox s in assertT t name (near a lo && near b hi) (show (a,b))
+      dirs = [("top",(0,0,1)),("bot",(0,0,-1)),("rt",(1,0,0)),("lft",(-1,0,0)),("bak",(0,1,0)),("fwd",(0,-1,0))]
+      arm = "arm = box 2 4 6 |> frame root bot bot bak\n"
+  forM_ [(n,nv,u,uv) | (n,nv) <- dirs, (u,uv) <- dirs, dot3 nv uv == 0] $ \(n,nv,u,uv) -> do
+    let src = "ref = box 20 20 10 |> frame face ctr " ++ n ++ " " ++ u ++ "\n" ++ arm ++ "main = arm |> mate ref @face @root\n"
+    case p src >>= \(_,s) -> frameOf "root" s of
+      Left e -> failT t ("frame directions " ++ n ++ "/" ++ u) e
+      Right (MatingFrame origin basis) -> assertT t ("frame directions " ++ n ++ "/" ++ u)
+        (near origin (0,0,0) && near (mApply basis (0,0,1)) (vneg nv) && near (mApply basis (0,1,0)) uv) (show (origin,basis))
+  bounds "mate emits child only and preserves asymmetric side orientation"
+    ("ref = box 20 10 4 |> frame face rt rt top\n" ++ arm ++ "main = arm |> mate ref @face @root\n") ((10,-1,-2),(16,1,2))
+  bounds "roll is about the parent normal; gap moves outward"
+    ("ref = box 20 20 4 |> frame face top top bak\n" ++ arm ++ "main = arm |> mate ref @face @root 90 2\n") ((-2,-1,4),(2,1,10))
+  bounds "transformed parent frame retains its up direction"
+    ("ref = box 20 10 4 |> frame face top top bak |> roty 90 |> move 7 8 9\n" ++ arm ++ "main = arm |> mate ref @face @root\n") ((9,6,8),(15,10,10))
+  forM_ ["", "!glyph\n", "!simple\n"] $ \pragma -> bounds ("frames in syntax " ++ show pragma)
+    (pragma ++ "ref = box 20 20 4 |> frame face top top bak\n" ++ arm ++ "main = arm |> mate ref @face @root\n") ((-1,-2,2),(1,2,8))
+  case p "main = box 20 10 4 |> frame face top top bak |> scale 2 3 4 |> move 1 2 3\n" >>= \(_,s) -> frameOf "face" s of
+    Left e -> failT t "orthogonal scaled frame" e
+    Right (MatingFrame origin basis) -> assertT t "orthogonal scaled frame" (near origin (1,2,11) && near (mApply basis (0,0,1)) (0,0,1)) (show (origin,basis))
+  case p "main = box 2 2 2 |> frame f top top+rt bak\n" >>= \(_,s) -> frameOf "f" s of
+    Left e -> failT t "diagonal frame normal" e
+    Right (MatingFrame _ b) -> assertT t "diagonal frame normal" (near (mApply b (0,0,1)) (vnormed (1,0,1))) (show b)
+  bounds "frame origins can be used as point datums"
+    "main = box 2 4 6 |> frame f top top bak |> anchor @f\n" ((-1,-2,-6),(1,2,0))
+  bounds "frame survives unrelated growth and cuts"
+    ("base = box 20 20 4 |> frame f top top bak\nref = base |> at top (box 30 30 50) |> cut (sphere 1)\n" ++ arm ++ "main = arm |> mate ref @f @root\n") ((-1,-2,2),(1,2,8))
+  bounds "fresh frame after reflection can be mated"
+    ("ref = box 20 20 4 |> mirror 1 0 0 |> frame f top top bak\n" ++ arm ++ "main = arm |> mate ref @f @root\n") ((-1,-2,2),(1,2,8))
+  forM_ [(20,6),(40,12)] $ \(w,h) -> bounds ("mating survives parent/child resize " ++ show (w,h))
+    ("ref = box " ++ show w ++ " 10 4 |> frame f rt rt top\narm = box 2 4 " ++ show h ++ " |> frame root bot bot bak\nmain = arm |> mate ref @f @root 0 0.25\n") ((w/2+0.25,-1,-2),(w/2+0.25+h,1,2))
+  forM_ [ ("zero normal", "main = box 2 2 2 |> frame f top ctr bak\n", ["nonzero"])
+        , ("parallel up", "main = box 2 2 2 |> frame f top top bot\n", ["not be parallel"])
+        , ("2D frame", "main = ⭘ 2 |> frame f ctr top bak\n", ["3D solid"])
+        , ("duplicate namespace", "main = box 2 2 2 |> datum f ctr |> frame f top top bak\n", ["duplicate"])
+        , ("duplicate frame namespace", "main = box 2 2 2 |> frame f top top bak |> datum f ctr\n", ["duplicate"])
+        , ("point is not frame", "ref = box 2 2 2 |> datum f top\n" ++ arm ++ "main = arm |> mate ref @f @root\n", ["point datum", "oriented frame"])
+        , ("missing frame", "ref = box 2 2 2\n" ++ arm ++ "main = arm |> mate ref @f @root\n", ["unknown frame '@f'"])
+        , ("reflected frame", "ref = box 2 2 2 |> frame f top top bak |> mirror 1 0 0\n" ++ arm ++ "main = arm |> mate ref @f @root\n", ["reflected", "new frame"])
+        , ("skewed frame", "ref = box 2 2 2 |> frame f top top+rt bak |> scale 2 1 1\n" ++ arm ++ "main = arm |> mate ref @f @root\n", ["skewed"])
+        , ("ambiguous frame", "ref = box 2 2 2 |> frame f top top bak |> grid 2 1 4 0\n" ++ arm ++ "main = arm |> mate ref @f @root\n", ["ambiguous frame", "2 copies"])
+        , ("incomplete roll/gap", "ref = box 2 2 2 |> frame f top top bak\n" ++ arm ++ "main = arm |> mate ref @f @root 45\n", ["gap", "both required"])
+        , ("numeric typo", "main = box 2 2 2 |> frame f top top bak typo 0 0\n", ["undefined variable 'typo'"])
+        ] $ \(name,src,want) -> expectErr t name (p src) ("frames.coscad:" : want) ["circular dependency"]
+  dir <- tempDir "frame-constraints"
+  writeFile (dir </> "part.coscad") "main = box 2 4 6 |> frame foot bot bot bak |> frame head top top bak\n"
+  let file = dir </> "graph.assemble"
+      refs = "a ← part.coscad ×1\nb ← part.coscad ×1\nc ← part.coscad ×1\n"
+      joints = "mate b @foot a @head\nmate c @foot b @head\n"
+      load src = writeFile file src >> loadAssembleFile [] file
+      graphBounds name src want = do
+        r <- load src
+        case r >>= maybe (Left "missing asm") Right . arAsm of
+          Left e -> failT t name e
+          Right s -> let (lo,hi) = bbox s; (a,b) = want in assertT t name (near lo a && near hi b) (show (lo,hi))
+  graphBounds "forward graph propagation" (refs ++ "fixed a\n" ++ joints) ((-1,-2,-3),(1,2,15))
+  graphBounds "reverse graph propagation" (refs ++ "fixed c\n" ++ joints) ((-1,-2,-15),(1,2,3))
+  graphBounds "fixed root XYZ rotation and translation" (refs ++ "fixed a 10 20 30 0 90 0\n" ++ joints) ((7,18,29),(25,22,31))
+  graphBounds "consistent loop is accepted" (refs ++ "fixed a\n" ++ joints ++ "mate c @foot a @head gap=6\n") ((-1,-2,-3),(1,2,15))
+  graphBounds "consistent multiple fixed roots" (refs ++ "fixed a\nfixed c 0 0 12 0 0 0\n" ++ joints) ((-1,-2,-3),(1,2,15))
+  forM_ [ ("floating component", refs ++ "fixed a\nmate b @foot a @head\n", ["underconstrained", "c"])
+        , ("no fixed root", refs ++ joints, ["underconstrained", "fixed"])
+        , ("translation conflict", refs ++ "fixed a\n" ++ joints ++ "mate c @foot a @head gap=7\n", ["graph.assemble:", "conflicting assembly constraints", "position residual"])
+        , ("orientation conflict", refs ++ "fixed a\n" ++ joints ++ "mate c @foot a @head gap=6 roll=90\n", ["conflicting assembly constraints", "orientation residual"])
+        , ("fixed pose conflict", refs ++ "fixed a\nfixed c\n" ++ joints, ["conflicting assembly constraints"])
+        , ("unknown instance", refs ++ "fixed a\nmate typo @foot a @head\n", ["graph.assemble:5:1:", "unknown constrained instance 'typo'"])
+        , ("unknown frame on instance", refs ++ "fixed a\nmate b @bad a @head\n", ["graph.assemble:5:1:", "b @bad", "unknown frame"])
+        , ("self mating", refs ++ "fixed a\nmate a @foot a @head\n", ["two different part instances"])
+        , ("duplicate fixed", refs ++ "fixed a\nfixed a\n", ["graph.assemble:5:1:", "duplicate fixed"])
+        , ("manual asm conflict", refs ++ "fixed a\n" ++ joints ++ "asm = a\n", ["remove the manual asm"])
+        , ("multiplicity ambiguity", "a ← part.coscad ×2\nfixed a\n", ["distinct instance names", "×2"])
+        , ("incomplete fixed pose", refs ++ "fixed a 1 2 3\n", ["graph.assemble:4:", "six pose numbers"])
+        , ("bad mate option", refs ++ "mate b @foot a @head rol=90\n", ["graph.assemble:4:", "did you mean 'roll'"])
+        , ("duplicate mate option", refs ++ "mate b @foot a @head roll=0 roll=90\n", ["duplicate mate option 'roll'"])
+        , ("nonfinite mate option", refs ++ "mate b @foot a @head gap=NaN\n", ["expected a finite distance"])
+        , ("keyword cannot swallow next line", refs ++ "mate b @foot a\nfixed a\n", ["graph.assemble:4:", "oriented frame reference"])
+        ] $ \(name,src,want) -> load src >>= \r -> expectErr t name r want ["circular dependency"]
+  r <- load (refs ++ "fixed a\n" ++ joints)
+  case r of
+    Left e -> failT t "constraint substitutions" e
+    Right ar -> do
+      let substituted wrap = resolveAssembly ar (Map.fromList [(n,wrap n s) | (n,s) <- arParts ar]) >>= maybe (Left "no asm") Right . Map.lookup "asm"
+      assertT t "planner tags survive constraint resolution"
+        (either (const False) (\s -> all (`isInfixOf` show s) ["Tag \"a\"", "Tag \"b\"", "Tag \"c\""]) (substituted Tag)) "missing instance identity"
+      case substituted (\n s -> if n == "c" then s else Hidden s) of
+        Left e -> failT t "checker retains hidden mating frames" e
+        Right s -> let out = renderScad s in assertT t "checker retains hidden mating frames"
+          (length (filter (isPrefixOf "cuboid" . dropWhile (== ' ')) (lines out)) == 1 && "[0, 0, 1, 12]" `isInfixOf` out) out
+  planned <- planSummary "examples/assemble/constraints/frame-stand.assemble"
+  assertT t "constraint-generated assembly plans all three instances"
+    (either (const False) (\ps -> sort (psParts ps) == ["base", "left_post", "right_post"] && sum (map (length . ssParts) (psSteps ps)) == 3 && null (psDesignErrors ps)) planned) (either id show planned)
 
 topologyTier :: T -> IO ()
 topologyTier t = do
@@ -823,6 +922,36 @@ geometry t update bin = do
   assertT t "coscad check bow3: no overlaps" (either (const False) (const True) rc) (either show (const "") rc)
   leftovers <- filter ("chk" `isInfixOf`) <$> listDirectory bow
   assertT t "coscad check leaves no scratch files next to the assembly" (null leftovers) (show leftovers)
+  -- Geometry from explicit frames must equal independently placed reference
+  -- solids. A remote 1 mm3 marker makes an empty symmetric difference a
+  -- successful STL export, without treating OpenSCAD failures as emptiness.
+  cornerSrc <- readFile "examples/topological/mating-corner.coscad"
+  case parseProgramNamed "mating-corner.coscad" cornerSrc of
+    Left e -> failT t "oriented corner symmetric difference" e
+    Right (_,s) -> do
+      let reference = "union(){cube([20,20,4],center=true);translate([0,0,5]) cube([2,4,6],center=true);translate([13,0,0]) cube([6,2,4],center=true);}"
+          actual = gen s
+          symmetric = "include <BOSL2/std.scad>\nunion(){translate([-1000,-1000,-1000]) cube(1);difference(){" ++ actual ++ reference ++ "}difference(){" ++ reference ++ actual ++ "}}"
+      r <- renderMesh bin dir symmetric
+      assertT t "oriented corner symmetric difference is empty"
+        (either (const False) (\tris -> abs (meshVolume tris - 1) < 1e-8 && length (splitBodies tris) == 1) r) (either id (show . meshVolume) r)
+  framed <- tempDir "constraint-check"
+  forM_ ["base.coscad", "post.coscad", "frame-stand.assemble"] $ \f ->
+    copyFile ("examples/assemble/constraints" </> f) (framed </> f)
+  checked <- try (processCheckWith True (framed </> "frame-stand.assemble")) :: IO (Either SomeException ())
+  case checked of
+    Left e -> failT t "constraint check" (show e)
+    Right () -> do
+      tmp <- getTemporaryDirectory
+      forM_ [("left_post",(-13,-5,2),(-7,5,22)), ("right_post",(5,-3,2),(15,3,22))] $ \(n,wlo,whi) -> do
+        tris <- parseStlAscii <$> readFile (tmp </> "coscad-check/frame-stand" </> ("chk_" ++ n ++ ".stl"))
+        let bodies = filter (\body -> let ((x,_,_),_) = meshBounds body in x < 90000) (splitBodies tris)
+            (lo,hi) = meshBounds (concat bodies)
+            near (a,b,c) (x,y,z) = all (< 1e-6) [abs(a-x),abs(b-y),abs(c-z)]
+        assertT t ("constraint check isolates world pose of " ++ n) (length bodies == 1 && near lo wlo && near hi whi) (show (lo,hi))
+  writeFile (framed </> "collision.assemble") "base ← base.coscad ×1\nleft_post ← post.coscad ×1\nfixed base\nmate left_post @foot base @left_mount gap=-1\n"
+  collision <- try (processCheckWith False (framed </> "collision.assemble")) :: IO (Either ExitCode ())
+  assertT t "consistent constraints still expose actual interference" (collision == Left (ExitFailure 1)) (show collision)
   -- Hidden parts must retain their anchors during isolation, including
   -- chained attachments and transformed assemblies. Verify the rendered
   -- isolated child's actual bounds, not the bbox containing hidden parts.
@@ -908,6 +1037,7 @@ main = do
   diagnostics t
   remainingDiagnostics t
   topologyTier t
+  frameTier t
   examples t update
   planTier t
   render <- lookupEnv "COSCAD_RENDER"

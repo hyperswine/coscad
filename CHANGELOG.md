@@ -8,6 +8,14 @@ and this project adheres to the
 
 ## Unreleased
 
+- Language/assembly: oriented construction frames (`|> frame`) and child-only
+  rigid mating (`|> mate`) with explicit normal, up, roll and gap. Declarative
+  `.assemble` `fixed` / `mate` constraints propagate poses in both directions,
+  validate closed loops and diagnose floating/conflicting assemblies. Design,
+  manufacturing, interference checking and planning share the generated poses.
+  Existing manual assembly expressions remain supported. Moving joints and
+  collision solving are outside this first increment.
+
 - Language: named construction datums (`|> datum name ref`, `@name`),
   child-only placement against a separate shape (`|> place parent target own`),
   bounded rectangular feature grids (`|> grid n m pitch_x pitch_y`), and unary

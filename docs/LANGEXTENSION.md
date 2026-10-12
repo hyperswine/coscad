@@ -174,6 +174,89 @@ dimension. Use grids for features inside a part; assembly instances still use
 See [datum-plate.coscad](../examples/topological/datum-plate.coscad) for a
 mounting grid positioned against a saved corner datum.
 
+## Oriented mating frames
+
+`|> frame name ref normal up [dx dy dz]` saves a point and a right-handed
+orientation on a **3D solid**. `ref` is a box anchor or `@name`; offsets use
+the current XYZ axes. `normal` and `up` use direction words, including
+combinations such as `top+rt`. The normal becomes local +Z; up is projected
+onto the face plane and normalized to become local +Y. Neither direction
+may be zero, and they must not be parallel. Local +X completes the frame.
+
+```
+plate = box 40 30 4 |> frame socket top top bak
+post = box 6 10 20 |> frame foot bot bot bak
+main = post |> mate plate @socket @foot 90 0.2
+```
+
+`child |> mate parent @target @own [roll gap]` returns only the rigidly
+transformed child. Frame origins coincide at zero gap, their normals oppose,
+and their up axes agree at zero roll. Roll is in degrees, right-handed about
+the parent's outward normal; gap is in mm along that normal. Both optional
+numbers must be supplied together; both default to zero. Parent expressions
+with transforms or booleans need parentheses. Parent and child must be 3D.
+
+Frame names share the datum namespace. A frame's origin also works with
+`place` and `anchor @name`; a point-only datum cannot be used for `mate`.
+Frames retain their original feature locations through CSG and transforms.
+Repeated names are ambiguous. Scaling axes is allowed if the transformed
+axes remain orthogonal and right-handed; axis lengths are normalized when
+selected. Reflections, degenerate axes and skewed frames are rejected on
+selection: define a fresh frame **after** the geometry transform instead.
+Frames are explicit construction metadata, not automatically recognized
+faces or guarantees that mating surfaces fit or remain after a cut.
+
+See [mating-corner.coscad](../examples/topological/mating-corner.coscad)
+for upright and sideways mates with explicit up directions.
+
+## Rigid assembly constraints
+
+A `.assemble` can generate its assembled view from `fixed` and `mate`
+statements instead of an `asm = ...` expression:
+
+```
+base ← base.coscad ×1
+left_post ← post.coscad ×1
+right_post ← post.coscad ×1
+fixed base
+mate left_post @foot base @left_mount
+mate right_post @foot base @right_mount roll=90 gap=0
+```
+
+Each declaration names one physical instance. Reusing a part file is fine;
+use a distinct alias for every copy and `×1` to print it or `×0` for a premade
+instance. Counts above one are rejected in constrained assemblies because
+they do not identify individual poses. A nested assembly acts as one rigid
+instance. Each connected component needs at least one fixed instance.
+
+`fixed instance [x y z rx ry rz]` defaults to the identity pose. If provided,
+all six finite numeric literals are required: mm translation and XYZ rotation
+in degrees (X, then Y, then Z). Constraint statements currently take literal
+poses and literal `roll=degrees` / `gap=mm` options, not numeric bindings.
+`mate child @own parent @target` uses the same face convention as the pipeline.
+Statements and declaration order do not determine solving order: poses
+propagate in either direction from fixed roots. Every declared instance is
+included exactly once in the generated `asm`.
+
+Multiple fixed roots and closed loops are accepted only if all constraints
+agree, with per-component translation tolerance 0.000001 mm and matrix-entry
+orientation tolerance 0.00000001. Contradictions name the joint and report
+position and orientation residuals. Floating components, missing instances,
+missing or ambiguous frames, duplicate fixed poses, unknown/duplicate options
+and mixed manual `asm`/constraint definitions are errors. Graph size is
+bounded to 10000 parts and 10000 constraints.
+
+This first solver handles rigid mates with all six degrees of freedom fixed.
+It does not solve hinges, sliders, distances, flexible parts, contacts or
+collision avoidance. Use `coscad check` to test physical interference.
+Existing `fastener` statements still describe hardware and planning joints;
+geometric mates do not invent fasteners or assembly precedence. Design,
+checker and planner views share the resolved poses. Manufacturing validates
+the same constraints, then orients and packs the original parts for printing.
+
+See [frame-stand.assemble](../examples/assemble/constraints/frame-stand.assemble)
+for two copies of a post, one rolled 90 degrees.
+
 ## .assemble / coscad next
 
 See docs/MANUFACTURING.md.

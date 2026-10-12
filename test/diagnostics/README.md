@@ -1,6 +1,6 @@
 # Diagnostic probes
 
-`cases.json` contains 193 curated cases, including 27 valid controls, malformed
+`cases.json` contains 212 curated cases, including 30 valid controls, malformed
 inputs, and exploratory geometry/metadata cases. `scripts/probe-diagnostics.py` adds 250 deterministic
 single-character edits (seed `20261011`) and invokes the actual CLI in a fresh
 temporary directory for each case. It never invokes rendering or printer commands.
@@ -24,7 +24,10 @@ python3 scripts/probe-diagnostics.py \
 
 The command returns **1 if any required rejection/message is missing**, or if
 a process times out or emits a detected runtime exception. The expanded corpus
-passes all 443 probes after the [follow-up fixes](../../docs/reviews/2026-10-12-diagnostic-fixes.md).
+passes all 462 probes with oriented mating frames and assembly constraints.
+The 19 new cases include 16 required rejections that also assert no output
+artifacts were generated. Earlier results are in the
+[follow-up fixes](../../docs/reviews/2026-10-12-diagnostic-fixes.md).
 Run it alongside `stack test`; it is not yet wired into CI. The
 [original audit](../../docs/reviews/2026-10-11-diagnostic-audit.md) preserves the
 earlier failures and before/after responses.

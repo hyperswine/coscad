@@ -5,6 +5,8 @@ type D = Double
 
 type I = Int
 
+type Matrix3 = ((D, D, D), (D, D, D), (D, D, D)) -- rows
+
 data Shape
   = Empty -- renders nothing
   | Hidden Shape -- checker-only: retain geometry for anchors, emit no solid
@@ -37,6 +39,7 @@ data Shape
   | Mirror (D, D, D) Shape
   | Translate (D, D, D) Shape -- vector translate (used by attachment desugaring)
   | RotAxis D (D, D, D) Shape -- axis-angle rotation (used by attachment desugaring)
+  | Transform3 Matrix3 (D, D, D) Shape -- rigid rotation and translation
   | -- Attachment sugar (desugared by 'resolve' before codegen) ----
     Anchor (D, D, D) Shape -- re-origin shape at its own anchor point
   | Position (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, child: snap child at anchor+offset
@@ -47,6 +50,7 @@ data Shape
   | Loft [(D, Shape)] -- (z, 2D profile) pairs, skinned bottom to top (BOSL2 skin)
   | Tag String Shape -- named subtree (an assembly part instance); identity for geometry
   | Datum String (D, D, D) Shape -- named construction point in this subtree's coordinates
+  | Frame String (D, D, D) Matrix3 Shape -- origin and right-handed local axes
   | Union [Shape]
   | Intersection [Shape]
   | Hull [Shape]
@@ -68,6 +72,7 @@ shapeChildren s = case s of
   Mirror _ x -> [x]
   Translate _ x -> [x]
   RotAxis _ _ x -> [x]
+  Transform3 _ _ x -> [x]
   Anchor _ x -> [x]
   Position _ _ a b -> [a, b]
   AttachTo _ _ a b -> [a, b]
@@ -77,6 +82,7 @@ shapeChildren s = case s of
   Loft ps -> map snd ps
   Tag _ x -> [x]
   Datum _ _ x -> [x]
+  Frame _ _ _ x -> [x]
   Union xs -> xs
   Intersection xs -> xs
   Hull xs -> xs

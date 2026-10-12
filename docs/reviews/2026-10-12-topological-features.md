@@ -71,8 +71,9 @@ new rotor have empty symmetric differences.
 
 ## Remaining work
 
-Oriented mating frames, explicit roll, per-instance feature selection and
-closed-loop assembly constraints remain separate design work. The current
-datums are points, not a general constraint solver or automatic surface
-tracking. Canonical example migration and an eventual default authoring style
-still need the fit, resize and instruction checks described in the study.
+The next increment adds [oriented mating frames and rigid assembly
+constraints](2026-10-12-mating-frames.md), including explicit roll, per-instance
+frame selection and closed-loop consistency checks. Point datums still have
+no orientation and neither feature automatically tracks surfaces. Canonical
+example migration and an eventual default authoring style still need the fit,
+resize and instruction checks described in the study.

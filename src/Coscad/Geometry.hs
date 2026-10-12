@@ -17,8 +17,8 @@ type V3 = (D, D, D)
 
 type BBox = (V3, V3) -- (min corner, max corner)
 
--- | A bounding-box anchor or a named construction point. Named points have
--- no orientation: placing at one requires an explicit child anchor.
+-- | A bounding-box anchor, point datum or frame origin. Point placement uses
+-- only the position; oriented mating selects the complete frame separately.
 data PointRef = BoxPoint V3 | NamedPoint String deriving (Show)
 
 pointOf :: PointRef -> Shape -> Either String V3
@@ -42,6 +42,7 @@ datumPoints = Map.fromListWith (++) . map (\(n, p) -> (n, [p])) . go . resolve
     moved f = map (\(n, p) -> (n, f p))
     go s = case s of
       Datum n p x -> (n, p) : go x
+      Frame n p _ x -> (n, p) : go x
       Tx d x -> moved (vadd (d, 0, 0)) (go x)
       Ty d x -> moved (vadd (0, d, 0)) (go x)
       Tz d x -> moved (vadd (0, 0, d)) (go x)
@@ -50,6 +51,7 @@ datumPoints = Map.fromListWith (++) . map (\(n, p) -> (n, [p])) . go . resolve
       Ry a x -> moved (mApply (rodMat a (0, 1, 0))) (go x)
       Rz a x -> moved (mApply (rodMat a (0, 0, 1))) (go x)
       RotAxis a v x -> moved (mApply (rodMat a v)) (go x)
+      Transform3 m t x -> moved (vadd t . mApply m) (go x)
       Scale v x -> moved (vmul v) (go x)
       Mirror n x -> moved (mApply (mirrorMat n)) (go x)
       Loft ps -> concat [moved (\(a, b, _) -> (a, b, z)) (go p) | (z, p) <- ps]
@@ -81,7 +83,92 @@ vclamp (a, b, c) = (cl a, cl b, cl c)
 cross :: V3 -> V3 -> V3
 cross (a1, a2, a3) (b1, b2, b3) = (a2 * b3 - a3 * b2, a3 * b1 - a1 * b3, a1 * b2 - a2 * b1)
 
-type M3 = (V3, V3, V3) -- rows
+type M3 = Matrix3 -- rows
+
+matIdentity :: M3
+matIdentity = ((1, 0, 0), (0, 1, 0), (0, 0, 1))
+
+matTranspose :: M3 -> M3
+matTranspose ((a,b,c),(d,e,f),(g,h,i)) = ((a,d,g),(b,e,h),(c,f,i))
+
+matMul :: M3 -> M3 -> M3
+matMul a b = matTranspose (let (x,y,z) = matTranspose b in (mApply a x, mApply a y, mApply a z))
+
+dot3 :: V3 -> V3 -> D
+dot3 (a,b,c) (x,y,z) = a*x + b*y + c*z
+
+scale3 :: D -> V3 -> V3
+scale3 s = vmul (s,s,s)
+
+-- | A frame's +Z points out of the mating face. +Y is its in-plane up
+-- direction. Columns are local axes in the containing shape's coordinates.
+data MatingFrame = MatingFrame { frameOrigin :: V3, frameBasis :: M3 } deriving (Show)
+
+makeFrame :: V3 -> V3 -> V3 -> Either String MatingFrame
+makeFrame origin normal up
+  | normal == (0,0,0) || up == (0,0,0) = Left "frame normal and up directions must be nonzero; ctr is not a direction"
+  | vlen projected < 1e-9 = Left "frame normal and up directions must not be parallel; choose an in-plane up direction"
+  | otherwise = Right (MatingFrame origin (matTranspose (cross y z, y, z)))
+  where
+    z = vnormed normal
+    u = vnormed up
+    projected = vsub u (scale3 (dot3 u z) z)
+    y = vnormed projected
+
+-- | Keep both origin and axes through transforms. A reflected or skewed
+-- frame cannot describe a rigid mate. Selectors diagnose this explicitly;
+-- authors can define a fresh frame after the geometry transform instead.
+framePoints :: Shape -> Map.Map String [MatingFrame]
+framePoints = Map.fromListWith (++) . map (\(n,f) -> (n,[f])) . go . resolve
+  where
+    moved m t = map (\(n, MatingFrame p b) -> (n, MatingFrame (vadd t (mApply m p)) (matMul m b)))
+    go s = case s of
+      Frame n p b x -> (n, MatingFrame p b) : go x
+      Tx d x -> moved matIdentity (d,0,0) (go x)
+      Ty d x -> moved matIdentity (0,d,0) (go x)
+      Tz d x -> moved matIdentity (0,0,d) (go x)
+      Translate t x -> moved matIdentity t (go x)
+      Rx a x -> moved (rodMat a (1,0,0)) (0,0,0) (go x)
+      Ry a x -> moved (rodMat a (0,1,0)) (0,0,0) (go x)
+      Rz a x -> moved (rodMat a (0,0,1)) (0,0,0) (go x)
+      RotAxis a v x -> moved (rodMat a v) (0,0,0) (go x)
+      Transform3 m t x -> moved m t (go x)
+      Scale (a,b,c) x -> moved ((a,0,0),(0,b,0),(0,0,c)) (0,0,0) (go x)
+      Mirror n x -> moved (mirrorMat n) (0,0,0) (go x)
+      _ -> concatMap go (shapeChildren s)
+
+frameOf :: String -> Shape -> Either String MatingFrame
+frameOf name s = case Map.lookup name (framePoints s) of
+  Nothing | Map.member name (datumPoints s) -> Left ("'@" ++ name ++ "' is a point datum; define an oriented frame with |> frame before mating")
+          | otherwise -> Left ("unknown frame '@" ++ name ++ "'; available frames: " ++ available)
+  Just [MatingFrame p b] -> case rigidFrameBasis b of
+    Left err -> Left ("frame '@" ++ name ++ "': " ++ err)
+    Right normalized -> Right (MatingFrame p normalized)
+  Just fs -> Left ("ambiguous frame '@" ++ name ++ "': " ++ show (length fs) ++ " copies; select one instance or define a new frame on the result")
+  where
+    available = case Map.keys (framePoints s) of [] -> "none"; ns -> unwords (map ('@':) ns)
+
+rigidFrameBasis :: M3 -> Either String M3
+rigidFrameBasis b
+  | any bad (concatMap vec [a,c,d]) || any (== (0,0,0)) [a,c,d] = invalid
+  | maximum (map abs [dot3 x y, dot3 x z, dot3 y z]) > 1e-8 || dot3 (cross x y) z < 1 - 1e-8 = invalid
+  | otherwise = Right (matTranspose (x,y,z))
+  where
+    (a,c,d) = matTranspose b
+    (x,y,z) = (vnormed a, vnormed c, vnormed d)
+    vec (i,j,k) = [i,j,k]
+    bad n = isNaN n || isInfinite n
+    invalid = Left "frame axes are reflected, degenerate or skewed; define a new frame after the mirror or nonuniform scale"
+
+-- | Child-to-parent pose. At zero roll, normals oppose and up axes agree.
+-- Gap is measured along the parent's outward normal; roll is right-handed
+-- about that normal. No geometry from the reference parent is returned.
+matingPose :: MatingFrame -> MatingFrame -> D -> D -> (M3, V3)
+matingPose (MatingFrame pp pb) (MatingFrame cp cb) roll gap = (r, vsub target (mApply r cp))
+  where
+    flipFace = ((-1,0,0),(0,1,0),(0,0,-1))
+    r = pb `matMul` rodMat roll (0,0,1) `matMul` flipFace `matMul` matTranspose cb
+    target = vadd pp (scale3 gap (mApply pb (0,0,1)))
 
 mApply :: M3 -> V3 -> V3
 mApply (r1, r2, r3) v = (dot r1 v, dot r2 v, dot r3 v)
@@ -188,6 +275,7 @@ bbox s = case s of
   Ry a x -> xformBBox (rodMat a (0, 1, 0)) (bbox x)
   Rz a x -> xformBBox (rodMat a (0, 0, 1)) (bbox x)
   RotAxis a v x -> xformBBox (rodMat a v) (bbox x)
+  Transform3 m t x -> bshift t (xformBBox m (bbox x))
   Scale v x -> fromCorners (map (vmul v) (bcorners (bbox x)))
   Mirror n x -> xformBBox (mirrorMat n) (bbox x)
   Diff a _ -> bbox a
@@ -195,6 +283,7 @@ bbox s = case s of
   Loft ps -> fromCorners [(px, py, z) | (z, p) <- ps, (px, py, _) <- bcorners (bbox p)]
   Tag _ x -> bbox x
   Datum _ _ x -> bbox x
+  Frame _ _ _ x -> bbox x
   Offset r x -> let ((x0, y0, z0), (x1, y1, z1)) = bbox x in ((x0 - r, y0 - r, z0), (x1 + r, y1 + r, z1))
   Union xs -> foldr1 bmerge (map bbox xs)
   Intersection xs -> foldr1 boverlap (map bbox xs)
@@ -252,12 +341,14 @@ resolve s = case s of
   Ry a x -> Ry a (resolve x)
   Rz a x -> Rz a (resolve x)
   RotAxis a v x -> RotAxis a v (resolve x)
+  Transform3 m t x -> Transform3 m t (resolve x)
   Scale v x -> Scale v (resolve x)
   Mirror n x -> Mirror n (resolve x)
   Extrude h x -> Extrude h (resolve x)
   Loft ps -> Loft [(z, resolve p) | (z, p) <- ps]
   Tag n x -> Tag n (resolve x)
   Datum n p x -> Datum n p (resolve x)
+  Frame n p b x -> Frame n p b (resolve x)
   Offset r x -> Offset r (resolve x)
   Diff a b -> Diff (resolve a) (resolve b)
   Union xs -> Union (map resolve xs)

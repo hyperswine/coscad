@@ -34,6 +34,7 @@ def mutations(count):
         "main = loft 0 (⭘ 5) 10 (△ 3)\n",
         "plate = box 30 20 4 |> datum hole top+lft 5 0 0\nmain = zcyl 2 6 |> place plate @hole ctr 0 0 -2\n",
         "main = box 2 2 2 |> grid 3 2 5 6 |> hull |> anchor bot\n",
+        "plate = box 30 20 4 |> frame socket top top bak\narm = box 2 4 10 |> frame foot bot bot bak\nmain = arm |> mate plate @socket @foot 90 0.2\n",
     ]
     seen = set()
     punctuation = "()=,|>+-*/$!▽←×;[]{}\x00\u200b\u2212\uff1d"
@@ -96,6 +97,7 @@ def probe(binary, case, timeout):
         passed = expected == "observe" or status == {"accept": "accepted", "reject": "rejected"}[expected]
         passed = passed and all(s in stdout + stderr for s in case.get("messages", []))
         generated = sorted(p.name for p in folder.iterdir() if p.name not in {filename, "stdout.log", "stderr.log", *files})
+        passed = passed and not (case.get("no_generated_files") and generated)
         return {**case, "status": status, "expectation_met": passed, "exit_code": process.returncode,
                 "elapsed_seconds": round(time.monotonic() - started, 4), "stdout": stdout, "stderr": stderr,
                 "generated_files": generated}

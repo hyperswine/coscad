@@ -7,6 +7,7 @@ module Coscad.Assemble (module Coscad.Assemble) where
 
 import Control.Monad (unless, void, when)
 import Coscad.Codegen
+import Coscad.Constraint (Constraint (..), solveConstraints)
 import Coscad.Geometry
 import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Parser
@@ -55,6 +56,7 @@ data AsmStmt
   | AClearance Double
   | AFastener FastDecl
   | APlan [(String, String)]
+  | AConstraint Constraint
   | ADef Def
 
 -- | `fastener M5x8 bracket railA top ×2 nut=dropin at=350,370`: a screw
@@ -92,6 +94,7 @@ data AsmResult = AsmResult
   , arPartMeta :: [(String, (Int, [(String, String)]))] -- top-level part name -> (count, hints)
   , arFasteners :: [FastDecl]   -- `fastener` lines, for `coscad plan`
   , arPlanOpts :: [(String, String)] -- `plan key=value ...` line
+  , arConstraints :: [Constraint] -- rigid frames, re-resolved for check/plan
   }
 
 asmProgram :: SynMode -> Parser [AsmStmt]
@@ -119,6 +122,8 @@ asmStmt =
     <|> clearanceStmt
     <|> fastenerStmt
     <|> planStmt
+    <|> fixedStmt
+    <|> mateStmt
     <|> (lookAhead (try (identifier *> symbol "←")) *> partStmt)
     <|> (ADef <$> variableDefinition)
 
@@ -149,6 +154,59 @@ fastenerStmt = do
 
 planStmt :: Parser AsmStmt
 planStmt = statementKeyword "plan" *> onStatementLine planOptions
+
+fixedStmt :: Parser AsmStmt
+fixedStmt = do
+  pos <- getSourcePos
+  statementKeyword "fixed"
+  onStatementLine $ do
+    name <- identifier <?> "fixed part instance"
+    (t,r) <- ((,) (0,0,0) (0,0,0) <$ lookAhead eof) <|> ((,) <$> vector <*> vector)
+    return (AConstraint (Fixed (sourcePosPretty pos) name t r))
+  where
+    vector = (,,) <$> literal <*> literal <*> literal
+    literal = do
+      n <- double <?> "six pose numbers: x y z rx ry rz (mm and degrees)"
+      unless (finite n) (fail "fixed pose must be finite")
+      return n
+
+mateStmt :: Parser AsmStmt
+mateStmt = do
+  pos <- getSourcePos
+  statementKeyword "mate"
+  onStatementLine $ do
+    child <- identifier <?> "child part instance"
+    cf <- frameRef
+    parent <- identifier <?> "parent part instance"
+    pf <- frameRef
+    opts <- options "mate" $ \opt -> case opt of
+      OHint (k,v) | k `elem` ["roll", "gap"] -> numberHint k (if k == "roll" then "angle in degrees" else "distance in mm") (const True) "positive, zero or negative" v
+      OHint (k,_) -> Left ("unknown mate option '" ++ k ++ "'" ++ suggestion ["roll", "gap"] k ++ "; choose roll or gap")
+      _ -> Left "mate takes roll=degrees and gap=mm options"
+    let get k = maybe 0 id (lookup k [h | OHint h <- opts] >>= readFinite)
+    return (AConstraint (Mate (sourcePosPretty pos) child cf parent pf (get "roll") (get "gap")))
+
+-- One shared resolution path for assembled views, tagged planner instances
+-- and checker-hidden references. Counts are manufacturing multiplicities;
+-- a constrained pose needs a distinct alias for every physical instance.
+resolveAssembly :: AsmResult -> VarTable -> Either String VarTable
+resolveAssembly ar = resolveWithConstraints (arMode ar) (arDefs ar) (arPartMeta ar) (arConstraints ar)
+
+resolveWithConstraints :: SynMode -> [Def] -> [(String, (Int, [(String,String)]))] -> [Constraint] -> VarTable -> Either String VarTable
+resolveWithConstraints mode defs meta constraints table0 = do
+  case [d | d <- defs, defName d == "asm", not (null constraints)] of
+    d : _ -> Left (sourcePosPretty (defPos d) ++ ": assembly constraints generate asm; remove the manual asm = definition or remove fixed/mate statements")
+    [] -> return ()
+  case [n | (n,(printCount,_)) <- meta, printCount > 1, not (null constraints)] of
+    n : _ -> Left (location ++ ": constrained part '" ++ n ++ "' needs distinct instance names: use separate declarations for each copy (each with ×0 or ×1), not ×2 or larger")
+    [] -> return ()
+  table <- resolveVariables mode defs table0
+  if null constraints then return table else do
+    parts <- mapM (\(n,_) -> maybe (Left ("missing constrained instance '" ++ n ++ "'")) (Right . (,) n) (Map.lookup n table0)) meta
+    asm <- solveConstraints parts constraints
+    return (Map.insert "asm" asm table)
+  where
+    location = case constraints of Fixed loc _ _ _ : _ -> loc; Mate loc _ _ _ _ _ _ : _ -> loc; [] -> "assembly"
 
 -- Parse line-local options without consuming a following `asm = ...` as a hint.
 onStatementLine :: Parser a -> Parser a
@@ -339,7 +397,9 @@ loadAssembleFile visited path
                     return (Left (path ++ ": total expanded print count is too large; maximum is " ++ show maxQuantity))
                   Right entries -> do
                     let table0 = Map.fromList [(n, s) | (n, s, _) <- entries]
-                    case resolveVariables fmode defs table0 of
+                        meta = [(n, (c, h)) | APart n _ c _ h <- partsS]
+                        constraints = [c | AConstraint c <- stmts]
+                    case resolveWithConstraints fmode defs meta constraints table0 of
                       Left err -> return (Left err)
                       Right table ->
                         return $
@@ -351,9 +411,10 @@ loadAssembleFile visited path
                               , arClearance = clr
                               , arDefs = defs
                               , arParts = [(n, s) | (n, s, _) <- entries]
-                              , arPartMeta = [(n, (c, h)) | APart n _ c _ h <- partsS]
+                              , arPartMeta = meta
                               , arFasteners = [f | AFastener f <- stmts]
                               , arPlanOpts = concat [o | APlan o <- stmts]
+                              , arConstraints = constraints
                               , arFlat = concat [f | (_, _, f) <- entries]
                               }
 

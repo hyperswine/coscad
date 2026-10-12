@@ -22,6 +22,8 @@ examples/assemble/bow3/center3.coscad 43019.402 -55.000 -18.000 -7.000 55.000 18
 examples/assemble/bow3/l_arch3.coscad 57896.612 -26.000 -1.000 0.000 216.705 68.250 14.000
 examples/assemble/bow3/r_arch3.coscad 57896.612 -216.705 -1.000 0.000 26.000 68.250 14.000
 examples/assemble/bracket90.coscad 5268.865 -9.000 -8.982 -1.500 34.000 34.000 5.000
+examples/assemble/constraints/base.coscad 4800.000 -20.000 -15.000 -2.000 20.000 15.000 2.000
+examples/assemble/constraints/post.coscad 1200.000 -3.000 -5.000 -10.000 3.000 5.000 10.000
 examples/assemble/inner90.coscad 10301.762 -1.500 -10.000 -1.500 32.000 10.000 32.000
 examples/assemble/plan/corner_inside.coscad 7399.605 -10.000 -10.000 -10.000 10.000 10.000 10.000
 examples/assemble/plan/flat90.coscad 6915.650 -20.000 -20.000 -3.000 20.000 20.000 3.000
@@ -54,6 +56,7 @@ examples/panel.coscad 99356.566 -100.000 -100.000 -1.250 100.000 100.000 1.250
 examples/simple_transform.coscad 1000.000 5.000 0.000 0.000 15.000 10.000 10.000
 examples/sphere.coscad 14044.425 -15.000 -14.970 -14.970 15.000 14.970 14.970
 examples/topological/datum-plate.coscad 6569.600 -30.000 -16.000 0.000 30.000 16.000 4.000
+examples/topological/mating-corner.coscad 1696.000 -10.000 -10.000 -2.000 16.000 10.000 8.000
 examples/topological/pipeline_basics.coscad 831.384 96.000 93.072 0.000 108.000 106.928 10.000
 examples/topological/tbracket.coscad 2638.931 -3.500 -7.500 -10.000 13.500 7.500 10.000
 examples/topological/topo_tour.coscad 16740.862 -28.000 -20.000 -4.000 28.000 20.000 29.000

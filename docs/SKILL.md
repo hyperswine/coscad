@@ -230,6 +230,22 @@ datum is unaffected by an asymmetric ear.
 
 ## .assemble and coscad next
 
+Oriented interfaces: `|> frame name ref normal up [dx dy dz]` saves an
+outward +Z normal and projected in-plane +Y up direction on a 3D solid.
+`child |> mate parent @target @own [roll gap]` returns only the rigidly
+placed child; normals oppose, up agrees at zero roll, and positive gap moves
+along the parent's outward normal. Roll and gap default to zero; supply both
+when present. Frames share the datum namespace; a point datum has no axes.
+Mirrored/skewed frames must be redefined after the geometry transform.
+
+Rigid `.assemble` constraints: use `fixed root [x y z rx ry rz]` and
+`mate child @own parent @target [roll=degrees gap=mm]` instead of `asm =`.
+Each physical instance needs its own part alias with ×0 or ×1. Components
+need fixed roots; consistent loops work, conflicting or floating graphs fail.
+The checker and planner use the solved poses. Mates do not add hardware or
+precedence; retain explicit fastener declarations and run `coscad check`.
+See `docs/LANGEXTENSION.md` and `examples/assemble/constraints/`.
+
 `.assemble` = separate physical parts (recursive refs, `×N` counts,
 `×0` assembly-only, `▽anchor` print orientation, key=value hints).
 `coscad foo.assemble` = design outputs; `coscad next foo.assemble` =
