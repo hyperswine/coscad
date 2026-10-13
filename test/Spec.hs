@@ -28,7 +28,7 @@ import Coscad.Json (JValue (..), asArray, asNumber, asString, decode, lookupKey)
 import qualified Coscad.Json
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
 import Coscad.Next (processNext)
-import Coscad.OpenScad (bosl2Version, findOpenscad, openscadVersion, renderStlFile)
+import Coscad.OpenScad (bosl2Version, findOpenscad, openscadFullRender, openscadPngArgs, openscadVersion, renderStlFile, runOpenscadRaw)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Part (renderPart)
 import Coscad.Plan (PlanSummary (..), StepSummary (..), FastenerSummary (..), planSummary)
@@ -1302,6 +1302,29 @@ geometry t update bin = do
       tris <- readStl (st </> "p.stl")
       let v = meshVolume tris
       assertT t "coscad stl renders a part" (abs (v - 4 / 3 * pi * 125) < 0.03 * (4 / 3 * pi * 125)) (printf "sphere volume %.2f" v)
+  -- step scenes render fully (Manifold) where OpenSCAD supports it, with the bench in the mesh
+  full <- openscadFullRender
+  tmpBase <- getTemporaryDirectory
+  let sceneF = tmpBase </> "coscad-test" </> "cli" </> "corner_pair_step1.scad"
+      scenePng = dir </> "step1.png"
+      sceneStl = dir </> "step1.stl"
+  haveScene <- doesFileExist sceneF
+  if not haveScene
+    then failT t "step scene from the cli tier exists" sceneF
+    else do
+      rp <- runOpenscadRaw (openscadPngArgs full scenePng sceneF)
+      pngOk <- doesFileExist scenePng
+      pngSize <- if pngOk then fromIntegral <$> withFile scenePng ReadMode hFileSize else return (0 :: Int)
+      assertT t ("step scene renders to PNG (" ++ (if full then "full Manifold render" else "preview") ++ ")")
+        (either (const False) (\(c, out, err) -> c == ExitSuccess && not (any ("ERROR" `isPrefixOf`) (lines (out ++ err)))) rp && pngOk && pngSize > 5000)
+        (show rp ++ " size " ++ show pngSize)
+      when full $ do
+        rs <- runOpenscadRaw ["-o", sceneStl, "--export-format", "asciistl", "--backend=manifold", "--render=force", sceneF]
+        tris <- either (const []) id . parseStlAscii <$> readFile sceneStl
+        let ((_, _, z0), (_, _, z1)) = meshBounds tris
+        assertT t "full render keeps the bench slab under the parts (scene extends 2.5 mm below the rest face)"
+          (either (const False) (\(c, _, _) -> c == ExitSuccess) rs && not (null tris) && z0 < -2.4 && z1 > 0)
+          (show rs ++ " bounds z " ++ show (z0, z1))
   -- toolchain probes used by `coscad doctor`
   ov <- openscadVersion
   assertT t "openscad --version is parsed" (maybe False (not . null) ov) (show ov)
@@ -1374,6 +1397,8 @@ cliTier t = do
       pj <- readJson (dir </> "corner_pair_plan.json")
       let nuts v = [n | st <- fromMaybe [] (asArray =<< lookupKey "steps" v), f <- fromMaybe [] (asArray =<< lookupKey "fasteners" st), Just n <- [asString =<< lookupKey "nut" f]]
           steps v = fromMaybe [] (asArray =<< lookupKey "steps" v)
+      step1 <- readFile (dir </> "corner_pair_step1.scad")
+      assertT t "plan: step scene draws the bench as a solid slab, no background modifier" ("color(\"Gainsboro\") translate(" `isInfixOf` step1 && not ("\n%" `isInfixOf` step1) && "color(\"Orange\")" `isInfixOf` step1) (take 600 step1)
       assertT t "plan: exit 0, plan JSON parses, nut kinds use the nut= words" (c9 == ExitSuccess && null e9 && "Wrote" `isInfixOf` o9 && either (const False) (\v -> not (null (steps v)) && all (`elem` ["dropin", "slidein", "hex", "none"]) (nuts v) && not (null (nuts v))) pj) (show (c9, e9, either id (const "parsed") pj))
       -- a design error: two screws at the same spot. Exit 2, stderr, files still written.
       srcPair <- readFile (dir </> "corner_pair.assemble")

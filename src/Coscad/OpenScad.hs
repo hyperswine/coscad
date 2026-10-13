@@ -7,6 +7,8 @@ module Coscad.OpenScad
   , libraryDirs
   , openscadEnv
   , openscadStlArgs
+  , openscadPngArgs
+  , openscadFullRender
   , runOpenscadRaw
   , runOpenscad
   , renderStlFile
@@ -132,6 +134,26 @@ openscadEnv = do
 -- on version and preferences.
 openscadStlArgs :: FilePath -> FilePath -> [String]
 openscadStlArgs stlF scadF = ["-o", stlF, "--export-format", "asciistl", scadF]
+
+-- | Can this OpenSCAD render scenes fully (CSG evaluated, no preview
+-- z-fighting) at preview speed? True when it has the Manifold backend
+-- (2025.05 or newer: `--backend` in its `--help`). Older builds would need
+-- CGAL, which is 15 to 25 times slower per scene, so they keep the preview.
+openscadFullRender :: IO Bool
+openscadFullRender = do
+  r <- runOpenscadRaw ["--help"]
+  return $ case r of
+    Right (_, out, err) -> "--backend" `isInfixOf` (out ++ err)
+    Left _ -> False
+
+-- | Arguments for a 1200 x 900 PNG of a scene. With `full`, the scene is
+-- evaluated with Manifold, which keeps `color()` and removes the coincident
+-- face artefacts of the OpenCSG preview; otherwise the preview is used.
+openscadPngArgs :: Bool -> FilePath -> FilePath -> [String]
+openscadPngArgs full pngF scadF =
+  ["-o", pngF, "--imgsize=1200,900", "--colorscheme=Tomorrow", "--projection=p"]
+    ++ (if full then ["--backend=manifold", "--render=force"] else [])
+    ++ [scadF]
 
 -- | Run OpenSCAD with the given arguments (Left only if it cannot be run at all).
 runOpenscadRaw :: [String] -> IO (Either String (ExitCode, String, String))

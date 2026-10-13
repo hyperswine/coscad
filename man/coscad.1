@@ -132,11 +132,13 @@ host material),
 and one
 .Pa spec_stepN.scad
 scene per step
-.Pq this step orange, earlier parts grey, screw heads red, bench translucent ;
+.Pq this step orange, earlier parts grey, screw heads red, a grey bench slab ;
 .Fl -png
-also renders them through OpenSCAD.
+also renders them through OpenSCAD: fully evaluated with the Manifold backend
+(OpenSCAD 2025.05 or newer; no preview artefacts on mated faces, same speed),
+or the preview on older builds, with a note.
 Design errors (colliding screws, too little thread reach, a clamp not on
-its host face) are reported and exit 1.
+its host face) are reported and exit 2.
 See
 .Sx ASSEMBLIES .
 .It Nm Cm site Ar dir Ar spec.assemble ...

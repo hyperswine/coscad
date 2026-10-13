@@ -205,8 +205,12 @@ yet.
   (including `inset=` for a recessed peg seat), before the instruction step's
   bench rotation. It is not the screw head position.
 - `foo_stepN.scad`: the scene after step N, rest face down, this step's
-  parts orange, earlier parts grey, screw heads red, the bench as a
-  translucent slab. `--png` also renders `foo_stepN.png` through OpenSCAD.
+  parts orange, earlier parts grey, screw heads red, the bench as a grey
+  slab just under the rest face. `--png` also renders `foo_stepN.png`
+  through OpenSCAD. With OpenSCAD 2025.05 or newer the scenes are fully
+  evaluated with the Manifold backend, which costs the same as the preview
+  and removes the flicker where mated faces coincide; older OpenSCAD builds
+  get the preview and a note (CGAL would be 15 to 25 times slower).
 
 ## Companion site
 

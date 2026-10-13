@@ -17,7 +17,7 @@ import Coscad.Assemble
 import Coscad.Codegen (gen, renderScad, showD, usesBosl2)
 import Coscad.Geometry
 import Coscad.IO (writeFileUtf8)
-import Coscad.OpenScad (runOpenscadRaw)
+import Coscad.OpenScad (openscadFullRender, openscadPngArgs, runOpenscadRaw)
 import Coscad.Validate (finite, readFinite, maxQuantity)
 import Coscad.Shape
 import Data.Char (isDigit, toLower)
@@ -1121,8 +1121,11 @@ stepScad m steps k =
     ++ concat [ "  color(\"" ++ col ++ "\") " ++ instScad i | (i, col) <- zip prev (repeat "LightGray") ++ zip now (repeat "Orange") ]
     ++ concat [ "  color(\"" ++ col ++ "\") " ++ fastScad f | (f, col) <- zip prevF (repeat "DarkRed") ++ zip nowF (repeat "Red"), not (isPegF f) ]
     ++ "}\n"
+    -- The bench is a solid slab (a `%` background object would vanish from
+    -- a full render), stopped 0.5 mm short of the rest face so the preview
+    -- cannot z-fight it against the parts' bottom faces.
     ++ "// the bench, under the rest face (scene coordinates: rest face is -Z)\n"
-    ++ "%translate([" ++ showV (bx0 - 20, by0 - 20, bench - 2) ++ "]) cube([" ++ showV (bx1 - bx0 + 40, by1 - by0 + 40, 2) ++ "]);\n"
+    ++ "color(\"Gainsboro\") translate([" ++ showV (bx0 - 20, by0 - 20, bench - 2.5) ++ "]) cube([" ++ showV (bx1 - bx0 + 40, by1 - by0 + 40, 2) ++ "]);\n"
     ++ "$fn = 24;\n"
   where
     s = steps !! (k - 1)
@@ -1286,11 +1289,14 @@ processPlanSummary png path = do
       writeFileUtf8 (base ++ "_plan.md") (planMarkdown title model steps errs)
       writeFileUtf8 (base ++ "_plan.json") (planJson path model steps errs)
       printf "Wrote %s_plan.md (%d steps, %d flips, cost %s)\n" base (length steps) (length (filter stFlip steps)) (showD (sCost st))
+      full <- if png then openscadFullRender else return False
+      when (png && not full) $
+        hPutStrLn stderr "note: step images use the OpenSCAD preview (coincident faces may flicker); OpenSCAD 2025.05 or newer renders them fully at the same speed"
       forM_ (zip [1 :: Int ..] steps) $ \(k, _) -> do
         let f = base ++ "_step" ++ show k ++ ".scad"
         writeFileUtf8 f (stepScad model steps k)
         when png $ do
-          r <- runOpenscadRaw ["-o", base ++ "_step" ++ show k ++ ".png", "--imgsize=1200,900", "--colorscheme=Tomorrow", "--projection=p", f]
+          r <- runOpenscadRaw (openscadPngArgs full (base ++ "_step" ++ show k ++ ".png") f)
           case r of
             Right (ExitSuccess, _, _) -> return ()
             Right (_, _, e) -> hPutStrLn stderr ("warning: png for step " ++ show k ++ ": " ++ take 200 e)

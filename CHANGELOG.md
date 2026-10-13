@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## Unreleased
+
+- `plan --png` and `site` render step images fully with OpenSCAD's Manifold
+  backend when available (2025.05 or newer): no z-fighting on mated faces,
+  at preview speed. Older OpenSCAD builds keep the preview with a note. The
+  bench is a solid slab stopped just short of the rest face, so it survives a
+  full render and cannot flicker in a preview.
+
 ## 1.2.0.0 - 2026-10-13
 
 - CLI contract for editors and pipelines: every diagnostic goes to stderr

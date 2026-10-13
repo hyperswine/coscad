@@ -12,5 +12,5 @@ multmatrix([[0, 0, -1, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1]]) {
   color("Red") translate([20, 0, 4]) rotate(a = 90, v = [0, 1, 0]) cylinder(h = 3.5, r = 4.25);
 }
 // the bench, under the rest face (scene coordinates: rest face is -Z)
-%translate([-40, -40, -22]) cube([80, 80, 2]);
+color("Gainsboro") translate([-40, -40, -22.5]) cube([80, 80, 2]);
 $fn = 24;

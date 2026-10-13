@@ -26,5 +26,5 @@ multmatrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) {
   color("Orange") multmatrix([[0.5, -0.866025404, 0, 12], [-0.866025404, -0.5, 0, -20.784609691], [0, 0, -1, 99.5], [0, 0, 0, 1]]) { union() { union() { union() { cylinder(h = 4, r = 6.5); translate([0, 0, 4]) { intersection() { cylinder(h = 7.8, r1 = 6.5, r2 = 0); cylinder(h = 3, r = 6.5); } } } translate([0, 0, 6.8]) { cylinder(h = 3.6, r = 2.4); } } translate([0, 0, 10.3]) { intersection() { cylinder(h = 2.4, r1 = 2.4, r2 = 0); cylinder(h = 0.5, r = 2.4); } } } }
 }
 // the bench, under the rest face (scene coordinates: rest face is -Z)
-%translate([-50.5, -51.230762114, -2]) cube([101, 102.461524227, 2]);
+color("Gainsboro") translate([-50.5, -51.230762114, -2.5]) cube([101, 102.461524227, 2]);
 $fn = 24;
