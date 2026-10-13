@@ -150,13 +150,13 @@
         "coscad.executableCommand": {
           "type": "string",
           "default": "coscad",
-          "description": "Command that runs the CoScad compiler: 'coscad' for a release binary on PATH, a full path to the binary, or 'cabal run coscad --' inside a checkout (set coscad.workingDirectory to it). Needs compiler 1.1.0.0 or newer for compiler diagnostics.",
+          "description": "Command that runs the CoScad compiler: 'coscad' for a release binary on PATH, a full path to the binary, or 'cabal run coscad --' inside a checkout (set coscad.workingDirectory to it). Needs compiler 1.2.0.0 or newer for compiler diagnostics.",
           "order": 2
         },
         "coscad.compilerDiagnostics": {
           "type": "boolean",
           "default": true,
-          "description": "On open/save, run coscad validate on parts and assemblies without writing artifacts and show its errors (exit 1 = cannot run, exit 2 = design problem). Needs compiler 1.1.0.0 or newer; the extension checks `coscad --version` once and says so otherwise.",
+          "description": "On open/save, run coscad validate on parts and assemblies without writing artifacts and show its errors (exit 1 = cannot run, exit 2 = design problem). Needs compiler 1.2.0.0 or newer; the extension checks `coscad --version` once and says so otherwise.",
           "order": 3
         },
         "coscad.workingDirectory": {

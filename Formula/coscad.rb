@@ -8,7 +8,7 @@
 class Coscad < Formula
   desc 'Glyph/pipeline CAD language: .coscad/.assemble to OpenSCAD, STL, and print beds'
   homepage 'https://github.com/hyperswine/coscad'
-  url 'https://github.com/hyperswine/coscad/archive/refs/tags/v1.1.0.0.tar.gz'
+  url 'https://github.com/hyperswine/coscad/archive/refs/tags/v1.2.0.0.tar.gz'
   sha256 '0000000000000000000000000000000000000000000000000000000000000000' # scripts/update-formula.sh
   license 'GPL-3.0-only'
   head 'https://github.com/hyperswine/coscad.git', branch: 'main'

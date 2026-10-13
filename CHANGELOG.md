@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
-## Unreleased
+## 1.2.0.0 - 2026-10-13
 
 - CLI contract for editors and pipelines: every diagnostic goes to stderr
   and starts with `Error: file:line:col: reason` on one line (the source
@@ -154,8 +154,6 @@ and this project adheres to the
 - Loft profiles reject vector Z translations and oblique or zero mirror
   normals instead of silently dropping components; Z-normal reflection
   correctly leaves an XY profile unchanged.
-
-## Unreleased
 
 - Examples: migrate fourteen remaining assembly and packing examples to
   `fixed` / `mate` authoring, with independent coordinate fixtures and

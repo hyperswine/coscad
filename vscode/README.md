@@ -57,7 +57,7 @@ See COSCADLANG.md for examples and a compact syntax reference.
 |---|---|---|
 | `coscad.executableCommand` | `coscad` | command that runs the compiler: a binary on PATH, a full path, or `cabal run coscad --` inside a checkout |
 | `coscad.workingDirectory` | `""` | working directory for that command; empty = the file's folder (`coscad.executablePath` is the deprecated name) |
-| `coscad.compilerDiagnostics` | `true` | validate parts and assemblies on open/save and show compiler errors; needs compiler 1.1.0.0 or newer |
+| `coscad.compilerDiagnostics` | `true` | validate parts and assemblies on open/save and show compiler errors; needs compiler 1.2.0.0 or newer |
 
 For a local checkout:
 
@@ -86,7 +86,7 @@ protocol features and TextMate highlighting.
 ## Requirements
 
 - VS Code 1.82 or newer
-- CoScad compiler 1.1.0.0 or newer (`coscad validate`, positioned diagnostics,
+- CoScad compiler 1.2.0.0 or newer (`coscad validate`, positioned diagnostics,
   exit codes); the extension checks `coscad --version` once and says so when
   the compiler is missing or too old
 

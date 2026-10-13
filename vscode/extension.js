@@ -7,7 +7,7 @@ const { LanguageClient, TransportKind } = require('vscode-languageclient/node')
 // The first compiler release whose `validate` command, `file:line:col: reason`
 // diagnostics and exit codes (1 = could not run, 2 = design problem) this
 // extension relies on.
-const MIN_COMPILER = [1, 1, 0, 0]
+const MIN_COMPILER = [1, 2, 0, 0]
 const VALIDATE_TIMEOUT_MS = 20000
 
 let client

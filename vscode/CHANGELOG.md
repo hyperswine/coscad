@@ -4,7 +4,7 @@
 
 - Lives in the compiler repository under `vscode/`, versioned with it.
 - Compiler diagnostics probe `coscad --version` once per configuration: a
-  missing compiler, a compiler without `validate` (older than 1.1.0.0) or a
+  missing compiler, a compiler without `validate` (older than 1.2.0.0) or a
   command that answers with something else produces one notice and no red
   error on every file.
 - Reads the compiler's 1.1 diagnostics (`file:line:col: reason` with the
