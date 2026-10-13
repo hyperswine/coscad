@@ -1,0 +1,115 @@
+// Named rigid interfaces; coordinate reference retained under test/fixtures/assemblies.
+plate 256 256 6
+corner1 ← corner.coscad ×1 ▽bot
+corner2 ← corner.coscad ×1 ▽bot
+corner3 ← corner.coscad ×1 ▽bot
+corner4 ← corner.coscad ×1 ▽bot
+corner5 ← corner.coscad ×1 ▽bot
+corner6 ← corner.coscad ×1 ▽bot
+corner7 ← corner.coscad ×1 ▽bot
+corner8 ← corner.coscad ×1 ▽bot
+bar1 ← bar.coscad ×1
+bar2 ← bar.coscad ×1
+bar3 ← bar.coscad ×1
+bar4 ← bar.coscad ×1
+bar5 ← bar.coscad ×1
+bar6 ← bar.coscad ×1
+bar7 ← bar.coscad ×1
+bar8 ← bar.coscad ×1
+bar9 ← bar.coscad ×1
+bar10 ← bar.coscad ×1
+bar11 ← bar.coscad ×1
+bar12 ← bar.coscad ×1
+strut1 ← strut.coscad ×1 ▽bot
+strut2 ← strut.coscad ×1 ▽bot
+strut3 ← strut.coscad ×1 ▽bot
+strut4 ← strut.coscad ×1 ▽bot
+strut5 ← strut.coscad ×1 ▽bot
+strut6 ← strut.coscad ×1 ▽bot
+strut7 ← strut.coscad ×1 ▽bot
+strut8 ← strut.coscad ×1 ▽bot
+inner ← inner.coscad ×1 ▽bot
+
+fixed corner1 0 0 0 0 0 0
+mate bar1 @bar_socket_corner1 corner1 @bar_socket_bar1
+mate bar6 @bar_socket_corner1 corner2 @bar_socket_bar1
+mate bar2 @bar_socket_corner3 corner3 @bar_socket_bar1
+mate bar5 @bar_socket_corner3 corner4 @bar_socket_bar1
+mate bar7 @bar_socket_corner1 corner5 @bar_socket_bar1 roll=-180
+mate bar3 @bar_socket_corner3 corner6 @bar_socket_bar1 roll=-180
+mate bar8 @bar_socket_corner3 corner7 @bar_socket_bar1 roll=-180
+mate bar4 @bar_socket_corner1 corner8 @bar_socket_bar1 roll=-180
+mate bar5 @bar_socket_corner1 corner1 @bar_socket_bar5
+mate bar1 @bar_socket_corner3 corner2 @bar_socket_bar5
+mate bar6 @bar_socket_corner3 corner3 @bar_socket_bar5
+mate bar2 @bar_socket_corner1 corner4 @bar_socket_bar5
+mate bar3 @bar_socket_corner1 corner5 @bar_socket_bar5 roll=180
+mate bar8 @bar_socket_corner1 corner6 @bar_socket_bar5 roll=180
+mate bar4 @bar_socket_corner3 corner7 @bar_socket_bar5 roll=180
+mate bar7 @bar_socket_corner3 corner8 @bar_socket_bar5 roll=180
+mate bar9 @bar_socket_corner3 corner1 @bar_socket_bar9 roll=-90
+mate bar10 @bar_socket_corner3 corner2 @bar_socket_bar9 roll=-180
+mate bar11 @bar_socket_corner3 corner3 @bar_socket_bar9 roll=90
+mate bar12 @bar_socket_corner3 corner4 @bar_socket_bar9
+mate bar9 @bar_socket_corner1 corner5 @bar_socket_bar9
+mate bar10 @bar_socket_corner1 corner6 @bar_socket_bar9 roll=90
+mate bar11 @bar_socket_corner1 corner7 @bar_socket_bar9 roll=180
+mate bar12 @bar_socket_corner1 corner8 @bar_socket_bar9 roll=-90
+mate strut1 @diagonal_socket_corner1 corner1 @diagonal_socket_strut1
+mate inner @inner_socket_strut1 strut1 @inner_socket_inner
+mate strut2 @diagonal_socket_corner1 corner2 @diagonal_socket_strut1
+mate inner @inner_socket_strut2 strut2 @inner_socket_inner
+mate strut3 @diagonal_socket_corner1 corner3 @diagonal_socket_strut1
+mate inner @inner_socket_strut3 strut3 @inner_socket_inner
+mate strut4 @diagonal_socket_corner1 corner4 @diagonal_socket_strut1
+mate inner @inner_socket_strut4 strut4 @inner_socket_inner
+mate strut5 @diagonal_socket_corner5 corner5 @diagonal_socket_strut1 roll=-180
+mate inner @inner_socket_strut5 strut5 @inner_socket_inner_2
+mate strut6 @diagonal_socket_corner5 corner6 @diagonal_socket_strut1 roll=-180
+mate inner @inner_socket_strut6 strut6 @inner_socket_inner_2
+mate strut7 @diagonal_socket_corner5 corner7 @diagonal_socket_strut1 roll=-180
+mate inner @inner_socket_strut7 strut7 @inner_socket_inner_2
+mate strut8 @diagonal_socket_corner5 corner8 @diagonal_socket_strut1 roll=-180
+mate inner @inner_socket_strut8 strut8 @inner_socket_inner_2
+
+fastener M3x16 corner1 bar1 bot head=socket nut=hex pocket=clamped.top
+fastener M3x16 corner2 bar6 bot head=socket nut=hex pocket=clamped.top
+fastener M3x16 corner3 bar2 bot head=socket nut=hex pocket=clamped.top
+fastener M3x16 corner4 bar5 bot head=socket nut=hex pocket=clamped.top
+fastener M3x16 corner5 bar7 top head=socket nut=hex pocket=clamped.bot
+fastener M3x16 corner6 bar3 top head=socket nut=hex pocket=clamped.bot
+fastener M3x16 corner7 bar8 top head=socket nut=hex pocket=clamped.bot
+fastener M3x16 corner8 bar4 top head=socket nut=hex pocket=clamped.bot
+fastener M3x16 corner1 bar5 lft head=socket nut=hex pocket=clamped.rt
+fastener M3x16 corner2 bar1 fwd head=socket nut=hex pocket=clamped.bak
+fastener M3x16 corner3 bar6 rt head=socket nut=hex pocket=clamped.lft
+fastener M3x16 corner4 bar2 bak head=socket nut=hex pocket=clamped.fwd
+fastener M3x16 corner5 bar3 fwd head=socket nut=hex pocket=clamped.bak
+fastener M3x16 corner6 bar8 rt head=socket nut=hex pocket=clamped.lft
+fastener M3x16 corner7 bar4 bak head=socket nut=hex pocket=clamped.fwd
+fastener M3x16 corner8 bar7 lft head=socket nut=hex pocket=clamped.rt
+fastener M3x16 corner1 bar9 fwd head=socket nut=hex pocket=clamped.bak
+fastener M3x16 corner2 bar10 rt head=socket nut=hex pocket=clamped.lft
+fastener M3x16 corner3 bar11 bak head=socket nut=hex pocket=clamped.fwd
+fastener M3x16 corner4 bar12 lft head=socket nut=hex pocket=clamped.rt
+fastener M3x16 corner5 bar9 lft head=socket nut=hex pocket=clamped.rt
+fastener M3x16 corner6 bar10 fwd head=socket nut=hex pocket=clamped.bak
+fastener M3x16 corner7 bar11 rt head=socket nut=hex pocket=clamped.lft
+fastener M3x16 corner8 bar12 bak head=socket nut=hex pocket=clamped.fwd
+fastener peg strut1 corner1 rt
+fastener peg inner strut1 rt
+fastener peg strut2 corner2 lft
+fastener peg inner strut2 lft
+fastener peg strut3 corner3 lft
+fastener peg inner strut3 lft
+fastener peg strut4 corner4 rt
+fastener peg inner strut4 rt
+fastener peg strut5 corner5 rt
+fastener peg inner strut5 rt
+fastener peg strut6 corner6 lft
+fastener peg inner strut6 lft
+fastener peg strut7 corner7 lft
+fastener peg inner strut7 lft
+fastener peg strut8 corner8 rt
+fastener peg inner strut8 rt
+plan beam=20

@@ -10,7 +10,8 @@ import posixpath
 PAGES = [('index', 'Overview'), ('langextension', 'Language'),
          ('topological', 'Topological'), ('manufacturing', 'Manufacturing'),
          ('plan', 'Build plans'), ('lessons', 'Lessons'), ('syntax', 'Syntax modes'),
-         ('examples', 'Examples'), ('changelog', 'Changelog'), ('man', 'man coscad'),
+         ('examples', 'Examples'), ('tesseract', 'Tesseract'),
+         ('changelog', 'Changelog'), ('man', 'man coscad'),
          ('orbit-tower', 'Orbit Tower notes')]
 
 

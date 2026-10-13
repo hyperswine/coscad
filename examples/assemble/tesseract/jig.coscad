@@ -1,0 +1,5 @@
+// Temporary 35 mm assembly support, removed through the bottom opening.
+// Four 3 mm posts support the centre cube while the radial skeleton is loose.
+foot = box 26 26 2 |> move 0 0 1
+post = box 3 3 33 |> move -9 -9 18.5 |> grid 2 2 18 18
+main = foot ⊕ post

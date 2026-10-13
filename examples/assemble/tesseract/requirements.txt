@@ -1,0 +1,4 @@
+# Only needed for verify.py, not CoScad compilation or printing.
+trimesh>=4,<6
+manifold3d>=3,<4
+networkx>=3,<4

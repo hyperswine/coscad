@@ -37,7 +37,6 @@ __pycache__/
 *_run.json
 *-printer-capture.*
 result.json
-examples/assemble/tesseract/tesseract_step29.png
 cabal.project.local
 vscode/node_modules/
 *.vsix

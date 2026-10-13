@@ -6,10 +6,10 @@
 // its nut in a pocket on the opposite face. Screws: 24 x M3x16 socket head,
 // 24 x M3 hex nut.
 plate 256 256 6
-corner ← ../../../../../../examples/assemble/tesseract/corner.coscad ×8 ▽bot
-bar    ← ../../../../../../examples/assemble/tesseract/bar.coscad ×12
-strut  ← ../../../../../../examples/assemble/tesseract/strut.coscad ×8 ▽bot
-inner  ← ../../../../../../examples/assemble/tesseract/inner.coscad ×1 ▽bot
+corner ← ../../../../../../examples/assemble/tesseract/bolted/corner.coscad ×8 ▽bot
+bar    ← ../../../../../../examples/assemble/tesseract/bolted/bar.coscad ×12
+strut  ← ../../../../../../examples/assemble/tesseract/bolted/strut.coscad ×8 ▽bot
+inner  ← ../../../../../../examples/assemble/tesseract/bolted/inner.coscad ×1 ▽bot
 
 asm = (corner |> move 0 0 0)
   ⊕ (corner |> rotz 90 |> move 100 0 0)

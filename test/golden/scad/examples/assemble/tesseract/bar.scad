@@ -1,24 +1,26 @@
 include <BOSL2/std.scad>
 
-difference() {
-  difference() {
-    difference() {
-      difference() {
-        cuboid([73.5, 6, 6]);
-        translate([-33.85, 0, 0]) {
-          zcyl(r = 1.7, l = 20);
-        }
+union() {
+  union() {
+    cuboid([76, 7, 7], chamfer = 0.4);
+    union() {
+      translate([38.85, 0, 0]) {
+        xcyl(r = 2.1, l = 1.95);
       }
-      translate([-33.85, 0, 0]) {
-        ycyl(r = 1.7, l = 20);
+      translate([40.3, 0, 0]) {
+        xcyl(r = 2.7, l = 1);
       }
-    }
-    translate([33.85, 0, 0]) {
-      zcyl(r = 1.7, l = 20);
     }
   }
-  translate([33.85, 0, 0]) {
-    ycyl(r = 1.7, l = 20);
+  rotate([0, 0, 180]) {
+    union() {
+      translate([38.85, 0, 0]) {
+        xcyl(r = 2.1, l = 1.95);
+      }
+      translate([40.3, 0, 0]) {
+        xcyl(r = 2.7, l = 1);
+      }
+    }
   }
 }
 $fn = 50;

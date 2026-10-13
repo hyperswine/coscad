@@ -1,0 +1,12 @@
+// Frame bar, 6 x 6 x 73.5: sits 5.8 mm deep in a corner socket at each
+// end. M3 clearance holes 2.9 mm from each end, through in both
+// directions, so the block's screw can cross the bar whichever way the
+// block is turned.
+main = box 73.5 6 6
+  |> cutat lft 2.9 0 0 (zcyl 1.7 20)
+  |> cutat lft 2.9 0 0 (ycyl 1.7 20)
+  |> cutat rt -2.9 0 0 (zcyl 1.7 20)
+  |> cutat rt -2.9 0 0 (ycyl 1.7 20)
+// Oriented joint interfaces; construction metadata does not add material.
+  |> frame bar_socket_corner1 ctr lft top -36.75 0 0
+  |> frame bar_socket_corner3 ctr rt top 36.75 0 0

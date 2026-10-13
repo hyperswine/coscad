@@ -204,7 +204,7 @@ migrationTier t = do
                 _ -> False) (show (Map.lookup newName ap,Map.lookup oldName op))
           _ -> failT t (file ++ ": instance pose comparison") "cannot resolve tagged instances"
 
-        when (file `elem` ["examples/assemble/ball/ball.assemble","examples/assemble/tesseract/tesseract.assemble","examples/assemble/plan/corner_pair.assemble","models/orbit-tower/orbit-tower.assemble"]) $ do
+        when (file `elem` ["examples/assemble/ball/ball.assemble","examples/assemble/tesseract/bolted/tesseract.assemble","examples/assemble/plan/corner_pair.assemble","models/orbit-tower/orbit-tower.assemble"]) $ do
           pa <- planSummary file
           pb <- planSummary ref
           case (pa,pb) of
@@ -215,6 +215,41 @@ migrationTier t = do
               assertT t (file ++ ": all instances placed once") (sort(concatMap ssParts(psSteps p)) == sort(psParts p)) (show(psParts p))
             _ -> failT t (file ++ ": instruction comparison") (show (pa,pb))
       _ -> failT t (file ++ ": migration loads") (either id (const "ok") a ++ " / " ++ either id (const "ok") b)
+
+tesseractTier :: T -> IO ()
+tesseractTier t = do
+  section "fastener-free tesseract: captive joints and closure order"
+  let dir = "examples/assemble/tesseract"
+  finished <- loadAssembleFile [] (dir </> "finished.assemble")
+  case finished of
+    Left e -> failT t "finished tesseract loads" e
+    Right ar -> do
+      assertT t "finished tesseract contains 37 printed pieces, no jig"
+        (sum (map fpCount (arFlat ar)) == 37 && all ((/= "jig.coscad") . takeFileName . fpSource) (arFlat ar)) "incorrect finished BOM"
+      assertT t "slimmer tesseract retains the 100 mm outer envelope"
+        (maybe False (\sh -> let (lo,hi) = bbox sh in vlen lo < 1e-8 && vlen (vsub hi (100,100,100)) < 1e-8) (arAsm ar)) (show (fmap bbox (arAsm ar)))
+  coupon <- loadAssembleFile [] (dir </> "fit-test.assemble")
+  assertT t "joint fit test is three physical pieces" (either (const False) ((== 3) . sum . map fpCount . arFlat) coupon) "incorrect fit test"
+  summary <- planSummary (dir </> "tesseract.assemble")
+  case summary of
+    Left e -> failT t "interlocking tesseract instruction plan" e
+    Right p -> do
+      let placed = concatMap ssParts (psSteps p)
+          ranks = Map.fromList (zip placed [0::Int ..])
+          before a b = case (Map.lookup a ranks, Map.lookup b ranks) of
+            (Just i,Just j) -> i < j
+            _ -> False
+      assertT t "tesseract instructions place every part exactly once" (length placed == 38 && sort placed == sort (psParts p)) (show placed)
+      assertT t "tesseract uses integral joints and no separate screws or nuts"
+        (null (psDesignErrors p) && all (\(spec,_,_,nut) -> spec == "peg" && nut == "none") (concatMap ssFasteners (psSteps p))) (show (psDesignErrors p))
+      assertT t "assembly support goes under the centre before the struts"
+        (before "jig" "inner" && all (before "inner" . ("strut" ++) . show) [1::Int ..8]) (show placed)
+      assertT t "each corner base follows its radial strut"
+        (all (\i -> before ("strut" ++ show i) ("corner" ++ show i)) [1::Int ..8]) (show placed)
+      assertT t "open bases precede every bar"
+        (and [before ("corner" ++ show i) ("bar" ++ show j) | i <- [1::Int ..8],j <- [1::Int ..12]]) (show placed)
+      assertT t "caps close only after every bar is seated"
+        (and [before ("bar" ++ show i) ("cap" ++ show j) | i <- [1::Int ..12],j <- [1::Int ..8]]) (show placed)
 
 frameTier :: T -> IO ()
 frameTier t = do
@@ -472,8 +507,8 @@ planTier t = do
   writeFile (tmpB </> "bad.assemble") (ballSrc ++ "\nfastener M5x20 shell1 core rt pocket=top\n")
   rp <- planSummary (tmpB </> "bad.assemble")
   assertT t "plan: pocket= without nut=hex is an error" (either ("pocket= only applies to nut=hex" `isInfixOf`) (const False) rp) (either id show rp)
-  -- the tesseract: screws threading into printed bars (no nuts), friction pegs, diagonal parts
-  rt <- planSummary "examples/assemble/tesseract/tesseract.assemble"
+  -- Preserve the old bolted tesseract regression alongside the new captive design.
+  rt <- planSummary "examples/assemble/tesseract/bolted/tesseract.assemble"
   case rt of
     Left e -> failT t "plan tesseract" e
     Right ps -> do
@@ -483,7 +518,7 @@ planTier t = do
       assertT t "tesseract: starts with the corner blocks on the bench" (take 4 (concatMap ssParts (psSteps ps)) == ["corner1", "corner2", "corner3", "corner4"]) (show (take 6 (concatMap ssParts (psSteps ps))))
       assertT t "tesseract: no screw is driven up through the bench" (all (\st -> ssRest st /= "bottom (-Z) face" || null [f | f@(_, _, _, _) <- ssFasteners st, False]) (psSteps ps)) "n/a"
       assertT t "tesseract: at most 2 flips" (length (filter ssFlip (psSteps ps)) <= 2) (show (length (filter ssFlip (psSteps ps))))
-  tessMd <- readFile "examples/assemble/tesseract/tesseract_plan.md"
+  tessMd <- readFile "examples/assemble/tesseract/bolted/tesseract_plan.md"
   assertT t "tesseract: plan speaks of pegs and nut pockets in the blocks, no T-nuts" (all (`isInfixOf` tessMd) ["Push: strut1 into", "24 × M3 hex nut", "into the pocket on the top face"] && not ("T-nut" `isInfixOf` tessMd)) (take 500 tessMd)
   -- A rotor must enter its recessed journal before the next axle captures it.
   ro <- planSummary "models/orbit-tower/orbit-tower.assemble"
@@ -1448,6 +1483,7 @@ main = do
   frameTier t
   cubeTier t
   migrationTier t
+  tesseractTier t
   examples t update
   planTier t
   framedFastenerTier t

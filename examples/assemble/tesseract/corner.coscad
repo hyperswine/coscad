@@ -1,35 +1,29 @@
-// Corner block, 19 mm: three square sockets (6.4 wide, 5.8 deep) for the
-// 6 mm bars. Each bar is held by one M3x16 that crosses the block through
-// the bar end's hole: head recessed in an outer face, hex nut in a pocket
-// on the opposite (inner) face, flats toward the block's faces. The three screws run along Z, X and Y
-// for the X, Y and Z sockets, so they never cross and the block keeps its
-// three-fold symmetry about the diagonal; the strut peg socket runs down
-// that diagonal from the inner corner. Local frame: outer corner at the
-// origin, bars leave along +X, +Y, +Z.
-C    = 19
-bar  = 6.4
-deep = 6
-hexr = 3.3
-main = box C C C |> move (C / 2) (C / 2) (C / 2)
-  |> cutat lft+fwd+bot 16.1 9.5 9.5 (box deep bar bar)     // +X socket
-  |> cutat lft+fwd+bot 9.5 16.1 9.5 (box bar deep bar)     // +Y socket
-  |> cutat lft+fwd+bot 9.5 9.5 16.1 (box bar bar deep)     // +Z socket
-  // +X socket: screw along Z, head on the bottom face, nut pocket on top
-  |> cutat lft+fwd+bot 16.1 9.5 9.5 (zcyl 1.7 40)
-  |> cutat lft+fwd+bot 16.1 9.5 0 (zcyl 3 6)
-  |> cutat lft+fwd+bot 16.1 9.5 19 (⎏ 6 hexr 8 |> rotz 30)
-  // +Y socket: screw along X, head on the -X face, nut pocket on +X
-  |> cutat lft+fwd+bot 9.5 16.1 9.5 (xcyl 1.7 40)
-  |> cutat lft+fwd+bot 0 16.1 9.5 (xcyl 3 6)
-  |> cutat lft+fwd+bot 19 16.1 9.5 (⎏ 6 hexr 8 |> roty 90)
-  // +Z socket: screw along Y, head on the -Y face, nut pocket on +Y
-  |> cutat lft+fwd+bot 9.5 9.5 16.1 (ycyl 1.7 40)
-  |> cutat lft+fwd+bot 9.5 0 16.1 (ycyl 3 6)
-  |> cutat lft+fwd+bot 9.5 19 16.1 (⎏ 6 hexr 8 |> rotx 90)
-  // strut peg socket down the body diagonal from the inner corner
-  |> cutat lft+fwd+bot 18 18 18 (zcyl 2.65 10 |> roty 54.7356 |> rotz 45)
-// Oriented joint interfaces; construction metadata does not add material.
-  |> frame bar_socket_bar1 ctr rt top 3.75 0 0
-  |> frame bar_socket_bar5 ctr bak top 0 3.75 0
-  |> frame bar_socket_bar9 ctr top bak 0 0 3.75
-  |> frame diagonal_socket_strut1 ctr rt+bak+top top 8.5 8.5 8.5
+// Shared dimensions are duplicated deliberately in the two printable halves.
+// 12 mm hubs versus 19 mm on the bolted version; bars are 7 mm wide.
+C = 12
+half = C / 2
+d = 54.735610317245346
+collar_r = 2.8
+neck_r = 2.2
+blank = ▣ C C C 0.4 |> move half half half
+// Shouldered end: 5.4 mm collar at x=9.2..10.2, 4.2 mm neck to x=12.
+x_socket = (xcyl collar_r 1.2 |> move 9.7 half half) ⊕ (xcyl neck_r 2.3 |> move 11.25 half half)
+// Swept open channels admit the bars from outside each edge, perpendicular to their axes.
+y_socket = x_socket |> rotz 90 |> move C 0 0
+z_socket = x_socket |> roty -90 |> move C 0 0
+x_open = x_socket ⇓ (x_socket |> move 0 -12 -12)
+y_open = y_socket ⇓ (y_socket |> move -12 0 -12)
+z_open = z_socket ⇓ (z_socket |> move -12 -12 0)
+sockets = x_open ⊕ y_open ⊕ z_open
+// Half-space z>=0, oriented along the body diagonal. Split at x+y+z=21.
+positive = box 100 100 100 |> move 0 0 50 |> roty d |> rotz 45 |> move 7 7 7
+// A 0.12 mm gap between halves keeps the cap from bottoming before its pin seats.
+inside = positive |> move 0.0692820323 0.0692820323 0.0692820323
+pin_hole = zcyl 1.65 3.6 |> move 0 0 1.3 |> roty d |> rotz 45 |> move 7 7 7
+strut_hole = zcyl 2.65 5.6 |> roty d |> rotz 45 |> move 11.6 11.6 11.6
+main = (blank ∩ inside) ⊖ sockets ⊖ pin_hole ⊖ strut_hole
+  |> frame bar_socket_bar1 ctr rt top 3.2 0 0
+  |> frame bar_socket_bar5 ctr bak top 0 3.2 0
+  |> frame bar_socket_bar9 ctr top bak 0 0 3.2
+  |> frame diagonal_socket_strut1 ctr rt+bak+top top 6 6 6
+  |> frame lock ctr lft+fwd+bot top 1 1 1

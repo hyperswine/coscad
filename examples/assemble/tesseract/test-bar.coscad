@@ -1,0 +1,6 @@
+// Short one-ended bar for checking one complete corner before a full print.
+body = ▣ 16 7 7 0.4
+neck = xcyl 2.1 1.95 |> move -8.85 0 0
+collar = xcyl 2.7 1 |> move -10.3 0 0
+main = body ⊕ neck ⊕ collar
+  |> frame end ctr lft top -10.8 0 0

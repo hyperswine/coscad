@@ -13,6 +13,10 @@
   reports plate overflow, `coscad next` spills to more beds), `autotest`
   (orientation search), and `bow3/` — the flagship three-part
   manufactured assembly.
+- `examples/assemble/tesseract/` — a 100 mm nested-cube display with 12 mm
+  split hubs and captured printed joints, no screws or nuts. The supported
+  build, finished object, three-piece fit test and retained bolted version
+  are described in [Tesseract](TESSERACT.md).
 - `examples-next/` — earlier manufacturing-era parts (bow2 generation,
   greaser tool with its manifest kept as a reference output), and
   `example_check.assemble` with parts `a`/`b`/`c` — a `coscad check`

@@ -1,0 +1,9 @@
+// Three small pieces: one base, one cap and one captured bar end.
+plate 256 256 6
+corner ← corner.coscad ×1 ▽lft+fwd+bot
+cap ← cap.coscad ×1 ▽lft+fwd+bot
+// Stand the short bar on its broad end so the collar prints upward.
+bar ← test-bar.coscad ×1 ▽rt
+fixed corner 0 0 0 0 0 0
+mate cap @lock corner @lock
+mate bar @end corner @bar_socket_bar1

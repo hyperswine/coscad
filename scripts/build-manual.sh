@@ -14,7 +14,7 @@ commit=$(git rev-parse --short HEAD 2>/dev/null || echo dev)
 if ! git diff --quiet || ! git diff --cached --quiet; then commit="$commit-dirty"; fi
 stamp=$(date -u +"%Y-%m-%d %H:%MZ")
 
-pages=(README:Overview docs/ORBIT-TOWER:Orbit-Tower-notes docs/LANGEXTENSION:Language docs/TOPOLOGICAL:Topological docs/MANUFACTURING:Manufacturing docs/PLAN:Build-plans docs/LESSONS:Lessons docs/SYNTAX:Syntax-modes docs/EXAMPLES:Examples CHANGELOG:Changelog)
+pages=(README:Overview docs/ORBIT-TOWER:Orbit-Tower-notes docs/LANGEXTENSION:Language docs/TOPOLOGICAL:Topological docs/MANUFACTURING:Manufacturing docs/PLAN:Build-plans docs/LESSONS:Lessons docs/SYNTAX:Syntax-modes docs/EXAMPLES:Examples docs/TESSERACT:Tesseract CHANGELOG:Changelog)
 nav="$tmp/nav.html"
 {
   echo '<nav class="top"><a class="brand" href="index.html">CoScad manual</a>'

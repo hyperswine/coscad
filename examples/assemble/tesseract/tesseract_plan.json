@@ -1,9 +1,14 @@
 {
-  "source": "tesseract.assemble",
+  "source": "examples/assemble/tesseract/tesseract.assemble",
   "parts": [
     {
       "name": "corner1",
       "part": "corner1",
+      "material": "printed"
+    },
+    {
+      "name": "cap1",
+      "part": "cap1",
       "material": "printed"
     },
     {
@@ -12,8 +17,18 @@
       "material": "printed"
     },
     {
+      "name": "cap2",
+      "part": "cap2",
+      "material": "printed"
+    },
+    {
       "name": "corner3",
       "part": "corner3",
+      "material": "printed"
+    },
+    {
+      "name": "cap3",
+      "part": "cap3",
       "material": "printed"
     },
     {
@@ -22,8 +37,18 @@
       "material": "printed"
     },
     {
+      "name": "cap4",
+      "part": "cap4",
+      "material": "printed"
+    },
+    {
       "name": "corner5",
       "part": "corner5",
+      "material": "printed"
+    },
+    {
+      "name": "cap5",
+      "part": "cap5",
       "material": "printed"
     },
     {
@@ -32,13 +57,28 @@
       "material": "printed"
     },
     {
+      "name": "cap6",
+      "part": "cap6",
+      "material": "printed"
+    },
+    {
       "name": "corner7",
       "part": "corner7",
       "material": "printed"
     },
     {
+      "name": "cap7",
+      "part": "cap7",
+      "material": "printed"
+    },
+    {
       "name": "corner8",
       "part": "corner8",
+      "material": "printed"
+    },
+    {
+      "name": "cap8",
+      "part": "cap8",
       "material": "printed"
     },
     {
@@ -145,6 +185,11 @@
       "name": "inner",
       "part": "inner",
       "material": "printed"
+    },
+    {
+      "name": "jig",
+      "part": "jig",
+      "material": "printed"
     }
   ],
   "design_errors": [],
@@ -153,25 +198,7 @@
       "step": 1,
       "rest": "bottom (-Z) face",
       "flip": false,
-      "parts": [],
-      "preload": ["corner1", "corner2", "corner3", "corner4", "corner5", "corner6", "corner7", "corner8"],
-      "fasteners": [],
-      "warnings": ["Load the nuts into corner1 in hand, turning it to reach the pockets or slots; retain them while placing the part", "Load the nuts into corner2 in hand, turning it to reach the pockets or slots; retain them while placing the part", "Load the nuts into corner3 in hand, turning it to reach the pockets or slots; retain them while placing the part", "Load the nuts into corner4 in hand, turning it to reach the pockets or slots; retain them while placing the part", "Load the nuts into corner5 in hand, turning it to reach the pockets or slots; retain them while placing the part", "Load the nuts into corner6 in hand, turning it to reach the pockets or slots; retain them while placing the part", "Load the nuts into corner7 in hand, turning it to reach the pockets or slots; retain them while placing the part", "Load the nuts into corner8 in hand, turning it to reach the pockets or slots; retain them while placing the part"]
-    },
-    {
-      "step": 2,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["corner1", "corner2", "corner3", "corner4"],
-      "preload": [],
-      "fasteners": [],
-      "warnings": []
-    },
-    {
-      "step": 3,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["strut1"],
+      "parts": ["jig", "inner", "strut1"],
       "preload": [],
       "fasteners": [
         {
@@ -179,21 +206,46 @@
           "head": "peg",
           "nut": "none",
           "clamped": "strut1",
-          "host": "corner1",
-          "face": "rt",
-          "position_mm": [19, 15.726, 16.1],
-          "axis": [1, 0, 0],
-          "head_position_mm": [44.587, 15.726, 16.1],
+          "host": "inner",
+          "face": "lft",
+          "position_mm": [35, 39.714, 39.34],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [7.48, 39.714, 39.34],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 16.1,
+          "at_mm": 4.714,
           "torque_nm": 0
         }
       ],
       "warnings": []
     },
     {
-      "step": 4,
+      "step": 2,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["corner1"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "corner1",
+          "host": "strut1",
+          "face": "lft",
+          "position_mm": [7.48, 9.74, 10.113],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [0, 9.74, 10.113],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 2.26,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 3,
       "rest": "bottom (-Z) face",
       "flip": false,
       "parts": ["strut2"],
@@ -204,14 +256,39 @@
           "head": "peg",
           "nut": "none",
           "clamped": "strut2",
-          "host": "corner2",
-          "face": "lft",
-          "position_mm": [81, 15.726, 16.1],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [55.413, 15.726, 16.1],
+          "host": "inner",
+          "face": "rt",
+          "position_mm": [65, 39.714, 39.34],
+          "axis": [1, 0, 0],
+          "head_position_mm": [92.52, 39.714, 39.34],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 16.1,
+          "at_mm": 4.714,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 4,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["corner2"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "corner2",
+          "host": "strut2",
+          "face": "rt",
+          "position_mm": [92.52, 9.74, 10.113],
+          "axis": [1, 0, 0],
+          "head_position_mm": [100, 9.74, 10.113],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 2.26,
           "torque_nm": 0
         }
       ],
@@ -229,14 +306,14 @@
           "head": "peg",
           "nut": "none",
           "clamped": "strut3",
-          "host": "corner3",
-          "face": "lft",
-          "position_mm": [81, 84.274, 16.1],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [55.413, 84.274, 16.1],
+          "host": "inner",
+          "face": "rt",
+          "position_mm": [65, 60.286, 39.34],
+          "axis": [1, 0, 0],
+          "head_position_mm": [92.52, 60.286, 39.34],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 3.274,
+          "at_mm": 25.286,
           "torque_nm": 0
         }
       ],
@@ -244,6 +321,31 @@
     },
     {
       "step": 6,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["corner3"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "corner3",
+          "host": "strut3",
+          "face": "rt",
+          "position_mm": [92.52, 90.26, 10.113],
+          "axis": [1, 0, 0],
+          "head_position_mm": [100, 90.26, 10.113],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 34.688,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 7,
       "rest": "bottom (-Z) face",
       "flip": false,
       "parts": ["strut4"],
@@ -254,576 +356,46 @@
           "head": "peg",
           "nut": "none",
           "clamped": "strut4",
-          "host": "corner4",
-          "face": "rt",
-          "position_mm": [19, 84.274, 16.1],
-          "axis": [1, 0, 0],
-          "head_position_mm": [44.587, 84.274, 16.1],
+          "host": "inner",
+          "face": "lft",
+          "position_mm": [35, 60.286, 39.34],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [7.48, 60.286, 39.34],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 16.1,
+          "at_mm": 25.286,
           "torque_nm": 0
         }
       ],
       "warnings": []
-    },
-    {
-      "step": 7,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar5"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.rt",
-          "clamped": "corner1",
-          "host": "bar5",
-          "face": "lft",
-          "position_mm": [6.5, 16.125, 9.5],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [0, 16.125, 9.5],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["driver axis is not vertical here (lft face of bar5); keep the driver square to the bracket"]
     },
     {
       "step": 8,
       "rest": "bottom (-Z) face",
       "flip": false,
-      "parts": ["bar6"],
+      "parts": ["corner4"],
       "preload": [],
       "fasteners": [
         {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.lft",
-          "clamped": "corner3",
-          "host": "bar6",
-          "face": "rt",
-          "position_mm": [93.5, 83.875, 9.5],
-          "axis": [1, 0, 0],
-          "head_position_mm": [100, 83.875, 9.5],
-          "thread_reach_mm": 9.5,
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "corner4",
+          "host": "strut4",
+          "face": "lft",
+          "position_mm": [7.48, 90.26, 10.113],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [0, 90.26, 10.113],
+          "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
+          "at_mm": 34.688,
+          "torque_nm": 0
         }
       ],
-      "warnings": ["driver axis is not vertical here (rt face of bar6); keep the driver square to the bracket"]
+      "warnings": []
     },
     {
       "step": 9,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar2"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.fwd",
-          "clamped": "corner4",
-          "host": "bar2",
-          "face": "bak",
-          "position_mm": [16.125, 93.5, 9.5],
-          "axis": [0, 1, 0],
-          "head_position_mm": [16.125, 100, 9.5],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["driver axis is not vertical here (bak face of bar2); keep the driver square to the bracket"]
-    },
-    {
-      "step": 10,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar1"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.bak",
-          "clamped": "corner2",
-          "host": "bar1",
-          "face": "fwd",
-          "position_mm": [83.875, 6.5, 9.5],
-          "axis": [0, -1, 0],
-          "head_position_mm": [83.875, 0, 9.5],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["driver axis is not vertical here (fwd face of bar1); keep the driver square to the bracket"]
-    },
-    {
-      "step": 11,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar10"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.lft",
-          "clamped": "corner2",
-          "host": "bar10",
-          "face": "rt",
-          "position_mm": [93.5, 9.5, 16.125],
-          "axis": [1, 0, 0],
-          "head_position_mm": [100, 9.5, 16.125],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["bar10 stands on end in this step; steady it until it is braced", "driver axis is not vertical here (rt face of bar10); keep the driver square to the bracket"]
-    },
-    {
-      "step": 12,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["corner6"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.bak",
-          "clamped": "corner6",
-          "host": "bar10",
-          "face": "fwd",
-          "position_mm": [90.5, 6.5, 83.875],
-          "axis": [0, -1, 0],
-          "head_position_mm": [90.5, 0, 83.875],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["driver axis is not vertical here (fwd face of bar10); keep the driver square to the bracket"]
-    },
-    {
-      "step": 13,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar3"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.bot",
-          "clamped": "corner6",
-          "host": "bar3",
-          "face": "top",
-          "position_mm": [83.875, 9.5, 93.5],
-          "axis": [0, 0, 1],
-          "head_position_mm": [83.875, 9.5, 100],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["the nut pocket on the bot face of corner6 faces down here; hold the nut in it while the screw starts"]
-    },
-    {
-      "step": 14,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["strut6"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "peg",
-          "head": "peg",
-          "nut": "none",
-          "clamped": "strut6",
-          "host": "corner6",
-          "face": "lft",
-          "position_mm": [81, 15.726, 83.9],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [55.413, 15.726, 83.9],
-          "thread_reach_mm": 0,
-          "inset_mm": 0,
-          "at_mm": 15.726,
-          "torque_nm": 0
-        }
-      ],
-      "warnings": []
-    },
-    {
-      "step": 15,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar8"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.lft",
-          "clamped": "corner6",
-          "host": "bar8",
-          "face": "rt",
-          "position_mm": [93.5, 16.125, 90.5],
-          "axis": [1, 0, 0],
-          "head_position_mm": [100, 16.125, 90.5],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["driver axis is not vertical here (rt face of bar8); keep the driver square to the bracket"]
-    },
-    {
-      "step": 16,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["corner7"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.bot",
-          "clamped": "corner7",
-          "host": "bar8",
-          "face": "top",
-          "position_mm": [90.5, 83.875, 93.5],
-          "axis": [0, 0, 1],
-          "head_position_mm": [90.5, 83.875, 100],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["the nut pocket on the bot face of corner7 faces down here; hold the nut in it while the screw starts"]
-    },
-    {
-      "step": 17,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar4"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.fwd",
-          "clamped": "corner7",
-          "host": "bar4",
-          "face": "bak",
-          "position_mm": [83.875, 93.5, 90.5],
-          "axis": [0, 1, 0],
-          "head_position_mm": [83.875, 100, 90.5],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["driver axis is not vertical here (bak face of bar4); keep the driver square to the bracket"]
-    },
-    {
-      "step": 18,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["strut7"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "peg",
-          "head": "peg",
-          "nut": "none",
-          "clamped": "strut7",
-          "host": "corner7",
-          "face": "lft",
-          "position_mm": [81, 84.274, 83.9],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [55.413, 84.274, 83.9],
-          "thread_reach_mm": 0,
-          "inset_mm": 0,
-          "at_mm": 3.274,
-          "torque_nm": 0
-        }
-      ],
-      "warnings": []
-    },
-    {
-      "step": 19,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["corner8"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.bot",
-          "clamped": "corner8",
-          "host": "bar4",
-          "face": "top",
-          "position_mm": [16.125, 90.5, 93.5],
-          "axis": [0, 0, 1],
-          "head_position_mm": [16.125, 90.5, 100],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["the nut pocket on the bot face of corner8 faces down here; hold the nut in it while the screw starts"]
-    },
-    {
-      "step": 20,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar7"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.rt",
-          "clamped": "corner8",
-          "host": "bar7",
-          "face": "lft",
-          "position_mm": [6.5, 83.875, 90.5],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [0, 83.875, 90.5],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["driver axis is not vertical here (lft face of bar7); keep the driver square to the bracket"]
-    },
-    {
-      "step": 21,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["strut8"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "peg",
-          "head": "peg",
-          "nut": "none",
-          "clamped": "strut8",
-          "host": "corner8",
-          "face": "rt",
-          "position_mm": [19, 84.274, 83.9],
-          "axis": [1, 0, 0],
-          "head_position_mm": [44.587, 84.274, 83.9],
-          "thread_reach_mm": 0,
-          "inset_mm": 0,
-          "at_mm": 3.274,
-          "torque_nm": 0
-        }
-      ],
-      "warnings": []
-    },
-    {
-      "step": 22,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar11"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.fwd",
-          "clamped": "corner3",
-          "host": "bar11",
-          "face": "bak",
-          "position_mm": [90.5, 93.5, 16.125],
-          "axis": [0, 1, 0],
-          "head_position_mm": [90.5, 100, 16.125],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        },
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.lft",
-          "clamped": "corner7",
-          "host": "bar11",
-          "face": "rt",
-          "position_mm": [93.5, 90.5, 83.875],
-          "axis": [1, 0, 0],
-          "head_position_mm": [100, 90.5, 83.875],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["bar11 stands on end in this step; steady it until it is braced", "driver axis is not vertical here (bak face of bar11); keep the driver square to the bracket", "driver axis is not vertical here (rt face of bar11); keep the driver square to the bracket"]
-    },
-    {
-      "step": 23,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar12"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.rt",
-          "clamped": "corner4",
-          "host": "bar12",
-          "face": "lft",
-          "position_mm": [6.5, 90.5, 16.125],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [0, 90.5, 16.125],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        },
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.fwd",
-          "clamped": "corner8",
-          "host": "bar12",
-          "face": "bak",
-          "position_mm": [9.5, 93.5, 83.875],
-          "axis": [0, 1, 0],
-          "head_position_mm": [9.5, 100, 83.875],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["bar12 stands on end in this step; steady it until it is braced", "driver axis is not vertical here (lft face of bar12); keep the driver square to the bracket", "driver axis is not vertical here (bak face of bar12); keep the driver square to the bracket"]
-    },
-    {
-      "step": 24,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["bar9"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.bak",
-          "clamped": "corner1",
-          "host": "bar9",
-          "face": "fwd",
-          "position_mm": [9.5, 6.5, 16.125],
-          "axis": [0, -1, 0],
-          "head_position_mm": [9.5, 0, 16.125],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["bar9 stands on end in this step; steady it until it is braced", "driver axis is not vertical here (fwd face of bar9); keep the driver square to the bracket"]
-    },
-    {
-      "step": 25,
-      "rest": "bottom (-Z) face",
-      "flip": false,
-      "parts": ["corner5"],
-      "preload": [],
-      "fasteners": [
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.bot",
-          "clamped": "corner5",
-          "host": "bar7",
-          "face": "top",
-          "position_mm": [9.5, 16.125, 93.5],
-          "axis": [0, 0, 1],
-          "head_position_mm": [9.5, 16.125, 100],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        },
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.bak",
-          "clamped": "corner5",
-          "host": "bar3",
-          "face": "fwd",
-          "position_mm": [16.125, 6.5, 90.5],
-          "axis": [0, -1, 0],
-          "head_position_mm": [16.125, 0, 90.5],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        },
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.rt",
-          "clamped": "corner5",
-          "host": "bar9",
-          "face": "lft",
-          "position_mm": [6.5, 9.5, 83.875],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [0, 9.5, 83.875],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
-        }
-      ],
-      "warnings": ["the nut pocket on the bot face of corner5 faces down here; hold the nut in it while the screw starts", "driver axis is not vertical here (fwd face of bar3); keep the driver square to the bracket", "driver axis is not vertical here (lft face of bar9); keep the driver square to the bracket"]
-    },
-    {
-      "step": 26,
       "rest": "bottom (-Z) face",
       "flip": false,
       "parts": ["strut5"],
@@ -834,218 +406,869 @@
           "head": "peg",
           "nut": "none",
           "clamped": "strut5",
-          "host": "corner5",
-          "face": "rt",
-          "position_mm": [19, 15.726, 83.9],
-          "axis": [1, 0, 0],
-          "head_position_mm": [44.587, 15.726, 83.9],
+          "host": "inner",
+          "face": "lft",
+          "position_mm": [35, 39.714, 60.66],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [7.48, 39.714, 60.66],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 2.9,
+          "at_mm": 4.714,
           "torque_nm": 0
         }
       ],
       "warnings": []
     },
     {
-      "step": 27,
-      "rest": "top (+Z) face",
-      "flip": true,
-      "parts": [],
+      "step": 10,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["corner5"],
       "preload": [],
       "fasteners": [
         {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.top",
-          "clamped": "corner1",
-          "host": "bar1",
-          "face": "bot",
-          "position_mm": [16.125, 9.5, 6.5],
-          "axis": [0, 0, -1],
-          "head_position_mm": [16.125, 9.5, 0],
-          "thread_reach_mm": 9.5,
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "corner5",
+          "host": "strut5",
+          "face": "lft",
+          "position_mm": [7.48, 9.74, 89.887],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [0, 9.74, 89.887],
+          "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        },
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.top",
-          "clamped": "corner2",
-          "host": "bar6",
-          "face": "bot",
-          "position_mm": [90.5, 16.125, 6.5],
-          "axis": [0, 0, -1],
-          "head_position_mm": [90.5, 16.125, 0],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 2.875,
-          "torque_nm": 0.4
-        },
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.top",
-          "clamped": "corner3",
-          "host": "bar2",
-          "face": "bot",
-          "position_mm": [83.875, 90.5, 6.5],
-          "axis": [0, 0, -1],
-          "head_position_mm": [83.875, 90.5, 0],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
-        },
-        {
-          "spec": "M3x16",
-          "head": "socket",
-          "nut": "hex",
-          "pocket": "clamped.top",
-          "clamped": "corner4",
-          "host": "bar5",
-          "face": "bot",
-          "position_mm": [9.5, 83.875, 6.5],
-          "axis": [0, 0, -1],
-          "head_position_mm": [9.5, 83.875, 0],
-          "thread_reach_mm": 9.5,
-          "inset_mm": 0,
-          "at_mm": 70.625,
-          "torque_nm": 0.4
+          "at_mm": 2.26,
+          "torque_nm": 0
         }
       ],
-      "warnings": ["Hold corner1, corner2, corner3, corner4 against the assembly while turning it; their joints are not fastened yet", "the nut pocket on the top face of corner1 faces down here; hold the nut in it while the screw starts", "the nut pocket on the top face of corner2 faces down here; hold the nut in it while the screw starts", "the nut pocket on the top face of corner3 faces down here; hold the nut in it while the screw starts", "the nut pocket on the top face of corner4 faces down here; hold the nut in it while the screw starts"]
+      "warnings": []
+    },
+    {
+      "step": 11,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["strut6"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "strut6",
+          "host": "inner",
+          "face": "rt",
+          "position_mm": [65, 39.714, 60.66],
+          "axis": [1, 0, 0],
+          "head_position_mm": [92.52, 39.714, 60.66],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 4.714,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 12,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["corner6"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "corner6",
+          "host": "strut6",
+          "face": "rt",
+          "position_mm": [92.52, 9.74, 89.887],
+          "axis": [1, 0, 0],
+          "head_position_mm": [100, 9.74, 89.887],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 2.26,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 13,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["strut7"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "strut7",
+          "host": "inner",
+          "face": "rt",
+          "position_mm": [65, 60.286, 60.66],
+          "axis": [1, 0, 0],
+          "head_position_mm": [92.52, 60.286, 60.66],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 25.286,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 14,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["corner7"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "corner7",
+          "host": "strut7",
+          "face": "rt",
+          "position_mm": [92.52, 90.26, 89.887],
+          "axis": [1, 0, 0],
+          "head_position_mm": [100, 90.26, 89.887],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 34.688,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 15,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["strut8"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "strut8",
+          "host": "inner",
+          "face": "lft",
+          "position_mm": [35, 60.286, 60.66],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [7.48, 60.286, 60.66],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 25.286,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 16,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["corner8"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "corner8",
+          "host": "strut8",
+          "face": "lft",
+          "position_mm": [7.48, 90.26, 89.887],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [0, 90.26, 89.887],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 34.688,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 17,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar1"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar1",
+          "host": "corner1",
+          "face": "rt",
+          "position_mm": [9.2, 6, 6],
+          "axis": [1, 0, 0],
+          "head_position_mm": [90.8, 6, 6],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar1",
+          "host": "corner2",
+          "face": "lft",
+          "position_mm": [90.8, 6, 6],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [9.2, 6, 6],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 18,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar4"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar4",
+          "host": "corner8",
+          "face": "rt",
+          "position_mm": [9.2, 94, 94],
+          "axis": [1, 0, 0],
+          "head_position_mm": [90.8, 94, 94],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar4",
+          "host": "corner7",
+          "face": "lft",
+          "position_mm": [90.8, 94, 94],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [9.2, 94, 94],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 19,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar5"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar5",
+          "host": "corner1",
+          "face": "bak",
+          "position_mm": [6, 9.2, 6],
+          "axis": [0, 1, 0],
+          "head_position_mm": [6, 90.8, 6],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar5",
+          "host": "corner4",
+          "face": "fwd",
+          "position_mm": [6, 90.8, 6],
+          "axis": [0, -1, 0],
+          "head_position_mm": [6, 9.2, 6],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 20,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar6"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar6",
+          "host": "corner2",
+          "face": "bak",
+          "position_mm": [94, 9.2, 6],
+          "axis": [0, 1, 0],
+          "head_position_mm": [94, 90.8, 6],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar6",
+          "host": "corner3",
+          "face": "fwd",
+          "position_mm": [94, 90.8, 6],
+          "axis": [0, -1, 0],
+          "head_position_mm": [94, 9.2, 6],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 21,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar7"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar7",
+          "host": "corner5",
+          "face": "bak",
+          "position_mm": [6, 9.2, 94],
+          "axis": [0, 1, 0],
+          "head_position_mm": [6, 90.8, 94],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar7",
+          "host": "corner8",
+          "face": "fwd",
+          "position_mm": [6, 90.8, 94],
+          "axis": [0, -1, 0],
+          "head_position_mm": [6, 9.2, 94],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 22,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar8"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar8",
+          "host": "corner6",
+          "face": "bak",
+          "position_mm": [94, 9.2, 94],
+          "axis": [0, 1, 0],
+          "head_position_mm": [94, 90.8, 94],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar8",
+          "host": "corner7",
+          "face": "fwd",
+          "position_mm": [94, 90.8, 94],
+          "axis": [0, -1, 0],
+          "head_position_mm": [94, 9.2, 94],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 23,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar9"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar9",
+          "host": "corner1",
+          "face": "top",
+          "position_mm": [6, 6, 9.2],
+          "axis": [0, 0, 1],
+          "head_position_mm": [6, 6, 90.8],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar9",
+          "host": "corner5",
+          "face": "bot",
+          "position_mm": [6, 6, 90.8],
+          "axis": [0, 0, -1],
+          "head_position_mm": [6, 6, 9.2],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": ["bar9 stands on end in this step; steady it until it is braced"]
+    },
+    {
+      "step": 24,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar3"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar3",
+          "host": "corner5",
+          "face": "rt",
+          "position_mm": [9.2, 6, 94],
+          "axis": [1, 0, 0],
+          "head_position_mm": [90.8, 6, 94],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar3",
+          "host": "corner6",
+          "face": "lft",
+          "position_mm": [90.8, 6, 94],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [9.2, 6, 94],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 25,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar11"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar11",
+          "host": "corner3",
+          "face": "top",
+          "position_mm": [94, 94, 9.2],
+          "axis": [0, 0, 1],
+          "head_position_mm": [94, 94, 90.8],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar11",
+          "host": "corner7",
+          "face": "bot",
+          "position_mm": [94, 94, 90.8],
+          "axis": [0, 0, -1],
+          "head_position_mm": [94, 94, 9.2],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": ["bar11 stands on end in this step; steady it until it is braced"]
+    },
+    {
+      "step": 26,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar10"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar10",
+          "host": "corner2",
+          "face": "top",
+          "position_mm": [94, 6, 9.2],
+          "axis": [0, 0, 1],
+          "head_position_mm": [94, 6, 90.8],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar10",
+          "host": "corner6",
+          "face": "bot",
+          "position_mm": [94, 6, 90.8],
+          "axis": [0, 0, -1],
+          "head_position_mm": [94, 6, 9.2],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": ["bar10 stands on end in this step; steady it until it is braced"]
+    },
+    {
+      "step": 27,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["bar12"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar12",
+          "host": "corner4",
+          "face": "top",
+          "position_mm": [6, 94, 9.2],
+          "axis": [0, 0, 1],
+          "head_position_mm": [6, 94, 90.8],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        },
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "bar12",
+          "host": "corner8",
+          "face": "bot",
+          "position_mm": [6, 94, 90.8],
+          "axis": [0, 0, -1],
+          "head_position_mm": [6, 94, 9.2],
+          "thread_reach_mm": 0,
+          "inset_mm": 2.8,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": ["bar12 stands on end in this step; steady it until it is braced"]
     },
     {
       "step": 28,
-      "rest": "top (+Z) face",
+      "rest": "bottom (-Z) face",
       "flip": false,
-      "parts": ["inner"],
+      "parts": ["bar2"],
       "preload": [],
       "fasteners": [
         {
           "spec": "peg",
           "head": "peg",
           "nut": "none",
-          "clamped": "inner",
-          "host": "strut1",
+          "clamped": "bar2",
+          "host": "corner4",
           "face": "rt",
-          "position_mm": [44.587, 39.794, 39.42],
+          "position_mm": [9.2, 94, 6],
           "axis": [1, 0, 0],
-          "head_position_mm": [65, 39.794, 39.42],
+          "head_position_mm": [90.8, 94, 6],
           "thread_reach_mm": 0,
-          "inset_mm": 0,
-          "at_mm": 27.341,
+          "inset_mm": 2.8,
+          "at_mm": 6,
           "torque_nm": 0
         },
         {
           "spec": "peg",
           "head": "peg",
           "nut": "none",
-          "clamped": "inner",
-          "host": "strut2",
+          "clamped": "bar2",
+          "host": "corner3",
           "face": "lft",
-          "position_mm": [55.413, 39.794, 39.42],
+          "position_mm": [90.8, 94, 6],
           "axis": [-1, 0, 0],
-          "head_position_mm": [35, 39.794, 39.42],
+          "head_position_mm": [9.2, 94, 6],
           "thread_reach_mm": 0,
-          "inset_mm": 0,
-          "at_mm": 27.341,
+          "inset_mm": 2.8,
+          "at_mm": 6,
           "torque_nm": 0
-        },
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 29,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["cap1"],
+      "preload": [],
+      "fasteners": [
         {
           "spec": "peg",
           "head": "peg",
           "nut": "none",
-          "clamped": "inner",
-          "host": "strut3",
-          "face": "lft",
-          "position_mm": [55.413, 60.206, 39.42],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [35, 60.206, 39.42],
+          "clamped": "cap1",
+          "host": "corner1",
+          "face": "bot",
+          "position_mm": [6, 6, 0],
+          "axis": [0, 0, -1],
+          "head_position_mm": [6, 6, 0],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 4.794,
+          "at_mm": 6,
           "torque_nm": 0
-        },
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 30,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["cap2"],
+      "preload": [],
+      "fasteners": [
         {
           "spec": "peg",
           "head": "peg",
           "nut": "none",
-          "clamped": "inner",
-          "host": "strut4",
-          "face": "rt",
-          "position_mm": [44.587, 60.206, 39.42],
-          "axis": [1, 0, 0],
-          "head_position_mm": [65, 60.206, 39.42],
+          "clamped": "cap2",
+          "host": "corner2",
+          "face": "bot",
+          "position_mm": [94, 6, 0],
+          "axis": [0, 0, -1],
+          "head_position_mm": [94, 6, 0],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 4.794,
+          "at_mm": 6,
           "torque_nm": 0
-        },
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 31,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["cap3"],
+      "preload": [],
+      "fasteners": [
         {
           "spec": "peg",
           "head": "peg",
           "nut": "none",
-          "clamped": "inner",
-          "host": "strut5",
-          "face": "rt",
-          "position_mm": [44.587, 39.794, 60.58],
-          "axis": [1, 0, 0],
-          "head_position_mm": [65, 39.794, 60.58],
+          "clamped": "cap3",
+          "host": "corner3",
+          "face": "bot",
+          "position_mm": [94, 94, 0],
+          "axis": [0, 0, -1],
+          "head_position_mm": [94, 94, 0],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 27.341,
+          "at_mm": 6,
           "torque_nm": 0
-        },
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 32,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["cap4"],
+      "preload": [],
+      "fasteners": [
         {
           "spec": "peg",
           "head": "peg",
           "nut": "none",
-          "clamped": "inner",
-          "host": "strut6",
-          "face": "lft",
-          "position_mm": [55.413, 39.794, 60.58],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [35, 39.794, 60.58],
+          "clamped": "cap4",
+          "host": "corner4",
+          "face": "bot",
+          "position_mm": [6, 94, 0],
+          "axis": [0, 0, -1],
+          "head_position_mm": [6, 94, 0],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 27.341,
+          "at_mm": 6,
           "torque_nm": 0
-        },
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 33,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["cap5"],
+      "preload": [],
+      "fasteners": [
         {
           "spec": "peg",
           "head": "peg",
           "nut": "none",
-          "clamped": "inner",
-          "host": "strut7",
-          "face": "lft",
-          "position_mm": [55.413, 60.206, 60.58],
-          "axis": [-1, 0, 0],
-          "head_position_mm": [35, 60.206, 60.58],
+          "clamped": "cap5",
+          "host": "corner5",
+          "face": "top",
+          "position_mm": [6, 6, 100],
+          "axis": [0, 0, 1],
+          "head_position_mm": [6, 6, 100],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 4.794,
+          "at_mm": 6,
           "torque_nm": 0
-        },
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 34,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["cap6"],
+      "preload": [],
+      "fasteners": [
         {
           "spec": "peg",
           "head": "peg",
           "nut": "none",
-          "clamped": "inner",
-          "host": "strut8",
-          "face": "rt",
-          "position_mm": [44.587, 60.206, 60.58],
-          "axis": [1, 0, 0],
-          "head_position_mm": [65, 60.206, 60.58],
+          "clamped": "cap6",
+          "host": "corner6",
+          "face": "top",
+          "position_mm": [94, 6, 100],
+          "axis": [0, 0, 1],
+          "head_position_mm": [94, 6, 100],
           "thread_reach_mm": 0,
           "inset_mm": 0,
-          "at_mm": 4.794,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 35,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["cap7"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "cap7",
+          "host": "corner7",
+          "face": "top",
+          "position_mm": [94, 94, 100],
+          "axis": [0, 0, 1],
+          "head_position_mm": [94, 94, 100],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 6,
+          "torque_nm": 0
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 36,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["cap8"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "peg",
+          "head": "peg",
+          "nut": "none",
+          "clamped": "cap8",
+          "host": "corner8",
+          "face": "top",
+          "position_mm": [6, 94, 100],
+          "axis": [0, 0, 1],
+          "head_position_mm": [6, 94, 100],
+          "thread_reach_mm": 0,
+          "inset_mm": 0,
+          "at_mm": 6,
           "torque_nm": 0
         }
       ],
