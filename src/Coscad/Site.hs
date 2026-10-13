@@ -10,19 +10,21 @@ import Coscad.Plan (PlanSummary (..), StepSummary (..), processPlanSummary)
 import Data.Char (isSpace)
 import Data.List (intercalate, isPrefixOf, sort)
 import System.Directory (copyFile, createDirectoryIfMissing, doesFileExist)
+import Coscad.Json
 import System.Exit (exitFailure)
 import System.FilePath (dropExtension, takeDirectory, takeFileName, (</>))
 import System.IO (hPutStrLn, stderr)
 
 -- | Crude JSON string escaping for values we embed into <script> blocks.
 jstr :: String -> String
-jstr s = "\"" ++ concatMap esc s ++ "\""
-  where
-    esc '"' = "\\\""
-    esc '\\' = "\\\\"
-    esc '<' = "\\u003c"
-    esc '\n' = "\\n"
-    esc c = [c]
+jstr = encode . JString
+
+-- | JSON inside a <script> element must not contain "</", or the browser
+-- ends the script there.
+scriptSafe :: String -> String
+scriptSafe [] = []
+scriptSafe ('<' : '/' : r) = "<\\/" ++ scriptSafe r
+scriptSafe (c : r) = c : scriptSafe r
 
 -- | The build page: everything is rendered client-side from the embedded
 -- plan JSON, so the same page works from a file:// URL or a web host.
@@ -39,7 +41,7 @@ buildPageHtml name planJson imagePrefix nSteps = unlines
   , "<main><details id=\"before\"><summary>Before you start</summary><div id=\"bom\"></div><div id=\"preload\"></div></details>"
   , "<div id=\"errors\"></div><ol id=\"steps\"></ol></main>"
   , "<nav id=\"bar\"><button id=\"prev\">&#9664; Prev</button><span id=\"pos\">&nbsp;</span><button id=\"next\">Next &#9654;</button></nav>"
-  , "<script>const PLAN = " ++ planJson ++ ";\nconst IMG = " ++ jstr imagePrefix ++ ";\nconst NSTEPS = " ++ show nSteps ++ ";"
+  , "<script>const PLAN = " ++ scriptSafe planJson ++ ";\nconst IMG = " ++ jstr imagePrefix ++ ";\nconst NSTEPS = " ++ show nSteps ++ ";"
   , js ++ "</script></body></html>"
   ]
 
@@ -81,20 +83,20 @@ js = unlines
   , "const fasteners = steps.flatMap(s => s.fasteners), screws = fasteners.filter(f => !isPeg(f));"
   , "$('#summary').textContent = `${new Set(steps.flatMap(s => s.parts)).size} parts · ${fasteners.filter(isPeg).length} peg joints · ${screws.length} screws · ${steps.length} steps · ${steps.filter(s => s.flip).length} flips`;"
   , "if (PLAN.design_errors.length) $('#errors').innerHTML = PLAN.design_errors.map(e => `<div class=err>Design error: ${esc(e)}</div>`).join('');"
-  , "const nutWords = f => f.nut === 'Hex' ? 'hex nut' : f.nut === 'DropIn' ? 'drop-in T-nut' : 'slide-in T-nut';"
+  , "const nutWords = f => f.nut === 'hex' ? 'hex nut' : f.nut === 'dropin' ? 'drop-in T-nut' : 'slide-in T-nut';"
   , "const diameter = f => f.spec.replace(/^M(\\d+(?:\\.\\d+)?).*/i, '$1');"
   , "const bom = {}, addBom = k => { bom[k] = (bom[k] || 0) + 1; };"
   , "const parts = PLAN.parts || [...new Set(steps.flatMap(s => s.parts))].map(name => ({part: name.replace(/#\\d+$/, '')}));"
   , "for (const p of parts) addBom(p.part + (p.material ? ` (${p.material})` : ''));"
-  , "for (const f of screws) { addBom(`${f.spec} ${f.head} head screw`); if (f.nut !== 'NoNut') addBom(`M${diameter(f)} ${nutWords(f)}`); }"
+  , "for (const f of screws) { addBom(`${f.spec} ${f.head} head screw`); if (f.nut !== 'none') addBom(`M${diameter(f)} ${nutWords(f)}`); }"
   , "$('#bom').innerHTML = '<b>Bill of materials</b><ul>' + Object.entries(bom).map(([k, n]) => `<li>${n} × ${esc(k)}</li>`).join('') + '</ul>';"
   , "const pocketLocation = p => { const ref = p.replace(/^(clamped|host)\\./, ''); return ref.startsWith('@') ? 'at ' + ref : 'on the ' + ref + ' face'; };"
   , "const holeLocation = f => f.face.startsWith('@') ? 'hole ' + f.face : f.face + ' face';"
-  , "const preloadWords = f => f.nut === 'Hex' ? `M${diameter(f)} hex nut${f.pocket ? ' into the pocket ' + pocketLocation(f.pocket) : ''}` : `M${diameter(f)} ${nutWords(f)}, ${f.face} slot @ ${f.at_mm} mm from the marked low end`;"
-  , "const pre = {}; for (const f of fasteners) if (!isPeg(f) && f.nut !== 'NoNut') { const h = (f.pocket || '').startsWith('clamped.') ? f.clamped : f.host; (pre[h] = pre[h] || []).push(preloadWords(f)); }"
+  , "const preloadWords = f => f.nut === 'hex' ? `M${diameter(f)} hex nut${f.pocket ? ' into the pocket ' + pocketLocation(f.pocket) : ''}` : `M${diameter(f)} ${nutWords(f)}, ${f.face} slot @ ${f.at_mm} mm from the marked low end`;"
+  , "const pre = {}; for (const f of fasteners) if (!isPeg(f) && f.nut !== 'none') { const h = (f.pocket || '').startsWith('clamped.') ? f.clamped : f.host; (pre[h] = pre[h] || []).push(preloadWords(f)); }"
   , "$('#preload').innerHTML = '<b>Nut preload sheet</b>' + (Object.keys(pre).length ? '<ul>' + Object.entries(pre).map(([h, ps]) => `<li><b>${esc(h)}</b>: ${ps.map(esc).join('; ')}</li>`).join('') + '</ul>' : '<p>No nuts to preload.</p>');"
   , "const torqueWords = f => f.torque_nm < 1 ? `${f.torque_nm} Nm (printed lips: finger tight + ¼ turn, no power driver)` : `${f.torque_nm} Nm`;"
-  , "const jointWords = f => isPeg(f) ? `Fit <b>${esc(f.clamped)}</b> to <b>${esc(f.host)}</b> from the ${esc(f.face)} entry${f.inset_mm ? `, onto the seat ${f.inset_mm} mm below the face` : ''} until seated` : `Tighten <code>${esc(f.spec)}</code> ${esc(f.head)} head through <b>${esc(f.clamped)}</b> into <b>${esc(f.host)}</b> (${esc(holeLocation(f))}${f.nut === 'NoNut' ? ', threads into the part' : f.nut === 'Hex' ? ', captive hex nut' : ', slot @ ' + f.at_mm + ' mm'}) — <span class=torque>${esc(torqueWords(f))}</span>`;"
+  , "const jointWords = f => isPeg(f) ? `Fit <b>${esc(f.clamped)}</b> to <b>${esc(f.host)}</b> from the ${esc(f.face)} entry${f.inset_mm ? `, onto the seat ${f.inset_mm} mm below the face` : ''} until seated` : `Tighten <code>${esc(f.spec)}</code> ${esc(f.head)} head through <b>${esc(f.clamped)}</b> into <b>${esc(f.host)}</b> (${esc(holeLocation(f))}${f.nut === 'none' ? ', threads into the part' : f.nut === 'hex' ? ', captive hex nut' : ', slot @ ' + f.at_mm + ' mm'}) — <span class=torque>${esc(torqueWords(f))}</span>`;"
   , "$('#steps').innerHTML = steps.map((s, i) => `<li class=step id=step-${i + 1} data-text=\"${esc([s.rest, ...s.parts, ...s.preload, ...s.fasteners.flatMap(f => [f.spec, f.clamped, f.host, f.face])].join(' ').toLowerCase())}\">"
   , "  <img loading=lazy width=1200 height=900 src=\"${IMG}${i + 1}.png\" alt=\"step ${i + 1}\" onerror=\"this.style.display='none'\">"
   , "  <div class=body><div class=title><b>Step ${i + 1}</b><span class=badge>${esc(s.rest)} down</span>${s.flip ? '<span class=\"badge flip\">flip the assembly</span>' : ''}</div><ul>"
@@ -120,7 +122,7 @@ indexHtml builds = unlines
   , siteNav ""
   , "<header><h1>Builds</h1><div class=muted>" ++ show (length builds) ++ " assembl" ++ (if length builds == 1 then "y" else "ies") ++ "</div><input id=\"q\" type=\"search\" placeholder=\"search builds: name, part, screw&hellip;\" autocomplete=\"off\"></header>"
   , "<main id=\"list\"></main>"
-  , "<script>const BUILDS = [" ++ intercalate "," [ "{name:" ++ jstr n ++ ",dir:" ++ jstr d ++ ",tags:" ++ jstr (unwords tags) ++ ",parts:" ++ show p ++ ",screws:" ++ show f ++ ",steps:" ++ show s ++ "}" | (n, d, tags, p, f, s) <- builds ] ++ "];"
+  , "<script>const BUILDS = " ++ scriptSafe (encode (jlist [jobj [("name", JString n), ("dir", JString d), ("tags", JString (unwords tags)), ("parts", JNumber (fromIntegral p)), ("screws", JNumber (fromIntegral f)), ("steps", JNumber (fromIntegral s))] | (n, d, tags, p, f, s) <- builds])) ++ ";"
   , "const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));"
   , "function render(q) { document.getElementById('list').innerHTML = BUILDS.filter(b => !q || (b.name + ' ' + b.tags).toLowerCase().includes(q)).map(b => `<a class=card href=\"${esc(b.dir)}/index.html\"><img loading=lazy src=\"${esc(b.dir)}/${esc(b.name)}_step1.png\" alt=\"\" onerror=\"this.style.display='none'\"><div class=body><b>${esc(b.name)}</b><div class=muted>${b.parts} parts · ${b.screws} screws · ${b.steps} steps</div><div class=muted>${esc(b.tags)}</div></div></a>`).join('') || '<div class=muted>no builds match</div>'; }"
   , "document.getElementById('q').addEventListener('input', e => render(e.target.value.trim().toLowerCase())); render('');"

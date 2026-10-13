@@ -10,6 +10,7 @@ import Coscad.Codegen
 import Coscad.Constraint (Constraint (..), solveConstraints)
 import Coscad.Geometry
 import Coscad.IO (readFileUtf8, writeFileUtf8)
+import Coscad.Json
 import Coscad.Parser
 import Coscad.Shape
 import Coscad.Validate (finite, readFinite, suggestion, maxQuantity)
@@ -84,7 +85,8 @@ data FlatPart = FlatPart
   }
 
 data AsmResult = AsmResult
-  { arPlate :: (Double, Double, Double)
+  { arSource :: FilePath          -- the .assemble file this came from (for diagnostics)
+  , arPlate :: (Double, Double, Double)
   , arAsm :: Maybe Shape
   , arFlat :: [FlatPart]
   , arMode :: SynMode           -- pragma of this .assemble file
@@ -381,17 +383,17 @@ partOpt =
 
 loadAssembleFile :: [FilePath] -> FilePath -> IO (Either String AsmResult)
 loadAssembleFile visited path
-  | path `elem` visited = return (Left ("Cycle in .assemble references involving: " ++ path))
+  | path `elem` visited = return (Left (path ++ ": cycle in .assemble references involving this file" ++ concatMap (" <- " ++) (reverse visited)))
   | otherwise = do
       exists <- doesFileExist path
       if not exists
-        then return (Left ("File not found: " ++ path))
+        then return (Left (path ++ ": file not found"))
         else do
           contents <- readFileUtf8 path
           case checkedPragma path contents of
             Left err -> return (Left err)
             Right (fmode, fbody) -> case parse (sc *> asmProgram fmode <* eof) path fbody of
-              Left err -> return (Left (errorBundlePretty err))
+              Left err -> return (Left (prettyBundle err))
               Right stmts -> do
                 let dir = takeDirectory path
                     partsS = [p | p@APart {} <- stmts]
@@ -413,7 +415,8 @@ loadAssembleFile visited path
                         return $
                           Right
                             AsmResult
-                              { arPlate = plate
+                              { arSource = path
+                              , arPlate = plate
                               , arAsm = Map.lookup "asm" table
                               , arMode = fmode
                               , arClearance = clr
@@ -429,11 +432,12 @@ loadAssembleFile visited path
 loadRef :: [FilePath] -> FilePath -> AsmStmt -> IO (Either String (String, Shape, [FlatPart]))
 loadRef visited dir (APart name rel cnt down hints) = do
   let p = dir </> rel
+      referrer = case visited of (v : _) -> takeFileName v; [] -> "the assembly"
   case takeExtension p of
     ".coscad" -> do
       exists <- doesFileExist p
       if not exists
-        then return (Left ("Part file not found: " ++ p))
+        then return (Left (p ++ ": part file not found (referenced from " ++ referrer ++ ")"))
         else do
           c <- readFileUtf8 p
           case parseProgramNamed p c of
@@ -445,7 +449,7 @@ loadRef visited dir (APart name rel cnt down hints) = do
       case r of
         Left err -> return (Left err)
         Right ar -> case arAsm ar of
-          Nothing -> return (Left ("Subassembly " ++ p ++ " has no 'asm' definition"))
+          Nothing -> return (Left (p ++ ": subassembly has no 'asm' definition"))
           Just _ | any (\f -> toInteger (fpCount f) * toInteger cnt > toInteger maxQuantity) (arFlat ar) ->
             return (Left (p ++ ": expanded print count for '" ++ name ++ "' is too large; maximum is " ++ show maxQuantity))
           Just s ->
@@ -461,7 +465,7 @@ loadRef visited dir (APart name rel cnt down hints) = do
                     | fp <- arFlat ar
                   ]
                 )
-    ext -> return (Left ("Unsupported part reference (" ++ ext ++ "): " ++ p))
+    ext -> return (Left (p ++ ": unsupported part reference (" ++ ext ++ "); use a .coscad or .assemble file"))
 loadRef _ _ _ = return (Left "internal error: loadRef on non-part statement")
 
 -- | Rotate a shape so the declared anchor faces the bed (-Z),
@@ -518,20 +522,6 @@ packBeds (pw, pd, m) items0 = do
       | y + d > pd - m = Right (reverse acc, item : rest)
       | otherwise = fit (x + w + m) y (max rowD d) ((iid, k, (w, d), (x, y)) : acc) rest
 
-jstr :: String -> String
-jstr s = "\"" ++ concatMap esc s ++ "\""
-  where
-    esc '"' = "\\\""
-    esc '\\' = "\\\\"
-    esc c = [c]
-
-jnum :: Double -> String
-jnum x =
-  let r = fromIntegral (round (x * 1000) :: Integer) / 1000 :: Double
-   in if r == fromIntegral (round r :: Integer)
-        then show (round r :: Integer)
-        else show r
-
 manifestJson ::
   FilePath ->
   String ->
@@ -541,31 +531,36 @@ manifestJson ::
   [FlatPart] ->
   String
 manifestJson src base (pw, pd, m) variants plates asmOnly =
-  "{\n"
-    ++ ("  \"source\": " ++ jstr src ++ ",\n")
-    ++ ("  \"plate\": {\"w\": " ++ jnum pw ++ ", \"d\": " ++ jnum pd ++ ", \"margin\": " ++ jnum m ++ ", \"count\": " ++ show (length plates) ++ "},\n")
-    ++ ("  \"variants\": [\n" ++ intercalate ",\n" (map vj variants) ++ "\n  ],\n")
-    ++ ("  \"placements\": [\n" ++ intercalate ",\n" [pj i p | (i, ps) <- zip [(1 :: Int) ..] plates, p <- ps] ++ "\n  ],\n")
-    ++ ("  \"assembly_only\": [" ++ intercalate ", " (map aj asmOnly) ++ "]\n")
-    ++ "}\n"
+  encodePretty $
+    jobj
+      [ ("source", JString src)
+      , ("plate", jobj [("w", jnum3 pw), ("d", jnum3 pd), ("margin", jnum3 m), ("count", JNumber (fromIntegral (length plates)))])
+      , ("variants", jlist (map vj variants))
+      , ("placements", jlist [pj i p | (i, ps) <- zip [(1 :: Int) ..] plates, p <- ps])
+      , ("assembly_only", jlist (map aj asmOnly))
+      ]
   where
     placed = concat plates
     vj (k@(srcf, dk), fp, _, (w, d, h), vname) =
-      "    {\"id\": " ++ jstr vname ++ ", \"part\": " ++ jstr (fpName fp)
-        ++ ", \"source\": " ++ jstr srcf
-        ++ ", \"down\": " ++ jstr dk
-        ++ ", \"count\": " ++ show (length [() | (_, k', _, _) <- placed, k' == k])
-        ++ ", \"footprint\": [" ++ jnum w ++ ", " ++ jnum d ++ ", " ++ jnum h ++ "]"
-        ++ ", \"scad\": " ++ jstr (base ++ "_part_" ++ vname ++ ".scad")
-        ++ ", \"hints\": {" ++ intercalate ", " [jstr hk ++ ": " ++ jstr hv | (hk, hv) <- fpHints fp] ++ "}}"
+      jobj
+        [ ("id", JString vname)
+        , ("part", JString (fpName fp))
+        , ("source", JString srcf)
+        , ("down", JString dk)
+        , ("count", JNumber (fromIntegral (length [() | (_, k', _, _) <- placed, k' == k])))
+        , ("footprint", jlist (map jnum3 [w, d, h]))
+        , ("scad", JString (base ++ "_part_" ++ vname ++ ".scad"))
+        , ("hints", jobj [(hk, JString hv) | (hk, hv) <- fpHints fp])
+        ]
     pj i (iid, k, (w, d), (x, y)) =
-      "    {\"instance\": " ++ jstr iid ++ ", \"variant\": " ++ jstr (vnameOfK k)
-        ++ ", \"plate\": " ++ show i
-        ++ ", \"x\": " ++ jnum x ++ ", \"y\": " ++ jnum y
-        ++ ", \"w\": " ++ jnum w ++ ", \"d\": " ++ jnum d ++ "}"
+      jobj
+        [ ("instance", JString iid)
+        , ("variant", JString (vnameOfK k))
+        , ("plate", JNumber (fromIntegral i))
+        , ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d)
+        ]
     vnameOfK k = head [vn | (k', _, _, _, vn) <- variants, k' == k]
-    aj fp = "{\"part\": " ++ jstr (fpName fp) ++ ", \"source\": " ++ jstr (fpSource fp) ++ "}"
-
+    aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]
 processAssemble :: FilePath -> IO ()
 processAssemble inputFile = do
   r <- loadAssembleFile [] inputFile
@@ -620,7 +615,7 @@ processAssemble inputFile = do
             )
             (zip [(1 :: Int) ..] plates)
           when (nPlates > 1) $
-            putStrLn ("(" ++ show (length instances) ++ " parts need " ++ show nPlates ++ " plates of " ++ jnum pw ++ "x" ++ jnum pd ++ ")")
+            putStrLn ("(" ++ show (length instances) ++ " parts need " ++ show nPlates ++ " plates of " ++ showD pw ++ "x" ++ showD pd ++ ")")
           writeFileUtf8 (base ++ "_manifest.json") (manifestJson inputFile baseName plate variants plates asmOnly)
           putStrLn ("Wrote " ++ base ++ "_manifest.json")
 

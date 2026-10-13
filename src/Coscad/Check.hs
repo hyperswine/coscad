@@ -16,11 +16,12 @@
 --      distance (grid-accelerated): CONTACT (< 0.02mm) is informational
 --      (mating faces), a gap below the declared `clearance` is a WARNING.
 --
--- Exit code 1 if any OVERLAP is found.
+-- Exit code 2 if any OVERLAP is found (1 means the check could not run).
 module Coscad.Check (module Coscad.Check) where
 
 import Coscad.Assemble
 import Coscad.Codegen
+import Coscad.IO (readFileLatin1, scratchDir)
 import Coscad.Mesh (Tri, meshVolume, parseStlAscii)
 import Coscad.OpenScad (openscadStlArgs, renderStlFile, runOpenscadRaw)
 import Coscad.Shape
@@ -28,9 +29,9 @@ import Control.Monad (forM, forM_, unless, when)
 import Data.IORef
 import Data.List (foldl', intercalate)
 import qualified Data.Map as Map
-import System.Directory (createDirectoryIfMissing, getTemporaryDirectory, removePathForcibly)
-import System.Exit (ExitCode (..), exitFailure)
-import System.FilePath (takeBaseName, (</>))
+import System.Directory (createDirectoryIfMissing, removePathForcibly)
+import System.Exit (ExitCode (..), exitFailure, exitWith)
+import System.FilePath ((</>))
 import System.IO (hPutStrLn, stderr)
 
 type V3 = (Double, Double, Double)
@@ -215,13 +216,16 @@ runOpenscadChecked scadF stlF = do
 processCheck :: FilePath -> IO ()
 processCheck = processCheckWith False
 
--- | Scratch renders go to a per-assembly folder under the system temp
--- directory and are deleted afterwards unless `keepTemp` (--keep-temp).
+-- | Scratch renders go to a fresh folder under the system temp directory
+-- (never shared with another running check) and are deleted afterwards
+-- unless `keepTemp` (--keep-temp), which names the folder.
 processCheckWith :: Bool -> FilePath -> IO ()
-processCheckWith keepTemp path = do
-  tmpRoot <- getTemporaryDirectory
-  let dir = tmpRoot </> "coscad-check" </> takeBaseName path
-  removePathForcibly dir
+processCheckWith keepTemp = processCheckIn keepTemp Nothing
+
+-- | As 'processCheckWith', with an explicit scratch directory (tests).
+processCheckIn :: Bool -> Maybe FilePath -> FilePath -> IO ()
+processCheckIn keepTemp scratch path = do
+  dir <- maybe (scratchDir "check") return scratch
   createDirectoryIfMissing True dir
   res <- loadAssembleFile [] path
   case res of
@@ -270,7 +274,7 @@ processCheckWith keepTemp path = do
                   stlF = dir </> ("chk_pair" ++ show i ++ ".stl")
               let emit x y = writeFile scadF ("intersection() {\n union() { " ++ polyScad x ++ marker ++ " }\n union() { " ++ polyScad y ++ marker ++ " }\n}\n")
                   measure = do
-                    tris <- parseStlAscii <$> readFile stlF
+                    tris <- either (const []) id . parseStlAscii <$> readFileLatin1 stlF
                     return (sum (map meshVolume (filter farFromMarkerNot (splitBodies tris))))
               emit ba bb
               r1 <- runOpenscadChecked scadF stlF
@@ -302,7 +306,7 @@ processCheckWith keepTemp path = do
         nw <- readIORef warnsR
         putStrLn ("check: " ++ show no ++ " overlaps, " ++ show nw ++ " clearance warnings")
         if keepTemp then putStrLn ("scratch renders kept in " ++ dir) else removePathForcibly dir
-        when (no > 0) exitFailure
+        when (no > 0) (exitWith (ExitFailure 2))
   where
     rnd x = fromIntegral (round (x * 1000) :: Integer) / 1000 :: Double
     tails' [] = []

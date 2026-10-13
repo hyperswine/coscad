@@ -14,7 +14,10 @@ module Coscad.OpenScad
   , bosl2Version
   ) where
 
-import Control.Exception (SomeException, try)
+import Control.Concurrent (forkIO)
+import Control.Concurrent.MVar (newEmptyMVar, putMVar, takeMVar)
+import Control.Exception (SomeException, evaluate, try)
+import Coscad.IO (readFileLatin1)
 import Coscad.Mesh
 import Data.Char (isSpace)
 import Data.List (intercalate, isInfixOf, isPrefixOf)
@@ -23,7 +26,9 @@ import System.Environment (getEnvironment, lookupEnv)
 import System.Exit (ExitCode (..))
 import System.FilePath (dropTrailingPathSeparator, takeDirectory, (</>))
 import System.Info (os)
-import System.Process (CreateProcess (..), proc, readCreateProcessWithExitCode)
+import System.IO (hGetContents)
+import System.Process (CmdSpec (..), CreateProcess (..), StdStream (..), proc, terminateProcess, waitForProcess, withCreateProcess)
+import System.Timeout (timeout)
 
 -- | The OpenSCAD binary: $COSCAD_OPENSCAD (may be a wrapper script,
 -- e.g. xvfb-run on a headless box), then `openscad` on PATH, then the
@@ -43,10 +48,23 @@ findOpenscad = do
       [ "/Applications/OpenSCAD.app/Contents/MacOS/openscad"
       , "C:\\Program Files\\OpenSCAD\\openscad.exe"
       , "C:\\Program Files (x86)\\OpenSCAD\\openscad.exe"
+      , "/opt/homebrew/bin/openscad"
       , "/usr/bin/openscad"
       , "/usr/local/bin/openscad"
       , "/snap/bin/openscad"
       ]
+
+-- | Seconds a single OpenSCAD run may take: $COSCAD_OPENSCAD_TIMEOUT,
+-- default 600. A render that is still going after that is killed and
+-- reported as a failure instead of hanging `stl`, `next`, `check`, `plan
+-- --png` and unattended pipelines forever (CGAL on an unstable boolean,
+-- or Qt waiting for a display on a headless box).
+openscadTimeoutSeconds :: IO Int
+openscadTimeoutSeconds = do
+  v <- lookupEnv "COSCAD_OPENSCAD_TIMEOUT"
+  return $ case v >>= \s -> case reads s of [(n, "")] | n > 0 -> Just n; _ -> Nothing of
+    Just n -> n
+    Nothing -> 600
 
 firstFile :: [FilePath] -> IO (Maybe FilePath)
 firstFile [] = return Nothing
@@ -123,10 +141,38 @@ runOpenscadRaw args = do
     Nothing -> return (Left "OpenSCAD not found: install it, put `openscad` on PATH, or set COSCAD_OPENSCAD (see `coscad doctor`)")
     Just bin -> do
       env <- openscadEnv
-      r <- try (readCreateProcessWithExitCode (proc bin args) {env = Just env} "")
+      secs <- openscadTimeoutSeconds
+      r <- try (runWithTimeout secs bin (proc bin args) {env = Just env, std_in = NoStream, std_out = CreatePipe, std_err = CreatePipe})
       return $ case r of
         Left e -> Left ("could not run " ++ bin ++ ": " ++ show (e :: SomeException))
-        Right x -> Right x
+        Right (Left e) -> Left e
+        Right (Right x) -> Right x
+
+-- | Run a process, draining stdout and stderr concurrently, and kill it
+-- when it exceeds the time limit.
+runWithTimeout :: Int -> FilePath -> CreateProcess -> IO (Either String (ExitCode, String, String))
+runWithTimeout secs bin cp = withCreateProcess cp $ \_ mout merr ph -> do
+  let drain = maybe (return "") (\h -> do s <- hGetContents h; _ <- evaluate (length s); return s)
+  outV <- newEmptyMVar
+  errV <- newEmptyMVar
+  _ <- forkIO (drain mout >>= putMVar outV)
+  _ <- forkIO (drain merr >>= putMVar errV)
+  code <- timeout (secs * 1000000) (waitForProcess ph)
+  case code of
+    Nothing -> do
+      terminateProcess ph
+      _ <- waitForProcess ph
+      _ <- takeMVar outV
+      _ <- takeMVar errV
+      return (Left (bin ++ " did not finish within " ++ show secs ++ " s (" ++ unwords (take 1 (reverse (cmdspecArgs cp))) ++ "); killed. Simplify the geometry or raise COSCAD_OPENSCAD_TIMEOUT"))
+    Just c -> do
+      out <- takeMVar outV
+      err <- takeMVar errV
+      return (Right (c, out, err))
+  where
+    cmdspecArgs p = case cmdspec p of
+      RawCommand _ as -> as
+      ShellCommand s -> [s]
 
 -- | .scad -> .stl, exit status only.
 runOpenscad :: FilePath -> FilePath -> IO (Either String ())
@@ -156,9 +202,11 @@ renderStlFile scadF stlF = do
               if not ok
                 then return (Left ("openscad produced no STL for " ++ scadF))
                 else do
-                  s <- readFile stlF
-                  let tris = parseStlAscii s
-                  length tris `seq` return (Right tris)
+                  s <- readFileLatin1 stlF
+                  return $ case parseStlAscii s of
+                    Left why -> Left (stlF ++ ": " ++ why)
+                    Right [] -> Left (scadF ++ " rendered an empty mesh: the part has no volume (every solid was cut away, or a 2D profile was never extruded)")
+                    Right tris -> Right tris
 
 trim :: String -> String
 trim = f . f where f = reverse . dropWhile isSpace

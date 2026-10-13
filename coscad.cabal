@@ -30,6 +30,7 @@ library
       Coscad.Dsl
       Coscad.Geometry
       Coscad.IO
+      Coscad.Json
       Coscad.Mesh
       Coscad.Next
       Coscad.OpenScad

@@ -5,12 +5,13 @@
 module Coscad.Doctor (runDoctor) where
 
 import Coscad.Codegen (renderScad)
+import Coscad.IO (scratchDir)
 import Coscad.Mesh (meshVolume)
 import Coscad.OpenScad
 import Coscad.Parser (parseProgramNamed)
 import Data.Version (showVersion)
 import Paths_coscad (version)
-import System.Directory (createDirectoryIfMissing, doesFileExist, getTemporaryDirectory, removePathForcibly)
+import System.Directory (doesFileExist, removePathForcibly)
 import System.Environment (lookupEnv)
 import System.Exit (exitFailure)
 import System.FilePath ((</>))
@@ -19,10 +20,7 @@ import Text.Printf (printf)
 runDoctor :: IO ()
 runDoctor = do
   putStrLn ("coscad " ++ showVersion version)
-  tmp <- getTemporaryDirectory
-  let dir = tmp </> "coscad-doctor"
-  removePathForcibly dir
-  createDirectoryIfMissing True dir
+  dir <- scratchDir "doctor"
   -- OpenSCAD
   bin <- findOpenscad
   okScad <- case bin of

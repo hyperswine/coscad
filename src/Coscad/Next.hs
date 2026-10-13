@@ -7,9 +7,11 @@ import Coscad.Assemble
 import Coscad.Codegen
 import Coscad.Geometry
 import Coscad.IO (writeFileUtf8)
+import Coscad.Json
 import Coscad.Mesh
 import Coscad.OpenScad (renderStlFile)
-import Data.List (foldl', intercalate)
+import Data.List (foldl')
+import Control.Monad (when)
 import System.Exit (exitFailure)
 import System.FilePath (dropExtension)
 import System.IO (hPutStrLn, stderr)
@@ -112,6 +114,9 @@ processNext inputFile = do
           printable = [fp | fp <- arFlat ar, fpCount fp > 0]
           asmOnly = [fp | fp <- arFlat ar, fpCount fp <= 0]
           vkeys = foldl' (\acc fp -> if vkey fp `elem` acc then acc else acc ++ [vkey fp]) [] printable
+      when (null printable) $ do
+        hPutStrLn stderr ("Error: " ++ inputFile ++ ": nothing to print: every part is ×0 (assembly-only) or no part is declared")
+        exitFailure
       -- compile each variant to a mesh once
       variantsE <- mapM
         ( \k -> do
@@ -148,7 +153,7 @@ processNext inputFile = do
                 ( \(i, placed) -> do
                     let tris = concat [meshMap (vadd (x, y, 0)) (meshOf k) | (_, k, _, (x, y)) <- placed]
                         f = base ++ "_bed" ++ show i ++ ".stl"
-                    writeFile f (stlAscii ("bed" ++ show i) tris)
+                    writeFileUtf8 f (stlAscii ("bed" ++ show i) tris)
                     putStrLn ("Wrote " ++ f ++ " (" ++ show (length placed) ++ " parts)")
                 )
                 (zip [(1 :: Int) ..] beds)
@@ -165,29 +170,34 @@ nextManifest ::
   [FlatPart] ->
   String
 nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
-  "{\n"
-    ++ ("  \"source\": " ++ jstr src ++ ",\n")
-    ++ ("  \"bed\": {\"w\": " ++ jnum pw ++ ", \"d\": " ++ jnum pd ++ ", \"margin\": " ++ jnum m ++ ", \"max_z\": " ++ jnum bedZ ++ "},\n")
-    ++ ("  \"variants\": [\n" ++ intercalate ",\n" (map vj variants) ++ "\n  ],\n")
-    ++ ("  \"beds\": [\n" ++ intercalate ",\n" (map bj (zip [(1 :: Int) ..] beds)) ++ "\n  ],\n")
-    ++ ("  \"assembly_only\": [" ++ intercalate ", " (map aj asmOnly) ++ "]\n")
-    ++ "}\n"
+  encodePretty $
+    jobj
+      [ ("source", JString src)
+      , ("bed", jobj [("w", jnum3 pw), ("d", jnum3 pd), ("margin", jnum3 m), ("max_z", jnum3 bedZ)])
+      , ("variants", jlist (map vj variants))
+      , ("beds", jlist (map bj (zip [(1 :: Int) ..] beds)))
+      , ("assembly_only", jlist (map aj asmOnly))
+      ]
   where
-    total = length . concat $ beds
     vj ((srcf, _), fp, _, (w, d, h), vname, lbl, mode, sc) =
-      "    {\"id\": " ++ jstr vname ++ ", \"part\": " ++ jstr (fpName fp)
-        ++ ", \"source\": " ++ jstr srcf
-        ++ ", \"down\": " ++ jstr lbl ++ ", \"orientation_mode\": " ++ jstr mode
-        ++ ", \"fff_score\": " ++ jnum sc
-        ++ ", \"footprint\": [" ++ jnum w ++ ", " ++ jnum d ++ ", " ++ jnum h ++ "]"
-        ++ ", \"mesh\": " ++ jstr (base ++ "_next_" ++ vname ++ ".stl")
-        ++ ", \"hints\": {" ++ intercalate ", " [jstr hk ++ ": " ++ jstr hv | (hk, hv) <- fpHints fp] ++ "}}"
+      jobj
+        [ ("id", JString vname)
+        , ("part", JString (fpName fp))
+        , ("source", JString srcf)
+        , ("down", JString lbl)
+        , ("orientation_mode", JString mode)
+        , ("fff_score", jnum3 sc)
+        , ("footprint", jlist (map jnum3 [w, d, h]))
+        , ("mesh", JString (base ++ "_next_" ++ vname ++ ".stl"))
+        , ("hints", jobj [(hk, JString hv) | (hk, hv) <- fpHints fp])
+        ]
     bj (i, placed) =
-      "    {\"index\": " ++ show i ++ ", \"stl\": " ++ jstr (base ++ "_bed" ++ show i ++ ".stl")
-        ++ ", \"placements\": [\n" ++ intercalate ",\n" (map pj placed) ++ "\n    ]}"
+      jobj
+        [ ("index", JNumber (fromIntegral i))
+        , ("stl", JString (base ++ "_bed" ++ show i ++ ".stl"))
+        , ("placements", jlist (map pj placed))
+        ]
     pj (iid, k, (w, d), (x, y)) =
-      "      {\"instance\": " ++ jstr iid ++ ", \"variant\": " ++ jstr (vn k)
-        ++ ", \"x\": " ++ jnum x ++ ", \"y\": " ++ jnum y ++ ", \"w\": " ++ jnum w ++ ", \"d\": " ++ jnum d ++ "}"
+      jobj [("instance", JString iid), ("variant", JString (vn k)), ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d)]
     vn k = head [vname | (k', _, _, _, vname, _, _, _) <- variants, k' == k]
-    aj fp = "{\"part\": " ++ jstr (fpName fp) ++ ", \"source\": " ++ jstr (fpSource fp) ++ "}"
-
+    aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]

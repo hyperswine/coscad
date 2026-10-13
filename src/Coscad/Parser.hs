@@ -101,8 +101,8 @@ tryResolveVar mode table nums d =
       Right _ -> Right (defName d, shape)
       Left msg -> Left (d, FSyntax (sourcePosPretty (defPos d) ++ ": in '" ++ defName d ++ "': " ++ msg))
     Left err -> case undefinedVarIn err of
-      Just v -> Left (d, FMissing v (errorBundlePretty err))
-      Nothing -> Left (d, FSyntax (errorBundlePretty err))
+      Just v -> Left (d, FMissing v (prettyBundle err))
+      Nothing -> Left (d, FSyntax (prettyBundle err))
 
 type VarName = String
 
@@ -112,6 +112,23 @@ type VarTable = Map.Map VarName Shape
 type NumTable = Map.Map VarName Double
 
 type Parser = Parsec Void String
+
+-- | Render a parse error as `file:line:col: message` on the first line,
+-- followed by the source excerpt and caret. Every CoScad diagnostic
+-- therefore starts with a position and the reason on one line, which is
+-- what editors and pipelines match on; the excerpt is for humans.
+prettyBundle :: ParseErrorBundle String Void -> String
+prettyBundle bundle =
+  case lines (errorBundlePretty bundle) of
+    (header : rest) ->
+      let (excerpt, msg) = span isExcerpt rest
+          reason = intercalate "; " (filter (not . null) (map (dropWhileEnd isSpace) msg))
+       in dropWhileEnd isSpace (unlines ((header ++ " " ++ reason) : excerpt))
+    [] -> ""
+  where
+    isExcerpt l = case dropWhile isSpace l of
+      '|' : _ -> True
+      cs -> let (digits, after) = span (`elem` "0123456789") cs in not (null digits) && take 1 (dropWhile isSpace after) == "|"
 
 -- Lexer helpers
 sc :: Parser ()
@@ -207,7 +224,7 @@ parseProgramNamed file input =
   case checkedPragma file input of
     Left err -> Left err
     Right (mode, body) -> case parse (sc *> program file mode <* eof) file body of
-        Left err -> Left (errorBundlePretty err)
+        Left err -> Left (prettyBundle err)
         Right result -> result
 
 checkedPragma :: FilePath -> String -> Either String (SynMode, String)
@@ -229,7 +246,7 @@ checkedPragma file input = do
         code = trim (takeComment line)
         at = off + length (takeWhile isSpace line)
         err msg = case parse (takeP Nothing at *> fail msg :: Parser ()) file input of
-          Left e -> Left (errorBundlePretty e)
+          Left e -> Left (prettyBundle e)
           Right _ -> Right ()
     takeComment ('/' : '/' : _) = []
     takeComment (x : xs) = x : takeComment xs
@@ -314,7 +331,7 @@ expressionString = lexeme (dropWhileEnd isSpace . fst <$> match (firstLine *> ma
 parseExpression :: Ctx -> String -> Either String Shape
 parseExpression ctx input =
   case parse (sc *> expression ctx <* eof) "" input of
-    Left err -> Left (errorBundlePretty err)
+    Left err -> Left (prettyBundle err)
     Right shape -> Right shape
 
 -- Name a missing parameter, while preserving undefined-name and numeric errors.

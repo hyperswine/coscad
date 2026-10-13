@@ -21,9 +21,11 @@ module Main (main) where
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
 import Coscad.Assemble (AsmResult (..), FlatPart (..), loadAssembleFile, packBeds, processAssemble, resolveAssembly)
-import Coscad.Check (processCheckWith, splitBodies)
+import Coscad.Check (processCheckIn, processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
 import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3, vlen, vsub, scale3, vadd, vmul, rodMat, mirrorMat)
+import Coscad.Json (JValue (..), asArray, asNumber, asString, decode, lookupKey)
+import qualified Coscad.Json
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
 import Coscad.Next (processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadVersion, renderStlFile)
@@ -44,6 +46,7 @@ import System.Environment (lookupEnv)
 import System.Exit (ExitCode (..), exitFailure)
 import System.FilePath
 import System.IO
+import System.Process (readProcessWithExitCode)
 import Text.Printf (printf)
 
 -- ------------------------------------------------------------------
@@ -449,7 +452,7 @@ planTier t = do
       idx = indexHtml [("cube", "cube", ["M5x10", "material=printed"], 29, 38, 29)]
   assertT t "site: build page embeds plan JSON, images, safe-area header, both themes"
     (all (`isInfixOf` page) ["const PLAN = {\"steps\": []}", "cube_step", "NSTEPS = 3", "env(safe-area-inset-top", "data-theme=dark", "prefers-color-scheme:dark"]) (take 400 page)
-  assertT t "site: index lists builds with searchable tags" (all (`isInfixOf` idx) ["\"cube\"", "M5x10 material=printed", "steps:29"]) (take 400 idx)
+  assertT t "site: index lists builds with searchable tags" (all (`isInfixOf` idx) ["\"cube\"", "M5x10 material=printed", "\"steps\": 29"]) (take 400 idx)
   -- The bow now describes all four real bolts and captive nuts.
   rw <- planSummary "examples/assemble/bow3/bow3.assemble"
   assertT t "plan: bow3 places all three parts and makes all four M4 joints" (either (const False) (\ps -> sum (map (length . ssParts) (psSteps ps)) == 3 && psFastenerCount ps == 4 && null (psDesignErrors ps)) rw) (either id show rw)
@@ -492,7 +495,7 @@ planTier t = do
           stepOf p = head ([k | (k, s) <- steps, p `elem` ssParts s] ++ [maxBound])
           joints = concatMap ssFasteners (psSteps ps)
       assertT t "orbit tower: 20 parts and all 19 peg joints, no hardware or errors"
-        (length (psParts ps) == 20 && length joints == 19 && all (\(s, _, _, n) -> s == "peg" && n == "NoNut") joints && null (psDesignErrors ps) && all (null . ssPreload) (psSteps ps)) (show ps)
+        (length (psParts ps) == 20 && length joints == 19 && all (\(s, _, _, n) -> s == "peg" && n == "none") joints && null (psDesignErrors ps) && all (null . ssPreload) (psSteps ps)) (show ps)
       assertT t "orbit tower: stays upright throughout assembly"
         (all (\s -> ssRest s == "bottom (-Z) face" && not (ssFlip s)) (psSteps ps)) (show (psSteps ps))
       assertT t "orbit tower: every rotor enters before the axle or cap that captures it"
@@ -642,7 +645,7 @@ checkInvariants t name ps = do
       stepOfPreload h = head ([k | (k, s) <- steps, h `elem` ssPreload s] ++ [maxBound])
       screws = [(k, f) | (k, s) <- steps, f <- ssFasteners s]
       lateHost = [f | (k, f@(_, c, h, _)) <- screws, stepOfPart h > k || stepOfPart c > k]
-      lateNut = [f | (k, f@(_, c, h, nut)) <- screws, nut /= "NoNut", min (stepOfPreload h) (stepOfPreload c) > k]
+      lateNut = [f | (k, f@(_, c, h, nut)) <- screws, nut /= "none", min (stepOfPreload h) (stepOfPreload c) > k]
       placedTwice = [p | p <- psParts ps, length [() | (_, s) <- steps, p `elem` ssParts s] /= 1]
   assertT t (name ++ ": host and clamped part are placed before each screw") (null lateHost) (show lateHost)
   assertT t (name ++ ": every rail is preloaded before its first screw (nut-first)") (null lateNut) (show lateNut)
@@ -1196,8 +1199,11 @@ geometry t update bin = do
   case rn of
     Left e -> failT t "coscad next bow3" (show e)
     Right () -> do
-      bed <- parseStlAscii <$> readFile (bow </> "bow3_bed1.stl")
-      parts <- mapM (\n -> parseStlAscii <$> readFile (bow </> ("bow3_next_" ++ n ++ "_asis.stl"))) ["center", "larch", "rarch"]
+      bed <- readStl (bow </> "bow3_bed1.stl")
+      parts <- mapM (\n -> readStl (bow </> ("bow3_next_" ++ n ++ "_asis.stl"))) ["center", "larch", "rarch"]
+      mf <- decode <$> readFile (bow </> "bow3_manifest.json")
+      assertT t "coscad next manifest is valid JSON with one bed of three placements"
+        (case mf of Right v -> maybe False (\bs -> length bs == 1 && maybe False ((== 3) . length) (asArray =<< lookupKey "placements" (head bs))) (asArray =<< lookupKey "beds" v); Left _ -> False) (either id (const "parsed") mf)
       let vb = meshVolume bed
           vp = sum (map meshVolume parts)
           ((x0, y0, z0), (x1, y1, _)) = meshBounds bed
@@ -1231,20 +1237,20 @@ geometry t update bin = do
   framed <- tempDir "constraint-check"
   forM_ ["base.coscad", "post.coscad", "frame-stand.assemble"] $ \f ->
     copyFile ("examples/assemble/constraints" </> f) (framed </> f)
-  checked <- try (processCheckWith True (framed </> "frame-stand.assemble")) :: IO (Either SomeException ())
+  checkDir <- tempDir "check-frame-stand"
+  checked <- try (processCheckIn True (Just checkDir) (framed </> "frame-stand.assemble")) :: IO (Either SomeException ())
   case checked of
     Left e -> failT t "constraint check" (show e)
     Right () -> do
-      tmp <- getTemporaryDirectory
       forM_ [("left_post",(-13,-5,2),(-7,5,22)), ("right_post",(5,-3,2),(15,3,22))] $ \(n,wlo,whi) -> do
-        tris <- parseStlAscii <$> readFile (tmp </> "coscad-check/frame-stand" </> ("chk_" ++ n ++ ".stl"))
+        tris <- readStl (checkDir </> ("chk_" ++ n ++ ".stl"))
         let bodies = filter (\body -> let ((x,_,_),_) = meshBounds body in x < 90000) (splitBodies tris)
             (lo,hi) = meshBounds (concat bodies)
             near (a,b,c) (x,y,z) = all (< 1e-6) [abs(a-x),abs(b-y),abs(c-z)]
         assertT t ("constraint check isolates world pose of " ++ n) (length bodies == 1 && near lo wlo && near hi whi) (show (lo,hi))
   writeFile (framed </> "collision.assemble") "base ← base.coscad ×1\nleft_post ← post.coscad ×1\nfixed base\nmate left_post @foot base @left_mount gap=-1\n"
   collision <- try (processCheckWith False (framed </> "collision.assemble")) :: IO (Either ExitCode ())
-  assertT t "consistent constraints still expose actual interference" (collision == Left (ExitFailure 1)) (show collision)
+  assertT t "consistent constraints still expose actual interference (exit 2)" (collision == Left (ExitFailure 2)) (show collision)
   -- Hidden parts must retain their anchors during isolation, including
   -- chained attachments and transformed assemblies. Verify the rendered
   -- isolated child's actual bounds, not the bbox containing hidden parts.
@@ -1260,12 +1266,12 @@ geometry t update bin = do
         ] $ \(name, expr, zlo, zhi) -> do
     let f = rel </> (name ++ ".assemble")
     writeFile f ("a ← a.coscad ×1\nb ← b.coscad ×1\nasm = " ++ expr ++ "\n")
-    result <- try (processCheckWith True f) :: IO (Either SomeException ())
+    relDir <- tempDir ("check-" ++ name)
+    result <- try (processCheckIn True (Just relDir) f) :: IO (Either SomeException ())
     case result of
       Left e -> failT t ("relational check " ++ name) (show e)
       Right () -> do
-        tmp <- getTemporaryDirectory
-        tris <- parseStlAscii <$> readFile (tmp </> "coscad-check" </> name </> "chk_b.stl")
+        tris <- readStl (relDir </> "chk_b.stl")
         let bodies = filter (\body -> let ((x, _, _), _) = meshBounds body in x < 90000) (splitBodies tris)
             ((_, _, lo), (_, _, hi)) = meshBounds (concat bodies)
         assertT t ("relational check " ++ name) (abs (lo - zlo) < 1e-6 && abs (hi - zhi) < 1e-6)
@@ -1273,7 +1279,7 @@ geometry t update bin = do
   let overlapF = rel </> "overlap.assemble"
   writeFile overlapF "a ← a.coscad ×1\nb ← b.coscad ×1\nasm = a |> at top 0 0 -1 b\n"
   overlap <- try (processCheckWith False overlapF) :: IO (Either ExitCode ())
-  assertT t "relational check still detects real overlap" (overlap == Left (ExitFailure 1)) (show overlap)
+  assertT t "relational check still detects real overlap (exit 2)" (overlap == Left (ExitFailure 2)) (show overlap)
   -- design stage spills across plates instead of failing
   sp <- tempDir "spill"
   copyFile "examples/assemble/spill.assemble" (sp </> "spill.assemble")
@@ -1293,7 +1299,7 @@ geometry t update bin = do
   case rs of
     Left e -> failT t "coscad stl renders a part" (show e)
     Right () -> do
-      tris <- parseStlAscii <$> readFile (st </> "p.stl")
+      tris <- readStl (st </> "p.stl")
       let v = meshVolume tris
       assertT t "coscad stl renders a part" (abs (v - 4 / 3 * pi * 125) < 0.03 * (4 / 3 * pi * 125)) (printf "sphere volume %.2f" v)
   -- toolchain probes used by `coscad doctor`
@@ -1309,6 +1315,90 @@ geometry t update bin = do
       | otherwise = case words l of
           (f : rest) | Just g <- readGeo rest -> [(f, g)]
           _ -> []
+
+-- ------------------------------------------------------------------
+
+-- | Decode a JSON file; a missing file is a Left, not an exception.
+readJson :: FilePath -> IO (Either String JValue)
+readJson f = do
+  e <- doesFileExist f
+  if e then decode <$> readFile f else return (Left (f ++ ": not written"))
+
+readStl :: FilePath -> IO [Tri]
+readStl f = either (\e -> error (f ++ ": " ++ e)) id . parseStlAscii <$> readFile f
+
+-- ------------------------------------------------------------------
+-- cli: the built binary, as an editor or pipeline sees it
+
+cliTier :: T -> IO ()
+cliTier t = do
+  section "cli"
+  exe <- findExecutable "coscad"
+  case exe of
+    Nothing -> failT t "coscad executable on PATH" "cabal puts it there via build-tool-depends; run the suite with `cabal test`"
+    Just bin -> do
+      dir <- tempDir "cli"
+      let run args = readProcessWithExitCode bin args ""
+          firstLine = takeWhile (/= '\n')
+      (c0, o0, _) <- run ["--version"]
+      assertT t "--version exits 0 and names the version" (c0 == ExitSuccess && "coscad " `isPrefixOf` o0) (show (c0, o0))
+      (c1, _, e1) <- run []
+      assertT t "no arguments is a usage error (exit 1)" (c1 == ExitFailure 1 && not (null e1)) (show (c1, e1))
+      (c2, o2, e2) <- run [dir </> "missing.coscad"]
+      assertT t "missing file: exit 1, Error: on stderr, nothing on stdout" (c2 == ExitFailure 1 && "Error: " `isPrefixOf` e2 && "not found" `isInfixOf` e2 && null o2) (show (c2, o2, e2))
+      (c2v, o2v, e2v) <- run ["validate", dir </> "missing.coscad"]
+      assertT t "validate missing file: exit 1, Error: on stderr" (c2v == ExitFailure 1 && "Error: " `isPrefixOf` e2v && "not found" `isInfixOf` e2v && null o2v) (show (c2v, o2v, e2v))
+      writeFile (dir </> "ok.coscad") "r = 5\nmain = ● r\n"
+      (c3, o3, e3) <- run ["validate", dir </> "ok.coscad"]
+      assertT t "validate good part: exit 0, Valid part, empty stderr" (c3 == ExitSuccess && o3 == "Valid part\n" && null e3) (show (c3, o3, e3))
+      writeFile (dir </> "bad.coscad") "main = ■ 10 |> mov 1 2 3\n"
+      (c4, o4, e4) <- run ["validate", dir </> "bad.coscad"]
+      let want4 = "Error: " ++ dir </> "bad.coscad" ++ ":1:16: unknown pipeline stage 'mov'"
+      assertT t "validate bad part: exit 1, first stderr line is Error: file:line:col: reason" (c4 == ExitFailure 1 && want4 `isPrefixOf` firstLine e4 && "did you mean 'move'" `isInfixOf` firstLine e4 && null o4) (show (c4, o4, e4))
+      assertT t "validate bad part: the excerpt follows the reason" (any ("| main = " `isInfixOf`) (lines e4) && any ("^" `isInfixOf`) (lines e4)) e4
+      writeFile (dir </> "syntax.coscad") "main = box 10 20\n"
+      (c5, _, e5) <- run ["validate", dir </> "syntax.coscad"]
+      assertT t "validate syntax error: position and reason on one line" (c5 == ExitFailure 1 && ("Error: " ++ dir </> "syntax.coscad" ++ ":1:") `isPrefixOf` firstLine e5 && "height" `isInfixOf` firstLine e5) (show (c5, e5))
+      writeFile (dir </> "nopart.assemble") "a ← gone.coscad ×1\nasm = a\n"
+      (c6, _, e6) <- run ["validate", dir </> "nopart.assemble"]
+      assertT t "validate assembly with a missing part names the file" (c6 == ExitFailure 1 && ("Error: " ++ dir </> "gone.coscad" ++ ": part file not found") `isPrefixOf` firstLine e6) (show (c6, e6))
+      (c7, _, e7) <- run ["next", dir </> "ok.coscad"]
+      assertT t "next on a .coscad is a usage error" (c7 == ExitFailure 1 && "Error: " `isPrefixOf` e7) (show (c7, e7))
+      -- design stage + plan on the corner pair fixture, read back as JSON
+      planFiles <- listDirectory "examples/assemble/plan"
+      forM_ ("corner_pair.assemble" : filter ((== ".coscad") . takeExtension) planFiles) $ \f -> copyFile ("examples/assemble/plan" </> f) (dir </> f)
+      (c8, o8, e8) <- run [dir </> "corner_pair.assemble"]
+      mf <- readJson (dir </> "corner_pair_manifest.json")
+      assertT t "design stage: exit 0, manifest parses, plate and placements present" (c8 == ExitSuccess && null e8 && "Wrote" `isInfixOf` o8 && either (const False) (\v -> isJust (lookupKey "plate" v) && maybe False (not . null) (asArray =<< lookupKey "placements" v)) mf) (show (c8, e8, either id (const "parsed") mf))
+      (c9, o9, e9) <- run ["plan", dir </> "corner_pair.assemble"]
+      pj <- readJson (dir </> "corner_pair_plan.json")
+      let nuts v = [n | st <- fromMaybe [] (asArray =<< lookupKey "steps" v), f <- fromMaybe [] (asArray =<< lookupKey "fasteners" st), Just n <- [asString =<< lookupKey "nut" f]]
+          steps v = fromMaybe [] (asArray =<< lookupKey "steps" v)
+      assertT t "plan: exit 0, plan JSON parses, nut kinds use the nut= words" (c9 == ExitSuccess && null e9 && "Wrote" `isInfixOf` o9 && either (const False) (\v -> not (null (steps v)) && all (`elem` ["dropin", "slidein", "hex", "none"]) (nuts v) && not (null (nuts v))) pj) (show (c9, e9, either id (const "parsed") pj))
+      -- a design error: two screws at the same spot. Exit 2, stderr, files still written.
+      srcPair <- readFile (dir </> "corner_pair.assemble")
+      let fastLines = [l | l <- lines srcPair, "fastener " `isPrefixOf` l]
+      case fastLines of
+        (fl : _) -> do
+          writeFile (dir </> "collide.assemble") (srcPair ++ "\n" ++ fl ++ "\n")
+          (c10, o10, e10) <- run ["validate", dir </> "collide.assemble"]
+          assertT t "validate design error: exit 2, Error: on stderr" (c10 == ExitFailure 2 && "Error: " `isPrefixOf` e10 && "collide" `isInfixOf` e10 && null o10) (show (c10, o10, e10))
+          (c11, _, e11) <- run ["plan", dir </> "collide.assemble"]
+          pj2 <- readJson (dir </> "collide_plan.json")
+          assertT t "plan design error: exit 2, design: on stderr, design_errors in the JSON" (c11 == ExitFailure 2 && (": design: " `isInfixOf` e11) && either (const False) (maybe False (not . null) . (asArray =<<) . lookupKey "design_errors") pj2) (show (c11, e11, either id (const "parsed") pj2))
+        [] -> failT t "corner_pair has a fastener line" srcPair
+      -- the STL reader diagnoses what OpenSCAD can hand back
+      let nanStl = "solid x\n facet normal 0 0 1\n outer loop\n vertex 0 0 0\n vertex 1 0 0\n vertex nan 1 0\n endloop\n endfacet\nendsolid x\n"
+          binStl = "solid bin" ++ replicate 80 '\0' ++ "\1\0\0\0"
+      assertT t "STL: non-finite vertex is an error naming the line" (either ("line 6" `isInfixOf`) (const False) (parseStlAscii nanStl)) (show (parseStlAscii nanStl))
+      assertT t "STL: binary file is an error, not a crash" (either ("not ASCII" `isInfixOf`) (const False) (parseStlAscii binStl)) (show (parseStlAscii binStl))
+      assertT t "STL: empty solid parses to no triangles" (parseStlAscii "solid e\nendsolid e\n" == Right []) (show (parseStlAscii "solid e\nendsolid e\n"))
+      assertT t "STL: bounds of the empty mesh are a point" (meshBounds [] == ((0, 0, 0), (0, 0, 0))) ""
+      -- JSON round trip of awkward strings
+      let awkward = JObject [("s", JString "quote\" back\\ nl\n tab\t uni\x2028 </script>"), ("n", JArray [JNumber 1.5, JNumber (-2), JNull, JBool True])]
+      assertT t "Coscad.Json round-trips escapes" (decode (Coscad.Json.encode awkward) == Right awkward) (Coscad.Json.encode awkward)
+      _ <- return (asNumber JNull)
+      return ()
 
 -- ------------------------------------------------------------------
 
@@ -1336,6 +1426,7 @@ main = do
   examples t update
   planTier t
   framedFastenerTier t
+  cliTier t
   render <- lookupEnv "COSCAD_RENDER"
   bin <- findOpenscad
   case (render, bin) of

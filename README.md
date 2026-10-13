@@ -81,6 +81,12 @@ scripts/bambu-print-run.py frame.assemble  # photo, model → slice → print, w
 coscad --help                # command + language cheat sheet
 ```
 
+The two Bambu scripts need Bambu Studio; printing over the LAN also needs
+`python3 -m pip install -r scripts/requirements.txt` (paho-mqtt) and the
+bambu-lan scripts (`BAMBU_LAN_DIR`). The VS Code extension lives in
+`vscode/` (`npm install && npm test && npx @vscode/vsce package`, or take the
+`.vsix` attached to each release).
+
 `COSCAD_OPENSCAD` points at the OpenSCAD binary or a wrapper script
 (e.g. `xvfb-run -a openscad "$@"` on a headless machine); otherwise
 PATH and the usual install locations are searched.
@@ -90,7 +96,12 @@ name, a stray glyph, a circular definition, a duplicate, or a 2D/3D
 mismatch (extruding a solid, offsetting a cube, unioning a profile with
 a box) all fail at compile time instead of rendering silently wrong.
 OpenSCAD warnings during a render (a missing include, a dropped child)
-are treated as failures too.
+are treated as failures too. Every diagnostic goes to stderr as
+`Error: file:line:col: reason`, optionally followed by an excerpt; exit 1
+means the command could not run, exit 2 means the input was fine but the
+design has a problem (`validate`/`plan` design errors, `check` overlaps).
+A single OpenSCAD run is killed after `COSCAD_OPENSCAD_TIMEOUT` seconds
+(default 600) instead of hanging a pipeline.
 
 ## Two syntaxes, one language
 

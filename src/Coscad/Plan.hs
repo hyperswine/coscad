@@ -27,7 +27,8 @@ import qualified Data.Map as Map
 import Data.Maybe (fromMaybe, mapMaybe)
 import Data.Ord (comparing)
 import qualified Data.Set as Set
-import System.Exit (ExitCode (..), exitFailure)
+import Coscad.Json
+import System.Exit (ExitCode (..), exitFailure, exitWith)
 import System.FilePath (dropExtension, takeFileName)
 import System.IO (hPutStrLn, stderr)
 import Text.Printf (printf)
@@ -112,6 +113,15 @@ data Inst = Inst
 -- NoNut: the screw threads into the host itself (`nut=none`), or the joint is a
 -- friction peg (spec `peg`): nothing to preload.
 data NutKind = DropIn | SlideIn | Hex | NoNut deriving (Eq, Show)
+
+-- | The nut kind as it appears in plan JSON and on the site: the same
+-- words the `.assemble` `nut=` option takes.
+nutName :: NutKind -> String
+nutName k = case k of
+  DropIn -> "dropin"
+  SlideIn -> "slidein"
+  Hex -> "hex"
+  NoNut -> "none"
 
 data Fast = Fast
   { fId :: Int
@@ -292,8 +302,8 @@ parseSpec s = case map toLower s of
   where
     isDigitOrDot c = isDigit c || c == '.'
 
-mkFasteners :: [Inst] -> [FastDecl] -> Either String [Fast]
-mkFasteners insts decls = do
+mkFasteners :: FilePath -> [Inst] -> [FastDecl] -> Either String [Fast]
+mkFasteners srcFile insts decls = do
   fs <- concat <$> mapM one (zip [1 ..] decls)
   when (length fs > maxQuantity) $ Left ("total fastener count is too large; maximum is " ++ show maxQuantity)
   -- IDs must remain unique when one declaration expands to 100+ joints.
@@ -308,7 +318,7 @@ mkFasteners insts decls = do
         Just is -> Left ("'" ++ who ++ "' is placed " ++ show (length is) ++ " times; refer to one instance: " ++ intercalate ", " (map iName is))
         Nothing -> Left ("unknown part '" ++ who ++ "' (not placed in asm)")
     one (k, fd) = do
-      let at = "fastener line " ++ show (fdLine fd) ++ ": "
+      let at = srcFile ++ ":" ++ show (fdLine fd) ++ ":1: fastener: "
       mapM_ (either (Left . (at ++)) Right . validateFastenerHint) (fdOpts fd)
       when (fdCount fd < 1 || fdCount fd > maxQuantity) $ Left (at ++ "fastener count must be from 1 to " ++ show maxQuantity)
       (d, l) <- maybe (Left (at ++ "cannot read screw spec '" ++ fdSpec fd ++ "'; screw diameter and length must be positive (expected e.g. M5x8, or use peg for a peg joint)")) Right (parseSpec (fdSpec fd))
@@ -1060,20 +1070,44 @@ planMarkdown title m steps designErrors = unlines $
 
 planJson :: String -> Model -> [Step] -> [String] -> String
 planJson src m steps errs =
-  "{\n  \"source\": " ++ jstr src ++ ",\n  \"parts\": [" ++ intercalate ", " (map partJ (mInsts m)) ++ "],\n  \"design_errors\": [" ++ intercalate ", " (map jstr errs) ++ "],\n  \"steps\": [\n"
-    ++ intercalate ",\n" (zipWith stepJ [1 :: Int ..] steps) ++ "\n  ]\n}\n"
+  encodePretty $
+    jobj
+      [ ("source", JString src)
+      , ("parts", jlist (map partJ (mInsts m)))
+      , ("design_errors", jlist (map JString errs))
+      , ("steps", jlist (zipWith stepJ [1 :: Int ..] steps))
+      ]
   where
-    positionJ (x,y,z) = intercalate ", " (map jnum [x,y,z])
-    partJ i = "{\"name\": " ++ jstr (iName i) ++ ", \"part\": " ++ jstr (iPart i) ++ ", \"material\": "
-      ++ jstr (case iMat i of Aluminium -> "aluminium"; Printed -> "printed"; Steel -> "steel") ++ "}"
+    v3 (x, y, z) = jlist (map jnum3 [x, y, z])
+    partJ i = jobj [("name", JString (iName i)), ("part", JString (iPart i)), ("material", JString (case iMat i of Aluminium -> "aluminium"; Printed -> "printed"; Steel -> "steel"))]
     stepJ k s =
-      "    {\"step\": " ++ show k ++ ", \"rest\": " ++ jstr (dirName (stRest s)) ++ ", \"flip\": " ++ (if stFlip s then "true" else "false")
-        ++ ", \"parts\": [" ++ intercalate ", " (map jstr (stParts s)) ++ "]"
-        ++ ", \"preload\": [" ++ intercalate ", " (map jstr (stNuts s)) ++ "]"
-        ++ ", \"fasteners\": [" ++ intercalate ", " [fj (mFastById m Map.! i) | i <- stFasts s] ++ "]"
-        ++ ", \"warnings\": [" ++ intercalate ", " (map jstr (nub (stWarn s))) ++ "]}"
-    fj f = "{\"spec\": " ++ jstr (fSpec f) ++ ", \"head\": " ++ jstr (fHead f) ++ ", \"nut\": " ++ jstr (show (fNut f)) ++ maybe "" (\(pf, _) -> ", \"pocket\": " ++ jstr ((if fPocketInClamped f then "clamped." else "") ++ pf)) (fPocket f) ++ ", \"clamped\": " ++ jstr (fClamped f)
-      ++ ", \"host\": " ++ jstr (fHost f) ++ ", \"face\": " ++ jstr (fFaceName f) ++ ", \"position_mm\": [" ++ positionJ (fPos f) ++ "]" ++ ", \"axis\": [" ++ positionJ (fFace f) ++ "]" ++ ", \"head_position_mm\": [" ++ positionJ (fHeadPos f) ++ "]" ++ ", \"thread_reach_mm\": " ++ jnum (fReach f) ++ maybe "" (\ref -> ", \"seat\": " ++ jstr ref) (fSeatName f) ++ maybe "" (\p -> ", \"nut_seat_mm\": [" ++ positionJ p ++ "]") (fPocketSeat f) ++ ", \"inset_mm\": " ++ jnum (fInset f) ++ ", \"at_mm\": " ++ jnum (fAlong f) ++ ", \"torque_nm\": " ++ jnum (fTorque f) ++ "}"
+      jobj
+        [ ("step", JNumber (fromIntegral k))
+        , ("rest", JString (dirName (stRest s)))
+        , ("flip", JBool (stFlip s))
+        , ("parts", jlist (map JString (stParts s)))
+        , ("preload", jlist (map JString (stNuts s)))
+        , ("fasteners", jlist [fj (mFastById m Map.! i) | i <- stFasts s])
+        , ("warnings", jlist (map JString (nub (stWarn s))))
+        ]
+    fj f =
+      jobj $
+        [ ("spec", JString (fSpec f))
+        , ("head", JString (fHead f))
+        , ("nut", JString (nutName (fNut f)))
+        ]
+          ++ maybe [] (\(pf, _) -> [("pocket", JString ((if fPocketInClamped f then "clamped." else "") ++ pf))]) (fPocket f)
+          ++ [ ("clamped", JString (fClamped f))
+             , ("host", JString (fHost f))
+             , ("face", JString (fFaceName f))
+             , ("position_mm", v3 (fPos f))
+             , ("axis", v3 (fFace f))
+             , ("head_position_mm", v3 (fHeadPos f))
+             , ("thread_reach_mm", jnum3 (fReach f))
+             ]
+          ++ maybe [] (\ref -> [("seat", JString ref)]) (fSeatName f)
+          ++ maybe [] (\p -> [("nut_seat_mm", v3 p)]) (fPocketSeat f)
+          ++ [("inset_mm", jnum3 (fInset f)), ("at_mm", jnum3 (fAlong f)), ("torque_nm", jnum3 (fTorque f))]
 
 -- per-step OpenSCAD scene: everything placed so far, this step highlighted,
 -- the bench under the rest face, scene rotated so the rest face is down.
@@ -1149,7 +1183,7 @@ buildModel ar = do
   table <- resolveAssembly ar table0
   asmS <- maybe (Left "no asm") Right (Map.lookup "asm" table)
   insts <- mkInstances ar asmS
-  fasts <- mkFasteners insts (arFasteners ar)
+  fasts <- mkFasteners (arSource ar) insts (arFasteners ar)
   ordered <- partPreds ar insts
   let byName = Map.fromList [(iName i, i) | i <- insts]
       errs = designErrors insts fasts
@@ -1221,7 +1255,7 @@ summarise :: Model -> [String] -> St -> PlanSummary
 summarise model errs st =
   let steps = toSteps (reverse (sMoves st))
       summ s = StepSummary (dirName (stRest s)) (stFlip s) (stParts s) (stNuts s)
-        [(fSpec f, fClamped f, fHost f, show (fNut f)) | i <- stFasts s, let f = mFastById model Map.! i] (stWarn s)
+        [(fSpec f, fClamped f, fHost f, nutName (fNut f)) | i <- stFasts s, let f = mFastById model Map.! i] (stWarn s)
       hardware f = FastenerSummary (fPos f) (fFace f) (fHeadPos f) (fPocketSeat f) (fPocketEntry f) (fReach f)
    in PlanSummary (map iName (mInsts model)) (length (mFasts model)) errs (map summ steps) (sCost st) (map hardware (mFasts model))
 
@@ -1241,12 +1275,12 @@ processPlanSummary png path = do
       base = dropExtension path
       title = takeFileName base
   printf "plan: %d part instances, %d fasteners on %d hosts\n" (length insts) (length fasts) (length (nub (map fHost fasts)))
-  unless (null errs) $ mapM_ (putStrLn . ("DESIGN ERROR  " ++)) errs
+  unless (null errs) $ mapM_ (hPutStrLn stderr . (("Error: " ++ path ++ ": design: ") ++)) errs
   case runSearch ar model of
     Left why -> do
-      mapM_ (hPutStrLn stderr . ("Error: " ++)) why
+      mapM_ (hPutStrLn stderr . (("Error: " ++ path ++ ": ") ++)) why
       writeFileUtf8 (base ++ "_plan.md") (planMarkdown title model [] (errs ++ why))
-      exitFailure
+      exitWith (ExitFailure 2)
     Right st -> do
       let steps = toSteps (reverse (sMoves st))
       writeFileUtf8 (base ++ "_plan.md") (planMarkdown title model steps errs)
@@ -1262,5 +1296,5 @@ processPlanSummary png path = do
             Right (_, _, e) -> hPutStrLn stderr ("warning: png for step " ++ show k ++ ": " ++ take 200 e)
             Left e -> hPutStrLn stderr ("warning: " ++ e)
       putStrLn ("Wrote " ++ base ++ "_step1.." ++ show (length steps) ++ ".scad" ++ (if png then " and .png" else ""))
-      unless (null errs) exitFailure
+      unless (null errs) (exitWith (ExitFailure 2))
       return (summarise model errs st)

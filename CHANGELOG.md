@@ -8,6 +8,38 @@ and this project adheres to the
 
 ## Unreleased
 
+- CLI contract for editors and pipelines: every diagnostic goes to stderr
+  and starts with `Error: file:line:col: reason` on one line (the source
+  excerpt follows); assembly loader and fastener errors name the file and
+  line; `plan` design errors go to stderr as `file: design: reason`.
+  Exit 2 now means "the design has a problem" (`validate`/`plan` design
+  errors, `check` overlaps) and exit 1 "could not run". Bare `coscad`
+  prints usage to stderr. `validate` on a missing part file says so.
+- JSON: manifests, plan JSON and the site's build index are emitted through
+  a real encoder (`Coscad.Json`, also a decoder for tests and tools), so
+  quotes, control characters and `</script>` in names, paths or hints can no
+  longer corrupt them. Plan JSON `nut` values are the `nut=` words
+  (`dropin`, `slidein`, `hex`, `none`) instead of Haskell constructor names.
+- Rendering: each OpenSCAD run is killed after `COSCAD_OPENSCAD_TIMEOUT`
+  seconds (default 600) and reported, instead of hanging `stl`/`next`/
+  `check`/`plan --png` forever. A binary or truncated STL, a non-finite
+  vertex, and an empty mesh are diagnosed instead of crashing with a UTF-8
+  or `Prelude.read` error. `check` and `doctor` use fresh per-run scratch
+  directories (`--keep-temp` names it), so concurrent runs no longer delete
+  each other's renders. `/opt/homebrew/bin/openscad` is a search candidate.
+  `next` refuses an assembly with nothing to print instead of writing an
+  empty manifest.
+- VS Code extension: moved into this repository under `vscode/` (0.4.0; see
+  its CHANGELOG): probes `coscad --version` before relying on `validate`,
+  reads the new diagnostic layout and exit codes, `coscad.workingDirectory`
+  replaces the misnamed `coscad.executablePath`, terminal commands no longer
+  depend on the shell, VS Code 1.82, GPL-3.0, a tenth of the package size.
+  CI tests and packages it; releases attach the `.vsix`.
+- Scripts: `scripts/requirements.txt` lists the Python dependency of the
+  Bambu LAN printing path (paho-mqtt).
+- Tests: a `cli` tier spawns the built binary and checks exit codes, the
+  stdout/stderr split, `validate`, and that manifests and plan JSON parse.
+
 - Build: the project builds with cabal-install and GHC 9.8 (`cabal build`,
   `cabal test`, `cabal install exe:coscad`); Stack files, hpack and
   `package.yaml` are gone and `coscad.cabal` is the source of truth.

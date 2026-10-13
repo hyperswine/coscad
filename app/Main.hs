@@ -16,9 +16,11 @@ import Data.Version (showVersion)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import Paths_coscad (version)
 import System.Environment (getArgs)
-import System.Exit (exitFailure, exitSuccess)
+import Control.Monad (unless)
+import System.Directory (doesFileExist)
+import System.Exit (ExitCode (..), exitFailure, exitSuccess, exitWith)
 import System.FilePath (takeExtension)
-import System.IO (hPutStrLn, hSetEncoding, stderr, stdout)
+import System.IO (Handle, hPutStrLn, hSetEncoding, stderr, stdout)
 import System.IO.Error (catchIOError, ioeGetFileName)
 
 main :: IO ()
@@ -36,13 +38,16 @@ runCLI = do
   hSetEncoding stderr utf8
   args <- getArgs
   case args of
-    [] -> usage >> exitFailure
-    (a : _) | a `elem` ["--help", "-h", "help"] -> usage >> exitSuccess
+    [] -> usage stderr >> exitFailure
+    (a : _) | a `elem` ["--help", "-h", "help"] -> usage stdout >> exitSuccess
     (a : _) | a `elem` ["--version", "-V", "version"] -> putStrLn ("coscad " ++ showVersion version)
     ["doctor"] -> runDoctor
     ["validate", f] -> case takeExtension f of
-      ".assemble" -> loadAssembleFile [] f >>= either bad (either bad (const (putStrLn "Valid assembly")) . validateHardware)
-      ".coscad" -> readFileUtf8 f >>= either bad (const (putStrLn "Valid part")) . parseProgramNamed f
+      ".assemble" -> loadAssembleFile [] f >>= either bad (either (designBad . unlines . map ((f ++ ": design: ") ++) . lines) (const (putStrLn "Valid assembly")) . validateHardware)
+      ".coscad" -> do
+        exists <- doesFileExist f
+        unless exists (bad (f ++ ": file not found"))
+        readFileUtf8 f >>= either bad (const (putStrLn "Valid part")) . parseProgramNamed f
       _ -> bad "validate needs a .coscad or .assemble file"
     ("validate" : _) -> bad "validate needs one .coscad or .assemble file"
     ("stl" : rest) -> withInOut "stl" rest renderPart
@@ -80,13 +85,21 @@ needExt ext f
   | takeExtension f == ext = return ()
   | otherwise = bad ("expected a " ++ ext ++ " file, got " ++ f ++ " (see coscad --help)")
 
+-- | Exit 1: the command could not run (usage, missing file, syntax or
+-- geometry error, OpenSCAD failure).
 bad :: String -> IO ()
 bad msg = hPutStrLn stderr ("Error: " ++ msg) >> exitFailure
 
-usage :: IO ()
-usage =
+-- | Exit 2: the input is well formed but the design has a problem
+-- (`validate`/`plan` design errors, `check` overlaps), so a pipeline can
+-- tell "fix the model" from "fix the setup".
+designBad :: String -> IO ()
+designBad msg = mapM_ (hPutStrLn stderr . ("Error: " ++)) (lines msg) >> exitWith (ExitFailure 2)
+
+usage :: Handle -> IO ()
+usage h =
   mapM_
-    putStrLn
+    (hPutStrLn h)
     [ "coscad " ++ showVersion version ++ " - glyph/pipeline CAD language -> OpenSCAD -> STL"
     , ""
     , "Usage:"
@@ -103,8 +116,13 @@ usage =
     , "  coscad --version | --help"
     , ""
     , "Environment:"
-    , "  COSCAD_OPENSCAD  OpenSCAD binary or wrapper script (else PATH, then the app bundle)"
-    , "  COSCAD_BOSL2     BOSL2 checkout directory (else the OpenSCAD library folders)"
+    , "  COSCAD_OPENSCAD          OpenSCAD binary or wrapper script (else PATH, then the app bundle)"
+    , "  COSCAD_BOSL2             BOSL2 checkout directory (else the OpenSCAD library folders)"
+    , "  COSCAD_OPENSCAD_TIMEOUT  seconds per OpenSCAD run before it is killed (default 600)"
+    , ""
+    , "Exit status: 0 ok; 1 could not run (usage, missing file, syntax/geometry error, OpenSCAD"
+    , "failure); 2 the design has a problem (plan/validate design errors, check overlaps)."
+    , "Diagnostics go to stderr as `Error: file:line:col: reason`, optionally followed by an excerpt."
     , ""
     , "Language (one definition per line; `main` is rendered; // comments):"
     , "  numbers      w = 20      t = w / 5 - 1      box w (w / 2) t      χ -r part"
