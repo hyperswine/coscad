@@ -1,0 +1,5 @@
+!simple
+// `coscad check` demo, part C: a lid 40x16x10 placed at z = 10.2 by the
+// assembly; its underside sits 0.2 mm above A and B, under the declared
+// 0.3 mm clearance, so `coscad check` reports a WARN for each pair
+main = Box 40 16 10

@@ -1,0 +1,3 @@
+!simple
+// `coscad check` demo, part A: a 16x16x10 block at the origin
+main = Box 16 16 10

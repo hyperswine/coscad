@@ -1,0 +1,74 @@
+// Small 2020 cube, 200 mm outside. Bottom ring at z 0..20, top ring at
+// z 180..200, verticals standing on the ring corners. Ring corners are
+// joined by flat 90-degree brackets on the ring's outer face (under the
+// bottom ring, on top of the top ring); verticals are braced to the X
+// rails with flat brackets on the outer -Y/+Y faces; one panel mounts on
+// the free +X face. Word shapes are centered: `move` places centers.
+!glyph
+plate 250 250 6
+rx ← rail200.coscad ×0 profile=2020 material=aluminium   // along X, 200
+ry ← rail160.coscad ×0 profile=2020 material=aluminium   // along Y, 160, between the X rails
+rz ← rail160.coscad ×0 profile=2020 material=printed     // verticals, 160, printed lips
+br ← flat90.coscad ×16
+px ← panel190.coscad ×1                                   // +X side panel
+
+asm = (rx |> move 100 10 10) ⊕ (rx |> move 100 190 10)
+  ⊕ (ry |> rotz 90 |> move 10 100 10) ⊕ (ry |> rotz 90 |> move 190 100 10)
+  ⊕ (rx |> move 100 10 190) ⊕ (rx |> move 100 190 190)
+  ⊕ (ry |> rotz 90 |> move 10 100 190) ⊕ (ry |> rotz 90 |> move 190 100 190)
+  ⊕ (rz |> roty 90 |> move 10 10 100) ⊕ (rz |> roty 90 |> move 190 10 100)
+  ⊕ (rz |> roty 90 |> move 10 190 100) ⊕ (rz |> roty 90 |> move 190 190 100)
+  // bottom ring corner brackets, under the ring (z -6..0)
+  ⊕ (br |> move 20 20 -3) ⊕ (br |> move 180 20 -3) ⊕ (br |> move 20 180 -3) ⊕ (br |> move 180 180 -3)
+  // top ring corner brackets, on top of the ring (z 200..206)
+  ⊕ (br |> move 20 20 203) ⊕ (br |> move 180 20 203) ⊕ (br |> move 20 180 203) ⊕ (br |> move 180 180 203)
+  // verticals braced to the bottom X rails, on the outer -Y / +Y faces
+  ⊕ (br |> rotx 90 |> move 20 -3 20) ⊕ (br |> rotx 90 |> move 180 -3 20)
+  ⊕ (br |> rotx 90 |> move 20 203 20) ⊕ (br |> rotx 90 |> move 180 203 20)
+  // verticals braced to the top X rails
+  ⊕ (br |> rotx 90 |> move 20 -3 180) ⊕ (br |> rotx 90 |> move 180 -3 180)
+  ⊕ (br |> rotx 90 |> move 20 203 180) ⊕ (br |> rotx 90 |> move 180 203 180)
+  // +X panel (x 200..203), on the Y rails' and verticals' +X faces
+  ⊕ (px |> roty 90 |> move 201.5 100 100)
+
+// bottom ring (from below)
+fastener M5x10 br#1 rx#1 bot at=30
+fastener M5x10 br#1 ry#1 bot at=10
+fastener M5x10 br#2 rx#1 bot at=170
+fastener M5x10 br#2 ry#2 bot at=10
+fastener M5x10 br#3 rx#2 bot at=30
+fastener M5x10 br#3 ry#1 bot at=150
+fastener M5x10 br#4 rx#2 bot at=170
+fastener M5x10 br#4 ry#2 bot at=150
+// top ring (from above)
+fastener M5x10 br#5 rx#3 top at=30
+fastener M5x10 br#5 ry#3 top at=10
+fastener M5x10 br#6 rx#3 top at=170
+fastener M5x10 br#6 ry#4 top at=10
+fastener M5x10 br#7 rx#4 top at=30
+fastener M5x10 br#7 ry#3 top at=150
+fastener M5x10 br#8 rx#4 top at=170
+fastener M5x10 br#8 ry#4 top at=150
+// verticals to the bottom X rails
+fastener M5x10 br#9 rx#1 fwd at=30
+fastener M5x10 br#9 rz#1 fwd at=10
+fastener M5x10 br#10 rx#1 fwd at=170
+fastener M5x10 br#10 rz#2 fwd at=10
+fastener M5x10 br#11 rx#2 bak at=30
+fastener M5x10 br#11 rz#3 bak at=10
+fastener M5x10 br#12 rx#2 bak at=170
+fastener M5x10 br#12 rz#4 bak at=10
+// verticals to the top X rails
+fastener M5x10 br#13 rx#3 fwd at=30
+fastener M5x10 br#13 rz#1 fwd at=150
+fastener M5x10 br#14 rx#3 fwd at=170
+fastener M5x10 br#14 rz#2 fwd at=150
+fastener M5x10 br#15 rx#4 bak at=30
+fastener M5x10 br#15 rz#3 bak at=150
+fastener M5x10 br#16 rx#4 bak at=170
+fastener M5x10 br#16 rz#4 bak at=150
+// +X panel: two screws into each Y rail, one into each vertical
+fastener M5x10 px ry#2 rt ×2
+fastener M5x10 px ry#4 rt ×2
+fastener M5x10 px rz#2 rt
+fastener M5x10 px rz#4 rt

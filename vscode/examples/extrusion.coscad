@@ -1,0 +1,23 @@
+// 2D to 3D extrusion examples
+// This demonstrates 2D profiles and extrusion
+
+// 2D profiles
+triangle_profile = △ 8     // Triangle with radius 8
+pentagon_profile = ⬠ 6    // Pentagon with radius 6
+circle_profile = ⭘ 4      // Circle with radius 4
+
+// Extrude 2D profiles to 3D
+triangle_extruded = ⮕ 15 triangle_profile  // Extrude triangle by height 15
+pentagon_extruded = ⮕ 12 pentagon_profile  // Extrude pentagon by height 12
+circle_extruded = ⮕ 10 circle_profile      // Extrude circle by height 10
+
+// Position the extruded shapes
+triangle_positioned = χ -20 triangle_extruded
+pentagon_positioned = χ 0 pentagon_extruded
+circle_positioned = χ 20 circle_extruded
+
+// Combine all shapes
+combined_extrusions = triangle_positioned ⊕ pentagon_positioned ⊕ circle_positioned
+
+// Main shape
+main = combined_extrusions

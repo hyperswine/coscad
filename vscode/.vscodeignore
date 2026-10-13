@@ -1,0 +1,21 @@
+# development files
+.gitignore
+test-*.js
+*.vsix
+*.log
+.vscode/**
+examples/.gitignore
+
+# node_modules: runtime files only
+node_modules/**/src/
+node_modules/**/*.ts
+node_modules/**/*.map
+node_modules/**/.npmignore
+node_modules/**/README.md
+node_modules/**/CHANGELOG.md
+node_modules/**/LICENSE
+node_modules/**/tsconfig.json
+node_modules/**/.eslintrc*
+**/.nyc_output
+**/coverage
+**/.vscode-test

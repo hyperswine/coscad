@@ -1,0 +1,16 @@
+// Comments directly above a definition show up in hover and outline.
+
+// Base plate, 40 mm square, 5 thick
+plate = box 40 40 5
+
+// Tap-drill radius for M4
+hole = 1.75
+
+// Post height derived from the plate
+post_h = plate_t * 4
+plate_t = 5
+
+// A centered post on the plate, drilled through
+main = plate
+  |> at top (cyl 6 post_h)
+  |> cutat top 0 0 0 (zcyl hole 60)

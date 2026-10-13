@@ -1,0 +1,6 @@
+// 3 mm side panel, 190 x 190, four M5 clearance holes near the corners.
+main = box 190 190 3
+  |> cutat top 80 80 0 (zcyl 2.75 10)
+  |> cutat top -80 80 0 (zcyl 2.75 10)
+  |> cutat top 80 -80 0 (zcyl 2.75 10)
+  |> cutat top -80 -80 0 (zcyl 2.75 10)

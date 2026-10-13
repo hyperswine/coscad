@@ -1,0 +1,14 @@
+// Numeric bindings: a definition whose right-hand side is arithmetic is a
+// number. Use it anywhere a number goes; write arithmetic in parentheses
+// (or on its own line) so `box w h t` stays unambiguous.
+w = 40
+t = w / 8              // 5
+hole = 2.15            // M4 tap drill radius
+pitch = (w - 2 * t) / 2
+
+plate = box w w t
+main = plate
+  |> cutat top (-pitch) (-pitch) 0 (zcyl hole 30)
+  |> cutat top pitch (-pitch) 0 (zcyl hole 30)
+  |> cutat top (-pitch) pitch 0 (zcyl hole 30)
+  |> cutat top pitch pitch 0 (zcyl hole 30)

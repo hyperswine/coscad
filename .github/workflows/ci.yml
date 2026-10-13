@@ -59,3 +59,18 @@ jobs:
         run: cabal run coscad -- doctor
       - name: tests (diagnostics, examples, snapshots, geometry, cli)
         run: cabal test --test-show-details=direct
+
+  vscode:
+    name: vscode extension
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vscode
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
+      - run: npx --yes @vscode/vsce package

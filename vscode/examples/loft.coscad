@@ -1,0 +1,22 @@
+// Funnel: numeric bindings + lofts over 2D profiles.
+// Numbers are plain definitions; arithmetic goes in parentheses or on
+// the right-hand side of a numeric definition. A loft skins its
+// profiles bottom to top (BOSL2 skin, method "distance", so profiles
+// may have different vertex counts).
+
+r_top = 20
+r_bot = 8
+h = 40
+wall = 2
+neck = 12                       // straight spout below the cone
+
+// outer skin: spout -> cone; the spout is two equal circles
+outer = loft 0 (⭘ r_bot) neck (⭘ r_bot) (neck + h) (⭘ r_top)
+
+// inner void, 1 mm proud at both ends so the boolean is clean
+inner = loft -1 (⭘ (r_bot - wall)) neck (⭘ (r_bot - wall)) (neck + h + 1) (⭘ (r_top - wall))
+
+// a triangular lug lofted from a circle: different vertex counts are fine
+lug = ⭘ 3 |> loft 6 (ω 30 (△ 4))
+
+main = outer ⊖ inner ⊕ (χ (r_top + 2) (ζ (neck + h - 6) lug))

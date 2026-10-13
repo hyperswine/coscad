@@ -1,0 +1,32 @@
+// ============================================================
+// Topological modelling tour
+// ============================================================
+// The idea: place features relative to the part's own anchors
+// (top bot lft rt fwd bak ctr, combinable like lft+fwd) instead
+// of absolute coordinates. Three relational operations:
+//
+//   |> at v [dx dy dz] child     union child, stacked at anchor v
+//                                (child's opposite corner/face
+//                                 mates to the anchor point)
+//   |> on v [dx dy dz] child     attach: child rotated so +Z
+//                                points along v, bottom mated
+//   |> cutat v [dx dy dz] child  SUBTRACT child, centered at the
+//                                anchor point (+offset)
+//
+// Rule of thumb learned the hard way: anchor features to the
+// nearest STABLE datum. A composite's ctr or a far-face anchor
+// moves whenever distant geometry changes (a taller tip shifts
+// the y-center and silently misplaces your bolt holes). Corner
+// anchors adjacent to the feature (like lft+fwd = the near
+// bottom corner) survive any change elsewhere on the part.
+
+// a little pedestal, no absolute translations anywhere:
+base = box 40 40 8
+main = base
+  |> at top (cyl 6 20)                  // post stacked on top
+  |> at top (◙ 18 18 5 2)               // cap lands on the post
+  |> on rt (⌭ 3 8 0.5)                  // stud out the right face
+  |> on lft (⌭ 3 8 0.5)                 // and the left
+  |> cutat top 0 0 -2 (zcyl 2.15 30)    // axial bore, sunk 2mm
+  |> cutat bot+rt -6 0 0 (ycyl 2 60)    // side bore near an edge:
+                                        // bot+rt is a stable datum

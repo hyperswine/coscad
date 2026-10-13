@@ -1,0 +1,2 @@
+len = 200
+main = box len 20 20

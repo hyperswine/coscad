@@ -1,0 +1,184 @@
+{
+  "name": "coscad-lsp",
+  "displayName": "COSCAD Language Support",
+  "description": "CoScad language support: highlighting, hover, completion, in-editor and compiler diagnostics, and commands for compile, validate, STL, check, next, plan and doctor",
+  "version": "0.4.0",
+  "publisher": "hyperswine",
+  "license": "GPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hyperswine/coscad.git",
+    "directory": "vscode"
+  },
+  "homepage": "https://github.com/hyperswine/coscad/tree/main/vscode",
+  "bugs": {
+    "url": "https://github.com/hyperswine/coscad/issues"
+  },
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.82.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "coscad",
+        "aliases": [
+          "COSCAD",
+          "coscad"
+        ],
+        "extensions": [
+          ".coscad",
+          ".assemble"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "icon.png",
+          "dark": "icon.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "coscad",
+        "scopeName": "source.coscad",
+        "path": "./syntaxes/coscad.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "coscad.runmain",
+        "title": "COSCAD: Compile to OpenSCAD"
+      },
+      {
+        "command": "coscad.validate",
+        "title": "COSCAD: Validate (coscad validate)"
+      },
+      {
+        "command": "coscad.stl",
+        "title": "COSCAD: Render to STL"
+      },
+      {
+        "command": "coscad.check",
+        "title": "COSCAD: Check Assembly (interference / clearance)"
+      },
+      {
+        "command": "coscad.next",
+        "title": "COSCAD: Manufacture (coscad next)"
+      },
+      {
+        "command": "coscad.plan",
+        "title": "COSCAD: Build Plan (coscad plan)"
+      },
+      {
+        "command": "coscad.planPng",
+        "title": "COSCAD: Build Plan with step images (coscad plan --png)"
+      },
+      {
+        "command": "coscad.doctor",
+        "title": "COSCAD: Doctor (verify OpenSCAD + BOSL2)"
+      },
+      {
+        "command": "coscad.openSettings",
+        "title": "COSCAD: Open Settings"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "resourceExtname == .coscad || resourceExtname == .assemble",
+          "command": "coscad.runmain",
+          "group": "coscad@1"
+        },
+        {
+          "when": "resourceExtname == .coscad || resourceExtname == .assemble",
+          "command": "coscad.validate",
+          "group": "coscad@1b"
+        },
+        {
+          "when": "resourceExtname == .coscad",
+          "command": "coscad.stl",
+          "group": "coscad@2"
+        },
+        {
+          "when": "resourceExtname == .assemble",
+          "command": "coscad.check",
+          "group": "coscad@3"
+        },
+        {
+          "when": "resourceExtname == .assemble",
+          "command": "coscad.next",
+          "group": "coscad@4"
+        },
+        {
+          "when": "resourceExtname == .assemble",
+          "command": "coscad.plan",
+          "group": "coscad@4b"
+        },
+        {
+          "when": "resourceExtname == .assemble",
+          "command": "coscad.planPng",
+          "group": "coscad@4c"
+        },
+        {
+          "when": "resourceExtname == .coscad || resourceExtname == .assemble",
+          "command": "coscad.doctor",
+          "group": "coscad@5"
+        },
+        {
+          "when": "resourceExtname == .coscad || resourceExtname == .assemble",
+          "command": "coscad.openSettings",
+          "group": "coscad@6"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "COSCAD Configuration",
+      "properties": {
+        "coscad.executablePath": {
+          "type": "string",
+          "default": "",
+          "description": "Deprecated name for coscad.workingDirectory (it was never the path to the binary). Still honoured when coscad.workingDirectory is empty.",
+          "deprecationMessage": "Use coscad.workingDirectory; this setting is a working directory, not an executable path.",
+          "order": 9
+        },
+        "coscad.executableCommand": {
+          "type": "string",
+          "default": "coscad",
+          "description": "Command that runs the CoScad compiler: 'coscad' for a release binary on PATH, a full path to the binary, or 'cabal run coscad --' inside a checkout (set coscad.workingDirectory to it). Needs compiler 1.1.0.0 or newer for compiler diagnostics.",
+          "order": 2
+        },
+        "coscad.compilerDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "On open/save, run coscad validate on parts and assemblies without writing artifacts and show its errors (exit 1 = cannot run, exit 2 = design problem). Needs compiler 1.1.0.0 or newer; the extension checks `coscad --version` once and says so otherwise.",
+          "order": 3
+        },
+        "coscad.workingDirectory": {
+          "type": "string",
+          "default": "",
+          "description": "Working directory for the CoScad command (e.g. a cabal checkout when coscad.executableCommand is \"cabal run coscad --\"). Leave empty to run from the source file's directory.",
+          "order": 1
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "vsce package --allow-missing-repository",
+    "test": "node test-parser.js && node test-extension.js && node test-hover.js && node test-server.js"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12"
+  },
+  "devDependencies": {
+    "@types/node": "^18.x",
+    "@types/vscode": "^1.82.0"
+  }
+}

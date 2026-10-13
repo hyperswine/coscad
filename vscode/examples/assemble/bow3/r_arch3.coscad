@@ -1,0 +1,15 @@
+// Recurve bow arch, topological build (mirrored right-hand). Root thickness = full tab
+// width (26), tapering along the limb to an ~8mm stalk; the tip
+// recurves the opposite way and ends in a knob with a string
+// groove pinched on BOTH sides of the neck. Through-bolted:
+// 2x M4 clearance holes in the flange tab (heads counterbored on
+// top; nuts live in hex pockets under the center piece).
+limb2d = ✎ 0 0 70 2 140 16 185 40 202 51 212 66 205 79 201 88 191 92 184 85 180 78 183 72 189 72 192 69 195 68.5 198.4 75.4 204 66.9 195.8 57.5 179.8 49.1 135.3 30.2 67.5 23.9 0 26
+
+main = part |> mirror 1 0 0
+part = limb2d |> extrude 14
+  |> at lft+fwd 0 27 3.5 (box 26 28 7)
+  |> cutat lft+fwd 13 6 0 (zcyl 2.15 20)
+  |> cutat lft+fwd 13 22 0 (zcyl 2.15 20)
+  |> cutat lft+fwd 13 6 5.8 (zcyl 3.8 3)
+  |> cutat lft+fwd 13 22 5.8 (zcyl 3.8 3)

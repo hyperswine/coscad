@@ -1,0 +1,3 @@
+// 2020 extrusion stand-in, 300 mm along X; the assembly stands it up.
+len = 300
+main = box len 20 20

@@ -1,0 +1,5 @@
+plate 250 250 6
+center ← center3.coscad ×1
+larch  ← l_arch3.coscad ×1
+rarch  ← r_arch3.coscad ×1
+asm = center ⊕ (larch |> move 55 -13 -7) ⊕ (rarch |> move -55 -13 -7)

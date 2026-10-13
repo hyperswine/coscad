@@ -1,0 +1,87 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "CoScad",
+  "scopeName": "source.coscad",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#pragmas" },
+    { "include": "#declarations" },
+    { "include": "#assembly" },
+    { "include": "#shapes3d" },
+    { "include": "#shapes2d" },
+    { "include": "#transformations" },
+    { "include": "#pipeline" },
+    { "include": "#anchors" },
+    { "include": "#operations" },
+    { "include": "#numbers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "name": "comment.line.double-slash.coscad", "match": "//.*$" }
+      ]
+    },
+    "pragmas": {
+      "patterns": [
+        { "name": "meta.preprocessor.coscad", "match": "^\\s*!(?:glyph|simple)\\b" }
+      ]
+    },
+    "declarations": {
+      "patterns": [
+        { "name": "variable.other.definition.coscad", "match": "\\b[\\p{L}_][\\p{L}\\p{N}_₀-₉]*(?=\\s*(?:=|←))" }
+      ]
+    },
+    "assembly": {
+      "patterns": [
+        { "name": "keyword.declaration.assembly.coscad", "match": "\\b(?:plate|clearance|fastener|plan|fixed|mate)\\b" },
+        { "name": "keyword.operator.assembly.coscad", "match": "[←×▽@]" },
+        { "name": "string.unquoted.filename.coscad", "match": "[^\\s]+\\.(?:coscad|assemble)\\b" },
+        { "name": "constant.other.screw.coscad", "match": "\\bM\\d+(?:\\.\\d+)?x\\d+(?:\\.\\d+)?\\b" },
+        { "name": "variable.other.property.coscad", "match": "\\b[\\p{L}_][\\p{L}\\p{N}_₀-₉]*(?==)" }
+      ]
+    },
+    "shapes3d": {
+      "patterns": [
+        { "name": "entity.name.function.shape3d.coscad", "match": "[■●◎▻▬⎏▣◙⌭⌽⊚⏢◉⊿]" },
+        { "name": "entity.name.function.shape3d.coscad", "match": "\\b(?:xcyl|ycyl|zcyl|cube|box|sphere|cyl|tube|torus|wedge|Sphere|Cube|Box|Cylinder|Cone|Tube|Torus|Wedge|Prismoid)\\b" }
+      ]
+    },
+    "shapes2d": {
+      "patterns": [
+        { "name": "entity.name.function.shape2d.coscad", "match": "[△⬠⭘✎]" },
+        { "name": "entity.name.function.shape2d.coscad", "match": "\\b(?:Circle|Triangle|Pentagon|Bezier)\\b" }
+      ]
+    },
+    "transformations": {
+      "patterns": [
+        { "name": "keyword.control.transformation.coscad", "match": "[χψζθϕω⬈⇋⮕⟰⚓]" },
+        { "name": "keyword.control.transformation.coscad", "match": "\\b(?:Translate|Rotate|Scale|Mirror|Extrude|Loft|loft|Anchor|Hull|Union|Intersect|Minkowski|Offset)(?:\\.[xyz])?\\b" }
+      ]
+    },
+    "pipeline": {
+      "patterns": [
+        { "name": "keyword.operator.composition.coscad", "match": "\\|>" },
+        { "name": "keyword.control.pipeline.coscad", "match": "\\b(?:x|y|z|rotx|roty|rotz|move|scale|mirror|extrude|loft|anchor|at|on|cutat|add|cut|isect|hull|mink|datum|frame|place|mate|grid)\\b" }
+      ]
+    },
+    "anchors": {
+      "patterns": [
+        { "name": "constant.language.anchor.coscad", "match": "\\b(?:top|up|bot|dn|down|rt|right|lft|left|fwd|front|bak|back|ctr|center)\\b" }
+      ]
+    },
+    "operations": {
+      "patterns": [
+        { "name": "keyword.operator.boolean.coscad", "match": "[⊖⊝⊛⊕∩⇓⊞↯*]" },
+        { "name": "keyword.operator.attachment.coscad", "match": "[⌖⋈]" },
+        { "name": "keyword.operator.application.coscad", "match": "\\$" },
+        { "name": "keyword.operator.assignment.coscad", "match": "=" },
+        { "name": "keyword.operator.arithmetic.coscad", "match": "[+\\-/]" }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        { "name": "constant.numeric.coscad", "match": "(?<![\\w.])-?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?" }
+      ]
+    }
+  }
+}
