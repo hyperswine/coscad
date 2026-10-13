@@ -4,7 +4,7 @@
 		{
 			"label": "Build CoSCAD",
 			"type": "shell",
-			"command": "stack build",
+			"command": "cabal build",
 			"group": "build",
 			"problemMatcher": [
 				"$haskell"

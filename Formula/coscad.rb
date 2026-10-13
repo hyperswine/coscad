@@ -1,7 +1,7 @@
 # Homebrew formula for CoScad.
 #
 #   brew tap hyperswine/coscad https://github.com/hyperswine/coscad
-#   brew install coscad            # tagged release (source build with Stack)
+#   brew install coscad            # tagged release (source build with cabal)
 #   brew install --HEAD coscad     # current main
 #
 # scripts/update-formula.sh <version> refreshes `url`/`sha256` after a tag.
@@ -13,13 +13,12 @@ class Coscad < Formula
   license 'GPL-3.0-only'
   head 'https://github.com/hyperswine/coscad.git', branch: 'main'
 
+  depends_on 'cabal-install' => :build
   depends_on 'ghc@9.8' => :build
-  depends_on 'haskell-stack' => :build
 
   def install
-    # stack.yaml uses the system GHC (snapshot: 9.8.x); Homebrew's ghc@9.8 is keg-only.
-    ENV.prepend_path 'PATH', formula_opt_bin('ghc@9.8')
-    system 'stack', '--system-ghc', '--no-install-ghc', '--local-bin-path', bin, 'install'
+    system 'cabal', 'v2-update'
+    system 'cabal', 'v2-install', *std_cabal_v2_args
     man1.install 'man/coscad.1'
     doc.install Dir['docs/*.md'], 'README.md', 'CHANGELOG.md'
     pkgshare.install 'examples'

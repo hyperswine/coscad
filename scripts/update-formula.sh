@@ -9,6 +9,7 @@ curl -fsSL "$url" -o "$tmp"
 sha=$(shasum -a 256 "$tmp" | cut -d' ' -f1)
 rm -f "$tmp"
 f=$(dirname "$0")/../Formula/coscad.rb
-sed -i.bak -E "s|^  url \".*\"$|  url \"${url}\"|; s|^  sha256 \"[0-9a-f]+\".*$|  sha256 \"${sha}\"|" "$f"
+sed -i.bak -E "s|^  url ['\"].*['\"]\$|  url '${url}'|; s|^  sha256 ['\"][0-9a-f]+['\"].*\$|  sha256 '${sha}'|" "$f"
 rm -f "$f.bak"
+grep -q "$sha" "$f" || { echo "failed to rewrite $f" >&2; exit 1; }
 echo "Formula/coscad.rb -> v${ver} (${sha})"

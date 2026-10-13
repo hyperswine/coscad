@@ -6,7 +6,7 @@ set -euo pipefail
 REPO=${REPO:-$HOME/srv/coscad}
 WWW=${WWW:-$HOME/srv/manual-www}
 BIN=${BIN:-$HOME/srv/bin}
-export PATH="$BIN:/opt/homebrew/bin:$HOME/.ghcup/bin:/Applications/OpenSCAD.app/Contents/MacOS:/usr/local/bin:$PATH"
+export PATH="$BIN:/opt/homebrew/bin:$HOME/.ghcup/bin:$HOME/.cabal/bin:/Applications/OpenSCAD.app/Contents/MacOS:/usr/local/bin:$PATH"
 # SSH and launchd do not necessarily inherit the same shell environment.
 if [ -z "${COSCAD_BOSL2:-}" ] && [ -f "$HOME/srv/BOSL2/std.scad" ]; then
   export COSCAD_BOSL2="$HOME/srv/BOSL2"
@@ -21,7 +21,8 @@ if [ "$local_rev" = "$remote_rev" ] && [ -f "$WWW/index.html" ] && [ "${1:-}" !=
 echo "$(date -u +%FT%TZ) updating ${local_rev:0:7} -> ${remote_rev:0:7}"
 git reset -q --hard origin/main
 mkdir -p "$BIN"
-stack --no-terminal install --local-bin-path "$BIN" 2>&1 | tail -3
+cabal update 2>&1 | tail -1
+cabal install exe:coscad --install-method=copy --overwrite-policy=always --installdir="$BIN" 2>&1 | tail -3
 coscad doctor
 scripts/build-manual.sh "$WWW"
 echo "$(date -u +%FT%TZ) done"

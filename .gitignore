@@ -38,3 +38,4 @@ __pycache__/
 *-printer-capture.*
 result.json
 examples/assemble/tesseract/tesseract_step29.png
+cabal.project.local

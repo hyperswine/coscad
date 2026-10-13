@@ -9,7 +9,7 @@ the compiler installed to `~/srv/bin`, the site at `~/srv/manual-www`, nginx
 serving it on port 6210 (`manual-nginx-mini.conf`), and a launchd job
 (`cloud.cswine.manual-update.plist`) running `scripts/manual-update.sh` every
 5 minutes: it fetches `origin/main`, and when it moved, resets the checkout,
-rebuilds the compiler (`stack install`), and rebuilds the site atomically.
+rebuilds the compiler (`cabal install`), and rebuilds the site atomically.
 `bash scripts/manual-update.sh --force` rebuilds regardless. Logs:
 `~/srv/logs/manual-update.log`.
 

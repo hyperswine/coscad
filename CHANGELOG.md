@@ -8,6 +8,13 @@ and this project adheres to the
 
 ## Unreleased
 
+- Build: the project builds with cabal-install and GHC 9.8 (`cabal build`,
+  `cabal test`, `cabal install exe:coscad`); Stack files, hpack and
+  `package.yaml` are gone and `coscad.cabal` is the source of truth.
+  Hackage dependencies are pinned in `cabal.project.freeze`. CI, the release
+  workflow, the Homebrew formula and the manual host's update script use
+  cabal.
+
 - Planner: locate screws with host `@frame`, clamped `seat=@frame` and hex
   nut `pocket=@frame` bearing seats. Derive transformed axes, head positions,
   thread reach and access from those declarations. Add `preload=hand` for

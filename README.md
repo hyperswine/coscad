@@ -30,23 +30,24 @@ Prebuilt binaries for macOS, Linux, and Windows are attached to each
 GitHub release (`coscad-<os>-<arch>.tar.gz` / `.zip`) with the man page
 and examples; put `coscad` on your PATH and, if you want `man coscad`,
 copy `man/coscad.1` into a `man1` directory on your MANPATH. Or build
-from source with [Stack](https://haskellstack.org)
-(the snapshot pins GHC 9.8.2; `stack.yaml` uses the system GHC, so have
-9.8.2 installed, e.g. via ghcup):
+from source with [cabal](https://www.haskell.org/cabal/) and GHC 9.8
+(both installable with [ghcup](https://www.haskell.org/ghcup/); the
+dependency set is pinned in `cabal.project.freeze`):
 
 ```sh
-stack install                # binary lands in bin/
+cabal update
+cabal install exe:coscad --install-method=copy --installdir=bin   # binary lands in bin/
 ```
 
 macOS note: ghcup's GHC links against the Command Line Tools SDK. If a
 CLT update leaves that SDK newer than Xcode's linker, linking fails with
 `tapi error ... unknown architecture arm64e.x1-macos`. Until Xcode and
-the CLT match again, tell Stack to link with the CLT toolchain by adding
-to `~/.stack/config.yaml`:
+the CLT match again, tell GHC to link with the CLT toolchain by adding
+to `cabal.project.local` (git-ignored):
 
-```yaml
-ghc-options:
-  "$locals": -pgml /Library/Developer/CommandLineTools/usr/bin/clang
+```
+package coscad
+  ghc-options: -pgml /Library/Developer/CommandLineTools/usr/bin/clang
 ```
 
 Rendering needs [OpenSCAD](https://openscad.org) 2021.01 or newer and a
@@ -179,8 +180,9 @@ OpenSCAD). manual.cswine.cloud rebuilds it from `main` automatically; see
 
 ## Releasing
 
-1. Bump `version` in `package.yaml` and the CHANGELOG, commit, tag
-   `v<version>`, push the tag: the release workflow attaches binaries.
+1. Bump `version` in `coscad.cabal` and the CHANGELOG, commit, tag
+   `v<version>`, push the tag: the release workflow runs the pure test
+   tiers, checks the tag against `coscad --version`, and attaches binaries.
 2. `scripts/update-formula.sh <version>` rewrites the formula's `url` and
    `sha256` for that tag; commit `Formula/coscad.rb`.
 
@@ -196,18 +198,20 @@ OpenSCAD). manual.cswine.cloud rebuilds it from `main` automatically; see
 ## Tests
 
 ```sh
-stack test                          # all tiers; geometry tier needs OpenSCAD
-COSCAD_RENDER=0 stack test          # pure tiers only (~1s)
-COSCAD_UPDATE_GOLDEN=1 stack test   # accept changed .scad / geometry snapshots
+cabal test                          # all tiers; geometry tier needs OpenSCAD
+COSCAD_RENDER=0 cabal test          # pure tiers only (a few seconds)
+COSCAD_UPDATE_GOLDEN=1 cabal test   # accept changed .scad / geometry snapshots
 ```
 
-Three tiers in `test/Spec.hs`: diagnostics (error messages carry
+Four tiers in `test/Spec.hs`: diagnostics (error messages carry
 position and cause), examples (every example compiles, every
 `.assemble` loads, emitted `.scad` matches `test/golden/scad/`), and
 geometry (every example renders through OpenSCAD and its mesh volume +
 bounds match `test/golden/geometry.txt`, plus cross-checks: the
 topological bracket equals the coordinate bracket, `coscad next`
-conserves volume across bed packing, `coscad check` passes on bow3).
+conserves volume across bed packing, `coscad check` passes on bow3), and cli (the built binary is spawned:
+exit codes, stdout/stderr split, `validate`, and the manifests parse as
+JSON).
 When a snapshot fails, the message shows golden vs current; accept
 deliberate changes with `COSCAD_UPDATE_GOLDEN=1` and review the diff.
 OpenSCAD is found via `COSCAD_OPENSCAD`, then PATH, then the macOS app

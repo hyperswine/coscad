@@ -19,10 +19,10 @@
   demo whose lid sits 0.2 mm above the blocks, under the declared 0.3 mm
   clearance.
 - `examples/archive/` — historical debug/test scratch files.
-- `examples/haskell/` — embedded-DSL samples for ghci (`stack ghci
+- `examples/haskell/` — embedded-DSL samples for ghci (`cabal repl`, then `:load`
   examples/haskell/ExampleGear.hs`); not part of the build.
 
 Generated `.scad`/`.stl` are gitignored; regenerate with
 `coscad <file>` / `coscad next <file>`. Every example (outside
 `archive/`) is compiled, rendered, and compared against
-`test/golden/` by `stack test`; see README "Tests".
+`test/golden/` by `cabal test`; see README "Tests".

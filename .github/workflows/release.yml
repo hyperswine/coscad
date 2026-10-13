@@ -21,12 +21,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: haskell-actions/setup@v2
+        id: hs
         with:
           ghc-version: "9.8.2"
-          enable-stack: true
-          stack-version: "latest"
+          cabal-version: "3.12"
+      - name: Cache cabal
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ steps.hs.outputs.cabal-store }}
+            dist-newstyle
+          key: ${{ runner.os }}-cabal-${{ hashFiles('cabal.project.freeze', 'coscad.cabal') }}
+          restore-keys: ${{ runner.os }}-cabal-
+      - run: cabal update
       - name: Build
-        run: stack install --local-bin-path dist-bin
+        run: cabal build --enable-tests all
+      # The pure tiers (diagnostics, examples, snapshots, CLI) guard every
+      # release; the geometry tier needs OpenSCAD and runs in ci.yml.
+      - name: Test
+        run: cabal test --test-show-details=direct
+        env:
+          COSCAD_RENDER: "0"
+      - name: Tag matches package version
+        shell: bash
+        run: |
+          want="${GITHUB_REF_NAME#v}"
+          have=$(cabal run -v0 coscad -- --version | awk '{print $2}')
+          test "$want" = "$have" || { echo "tag $GITHUB_REF_NAME but coscad --version says $have"; exit 1; }
+      - name: Install
+        run: cabal install exe:coscad --install-method=copy --overwrite-policy=always --installdir=dist-bin
       - name: Package
         shell: bash
         run: |

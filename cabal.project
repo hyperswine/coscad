@@ -1,0 +1,5 @@
+-- CoScad builds with cabal-install (3.10 or newer) and GHC 9.8.
+-- Dependency versions are pinned in cabal.project.freeze; refresh them with
+-- `cabal freeze` after a deliberate upgrade.
+packages: .
+tests: True
