@@ -12,7 +12,7 @@
 - 1 × railA (aluminium)
 - 1 × railB (printed)
 
-### Preload sheet (T-nuts)
+### Preload sheet (nuts)
 
 - **railA**: 1 nut — top slot: 360. Mark the -X (left) end; positions are mm from the mark.
 - **railB**: 1 nut — lft slot: 10. Mark the -Z (bottom) end; positions are mm from the mark.
@@ -30,7 +30,7 @@
 ### Step 3 — front (-Y) face down
 - Place: br1 (on railA, railB)
 - Tighten: M5x10 button head into drop-in T-nut on railA top slot at 360 mm — 3.0 Nm
-- Tighten: M5x10 button head into drop-in T-nut on railB lft slot at 10 mm — 0.6 Nm (printed lips: finger tight + ¼ turn, no power driver)
+- Tighten: M5x10 button head into drop-in T-nut on railB lft slot at 10 mm — 0.6 Nm (printed part: finger tight + ¼ turn, no power driver)
 - Note: driver axis is not vertical here (top face of railA); keep the driver square to the bracket
 - Note: driver axis is not vertical here (lft face of railB); keep the driver square to the bracket
 

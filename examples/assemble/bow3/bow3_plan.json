@@ -1,10 +1,124 @@
 {
-  "source": "examples/assemble/bow3/bow3.assemble",
-  "parts": [{"name": "center", "part": "center", "material": "printed"}, {"name": "larch", "part": "larch", "material": "printed"}, {"name": "rarch", "part": "rarch", "material": "printed"}],
+  "source": "bow3.assemble",
+  "parts": [
+    {
+      "name": "center",
+      "part": "center",
+      "material": "printed"
+    },
+    {
+      "name": "larch",
+      "part": "larch",
+      "material": "printed"
+    },
+    {
+      "name": "rarch",
+      "part": "rarch",
+      "material": "printed"
+    }
+  ],
   "design_errors": [],
   "steps": [
-    {"step": 1, "rest": "bottom (-Z) face", "flip": false, "parts": [], "preload": ["center"], "fasteners": [], "warnings": ["Load the nuts into center in hand, turning it to reach the pockets or slots; retain them while placing the part"]},
-    {"step": 2, "rest": "bottom (-Z) face", "flip": false, "parts": ["center", "larch"], "preload": [], "fasteners": [{"spec": "M4x12", "head": "socket", "nut": "Hex", "pocket": "@nut_larch_m8", "clamped": "larch", "host": "center", "face": "@root_bore_m8_larch", "position_mm": [42, -8, 0], "axis": [0, 0, 1], "head_position_mm": [42, -8, 4.3], "thread_reach_mm": 4, "seat": "@head_m8", "nut_seat_mm": [42, -8, -3.7], "inset_mm": 0, "at_mm": 97, "torque_nm": 0.6}, {"spec": "M4x12", "head": "socket", "nut": "Hex", "pocket": "@nut_larch_8", "clamped": "larch", "host": "center", "face": "@root_bore_8_larch", "position_mm": [42, 8, 0], "axis": [0, 0, 1], "head_position_mm": [42, 8, 4.3], "thread_reach_mm": 4, "seat": "@head_8", "nut_seat_mm": [42, 8, -3.7], "inset_mm": 0, "at_mm": 97, "torque_nm": 0.6}], "warnings": []},
-    {"step": 3, "rest": "bottom (-Z) face", "flip": false, "parts": ["rarch"], "preload": [], "fasteners": [{"spec": "M4x12", "head": "socket", "nut": "Hex", "pocket": "@nut_rarch_m8", "clamped": "rarch", "host": "center", "face": "@root_bore_m8_rarch", "position_mm": [-42, -8, 0], "axis": [0, 0, 1], "head_position_mm": [-42, -8, 4.3], "thread_reach_mm": 4, "seat": "@head_m8", "nut_seat_mm": [-42, -8, -3.7], "inset_mm": 0, "at_mm": 13, "torque_nm": 0.6}, {"spec": "M4x12", "head": "socket", "nut": "Hex", "pocket": "@nut_rarch_8", "clamped": "rarch", "host": "center", "face": "@root_bore_8_rarch", "position_mm": [-42, 8, 0], "axis": [0, 0, 1], "head_position_mm": [-42, 8, 4.3], "thread_reach_mm": 4, "seat": "@head_8", "nut_seat_mm": [-42, 8, -3.7], "inset_mm": 0, "at_mm": 13, "torque_nm": 0.6}], "warnings": []}
+    {
+      "step": 1,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": [],
+      "preload": ["center"],
+      "fasteners": [],
+      "warnings": ["Load the nuts into center in hand, turning it to reach the pockets or slots; retain them while placing the part"]
+    },
+    {
+      "step": 2,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["center", "larch"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "M4x12",
+          "head": "socket",
+          "nut": "hex",
+          "pocket": "@nut_larch_m8",
+          "clamped": "larch",
+          "host": "center",
+          "face": "@root_bore_m8_larch",
+          "position_mm": [42, -8, 0],
+          "axis": [0, 0, 1],
+          "head_position_mm": [42, -8, 4.3],
+          "thread_reach_mm": 4,
+          "seat": "@head_m8",
+          "nut_seat_mm": [42, -8, -3.7],
+          "inset_mm": 0,
+          "at_mm": 97,
+          "torque_nm": 0.6
+        },
+        {
+          "spec": "M4x12",
+          "head": "socket",
+          "nut": "hex",
+          "pocket": "@nut_larch_8",
+          "clamped": "larch",
+          "host": "center",
+          "face": "@root_bore_8_larch",
+          "position_mm": [42, 8, 0],
+          "axis": [0, 0, 1],
+          "head_position_mm": [42, 8, 4.3],
+          "thread_reach_mm": 4,
+          "seat": "@head_8",
+          "nut_seat_mm": [42, 8, -3.7],
+          "inset_mm": 0,
+          "at_mm": 97,
+          "torque_nm": 0.6
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "step": 3,
+      "rest": "bottom (-Z) face",
+      "flip": false,
+      "parts": ["rarch"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "M4x12",
+          "head": "socket",
+          "nut": "hex",
+          "pocket": "@nut_rarch_m8",
+          "clamped": "rarch",
+          "host": "center",
+          "face": "@root_bore_m8_rarch",
+          "position_mm": [-42, -8, 0],
+          "axis": [0, 0, 1],
+          "head_position_mm": [-42, -8, 4.3],
+          "thread_reach_mm": 4,
+          "seat": "@head_m8",
+          "nut_seat_mm": [-42, -8, -3.7],
+          "inset_mm": 0,
+          "at_mm": 13,
+          "torque_nm": 0.6
+        },
+        {
+          "spec": "M4x12",
+          "head": "socket",
+          "nut": "hex",
+          "pocket": "@nut_rarch_8",
+          "clamped": "rarch",
+          "host": "center",
+          "face": "@root_bore_8_rarch",
+          "position_mm": [-42, 8, 0],
+          "axis": [0, 0, 1],
+          "head_position_mm": [-42, 8, 4.3],
+          "thread_reach_mm": 4,
+          "seat": "@head_8",
+          "nut_seat_mm": [-42, 8, -3.7],
+          "inset_mm": 0,
+          "at_mm": 13,
+          "torque_nm": 0.6
+        }
+      ],
+      "warnings": []
+    }
   ]
 }

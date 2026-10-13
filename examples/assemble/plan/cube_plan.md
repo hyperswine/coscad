@@ -120,6 +120,7 @@
 ### Step 15 — left (-X) face down (flip the assembly)
 - Place: upright_bl
 - Preload: upright_bl — 2 × M5 drop-in nuts (bak @ 10, bak @ 150)
+- Note: Hold bottom_right, upright_br against the assembly while turning it; their joints are not fastened yet
 
 ### Step 16 — left (-X) face down
 - Place: top_left
@@ -146,6 +147,7 @@
 - Place: br_back_low_left (on bottom_back, upright_bl)
 - Tighten: M5x10 button head into drop-in T-nut on bottom_back bak slot at 30 mm — 3.0 Nm
 - Tighten: M5x10 button head into drop-in T-nut on upright_bl bak slot at 10 mm — 0.6 Nm (printed part: finger tight + ¼ turn, no power driver)
+- Note: Hold top_left, upright_bl against the assembly while turning it; their joints are not fastened yet
 
 ### Step 20 — front (-Y) face down
 - Place: top_back
@@ -191,6 +193,7 @@
 - Tighten: M5x10 button head into drop-in T-nut on top_left top slot at 10 mm — 3.0 Nm
 - Tighten: M5x10 button head into drop-in T-nut on top_back top slot at 170 mm — 3.0 Nm
 - Tighten: M5x10 button head into drop-in T-nut on top_right top slot at 150 mm — 3.0 Nm
+- Note: Hold br_top_fl, br_top_br against the assembly while turning it; their joints are not fastened yet
 
 ### Step 28 — front (-Y) face down (flip the assembly)
 - Place: br_back_high_left (on top_back, upright_bl)

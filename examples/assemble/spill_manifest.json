@@ -1,21 +1,87 @@
 {
   "source": "spill.assemble",
-  "bed": {"w": 120, "d": 120, "margin": 6, "max_z": 250},
+  "plate": {
+    "w": 120,
+    "d": 120,
+    "margin": 6,
+    "count": 2
+  },
   "variants": [
-    {"id": "br_top", "part": "br", "source": "./bracket90.coscad", "down": "top", "orientation_mode": "declared", "fff_score": 0.268, "footprint": [43, 42.982, 6.5], "mesh": "spill_next_br_top.stl", "hints": {}}
+    {
+      "id": "br_top",
+      "part": "br",
+      "source": "./bracket90.coscad",
+      "down": "top",
+      "count": 7,
+      "footprint": [43, 43, 6.5],
+      "scad": "spill_part_br_top.scad",
+      "hints": {}
+    }
   ],
-  "beds": [
-    {"index": 1, "stl": "spill_bed1.stl", "placements": [
-      {"instance": "br_1", "variant": "br_top", "x": 6, "y": 6, "w": 43, "d": 42.982},
-      {"instance": "br_2", "variant": "br_top", "x": 55, "y": 6, "w": 43, "d": 42.982},
-      {"instance": "br_3", "variant": "br_top", "x": 6, "y": 54.982, "w": 43, "d": 42.982},
-      {"instance": "br_4", "variant": "br_top", "x": 55, "y": 54.982, "w": 43, "d": 42.982}
-    ]},
-    {"index": 2, "stl": "spill_bed2.stl", "placements": [
-      {"instance": "br_5", "variant": "br_top", "x": 6, "y": 6, "w": 43, "d": 42.982},
-      {"instance": "br_6", "variant": "br_top", "x": 55, "y": 6, "w": 43, "d": 42.982},
-      {"instance": "br_7", "variant": "br_top", "x": 6, "y": 54.982, "w": 43, "d": 42.982}
-    ]}
+  "placements": [
+    {
+      "instance": "br_1",
+      "variant": "br_top",
+      "plate": 1,
+      "x": 6,
+      "y": 6,
+      "w": 43,
+      "d": 43
+    },
+    {
+      "instance": "br_print2_1",
+      "variant": "br_top",
+      "plate": 1,
+      "x": 55,
+      "y": 6,
+      "w": 43,
+      "d": 43
+    },
+    {
+      "instance": "br_print3_1",
+      "variant": "br_top",
+      "plate": 1,
+      "x": 6,
+      "y": 55,
+      "w": 43,
+      "d": 43
+    },
+    {
+      "instance": "br_print4_1",
+      "variant": "br_top",
+      "plate": 1,
+      "x": 55,
+      "y": 55,
+      "w": 43,
+      "d": 43
+    },
+    {
+      "instance": "br_print5_1",
+      "variant": "br_top",
+      "plate": 2,
+      "x": 6,
+      "y": 6,
+      "w": 43,
+      "d": 43
+    },
+    {
+      "instance": "br_print6_1",
+      "variant": "br_top",
+      "plate": 2,
+      "x": 55,
+      "y": 6,
+      "w": 43,
+      "d": 43
+    },
+    {
+      "instance": "br_print7_1",
+      "variant": "br_top",
+      "plate": 2,
+      "x": 6,
+      "y": 55,
+      "w": 43,
+      "d": 43
+    }
   ],
   "assembly_only": []
 }

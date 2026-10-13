@@ -60,6 +60,14 @@
 - Preload: corner6 — 3 × M3 hex nuts into the pockets on the bot face, on the lft face, on the bak face
 - Preload: corner7 — 3 × M3 hex nuts into the pockets on the bot face, on the fwd face, on the lft face
 - Preload: corner8 — 3 × M3 hex nuts into the pockets on the bot face, on the rt face, on the fwd face
+- Note: Load the nuts into corner1 in hand, turning it to reach the pockets or slots; retain them while placing the part
+- Note: Load the nuts into corner2 in hand, turning it to reach the pockets or slots; retain them while placing the part
+- Note: Load the nuts into corner3 in hand, turning it to reach the pockets or slots; retain them while placing the part
+- Note: Load the nuts into corner4 in hand, turning it to reach the pockets or slots; retain them while placing the part
+- Note: Load the nuts into corner5 in hand, turning it to reach the pockets or slots; retain them while placing the part
+- Note: Load the nuts into corner6 in hand, turning it to reach the pockets or slots; retain them while placing the part
+- Note: Load the nuts into corner7 in hand, turning it to reach the pockets or slots; retain them while placing the part
+- Note: Load the nuts into corner8 in hand, turning it to reach the pockets or slots; retain them while placing the part
 
 ### Step 2 — bottom (-Z) face down
 - Place: corner1 (on bar1, bar5, bar9)
@@ -196,6 +204,7 @@
 - Tighten: M3x16 socket head through corner2 into the hex nut in bar6 (bot face) — 0.4 Nm (printed part: finger tight + ¼ turn, no power driver)
 - Tighten: M3x16 socket head through corner3 into the hex nut in bar2 (bot face) — 0.4 Nm (printed part: finger tight + ¼ turn, no power driver)
 - Tighten: M3x16 socket head through corner4 into the hex nut in bar5 (bot face) — 0.4 Nm (printed part: finger tight + ¼ turn, no power driver)
+- Note: Hold corner1, corner2, corner3, corner4 against the assembly while turning it; their joints are not fastened yet
 - Note: the nut pocket on the top face of corner1 faces down here; hold the nut in it while the screw starts
 - Note: the nut pocket on the top face of corner2 faces down here; hold the nut in it while the screw starts
 - Note: the nut pocket on the top face of corner3 faces down here; hold the nut in it while the screw starts

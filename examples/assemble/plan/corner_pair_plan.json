@@ -1,9 +1,81 @@
 {
-  "source": "examples/assemble/plan/corner_pair.assemble",
+  "source": "corner_pair.assemble",
+  "parts": [
+    {
+      "name": "railA",
+      "part": "railA",
+      "material": "aluminium"
+    },
+    {
+      "name": "railB",
+      "part": "railB",
+      "material": "printed"
+    },
+    {
+      "name": "br1",
+      "part": "br1",
+      "material": "printed"
+    }
+  ],
   "design_errors": [],
   "steps": [
-    {"step": 1, "rest": "front (-Y) face", "flip": false, "parts": ["railA"], "preload": ["railA"], "fasteners": [], "warnings": []},
-    {"step": 2, "rest": "front (-Y) face", "flip": false, "parts": ["railB"], "preload": ["railB"], "fasteners": [], "warnings": []},
-    {"step": 3, "rest": "front (-Y) face", "flip": false, "parts": ["br1"], "preload": [], "fasteners": [{"spec": "M5x10", "head": "button", "nut": "DropIn", "clamped": "br1", "host": "railA", "face": "top", "at_mm": 360, "torque_nm": 3}, {"spec": "M5x10", "head": "button", "nut": "DropIn", "clamped": "br1", "host": "railB", "face": "lft", "at_mm": 10, "torque_nm": 0.6}], "warnings": ["driver axis is not vertical here (top face of railA); keep the driver square to the bracket", "driver axis is not vertical here (lft face of railB); keep the driver square to the bracket"]}
+    {
+      "step": 1,
+      "rest": "front (-Y) face",
+      "flip": false,
+      "parts": ["railA"],
+      "preload": ["railA"],
+      "fasteners": [],
+      "warnings": []
+    },
+    {
+      "step": 2,
+      "rest": "front (-Y) face",
+      "flip": false,
+      "parts": ["railB"],
+      "preload": ["railB"],
+      "fasteners": [],
+      "warnings": []
+    },
+    {
+      "step": 3,
+      "rest": "front (-Y) face",
+      "flip": false,
+      "parts": ["br1"],
+      "preload": [],
+      "fasteners": [
+        {
+          "spec": "M5x10",
+          "head": "button",
+          "nut": "dropin",
+          "clamped": "br1",
+          "host": "railA",
+          "face": "top",
+          "position_mm": [360, 10, 20],
+          "axis": [0, 0, 1],
+          "head_position_mm": [360, 10, 40],
+          "thread_reach_mm": 4,
+          "inset_mm": 0,
+          "at_mm": 360,
+          "torque_nm": 3
+        },
+        {
+          "spec": "M5x10",
+          "head": "button",
+          "nut": "dropin",
+          "clamped": "br1",
+          "host": "railB",
+          "face": "lft",
+          "position_mm": [370, 10, 30],
+          "axis": [-1, 0, 0],
+          "head_position_mm": [350, 10, 30],
+          "thread_reach_mm": 4,
+          "inset_mm": 0,
+          "at_mm": 10,
+          "torque_nm": 0.6
+        }
+      ],
+      "warnings": ["driver axis is not vertical here (top face of railA); keep the driver square to the bracket", "driver axis is not vertical here (lft face of railB); keep the driver square to the bracket"]
+    }
   ]
 }
