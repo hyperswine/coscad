@@ -40,3 +40,6 @@ result.json
 cabal.project.local
 vscode/node_modules/
 *.vsix
+pipeline.paths.local.json
+pipeline.lock.writer
+.pipeline.lock.json-*

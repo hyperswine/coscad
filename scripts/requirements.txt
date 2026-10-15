@@ -1,5 +1,2 @@
-# Python dependencies of scripts/bambu-slice.py --print and
-# scripts/bambu-print-run.py (slicing alone needs only Bambu Studio):
-#   python3 -m pip install -r scripts/requirements.txt
-# The FTPS upload also needs the bambu-lan scripts checkout (BAMBU_LAN_DIR).
-paho-mqtt>=2.0
+# Runtime LAN client version captured from the working environment.
+paho-mqtt==2.1.0

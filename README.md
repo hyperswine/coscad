@@ -66,6 +66,14 @@ boolean test part against a known volume.
 
 ## Quick start
 
+The working compiler-to-printer toolchain is recorded in
+[`pipeline.lock.json`](pipeline.lock.json), with QOS-style repository revisions
+and content hashes for local tools, profiles and deployed artifacts. Use
+`python3 scripts/pipeline-lock.py --check` to detect drift, or
+`python3 scripts/pipeline-lock.py --scope source --scope render --run coscad doctor`
+to run through the checked entry point. See
+[pins, deliberate upgrades and graceful recovery](docs/PIPELINE-LOCK.md).
+
 ```sh
 coscad part.coscad           # -> part.scad
 coscad validate part.coscad # source checks, no output files
@@ -84,7 +92,7 @@ coscad --help                # command + language cheat sheet
 The two Bambu scripts need Bambu Studio; printing over the LAN also needs
 `python3 -m pip install -r scripts/requirements.txt` (paho-mqtt) and the
 bambu-lan scripts (`BAMBU_LAN_DIR`). The VS Code extension lives in
-`vscode/` (`npm install && npm test && npx @vscode/vsce package`, or take the
+`vscode/` (`npm install && npm test && npm run package`, or take the
 `.vsix` attached to each release).
 
 `COSCAD_OPENSCAD` points at the OpenSCAD binary or a wrapper script

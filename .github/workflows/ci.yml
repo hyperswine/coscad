@@ -16,16 +16,16 @@ jobs:
         # when a supported CI installation is available.
         os: [ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: haskell-actions/setup@v2
+      - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
         id: hs
         with:
           ghc-version: "9.8.2"
-          cabal-version: "3.12"
+          cabal-version: "3.16.1.0"
 
       - name: Cache cabal
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             ${{ steps.hs.outputs.cabal-store }}
@@ -42,7 +42,10 @@ jobs:
           printf '#!/bin/sh\nexec xvfb-run -a openscad "$@"\n' | sudo tee /usr/local/bin/openscad-headless >/dev/null
           sudo chmod +x /usr/local/bin/openscad-headless
           echo "COSCAD_OPENSCAD=/usr/local/bin/openscad-headless" >> "$GITHUB_ENV"
-          git clone --depth 1 https://github.com/BelfrySCAD/BOSL2 "$HOME/BOSL2"
+          git init "$HOME/BOSL2"
+          git -C "$HOME/BOSL2" remote add origin https://github.com/BelfrySCAD/BOSL2
+          git -C "$HOME/BOSL2" fetch --depth 1 origin e173fa0ae45f9e2082e0d8c0382dae98621b7c20
+          git -C "$HOME/BOSL2" checkout --detach FETCH_HEAD
           echo "COSCAD_BOSL2=$HOME/BOSL2" >> "$GITHUB_ENV"
 
       - name: OpenSCAD + BOSL2 (Windows)
@@ -50,9 +53,16 @@ jobs:
         shell: pwsh
         run: |
           choco install openscad --no-progress -y
-          git clone --depth 1 https://github.com/BelfrySCAD/BOSL2 "$env:USERPROFILE\BOSL2"
+          git init "$env:USERPROFILE\BOSL2"
+          git -C "$env:USERPROFILE\BOSL2" remote add origin https://github.com/BelfrySCAD/BOSL2
+          git -C "$env:USERPROFILE\BOSL2" fetch --depth 1 origin e173fa0ae45f9e2082e0d8c0382dae98621b7c20
+          git -C "$env:USERPROFILE\BOSL2" checkout --detach FETCH_HEAD
           "COSCAD_BOSL2=$env:USERPROFILE\BOSL2" | Out-File -FilePath $env:GITHUB_ENV -Append
 
+      - name: Pin policy and refusal checks
+        run: |
+          python3 scripts/pipeline-lock.py --check-ci
+          python3 scripts/test-pipeline-lock.py
       - run: cabal update
       - run: cabal build --enable-tests all
       - name: coscad doctor
@@ -67,10 +77,10 @@ jobs:
       run:
         working-directory: vscode
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: "20"
+          node-version: "22.13.0"
       - run: npm ci --no-audit --no-fund
       - run: npm test
-      - run: npx --yes @vscode/vsce package
+      - run: npm run package

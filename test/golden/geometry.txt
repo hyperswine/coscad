@@ -1,4 +1,4 @@
-# path volume xmin ymin zmin xmax ymax zmax (regenerate: COSCAD_UPDATE_GOLDEN=1 stack test)
+# path volume xmin ymin zmin xmax ymax zmax (regenerate: COSCAD_UPDATE_GOLDEN=1 cabal test)
 examples-next/a.coscad 2560.000 -8.000 -8.000 -5.000 8.000 8.000 5.000
 examples-next/b.coscad 2560.000 -8.000 -8.000 -5.000 8.000 8.000 5.000
 examples-next/bracket_seam.coscad 2638.931 -3.500 -7.500 -10.000 13.500 7.500 10.000
@@ -34,10 +34,17 @@ examples/assemble/plan/rail2020.coscad 160000.000 -200.000 -10.000 -10.000 200.0
 examples/assemble/plan/rail2020_300.coscad 120000.000 -150.000 -10.000 -10.000 150.000 10.000 10.000
 examples/assemble/rail120.coscad 48000.000 -10.000 -10.000 -60.000 10.000 10.000 60.000
 examples/assemble/rail200.coscad 80000.000 -100.000 -10.000 -10.000 100.000 10.000 10.000
-examples/assemble/tesseract/bar.coscad 2480.871 -36.750 -3.000 -3.000 36.750 3.000 3.000
-examples/assemble/tesseract/corner.coscad 5286.706 0.000 0.000 0.000 19.000 19.000 19.000
+examples/assemble/tesseract/bar.coscad 3790.970 -40.800 -3.500 -3.500 40.800 3.500 3.500
+examples/assemble/tesseract/bolted/bar.coscad 2480.871 -36.750 -3.000 -3.000 36.750 3.000 3.000
+examples/assemble/tesseract/bolted/corner.coscad 5286.706 0.000 0.000 0.000 19.000 19.000 19.000
+examples/assemble/tesseract/bolted/inner.coscad 24263.663 -15.000 -15.000 -15.000 15.000 15.000 15.000
+examples/assemble/tesseract/bolted/strut.coscad 772.930 -23.000 -2.495 -1.500 23.000 2.495 2.500
+examples/assemble/tesseract/cap.coscad 1133.302 0.000 0.000 0.000 12.000 12.000 12.000
+examples/assemble/tesseract/corner.coscad 331.751 0.000 0.000 0.000 12.000 12.000 12.000
 examples/assemble/tesseract/inner.coscad 24263.663 -15.000 -15.000 -15.000 15.000 15.000 15.000
-examples/assemble/tesseract/strut.coscad 772.930 -23.000 -2.495 -1.500 23.000 2.495 2.500
+examples/assemble/tesseract/jig.coscad 2540.000 -13.000 -13.000 0.000 13.000 13.000 35.000
+examples/assemble/tesseract/strut.coscad 913.018 -27.169 -2.495 -1.500 27.169 2.495 2.500
+examples/assemble/tesseract/test-bar.coscad 822.456 -10.800 -3.500 -3.500 8.000 3.500 3.500
 examples/attach_demo.coscad 30993.846 -58.000 -30.000 -10.000 87.425 30.000 46.990
 examples/bow.coscad 105539.119 -246.227 -8.000 0.000 246.227 59.879 14.000
 examples/bracket.coscad 2638.930 -1.000 -7.500 0.000 16.000 7.500 20.000

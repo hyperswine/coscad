@@ -1,0 +1,222 @@
+{
+  "baseline_source_revision": "ddc2a4eca6ef7ff96093a62ee64fa3ee988e3f2b",
+  "layout": 1,
+  "pins": {
+    "bambu_lan": {
+      "layout": 1,
+      "repository": "3d-models",
+      "revision": "66a1ce044183291e9a4c4cb3b5e4bb6e3f0da12c",
+      "scope": "source",
+      "tree": "9c1e556b05bdf232f52deb8e4b6efae660ff9a81"
+    },
+    "bambu_profiles": {
+      "files": 2516,
+      "scope": "slice",
+      "sha256": "8c888bd803da56c91f49663bd343cd4bb756c3abbe7ccfafec748e15405121a1"
+    },
+    "bambustudio": {
+      "scope": "slice",
+      "sha256": "1a79017b9f86fb6db92987f4a4c4a4834ac540cf36703d49c7c91ed1959c2026"
+    },
+    "bambustudio_bundle": {
+      "files": 6718,
+      "scope": "slice",
+      "sha256": "a1d6b28b165c3fed0d40f90b3179e938ce19b76ee0a3ad8ac14ba97ac4baaa38"
+    },
+    "bambustudio_version": {
+      "scope": "slice",
+      "version": "02.08.02.61"
+    },
+    "bosl2": {
+      "layout": 1,
+      "repository": "BOSL2",
+      "revision": "e173fa0ae45f9e2082e0d8c0382dae98621b7c20",
+      "scope": "source",
+      "tree": "ee21bfcaa885b52ce2c815f71e0d15bb742f572d"
+    },
+    "cabal": {
+      "scope": "build",
+      "sha256": "423cbf298c32dc384465d9421162348192aca9fd51c69a6a9e16be37701e445b",
+      "version": "3.16.1.0"
+    },
+    "cabal_freeze": {
+      "scope": "build",
+      "sha256": "1c5f1126f20c4123fd8d3bec8cb7a47037eb45effca34948eb047d85911715e7"
+    },
+    "clang": {
+      "scope": "build",
+      "sha256": "34129c71a01a74f7f3b2443521519b2e5447553fa187f5fcafaaf8c42cc192e2",
+      "version": "Apple clang version 21.0.0 (clang-2100.3.34.2)"
+    },
+    "coscad_binary": {
+      "scope": "render",
+      "sha256": "226a50d2898272083b40168e8b8fb95634eadaaa06ab95006b264a38eb207d51",
+      "version": "coscad 1.2.0.0"
+    },
+    "coscad_source": {
+      "files": 189,
+      "scope": "source",
+      "sha256": "0b4aacd9ad05a3ec6077e80dd77a01877f19d2d45edd11f2b24c312e4682ab22"
+    },
+    "deployed_source": {
+      "layout": 1,
+      "repository": "fprisc",
+      "revision": "6f3cccb8dd44861159c13a950d9e957b596ab14b",
+      "scope": "printer"
+    },
+    "editor_modules": {
+      "files": 8918,
+      "scope": "editor",
+      "sha256": "5cf83fa0447a49435e7a3ba51e499b03cad90478f31d456109094c8390ac1ac0"
+    },
+    "fpr_compiler": {
+      "scope": "build",
+      "sha256": "002f1edc2c6c4c8e7750e3431eb3d10cbc910de2722f4c46cc4ecd8dae4eda3e",
+      "version": "fpr 0.12.0"
+    },
+    "fprisc": {
+      "layout": 1,
+      "repository": "fprisc",
+      "revision": "1855427888521f03c1e57faa6d9a0743e993805c",
+      "scope": "source",
+      "tree": "26d590ec1ff94c100dfbc316a0a17e76c33022b2"
+    },
+    "ghc": {
+      "scope": "build",
+      "sha256": "32c7c841abb06159b0caf8162ccd2769b424fcc8672c312349524211fe95c3f2",
+      "version": "9.8.2"
+    },
+    "host": {
+      "machine": "arm64",
+      "os_version": "27.0.1",
+      "scope": "build",
+      "system": "Darwin"
+    },
+    "libcrypto": {
+      "scope": "build",
+      "sha256": "6c7139ae515b274286b2f62d662a173e32d34854e1fc26cca46ee08efe16ae45"
+    },
+    "libssl": {
+      "scope": "build",
+      "sha256": "2b343dc7a88d6e49720ae6b939a178b5e688912e682044250203770b8acc2a08"
+    },
+    "linode": {
+      "files": {
+        "/etc/letsencrypt/renewal-hooks/deploy/30-3dprint-nginx": "b2c352134bc896c9110f967fadf798c46d9f8016b825d3386ff5e3069708de8c",
+        "/etc/nginx/sites-available/3dprint.cswine.cloud": "9cc2f46b77d922042c46127a570b90f858fdc5abe9dc9e5c97cb9c1ff2ee83be",
+        "/etc/nginx/snippets/3dprint-access.conf": "4c1dbe1930122299e730da6daa7099187222fe9b38a7e325862c964a77b70059"
+      },
+      "packages": [
+        "certbot=2.9.0-1",
+        "nginx=1.24.0-2ubuntu7.18",
+        "openssl=3.0.13-0ubuntu3.16"
+      ],
+      "scope": "infrastructure"
+    },
+    "mandoc": {
+      "scope": "manual",
+      "sha256": "966c2d31950c558d310a19d3c43cbfa16deb4cf2b62fd6618d6f6ce09e3a0557"
+    },
+    "native_host": {
+      "scope": "printer",
+      "sha256": "7ad754f7cfe40e9656010de41d663973579107522be252a54e75d6479862c821"
+    },
+    "node": {
+      "scope": "editor",
+      "sha256": "5c79f8e198fd2456ea6660aaa6be218f9f44747f2306c7d0f5f97b087b2f2dfc",
+      "version": "v22.13.0"
+    },
+    "npm": {
+      "scope": "editor",
+      "sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+      "version": "10.9.2"
+    },
+    "npm_distribution": {
+      "files": 2379,
+      "scope": "editor",
+      "sha256": "0c436e89a5d82c27004561dcf68d9cd87ebb049e50f4b18797690027a4e2ab0f"
+    },
+    "npm_lock": {
+      "scope": "editor",
+      "sha256": "9bb994e319e16407ec99ca6c9691363d9e66a21de79b67cfd9bd7de358aba660"
+    },
+    "openscad": {
+      "scope": "render",
+      "sha256": "40a82694be15c36306ca5e1e4e0167ced221bfb6341f37388c3352fa21e598d6",
+      "version": "OpenSCAD version 2025.05.16"
+    },
+    "openscad_bundle": {
+      "files": 369,
+      "scope": "render",
+      "sha256": "67b12b5139ac89cb223b6eb7c215a3b6e96113ab9be7a1b13187ef4c178e3c69"
+    },
+    "openssl": {
+      "scope": "build",
+      "version": "OpenSSL 3.6.5 29 Sep 2026 (Library: OpenSSL 3.6.5 29 Sep 2026)"
+    },
+    "openssl_binary": {
+      "scope": "build",
+      "sha256": "b03f2e68b47deed8084008b548a50e95eca6bb952154e5d95daf813a833bba3b"
+    },
+    "openssl_headers": {
+      "files": 142,
+      "scope": "build",
+      "sha256": "83690e916ec333aa42025ee4ca8c099d46e26e6636badb8d92b53a5d709bac0d"
+    },
+    "pandoc": {
+      "scope": "manual",
+      "sha256": "692dfdcaf61fd1b9dcbf287f254c4ff0ef9a2f2283f4119125e54c0ff86be199",
+      "version": "pandoc 3.12.1"
+    },
+    "printer_ca": {
+      "scope": "printer",
+      "sha256": "36f2bcee347ec7adce719b5fd350099591a4d3d0ec4e039c7019890d78e152a0"
+    },
+    "printer_config": {
+      "scope": "printer",
+      "sha256": "4949dc51456cd51740bb73a16ac50a35301c211f621eee4c8dfa064edb16794a"
+    },
+    "printer_libcrypto": {
+      "scope": "printer",
+      "sha256": "6c7139ae515b274286b2f62d662a173e32d34854e1fc26cca46ee08efe16ae45"
+    },
+    "printer_libssl": {
+      "scope": "printer",
+      "sha256": "2b343dc7a88d6e49720ae6b939a178b5e688912e682044250203770b8acc2a08"
+    },
+    "python": {
+      "scope": "build",
+      "sha256": "15c72833c1ffc09bc4e05d1e1866784d126721ad548d9c4d8f943641262535cb",
+      "version": "Python 3.15.0"
+    },
+    "python_packages": {
+      "contents": {
+        "cffi": "a7c4e3563d4f19bf931d540c8a40cfb8dd02154dfe105592079f7fc87d551764",
+        "cryptography": "292afbbfcb7bf8368f2187730601ff70948ef47d31a28dbc852e1cd74e4b8ab6",
+        "paho-mqtt": "8ce708ee96a4205e30c823614c71d2f36a32184e09a5c9eefe97baa0c4884095",
+        "pycparser": "257808abef988fecb77e5dcaafced8f5faaea97e2d39b1020e3e02854b39605c"
+      },
+      "scope": "test",
+      "versions": {
+        "cffi": "2.1.1",
+        "cryptography": "48.0.1",
+        "paho-mqtt": "2.1.0",
+        "pycparser": "3.11"
+      }
+    },
+    "tailscale": {
+      "scope": "infrastructure",
+      "sha256": "97c499ef3da263ab3a4ab2de2e0b3e6f3a76ed91d5c480ada252d804d5d0e704"
+    },
+    "tailscale_version": {
+      "scope": "infrastructure",
+      "version": "1.104.1\n  tailscale commit: 9a522a9786c97eb7910c01ccb7bd66557b04c910\n  long version: 1.104.1-t9a522a978\n  go version: go1.27.1"
+    },
+    "test_python": {
+      "scope": "test",
+      "sha256": "15c72833c1ffc09bc4e05d1e1866784d126721ad548d9c4d8f943641262535cb",
+      "version": "Python 3.15.0"
+    }
+  },
+  "repository": "coscad-pipeline"
+}

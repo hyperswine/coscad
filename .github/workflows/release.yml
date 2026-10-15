@@ -19,14 +19,14 @@ jobs:
           - os: windows-latest
             artifact: coscad-windows-x86_64
     steps:
-      - uses: actions/checkout@v4
-      - uses: haskell-actions/setup@v2
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
         id: hs
         with:
           ghc-version: "9.8.2"
-          cabal-version: "3.12"
+          cabal-version: "3.16.1.0"
       - name: Cache cabal
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             ${{ steps.hs.outputs.cabal-store }}
@@ -63,7 +63,7 @@ jobs:
           else
             tar czf "${{ matrix.artifact }}.tar.gz" "${{ matrix.artifact }}"
           fi
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ matrix.artifact }}
           path: |
@@ -78,14 +78,14 @@ jobs:
       run:
         working-directory: vscode
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: "20"
+          node-version: "22.13.0"
       - run: npm ci --no-audit --no-fund
       - run: npm test
-      - run: npx --yes @vscode/vsce package
-      - uses: actions/upload-artifact@v4
+      - run: npm run package
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: coscad-vscode
           path: vscode/*.vsix
@@ -96,10 +96,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           path: artifacts
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: artifacts/**/*
           generate_release_notes: true

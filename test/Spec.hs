@@ -1062,7 +1062,7 @@ examples t update = do
             pass t
           else do
             want <- readFile g
-            assertT t ("snapshot " ++ f) (want == out) (firstDiff want out ++ "\n(COSCAD_UPDATE_GOLDEN=1 stack test to accept)")
+            assertT t ("snapshot " ++ f) (want == out) (firstDiff want out ++ "\n(COSCAD_UPDATE_GOLDEN=1 cabal test to accept)")
   section "assemblies load"
   as <- exampleFiles ".assemble"
   forM_ as $ \f -> do
@@ -1131,13 +1131,15 @@ geometry t update bin = do
             case Map.lookup f golden of
               Just want | not update ->
                 assertT t ("geometry " ++ f) (geoClose want g)
-                  ("volume/bounds drifted\n  golden: " ++ showGeo want ++ "\n  now:    " ++ showGeo g ++ "\n(COSCAD_UPDATE_GOLDEN=1 stack test to accept)")
+                  ("volume/bounds drifted\n  golden: " ++ showGeo want ++ "\n  now:    " ++ showGeo g ++ "\n(COSCAD_UPDATE_GOLDEN=1 cabal test to accept)")
+              Nothing | not update ->
+                failT t ("geometry " ++ f) "missing geometry baseline; review the mesh and record it explicitly with COSCAD_UPDATE_GOLDEN=1 cabal test"
               _ -> putStrLn ("recorded " ++ f) >> pass t
             return (Just (f, g))
   let table = Map.fromList [x | Just x <- rows]
       merged = if update then Map.union table golden else Map.union golden table
-  when (update || Map.size merged /= Map.size golden) $
-    writeFile goldenF (unlines ["# path volume xmin ymin zmin xmax ymax zmax (regenerate: COSCAD_UPDATE_GOLDEN=1 stack test)"] ++ unlines [f ++ " " ++ showGeo g | (f, g) <- Map.toList merged])
+  when update $
+    writeFile goldenF (unlines ["# path volume xmin ymin zmin xmax ymax zmax (regenerate: COSCAD_UPDATE_GOLDEN=1 cabal test)"] ++ unlines [f ++ " " ++ showGeo g | (f, g) <- Map.toList merged])
   -- Check actual bracket material, not the planner's axis-aligned boxes.
   -- Independent world-space probes cover all 16 corners and 32 rail bores.
   cube <- loadAssembleFile [] "examples/assemble/plan/cube.assemble"
