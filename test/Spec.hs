@@ -31,6 +31,7 @@ import Coscad.Next (processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadFullRender, openscadPngArgs, openscadVersion, renderStlFile, runOpenscadRaw)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Part (renderPart)
+import Coscad.Printability
 import Coscad.Plan (PlanSummary (..), StepSummary (..), FastenerSummary (..), planSummary)
 import MigrationCases (migrationCases)
 import Coscad.Site (buildPageHtml, indexHtml)
@@ -1472,6 +1473,26 @@ tempDir name = do
   createDirectoryIfMissing True d
   return d
 
+printabilityTier :: T -> IO ()
+printabilityTier t = do
+  let patch x y h w = [((x,y,h),(x+w,y+w,h),(x+w,y,h)),
+                        ((x,y,h),(x,y+w,h),(x+w,y+w,h))]
+      base = patch 0 0 0 10
+      flat = analysePrintability base
+      tiny = analysePrintability (patch 0 0 0 2)
+      raised = analysePrintability (base ++ patch 20 0 0.8 2 ++ patch 30 0 0.8 2)
+      translated = analysePrintability (patch 50 80 100 10)
+      upward = map (\(a,b,c) -> (a,c,b)) (patch 20 0 0.8 2)
+  assertT t "printability: true contact area, not bounding footprint" (abs (bedContactMm2 flat-100) < 1e-9) (show flat)
+  assertT t "printability: small contact warns" (any ("flat bed contact" `isInfixOf`) (printabilityWarnings tiny)) (show tiny)
+  assertT t "printability: elevated starts are reported once per height" (elevatedStartsMm raised == [0.8]) (show raised)
+  assertT t "printability: translation preserves contact and relative heights"
+    (bedContactMm2 translated == 100 && null (elevatedStartsMm translated)) (show translated)
+  assertT t "printability: an upward-facing floor is not an unsupported start"
+    (null (elevatedStartsMm (analysePrintability (base ++ upward)))) ""
+  assertT t "printability: empty input has no invented starts"
+    (bedContactMm2 (analysePrintability []) == 0 && null (elevatedStartsMm (analysePrintability []))) ""
+
 main :: IO ()
 main = do
   setLocaleEncoding utf8
@@ -1481,6 +1502,7 @@ main = do
   update <- (== Just "1") <$> lookupEnv "COSCAD_UPDATE_GOLDEN"
   diagnostics t
   remainingDiagnostics t
+  printabilityTier t
   topologyTier t
   frameTier t
   cubeTier t

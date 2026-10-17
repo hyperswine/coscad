@@ -10,6 +10,7 @@ import Coscad.IO (writeFileUtf8)
 import Coscad.Json
 import Coscad.Mesh
 import Coscad.OpenScad (renderStlFile)
+import Coscad.Printability
 import Data.List (foldl')
 import Control.Monad (when)
 import System.Exit (exitFailure)
@@ -142,9 +143,11 @@ processNext inputFile = do
       case sequence variantsE of
         Left err -> hPutStrLn stderr ("Error: " ++ err) >> exitFailure
         Right variants -> do
+          mapM_ (\(_, _, tris, _, name, _, _, _) ->
+            mapM_ (hPutStrLn stderr . (("Warning: " ++ name ++ ": ") ++))
+              (printabilityWarnings (analysePrintability tris))) variants
           let footOf k = head [(w, d) | (k', _, _, (w, d, _), _, _, _, _) <- variants, k' == k]
               meshOf k = head [n | (k', _, n, _, _, _, _, _) <- variants, k' == k]
-              vnameOf k = head [vn | (k', _, _, _, vn, _, _, _) <- variants, k' == k]
               instances = [(instId fp i, vkey fp) | fp <- printable, i <- [1 .. fpCount fp]]
           case packBeds (pw, pd, marg) [(iid, k, footOf k) | (iid, k) <- instances] of
             Left err -> hPutStrLn stderr ("Error: " ++ err) >> exitFailure
@@ -179,7 +182,7 @@ nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
       , ("assembly_only", jlist (map aj asmOnly))
       ]
   where
-    vj ((srcf, _), fp, _, (w, d, h), vname, lbl, mode, sc) =
+    vj ((srcf, _), fp, tris, (w, d, h), vname, lbl, mode, sc) =
       jobj
         [ ("id", JString vname)
         , ("part", JString (fpName fp))
@@ -187,6 +190,10 @@ nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
         , ("down", JString lbl)
         , ("orientation_mode", JString mode)
         , ("fff_score", jnum3 sc)
+        , ("printability", let p = analysePrintability tris in jobj
+            [("bed_contact_mm2", jnum3 (bedContactMm2 p))
+            ,("elevated_start_heights_mm", jlist (map jnum3 (elevatedStartsMm p)))
+            ,("warnings", jlist (map JString (printabilityWarnings p)))])
         , ("footprint", jlist (map jnum3 [w, d, h]))
         , ("mesh", JString (base ++ "_next_" ++ vname ++ ".stl"))
         , ("hints", jobj [(hk, JString hv) | (hk, hv) <- fpHints fp])

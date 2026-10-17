@@ -40,6 +40,11 @@ asm = center ⊕ (larch |> move 55 -13 -7) ⊕ ...
    cylinders' flanks deliberately don't count, they self-support),
    − height, − a slenderness penalty (tall skinny prints wobble).
    Chosen face, mode, and score are recorded in the manifest for audit.
+   Each variant also records `printability`: true flat bed-contact area,
+   elevated downward-facing local minima, and warnings for small contact or
+   tall narrow geometry. Warnings are printed even for declared orientations.
+   These are conservative mesh diagnostics: curved first-layer contact,
+   bridges, cooling and complete support coverage still need slicer review.
 3. **Packing**: largest-footprint-first shelf packing, spilling to as
    many beds as needed; each `foo_bedN.stl` is one watertight multi-body
    solid, every placement inside margins.
