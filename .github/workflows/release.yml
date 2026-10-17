@@ -16,8 +16,6 @@ jobs:
             artifact: coscad-linux-x86_64
           - os: macos-latest
             artifact: coscad-macos-arm64
-          - os: windows-latest
-            artifact: coscad-windows-x86_64
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
@@ -58,18 +56,12 @@ jobs:
           cp -r docs "${{ matrix.artifact }}/docs"
           cp -r man "${{ matrix.artifact }}/man"
           cp -r examples "${{ matrix.artifact }}/examples"
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            7z a "${{ matrix.artifact }}.zip" "${{ matrix.artifact }}"
-          else
-            tar czf "${{ matrix.artifact }}.tar.gz" "${{ matrix.artifact }}"
-          fi
+          tar czf "${{ matrix.artifact }}.tar.gz" "${{ matrix.artifact }}"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ matrix.artifact }}
-          path: |
-            ${{ matrix.artifact }}.tar.gz
-            ${{ matrix.artifact }}.zip
-          if-no-files-found: ignore
+          path: ${{ matrix.artifact }}.tar.gz
+          if-no-files-found: error
 
   vscode:
     name: vscode extension

@@ -48,8 +48,6 @@ findOpenscad = do
   where
     candidates =
       [ "/Applications/OpenSCAD.app/Contents/MacOS/openscad"
-      , "C:\\Program Files\\OpenSCAD\\openscad.exe"
-      , "C:\\Program Files (x86)\\OpenSCAD\\openscad.exe"
       , "/opt/homebrew/bin/openscad"
       , "/usr/bin/openscad"
       , "/usr/local/bin/openscad"
@@ -75,7 +73,7 @@ firstFile (c : cs) = do
   if e then return (Just c) else firstFile cs
 
 pathSep :: Char
-pathSep = if os == "mingw32" then ';' else ':'
+pathSep = ':'
 
 splitOn :: Char -> String -> [String]
 splitOn c s = case break (== c) s of
@@ -90,11 +88,9 @@ libraryDirs = do
   osp <- maybe [] (splitOn pathSep) <$> lookupEnv "OPENSCADPATH"
   let user = case os of
         "darwin" -> [home </> "Documents" </> "OpenSCAD" </> "libraries"]
-        "mingw32" -> [home </> "Documents" </> "OpenSCAD" </> "libraries", home </> "My Documents" </> "OpenSCAD" </> "libraries"]
         _ -> [home </> ".local" </> "share" </> "OpenSCAD" </> "libraries"]
       sys = case os of
         "darwin" -> ["/Applications/OpenSCAD.app/Contents/Resources/libraries"]
-        "mingw32" -> ["C:\\Program Files\\OpenSCAD\\libraries"]
         _ -> ["/usr/share/openscad/libraries", "/usr/local/share/openscad/libraries"]
   return (filter (not . null) osp ++ user ++ sys)
 

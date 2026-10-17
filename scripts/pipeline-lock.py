@@ -236,18 +236,10 @@ def check_ci(root,lock):
 def writer(lock):
     """OS-owned writer lock releases on process death; stale files do not block."""
     with lock.with_suffix('.writer').open('a') as handle:
-        if os.name=='nt':
-            import msvcrt
-            handle.write('0'); handle.flush(); handle.seek(0)
-            try: msvcrt.locking(handle.fileno(),msvcrt.LK_NBLCK,1)
-            except OSError: raise Refused('another pin writer is active') from None
-            try: yield
-            finally: handle.seek(0); msvcrt.locking(handle.fileno(),msvcrt.LK_UNLCK,1)
-        else:
-            import fcntl
-            try: fcntl.flock(handle,fcntl.LOCK_EX|fcntl.LOCK_NB)
-            except BlockingIOError: raise Refused('another pin writer is active') from None
-            yield
+        import fcntl
+        try: fcntl.flock(handle,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except BlockingIOError: raise Refused('another pin writer is active') from None
+        yield
 
 def atomic_json(path,value):
     fd,name=tempfile.mkstemp(prefix='.'+path.name+'-',dir=path.parent)

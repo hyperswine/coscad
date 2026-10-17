@@ -26,8 +26,8 @@ That installs `coscad`, `man coscad`, the docs under
 `$(brew --prefix)/share/doc/coscad`, and the examples under
 `$(brew --prefix)/share/coscad/examples`.
 
-Prebuilt binaries for macOS, Linux, and Windows are attached to each
-GitHub release (`coscad-<os>-<arch>.tar.gz` / `.zip`) with the man page
+Prebuilt binaries for macOS and Linux are attached to each GitHub
+release (`coscad-<os>-<arch>.tar.gz`) with the man page
 and examples; put `coscad` on your PATH and, if you want `man coscad`,
 copy `man/coscad.1` into a `man1` directory on your MANPATH. Or build
 from source with [cabal](https://www.haskell.org/cabal/) and GHC 9.8
@@ -53,8 +53,8 @@ package coscad
 Rendering needs [OpenSCAD](https://openscad.org) 2021.01 or newer and a
 [BOSL2](https://github.com/BelfrySCAD/BOSL2) checkout in an OpenSCAD
 library folder (`~/Documents/OpenSCAD/libraries` on macOS,
-`~/.local/share/OpenSCAD/libraries` on Linux, `Documents\OpenSCAD\libraries`
-on Windows) — or anywhere, with `COSCAD_BOSL2=/path/to/BOSL2`. Check the
+`~/.local/share/OpenSCAD/libraries` on Linux) — or anywhere, with
+`COSCAD_BOSL2=/path/to/BOSL2`. Check the
 whole chain with:
 
 ```sh

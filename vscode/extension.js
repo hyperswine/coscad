@@ -51,7 +51,7 @@ function activeCoscadDocument(allowedExtensions) {
 
 function shellQuote(value) {
   if (/^[\w./@%+=:,-]+$/.test(value)) return value
-  return process.platform === 'win32' ? '"' + value.replace(/"/g, '""') + '"' : "'" + value.replace(/'/g, "'\"'\"'") + "'"
+  return "'" + value.replace(/'/g, "'\"'\"'") + "'"
 }
 
 // Run `coscad <args...>` in the COSCAD terminal. The terminal is created in
@@ -102,7 +102,7 @@ function parseCompilerErrors(stderr, filePath) {
   const diagnostics = []
   const lines = stderr.replace(/\r/g, '').split('\n')
   const positioned = /^(.*?):(\d+):(\d+):\s*(.*)$/
-  const fileLevel = /^((?:[A-Za-z]:)?[^:\n]*\.(?:coscad|assemble)):\s+(.*)$/
+  const fileLevel = /^([^:\n]*\.(?:coscad|assemble)):\s+(.*)$/
   const isExcerpt = line => /^\s*(\d+\s*)?\|/.test(line)
   const same = file => path.resolve(file) === path.resolve(filePath)
   const sev = vscode.DiagnosticSeverity.Error
@@ -177,7 +177,7 @@ function versionAtLeast(have, want) {
 function runCompiler(args, cwd, timeout) {
   return new Promise(resolve => {
     const [exe, ...pre] = splitCommand(config().command)
-    execFile(exe, [...pre, ...args], { cwd, timeout, windowsHide: true, maxBuffer: 8 * 1024 * 1024 }, (error, stdout, stderr) => {
+    execFile(exe, [...pre, ...args], { cwd, timeout, maxBuffer: 8 * 1024 * 1024 }, (error, stdout, stderr) => {
       resolve({ error, stdout: String(stdout || ''), stderr: String(stderr || '') })
     })
   })
