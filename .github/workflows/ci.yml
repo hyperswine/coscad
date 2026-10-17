@@ -12,9 +12,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # OpenSCAD's Homebrew cask is disabled by Gatekeeper; restore macOS
-        # when a supported CI installation is available.
-        os: [ubuntu-latest, windows-latest]
+        # Linux only: coscad targets macOS and Linux, and Windows is not a
+        # supported platform. OpenSCAD's Homebrew cask is disabled by
+        # Gatekeeper; restore macOS when a supported CI installation exists.
+        os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
@@ -47,17 +48,6 @@ jobs:
           git -C "$HOME/BOSL2" fetch --depth 1 origin e173fa0ae45f9e2082e0d8c0382dae98621b7c20
           git -C "$HOME/BOSL2" checkout --detach FETCH_HEAD
           echo "COSCAD_BOSL2=$HOME/BOSL2" >> "$GITHUB_ENV"
-
-      - name: OpenSCAD + BOSL2 (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          choco install openscad --no-progress -y
-          git init "$env:USERPROFILE\BOSL2"
-          git -C "$env:USERPROFILE\BOSL2" remote add origin https://github.com/BelfrySCAD/BOSL2
-          git -C "$env:USERPROFILE\BOSL2" fetch --depth 1 origin e173fa0ae45f9e2082e0d8c0382dae98621b7c20
-          git -C "$env:USERPROFILE\BOSL2" checkout --detach FETCH_HEAD
-          "COSCAD_BOSL2=$env:USERPROFILE\BOSL2" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Pin policy and refusal checks
         run: |
