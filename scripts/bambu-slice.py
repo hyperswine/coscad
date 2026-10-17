@@ -5,6 +5,7 @@ optionally send one to a Bambu printer in LAN developer mode.
   scripts/bambu-slice.py foo_manifest.json                 # slice every bed
   scripts/bambu-slice.py foo_manifest.json --bed 2         # one bed
   scripts/bambu-slice.py foo_manifest.json --print 1       # slice, upload bed 1, start it
+  scripts/bambu-slice.py foo_manifest.json --accept-printability   # slice despite reviewed warnings
 
 Each bed becomes `<base>_bedN.gcode.3mf` next to the manifest (the file a
 Bambu printer accepts) plus `<base>_print.json` with time and filament per
@@ -13,6 +14,16 @@ not resolve `inherits`, which silently leaves filament density, flow and
 temperatures at defaults). Printing needs BAMBU_HOST, BAMBU_SERIAL and
 BAMBU_ACCESS_CODE and the bambu-lan scripts (BAMBU_LAN_DIR, default
 ~/Documents/GitHub/3d-models/bambu-lan) for the FTPS upload.
+
+Printability: the warnings `coscad next` recorded for the parts on each
+bed are printed, written to `<base>_print.json`, and checked against the
+process. Small-contact and tall/narrow parts need an explicit brim,
+flat-overhang and elevated-start parts need supports; anything else
+needs one or the other. Unaddressed warnings refuse the slice (exit 2)
+unless --accept-printability is given. A brim the manifest reserved
+(`brim=N` hints, `plate ... brim=N`) is applied as an outer brim when the
+process does not set one, and an explicit brim wider than a part's
+reserved space is reported.
 """
 import argparse, json, os, shutil, subprocess, sys, tempfile, time
 
@@ -81,26 +92,40 @@ def preset_overrides(path, preset, additional_keys=()):
     return data
 
 
-def write_presets(printer, process, filament, bed, overrides=None, filament_overrides=None):
+def resolve_process(process, overrides=None, extra=None):
+    """The flattened process preset with explicit overrides, then any
+    settings this script derives (`extra`, e.g. the manifest's brim)."""
     proc = flatten("process", process)
     if overrides:
         # brim_type can be omitted by presets that inherit the slicer's
         # compiled default; it is still an explicit supported process key.
         proc.update(preset_overrides(overrides, proc, {"brim_type"}))
+    proc.update(extra or {})
+    return proc
+
+
+def write_presets(printer, process, filament, bed, overrides=None, filament_overrides=None, extra=None):
+    """Write the three flat presets into a fresh temporary directory. The
+    directory is removed again if anything fails here; on success the
+    caller owns it (see `main`)."""
+    proc = resolve_process(process, overrides, extra)
     proc["curr_bed_type"] = bed
     fila = flatten("filament", filament)
     if filament_overrides:
         fila.update(preset_overrides(filament_overrides, fila))
+    machine = machine_with_templates(printer)
     pdir = tempfile.mkdtemp(prefix="coscad-presets-")
-    files = {}
-    for kind, name, data in (("machine", printer, machine_with_templates(printer)),
-                             ("process", process, proc),
-                             ("filament", filament, fila)):
-        f = os.path.join(pdir, kind + ".json")
-        with open(f, "w") as fh:
-            json.dump(data, fh, indent=1)
-        files[kind] = f
-    return files
+    try:
+        files = {}
+        for kind, data in (("machine", machine), ("process", proc), ("filament", fila)):
+            f = os.path.join(pdir, kind + ".json")
+            with open(f, "w") as fh:
+                json.dump(data, fh, indent=1)
+            files[kind] = f
+        return files
+    except BaseException:
+        shutil.rmtree(pdir, ignore_errors=True)
+        raise
 
 
 def parse_gcode_header(path, needle):
@@ -115,31 +140,36 @@ def parse_gcode_header(path, needle):
 
 def slice_bed(stl, out3mf, presets, extra):
     work = tempfile.mkdtemp(prefix="coscad-slice-")
-    cmd = [APP, "--debug", "1",
-           "--load-settings", presets["machine"] + ";" + presets["process"],
-           "--load-filaments", presets["filament"],
-           "--slice", "0", "--export-3mf", os.path.basename(out3mf), "--outputdir", work] + extra + [stl]
-    r = subprocess.run(cmd, capture_output=True, text=True)
-    res_path = os.path.join(work, "result.json")
-    res = json.load(open(res_path)) if os.path.exists(res_path) else {}
-    if r.returncode != 0 or res.get("return_code", 1) != 0:
-        tail = "\n".join([l for l in (r.stdout + "\n" + r.stderr).splitlines()
-                          if not l.startswith("[")][-10:])
-        sys.exit(f"slicing {stl} failed: {res.get('error_string', r.returncode)}\n{tail}")
-    shutil.move(os.path.join(work, os.path.basename(out3mf)), out3mf)
-    gcode = os.path.join(work, "plate_1.gcode")
-    info = {"3mf": out3mf}
-    if os.path.exists(gcode):
-        info["print_time"] = parse_gcode_header(gcode, "; model printing time")
-        info["filament_g"] = parse_gcode_header(gcode, "; total filament weight [g]")
-        info["layers"] = parse_gcode_header(gcode, "; total layer number")
-    for plate in res.get("sliced_plates", []):
-        info["objects"] = [o["name"] for o in plate.get("objects", [])]
-        info["estimated_s"] = plate.get("total_predication")
-        if plate.get("warning_message"):
-            info["warning"] = plate["warning_message"]
-    shutil.rmtree(work, ignore_errors=True)
-    return info
+    try:
+        cmd = [APP, "--debug", "1",
+               "--load-settings", presets["machine"] + ";" + presets["process"],
+               "--load-filaments", presets["filament"],
+               "--slice", "0", "--export-3mf", os.path.basename(out3mf), "--outputdir", work] + extra + [stl]
+        r = subprocess.run(cmd, capture_output=True, text=True)
+        res_path = os.path.join(work, "result.json")
+        res = {}
+        if os.path.exists(res_path):
+            with open(res_path) as fh:
+                res = json.load(fh)
+        if r.returncode != 0 or res.get("return_code", 1) != 0:
+            tail = "\n".join([l for l in (r.stdout + "\n" + r.stderr).splitlines()
+                              if not l.startswith("[")][-10:])
+            sys.exit(f"slicing {stl} failed: {res.get('error_string', r.returncode)}\n{tail}")
+        shutil.move(os.path.join(work, os.path.basename(out3mf)), out3mf)
+        gcode = os.path.join(work, "plate_1.gcode")
+        info = {"3mf": out3mf}
+        if os.path.exists(gcode):
+            info["print_time"] = parse_gcode_header(gcode, "; model printing time")
+            info["filament_g"] = parse_gcode_header(gcode, "; total filament weight [g]")
+            info["layers"] = parse_gcode_header(gcode, "; total layer number")
+        for plate in res.get("sliced_plates", []):
+            info["objects"] = [o["name"] for o in plate.get("objects", [])]
+            info["estimated_s"] = plate.get("total_predication")
+            if plate.get("warning_message"):
+                info["warning"] = plate["warning_message"]
+        return info
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
 
 
 def spool_mapping(spool):
@@ -239,6 +269,106 @@ def check_manifest(m, path):
     raise ValueError(f"{path} has no beds: {rerun}")
 
 
+# What addresses each printability warning code from `coscad next`.
+MITIGATION = {"small_contact": "brim", "tall_narrow": "brim",
+              "flat_overhang": "supports", "elevated_start": "supports"}
+BRIM_TYPES = ("outer_only", "inner_only", "outer_and_inner")
+PRINTABILITY_REFUSED = 2
+
+
+def _setting(proc, key):
+    """A Bambu setting as one string (lists hold one value per extruder)."""
+    v = proc.get(key)
+    if isinstance(v, list):
+        v = v[0] if v else None
+    return None if v is None else str(v)
+
+
+def _number(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def process_measures(proc):
+    """Which mitigations the resolved process turns on. Only an explicit
+    brim counts: `auto_brim` decides per object and produced no brim on
+    the failed tesseract coupon."""
+    brim = _number(_setting(proc, "brim_width")) if _setting(proc, "brim_type") in BRIM_TYPES else 0.0
+    return {"brim_mm": brim if brim > 0 else 0.0,
+            "supports": _setting(proc, "enable_support") in ("1", "true")}
+
+
+def selected_beds(m, only=None):
+    return [b for b in m["beds"] if only is None or b["index"] == only]
+
+
+def bed_issues(m, beds):
+    """One entry per (bed, variant, warning) for the parts on these beds,
+    from each variant's `printability` block. Manifests without
+    `warning_codes` (before coscad 1.3) give code None."""
+    variants = {v.get("id"): v for v in m.get("variants", [])}
+    issues = []
+    for bed in beds:
+        seen = []
+        for p in bed.get("placements", []):
+            vid = p.get("variant")
+            if vid in seen:
+                continue
+            seen.append(vid)
+            pr = variants.get(vid, {}).get("printability") or {}
+            warnings = pr.get("warnings") or []
+            codes = pr.get("warning_codes") or []
+            for i, w in enumerate(warnings):
+                issues.append({"bed": bed["index"], "variant": vid,
+                               "instances": [q["instance"] for q in bed["placements"] if q.get("variant") == vid],
+                               "code": codes[i] if i < len(codes) else None, "warning": w})
+    return issues
+
+
+def reserved_brim(beds):
+    """The widest brim `coscad next` reserved for any part on these beds."""
+    return max([_number(p.get("brim_mm")) for b in beds for p in b.get("placements", [])] or [0.0])
+
+
+def brim_settings(m, beds, overrides):
+    """Process settings for the brim the manifest reserved, when the
+    explicit overrides leave the brim alone: an outer brim of the widest
+    reserved width. Empty when nothing is reserved or the user set one."""
+    width = reserved_brim(beds)
+    if width <= 0 or set(overrides or {}) & {"brim_type", "brim_width"}:
+        return {}
+    return {"brim_type": "outer_only", "brim_width": f"{width:g}"}
+
+
+def brim_conflicts(m, beds, brim_mm):
+    """Parts whose reserved space is narrower than the brim being sliced:
+    a part's brim may reach its own reservation plus half the margin
+    before it can touch a neighbour's (or the plate edge's margin)."""
+    if brim_mm <= 0:
+        return []
+    # manifests before coscad 1.3 reserve nothing and record no brim_mm
+    margin = _number((m.get("bed") or {}).get("margin"))
+    return [(b["index"], p["instance"], _number(p.get("brim_mm")))
+            for b in beds for p in b.get("placements", [])
+            if "brim_mm" in p and brim_mm > _number(p.get("brim_mm")) + margin / 2 + 1e-9]
+
+
+def gate_printability(issues, measures, accept):
+    """Classify each warning as addressed by the process or not, and
+    decide. Returns (issues annotated with `addressed_by`, refused)."""
+    out, open_ = [], []
+    for issue in issues:
+        need = MITIGATION.get(issue["code"])
+        have = [k for k in ("brim", "supports")
+                if (need in (None, k)) and (measures["brim_mm"] > 0 if k == "brim" else measures["supports"])]
+        out.append(dict(issue, needs=need or "brim or supports", addressed_by=have[0] if have else None))
+        if not have:
+            open_.append(issue)
+    return out, bool(open_) and not accept
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("manifest", help="<base>_manifest.json written by `coscad next` (schema coscad.next/1)")
@@ -252,11 +382,15 @@ def main():
     ap.add_argument("--print", dest="print_bed", type=int, metavar="N", help="after slicing, upload bed N and start printing it")
     ap.add_argument("--slicer-arg", action="append", default=[], help="extra Bambu Studio CLI argument (repeatable)")
     ap.add_argument("--spool", default="external", help="with --print: external (spool holder, default) or ams0..ams3 (AMS slot 1..4)")
+    ap.add_argument("--accept-printability", action="store_true",
+                    help="slice even when the manifest's printability warnings are not addressed by a brim or supports "
+                         "(recorded in _print.json)")
     a = ap.parse_args()
     spool_mapping(a.spool)
 
     try:
-        m = json.load(open(a.manifest))
+        with open(a.manifest) as fh:
+            m = json.load(fh)
         check_manifest(m, a.manifest)
     except (OSError, ValueError) as error:
         sys.exit(f"error: {error}")
@@ -277,10 +411,51 @@ def main():
                 filament = cand
         filament = filament or machine.get("default_filament_profile", [None])[0]
     bed_name = BED_TYPES[a.plate]
+    beds = selected_beds(m, a.bed)
+    if a.bed is not None and not beds:
+        sys.exit(f"error: the manifest has no bed {a.bed}")
     try:
-        presets = write_presets(a.printer, process, filament, bed_name, a.process_overrides, a.filament_overrides)
+        explicit = preset_overrides(a.process_overrides, flatten("process", process), {"brim_type"}) if a.process_overrides else {}
+        derived = brim_settings(m, beds, explicit)
+        proc = resolve_process(process, a.process_overrides, derived)
     except (OSError, ValueError) as error:
         sys.exit(f"invalid preset overrides: {error}")
+    measures = process_measures(proc)
+    issues, refused = gate_printability(bed_issues(m, beds), measures, a.accept_printability)
+    for issue in issues:
+        state = f"addressed by {issue['addressed_by']}" if issue["addressed_by"] else f"NOT addressed (needs {issue['needs']})"
+        print(f"bed {issue['bed']}: {issue['variant']}: {issue['warning']} [{state}]", file=sys.stderr)
+    if derived:
+        print(f"brim: {derived['brim_width']} mm outer brim, as reserved in the manifest", file=sys.stderr)
+    for index, inst, reserved in brim_conflicts(m, beds, measures["brim_mm"]):
+        print(f"warning: bed {index}: {inst} has {reserved:g} mm of brim reserved but the process prints "
+              f"{measures['brim_mm']:g} mm; brims may merge or reach the plate margin "
+              f"(add brim={measures['brim_mm']:g} to the part or plate and rerun `coscad next`)", file=sys.stderr)
+    if refused:
+        n = sum(1 for i in issues if not i["addressed_by"])
+        print(f"error: {n} printability warning{'s' if n != 1 else ''} not addressed by the process: enable an explicit brim "
+              f"(brim_type outer_only and brim_width in --process-overrides, or brim=N in the .assemble) or supports "
+              f"(enable_support), fix the part, or pass --accept-printability after review", file=sys.stderr)
+        sys.exit(PRINTABILITY_REFUSED)
+    try:
+        presets = write_presets(a.printer, process, filament, bed_name, a.process_overrides, a.filament_overrides, derived)
+    except (OSError, ValueError) as error:
+        sys.exit(f"invalid preset overrides: {error}")
+    try:
+        summary = slice_beds(a, m, beds, presets, process, filament, bed_name, machine, outdir, base,
+                             issues, measures, derived)
+    finally:
+        shutil.rmtree(os.path.dirname(presets["machine"]), ignore_errors=True)
+
+    if a.print_bed is not None:
+        hit = [b for b in summary["beds"] if b["index"] == a.print_bed]
+        if not hit:
+            sys.exit(f"bed {a.print_bed} was not sliced")
+        lan_print(hit[0]["3mf"], os.path.basename(hit[0]["3mf"]), a.spool)
+
+
+def slice_beds(a, m, beds, presets, process, filament, bed_name, machine, outdir, base, issues, measures, derived):
+    """Slice the selected beds and write `<base>_print.json`."""
     print(f"printer {a.printer} | process {process} | filament {filament} | {bed_name}")
 
     pw, pd = m["bed"]["w"], m["bed"]["d"]
@@ -295,27 +470,28 @@ def main():
         summary["process_overrides"] = preset_overrides(a.process_overrides, flatten("process", process), {"brim_type"})
     if a.filament_overrides:
         summary["filament_overrides"] = preset_overrides(a.filament_overrides, flatten("filament", filament))
-    for bed in m["beds"]:
-        if a.bed is not None and bed["index"] != a.bed:
-            continue
+    summary["printability"] = {"accept_printability": bool(a.accept_printability),
+                               "unaddressed": sum(1 for i in issues if not i["addressed_by"]),
+                               "brim_mm": measures["brim_mm"], "supports": measures["supports"],
+                               "brim_from_manifest": derived or None,
+                               "brim_conflicts": [{"bed": b, "instance": i, "reserved_mm": r}
+                                                  for b, i, r in brim_conflicts(m, beds, measures["brim_mm"])],
+                               "warnings": issues}
+    for bed in beds:
         stl = bed["stl"] if os.path.isabs(bed["stl"]) else os.path.join(outdir, os.path.basename(bed["stl"]))
         out3mf = f"{base}_bed{bed['index']}.gcode.3mf"
         t0 = time.time()
         info = slice_bed(stl, out3mf, presets, a.slicer_arg)
-        info.update({"index": bed["index"], "parts": [p["instance"] for p in bed["placements"]], "slice_s": round(time.time() - t0, 1)})
+        info.update({"index": bed["index"], "parts": [p["instance"] for p in bed["placements"]], "slice_s": round(time.time() - t0, 1),
+                     "printability_warnings": [i["warning"] for i in issues if i["bed"] == bed["index"]]})
         summary["beds"].append(info)
         print(f"bed {bed['index']}: {len(info['parts'])} parts, {info.get('print_time')}, {info.get('filament_g')} g -> {out3mf}")
         if info.get("warning"):
             print("  slicer warning:", info["warning"])
-    json.dump(summary, open(f"{base}_print.json", "w"), indent=2)
+    with open(f"{base}_print.json", "w") as fh:
+        json.dump(summary, fh, indent=2)
     print(f"Wrote {base}_print.json")
-    shutil.rmtree(os.path.dirname(presets["machine"]), ignore_errors=True)
-
-    if a.print_bed is not None:
-        hit = [b for b in summary["beds"] if b["index"] == a.print_bed]
-        if not hit:
-            sys.exit(f"bed {a.print_bed} was not sliced")
-        lan_print(hit[0]["3mf"], os.path.basename(hit[0]["3mf"]), a.spool)
+    return summary
 
 
 if __name__ == "__main__":

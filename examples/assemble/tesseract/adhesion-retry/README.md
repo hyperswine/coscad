@@ -23,7 +23,11 @@ physical results.
   increases measured bed contact from 7.38 to **69.73 mm²** while keeping
   the pin vertical and the mating surfaces unchanged.
 - An explicit **8 mm outer brim** with a **0.05 mm separation** replaces
-  auto brim, which produced no brim on the failed slice.
+  auto brim, which produced no brim on the failed slice. Each part asks for
+  it with `brim=8` in `fit-test.assemble`; `coscad next` reserves the brim
+  around the part when packing, and `bambu-slice.py` prints the reserved
+  width as an outer brim. Only the 0.05 mm gap stays in
+  `process-overrides.json`.
 - First-layer walls run at **25 mm/s**, infill at **35 mm/s**, with reduced
   acceleration. Later walls are limited to 45/60 mm/s instead of 200/300.
 - Cooling is disabled for the first three layers and ramps up afterwards.
@@ -31,12 +35,20 @@ physical results.
   The rendered collar low points start about **0.805 mm** above the bed;
   the nominal neck bottom is **1.4 mm** above the bed. The upright short
   bar alone would not test these supports.
-- Plate margins are 12 mm to leave room for the brim.
+- The plate margin is back to the default 6 mm. Each part's 8 mm brim is
+  reserved on top of it: 14 mm to the plate edge, 22 mm between parts. The
+  first slice used a hand-raised 12 mm margin instead.
 
 Nozzle and textured-plate temperatures remain **220°C / 65°C**.
 The nominal cap pin fit remains 0.03 mm radial interference.
 
 ## Offline verification
+
+`verification.json` and the time and filament estimates above were recorded
+for the first layout (12 mm margin, brim from `process-overrides.json`). The
+brim reservation moves the parts, so rebuilding gives a new bed and print
+file. Run the rebuild below and `verify.py` again before printing a new
+slice. The part meshes, contact areas, settings and brim width are the same.
 
 `verification.json` records the print-file checksum, embedded mesh check,
 four closed components, measured contact areas, settings, actual first-layer
@@ -67,3 +79,10 @@ The verifier uses the dependencies in `../requirements.txt`. Rendering also
 needs OpenSCAD and BOSL2. Both override files are kept separately so
 filament cooling cannot be accidentally overwritten by loading its preset.
 Do not add `--print` while preparing offline.
+
+The process overrides are still needed. The full bar's collars start
+0.805 mm above the bed, and `bambu-slice.py` refuses to slice that warning
+until supports are enabled (`enable_support` in `process-overrides.json`)
+or `--accept-printability` is given. The supports, slower first layer,
+reduced acceleration and cooling are tuning decisions for this retry. The
+manifest does not imply them, so they stay explicit.

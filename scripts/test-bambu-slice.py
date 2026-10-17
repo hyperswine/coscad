@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Offline regression checks for explicit presets and slicer failure reporting."""
+"""Offline regression checks for explicit presets, slicer failure reporting,
+the printability gate and temporary-directory cleanup. Needs no Bambu
+Studio: the slicer and its presets are mocked."""
+import contextlib
 import importlib.util
+import io
 import json
+import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -56,11 +62,47 @@ class SliceTests(unittest.TestCase):
 
     def test_slicer_failure_reports_stderr_without_type_error(self):
         with tempfile.TemporaryDirectory() as d:
+            work = os.path.join(d, "coscad-slice-x")
+            os.mkdir(work)
             failure = subprocess.CompletedProcess([], 2, "[trace] internal log\n", "unsupported setting")
             with patch.object(slicer.subprocess, "run", return_value=failure), \
-                 patch.object(slicer.tempfile, "mkdtemp", return_value=d), \
+                 patch.object(slicer.tempfile, "mkdtemp", return_value=work), \
                  self.assertRaisesRegex(SystemExit, "unsupported setting"):
                 slicer.slice_bed("part.stl", "out.3mf", {"machine": "m", "process": "p", "filament": "f"}, [])
+
+    def test_slice_work_dir_is_removed_after_a_slicer_failure(self):
+        with tempfile.TemporaryDirectory() as d:
+            work = os.path.join(d, "coscad-slice-x")
+            os.mkdir(work)
+            Path(work, "result.json").write_text('{"return_code": -51, "error_string": "boom"}')
+            failure = subprocess.CompletedProcess([], 1, "", "")
+            with patch.object(slicer.subprocess, "run", return_value=failure), \
+                 patch.object(slicer.tempfile, "mkdtemp", return_value=work), \
+                 self.assertRaisesRegex(SystemExit, "boom"):
+                slicer.slice_bed("part.stl", "out.3mf", {"machine": "m", "process": "p", "filament": "f"}, [])
+            self.assertFalse(os.path.exists(work))
+
+    def test_slice_work_dir_is_removed_when_the_slicer_cannot_start(self):
+        with tempfile.TemporaryDirectory() as d:
+            work = os.path.join(d, "coscad-slice-x")
+            os.mkdir(work)
+            with patch.object(slicer.subprocess, "run", side_effect=FileNotFoundError("BambuStudio")), \
+                 patch.object(slicer.tempfile, "mkdtemp", return_value=work), \
+                 self.assertRaises(FileNotFoundError):
+                slicer.slice_bed("part.stl", "out.3mf", {"machine": "m", "process": "p", "filament": "f"}, [])
+            self.assertFalse(os.path.exists(work))
+
+    def test_presets_dir_is_removed_when_writing_fails(self):
+        with tempfile.TemporaryDirectory() as d:
+            pdir = os.path.join(d, "coscad-presets-x")
+            os.mkdir(pdir)
+            unserialisable = {"x": object()}
+            with patch.object(slicer, "flatten", side_effect=lambda kind, name: dict(unserialisable) if kind == "filament" else {}), \
+                 patch.object(slicer, "machine_with_templates", return_value={}), \
+                 patch.object(slicer.tempfile, "mkdtemp", return_value=pdir), \
+                 self.assertRaises(TypeError):
+                slicer.write_presets("A1", "Optimal", "PLA", "Textured PEI Plate")
+            self.assertFalse(os.path.exists(pdir))
 
 
 class ManifestTests(unittest.TestCase):
@@ -116,6 +158,170 @@ class ManifestTests(unittest.TestCase):
                     self.assertRaises(ValueError, slicer.check_manifest, m, name)
                 else:
                     slicer.check_manifest(m, name)
+
+
+def manifest(warnings=(), codes=None, brim=None, margin=6, schema=True):
+    """A one-bed coscad.next/1 manifest with one part carrying `warnings`."""
+    pr = {"bed_contact_mm2": 1, "warnings": list(warnings)}
+    if codes is not None:
+        pr["warning_codes"] = list(codes)
+    placement = {"instance": "p_1", "variant": "p_bot", "x": 6, "y": 6, "w": 10, "d": 10}
+    if brim is not None:
+        placement["brim_mm"] = brim
+    m = {"bed": {"w": 256, "d": 256, "margin": margin}, "source": "a.assemble",
+         "variants": [{"id": "p_bot", "part": "p", "printability": pr, "hints": {}}],
+         "beds": [{"index": 1, "stl": "a_bed1.stl", "placements": [placement]}]}
+    if schema:
+        m["schema"] = "coscad.next/1"
+    return m
+
+
+class PrintabilityGateTests(unittest.TestCase):
+    CONTACT = "only 1 mm^2 of flat bed contact (2 mm^2 of first layer); check the first layer and use a brim or a broader print face"
+    START = "elevated downward-facing start at 10 mm above the bed; inspect supports before printing"
+
+    def gate(self, m, proc, accept=False):
+        measures = slicer.process_measures(proc)
+        return slicer.gate_printability(slicer.bed_issues(m, m["beds"]), measures, accept)
+
+    def test_clean_manifest_passes(self):
+        issues, refused = self.gate(manifest(), {})
+        self.assertEqual(issues, [])
+        self.assertFalse(refused)
+
+    def test_warnings_without_brim_or_supports_are_refused(self):
+        issues, refused = self.gate(manifest([self.CONTACT], ["small_contact"]), {"brim_type": "auto_brim", "brim_width": "5"})
+        self.assertTrue(refused)
+        self.assertEqual(issues[0]["needs"], "brim")
+        self.assertIsNone(issues[0]["addressed_by"])
+        self.assertEqual(issues[0]["instances"], ["p_1"])
+
+    def test_accept_printability_passes_and_keeps_the_record(self):
+        issues, refused = self.gate(manifest([self.CONTACT], ["small_contact"]), {}, accept=True)
+        self.assertFalse(refused)
+        self.assertEqual([i["warning"] for i in issues], [self.CONTACT])
+
+    def test_each_warning_needs_its_own_measure(self):
+        m = manifest([self.CONTACT, self.START], ["small_contact", "elevated_start"])
+        brim = {"brim_type": "outer_only", "brim_width": "8"}
+        issues, refused = self.gate(m, brim)
+        self.assertTrue(refused)
+        self.assertEqual([i["addressed_by"] for i in issues], ["brim", None])
+        issues, refused = self.gate(m, dict(brim, enable_support="1"))
+        self.assertFalse(refused)
+        self.assertEqual([i["addressed_by"] for i in issues], ["brim", "supports"])
+
+    def test_manifest_without_codes_needs_a_brim_or_supports(self):
+        m = manifest([self.CONTACT])
+        self.assertTrue(self.gate(m, {})[1])
+        self.assertFalse(self.gate(m, {"enable_support": "1"})[1])
+        self.assertFalse(self.gate(m, {"brim_type": "outer_only", "brim_width": ["3"]})[1])
+        self.assertTrue(self.gate(m, {"brim_type": "outer_only", "brim_width": "0"})[1])
+
+    def test_reserved_brim_is_applied_unless_the_process_sets_one(self):
+        m = manifest([self.CONTACT], ["small_contact"], brim=8)
+        self.assertEqual(slicer.brim_settings(m, m["beds"], {}), {"brim_type": "outer_only", "brim_width": "8"})
+        self.assertEqual(slicer.brim_settings(m, m["beds"], {"brim_type": "no_brim"}), {})
+        self.assertEqual(slicer.brim_settings(manifest(), manifest()["beds"], {}), {})
+        _, refused = self.gate(m, slicer.brim_settings(m, m["beds"], {}))
+        self.assertFalse(refused)
+
+    def test_a_brim_wider_than_the_reservation_is_reported(self):
+        m = manifest(brim=2, margin=6)
+        self.assertEqual(slicer.brim_conflicts(m, m["beds"], 5), [])
+        self.assertEqual(slicer.brim_conflicts(m, m["beds"], 5.5), [(1, "p_1", 2)])
+        self.assertEqual(slicer.brim_conflicts(manifest(), manifest()["beds"], 8), [], "old manifests reserve nothing to check")
+
+
+class MainTests(unittest.TestCase):
+    """bambu-slice.py end to end with the presets and the slicer mocked."""
+    CONTACT = PrintabilityGateTests.CONTACT
+
+    def run_main(self, m, *args, overrides=None):
+        d = tempfile.mkdtemp()
+        self.addCleanup(lambda: slicer.shutil.rmtree(d, ignore_errors=True))
+        path = Path(d) / "a_manifest.json"
+        path.write_text(json.dumps(m))
+        argv = ["bambu-slice.py", str(path)] + list(args)
+        if overrides is not None:
+            (Path(d) / "process.json").write_text(json.dumps(overrides))
+            argv += ["--process-overrides", str(Path(d) / "process.json")]
+        presets = Path(d) / "coscad-presets-x"
+        seen = {}
+
+        def fake_mkdtemp(prefix=""):
+            presets.mkdir()
+            return str(presets)
+
+        def fake_slice(stl, out3mf, files, extra):
+            seen["process"] = json.loads(Path(files["process"]).read_text())
+            return {"3mf": out3mf}
+
+        err = io.StringIO()
+        with patch.object(sys, "argv", argv), patch.object(slicer.os.path, "exists", lambda p: True), \
+             patch.object(slicer, "flatten", side_effect=lambda kind, name: {"default_print_profile": "P", "brim_width": "5", "enable_support": "0"} if kind != "filament" else {}), \
+             patch.object(slicer, "machine_with_templates", return_value={}), \
+             patch.object(slicer.tempfile, "mkdtemp", side_effect=fake_mkdtemp), \
+             patch.object(slicer, "slice_bed", side_effect=fake_slice), \
+             contextlib.redirect_stderr(err), contextlib.redirect_stdout(io.StringIO()):
+            try:
+                slicer.main()
+                code = 0
+            except SystemExit as e:
+                code = e.code
+        printed = Path(d) / "a_print.json"
+        return code, err.getvalue(), json.loads(printed.read_text()) if printed.exists() else None, seen, presets
+
+    def test_refusal_exits_2_before_slicing_and_writes_nothing(self):
+        code, err, summary, seen, presets = self.run_main(manifest([self.CONTACT], ["small_contact"]))
+        self.assertEqual(code, slicer.PRINTABILITY_REFUSED)
+        self.assertIn("NOT addressed (needs brim)", err)
+        self.assertIn("--accept-printability", err)
+        self.assertIsNone(summary)
+        self.assertEqual(seen, {})
+
+    def test_accept_printability_slices_and_records_the_warnings(self):
+        code, err, summary, _, presets = self.run_main(manifest([self.CONTACT], ["small_contact"]), "--accept-printability")
+        self.assertEqual(code, 0, err)
+        pr = summary["printability"]
+        self.assertTrue(pr["accept_printability"])
+        self.assertEqual(pr["unaddressed"], 1)
+        self.assertEqual([w["warning"] for w in pr["warnings"]], [self.CONTACT])
+        self.assertEqual(summary["beds"][0]["printability_warnings"], [self.CONTACT])
+        self.assertFalse(presets.exists(), "the presets directory is removed after slicing")
+
+    def test_reserved_brim_reaches_the_sliced_process(self):
+        code, err, summary, seen, _ = self.run_main(manifest([self.CONTACT], ["small_contact"], brim=8))
+        self.assertEqual(code, 0, err)
+        self.assertEqual((seen["process"]["brim_type"], seen["process"]["brim_width"]), ("outer_only", "8"))
+        self.assertEqual(summary["printability"]["brim_from_manifest"], {"brim_type": "outer_only", "brim_width": "8"})
+        self.assertEqual(summary["printability"]["warnings"][0]["addressed_by"], "brim")
+        self.assertFalse(summary["printability"]["accept_printability"])
+
+    def test_explicit_supports_address_an_elevated_start(self):
+        code, err, summary, _, _ = self.run_main(manifest([PrintabilityGateTests.START], ["elevated_start"]),
+                                                 overrides={"enable_support": "1"})
+        self.assertEqual(code, 0, err)
+        self.assertTrue(summary["printability"]["supports"])
+
+    def test_presets_dir_is_removed_when_slicing_fails(self):
+        d = tempfile.mkdtemp()
+        self.addCleanup(lambda: slicer.shutil.rmtree(d, ignore_errors=True))
+        path = Path(d) / "a_manifest.json"
+        path.write_text(json.dumps(manifest()))
+        presets = Path(d) / "coscad-presets-x"
+
+        def fake_mkdtemp(prefix=""):
+            presets.mkdir()
+            return str(presets)
+
+        with patch.object(sys, "argv", ["bambu-slice.py", str(path)]), patch.object(slicer.os.path, "exists", lambda p: True), \
+             patch.object(slicer, "flatten", return_value={}), patch.object(slicer, "machine_with_templates", return_value={}), \
+             patch.object(slicer.tempfile, "mkdtemp", side_effect=fake_mkdtemp), \
+             patch.object(slicer, "slice_bed", side_effect=SystemExit("slicing failed")), \
+             contextlib.redirect_stdout(io.StringIO()), self.assertRaises(SystemExit):
+            slicer.main()
+        self.assertFalse(presets.exists())
 
 
 if __name__ == "__main__":

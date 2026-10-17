@@ -12,7 +12,8 @@ import Coscad.Mesh
 import Coscad.OpenScad (renderStlFile)
 import Coscad.Printability
 import Control.Monad (when)
-import System.Exit (exitFailure)
+import Data.List (intercalate)
+import System.Exit (ExitCode (..), exitFailure, exitWith)
 import System.FilePath (dropExtension)
 import System.IO (hPutStrLn, stderr)
 
@@ -134,7 +135,13 @@ chooseOrientation maxZ Nothing tris =
            in Right (m, lbl, "auto", sc)
 
 processNext :: FilePath -> IO ()
-processNext inputFile = do
+processNext = processNextWith False
+
+-- | @coscad next [--strict]@. With @strict@, any printability warning
+-- makes the stage exit 2 (the design has a problem) after the beds and
+-- manifest are written, so they can still be inspected.
+processNextWith :: Bool -> FilePath -> IO ()
+processNextWith strict inputFile = do
   r <- loadAssembly [] inputFile
   case r of
     Left err -> failAsm err
@@ -179,36 +186,56 @@ processNext inputFile = do
               (printabilityWarnings (vPrint v))) variants
           let footOf k = head [(w, d) | v <- variants, vKey v == k, let (w, d, _) = vDims v]
               meshOf k = head [vMesh v | v <- variants, vKey v == k]
-              instances = [(instId fp i, vkey fp) | fp <- printable, i <- [1 .. fpCount fp]]
-          case packBeds (pw, pd, marg) [(iid, k, footOf k) | (iid, k) <- instances] of
+              printOf k = head [vPrint v | v <- variants, vKey v == k]
+              instances = [(instId fp i, vkey fp, instanceBrim (arPlateBrim ar) fp (printOf (vkey fp))) | fp <- printable, i <- [1 .. fpCount fp]]
+          case packBedsBrim (pw, pd, marg) [(iid, k, footOf k, b) | (iid, k, b) <- instances] of
             Left err -> hPutStrLn stderr ("Error: " ++ err) >> exitFailure
             Right beds -> do
               mapM_
                 ( \(i, placed) -> do
-                    let tris = concat [meshMap (vadd (x, y, 0)) (meshOf k) | (_, k, _, (x, y)) <- placed]
+                    let tris = concat [meshMap (vadd (x, y, 0)) (meshOf k) | (_, k, _, (x, y), _) <- placed]
                         f = base ++ "_bed" ++ show i ++ ".stl"
                     writeFileUtf8 f (stlAscii ("bed" ++ show i) tris)
                     putStrLn ("Wrote " ++ f ++ " (" ++ show (length placed) ++ " parts)")
                 )
                 (zip [(1 :: Int) ..] beds)
-              writeFileUtf8 (nextManifestPath base) (nextManifest inputFile base (pw, pd, marg) bedZ variants beds asmOnly)
+              writeFileUtf8 (nextManifestPath base) (nextManifest inputFile base (pw, pd, marg) (arPlateBrim ar) bedZ variants beds asmOnly)
               putStrLn ("Wrote " ++ nextManifestPath base)
+              let warned = [v | v <- variants, not (null (printabilityWarnings (vPrint v)))]
+                  count = sum (map (length . printabilityWarnings . vPrint) warned)
+              when (strict && not (null warned)) $ do
+                hPutStrLn stderr ("Error: " ++ inputFile ++ ": --strict: " ++ show count ++ " printability warning"
+                  ++ (if count == 1 then "" else "s") ++ " on " ++ intercalate ", " (map vName warned)
+                  ++ "; fix or reorient the parts, or slice with scripts/bambu-slice.py --accept-printability after review")
+                exitWith (ExitFailure 2)
+
+-- | Brim reserved around one instance: its own @brim=N@ hint wins
+-- (@brim=0@ opts out); otherwise @plate … brim=N@ applies to parts whose
+-- printability recommends a brim (small first layer, tall and narrow).
+instanceBrim :: Maybe Double -> FlatPart -> Printability -> Double
+instanceBrim plateBrim fp p = case brimHint fp of
+  Just b -> b
+  Nothing -> case plateBrim of
+    Just b | recommendsBrim p -> b
+    _ -> 0
 
 nextManifest ::
   FilePath ->
   String ->
   (Double, Double, Double) ->
+  Maybe Double ->
   Double ->
   [Variant] ->
-  [[(String, VKey, (Double, Double), (Double, Double))]] ->
+  [[(String, VKey, (Double, Double), (Double, Double), Double)]] ->
   [FlatPart] ->
   String
-nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
+nextManifest src base (pw, pd, m) plateBrim bedZ variants beds asmOnly =
   encodePretty $
     jobj
       [ ("schema", JString nextSchema)
       , ("source", JString src)
-      , ("bed", jobj [("w", jnum3 pw), ("d", jnum3 pd), ("margin", jnum3 m), ("max_z", jnum3 bedZ)])
+      , ("bed", jobj ([("w", jnum3 pw), ("d", jnum3 pd), ("margin", jnum3 m), ("max_z", jnum3 bedZ)]
+                       ++ [("brim_mm", jnum3 b) | Just b <- [plateBrim]]))
       , ("variants", jlist (map vj variants))
       , ("beds", jlist (map bj (zip [(1 :: Int) ..] beds)))
       , ("assembly_only", jlist (map aj asmOnly))
@@ -228,7 +255,8 @@ nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
             ,("overhang_mm2", jnum3 (overhangMm2 p))
             ,("first_layer_mm2", jnum3 (firstLayerMm2 p))
             ,("min_width_mm", jnum3 (minWidthMm p))
-            ,("warnings", jlist (map JString (printabilityWarnings p)))])
+            ,("warnings", jlist (map JString (printabilityWarnings p)))
+            ,("warning_codes", jlist (map JString (printabilityCodes p)))])
         , ("footprint", jlist (map jnum3 [w, d, h]))
         , ("mesh", JString (base ++ "_next_" ++ vname ++ ".stl"))
         , ("hints", jobj [(hk, JString hv) | (hk, hv) <- fpHints fp])
@@ -239,7 +267,7 @@ nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
         , ("stl", JString (base ++ "_bed" ++ show i ++ ".stl"))
         , ("placements", jlist (map pj placed))
         ]
-    pj (iid, k, (w, d), (x, y)) =
-      jobj [("instance", JString iid), ("variant", JString (vn k)), ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d)]
+    pj (iid, k, (w, d), (x, y), b) =
+      jobj [("instance", JString iid), ("variant", JString (vn k)), ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d), ("brim_mm", jnum3 b)]
     vn k = head [vName v | v <- variants, vKey v == k]
     aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]

@@ -1,6 +1,4 @@
 {
-  "brim_type": "outer_only",
-  "brim_width": "8",
   "brim_object_gap": "0.05",
   "initial_layer_speed": ["25"],
   "initial_layer_infill_speed": ["35"],

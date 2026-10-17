@@ -8,6 +8,43 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Printability you can act on.**
+  - `coscad next --strict` exits 2 when any part has a printability
+    warning. It still writes the beds and manifest so you can inspect them.
+    Without `--strict`, `next` behaves as before.
+  - Each manifest variant's `printability` gains `warning_codes`, one per
+    warning: `small_contact`, `tall_narrow`, `flat_overhang` or
+    `elevated_start`.
+  - `scripts/bambu-slice.py` prints the warnings for each bed and records
+    them in `<base>_print.json` (`printability`, and
+    `printability_warnings` per bed).
+  - `bambu-slice.py` refuses to slice (exit 2) when a warning isn't
+    addressed by the process. Small contact and tall/narrow need an
+    explicit brim (`brim_type` outer/inner and `brim_width` > 0; auto brim
+    doesn't count). Flat overhang and elevated starts need
+    `enable_support`. `--accept-printability` slices anyway and records it.
+  - `bambu-slice.py --bed N` with no such bed is now an error instead of
+    an empty `_print.json`.
+- **Brim reservation (packing positions change when a brim is reserved).**
+  - A part hint `brim=N` makes the packer grow that part's footprint by
+    N mm on every side, so the margin is kept outside the brim.
+  - `plate W D [margin] brim=N` (or `brim=auto` for 5 mm) does the same in
+    `coscad next` for parts whose printability recommends a brim. A part's
+    own `brim=N` wins, and `brim=0` opts out. The design stage applies the
+    hints only.
+  - Each `coscad next` placement records `brim_mm`, and `bed.brim_mm`
+    records the plate setting. Design placements carry `brim_mm` only when
+    it is non-zero.
+  - Without any brim settings, packing is unchanged.
+  - `bambu-slice.py` prints the reserved width as an outer brim when the
+    process overrides don't set one, and warns when the brim it prints is
+    wider than a part's reservation plus half the margin.
+- The tesseract adhesion retry declares `brim=8` on its parts instead of a
+  hand-raised 12 mm plate margin and a brim in `process-overrides.json`.
+  Its supports, speeds and cooling stay explicit overrides.
+- `bambu-slice.py` removes its temporary preset and slice directories on
+  every failure path. `scripts/test-bambu-slice.py` now runs in CI.
+
 - `coscad next` printability warnings: a new **flat overhang** warning for
   down faces that are neither bridged nor within 2 mm of a supporting wall
   (a mushroom cap, a hook arm; an upside-down cup's ceiling is a bridge and

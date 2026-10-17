@@ -20,6 +20,7 @@
 .Ar spec.assemble
 .Nm
 .Cm next
+.Op Fl -strict
 .Ar spec.assemble
 .Nm
 .Cm check
@@ -93,7 +94,7 @@ It never writes
 .Pa spec_manifest.json ;
 if it finds a design manifest left there by coscad 1.2 or earlier it prints a
 note to standard error and leaves the file in place.
-.It Nm Cm next Ar spec.assemble
+.It Nm Cm next Oo Fl -strict Oc Ar spec.assemble
 Manufacturing stage.
 Renders each variant once, chooses a print orientation where none was
 declared (scoring bed contact, overhang, height, and slenderness on the real
@@ -106,6 +107,20 @@ plus
 .Li coscad.next/1 ) ,
 recording per-variant orientation and printability and per-instance
 placements for slice-once, stamp-many slicing.
+Printability warnings go to standard error and to the manifest, each with a
+code in
+.Ql warning_codes
+.Pq Ql small_contact , Ql tall_narrow , Ql flat_overhang , Ql elevated_start .
+With
+.Fl -strict ,
+any warning makes
+.Cm next
+exit 2 after the outputs are written.
+Instances with a brim (see
+.Sx ASSEMBLIES )
+are packed with the brim reserved around their footprint; each placement
+records
+.Ql brim_mm .
 .It Nm Cm check Ar spec.assemble Op Fl -keep-temp
 Interference and clearance check on real meshes.
 Every part is rendered as placed by the
@@ -349,7 +364,7 @@ positions,
 attaches.
 .Sh ASSEMBLIES
 .Bd -literal -offset indent
-plate 250 250 6                      // bed width depth [margin]
+plate 250 250 6 brim=8               // bed width depth [margin] [brim=N|auto]
 clearance 0.15                       // minimum gap for `coscad check`
 gap = 2                              // numbers work here too
 center ← center.coscad ×1
@@ -365,6 +380,18 @@ orientation search in
 .Cm next .
 .Ql key=value
 entries are free hints carried into the manifest.
+.Ql brim=N
+reserves an N mm brim around each instance when packing;
+.Ql plate … brim=N
+reserves it in
+.Cm next
+for parts whose printability recommends a brim (small first layer, tall and
+narrow);
+.Ql brim=auto
+reserves 5 mm.
+A part's own
+.Ql brim=0
+opts out.
 For
 .Cm plan ,
 the hints
@@ -451,9 +478,11 @@ pipeline can tell "fix the model" from "fix the setup":
 and
 .Cm plan
 with design errors (colliding screws, too little thread reach, a clamp off
-its host face), and
+its host face),
 .Cm check
-when any overlap is found.
+when any overlap is found, and
+.Cm next Fl -strict
+when any part has a printability warning.
 Every command that loads an assembly
 .Pq Cm validate , the design stage, Cm next , Cm plan , Cm check , Cm site
 also exits 2 when its mating constraints contradict each other (a loop that

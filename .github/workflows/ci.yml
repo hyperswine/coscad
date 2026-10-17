@@ -53,6 +53,10 @@ jobs:
         run: |
           python3 scripts/pipeline-lock.py --check-ci
           python3 scripts/test-pipeline-lock.py
+      # Offline: presets and the slicer are mocked, no Bambu Studio needed.
+      # unittest, not bare asserts, so nothing is stripped under -O.
+      - name: bambu-slice tests
+        run: python3 -m unittest -v scripts/test-bambu-slice.py
       - run: cabal update
       - run: cabal build --enable-tests all
       - name: coscad doctor
