@@ -233,6 +233,8 @@ exit codes, stdout/stderr split, `validate`, and the manifests parse as
 JSON).
 When a snapshot fails, the message shows golden vs current; accept
 deliberate changes with `COSCAD_UPDATE_GOLDEN=1` and review the diff.
+Geometry entries still within tolerance keep their recorded values, so
+an update only rewrites the lines that drifted or were missing.
 OpenSCAD is found via `COSCAD_OPENSCAD`, then PATH, then the macOS app
 bundle.
 
