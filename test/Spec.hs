@@ -1453,7 +1453,7 @@ cliTier t = do
       let variantsDir = dir </> "variants"
       writeVariantCollisions variantsDir
       (cv, _, ev) <- run [variantsDir </> "top.assemble"]
-      design <- manifestVariants "scad" <$> readFile (variantsDir </> "top_manifest.json")
+      design <- manifestVariants "scad" <$> readFile (variantsDir </> "top_design.json")
       scads <- mapM (doesFileExist . (variantsDir </>)) ["top_part_a_base_asis.scad", "top_part_b_base_asis.scad"]
       assertT t "design stage: same part name in two subassemblies gets two variant ids and scads"
         (cv == ExitSuccess && and scads && design == Right (["a_base_asis", "b_base_asis"], ["top_part_a_base_asis.scad", "top_part_b_base_asis.scad"], ["b_base_asis", "a_base_asis"]))
