@@ -218,6 +218,7 @@ OpenSCAD). manual.cswine.cloud rebuilds it from `main` automatically; see
 - docs/PLAN.md — fasteners, material hints, and coscad plan
 - docs/EXAMPLES.md — index of the examples tree
 - docs/SKILL.md — agent skill file (gotchas + verification workflow)
+- docs/FEA-AND-BACKEND.md — intent: `coscad stress` and a native geometry backend (Manifold, then lighter)
 
 ## Tests
 
