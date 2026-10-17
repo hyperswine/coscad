@@ -21,7 +21,8 @@ module Main (main) where
 
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
-import Coscad.Assemble (AsmResult (..), FlatPart (..), loadAssembleFile, packBeds, processAssemble, resolveAssembly, variantNames)
+import Coscad.Assemble (AsmResult (..), FlatPart (..), loadAssembleFile, loadAssembly, packBeds, processAssemble, resolveAssembly, variantNames)
+import Coscad.Constraint (AsmError (..))
 import Coscad.Check (processCheckIn, processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
 import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3, vlen, vsub, scale3, vadd, vmul, rodMat, mirrorMat)
@@ -330,13 +331,14 @@ frameTier t = do
         , ("self mating", refs ++ "fixed a\nmate a @foot a @head\n", ["two different part instances"])
         , ("duplicate fixed", refs ++ "fixed a\nfixed a\n", ["graph.assemble:5:1:", "duplicate fixed"])
         , ("manual asm conflict", refs ++ "fixed a\n" ++ joints ++ "asm = a\n", ["remove the manual asm"])
-        , ("multiplicity ambiguity", "a ← part.coscad ×2\nfixed a\n", ["distinct instance names", "×2"])
+        , ("multiplicity ambiguity", "a ← part.coscad ×2\nfixed a\n", ["graph.assemble:1:1:", "distinct instance names", "×2"])
         , ("incomplete fixed pose", refs ++ "fixed a 1 2 3\n", ["graph.assemble:4:", "six pose numbers"])
         , ("bad mate option", refs ++ "mate b @foot a @head rol=90\n", ["graph.assemble:4:", "did you mean 'roll'"])
         , ("duplicate mate option", refs ++ "mate b @foot a @head roll=0 roll=90\n", ["duplicate mate option 'roll'"])
         , ("nonfinite mate option", refs ++ "mate b @foot a @head gap=NaN\n", ["expected a finite distance"])
         , ("keyword cannot swallow next line", refs ++ "mate b @foot a\nfixed a\n", ["graph.assemble:4:", "oriented frame reference"])
         ] $ \(name,src,want) -> load src >>= \r -> expectErr t name r want ["circular dependency"]
+  constraintLoopTier t dir
   r <- load (refs ++ "fixed a\n" ++ joints)
   case r of
     Left e -> failT t "constraint substitutions" e
@@ -1459,6 +1461,29 @@ cliTier t = do
       writeFile (dir </> "syntax.coscad") "main = box 10 20\n"
       (c5, _, e5) <- run ["validate", dir </> "syntax.coscad"]
       assertT t "validate syntax error: position and reason on one line" (c5 == ExitFailure 1 && ("Error: " ++ dir </> "syntax.coscad" ++ ":1:") `isPrefixOf` firstLine e5 && "height" `isInfixOf` firstLine e5) (show (c5, e5))
+      -- constraint design errors exit 2 from every command that loads an assembly; input errors exit 1
+      let loops = dir </> "loops"
+      createDirectoryIfMissing True loops
+      writeLink loops
+      writeFile (loops </> "ring.assemble") (ringAssembly " gap=0.000002")
+      writeFile (loops </> "float.assemble") "l1 ← link.coscad ×1\nl2 ← link.coscad ×1\nl3 ← link.coscad ×1\nfixed l1\nmate l2 @a l1 @b\n"
+      writeFile (loops </> "roots.assemble") "l1 ← link.coscad ×1\nl2 ← link.coscad ×1\nfixed l1\nfixed l2\nmate l2 @a l1 @b\n"
+      writeFile (loops </> "typo.assemble") "l1 ← link.coscad ×1\nl2 ← link.coscad ×1\nfixed l1\nmate l9 @a l1 @b\n"
+      let ring = loops </> "ring.assemble"
+          ringFirst = "Error: " ++ ring ++ ":17:1: conflicting assembly constraints"
+      forM_ [ (["validate", ring], "validate"), ([ring], "design stage"), (["next", ring], "next")
+            , (["plan", ring], "plan"), (["check", ring], "check"), (["site", loops </> "site", ring], "site") ] $ \(args, label) -> do
+        (c, o, e) <- run args
+        assertT t (label ++ ": constraint loop conflict exits 2 with the closing mate first and every mate as a note")
+          (c == ExitFailure 2 && ringFirst `isPrefixOf` firstLine e && length (filter ("  note: " `isPrefixOf`) (lines e)) == 8 && not ("Wrote" `isInfixOf` o))
+          (show (c, o, e))
+      forM_ [("float.assemble", ":3:1: underconstrained"), ("roots.assemble", ":5:1: conflicting assembly constraints")] $ \(f, want) -> do
+        (c, o, e) <- run ["validate", loops </> f]
+        assertT t ("validate " ++ f ++ ": design error exits 2 at the right line") (c == ExitFailure 2 && ("Error: " ++ loops </> f ++ want) `isPrefixOf` firstLine e && null o) (show (c, o, e))
+      forM_ [["validate"], [], ["next"], ["plan"], ["check"]] $ \cmd -> do
+        (c, o, e) <- run (cmd ++ [loops </> "typo.assemble"])
+        assertT t (unwords ("coscad" : cmd) ++ " with an unknown instance: input error exits 1")
+          (c == ExitFailure 1 && ("Error: " ++ loops </> "typo.assemble" ++ ":4:1: unknown constrained instance") `isPrefixOf` firstLine e && not ("Wrote" `isInfixOf` o)) (show (c, o, e))
       writeFile (dir </> "nopart.assemble") "a ← gone.coscad ×1\nasm = a\n"
       (c6, _, e6) <- run ["validate", dir </> "nopart.assemble"]
       assertT t "validate assembly with a missing part names the file" (c6 == ExitFailure 1 && ("Error: " ++ dir </> "gone.coscad" ++ ": part file not found") `isPrefixOf` firstLine e6) (show (c6, e6))
@@ -1531,6 +1556,75 @@ printabilityTier t = do
     (null (elevatedStartsMm (analysePrintability (base ++ upward)))) ""
   assertT t "printability: empty input has no invented starts"
     (bedContactMm2 (analysePrintability []) == 0 && null (elevatedStartsMm (analysePrintability []))) ""
+
+-- ------------------------------------------------------------------
+-- constraint loops: the whole loop, blamed on the line that closed it
+
+-- | A ring of eight links from /workspace/edge/loop: l1 fixed, l(k+1)
+-- mated to l(k) on lines 10-16, and the closing mate l1 → l8 on line 17.
+ringAssembly :: String -> String
+ringAssembly closing =
+  concat ["l" ++ show k ++ " ← link.coscad ×1\n" | k <- [1 .. 8 :: Int]]
+    ++ "fixed l1\n"
+    ++ concat ["mate l" ++ show (k + 1) ++ " @a l" ++ show k ++ " @b\n" | k <- [1 .. 7 :: Int]]
+    ++ "mate l1 @a l8 @b" ++ closing ++ "\n"
+
+writeLink :: FilePath -> IO ()
+writeLink dir = writeFile (dir </> "link.coscad") "main = box 10 10 10\n  |> frame a lft lft top\n  |> frame b rt+fwd rt+fwd top\n"
+
+constraintLoopTier :: T -> FilePath -> IO ()
+constraintLoopTier t dir = do
+  writeLink dir
+  let file = dir </> "loop.assemble"
+      load src = writeFile file src >> loadAssembly [] file
+      firstLine = takeWhile (/= '\n')
+      at n = file ++ ":" ++ show (n :: Int) ++ ":1:"
+      design name src check = do
+        r <- load src
+        case r of
+          Left (DesignError m) -> assertT t name (check m) m
+          Left (InputError m) -> failT t name ("expected a design error, got an input error:\n" ++ m)
+          Right _ -> failT t name "expected a design error, but it loaded"
+      inputErr name src want = do
+        r <- load src
+        case r of
+          Left (InputError m) -> assertT t name (all (`isInfixOf` m) want) m
+          Left (DesignError m) -> failT t name ("expected an input error, got a design error:\n" ++ m)
+          Right _ -> failT t name "expected an input error, but it loaded"
+      wholeRing m =
+        (at 17 `isPrefixOf` firstLine m)
+          && and [("  note: " ++ at n ++ " mate ") `isInfixOf` m | n <- [10 .. 17]]
+          && length (lines m) == 9
+          && not (at 13 `isInfixOf` firstLine m)
+  design "loop: ring with a 2 µm closing gap is blamed on the closing mate (line 17) and lists all 8 mates"
+    (ringAssembly " gap=0.000002") (\m -> wholeRing m && "position residual" `isInfixOf` m && "Any of its 8 constraints" `isInfixOf` m)
+  design "loop: ring with a 1 µdeg closing roll lists the whole loop with its orientation residual"
+    (ringAssembly " roll=0.000001") (\m -> wholeRing m && "orientation residual" `isInfixOf` m)
+  rs <- load (ringAssembly " gap=0.0000005")
+  assertT t "loop: a closing gap inside the 1e-6 mm tolerance still loads" (either (const False) (const True) rs) (either show (const "") rs)
+  rc <- load (ringAssembly "")
+  assertT t "loop: a consistent ring loads" (either (const False) (const True) rc) (either show (const "") rc)
+  let links n = concat ["l" ++ show k ++ " ← link.coscad ×1\n" | k <- [1 .. n :: Int]]
+  design "floating part is reported at its own declaration, not the first constraint"
+    (links 3 ++ "fixed l1\nmate l2 @a l1 @b\n") (\m -> (at 3 ++ " underconstrained assembly") `isPrefixOf` firstLine m && "reaches l3" `isInfixOf` m)
+  design "several floating parts: the first declaration is the error, each other one a note"
+    (links 4 ++ "fixed l1\n") (\m -> at 2 `isPrefixOf` firstLine m && "reaches l2 l3 l4" `isInfixOf` m && ("  note: " ++ at 3) `isInfixOf` m && ("  note: " ++ at 4) `isInfixOf` m)
+  design "two fixed roots that disagree: the chain between them with both fixed lines"
+    (links 2 ++ "fixed l1\nfixed l2\nmate l2 @a l1 @b\n")
+    (\m -> at 5 `isPrefixOf` firstLine m && "chain between fixed instances" `isInfixOf` m && all (`isInfixOf` m) ["  note: " ++ at 3 ++ " fixed l1", "  note: " ++ at 4 ++ " fixed l2", "  note: " ++ at 5 ++ " mate l2 @a l1 @b"])
+  design "duplicate fixed is a design error that points back at the first fixed"
+    (links 2 ++ "fixed l1\nfixed l1\nmate l2 @a l1 @b\n") (\m -> at 4 `isPrefixOf` firstLine m && "duplicate fixed" `isInfixOf` m && ("  note: " ++ at 3 ++ " fixed l1") `isInfixOf` m)
+  rd <- load (links 2 ++ "fixed l1\nmate l2 @a l1 @b\nmate l2 @a l1 @b\n")
+  assertT t "an exactly repeated mate is consistent and loads" (either (const False) (const True) rd) (either show (const "") rd)
+  inputErr "unknown instance in a mate stays an input error" (links 2 ++ "fixed l1\nmate l9 @a l1 @b\n") [at 4, "unknown constrained instance 'l9'"]
+  inputErr "unknown frame stays an input error" (links 2 ++ "fixed l1\nmate l2 @zz l1 @b\n") [at 4, "unknown frame"]
+  inputErr "syntax error stays an input error" (links 2 ++ "fixed l1 1 2\n") [file ++ ":3:13:", "six pose numbers"]
+  -- a conflict inside a subassembly is still a design error when loaded through its parent
+  writeFile (dir </> "ring.assemble") (ringAssembly " gap=0.000002")
+  writeFile (dir </> "outer.assemble") "r ← ring.assemble ×1\nasm = r\n"
+  ro <- loadAssembly [] (dir </> "outer.assemble")
+  assertT t "a loop conflict in a subassembly is a design error of the parent too, located in the subassembly"
+    (case ro of Left (DesignError m) -> ((dir </> "ring.assemble") ++ ":17:1:") `isPrefixOf` m; _ -> False) (either show (const "loaded") ro)
 
 -- ------------------------------------------------------------------
 -- variant names: one id and one artefact per (source, orientation)

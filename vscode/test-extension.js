@@ -98,6 +98,16 @@ assert.equal(d.length, 1)
 assert.equal(d[0].range.start.line, 1)
 assert.deepEqual(parseCompilerErrors('', '/tmp/x/part.coscad'), [])
 
+// a constraint loop conflict (exit 2): one diagnostic on the closing mate; the note lines are not separate errors
+d = parseCompilerErrors(`Error: /tmp/ring.assemble:17:1: conflicting assembly constraints: the loop l1 l8 l2 does not close at 'l5' (position residual 2.0e-6 mm, orientation residual 0.0); check fixed poses, mating frames, roll and gap. Any of its 3 constraints may be the wrong one:
+  note: /tmp/ring.assemble:10:1: mate l2 @a l1 @b
+  note: /tmp/ring.assemble:16:1: mate l8 @a l7 @b
+  note: /tmp/ring.assemble:17:1: mate l1 @a l8 @b
+`, '/tmp/ring.assemble')
+assert.equal(d.length, 1)
+assert.equal(d[0].range.start.line, 16)
+assert.match(d[0].message, /conflicting assembly constraints.*Any of its 3 constraints/)
+
 // version probe helpers
 assert.deepEqual(parseVersion('coscad 1.1.0.0\n'), [1, 1, 0, 0])
 assert.equal(parseVersion('Error: expected a .coscad file, got --version'), null)

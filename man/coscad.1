@@ -444,6 +444,13 @@ with design errors (colliding screws, too little thread reach, a clamp off
 its host face), and
 .Cm check
 when any overlap is found.
+Every command that loads an assembly
+.Pq Cm validate , the design stage, Cm next , Cm plan , Cm check , Cm site
+also exits 2 when its mating constraints contradict each other (a loop that
+does not close, or two fixed roots that disagree), when a part is reached by
+no fixed root, or when an instance is fixed twice.
+Unknown instances or frames, syntax errors and non-finite values in
+constraints still exit 1.
 .Cm doctor
 exits 1 when OpenSCAD, BOSL2, or the test render fails.
 .Pp
@@ -453,6 +460,11 @@ optionally followed by a source excerpt with a caret; design errors from
 .Cm plan
 read
 .Ql Error: file.assemble: design: reason .
+A constraint conflict is reported at the constraint declared last on the
+loop and is followed by one
+.Ql "  note: file:line:col: constraint"
+line for every constraint on the loop, any of which may be the wrong one;
+a floating part is reported at its declaration.
 Progress and results go to standard output.
 .Sh EXAMPLES
 A bracket built relationally, then rendered:

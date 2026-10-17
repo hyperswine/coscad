@@ -2,7 +2,7 @@
 -- modules; this file only parses arguments and dispatches.
 module Main (main) where
 
-import Coscad.Assemble (processAssemble, loadAssembleFile)
+import Coscad.Assemble (failAsm, loadAssembly, processAssemble)
 import Coscad.Check (processCheckWith)
 import Coscad.Doctor (runDoctor)
 import Coscad.Next (processNext)
@@ -43,7 +43,7 @@ runCLI = do
     (a : _) | a `elem` ["--version", "-V", "version"] -> putStrLn ("coscad " ++ showVersion version)
     ["doctor"] -> runDoctor
     ["validate", f] -> case takeExtension f of
-      ".assemble" -> loadAssembleFile [] f >>= either bad (either (designBad . unlines . map ((f ++ ": design: ") ++) . lines) (const (putStrLn "Valid assembly")) . validateHardware)
+      ".assemble" -> loadAssembly [] f >>= either failAsm (either (designBad . unlines . map ((f ++ ": design: ") ++) . lines) (const (putStrLn "Valid assembly")) . validateHardware)
       ".coscad" -> do
         exists <- doesFileExist f
         unless exists (bad (f ++ ": file not found"))
@@ -121,7 +121,9 @@ usage h =
     , "  COSCAD_OPENSCAD_TIMEOUT  seconds per OpenSCAD run before it is killed (default 600)"
     , ""
     , "Exit status: 0 ok; 1 could not run (usage, missing file, syntax/geometry error, OpenSCAD"
-    , "failure); 2 the design has a problem (plan/validate design errors, check overlaps)."
+    , "failure, unknown instance or frame); 2 the design has a problem (plan/validate design errors,"
+    , "check overlaps, and for every command that loads an assembly: constraint loops that do not"
+    , "close, parts no fixed root reaches, an instance fixed twice)."
     , "Diagnostics go to stderr as `Error: file:line:col: reason`, optionally followed by an excerpt."
     , ""
     , "Language (one definition per line; `main` is rendered; // comments):"

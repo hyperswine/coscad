@@ -1270,8 +1270,8 @@ processPlan png path = processPlanSummary png path >> return ()
 -- actual steps, rather than declarations or stale image files.
 processPlanSummary :: Bool -> FilePath -> IO PlanSummary
 processPlanSummary png path = do
-  res <- loadAssembleFile [] path
-  ar <- either (\e -> hPutStrLn stderr ("Error: " ++ e) >> exitFailure) return res
+  res <- loadAssembly [] path
+  ar <- either failAsm return res
   (model, errs) <- either (\e -> hPutStrLn stderr ("Error: " ++ e) >> exitFailure) return (buildModel ar)
   let insts = mInsts model
       fasts = mFasts model

@@ -107,7 +107,11 @@ OpenSCAD warnings during a render (a missing include, a dropped child)
 are treated as failures too. Every diagnostic goes to stderr as
 `Error: file:line:col: reason`, optionally followed by an excerpt; exit 1
 means the command could not run, exit 2 means the input was fine but the
-design has a problem (`validate`/`plan` design errors, `check` overlaps).
+design has a problem (`validate`/`plan` design errors, `check` overlaps,
+and, from every command that loads an assembly, mating constraints that
+contradict each other, parts no fixed root reaches, or an instance fixed
+twice). A constraint conflict is reported on the line that closed the loop,
+followed by one `  note: file:line:col: …` line per constraint on the loop.
 A single OpenSCAD run is killed after `COSCAD_OPENSCAD_TIMEOUT` seconds
 (default 600) instead of hanging a pipeline.
 

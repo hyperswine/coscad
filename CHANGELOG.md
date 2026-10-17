@@ -8,6 +8,18 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Constraint errors report the whole loop and exit 2.** A mating loop
+  that does not close (or two fixed roots that disagree) is reported on the
+  constraint declared last on it, followed by a `  note: file:line:col:`
+  line for every constraint on the loop; previously one joint was named,
+  wherever the breadth-first walk happened to meet, often not the closing
+  mate. Floating parts are reported at their declaration instead of the
+  first constraint, and a duplicate `fixed` points back at the first one.
+  Constraint conflicts, floating parts and duplicate `fixed` now exit 2
+  (design problem) from `validate`, the design stage, `next`, `plan`,
+  `check` and `site`; unknown instances or frames and syntax errors stay
+  exit 1. Scripts that treated these failures as exit 1 will see 2.
+
 - Windows is no longer supported: CI and release builds are macOS/Linux
   only (no `coscad-windows-x86_64` archive), and the Windows OpenSCAD and
   library search paths, lock branch and extension quoting are removed.
