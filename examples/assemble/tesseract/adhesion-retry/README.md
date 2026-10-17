@@ -13,8 +13,8 @@ clear again when resuming and select the actual PLA tray. Print this trial
 before the complete tesseract.
 
 The plate contains one corner base, one cap, one short upright bar and one
-full-length bar. The slicer estimates **39m15s of printing, about 46 minutes
-including preparation, and 5.29 g PLA**. These are estimates, not measured
+full-length bar. The slicer estimates **39m20s of printing, about 46 minutes
+including preparation, and 5.28 g PLA**. These are estimates, not measured
 physical results.
 
 ## Changes from the failed coupon
@@ -44,11 +44,11 @@ The nominal cap pin fit remains 0.03 mm radial interference.
 
 ## Offline verification
 
-`verification.json` and the time and filament estimates above were recorded
-for the first layout (12 mm margin, brim from `process-overrides.json`). The
-brim reservation moves the parts, so rebuilding gives a new bed and print
-file. Run the rebuild below and `verify.py` again before printing a new
-slice. The part meshes, contact areas, settings and brim width are the same.
+`verification.json` and the time and filament estimates above come from
+the current layout (default 6 mm margin plus the 8 mm brim reserved per
+part), re-sliced with Bambu Studio on 17 Oct 2026. The first layout (12 mm
+margin, brim from `process-overrides.json`) estimated 39m15s and 5.29 g; the
+part meshes, contact areas, settings and brim width are unchanged.
 
 `verification.json` records the print-file checksum, embedded mesh check,
 four closed components, measured contact areas, settings, actual first-layer
@@ -72,8 +72,14 @@ python3 scripts/bambu-slice.py \
   --process '0.16mm Optimal @BBL A1' \
   --process-overrides examples/assemble/tesseract/adhesion-retry/process-overrides.json \
   --filament-overrides examples/assemble/tesseract/adhesion-retry/filament-overrides.json
-python3 examples/assemble/tesseract/adhesion-retry/verify.py
+python3 examples/assemble/tesseract/verify.py --report /tmp/tesseract-geometry.json
+python3 examples/assemble/tesseract/adhesion-retry/verify.py \
+  --geometry-report /tmp/tesseract-geometry.json
 ```
+
+Without `--geometry-report`, `verify.py` writes `verification.json` without
+its assembly section. The parent check takes about three minutes and needs
+`--compiler` pointed at a built `coscad` if `bin/coscad` does not exist.
 
 The verifier uses the dependencies in `../requirements.txt`. Rendering also
 needs OpenSCAD and BOSL2. Both override files are kept separately so
