@@ -56,7 +56,7 @@ data POpt = OCount Int | ODown (Double, Double, Double) String | OHint (String, 
 
 data AsmStmt
   = APart String FilePath Int (Maybe ((Double, Double, Double), String)) [(String, String)]
-  | APlate Double Double Double
+  | APlate Double Double Double (Maybe Double) -- ^ width, depth, margin, brim=N for parts that recommend one
   | AClearance Double
   | AFastener FastDecl
   | APlan [(String, String)]
@@ -90,6 +90,7 @@ data FlatPart = FlatPart
 data AsmResult = AsmResult
   { arSource :: FilePath          -- the .assemble file this came from (for diagnostics)
   , arPlate :: (Double, Double, Double)
+  , arPlateBrim :: Maybe Double  -- `plate … brim=N`: brim reserved by `next` for parts whose printability recommends one
   , arAsm :: Maybe Shape
   , arFlat :: [FlatPart]
   , arMode :: SynMode           -- pragma of this .assemble file
@@ -262,6 +263,7 @@ validatePartHint (key, raw) = case key of
     else Left "ends= expects two values: open,blocked (min end, max end)"
   "mass" -> numberHint key "mass in grams" (> 0) "greater than zero" raw
   "torque" -> numberHint key "torque in Nm" (> 0) "greater than zero" raw
+  "brim" -> numberHint key "brim width in mm" (>= 0) "non-negative (brim=0 opts out of a plate brim)" raw
   _ -> Right ()
 
 validateFastenerHint :: (String, String) -> Either String ()
@@ -340,7 +342,23 @@ plateStmt = statementKeyword "plate" *> onStatementLine (do
   off <- getOffset
   m <- distance "plate margin" (>= 0) "non-negative" <|> pure 6
   when (m >= w / 2 || m >= d / 2) (setOffset off *> fail "plate margin must leave usable space: twice the margin must be smaller than width and depth")
-  return (APlate w d m))
+  brim <- optional (do
+    _ <- symbol "brim"
+    _ <- char '=' <* hspace
+    (symbol "auto" *> pure defaultBrimMm) <|> distance "plate brim" (>= 0) "non-negative (or brim=auto)")
+  return (APlate w d m brim))
+
+-- | Width `plate … brim=auto` reserves: Bambu Studio's default brim width.
+defaultBrimMm :: Double
+defaultBrimMm = 5
+
+-- | The brim an instance asks for with its own @brim=N@ hint. The
+-- outermost reference wins, as hints from an enclosing @.assemble@ come
+-- after the subassembly's own.
+brimHint :: FlatPart -> Maybe Double
+brimHint fp = case [v | ("brim", v) <- reverse (fpHints fp)] of
+  v : _ -> readFinite v
+  [] -> Nothing
 
 distance :: String -> (Double -> Bool) -> String -> Parser Double
 distance name valid range = do
@@ -424,7 +442,8 @@ loadAssembly visited path
                     dir = takeDirectory path
                     partsS = [p | p@APart {} <- stmts]
                     defs = [d | ADef d <- stmts]
-                    plate = last ((220, 220, 6) : [(w, d, m) | APlate w d m <- stmts])
+                    plate = last ((220, 220, 6) : [(w, d, m) | APlate w d m _ <- stmts])
+                    plateBrim = last (Nothing : [b | APlate _ _ _ b <- stmts])
                     clr = last (0 : [c | AClearance c <- stmts])
                 loaded <- mapM (loadRef (path : visited) dir) partsS
                 case sequence loaded of
@@ -443,6 +462,7 @@ loadAssembly visited path
                             AsmResult
                               { arSource = path
                               , arPlate = plate
+                              , arPlateBrim = plateBrim
                               , arAsm = Map.lookup "asm" table
                               , arMode = fmode
                               , arClearance = clr
@@ -556,25 +576,47 @@ packBeds ::
   (Double, Double, Double) ->
   [(String, VKey, (Double, Double))] ->
   Either String [[(String, VKey, (Double, Double), (Double, Double))]]
-packBeds (pw, pd, m) items0 = do
+packBeds plate items =
+  map (map (\(iid, k, wd, xy, _) -> (iid, k, wd, xy))) <$> packBedsBrim plate [(iid, k, wd, 0) | (iid, k, wd) <- items]
+
+-- | 'packBeds' with a brim width reserved around each footprint: the
+-- packer places the footprint grown by the brim on every side, so the
+-- part keeps the margin to its neighbours and the plate edge *outside*
+-- its brim. Placements are the part's own corner and size (the brim is
+-- returned alongside), so meshes are stamped exactly as before. Order is
+-- deterministic: largest reserved area first, ties in input order.
+packBedsBrim ::
+  (Double, Double, Double) ->
+  [(String, VKey, (Double, Double), Double)] ->
+  Either String [[(String, VKey, (Double, Double), (Double, Double), Double)]]
+packBedsBrim (pw, pd, m) items0 = do
   unless (all finite [pw, pd, m] && pw > 0 && pd > 0 && m >= 0 && m < pw / 2 && m < pd / 2) $
     Left "plate dimensions must be finite and positive; margin must be non-negative and leave usable space"
-  mapM_ (\(iid, _, (w, d)) -> unless (finite w && finite d && w > 0 && d > 0) (Left (iid ++ " footprint must be finite and positive"))) items0
+  mapM_ (\(iid, _, (w, d), b) -> do
+    unless (finite w && finite d && w > 0 && d > 0) (Left (iid ++ " footprint must be finite and positive"))
+    unless (finite b && b >= 0) (Left (iid ++ " brim must be a finite, non-negative width"))) items0
   go (sortBy bigger items0)
   where
-    bigger (_, _, (w1, d1)) (_, _, (w2, d2)) = compare (w2 * d2) (w1 * d1)
+    cell (w, d) b = (w + 2 * b, d + 2 * b)
+    bigger (_, _, f1, b1) (_, _, f2, b2) =
+      let (w1, d1) = cell f1 b1
+          (w2, d2) = cell f2 b2
+       in compare (w2 * d2) (w1 * d1)
     go [] = Right []
     go xs = do
       (placed, rest) <- fitOne xs
       (placed :) <$> go rest
     fitOne = fit m m 0 []
     fit _ _ _ acc [] = Right (reverse acc, [])
-    fit x y rowD acc (item@(iid, k, (w, d)) : rest)
-      | w > pw - 2 * m || d > pd - 2 * m =
-          Left (iid ++ " footprint " ++ show w ++ "x" ++ show d ++ " exceeds the " ++ show pw ++ "x" ++ show pd ++ " plate with " ++ show m ++ " margin")
-      | x + w > pw - m = fit m (y + rowD + m) 0 acc (item : rest)
-      | y + d > pd - m = Right (reverse acc, item : rest)
-      | otherwise = fit (x + w + m) y (max rowD d) ((iid, k, (w, d), (x, y)) : acc) rest
+    fit x y rowD acc (item@(iid, k, (w, d), b) : rest)
+      | cw > pw - 2 * m || cd > pd - 2 * m =
+          Left (iid ++ " footprint " ++ show w ++ "x" ++ show d ++ (if b > 0 then " with a " ++ show b ++ " mm brim" else "")
+            ++ " exceeds the " ++ show pw ++ "x" ++ show pd ++ " plate with " ++ show m ++ " margin")
+      | x + cw > pw - m = fit m (y + rowD + m) 0 acc (item : rest)
+      | y + cd > pd - m = Right (reverse acc, item : rest)
+      | otherwise = fit (x + cw + m) y (max rowD cd) ((iid, k, (w, d), (x + b, y + b), b) : acc) rest
+      where
+        (cw, cd) = cell (w, d) b
 
 -- | Manifest schema identifiers. The design stage and `coscad next` write
 -- different files with different shapes; consumers check `schema` first.
@@ -602,7 +644,7 @@ manifestJson ::
   String ->
   (Double, Double, Double) ->
   [(VKey, FlatPart, Shape, (Double, Double, Double), String)] ->
-  [[(String, VKey, (Double, Double), (Double, Double))]] ->
+  [[(String, VKey, (Double, Double), (Double, Double), Double)]] ->
   [FlatPart] ->
   String
 manifestJson src base (pw, pd, m) variants plates asmOnly =
@@ -623,18 +665,20 @@ manifestJson src base (pw, pd, m) variants plates asmOnly =
         , ("part", JString (fpName fp))
         , ("source", JString srcf)
         , ("down", JString dk)
-        , ("count", JNumber (fromIntegral (length [() | (_, k', _, _) <- placed, k' == k])))
+        , ("count", JNumber (fromIntegral (length [() | (_, k', _, _, _) <- placed, k' == k])))
         , ("footprint", jlist (map jnum3 [w, d, h]))
         , ("scad", JString (base ++ "_part_" ++ vname ++ ".scad"))
         , ("hints", jobj [(hk, JString hv) | (hk, hv) <- fpHints fp])
         ]
-    pj i (iid, k, (w, d), (x, y)) =
+    pj i (iid, k, (w, d), (x, y), b) =
       jobj
-        [ ("instance", JString iid)
-        , ("variant", JString (vnameOfK k))
-        , ("plate", JNumber (fromIntegral i))
-        , ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d)
-        ]
+        ( [ ("instance", JString iid)
+          , ("variant", JString (vnameOfK k))
+          , ("plate", JNumber (fromIntegral i))
+          , ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d)
+          ]
+            ++ [("brim_mm", jnum3 b) | b > 0]
+        )
     vnameOfK k = head [vn | (k', _, _, _, vn) <- variants, k' == k]
     aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]
 processAssemble :: FilePath -> IO ()
@@ -673,8 +717,10 @@ processAssemble inputFile = do
         variants
       let footOf k = head [(w, d) | (k', _, _, (w, d, _), _) <- variants, k' == k]
           normOf k = head [n | (k', _, n, _, _) <- variants, k' == k]
-          instances = [(instId fp i, vkey fp) | fp <- printable, i <- [1 .. fpCount fp]]
-      case packBeds plate [(iid, k, footOf k) | (iid, k) <- instances] of
+          instances = [(instId fp i, vkey fp, maybe 0 id (brimHint fp)) | fp <- printable, i <- [1 .. fpCount fp]]
+      -- only explicit brim=N hints here: plate brim=N follows the mesh
+      -- printability that `coscad next` measures
+      case packBedsBrim plate [(iid, k, footOf k, b) | (iid, k, b) <- instances] of
         Left err -> do
           hPutStrLn stderr ("Error: " ++ err)
           exitWith (ExitFailure 1)
@@ -684,7 +730,7 @@ processAssemble inputFile = do
           mapM_
             ( \(i, placed) -> do
                 let slab = Translate (0, 0, -0.8) (Rectangle pw pd 0.6)
-                    plateShape = Union (slab : [Translate (x, y, 0) (normOf k) | (_, k, _, (x, y)) <- placed])
+                    plateShape = Union (slab : [Translate (x, y, 0) (normOf k) | (_, k, _, (x, y), _) <- placed])
                 writeScad plateShape (plateFile i)
                 putStrLn ("Wrote " ++ plateFile i ++ " (" ++ show (length placed) ++ " parts)")
             )

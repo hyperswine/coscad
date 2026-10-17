@@ -7,7 +7,7 @@ Union inside a `.coscad` = one printed solid. A separate reference in a
 decomposition primitive for the whole pipeline.
 
 ```
-plate 250 250 6                       # bed W D margin (optional)
+plate 250 250 6                       # bed W D margin (optional) [brim=N|auto]
 center ← center3.coscad ×1
 larch  ← l_arch3.coscad ×1 seam=rear  # free key=value hints ride to the slicer
 screws ← m4x20.coscad ×0              # ×0 = assembly-only (premade part)
@@ -17,6 +17,9 @@ asm = center ⊕ (larch |> move 55 -13 -7) ⊕ ...
 
 - `▽anchor` on a reference declares print orientation (that face on the
   bed). Undeclared parts get the automatic search in `next`.
+- `brim=N` on a reference reserves an N mm brim around each of its
+  instances when packing (see Packing below); `brim=0` opts out of a
+  plate-wide brim.
 - The `asm` expression is ordinary CoScad over the part names — poses
   are the one legitimate home for absolute `move`s.
 - Running `coscad foo.assemble` emits: `foo_asm.scad` (view),
@@ -87,6 +90,12 @@ prints a `Note:` to stderr and leaves the file alone; delete it or run
      island and is reported as an elevated start instead.
    - **elevated start**: a downward-facing local minimum above the bed.
 
+   `warning_codes` gives one stable code per warning, in the same order:
+   `small_contact`, `tall_narrow`, `flat_overhang`, `elevated_start`.
+   `coscad next --strict` exits 2 if any variant has a warning. It writes
+   the beds and the manifest first, so the warnings can be reviewed. The
+   default stays warn-only.
+
    The thresholds live in `PrintabilityConfig` (`defaultPrintabilityConfig`).
    **Bed contact** has one definition, used by both the score and
    `printability.bed_contact_mm2`: the area of down-facing triangles (normal
@@ -99,6 +108,22 @@ prints a `Note:` to stderr and leaves the file alone; delete it or run
 3. **Packing**: largest-footprint-first shelf packing, spilling to as
    many beds as needed; each `foo_bedN.stl` is one watertight multi-body
    solid, every placement inside margins.
+   - **Brim reservation:** an instance with a brim is packed as its
+     footprint grown by the brim on every side. The plate margin and the
+     gap to its neighbours are kept outside the brim. With margin 6 and
+     `brim=8`, a part sits 14 mm from the plate edge and 22 mm from
+     another 8 mm-brim part.
+   - **Which instances get one:** a part's own `brim=N` hint always applies
+     (`brim=0` opts out). Otherwise `plate … brim=N` (`brim=auto` = 5 mm,
+     Bambu's default) applies to parts whose printability recommends a
+     brim (`small_contact` or `tall_narrow`).
+   - **In the manifests:** each placement records `brim_mm` and keeps the
+     part's own `x`, `y`, `w`, `d`. `bed.brim_mm` records the plate
+     setting.
+   - **Design stage:** it reserves only the hints, because it doesn't
+     analyse meshes.
+   - **Ordering:** by reserved area, ties in declaration order, so packing
+     stays deterministic.
 
 `COSCAD_OPENSCAD` overrides the OpenSCAD binary (point it at an
 `xvfb-run -a openscad "$@"` wrapper on headless machines);
@@ -115,6 +140,9 @@ bed you want to print.
 - Orientation candidates are the six axis faces; tilted optima aren't
   searched.
 - Bed Z is currently a constant (250) pending a fourth `plate` arg.
+- The brim is reserved per instance, but Bambu Studio slices each bed as
+  one object with one brim width. `bambu-slice.py` reports parts whose
+  reservation is narrower than the brim it prints.
 - Fit/tolerance metadata rides as opaque hints; a first-class interface
   schema (mating pairs, fit classes) is deliberately not standardized
   yet.
@@ -155,6 +183,31 @@ mode with developer mode on, `BAMBU_HOST`, `BAMBU_SERIAL` and
 `BAMBU_ACCESS_CODE` in the environment, `paho-mqtt`, and the bambu-lan
 scripts (`BAMBU_LAN_DIR`) for the FTPS client with the printer's TLS
 quirks. Nothing is sent without `--print`.
+
+**Printability gate.** `bambu-slice.py` reads each variant's
+`printability` and prints the warnings for the parts on each bed it
+slices, with what addresses them.
+- **What addresses which warning:**
+  - `small_contact` and `tall_narrow` need an explicit brim: `brim_type`
+    `outer_only`, `inner_only` or `outer_and_inner` with `brim_width` > 0.
+    `auto_brim` doesn't count; it produced no brim on the failed tesseract
+    coupon.
+  - `flat_overhang` and `elevated_start` need `enable_support`.
+  - Warnings without a code (manifests from coscad 1.2) need either.
+- **Refusal:** if anything is left unaddressed, the script exits 2 before
+  slicing and writes nothing. `--accept-printability` slices anyway.
+- **Record:** `<base>_print.json` records the outcome under `printability`
+  (`accept_printability`, `unaddressed`, `brim_mm`, `supports`,
+  `brim_from_manifest`, `brim_conflicts`, and each warning with its bed,
+  variant, instances, code, need and `addressed_by`). Each bed also lists
+  its `printability_warnings`.
+- **Reserved brim:** when the manifest reserves a brim and the process
+  overrides set neither `brim_type` nor `brim_width`, the widest reserved
+  width on the sliced beds is printed as an outer brim
+  (`brim_from_manifest`). An explicit brim that is wider than a part's
+  reservation plus half the margin is reported, since brims may merge.
+- **Temporary directories:** the preset and slice directories are removed
+  on every exit path, including slicer failures.
 
 `--process-overrides FILE.json` applies explicit settings such as
 `{"brim_type":"outer_only","brim_width":"8"}` to the resolved process.

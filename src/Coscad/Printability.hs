@@ -22,6 +22,9 @@ module Coscad.Printability
   , unsupportedOverhang
   , firstLayerArea
   , minFootprintWidth
+  , printabilityWarnings
+  , printabilityCodes
+  , recommendsBrim
   ) where
 
 import Coscad.Format (showD)
@@ -33,11 +36,26 @@ import Data.List (foldl', sort, sortOn)
 data Printability = Printability
   { bedContactMm2 :: Double
   , elevatedStartsMm :: [Double]
-  , printabilityWarnings :: [String]
+  , printabilityIssues :: [(String, String)] -- ^ (code, warning): small_contact, tall_narrow, flat_overhang, elevated_start
   , overhangMm2 :: Double -- ^ unsupported flat overhang (not bridged, out of reach of a wall)
   , firstLayerMm2 :: Double -- ^ down-facing area within the first-layer band, projected
   , minWidthMm :: Double -- ^ narrowest width of the footprint's convex hull
   } deriving (Show)
+
+-- | The warnings as printed and written to the manifest, in order.
+printabilityWarnings :: Printability -> [String]
+printabilityWarnings = map snd . printabilityIssues
+
+-- | One stable machine-readable code per warning, in the same order:
+-- @small_contact@ and @tall_narrow@ are what a brim addresses,
+-- @flat_overhang@ and @elevated_start@ what supports address.
+printabilityCodes :: Printability -> [String]
+printabilityCodes = map fst . printabilityIssues
+
+-- | The part warns about its first layer or its height/width ratio, the
+-- warnings whose advice is a brim (@plate … brim=N@ reserves one for it).
+recommendsBrim :: Printability -> Bool
+recommendsBrim p = any (`elem` ["small_contact", "tall_narrow"]) (printabilityCodes p)
 
 -- | Warning thresholds, kept together so they can be tuned in one place.
 data PrintabilityConfig = PrintabilityConfig
@@ -268,11 +286,11 @@ analysePrintabilityWith cfg tris = Printability contact starts warnings overhang
     contactNeeded = max (pcMinContact cfg) (pcContactPerHeight2 cfg * height * height)
     overhangLimit = max (pcOverhangMin cfg) (pcOverhangFraction cfg * surface)
     warnings =
-      ["only " ++ showD contact ++ " mm^2 of flat bed contact (" ++ showD firstLayer ++ " mm^2 of first layer); check the first layer and use a brim or a broader print face"
+      [("small_contact", "only " ++ showD contact ++ " mm^2 of flat bed contact (" ++ showD firstLayer ++ " mm^2 of first layer); check the first layer and use a brim or a broader print face")
        | not (null tris), firstLayer < contactNeeded]
-      ++ ["tall, narrow print (height/width " ++ showD slender ++ " over its narrowest " ++ showD width ++ " mm); use a brim and conservative acceleration"
+      ++ [("tall_narrow", "tall, narrow print (height/width " ++ showD slender ++ " over its narrowest " ++ showD width ++ " mm); use a brim and conservative acceleration")
           | slender > slenderLimit]
-      ++ [showD overhang ++ " mm^2 of flat overhang is neither bridged nor within " ++ showD (pcReach cfg) ++ " mm of a supporting wall; enable supports or reorient"
+      ++ [("flat_overhang", showD overhang ++ " mm^2 of flat overhang is neither bridged nor within " ++ showD (pcReach cfg) ++ " mm of a supporting wall; enable supports or reorient")
           | overhang > overhangLimit]
-      ++ ["elevated downward-facing start at " ++ showD h ++ " mm above the bed; inspect supports before printing"
+      ++ [("elevated_start", "elevated downward-facing start at " ++ showD h ++ " mm above the bed; inspect supports before printing")
           | h <- starts]

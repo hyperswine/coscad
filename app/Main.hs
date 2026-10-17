@@ -5,7 +5,7 @@ module Main (main) where
 import Coscad.Assemble (failAsm, loadAssembly, processAssemble)
 import Coscad.Check (processCheckWith)
 import Coscad.Doctor (runDoctor)
-import Coscad.Next (processNext)
+import Coscad.Next (processNextWith)
 import Coscad.Part (compilePart, renderPart)
 import Coscad.Plan (processPlan, validateHardware)
 import Coscad.Site (processSite)
@@ -51,9 +51,11 @@ runCLI = do
       _ -> bad "validate needs a .coscad or .assemble file"
     ("validate" : _) -> bad "validate needs one .coscad or .assemble file"
     ("stl" : rest) -> withInOut "stl" rest renderPart
-    ("next" : rest) -> case rest of
-      [f] -> needExt ".assemble" f >> processNext f
-      _ -> bad "next needs one .assemble file. Usage: coscad next model.assemble"
+    ("next" : rest) -> do
+      let strict = "--strict" `elem` rest
+      case filter (/= "--strict") rest of
+        [f] -> needExt ".assemble" f >> processNextWith strict f
+        _ -> bad "next needs one .assemble file. Usage: coscad next [--strict] model.assemble"
     ("site" : rest) -> case rest of
       (dir : specs) | not (null specs) -> mapM_ (needExt ".assemble") specs >> processSite dir specs
       _ -> bad "site takes an output directory and one or more .assemble files"
@@ -107,7 +109,8 @@ usage h =
     , "  coscad validate <part.coscad|spec.assemble>  validate source, mating constraints and hardware without writing artifacts"
     , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"
     , "  coscad <spec.assemble>                  design stage: assembled view, packed plate(s), spec_design.json"
-    , "  coscad next <spec.assemble>             manufacturing: orient, pack beds, bedN.stl + spec_manifest.json"
+    , "  coscad next [--strict] <spec.assemble>  manufacturing: orient, pack beds, bedN.stl + spec_manifest.json;"
+    , "                                          --strict exits 2 when any part has a printability warning"
     , "  coscad plan <spec.assemble> [--png]     build instructions: ordered steps, preload sheet, BOM"
     , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
     , "  coscad check <spec.assemble> [--keep-temp]"
@@ -122,7 +125,7 @@ usage h =
     , ""
     , "Exit status: 0 ok; 1 could not run (usage, missing file, syntax/geometry error, OpenSCAD"
     , "failure, unknown instance or frame); 2 the design has a problem (plan/validate design errors,"
-    , "check overlaps, and for every command that loads an assembly: constraint loops that do not"
+    , "check overlaps, next --strict printability warnings, and for every command that loads an assembly: constraint loops that do not"
     , "close, parts no fixed root reaches, an instance fixed twice)."
     , "Diagnostics go to stderr as `Error: file:line:col: reason`, optionally followed by an excerpt."
     , ""

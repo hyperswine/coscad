@@ -21,7 +21,7 @@ module Main (main) where
 
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
-import Coscad.Assemble (AsmResult (..), FlatPart (..), loadAssembleFile, loadAssembly, packBeds, processAssemble, resolveAssembly, variantNames)
+import Coscad.Assemble (AsmResult (..), FlatPart (..), brimHint, loadAssembleFile, loadAssembly, packBeds, packBedsBrim, processAssemble, resolveAssembly, variantNames)
 import Coscad.Constraint (AsmError (..))
 import Coscad.Check (processCheckIn, processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
@@ -29,7 +29,7 @@ import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf,
 import Coscad.Json (JValue (..), asArray, asNumber, asString, decode, lookupKey)
 import qualified Coscad.Json
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
-import Coscad.Next (FffTerms (..), downMat, fffTerms, processNext)
+import Coscad.Next (FffTerms (..), downMat, fffTerms, instanceBrim, processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadFullRender, openscadPngArgs, openscadVersion, renderStlFile, runOpenscadRaw)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Part (renderPart)
@@ -847,7 +847,7 @@ diagnostics t = do
     Right _ -> failT t "packBeds rejects an oversized footprint with a clear message" "packed"
   -- the manual must mention every command, flag, and environment variable
   manPage <- readFile "man/coscad.1"
-  let manMissing = [w | w <- ["Cm stl", "Cm next", "Cm check", "Cm doctor", "Cm plan", "Cm site", "keep-temp", "Fl -png", "Fl -version", "Fl -help", "COSCAD_OPENSCAD", "COSCAD_BOSL2", "loft", "cutat", "fastener", "Fl o"], not (w `isInfixOf` manPage)]
+  let manMissing = [w | w <- ["Cm stl", "Cm next", "Cm check", "Cm doctor", "Cm plan", "Cm site", "keep-temp", "Fl -png", "Fl -strict", "Fl -version", "Fl -help", "COSCAD_OPENSCAD", "COSCAD_BOSL2", "loft", "cutat", "fastener", "Fl o"], not (w `isInfixOf` manPage)]
   assertT t "man/coscad.1 documents every command, flag, and env var" (null manMissing) (show manMissing)
   expectErr t "empty definition cannot swallow the next definition"
     (parseProgramNamed "empty.coscad" "a =\nmain = ■ 10\n")
@@ -1501,6 +1501,10 @@ cliTier t = do
       assertT t "validate assembly with a missing part names the file" (c6 == ExitFailure 1 && ("Error: " ++ dir </> "gone.coscad" ++ ": part file not found") `isPrefixOf` firstLine e6) (show (c6, e6))
       (c7, _, e7) <- run ["next", dir </> "ok.coscad"]
       assertT t "next on a .coscad is a usage error" (c7 == ExitFailure 1 && "Error: " `isPrefixOf` e7) (show (c7, e7))
+      (c7s, _, e7s) <- run ["next", "--strict"]
+      assertT t "next --strict without a file is a usage error naming --strict" (c7s == ExitFailure 1 && "next [--strict]" `isInfixOf` e7s) (show (c7s, e7s))
+      (_, helpOut, _) <- run ["--help"]
+      assertT t "--help documents next --strict and its exit 2" ("next [--strict]" `isInfixOf` helpOut && "next --strict printability warnings" `isInfixOf` helpOut) helpOut
       -- design stage + plan on the corner pair fixture, read back as JSON
       planFiles <- listDirectory "examples/assemble/plan"
       forM_ ("corner_pair.assemble" : filter ((== ".coscad") . takeExtension) planFiles) $ \f -> copyFile ("examples/assemble/plan" </> f) (dir </> f)
@@ -1620,6 +1624,65 @@ printabilityTier t = do
     assertT t ("orientation score and printability use the same contact: " ++ name)
       (fffContact (fffTerms m) == contactOf m) (show (fffContact (fffTerms m), contactOf m))
 
+-- | Brim reservation: the packer grows each footprint by its brim, the
+-- plate and part options parse, and which instances get a brim.
+brimTier :: T -> IO ()
+brimTier t = do
+  section "brim reservation"
+  let k = ("b", "top")
+      pos r = [[(iid, xy, b) | (iid, _, _, xy, b) <- bed] | bed <- r]
+      items b = [("a", k, (10, 10), b), ("b", k, (10, 10), b)]
+  assertT t "packBedsBrim with no brim places exactly as packBeds"
+    (fmap (map (map (\(i, _, wd, xy, _) -> (i, wd, xy)))) (packBedsBrim (100, 100, 6) (items 0))
+      == fmap (map (map (\(i, _, wd, xy) -> (i, wd, xy)))) (packBeds (100, 100, 6) [(i, kk, wd) | (i, kk, wd, _) <- items 0]))
+    (show (pos <$> packBedsBrim (100, 100, 6) (items 0)))
+  case packBedsBrim (100, 100, 6) (items 4) of
+    Right [[(_, _, _, (ax, ay), 4), (_, _, _, (bx, by), 4)]] ->
+      assertT t "a 4 mm brim keeps the 6 mm margin outside it: part at 10 mm, 14 mm (6 + 2·4) between parts"
+        (ax == 10 && ay == 10 && by == 10 && bx - (ax + 10) == 14) (show ((ax, ay), (bx, by)))
+    r -> failT t "a 4 mm brim keeps the 6 mm margin outside it" (show (pos <$> r))
+  case packBedsBrim (100, 100, 6) [("a", k, (10, 10), 0), ("b", k, (10, 10), 3)] of
+    Right [[(i1, _, _, (x1, _), _), (i2, _, _, (x2, _), _)]] ->
+      assertT t "the brim counts in the area order: the 16×16 reservation packs first, then 6 + 3 mm to the bare part"
+        (i1 == "b" && x1 == 9 && i2 == "a" && x2 == 9 + 10 + 3 + 6) (show (i1, x1, i2, x2))
+    r -> failT t "the brim counts in the area order" (show (pos <$> r))
+  let many = [("p" ++ show i, k, (fromIntegral (7 + i `mod` 5), fromIntegral (5 + i `mod` 3)), fromIntegral (i `mod` 3)) | i <- [1 .. 30 :: Int]]
+  assertT t "brim packing is deterministic" (fmap pos (packBedsBrim (120, 120, 6) many) == fmap pos (packBedsBrim (120, 120, 6) many)) ""
+  case packBedsBrim (100, 100, 6) [("long", k, (86, 10), 2)] of
+    Left e -> assertT t "a footprint that fits only without its brim is refused, naming the brim" ("with a 2.0 mm brim exceeds" `isInfixOf` e) e
+    Right _ -> failT t "a footprint that fits only without its brim is refused" "packed"
+  assertT t "a negative brim is refused" (either ("brim must be" `isInfixOf`) (const False) (packBedsBrim (100, 100, 6) [("a", k, (1, 1), -1)])) ""
+  -- parsing: plate brim=N|auto and the per-part brim=N hint
+  dir <- tempDir "brim-parse"
+  writeFile (dir </> "p.coscad") "main = box 6 6 20\n"
+  let load name src = do
+        writeFile (dir </> name) src
+        loadAssembleFile [] (dir </> name)
+  r1 <- load "a.assemble" "plate 200 200 6 brim=8\np ← p.coscad ×2\nq ← p.coscad ×1 brim=0\nr ← p.coscad ×1 brim=3.5\n"
+  case r1 of
+    Right ar -> do
+      assertT t "plate … brim=8 parses" (arPlateBrim ar == Just 8 && arPlate ar == (200, 200, 6)) (show (arPlateBrim ar))
+      let hint n = [brimHint fp | fp <- arFlat ar, fpName fp == n]
+          tall = analysePrintability (boxTris 6 6 20)
+          cube = analysePrintability (boxTris 20 20 20)
+          fpOf n = [fp | fp <- arFlat ar, fpName fp == n]
+          brims = [(n, instanceBrim (arPlateBrim ar) fp pr) | n <- ["p", "q", "r"], fp <- fpOf n, pr <- [tall, cube]]
+      assertT t "brim=N part hints parse" (hint "p" == [Nothing] && hint "q" == [Just 0] && hint "r" == [Just 3.5]) (show (map hint ["p", "q", "r"]))
+      assertT t "plate brim applies only where printability recommends one; a part's brim=N wins, brim=0 opts out"
+        (brims == [("p", 8), ("p", 0), ("q", 0), ("q", 0), ("r", 3.5), ("r", 3.5)]) (show brims)
+    Left e -> failT t "plate … brim=8 parses" e
+  r2 <- load "b.assemble" "plate 200 200 brim=auto\np ← p.coscad ×1\n"
+  assertT t "plate W D brim=auto keeps the default margin and reserves Bambu's 5 mm"
+    (either (const False) (\ar -> arPlateBrim ar == Just 5 && arPlate ar == (200, 200, 6)) r2) (either id (show . arPlateBrim) r2)
+  r3 <- load "c.assemble" "plate 200 200 6\np ← p.coscad ×1\n"
+  assertT t "a plate without brim= reserves none" (either (const False) ((== Nothing) . arPlateBrim) r3) (either id (show . arPlateBrim) r3)
+  forM_ [ ("plate 200 200 6 brim=-1\np ← p.coscad ×1\n", "plate brim must be a finite distance in mm, non-negative")
+        , ("plate 200 200 6 brim=wide\np ← p.coscad ×1\n", "plate brim in mm")
+        , ("p ← p.coscad ×1 brim=x\n", "brim=x: expected a finite brim width in mm")
+        , ("p ← p.coscad ×1 brim=-2\n", "brim=-2: expected a finite brim width in mm, non-negative") ] $ \(src, want) -> do
+    r <- load "bad.assemble" src
+    assertT t ("brim errors: " ++ want) (either (want `isInfixOf`) (const False) r) (either id (const "loaded") r)
+
 -- | A closed n-gon prism of radius r along x, lying on the bed with a
 -- vertex at the bottom.
 lyingRod :: Double -> Double -> Int -> [Tri]
@@ -1673,7 +1736,43 @@ printabilityProbes t = do
         (length ws == length want && and [any (w `isInfixOf`) ws | w <- want]
           && maybe True (\(lo, hi) -> oh >= lo && oh <= hi) ohRange)
         (show (ws, oh))
+      let cs = [c | Just arr <- [asArray =<< lookupKey "warning_codes" =<< p], x <- arr, Just c <- [asString x]]
+      assertT t ("printability probe " ++ vid ++ ": one warning code per warning") (length cs == length ws && all (`elem` ["small_contact", "tall_narrow", "flat_overhang", "elevated_start"]) cs) (show (cs, ws))
     _ -> failT t ("printability probe " ++ vid) ("variant missing: " ++ show [asString =<< lookupKey "id" v | v <- variants])
+  -- `coscad next --strict`: exit 2 on any warning, after writing the outputs; 0 on a clean assembly
+  exe <- findExecutable "coscad"
+  case exe of
+    Nothing -> failT t "next --strict: coscad on PATH" "run the suite with `cabal test`"
+    Just bin -> do
+      removeFile (dir </> "a_manifest.json")
+      (ca, oa, ea) <- readProcessWithExitCode bin ["next", "--strict", dir </> "a.assemble"] ""
+      written <- doesFileExist (dir </> "a_manifest.json")
+      assertT t "next --strict on edge/pr a.assemble exits 2 naming the warned variants, and still writes the manifest"
+        (ca == ExitFailure 2 && written && "Wrote " `isInfixOf` oa
+          && any (\l -> "Error: " `isPrefixOf` l && "--strict: 6 printability warnings on" `isInfixOf` l && "mushroom_bot" `isInfixOf` l) (lines ea))
+        (show (ca, ea))
+      (cn, _, en) <- readProcessWithExitCode bin ["next", dir </> "a.assemble"] ""
+      assertT t "next without --strict still exits 0 on the same warnings" (cn == ExitSuccess && "Warning: " `isInfixOf` en) (show (cn, en))
+      writeFile (dir </> "clean.assemble") "blk ← cube.coscad ×1 ▽bot\ncup ← cup.coscad ×1 ▽bot\n"
+      (cc, _, ec) <- readProcessWithExitCode bin ["next", "--strict", dir </> "clean.assemble"] ""
+      assertT t "next --strict on a clean assembly exits 0" (cc == ExitSuccess && not ("Warning: " `isInfixOf` ec)) (show (cc, ec))
+      -- plate brim=8 reserves a brim for the tall pillar only; brim=0 on one instance opts out
+      writeFile (dir </> "brim.assemble") "plate 256 256 6 brim=8\nblk ← cube.coscad ×1 ▽bot\npillar ← pillar.coscad ×2 ▽bot\nbare ← pillar.coscad ×1 ▽bot brim=0\n"
+      (cb, _, eb) <- readProcessWithExitCode bin ["next", dir </> "brim.assemble"] ""
+      mb <- decode <$> readFile (dir </> "brim_manifest.json")
+      let placementsB = either (const []) (\v -> [pl | Just bs <- [asArray =<< lookupKey "beds" v], b <- bs, Just ps <- [asArray =<< lookupKey "placements" b], pl <- ps]) mb
+          brimOf i = head ([n | pl <- placementsB, (asString =<< lookupKey "instance" pl) == Just i, Just n <- [asNumber =<< lookupKey "brim_mm" pl]] ++ [-1])
+          xyOf i = head ([(x, y) | pl <- placementsB, (asString =<< lookupKey "instance" pl) == Just i, Just x <- [asNumber =<< lookupKey "x" pl], Just y <- [asNumber =<< lookupKey "y" pl]] ++ [(-1, -1)])
+          bedBrim = either (const Nothing) (\v -> asNumber =<< lookupKey "brim_mm" =<< lookupKey "bed" v) mb
+      assertT t "plate brim=8: the warned pillars reserve 8 mm, the clean block and the brim=0 instance none"
+        (cb == ExitSuccess && map brimOf ["pillar_1", "pillar_2", "blk_1", "bare_1"] == [8, 8, 0, 0] && bedBrim == Just 8)
+        (show (cb, eb, map brimOf ["pillar_1", "pillar_2", "blk_1", "bare_1"], bedBrim))
+      -- each pillar's 22×22 reservation outranks the 20×20 block: pillars 8 mm
+      -- inside their cells (14, then 6 + 22 + 6 + 8 = 42), block at 6 + 2·(22 + 6) = 62,
+      -- the bare pillar 6 mm after it
+      assertT t "plate brim=8: placements step by margin + brim exactly"
+        (map xyOf ["blk_1", "pillar_1", "pillar_2", "bare_1"] == [(62, 6), (14, 14), (42, 14), (88, 6)])
+        (show (map xyOf ["blk_1", "pillar_1", "pillar_2", "bare_1"]))
 
 -- | Closed axis-aligned box with its min corner at the origin, outward
 -- normals (counter-clockwise seen from outside).
@@ -1713,6 +1812,12 @@ adhesionRetryContact t = do
           assertT t "coscad next: tesseract cap contact is 69.73 mm²" (abs (contactOf "cap" - 69.73) < 0.05) (show (contactOf "cap"))
           let warningsOf part = [w | v <- variants, field "part" v == Just part, Just arr <- [asArray =<< lookupKey "warnings" =<< printab v], x <- arr, Just w <- [asString x]]
           assertT t "coscad next: the 7×7×18.8 fit-test bar no longer warns as tall and narrow" (null (warningsOf "bar")) (show (warningsOf "bar"))
+          let placements = [pl | Just bs <- [asArray =<< lookupKey "beds" mv], b <- bs, Just ps <- [asArray =<< lookupKey "placements" b], pl <- ps]
+              num k pl = fromMaybe (-1) (asNumber =<< lookupKey k pl)
+          assertT t "adhesion retry: every part reserves its 8 mm brim inside the default 6 mm margin (no hand-raised 12 mm margin)"
+            (length placements == 4 && all ((== 8) . num "brim_mm") placements && minimum (map (num "x") placements) == 14
+              && minimum (map (num "y") placements) == 14 && (asNumber =<< lookupKey "margin" =<< lookupKey "bed" mv) == Just 6)
+            (show placements)
           let manifestWarnings = sort [ "Warning: " ++ i ++ ": " ++ w | v <- variants, Just i <- [field "id" v]
                                       , w <- maybe [] (mapMaybeString) (asArray =<< lookupKey "warnings" =<< printab v)]
               mapMaybeString = foldr (\x acc -> maybe acc (: acc) (asString x)) []
@@ -1866,6 +1971,7 @@ main = do
   diagnostics t
   remainingDiagnostics t
   printabilityTier t
+  brimTier t
   variantNameTier t
   goldenMergeTier t
   topologyTier t

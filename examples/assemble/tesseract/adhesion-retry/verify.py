@@ -29,6 +29,9 @@ def main():
     assert len(manifest['beds']) == 1
     placements = manifest['beds'][0]['placements']
     assert {p['instance'] for p in placements} == {'cap_1', 'corner_1', 'bar_1', 'fullbar_1'}
+    # every part reserves its 8 mm brim inside the 6 mm plate margin
+    assert all(p['brim_mm'] == 8 for p in placements)
+    keep_out = manifest['bed']['margin'] + 8
     mesh = trimesh.load_mesh(HERE / 'fit-test_bed1.stl')
     parts = mesh.split(only_watertight=False)
     assert mesh.is_volume and len(parts) == 4
@@ -39,7 +42,7 @@ def main():
         name = placement['instance']
         assert name not in measured
         assert part.is_volume and abs(part.bounds[0, 2]) < 1e-5
-        assert np.all(part.bounds[0, :2] >= 11.99) and np.all(part.bounds[1, :2] <= 244.01)
+        assert np.all(part.bounds[0, :2] >= keep_out - .01) and np.all(part.bounds[1, :2] <= 256 - keep_out + .01)
         feet = np.all(abs(part.triangles[:, :, 2] - part.bounds[0, 2]) < 1e-4, axis=1)
         measured[name] = {'bed_contact_mm2': float(part.area_faces[feet].sum()),
                           'size_mm': part.extents.tolist()}
@@ -68,6 +71,8 @@ def main():
         assert cfg['printer_model'] == 'Bambu Lab A1' and cfg['nozzle_diameter'] == ['0.4']
         assert cfg['curr_bed_type'] == 'Textured PEI Plate'
         assert cfg['filament_type'] == ['PLA']
+        # the brim comes from the manifest's reservation, not an override
+        assert cfg['brim_type'] == 'outer_only' and cfg['brim_width'] == '8', (cfg.get('brim_type'), cfg.get('brim_width'))
         for filename in ['process-overrides.json', 'filament-overrides.json']:
             for key, value in json.loads((HERE / filename).read_text()).items():
                 assert cfg[key] == value, (key, value, cfg.get(key))
