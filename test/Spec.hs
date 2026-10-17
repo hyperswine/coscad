@@ -29,7 +29,7 @@ import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf,
 import Coscad.Json (JValue (..), asArray, asNumber, asString, decode, lookupKey)
 import qualified Coscad.Json
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
-import Coscad.Next (processNext)
+import Coscad.Next (FffTerms (..), downMat, fffTerms, processNext)
 import Coscad.OpenScad (bosl2Version, findOpenscad, openscadFullRender, openscadPngArgs, openscadVersion, renderStlFile, runOpenscadRaw)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Part (renderPart)
@@ -1247,6 +1247,7 @@ geometry t update bin = do
               want = 30 / 3 * (a1 + a2 + sqrt (a1 * a2))
               got = meshVolume tris
            in assertT t "loft frustum volume" (abs (got - want) < 1e-3 * want) (printf "got %.3f want %.3f" got want)
+  adhesionRetryContact t
   -- cross-check: `coscad next` conserves volume across bed packing
   bow <- tempDir "bow3"
   srcs <- listDirectory "examples/assemble/bow3"
@@ -1575,6 +1576,75 @@ printabilityTier t = do
     (null (elevatedStartsMm (analysePrintability (base ++ upward)))) ""
   assertT t "printability: empty input has no invented starts"
     (bedContactMm2 (analysePrintability []) == 0 && null (elevatedStartsMm (analysePrintability []))) ""
+  -- one contact definition, tolerant of quantised and rotated meshes
+  let cube = boxTris 20 20 20
+      turn deg axis = map (\(a,b,c) -> (mApply (rodMat deg axis) a, mApply (rodMat deg axis) b, mApply (rodMat deg axis) c))
+      orient v = turn' (downMat v)
+      turn' m = map (\(a,b,c) -> (mApply m a, mApply m b, mApply m c))
+      contactOf = bedContactMm2 . analysePrintability
+      near a b = abs (a - b) < 1e-6 * max 1 (abs b)
+      tilted = turn 37 (1, 2, 3) cube
+      -- the face that was the cube's bottom, now pointing along R·(0,0,-1)
+      diagDown = orient (mApply (rodMat 37 (1, 2, 3)) (0, 0, -1)) tilted
+      -- ASCII-STL-like quantisation and float noise up to 4 µm on every vertex
+      jitter = map (\(a,b,c) -> (wob a, wob b, wob c))
+      wob (x, y, z) = (x, y, z + 0.004 * sin (13 * x + 7 * y))
+      pad = boxTris 20 20 10 ++ map (\(a,b,c) -> (lift a, lift b, lift c)) (boxTris 4 4 1)
+      lift (x, y, z) = (x + 30, y, z + 0.2)
+  assertT t "printability: closed cube has its whole bottom, 400 mm², on the bed" (near (contactOf cube) 400) (show (contactOf cube))
+  assertT t "printability: turning the cube about z keeps 400 mm²" (near (contactOf (turn 30 (0, 0, 1) cube)) 400) (show (contactOf (turn 30 (0, 0, 1) cube)))
+  assertT t "printability: the cube on its corner (▽lft+fwd+bot) has no flat contact"
+    (contactOf (orient (-1, -1, -1) cube) < 1e-9) (show (contactOf (orient (-1, -1, -1) cube)))
+  assertT t "printability: a face put down along a skew diagonal is found at 400 mm²" (abs (contactOf diagDown - 400) < 1e-3) (show (contactOf diagDown))
+  assertT t "printability: up to 4 µm of vertex noise on the bed face keeps the contact"
+    (abs (contactOf (jitter cube) - 400) < 1e-3 && abs (contactOf (jitter diagDown) - 400) < 1e-3) (show (contactOf (jitter cube), contactOf (jitter diagDown)))
+  assertT t "printability: a face 0.2 mm above the bed is not contact" (near (contactOf pad) 400) (show (contactOf pad))
+  forM_ [("cube", cube), ("corner", orient (-1, -1, -1) cube), ("diagonal", diagDown), ("noisy", jitter diagDown), ("raised pad", pad)] $ \(name, m) ->
+    assertT t ("orientation score and printability use the same contact: " ++ name)
+      (fffContact (fffTerms m) == contactOf m) (show (fffContact (fffTerms m), contactOf m))
+
+-- | Closed axis-aligned box with its min corner at the origin, outward
+-- normals (counter-clockwise seen from outside).
+boxTris :: Double -> Double -> Double -> [Tri]
+boxTris w d h = concatMap quad
+  [ [(0,0,0),(0,d,0),(w,d,0),(w,0,0)], [(0,0,h),(w,0,h),(w,d,h),(0,d,h)]
+  , [(0,0,0),(w,0,0),(w,0,h),(0,0,h)], [(0,d,0),(0,d,h),(w,d,h),(w,d,0)]
+  , [(0,0,0),(0,0,h),(0,d,h),(0,d,0)], [(w,0,0),(w,d,0),(w,d,h),(w,0,h)] ]
+  where quad [a,b,c,e] = [(a,b,c),(a,c,e)]
+        quad _ = []
+
+-- | `coscad next` on the tesseract adhesion retry: the manifest's contact
+-- areas match the independent trimesh measurement in verification.json,
+-- and the printability block equals the warnings printed on stderr.
+adhesionRetryContact :: T -> IO ()
+adhesionRetryContact t = do
+  exe <- findExecutable "coscad"
+  dir <- tempDir "adhesion-contact"
+  _ <- readProcessWithExitCode "cp" ["-R", "examples/assemble/tesseract", dir] ""
+  let work = dir </> "tesseract" </> "adhesion-retry"
+  verification <- decode <$> readFile "examples/assemble/tesseract/adhesion-retry/verification.json"
+  case exe of
+    Nothing -> failT t "adhesion retry contact: coscad on PATH" "run the suite with `cabal test`"
+    Just bin -> do
+      (c, _, e) <- readProcessWithExitCode bin ["next", work </> "fit-test.assemble"] ""
+      m <- decode <$> readFile (work </> "fit-test_manifest.json")
+      case (c, m, verification) of
+        (ExitSuccess, Right mv, Right vv) -> do
+          let variants = fromMaybe [] (asArray =<< lookupKey "variants" mv)
+              field k v = asString =<< lookupKey k v
+              printab v = lookupKey "printability" v
+              contactOf part = head ([n | v <- variants, field "part" v == Just part, Just n <- [asNumber =<< lookupKey "bed_contact_mm2" =<< printab v]] ++ [-1])
+              measured inst = fromMaybe (-1) (asNumber =<< lookupKey "bed_contact_mm2" =<< lookupKey inst =<< lookupKey "measured_parts" vv)
+          forM_ [("cap", "cap_1"), ("corner", "corner_1"), ("bar", "bar_1"), ("fullbar", "fullbar_1")] $ \(part, inst) ->
+            assertT t ("coscad next: " ++ part ++ " bed contact matches the trimesh measurement within 0.05 mm²")
+              (abs (contactOf part - measured inst) < 0.05) (show (contactOf part, measured inst))
+          assertT t "coscad next: tesseract cap contact is 69.73 mm²" (abs (contactOf "cap" - 69.73) < 0.05) (show (contactOf "cap"))
+          let manifestWarnings = sort [ "Warning: " ++ i ++ ": " ++ w | v <- variants, Just i <- [field "id" v]
+                                      , w <- maybe [] (mapMaybeString) (asArray =<< lookupKey "warnings" =<< printab v)]
+              mapMaybeString = foldr (\x acc -> maybe acc (: acc) (asString x)) []
+              printed = sort (filter ("Warning: " `isPrefixOf`) (lines e))
+          assertT t "coscad next: the manifest printability warnings are exactly the ones printed" (manifestWarnings == printed && not (null printed)) (show (manifestWarnings, printed))
+        _ -> failT t "adhesion retry contact: coscad next fit-test" (show (c, e, either id (const "parsed") m, either id (const "parsed") verification))
 
 -- ------------------------------------------------------------------
 -- constraint loops: the whole loop, blamed on the line that closed it

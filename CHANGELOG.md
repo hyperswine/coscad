@@ -8,6 +8,17 @@ and this project adheres to the
 
 ## Unreleased
 
+- `coscad next`: bed contact has one definition, shared by the orientation
+  score and the manifest's `printability.bed_contact_mm2` (down-facing
+  triangles with every vertex within 0.01 mm of the bed, or 1e-5 of the
+  part size above a metre). The score used to count faces up to 0.3 mm
+  above the bed as contact and the manifest used an exact 1e-5 mm plane,
+  which missed quantised vertices on rotated faces. Contact areas and
+  `fff_score` values can shift slightly (the tesseract corner's contact goes
+  from 102.55 to 103.27 mm², matching an independent trimesh measurement);
+  no example changes orientation or placement. Printability is analysed
+  once per variant.
+
 - **Manifest contract change.** The design stage (`coscad foo.assemble`)
   now writes `foo_design.json` (`"schema": "coscad.design/1"`) instead of
   `foo_manifest.json`, which is now written only by `coscad next`

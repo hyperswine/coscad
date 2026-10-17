@@ -62,13 +62,21 @@ prints a `Note:` to stderr and leaves the file alone; delete it or run
    per-instance XY offsets.
 2. **Orientation**: declared `▽` always wins. Otherwise the six axis
    faces are scored on the real mesh: + bed-contact area, − overhang
-   area (down-facing triangles steeper than ~65°, off the bed — lying
-   cylinders' flanks deliberately don't count, they self-support),
-   − height, − a slenderness penalty (tall skinny prints wobble).
+   area (down-facing triangles steeper than ~65°, starting more than
+   0.3 mm, the first-layer band, above the bed — lying cylinders' flanks
+   deliberately don't count, they self-support), − height, − a slenderness
+   penalty (tall skinny prints wobble).
    Chosen face, mode, and score are recorded in the manifest for audit.
-   Each variant also records `printability`: true flat bed-contact area,
-   elevated downward-facing local minima, and warnings for small contact or
-   tall narrow geometry. Warnings are printed even for declared orientations.
+   Each variant also records `printability` (analysed once, on the oriented
+   mesh): flat bed-contact area, elevated downward-facing local minima, and
+   warnings for small contact or tall narrow geometry. Warnings are printed
+   even for declared orientations, and are the same list as the manifest's.
+   **Bed contact** has one definition, used by both the score and
+   `printability.bed_contact_mm2`: the area of down-facing triangles (normal
+   within ~26° of straight down) whose three vertices lie within the plane
+   tolerance of the lowest point. The tolerance is 0.01 mm (1e-5 of the
+   largest dimension for parts over a metre): well under a layer, but wide
+   enough for STL quantisation and faces put down along a diagonal `▽`.
    These are conservative mesh diagnostics: curved first-layer contact,
    bridges, cooling and complete support coverage still need slicer review.
 3. **Packing**: largest-footprint-first shelf packing, spilling to as

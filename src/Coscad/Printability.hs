@@ -1,8 +1,19 @@
 -- | Mesh-level manufacturing diagnostics. These are conservative warnings,
 -- not a layer-by-layer support proof or a prediction of physical adhesion.
-module Coscad.Printability (Printability (..), analysePrintability) where
+--
+-- "Bed contact" has one definition, used both here and by the orientation
+-- score in "Coscad.Next": the area of downward-facing triangles (normal
+-- within about 26 degrees of straight down) whose three vertices all lie
+-- within 'planeTolerance' of the mesh's lowest point.
+module Coscad.Printability
+  ( Printability (..)
+  , analysePrintability
+  , bedContact
+  , planeTolerance
+  , downFacing
+  ) where
 
-import Coscad.Codegen (showD)
+import Coscad.Format (showD)
 import Coscad.Mesh (Tri, meshBounds, triArea, triNormal)
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
@@ -14,19 +25,44 @@ data Printability = Printability
   , printabilityWarnings :: [String]
   } deriving (Show)
 
+-- | How far a vertex may sit from the bed plane and still be on it:
+-- 0.01 mm, a small fraction of any layer height (0.08 mm and up), growing
+-- as 1e-5 of the largest dimension for meshes over a metre. Rendered STLs
+-- are quantised (ASCII STL keeps about seven significant digits, and a
+-- declared diagonal ▽ rotates every vertex), so an exact plane test loses
+-- real contact on a rotated face.
+planeTolerance :: [Tri] -> Double
+planeTolerance [] = 0.01
+planeTolerance tris =
+  let ((x0, y0, z0), (x1, y1, z1)) = meshBounds tris
+   in max 0.01 (1e-5 * maximum [x1 - x0, y1 - y0, z1 - z0])
+
+-- | Downward-facing for contact and overhang purposes.
+downFacing :: Tri -> Bool
+downFacing t = let (_, _, nz) = triNormal t in nz < -0.9
+
+-- | Flat area on the bed plane, in mm², with the given plane tolerance.
+bedContact :: Double -> [Tri] -> Double
+bedContact _ [] = 0
+bedContact tol tris =
+  let ((_, _, z0), _) = meshBounds tris
+      on (_, _, h) = h - z0 <= tol
+   in sum [triArea t | t@(a, b, c) <- tris, downFacing t, on a, on b, on c]
+
 analysePrintability :: [Tri] -> Printability
 analysePrintability tris = Printability contact starts warnings
   where
     ((x0,y0,z0),(x1,y1,z1)) = meshBounds tris
-    eps = 1e-5
+    eps = planeTolerance tris
     verts (a,b,c) = [a,b,c]
     z (_,_,h) = h
+    -- any downward component: a cup's sloped underside still starts a
+    -- layer in mid-air
     downward t = let (_,_,nz) = triNormal t in nz < -0.1
-    -- Actual coplanar surface area, rather than the bounding rectangle or
-    -- sloped triangles within 0.3 mm of it. A rounded bottom can have zero
-    -- flat area while still acquiring contact in the sliced first layer.
-    contact = sum [triArea t | t <- tris, downward t,
-                   all (\p -> abs (z p-z0) <= eps) (verts t)]
+    -- Actual coplanar surface area, rather than the bounding rectangle. A
+    -- rounded bottom can have zero flat area while still acquiring contact
+    -- in the sliced first layer.
+    contact = bedContact eps tris
     adjacency = Map.fromListWith Set.union
       [(p, Set.fromList [q,r]) | t <- tris,
        (p,q,r) <- case t of (a,b,c) -> [(a,b,c),(b,a,c),(c,a,b)]]
@@ -43,7 +79,7 @@ analysePrintability tris = Printability contact starts warnings
       | otherwise =
           let flat = plateau (z p) Set.empty [p]
               around = Set.unions (map neighbours (Set.toList flat))
-              low = z p-z0 > 0.001
+              low = z p-z0 > eps
                     && all (\q -> z q >= z p-eps) (Set.toList around)
                     && not (Set.null (Set.intersection below flat))
            in [z p-z0 | low] ++ minima (Set.union seen flat) ps
