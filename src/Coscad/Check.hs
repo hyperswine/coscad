@@ -227,9 +227,9 @@ processCheckIn :: Bool -> Maybe FilePath -> FilePath -> IO ()
 processCheckIn keepTemp scratch path = do
   dir <- maybe (scratchDir "check") return scratch
   createDirectoryIfMissing True dir
-  res <- loadAssembleFile [] path
+  res <- loadAssembly [] path
   case res of
-    Left err -> hPutStrLn stderr ("Error: " ++ err) >> exitFailure
+    Left err -> failAsm err
     Right ar -> case arAsm ar of
       Nothing -> hPutStrLn stderr "Error: check needs an `asm = ...` definition." >> exitFailure
       Just _ -> do

@@ -7,7 +7,7 @@ module Coscad.Assemble (module Coscad.Assemble) where
 
 import Control.Monad (unless, void, when)
 import Coscad.Codegen
-import Coscad.Constraint (Constraint (..), solveConstraints)
+import Coscad.Constraint (AsmError (..), Constraint (..), errorText, solveConstraints)
 import Coscad.Geometry
 import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Json
@@ -20,7 +20,7 @@ import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
 import Data.Maybe (isJust, isNothing)
 import System.Directory (doesFileExist)
-import System.Exit (exitFailure)
+import System.Exit (ExitCode (..), exitWith)
 import System.FilePath (dropExtension, takeDirectory, takeExtension, takeFileName, (</>))
 import System.IO (hPutStrLn, stderr)
 import Text.Megaparsec
@@ -100,9 +100,10 @@ data AsmResult = AsmResult
   , arFasteners :: [FastDecl]   -- `fastener` lines, for `coscad plan`
   , arPlanOpts :: [(String, String)] -- `plan key=value ...` line
   , arConstraints :: [Constraint] -- rigid frames, re-resolved for check/plan
+  , arPartPos :: [(String, String)] -- top-level part name -> declaration file:line:col
   }
 
-asmProgram :: SynMode -> Parser [AsmStmt]
+asmProgram :: SynMode -> Parser [(SourcePos, AsmStmt)]
 asmProgram mode = do
   located <- many ((,,) <$> getOffset <*> getSourcePos <*> asmStmt)
   distinct "part declaration" [(n, o, p) | (o, p, APart n _ _ _ _) <- located]
@@ -110,7 +111,7 @@ asmProgram mode = do
   mapM_ (\(o, _, st) -> case st of
     APart n _ _ _ _ | n `elem` reservedNames mode -> setOffset o *> fail ("reserved word '" ++ n ++ "' cannot be a part name; pick another name")
     _ -> return ()) located
-  return [st | (_, _, st) <- located]
+  return [(p, st) | (_, p, st) <- located]
   where
     distinct what = go Map.empty
       where
@@ -196,23 +197,28 @@ mateStmt = do
 -- and checker-hidden references. Counts are manufacturing multiplicities;
 -- a constrained pose needs a distinct alias for every physical instance.
 resolveAssembly :: AsmResult -> VarTable -> Either String VarTable
-resolveAssembly ar = resolveWithConstraints (arMode ar) (arDefs ar) (arPartMeta ar) (arConstraints ar)
+resolveAssembly ar = either (Left . errorText) Right . resolveAssemblyChecked ar
 
-resolveWithConstraints :: SynMode -> [Def] -> [(String, (Int, [(String,String)]))] -> [Constraint] -> VarTable -> Either String VarTable
-resolveWithConstraints mode defs meta constraints table0 = do
+-- | 'resolveAssembly' keeping the input/design distinction for exit codes.
+resolveAssemblyChecked :: AsmResult -> VarTable -> Either AsmError VarTable
+resolveAssemblyChecked ar = resolveWithConstraints (arMode ar) (arDefs ar) (arPartMeta ar) (arPartPos ar) (arConstraints ar)
+
+resolveWithConstraints :: SynMode -> [Def] -> [(String, (Int, [(String,String)]))] -> [(String, String)] -> [Constraint] -> VarTable -> Either AsmError VarTable
+resolveWithConstraints mode defs meta positions constraints table0 = do
   case [d | d <- defs, defName d == "asm", not (null constraints)] of
-    d : _ -> Left (sourcePosPretty (defPos d) ++ ": assembly constraints generate asm; remove the manual asm = definition or remove fixed/mate statements")
+    d : _ -> Left (InputError (sourcePosPretty (defPos d) ++ ": assembly constraints generate asm; remove the manual asm = definition or remove fixed/mate statements"))
     [] -> return ()
   case [n | (n,(printCount,_)) <- meta, printCount > 1, not (null constraints)] of
-    n : _ -> Left (location ++ ": constrained part '" ++ n ++ "' needs distinct instance names: use separate declarations for each copy (each with ×0 or ×1), not ×2 or larger")
+    n : _ -> Left (InputError (declared n ++ ": constrained part '" ++ n ++ "' needs distinct instance names: use separate declarations for each copy (each with ×0 or ×1), not ×2 or larger"))
     [] -> return ()
-  table <- resolveVariables mode defs table0
+  table <- either (Left . InputError) Right (resolveVariables mode defs table0)
   if null constraints then return table else do
-    parts <- mapM (\(n,_) -> maybe (Left ("missing constrained instance '" ++ n ++ "'")) (Right . (,) n) (Map.lookup n table0)) meta
+    parts <- mapM (\(n,_) -> maybe (Left (InputError (declared n ++ ": missing constrained instance '" ++ n ++ "'"))) (\s -> Right (n, declared n, s)) (Map.lookup n table0)) meta
     asm <- solveConstraints parts constraints
     return (Map.insert "asm" asm table)
   where
     location = case constraints of Fixed loc _ _ _ : _ -> loc; Mate loc _ _ _ _ _ _ : _ -> loc; [] -> "assembly"
+    declared n = maybe location id (lookup n positions)
 
 -- Parse line-local options without consuming a following `asm = ...` as a hint.
 onStatementLine :: Parser a -> Parser a
@@ -384,21 +390,38 @@ partOpt =
         return (OHint (k, v))
     ]
 
+-- | Load an assembly, flattening any error to its text (tests and tools
+-- that only need the message). Commands use 'loadAssembly' and 'failAsm'.
 loadAssembleFile :: [FilePath] -> FilePath -> IO (Either String AsmResult)
-loadAssembleFile visited path
-  | path `elem` visited = return (Left (path ++ ": cycle in .assemble references involving this file" ++ concatMap (" <- " ++) (reverse visited)))
+loadAssembleFile visited path = either (Left . errorText) Right <$> loadAssembly visited path
+
+-- | Report a load error the way every command does: the first line is
+-- `Error: file:line:col: reason`, any further lines (`  note: ...`) follow
+-- verbatim. Input errors exit 1, design errors exit 2.
+failAsm :: AsmError -> IO a
+failAsm e = do
+  case lines (errorText e) of
+    [] -> hPutStrLn stderr "Error: assembly could not be loaded"
+    first : rest -> mapM_ (hPutStrLn stderr) (("Error: " ++ first) : rest)
+  exitWith (ExitFailure (case e of DesignError _ -> 2; InputError _ -> 1))
+
+loadAssembly :: [FilePath] -> FilePath -> IO (Either AsmError AsmResult)
+loadAssembly visited path
+  | path `elem` visited = return (Left (InputError (path ++ ": cycle in .assemble references involving this file" ++ concatMap (" <- " ++) (reverse visited))))
   | otherwise = do
       exists <- doesFileExist path
       if not exists
-        then return (Left (path ++ ": file not found"))
+        then return (Left (InputError (path ++ ": file not found")))
         else do
           contents <- readFileUtf8 path
           case checkedPragma path contents of
-            Left err -> return (Left err)
+            Left err -> return (Left (InputError err))
             Right (fmode, fbody) -> case parse (sc *> asmProgram fmode <* eof) path fbody of
-              Left err -> return (Left (prettyBundle err))
-              Right stmts -> do
-                let dir = takeDirectory path
+              Left err -> return (Left (InputError (prettyBundle err)))
+              Right located -> do
+                let stmts = map snd located
+                    positions = [(n, sourcePosPretty p) | (p, APart n _ _ _ _) <- located]
+                    dir = takeDirectory path
                     partsS = [p | p@APart {} <- stmts]
                     defs = [d | ADef d <- stmts]
                     plate = last ((220, 220, 6) : [(w, d, m) | APlate w d m <- stmts])
@@ -407,12 +430,12 @@ loadAssembleFile visited path
                 case sequence loaded of
                   Left err -> return (Left err)
                   Right entries | sum [toInteger (fpCount f) | (_, _, fs) <- entries, f <- fs] > toInteger maxQuantity ->
-                    return (Left (path ++ ": total expanded print count is too large; maximum is " ++ show maxQuantity))
+                    return (Left (InputError (path ++ ": total expanded print count is too large; maximum is " ++ show maxQuantity)))
                   Right entries -> do
                     let table0 = Map.fromList [(n, s) | (n, s, _) <- entries]
                         meta = [(n, (c, h)) | APart n _ c _ h <- partsS]
                         constraints = [c | AConstraint c <- stmts]
-                    case resolveWithConstraints fmode defs meta constraints table0 of
+                    case resolveWithConstraints fmode defs meta positions constraints table0 of
                       Left err -> return (Left err)
                       Right table ->
                         return $
@@ -429,10 +452,11 @@ loadAssembleFile visited path
                               , arFasteners = [f | AFastener f <- stmts]
                               , arPlanOpts = concat [o | APlan o <- stmts]
                               , arConstraints = constraints
+                              , arPartPos = positions
                               , arFlat = concat [f | (_, _, f) <- entries]
                               }
 
-loadRef :: [FilePath] -> FilePath -> AsmStmt -> IO (Either String (String, Shape, [FlatPart]))
+loadRef :: [FilePath] -> FilePath -> AsmStmt -> IO (Either AsmError (String, Shape, [FlatPart]))
 loadRef visited dir (APart name rel cnt down hints) = do
   let p = dir </> rel
       referrer = case visited of (v : _) -> takeFileName v; [] -> "the assembly"
@@ -440,21 +464,21 @@ loadRef visited dir (APart name rel cnt down hints) = do
     ".coscad" -> do
       exists <- doesFileExist p
       if not exists
-        then return (Left (p ++ ": part file not found (referenced from " ++ referrer ++ ")"))
+        then return (Left (InputError (p ++ ": part file not found (referenced from " ++ referrer ++ ")")))
         else do
           c <- readFileUtf8 p
           case parseProgramNamed p c of
-            Left err -> return (Left err)
+            Left err -> return (Left (InputError err))
             Right (_, shape) ->
               return (Right (name, shape, [FlatPart [] name p cnt down hints shape]))
     ".assemble" -> do
-      r <- loadAssembleFile visited p
+      r <- loadAssembly visited p
       case r of
         Left err -> return (Left err)
         Right ar -> case arAsm ar of
-          Nothing -> return (Left (p ++ ": subassembly has no 'asm' definition"))
+          Nothing -> return (Left (InputError (p ++ ": subassembly has no 'asm' definition")))
           Just _ | any (\f -> toInteger (fpCount f) * toInteger cnt > toInteger maxQuantity) (arFlat ar) ->
-            return (Left (p ++ ": expanded print count for '" ++ name ++ "' is too large; maximum is " ++ show maxQuantity))
+            return (Left (InputError (p ++ ": expanded print count for '" ++ name ++ "' is too large; maximum is " ++ show maxQuantity)))
           Just s ->
             return $
               Right
@@ -468,8 +492,8 @@ loadRef visited dir (APart name rel cnt down hints) = do
                     | fp <- arFlat ar
                   ]
                 )
-    ext -> return (Left (p ++ ": unsupported part reference (" ++ ext ++ "); use a .coscad or .assemble file"))
-loadRef _ _ _ = return (Left "internal error: loadRef on non-part statement")
+    ext -> return (Left (InputError (p ++ ": unsupported part reference (" ++ ext ++ "); use a .coscad or .assemble file")))
+loadRef _ _ _ = return (Left (InputError "internal error: loadRef on non-part statement"))
 
 -- | Rotate a shape so the declared anchor faces the bed (-Z),
 -- rotating about its own bbox center. Nothing = already print-ready.
@@ -615,11 +639,9 @@ manifestJson src base (pw, pd, m) variants plates asmOnly =
     aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]
 processAssemble :: FilePath -> IO ()
 processAssemble inputFile = do
-  r <- loadAssembleFile [] inputFile
+  r <- loadAssembly [] inputFile
   case r of
-    Left err -> do
-      hPutStrLn stderr ("Error: " ++ err)
-      exitFailure
+    Left err -> failAsm err
     Right ar -> do
       let base = dropExtension inputFile
           baseName = takeFileName base
@@ -655,7 +677,7 @@ processAssemble inputFile = do
       case packBeds plate [(iid, k, footOf k) | (iid, k) <- instances] of
         Left err -> do
           hPutStrLn stderr ("Error: " ++ err)
-          exitFailure
+          exitWith (ExitFailure 1)
         Right plates -> do
           let nPlates = length plates
               plateFile i = base ++ (if nPlates == 1 then "_plate" else "_plate" ++ show i) ++ ".scad"

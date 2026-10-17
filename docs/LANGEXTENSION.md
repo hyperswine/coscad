@@ -240,8 +240,14 @@ included exactly once in the generated `asm`.
 
 Multiple fixed roots and closed loops are accepted only if all constraints
 agree, with per-component translation tolerance 0.000001 mm and matrix-entry
-orientation tolerance 0.00000001. Contradictions name the joint and report
-position and orientation residuals. Floating components, missing instances,
+orientation tolerance 0.00000001. A contradiction is reported as the whole
+loop (or the chain between two fixed roots that disagree): the error sits on
+the constraint declared last on it, the line that closed the loop, with the
+position and orientation residuals, and every constraint on the loop follows
+as a `  note: file:line:col: …` line, since any of them may be the wrong one.
+A floating component is reported at its part declaration. Contradictions,
+floating components and duplicate fixed poses are design errors (exit 2);
+the rest below are input errors (exit 1). Floating components, missing instances,
 missing or ambiguous frames, duplicate fixed poses, unknown/duplicate options
 and mixed manual `asm`/constraint definitions are errors. Graph size is
 bounded to 10000 parts and 10000 constraints.

@@ -104,9 +104,9 @@ chooseOrientation maxZ Nothing tris =
 
 processNext :: FilePath -> IO ()
 processNext inputFile = do
-  r <- loadAssembleFile [] inputFile
+  r <- loadAssembly [] inputFile
   case r of
-    Left err -> hPutStrLn stderr ("Error: " ++ err) >> exitFailure
+    Left err -> failAsm err
     Right ar -> do
       let base = dropExtension inputFile
           (pw, pd, marg) = arPlate ar
