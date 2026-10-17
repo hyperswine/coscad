@@ -8,6 +8,10 @@ and this project adheres to the
 
 ## Unreleased
 
+- Windows is no longer supported: CI and release builds are macOS/Linux
+  only (no `coscad-windows-x86_64` archive), and the Windows OpenSCAD and
+  library search paths, lock branch and extension quoting are removed.
+
 - `plan --png` and `site` render step images fully with OpenSCAD's Manifold
   backend when available (2025.05 or newer): no z-fighting on mated faces,
   at preview speed. Older OpenSCAD builds keep the preview with a note. The

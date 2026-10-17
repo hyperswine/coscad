@@ -124,7 +124,7 @@ then, editing its tracked allowlist requires a new source commit and source pin.
 Printer-only checks remain independent of source changes. Certificate renewal
 does not require treating an old TLS leaf certificate as a build dependency.
 
-GitHub-hosted runner images and their apt/Chocolatey installation environments
+GitHub-hosted runner images and their apt installation environments
 remain managed infrastructure. Exact actions, GHC/Cabal/Node, BOSL2 and dependency
 locks do not make those images hermetic. A follow-up should use versioned,
 checksum-verified renderer artifacts for each CI platform and record runner image

@@ -23,7 +23,6 @@ class LockTests(unittest.TestCase):
             self.assertNotEqual(first,lock.tree(p)); (p/'extra').unlink()
             self.assertEqual(first,lock.tree(p))
 
-    @unittest.skipIf(os.name=='nt','Windows symlink creation requires extra privileges')
     def test_symlink_target_content_is_checked_and_external_links_refused(self):
         with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as other:
             p=Path(d); (p/'version').mkdir(); (p/'version/library').write_text('one')
@@ -50,7 +49,6 @@ class LockTests(unittest.TestCase):
             self.assertEqual([f.name for f in p.parent.iterdir()],['lock.json'])
             lock.atomic_json(p,{'new':True}); self.assertEqual(json.loads(p.read_text()),{'new':True})
 
-    @unittest.skipIf(os.name=='nt','POSIX nonblocking lock behavior')
     def test_writer_lock_releases_after_exception_and_refuses_another_writer(self):
         with tempfile.TemporaryDirectory() as d:
             p=Path(d)/'lock.json'

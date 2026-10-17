@@ -1,5 +1,5 @@
 -- | UTF-8 file access regardless of the process locale: .coscad files
--- are full of glyphs, and Windows consoles default to a legacy code page.
+-- are full of glyphs, and a C or POSIX locale would reject them.
 module Coscad.IO (readFileUtf8, writeFileUtf8, readFileLatin1, scratchDir) where
 
 import Control.Exception (throwIO, try)

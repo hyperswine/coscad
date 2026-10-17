@@ -14,8 +14,9 @@
 --                    found or COSCAD_RENDER=0.
 --
 -- COSCAD_UPDATE_GOLDEN=1 rewrites the snapshots from the current output
--- (review the diff before committing). Missing snapshots are created
--- on first run.
+-- (review the diff before committing). Geometry entries within tolerance
+-- keep their recorded values; only drifted or missing ones are rewritten.
+-- Missing .scad snapshots are created on first run.
 module Main (main) where
 
 import Control.Exception (SomeException, try)
@@ -1110,6 +1111,19 @@ geoClose (v1, lo1, hi1) (v2, lo2, hi2) =
   where
     cl (a, b, c) (x, y, z) = all (\(p, q) -> abs (p - q) <= 0.01) [(a, x), (b, y), (c, z)]
 
+-- | Golden table after a run. Without update, only missing entries are
+-- added. With update, drifted or missing entries take the current value;
+-- entries still within 'geoClose' tolerance keep their recorded value, so
+-- re-accepting one deliberate change on a different OpenSCAD build does not
+-- rewrite every line with sub-tolerance noise.
+mergeGeometryGolden :: Bool -> Map.Map FilePath Geo -> [(FilePath, Geo)] -> Map.Map FilePath Geo
+mergeGeometryGolden update golden current = Map.union accepted golden
+  where
+    accepted = Map.fromList [(f, g) | (f, g) <- current, accept f g]
+    accept f g = case Map.lookup f golden of
+      Nothing -> True
+      Just want -> update && not (geoClose want g)
+
 geometry :: T -> Bool -> FilePath -> IO ()
 geometry t update bin = do
   section ("geometry via " ++ bin)
@@ -1135,11 +1149,13 @@ geometry t update bin = do
                   ("volume/bounds drifted\n  golden: " ++ showGeo want ++ "\n  now:    " ++ showGeo g ++ "\n(COSCAD_UPDATE_GOLDEN=1 cabal test to accept)")
               Nothing | not update ->
                 failT t ("geometry " ++ f) "missing geometry baseline; review the mesh and record it explicitly with COSCAD_UPDATE_GOLDEN=1 cabal test"
+              Just want | geoClose want g -> pass t
               _ -> putStrLn ("recorded " ++ f) >> pass t
             return (Just (f, g))
-  let table = Map.fromList [x | Just x <- rows]
-      merged = if update then Map.union table golden else Map.union golden table
-  when update $
+  let current = [x | Just x <- rows]
+      table = Map.fromList current
+      merged = mergeGeometryGolden update golden current
+  when (update && merged /= golden) $
     writeFile goldenF (unlines ["# path volume xmin ymin zmin xmax ymax zmax (regenerate: COSCAD_UPDATE_GOLDEN=1 cabal test)"] ++ unlines [f ++ " " ++ showGeo g | (f, g) <- Map.toList merged])
   -- Check actual bracket material, not the planner's axis-aligned boxes.
   -- Independent world-space probes cover all 16 corners and 32 rail bores.
@@ -1569,6 +1585,20 @@ distinctVariants (ids, paths, used) =
   where
     allDistinct xs = and [length (filter (== x) xs) == 1 | x <- xs]
 
+goldenMergeTier :: T -> IO ()
+goldenMergeTier t = do
+  let geo v = (v, (0, 0, 0), (1, 1, 1)) :: Geo
+      golden = Map.fromList [("kept.coscad", geo 100), ("drift.coscad", geo 50), ("absent.coscad", geo 7)]
+      current = [("kept.coscad", geo 100.004), ("drift.coscad", geo 40), ("new.coscad", geo 3)]
+      updated = mergeGeometryGolden True golden current
+      checked = mergeGeometryGolden False golden current
+  assertT t "golden update keeps entries within tolerance" (Map.lookup "kept.coscad" updated == Just (geo 100)) (show updated)
+  assertT t "golden update replaces drifted entries" (Map.lookup "drift.coscad" updated == Just (geo 40)) (show updated)
+  assertT t "golden update records missing entries" (Map.lookup "new.coscad" updated == Just (geo 3)) (show updated)
+  assertT t "golden update retains entries that did not render" (Map.lookup "absent.coscad" updated == Just (geo 7)) (show updated)
+  assertT t "without update, drift is never accepted" (Map.lookup "drift.coscad" checked == Just (geo 50)) (show checked)
+  assertT t "a run with nothing drifted leaves the golden unchanged" (mergeGeometryGolden True golden [("kept.coscad", geo 100.004)] == golden) ""
+
 main :: IO ()
 main = do
   setLocaleEncoding utf8
@@ -1580,6 +1610,7 @@ main = do
   remainingDiagnostics t
   printabilityTier t
   variantNameTier t
+  goldenMergeTier t
   topologyTier t
   frameTier t
   cubeTier t

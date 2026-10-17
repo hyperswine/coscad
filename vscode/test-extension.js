@@ -98,11 +98,6 @@ assert.equal(d.length, 1)
 assert.equal(d[0].range.start.line, 1)
 assert.deepEqual(parseCompilerErrors('', '/tmp/x/part.coscad'), [])
 
-// Windows drive letters in paths
-d = parseCompilerErrors('Error: C:\\work\\part.coscad:2:8: bad\n', 'C:\\work\\part.coscad')
-assert.equal(d.length, 1)
-assert.equal(d[0].range.start.line, 1)
-
 // version probe helpers
 assert.deepEqual(parseVersion('coscad 1.1.0.0\n'), [1, 1, 0, 0])
 assert.equal(parseVersion('Error: expected a .coscad file, got --version'), null)
@@ -110,6 +105,6 @@ assert.equal(versionAtLeast([1, 2, 0, 0], [1, 2, 0, 0]), true)
 assert.equal(versionAtLeast([1, 1, 9, 9], [1, 2, 0, 0]), false)
 assert.equal(versionAtLeast([1, 3], [1, 2, 0, 0]), true)
 assert.deepEqual(splitCommand('cabal run coscad --'), ['cabal', 'run', 'coscad', '--'])
-assert.deepEqual(splitCommand('"C:\\Program Files\\coscad\\coscad.exe"'), ['C:\\Program Files\\coscad\\coscad.exe'])
+assert.deepEqual(splitCommand('"/Applications/My Tools/coscad"'), ['/Applications/My Tools/coscad'])
 
 console.log('All extension tests passed')
