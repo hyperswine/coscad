@@ -1,4 +1,5 @@
 {
+  "schema": "coscad.design/1",
   "source": "frame.assemble",
   "plate": {
     "w": 220,

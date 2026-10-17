@@ -8,6 +8,15 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Manifest contract change.** The design stage (`coscad foo.assemble`)
+  now writes `foo_design.json` (`"schema": "coscad.design/1"`) instead of
+  `foo_manifest.json`, which is now written only by `coscad next`
+  (`"schema": "coscad.next/1"`). Previously the design stage overwrote the
+  print manifest with a differently shaped file. A design manifest left
+  under the old name gets a stderr note and is not deleted.
+  `bambu-slice.py` checks `schema`, still accepts pre-schema `coscad next`
+  manifests, and refuses design manifests with the command to run.
+
 - Windows is no longer supported: CI and release builds are macOS/Linux
   only (no `coscad-windows-x86_64` archive), and the Windows OpenSCAD and
   library search paths, lock branch and extension quoting are removed.

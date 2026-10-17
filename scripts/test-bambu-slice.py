@@ -63,5 +63,60 @@ class SliceTests(unittest.TestCase):
                 slicer.slice_bed("part.stl", "out.3mf", {"machine": "m", "process": "p", "filament": "f"}, [])
 
 
+class ManifestTests(unittest.TestCase):
+    BED = {"index": 1, "stl": "a_bed1.stl", "placements": []}
+
+    def test_next_manifest_is_accepted(self):
+        slicer.check_manifest({"schema": "coscad.next/1", "beds": [self.BED]}, "a_manifest.json")
+
+    def test_pre_schema_next_manifest_is_still_accepted(self):
+        slicer.check_manifest({"bed": {"w": 256, "d": 256}, "beds": [self.BED]}, "a_manifest.json")
+
+    def test_design_manifest_is_refused_with_the_next_command(self):
+        m = {"schema": "coscad.design/1", "source": "a.assemble", "plate": {}, "placements": []}
+        with self.assertRaisesRegex(ValueError, r"design-stage manifest.*coscad next a\.assemble` and slice the a_manifest\.json"):
+            slicer.check_manifest(m, "a_design.json")
+
+    def test_old_design_manifest_under_the_old_name_gets_a_migration_message(self):
+        m = {"source": "frame.assemble", "plate": {"w": 220}, "placements": []}
+        with self.assertRaisesRegex(ValueError, r"coscad 1\.2 or earlier.*_design\.json.*coscad next frame\.assemble"):
+            slicer.check_manifest(m, "frame_manifest.json")
+
+    def test_newer_or_foreign_schemas_are_refused(self):
+        with self.assertRaisesRegex(ValueError, "newer than this script"):
+            slicer.check_manifest({"schema": "coscad.next/2", "beds": []}, "a_manifest.json")
+        with self.assertRaisesRegex(ValueError, "unknown manifest schema"):
+            slicer.check_manifest({"schema": "other", "beds": []}, "a_manifest.json")
+        with self.assertRaisesRegex(ValueError, "no beds list"):
+            slicer.check_manifest({"schema": "coscad.next/1"}, "a_manifest.json")
+        with self.assertRaisesRegex(ValueError, "no beds"):
+            slicer.check_manifest({}, "a_manifest.json")
+
+    def test_cli_refuses_a_design_manifest_before_looking_for_bambu_studio(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "frame_manifest.json"
+            p.write_text(json.dumps({"source": "frame.assemble", "plate": {}, "placements": []}))
+            r = subprocess.run([slicer.sys.executable, str(Path(__file__).with_name("bambu-slice.py")), str(p)],
+                               capture_output=True, text=True, env={"BAMBU_STUDIO": "/nonexistent", "PATH": ""})
+            self.assertEqual(r.returncode, 1)
+            self.assertIn("design-stage manifest from coscad 1.2 or earlier", r.stderr)
+            self.assertNotIn("Traceback", r.stderr)
+
+    def test_tracked_manifests_match_their_names(self):
+        root = Path(__file__).resolve().parent.parent
+        tracked = subprocess.run(["git", "ls-files", "*_manifest.json", "*_design.json"], cwd=root,
+                                 capture_output=True, text=True)
+        if tracked.returncode != 0:
+            self.skipTest("not a git checkout")
+        for name in tracked.stdout.split():
+            m = json.loads((root / name).read_text())
+            with self.subTest(manifest=name):
+                if name.endswith("_design.json"):
+                    self.assertEqual(m.get("schema"), "coscad.design/1")
+                    self.assertRaises(ValueError, slicer.check_manifest, m, name)
+                else:
+                    slicer.check_manifest(m, name)
+
+
 if __name__ == "__main__":
     unittest.main()

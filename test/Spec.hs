@@ -39,7 +39,7 @@ import Coscad.Site (buildPageHtml, indexHtml)
 import Coscad.Shape (Shape (..), shapeChildren)
 import Data.IORef
 import Data.List (isInfixOf, isPrefixOf, sort, tails)
-import Data.Maybe (isJust, fromMaybe)
+import Data.Maybe (isJust, isNothing, fromMaybe)
 import qualified Data.Map as Map
 import Data.Time.Clock (diffUTCTime, getCurrentTime)
 import GHC.IO.Encoding (setLocaleEncoding)
@@ -1264,6 +1264,16 @@ geometry t update bin = do
       assertT t "coscad next: bed volume == sum of variant volumes" (abs (vb - vp) < 1e-6 * vp) (printf "bed %.3f parts %.3f" vb vp)
       -- the bed and margin come from the fixture's `plate` line, via the manifest
       manifest <- readFile (bow </> "bow3_manifest.json")
+      assertT t "coscad next manifest carries schema coscad.next/1"
+        (either (const False) (\v -> (asString =<< lookupKey "schema" v) == Just "coscad.next/1") mf) (take 200 manifest)
+      -- the design stage writes its own file and leaves the next manifest alone
+      rd <- try (processAssemble (bow </> "bow3.assemble")) :: IO (Either SomeException ())
+      after <- readFile (bow </> "bow3_manifest.json")
+      design <- readJson (bow </> "bow3_design.json")
+      assertT t "design stage after next: bow3_manifest.json untouched, bow3_design.json has schema coscad.design/1"
+        (either (const False) (const True) rd && after == manifest
+          && either (const False) (\v -> (asString =<< lookupKey "schema" v) == Just "coscad.design/1" && isJust (lookupKey "plate" v) && isNothing (lookupKey "beds" v)) design)
+        (show (either show (const "ok") rd, after == manifest, either id (const "parsed") design))
       let num key = case dropWhile (not . isPrefixOf key) (tails manifest) of
             (m : _) -> read (takeWhile (`elem` "0123456789.") (dropWhile (`elem` "\": ") (drop (length key) m))) :: Double
             [] -> error ("manifest lacks " ++ key)
@@ -1359,7 +1369,7 @@ geometry t update bin = do
     Right () -> do
       p1 <- doesFileExist (sp </> "spill_plate1.scad")
       p2 <- doesFileExist (sp </> "spill_plate2.scad")
-      mf <- readFile (sp </> "spill_manifest.json")
+      mf <- readFile (sp </> "spill_design.json")
       assertT t "design stage: multi-plate spill" (p1 && p2 && "\"plate\": 2" `isInfixOf` mf && "\"count\": 2" `isInfixOf` mf) (show (p1, p2))
   -- `coscad stl` end to end
   st <- tempDir "stl"
@@ -1443,7 +1453,7 @@ cliTier t = do
       let variantsDir = dir </> "variants"
       writeVariantCollisions variantsDir
       (cv, _, ev) <- run [variantsDir </> "top.assemble"]
-      design <- manifestVariants "scad" <$> readFile (variantsDir </> "top_manifest.json")
+      design <- manifestVariants "scad" <$> readFile (variantsDir </> "top_design.json")
       scads <- mapM (doesFileExist . (variantsDir </>)) ["top_part_a_base_asis.scad", "top_part_b_base_asis.scad"]
       assertT t "design stage: same part name in two subassemblies gets two variant ids and scads"
         (cv == ExitSuccess && and scads && design == Right (["a_base_asis", "b_base_asis"], ["top_part_a_base_asis.scad", "top_part_b_base_asis.scad"], ["b_base_asis", "a_base_asis"]))
@@ -1468,8 +1478,17 @@ cliTier t = do
       planFiles <- listDirectory "examples/assemble/plan"
       forM_ ("corner_pair.assemble" : filter ((== ".coscad") . takeExtension) planFiles) $ \f -> copyFile ("examples/assemble/plan" </> f) (dir </> f)
       (c8, o8, e8) <- run [dir </> "corner_pair.assemble"]
-      mf <- readJson (dir </> "corner_pair_manifest.json")
-      assertT t "design stage: exit 0, manifest parses, plate and placements present" (c8 == ExitSuccess && null e8 && "Wrote" `isInfixOf` o8 && either (const False) (\v -> isJust (lookupKey "plate" v) && maybe False (not . null) (asArray =<< lookupKey "placements" v)) mf) (show (c8, e8, either id (const "parsed") mf))
+      mf <- readJson (dir </> "corner_pair_design.json")
+      noNext <- not <$> doesFileExist (dir </> "corner_pair_manifest.json")
+      assertT t "design stage: exit 0, corner_pair_design.json parses with schema, plate and placements; no _manifest.json" (c8 == ExitSuccess && null e8 && noNext && ("Wrote " ++ dir </> "corner_pair_design.json") `isInfixOf` o8 && either (const False) (\v -> (asString =<< lookupKey "schema" v) == Just "coscad.design/1" && isJust (lookupKey "plate" v) && maybe False (not . null) (asArray =<< lookupKey "placements" v)) mf) (show (c8, o8, e8, noNext, either id (const "parsed") mf))
+      -- a design manifest left under the old name by coscad 1.2 gets a migration note, and is kept
+      let legacy = "{\"source\": \"corner_pair.assemble\", \"plate\": {\"w\": 220, \"d\": 220}, \"placements\": []}\n"
+      writeFile (dir </> "corner_pair_manifest.json") legacy
+      (c8b, _, e8b) <- run [dir </> "corner_pair.assemble"]
+      kept <- readFile (dir </> "corner_pair_manifest.json")
+      assertT t "design stage: old design manifest under _manifest.json gets a migration note on stderr and is left in place"
+        (c8b == ExitSuccess && "Note: " `isPrefixOf` e8b && "corner_pair_design.json" `isInfixOf` e8b && "coscad next" `isInfixOf` e8b && kept == legacy) (show (c8b, e8b))
+      removeFile (dir </> "corner_pair_manifest.json")
       (c9, o9, e9) <- run ["plan", dir </> "corner_pair.assemble"]
       pj <- readJson (dir </> "corner_pair_plan.json")
       let nuts v = [n | st <- fromMaybe [] (asArray =<< lookupKey "steps" v), f <- fromMaybe [] (asArray =<< lookupKey "fasteners" st), Just n <- [asString =<< lookupKey "nut" f]]

@@ -18,6 +18,7 @@ import Data.Char (isAlphaNum, isLetter, isSpace, toLower)
 import Data.List (foldl', intercalate, sortBy)
 import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
+import Data.Maybe (isJust, isNothing)
 import System.Directory (doesFileExist)
 import System.Exit (exitFailure)
 import System.FilePath (dropExtension, takeDirectory, takeExtension, takeFileName, (</>))
@@ -47,7 +48,9 @@ import qualified Text.Megaparsec.Char.Lexer as L
 --   foo_asm.scad         assembled view (if asm defined)
 --   foo_plate.scad       all printable instances packed on the bed
 --   foo_part_<v>.scad    one per variant (part+orientation), print-ready
---   foo_manifest.json    variants (slice once) + placements (stamp many)
+--   foo_design.json      design manifest: variants + plate placements
+--                        (schema coscad.design/1). foo_manifest.json is
+--                        written only by `coscad next` (schema coscad.next/1).
 
 data POpt = OCount Int | ODown (Double, Double, Double) String | OHint (String, String)
 
@@ -549,6 +552,27 @@ packBeds (pw, pd, m) items0 = do
       | y + d > pd - m = Right (reverse acc, item : rest)
       | otherwise = fit (x + w + m) y (max rowD d) ((iid, k, (w, d), (x, y)) : acc) rest
 
+-- | Manifest schema identifiers. The design stage and `coscad next` write
+-- different files with different shapes; consumers check `schema` first.
+designSchema, nextSchema :: String
+designSchema = "coscad.design/1"
+nextSchema = "coscad.next/1"
+
+-- | Design-stage manifest path for an assembly base path.
+designManifestPath :: FilePath -> FilePath
+designManifestPath base = base ++ "_design.json"
+
+-- | Manufacturing manifest path (`coscad next`) for an assembly base path.
+nextManifestPath :: FilePath -> FilePath
+nextManifestPath base = base ++ "_manifest.json"
+
+-- | A `<base>_manifest.json` left by a design stage from coscad 1.2 or
+-- earlier: it has a `plate` but neither `beds` nor `schema`.
+legacyDesignManifest :: String -> Bool
+legacyDesignManifest txt = case decode txt of
+  Right v -> isJust (lookupKey "plate" v) && isNothing (lookupKey "beds" v) && isNothing (lookupKey "schema" v)
+  Left _ -> False
+
 manifestJson ::
   FilePath ->
   String ->
@@ -560,7 +584,8 @@ manifestJson ::
 manifestJson src base (pw, pd, m) variants plates asmOnly =
   encodePretty $
     jobj
-      [ ("source", JString src)
+      [ ("schema", JString designSchema)
+      , ("source", JString src)
       , ("plate", jobj [("w", jnum3 pw), ("d", jnum3 pd), ("margin", jnum3 m), ("count", JNumber (fromIntegral (length plates)))])
       , ("variants", jlist (map vj variants))
       , ("placements", jlist [pj i p | (i, ps) <- zip [(1 :: Int) ..] plates, p <- ps])
@@ -644,6 +669,19 @@ processAssemble inputFile = do
             (zip [(1 :: Int) ..] plates)
           when (nPlates > 1) $
             putStrLn ("(" ++ show (length instances) ++ " parts need " ++ show nPlates ++ " plates of " ++ showD pw ++ "x" ++ showD pd ++ ")")
-          writeFileUtf8 (base ++ "_manifest.json") (manifestJson inputFile baseName plate variants plates asmOnly)
-          putStrLn ("Wrote " ++ base ++ "_manifest.json")
+          writeFileUtf8 (designManifestPath base) (manifestJson inputFile baseName plate variants plates asmOnly)
+          putStrLn ("Wrote " ++ designManifestPath base)
+          noteLegacyManifest base
 
+-- | Explain a stale design manifest under the manufacturing name instead of
+-- leaving a file that `bambu-slice.py` will refuse without context. The
+-- file is left in place: it may be referenced by the user's own scripts.
+noteLegacyManifest :: FilePath -> IO ()
+noteLegacyManifest base = do
+  let old = nextManifestPath base
+  exists <- doesFileExist old
+  when exists $ do
+    txt <- readFileUtf8 old
+    when (legacyDesignManifest txt) $
+      hPutStrLn stderr ("Note: " ++ old ++ " is a design manifest from coscad 1.2 or earlier. The design stage now writes "
+        ++ designManifestPath base ++ "; " ++ takeFileName old ++ " is reserved for `coscad next`. Delete it or run `coscad next` to replace it.")
