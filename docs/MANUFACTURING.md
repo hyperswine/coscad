@@ -105,6 +105,15 @@ mode with developer mode on, `BAMBU_HOST`, `BAMBU_SERIAL` and
 scripts (`BAMBU_LAN_DIR`) for the FTPS client with the printer's TLS
 quirks. Nothing is sent without `--print`.
 
+`--process-overrides FILE.json` applies explicit settings such as
+`{"brim_type":"outer_only","brim_width":"8"}` to the resolved process.
+`--filament-overrides FILE.json` handles filament settings such as early-layer
+cooling separately. Values use Bambu's string/list-of-strings encoding;
+unknown keys are refused. Both sets of overrides are recorded in `_print.json`.
+An automatic brim setting does not guarantee brim toolpaths: inspect the
+exported G-code. The tesseract adhesion retry includes a repeatable offline
+preflight that verifies actual brim and support extrusion.
+
 `scripts/bambu-print-run.py foo.assemble` does the whole thing unattended:
 it photographs the printer (`<timestamp>-a1-printer-capture.png`, from the
 printer's own camera), refuses to start if a print is running, runs

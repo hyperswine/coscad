@@ -65,16 +65,40 @@ def machine_with_templates(printer):
     return m
 
 
-def write_presets(printer, process, filament, bed):
-    pdir = tempfile.mkdtemp(prefix="coscad-presets-")
+def preset_overrides(path, preset, additional_keys=()):
+    """Refuse misspelled or malformed settings instead of silently dropping them."""
+    with open(path) as fh:
+        data = json.load(fh)
+    if not isinstance(data, dict):
+        raise ValueError("preset overrides must be a JSON object")
+    unknown = sorted(set(data) - set(preset) - set(additional_keys))
+    if unknown:
+        raise ValueError("unknown preset override settings: " + ", ".join(unknown))
+    for key, value in data.items():
+        if not (isinstance(value, str) or
+                isinstance(value, list) and value and all(isinstance(v, str) for v in value)):
+            raise ValueError(f"preset override {key} must be a string or a nonempty list of strings")
+    return data
+
+
+def write_presets(printer, process, filament, bed, overrides=None, filament_overrides=None):
     proc = flatten("process", process)
+    if overrides:
+        # brim_type can be omitted by presets that inherit the slicer's
+        # compiled default; it is still an explicit supported process key.
+        proc.update(preset_overrides(overrides, proc, {"brim_type"}))
     proc["curr_bed_type"] = bed
+    fila = flatten("filament", filament)
+    if filament_overrides:
+        fila.update(preset_overrides(filament_overrides, fila))
+    pdir = tempfile.mkdtemp(prefix="coscad-presets-")
     files = {}
     for kind, name, data in (("machine", printer, machine_with_templates(printer)),
                              ("process", process, proc),
-                             ("filament", filament, flatten("filament", filament))):
+                             ("filament", filament, fila)):
         f = os.path.join(pdir, kind + ".json")
-        json.dump(data, open(f, "w"), indent=1)
+        with open(f, "w") as fh:
+            json.dump(data, fh, indent=1)
         files[kind] = f
     return files
 
@@ -99,7 +123,8 @@ def slice_bed(stl, out3mf, presets, extra):
     res_path = os.path.join(work, "result.json")
     res = json.load(open(res_path)) if os.path.exists(res_path) else {}
     if r.returncode != 0 or res.get("return_code", 1) != 0:
-        tail = "\n".join(l for l in r.stdout.splitlines() if not l.startswith("[")[-10:])
+        tail = "\n".join([l for l in (r.stdout + "\n" + r.stderr).splitlines()
+                          if not l.startswith("[")][-10:])
         sys.exit(f"slicing {stl} failed: {res.get('error_string', r.returncode)}\n{tail}")
     shutil.move(os.path.join(work, os.path.basename(out3mf)), out3mf)
     gcode = os.path.join(work, "plate_1.gcode")
@@ -178,6 +203,8 @@ def main():
     ap.add_argument("manifest", help="<base>_manifest.json written by `coscad next`")
     ap.add_argument("--printer", default="Bambu Lab A1 0.4 nozzle", help="machine preset name")
     ap.add_argument("--process", default=None, help="process preset (default: the printer's default profile)")
+    ap.add_argument("--process-overrides", help="JSON file of explicit changes to the flattened process preset")
+    ap.add_argument("--filament-overrides", help="JSON file of explicit changes to the flattened filament preset")
     ap.add_argument("--filament", default=None, help="filament preset (default: from the parts' material= hint, else the printer's default)")
     ap.add_argument("--plate", default="textured", choices=sorted(BED_TYPES), help="build plate on the printer (default textured)")
     ap.add_argument("--bed", type=int, default=None, help="only this bed index")
@@ -207,7 +234,10 @@ def main():
                 filament = cand
         filament = filament or machine.get("default_filament_profile", [None])[0]
     bed_name = BED_TYPES[a.plate]
-    presets = write_presets(a.printer, process, filament, bed_name)
+    try:
+        presets = write_presets(a.printer, process, filament, bed_name, a.process_overrides, a.filament_overrides)
+    except (OSError, ValueError) as error:
+        sys.exit(f"invalid preset overrides: {error}")
     print(f"printer {a.printer} | process {process} | filament {filament} | {bed_name}")
 
     pw, pd = m["bed"]["w"], m["bed"]["d"]
@@ -218,6 +248,10 @@ def main():
             print(f"warning: the assembly's plate ({pw}x{pd}) is larger than the printer's bed ({max(xs)-min(xs):g}x{max(ys)-min(ys):g})", file=sys.stderr)
 
     summary = {"source": m.get("source"), "printer": a.printer, "process": process, "filament": filament, "plate": bed_name, "beds": []}
+    if a.process_overrides:
+        summary["process_overrides"] = preset_overrides(a.process_overrides, flatten("process", process), {"brim_type"})
+    if a.filament_overrides:
+        summary["filament_overrides"] = preset_overrides(a.filament_overrides, flatten("filament", filament))
     for bed in m["beds"]:
         if a.bed is not None and bed["index"] != a.bed:
             continue
