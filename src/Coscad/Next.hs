@@ -70,21 +70,13 @@ data FffTerms = FffTerms
   }
   deriving (Show)
 
--- | A down face that starts within this band above the bed is squashed
--- onto it by the first layer rather than needing support, so it is not
--- an overhang. It is deliberately not the contact tolerance: a face 0.2 mm
--- up does not hold the part down.
-firstLayerBand :: Double
-firstLayerBand = 0.3
-
 fffTerms :: [Tri] -> FffTerms
 fffTerms tris =
   let ((x0, y0, z0), (x1, y1, z1)) = meshBounds tris
       h = z1 - z0
-      verts (a, b, c) = [a, b, c]
       -- only near-horizontal downward faces need support; curved
       -- flanks of lying cylinders (45-65 deg) self-support in FFF
-      overhang = sum [triArea t | t <- tris, downFacing t, minimum [z | (_, _, z) <- verts t] > z0 + firstLayerBand]
+      overhang = sum (map triArea (overhangFaces tris))
    in FffTerms
         { fffContact = bedContact (planeTolerance tris) tris
         , fffOverhang = overhang
@@ -233,6 +225,9 @@ nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
         , ("printability", jobj
             [("bed_contact_mm2", jnum3 (bedContactMm2 p))
             ,("elevated_start_heights_mm", jlist (map jnum3 (elevatedStartsMm p)))
+            ,("overhang_mm2", jnum3 (overhangMm2 p))
+            ,("first_layer_mm2", jnum3 (firstLayerMm2 p))
+            ,("min_width_mm", jnum3 (minWidthMm p))
             ,("warnings", jlist (map JString (printabilityWarnings p)))])
         , ("footprint", jlist (map jnum3 [w, d, h]))
         , ("mesh", JString (base ++ "_next_" ++ vname ++ ".stl"))

@@ -8,6 +8,18 @@ and this project adheres to the
 
 ## Unreleased
 
+- `coscad next` printability warnings: a new **flat overhang** warning for
+  down faces that are neither bridged nor within 2 mm of a supporting wall
+  (a mushroom cap, a hook arm; an upside-down cup's ceiling is a bridge and
+  does not warn). **Tall and narrow** now uses the narrowest footprint width
+  (rotating calipers) instead of the bounding box, with a limit of
+  2.5 + 10/h, so a 2 mm wall turned 45° warns and the 7×7×18.8 fit-test bar
+  no longer does. **Small contact** looks at the first layer (down faces
+  within 0.3 mm of the bed, projected) against max(25 mm², 0.05·h²), so
+  lying rods no longer warn. The manifest's `printability` gains
+  `overhang_mm2`, `first_layer_mm2` and `min_width_mm`; thresholds are in
+  `PrintabilityConfig`.
+
 - `coscad next`: bed contact has one definition, shared by the orientation
   score and the manifest's `printability.bed_contact_mm2` (down-facing
   triangles with every vertex within 0.01 mm of the bed, or 1e-5 of the

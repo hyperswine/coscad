@@ -1248,6 +1248,7 @@ geometry t update bin = do
               got = meshVolume tris
            in assertT t "loft frustum volume" (abs (got - want) < 1e-3 * want) (printf "got %.3f want %.3f" got want)
   adhesionRetryContact t
+  printabilityProbes t
   -- cross-check: `coscad next` conserves volume across bed packing
   bow <- tempDir "bow3"
   srcs <- listDirectory "examples/assemble/bow3"
@@ -1599,9 +1600,80 @@ printabilityTier t = do
   assertT t "printability: up to 4 µm of vertex noise on the bed face keeps the contact"
     (abs (contactOf (jitter cube) - 400) < 1e-3 && abs (contactOf (jitter diagDown) - 400) < 1e-3) (show (contactOf (jitter cube), contactOf (jitter diagDown)))
   assertT t "printability: a face 0.2 mm above the bed is not contact" (near (contactOf pad) 400) (show (contactOf pad))
+  -- slenderness over the narrowest footprint direction, scaled with height
+  let wall = turn 45 (0, 0, 1) (boxTris 40 2 30)
+      warns kind = any (kind `isInfixOf`) . printabilityWarnings . analysePrintability
+      rodMesh = lyingRod 5 40 64
+  assertT t "printability: a 2×40 mm wall turned 45° is 2 mm wide (rotating calipers), not its 29.7 mm box"
+    (abs (minFootprintWidth wall - 2) < 1e-6) (show (minFootprintWidth wall))
+  assertT t "printability: the turned 2 mm wall is flagged as tall and narrow" (warns "tall, narrow" wall) (show (analysePrintability wall))
+  assertT t "printability: a 6×6×20 pillar is still tall and narrow" (warns "tall, narrow" (boxTris 6 6 20)) ""
+  assertT t "printability: the 7×7×18.8 fit-test bar is not (limit 2.5 + 10/h)" (not (warns "tall, narrow" (boxTris 7 7 18.8))) (show (analysePrintability (boxTris 7 7 18.8)))
+  assertT t "printability: a short 2×2×6 peg does not wobble enough to warn" (not (warns "tall, narrow" (boxTris 2 2 6))) ""
+  assertT t "printability: a lying rod has no flat contact but a first-layer strip, and does not warn"
+    (bedContactMm2 (analysePrintability rodMesh) < 1e-9 && firstLayerMm2 (analysePrintability rodMesh) > 25 && null (printabilityWarnings (analysePrintability rodMesh)))
+    (show (analysePrintability rodMesh))
+  assertT t "printability: a tall part needs more first layer (0.05·h²): 10×10×60 on 100 mm² warns"
+    (warns "flat bed contact" (boxTris 10 10 60) && not (warns "flat bed contact" (boxTris 10 10 20))) ""
+  assertT t "printability: a closed box has no overhang" (overhangMm2 (analysePrintability cube) == 0) ""
   forM_ [("cube", cube), ("corner", orient (-1, -1, -1) cube), ("diagonal", diagDown), ("noisy", jitter diagDown), ("raised pad", pad)] $ \(name, m) ->
     assertT t ("orientation score and printability use the same contact: " ++ name)
       (fffContact (fffTerms m) == contactOf m) (show (fffContact (fffTerms m), contactOf m))
+
+-- | A closed n-gon prism of radius r along x, lying on the bed with a
+-- vertex at the bottom.
+lyingRod :: Double -> Double -> Int -> [Tri]
+lyingRod r len n =
+  let ring x = [(x, r * sin a, r - r * cos a) | k <- [0 .. n - 1], let a = 2 * pi * fromIntegral k / fromIntegral n]
+      l0 = ring 0
+      l1 = ring len
+      nxt k = (k + 1) `mod` n
+      side = concat [[(l0 !! k, l1 !! nxt k, l1 !! k), (l0 !! k, l0 !! nxt k, l1 !! nxt k)] | k <- [0 .. n - 1]]
+      c0 = (0, 0, r)
+      c1 = (len, 0, r)
+      caps = concat [[(c0, l0 !! k, l0 !! nxt k), (c1, l1 !! nxt k, l1 !! k)] | k <- [0 .. n - 1]]
+   in side ++ caps
+
+-- | The printability probes from the review (edge/pr), rendered and run
+-- through `coscad next`: each one warns exactly as expected.
+printabilityProbes :: T -> IO ()
+printabilityProbes t = do
+  dir <- tempDir "printability-probes"
+  let parts =
+        [ ("cube", "main = box 20 20 20"), ("ball", "main = sphere 10"), ("rod", "main = xcyl 5 40")
+        , ("mushroom", "main = zcyl 3 4 |> at top (box 30 30 3)"), ("island", "main = box 20 20 4 ⊕ ζ 10 (box 6 6 4)")
+        , ("diagwall", "main = box 60 2 40 |> rotz 45"), ("pillar", "main = box 6 6 20")
+        , ("cup", "main = box 30 30 10 |> cut (box 20 20 8 |> z -1)"), ("hhole", "main = box 30 20 20 |> cut (xcyl 4 40)")
+        , ("chamf", "main = ▣ 20 20 10 2"), ("dome", "main = box 30 30 10 |> cut (sphere 8 |> z 5)")
+        , ("hook", "main = (box 30 10 3) ⊕ (box 3 10 20 |> x 13.5 |> z 8.5) ⊕ (box 10 10 2 |> x 20 |> z 17.5)") ]
+  forM_ parts $ \(n, src) -> writeFile (dir </> n <.> "coscad") (src ++ "\n")
+  writeFile (dir </> "a.assemble") (unlines ("plate 256 256 6" : [n ++ " ← " ++ f ++ ".coscad ×1 " ++ d | (n, f, d) <-
+    [("blk", "cube", "▽bot"), ("corner", "cube", "▽lft+fwd+bot"), ("ball", "ball", "▽bot"), ("rod", "rod", "▽bot"), ("mushroom", "mushroom", "▽bot")
+    , ("island", "island", "▽bot"), ("diagwall", "diagwall", "▽bot"), ("pillar", "pillar", "▽bot"), ("cup", "cup", "▽bot")]]))
+  writeFile (dir </> "b.assemble") (unlines ("plate 256 256 6" : [n ++ " ← " ++ n ++ ".coscad ×1 ▽bot" | n <- ["hhole", "chamf", "dome", "hook"]]))
+  let expected =
+        [ ("blk_bot", [], Nothing), ("corner_lft_fwd_bot", ["flat bed contact"], Nothing), ("ball_bot", ["flat bed contact"], Nothing)
+        , ("rod_bot", [], Nothing), ("mushroom_bot", ["flat overhang"], Just (800, 870)), ("island_bot", ["elevated downward-facing start at 10 mm"], Nothing)
+        , ("diagwall_bot", ["tall, narrow"], Nothing), ("pillar_bot", ["tall, narrow"], Nothing), ("cup_bot", [], Nothing)
+        , ("hhole_bot", [], Nothing), ("chamf_bot", [], Nothing), ("dome_bot", [], Nothing), ("hook_bot", ["flat overhang"], Just (70, 90)) ]
+  variants <- fmap concat $ forM ["a", "b"] $ \asm -> do
+    r <- try (processNext (dir </> asm <.> "assemble")) :: IO (Either SomeException ())
+    case r of
+      Left e -> failT t ("printability probes: coscad next " ++ asm) (show e) >> return []
+      Right () -> do
+        m <- decode <$> readFile (dir </> asm ++ "_manifest.json")
+        return (either (const []) (\v -> fromMaybe [] (asArray =<< lookupKey "variants" v)) m)
+  forM_ expected $ \(vid, want, ohRange) -> case [v | v <- variants, (asString =<< lookupKey "id" v) == Just vid] of
+    [v] -> do
+      let p = lookupKey "printability" v
+          ws = [w | Just arr <- [asArray =<< lookupKey "warnings" =<< p], x <- arr, Just w <- [asString x]]
+          oh = fromMaybe (-1) (asNumber =<< lookupKey "overhang_mm2" =<< p)
+          label = if null want then "no warnings" else unwords want
+      assertT t ("printability probe " ++ vid ++ ": " ++ label)
+        (length ws == length want && and [any (w `isInfixOf`) ws | w <- want]
+          && maybe True (\(lo, hi) -> oh >= lo && oh <= hi) ohRange)
+        (show (ws, oh))
+    _ -> failT t ("printability probe " ++ vid) ("variant missing: " ++ show [asString =<< lookupKey "id" v | v <- variants])
 
 -- | Closed axis-aligned box with its min corner at the origin, outward
 -- normals (counter-clockwise seen from outside).
@@ -1639,6 +1711,8 @@ adhesionRetryContact t = do
             assertT t ("coscad next: " ++ part ++ " bed contact matches the trimesh measurement within 0.05 mm²")
               (abs (contactOf part - measured inst) < 0.05) (show (contactOf part, measured inst))
           assertT t "coscad next: tesseract cap contact is 69.73 mm²" (abs (contactOf "cap" - 69.73) < 0.05) (show (contactOf "cap"))
+          let warningsOf part = [w | v <- variants, field "part" v == Just part, Just arr <- [asArray =<< lookupKey "warnings" =<< printab v], x <- arr, Just w <- [asString x]]
+          assertT t "coscad next: the 7×7×18.8 fit-test bar no longer warns as tall and narrow" (null (warningsOf "bar")) (show (warningsOf "bar"))
           let manifestWarnings = sort [ "Warning: " ++ i ++ ": " ++ w | v <- variants, Just i <- [field "id" v]
                                       , w <- maybe [] (mapMaybeString) (asArray =<< lookupKey "warnings" =<< printab v)]
               mapMaybeString = foldr (\x acc -> maybe acc (: acc) (asString x)) []

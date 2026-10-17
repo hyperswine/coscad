@@ -68,9 +68,26 @@ prints a `Note:` to stderr and leaves the file alone; delete it or run
    penalty (tall skinny prints wobble).
    Chosen face, mode, and score are recorded in the manifest for audit.
    Each variant also records `printability` (analysed once, on the oriented
-   mesh): flat bed-contact area, elevated downward-facing local minima, and
-   warnings for small contact or tall narrow geometry. Warnings are printed
-   even for declared orientations, and are the same list as the manifest's.
+   mesh): `bed_contact_mm2`, `first_layer_mm2`, `overhang_mm2`,
+   `min_width_mm`, `elevated_start_heights_mm` and `warnings`. Warnings are
+   printed even for declared orientations, and are the same list as the
+   manifest's. They are:
+   - **small first layer**: the down-facing area within the 0.3 mm
+     first-layer band (projected), below max(25 mm², 0.05·h²). A lying rod
+     has no flat contact but a strip of first layer, and does not warn.
+   - **tall and narrow**: height over the narrowest width of the
+     footprint's convex hull (rotating calipers, so a wall turned 45° is as
+     narrow as it is) above 2.5 + 10/h; short parts get more room.
+   - **flat overhang**: down faces above the first-layer band (the same
+     faces the score penalises), grouped into regions. A region edge is
+     supported where the face beyond it goes down. Area is unsupported if it
+     is more than 2 mm from a supported edge and no line through it meets
+     supported edges on both sides within 30 mm (a bridge). Warns above
+     max(25 mm², 2 % of the surface). A region with no supported edge is an
+     island and is reported as an elevated start instead.
+   - **elevated start**: a downward-facing local minimum above the bed.
+
+   The thresholds live in `PrintabilityConfig` (`defaultPrintabilityConfig`).
    **Bed contact** has one definition, used by both the score and
    `printability.bed_contact_mm2`: the area of down-facing triangles (normal
    within ~26° of straight down) whose three vertices lie within the plane
