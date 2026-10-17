@@ -115,6 +115,7 @@ def main():
                 run([args.compiler, 'next', work / (name + '.assemble')], env)
                 manifest = json.loads((work / (name + '_manifest.json')).read_text())
                 bed = trimesh.load_mesh(work / (name + '_bed1.stl'))
+                assert manifest.get('schema') == 'coscad.next/1', name
                 assert len(manifest['beds']) == 1
                 assert bed.is_volume and len(bed.split()) == count, name
                 assert np.all(bed.bounds[0][:2] >= 5.99) and np.all(bed.bounds[1][:2] <= 250.01)

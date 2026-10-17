@@ -25,6 +25,7 @@ def main():
     ap.add_argument('--geometry-report', type=Path, help='successful parent verify.py report')
     args = ap.parse_args()
     manifest = json.loads((HERE / 'fit-test_manifest.json').read_text())
+    assert manifest.get('schema', 'coscad.next/1') == 'coscad.next/1', 'fit-test_manifest.json must come from `coscad next`'
     assert len(manifest['beds']) == 1
     placements = manifest['beds'][0]['placements']
     assert {p['instance'] for p in placements} == {'cap_1', 'corner_1', 'bar_1', 'fullbar_1'}

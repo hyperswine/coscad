@@ -160,8 +160,8 @@ processNext inputFile = do
                     putStrLn ("Wrote " ++ f ++ " (" ++ show (length placed) ++ " parts)")
                 )
                 (zip [(1 :: Int) ..] beds)
-              writeFileUtf8 (base ++ "_manifest.json") (nextManifest inputFile base (pw, pd, marg) bedZ variants beds asmOnly)
-              putStrLn ("Wrote " ++ base ++ "_manifest.json")
+              writeFileUtf8 (nextManifestPath base) (nextManifest inputFile base (pw, pd, marg) bedZ variants beds asmOnly)
+              putStrLn ("Wrote " ++ nextManifestPath base)
 
 nextManifest ::
   FilePath ->
@@ -175,7 +175,8 @@ nextManifest ::
 nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
   encodePretty $
     jobj
-      [ ("source", JString src)
+      [ ("schema", JString nextSchema)
+      , ("source", JString src)
       , ("bed", jobj [("w", jnum3 pw), ("d", jnum3 pd), ("margin", jnum3 m), ("max_z", jnum3 bedZ)])
       , ("variants", jlist (map vj variants))
       , ("beds", jlist (map bj (zip [(1 :: Int) ..] beds)))
