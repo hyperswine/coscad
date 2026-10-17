@@ -495,6 +495,33 @@ vkey fp = (fpSource fp, maybe "asis" snd (fpDown fp))
 sanitize :: String -> String
 sanitize = map (\c -> if isAlphaNum c then c else '_')
 
+-- | One file-safe name per print variant (distinct source and orientation),
+-- in first-seen order. Both stages name their per-variant artefacts and
+-- manifest ids with these. The historical `part_down` name is kept when it
+-- is unique. Colliding names (the same part name from two sources, e.g. a
+-- `base` in two subassemblies, or names equal after sanitizing) are
+-- qualified by the assembly trail, then numbered; the result is unique.
+variantNames :: [FlatPart] -> [(VKey, String)]
+variantNames printable = zip keys (unique (zipWith pick plain qualified))
+  where
+    keys = foldl' (\acc fp -> if vkey fp `elem` acc then acc else acc ++ [vkey fp]) [] printable
+    firsts = [fp | k <- keys, fp <- take 1 [f | f <- printable, vkey f == k]]
+    downOf = maybe "asis" snd . fpDown
+    plain = [sanitize (fpName fp ++ "_" ++ downOf fp) | fp <- firsts]
+    qualified = [sanitize (intercalate "_" (fpTrail fp ++ [fpName fp, downOf fp])) | fp <- firsts]
+    occurrences xs x = length (filter (== x) xs)
+    pick p q = if occurrences plain p > 1 then q else p
+    -- Number whatever still collides, skipping numbered names that are taken.
+    unique names = reverse (foldl' step [] names)
+      where
+        step used n
+          | occurrences names n == 1 = n : used
+          | otherwise = free (1 :: Int) : used
+          where
+            free i =
+              let c = n ++ "_" ++ show i
+               in if c `elem` used || c `elem` names then free (i + 1) else c
+
 instId :: FlatPart -> Int -> String
 instId fp i = intercalate "/" (fpTrail fp ++ [fpName fp]) ++ "_" ++ show i
 
@@ -604,14 +631,15 @@ processAssemble inputFile = do
           writeScad s (base ++ "_asm.scad")
           putStrLn ("Wrote " ++ base ++ "_asm.scad")
         Nothing -> putStrLn "(no 'asm' defined; skipping assembled view)"
-      let vkeys = foldl' (\acc fp -> if vkey fp `elem` acc then acc else acc ++ [vkey fp]) [] printable
+      let names = variantNames printable
+          vkeys = map fst names
           mkVariant k =
             let fp = head [f | f <- printable, vkey f == k]
                 oriented = resolve (orientForBed (fpDown fp) (fpShape fp))
                 (lo, hi) = bbox oriented
                 norm = Translate (vneg lo) oriented
                 dims = vsub hi lo
-                vname = sanitize (fpName fp ++ "_" ++ maybe "asis" snd (fpDown fp))
+                vname = maybe (sanitize (fpName fp)) id (lookup k names)
              in (k, fp, norm, dims, vname)
           variants = map mkVariant vkeys
       mapM_

@@ -11,7 +11,6 @@ import Coscad.Json
 import Coscad.Mesh
 import Coscad.OpenScad (renderStlFile)
 import Coscad.Printability
-import Data.List (foldl')
 import Control.Monad (when)
 import System.Exit (exitFailure)
 import System.FilePath (dropExtension)
@@ -114,7 +113,8 @@ processNext inputFile = do
           bedZ = 250 -- default max print height; TODO: plate stmt 4th arg
           printable = [fp | fp <- arFlat ar, fpCount fp > 0]
           asmOnly = [fp | fp <- arFlat ar, fpCount fp <= 0]
-          vkeys = foldl' (\acc fp -> if vkey fp `elem` acc then acc else acc ++ [vkey fp]) [] printable
+          names = variantNames printable
+          vkeys = map fst names
       when (null printable) $ do
         hPutStrLn stderr ("Error: " ++ inputFile ++ ": nothing to print: every part is ×0 (assembly-only) or no part is declared")
         exitFailure
@@ -122,7 +122,7 @@ processNext inputFile = do
       variantsE <- mapM
         ( \k -> do
             let fp = head [f | f <- printable, vkey f == k]
-                vname = sanitize (fpName fp ++ "_" ++ maybe "asis" snd (fpDown fp))
+                vname = maybe (sanitize (fpName fp)) id (lookup k names)
                 scadF = base ++ "_next_" ++ vname ++ ".scad"
                 stlF = base ++ "_next_" ++ vname ++ ".stl"
             writeScad (resolve (fpShape fp)) scadF
