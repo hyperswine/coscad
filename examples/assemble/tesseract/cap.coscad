@@ -23,7 +23,9 @@ fit = 0.03
 pin_r = 1.65 + fit
 pin = (zcyl pin_r 2.9 |> move 0 0 1.25) ⊖ (box 0.7 4 3 |> move 0 0 2)
 locking_pin = pin |> roty d |> rotz 45 |> move 7 7 7
-// Flat outer diagonal print foot; orient its outward -111 face down.
-outer_trim = positive |> move -6 -6 -6
+// Clip the outer tip at x+y+z=9: about 69.7 mm² of flat bed contact,
+// versus 7.4 mm² at the old x+y+z=3 cut. Keep the -111 face down so
+// the locking pin still prints vertically. Mating surfaces are unchanged.
+outer_trim = positive |> move -4 -4 -4
 main = (((blank ⊖ positive) ∩ outer_trim) ⊕ locking_pin) ⊖ sockets
   |> frame lock ctr rt+bak+top top 1 1 1

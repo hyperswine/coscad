@@ -32,15 +32,22 @@ for the instruction planner; it does not add a separate manufactured part.
   checks. The unsupported intermediate skeleton is not a bench-stable build
   sequence, so use the supported assembly above to generate instructions.
 - `examples/assemble/tesseract/fit-test.assemble`: one base, one cap and one
-  short bar end. Print these three pieces first.
+  short bar end; the original three-piece coupon.
+- `examples/assemble/tesseract/adhesion-retry/fit-test.assemble`: the current
+  four-piece trial, adding one full-length bar and an explicit A1 slicing
+  profile. Use this before a full build; see its README for the saved print.
 
 The support is 35 mm tall, with four posts under the inner cube. The corner
 halves print with their outer diagonal face down; the cap's outer tip is
-trimmed to give it a flat foot. `next` uses real mesh bounds when putting
+trimmed at x+y+z=9 to give it about 69.7 mm² of flat contact (the original
+x+y+z=3 trim had only 7.4 mm²). The pin still prints vertically. `next` uses real mesh bounds when putting
 these diagonal faces on the bed. Full-length bars print lying down, and the diagonal
 struts retain a flat underside. The short fit-test bar stands on its broad
 end so its integral collar prints upward without an isolated first layer.
-Inspect the slicer support preview before printing the full-length bars.
+The full-length bars require local slicer supports beneath their end collars:
+the collars start 0.8 mm above the bed and their necks start at 1.4 mm.
+The upright short coupon does not test this. The retry explicitly enables
+snug supports and an 8 mm brim, and verifies the resulting toolpaths.
 
 The supported build contains eight bases, eight caps, twelve bars, eight
 struts, one inner cube and one removable support. Use the same filament and
@@ -96,7 +103,10 @@ flexible-material simulation.
 The [verification report](reviews/2026-10-13-tesseract-interlock.md) records
 748 compiler checks, 4,629 sampled motion positions and the one-bed meshes.
 
-No physical print, cap pull-off test or long-term creep test has been run.
+The original A1 coupon lost bed adhesion on subsequent layers; the center
+base initially adhered, while the side cap and short bar failed. The revised
+four-piece retry is prepared offline pending restoration of the home network.
+No successful revised print, cap pull-off test or long-term creep test has been run.
 The split pin and its fit are the remaining practical uncertainty. This is a
 display model; its captured bars should not be treated as a rated structural
 connection. Avoid repeated forced disassembly until the fit test establishes

@@ -39,7 +39,7 @@ examples/assemble/tesseract/bolted/bar.coscad 2480.871 -36.750 -3.000 -3.000 36.
 examples/assemble/tesseract/bolted/corner.coscad 5286.706 0.000 0.000 0.000 19.000 19.000 19.000
 examples/assemble/tesseract/bolted/inner.coscad 24263.663 -15.000 -15.000 -15.000 15.000 15.000 15.000
 examples/assemble/tesseract/bolted/strut.coscad 772.930 -23.000 -2.495 -1.500 23.000 2.495 2.500
-examples/assemble/tesseract/cap.coscad 1133.302 0.000 0.000 0.000 12.000 12.000 12.000
+examples/assemble/tesseract/cap.coscad 1017.742 0.000 0.000 0.000 12.000 12.000 12.000
 examples/assemble/tesseract/corner.coscad 331.751 0.000 0.000 0.000 12.000 12.000 12.000
 examples/assemble/tesseract/inner.coscad 24263.663 -15.000 -15.000 -15.000 15.000 15.000 15.000
 examples/assemble/tesseract/jig.coscad 2540.000 -13.000 -13.000 0.000 13.000 13.000 35.000

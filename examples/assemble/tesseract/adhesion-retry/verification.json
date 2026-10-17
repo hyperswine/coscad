@@ -1,0 +1,65 @@
+{
+  "verified_at": "2026-10-17T07:08:37.119370+11:00",
+  "verdict": "offline preflight passed; physical print pending",
+  "artifact": "fit-test_bed1.gcode.3mf",
+  "sha256": "fff58e348fa101461d7c03d5da79cf8f591551695e40832396e379a76d1a9ecb",
+  "bed_stl_sha256": "7547ab0e91675ab71877afe17b9109bdeb7254561a5b884c02097c31f14e0f91",
+  "measured_parts": {
+    "fullbar_1": {
+      "bed_contact_mm2": 466.23989501953474,
+      "size_mm": [
+        81.5999984741211,
+        7.0,
+        7.0
+      ]
+    },
+    "cap_1": {
+      "bed_contact_mm2": 69.73236630559255,
+      "size_mm": [
+        17.832348510122515,
+        17.832348510122518,
+        9.62820342270459
+      ]
+    },
+    "corner_1": {
+      "bed_contact_mm2": 103.27075676174333,
+      "size_mm": [
+        16.520475751072723,
+        16.52047575107273,
+        6.334427889483832
+      ]
+    },
+    "bar_1": {
+      "bed_contact_mm2": 38.43998580932748,
+      "size_mm": [
+        7.0,
+        7.0,
+        18.799999237060547
+      ]
+    }
+  },
+  "first_layer_extruding_moves_by_feature": {
+    "Support": 127,
+    "Support interface": 17,
+    "Brim": 3556,
+    "Outer wall": 71,
+    "Inner wall": 54,
+    "Bottom surface": 346,
+    "Gap infill": 25
+  },
+  "physical_print_attempted": false,
+  "physical_fit_tested": false,
+  "assembly_geometry": {
+    "parts": 38,
+    "unintended_overlap_mm3": 1.0565316114677833e-05,
+    "sampled_positions": 4629,
+    "spacing_mm": 0.1,
+    "nominal_press_interference_mm3": 0.46920814176348574,
+    "retained_bar_interference_mm3": {
+      "bar1": 0.6275179282266201,
+      "bar5": 0.6275178631582083,
+      "bar9": 0.6275178699864767
+    },
+    "physical_fit_tested": false
+  }
+}

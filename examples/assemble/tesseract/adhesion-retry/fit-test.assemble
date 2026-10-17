@@ -1,0 +1,11 @@
+// Repeat the failed joint coupon with a broader cap foot and explicit brim.
+// The extra full-length bar checks its collars with slicer supports enabled.
+plate 256 256 12
+corner ← ../corner.coscad ×1 ▽lft+fwd+bot
+cap ← ../cap.coscad ×1 ▽lft+fwd+bot
+bar ← ../test-bar.coscad ×1 ▽rt
+fullbar ← ../bar.coscad ×1 ▽fwd
+fixed corner 0 0 0 0 0 0
+mate cap @lock corner @lock
+mate bar @end corner @bar_socket_bar1
+fixed fullbar 100 0 0 0 0 0

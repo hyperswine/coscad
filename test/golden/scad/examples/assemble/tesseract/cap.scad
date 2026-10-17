@@ -17,7 +17,7 @@ difference() {
           }
         }
       }
-      translate([-6, -6, -6]) {
+      translate([-4, -4, -4]) {
         translate([7, 7, 7]) {
           rotate([0, 0, 45]) {
             rotate([0, 54.735610317, 0]) {
