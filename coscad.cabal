@@ -28,6 +28,7 @@ library
       Coscad.Dim
       Coscad.Doctor
       Coscad.Dsl
+      Coscad.Format
       Coscad.Geometry
       Coscad.IO
       Coscad.Json

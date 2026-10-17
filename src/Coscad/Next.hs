@@ -58,27 +58,66 @@ faceCandidates =
   , ((0, 1, 0), "bak")
   ]
 
+-- | The terms of the FFF orientation score for a mesh already rotated
+-- into a candidate orientation (areas in mm², height in mm).
+data FffTerms = FffTerms
+  { fffContact :: Double -- ^ 'bedContact', the same number the manifest reports
+  , fffOverhang :: Double -- ^ down faces starting above the first-layer band
+  , fffTotal :: Double -- ^ total surface area
+  , fffHeight :: Double
+  , fffMaxDim :: Double
+  , fffSlender :: Double -- ^ height over the narrower footprint side
+  }
+  deriving (Show)
+
+-- | A down face that starts within this band above the bed is squashed
+-- onto it by the first layer rather than needing support, so it is not
+-- an overhang. It is deliberately not the contact tolerance: a face 0.2 mm
+-- up does not hold the part down.
+firstLayerBand :: Double
+firstLayerBand = 0.3
+
+fffTerms :: [Tri] -> FffTerms
+fffTerms tris =
+  let ((x0, y0, z0), (x1, y1, z1)) = meshBounds tris
+      h = z1 - z0
+      verts (a, b, c) = [a, b, c]
+      -- only near-horizontal downward faces need support; curved
+      -- flanks of lying cylinders (45-65 deg) self-support in FFF
+      overhang = sum [triArea t | t <- tris, downFacing t, minimum [z | (_, _, z) <- verts t] > z0 + firstLayerBand]
+   in FffTerms
+        { fffContact = bedContact (planeTolerance tris) tris
+        , fffOverhang = overhang
+        , fffTotal = max 1e-9 (sum (map triArea tris))
+        , fffHeight = h
+        , fffMaxDim = maximum [x1 - x0, y1 - y0, h, 1]
+        , fffSlender = h / max 1 (min (x1 - x0) (y1 - y0))
+        }
+
 -- | FFF orientation score for a mesh already rotated into a
 -- candidate orientation. Higher is better; Nothing = exceeds bed Z.
 fffScore :: Double -> [Tri] -> Maybe Double
 fffScore maxZ tris =
-  let ((x0, y0, z0), (x1, y1, z1)) = meshBounds tris
-      h = z1 - z0
-      maxdim = maximum [x1 - x0, y1 - y0, h, 1]
-      eps = 0.3
-      stats = [(triNormal t, triArea t, minimum [z | (_, _, z) <- verts t], maximum [z | (_, _, z) <- verts t]) | t <- tris]
-      verts (a, b, c) = [a, b, c]
-      total = max 1e-9 (sum [a | (_, a, _, _) <- stats])
-      contact = sum [a | ((_, _, nz), a, _, mxz) <- stats, nz < -0.9, mxz < z0 + eps]
-      -- only near-horizontal downward faces need support; curved
-      -- flanks of lying cylinders (45-65 deg) self-support in FFF
-      overhang = sum [a | ((_, _, nz), a, mnz, _) <- stats, nz < -0.9, mnz > z0 + eps]
+  let FffTerms contact overhang total h maxdim slender = fffTerms tris
       -- stability: punish tall skinny prints (wobble, layer-shear)
-      slender = h / max 1 (min (x1 - x0) (y1 - y0))
       wobble = 0.1 * max 0 (slender - 2)
    in if h > maxZ
         then Nothing
         else Just (contact / total - 3 * overhang / total - 0.3 * h / maxdim - wobble)
+
+-- | One print variant after orientation: its mesh at the origin, chosen
+-- face and score, and its printability analysed once.
+data Variant = Variant
+  { vKey :: VKey
+  , vPart :: FlatPart
+  , vMesh :: [Tri]
+  , vDims :: (Double, Double, Double)
+  , vName :: String
+  , vDown :: String
+  , vMode :: String
+  , vScore :: Double
+  , vPrint :: Printability
+  }
 
 -- | Choose orientation: declared ▽ wins; otherwise best FFF score.
 -- Returns (rotation matrix, chosen face label, mode, score).
@@ -137,17 +176,17 @@ processNext inputFile = do
                         (lo, hi) = meshBounds rot
                         norm = meshMap (\v -> vsub v lo) rot
                         dims = vsub hi lo
-                    return (Right (k, fp, norm, dims, vname, lbl, mode, sc))
+                    return (Right (Variant k fp norm dims vname lbl mode sc (analysePrintability norm)))
         )
         vkeys
       case sequence variantsE of
         Left err -> hPutStrLn stderr ("Error: " ++ err) >> exitFailure
         Right variants -> do
-          mapM_ (\(_, _, tris, _, name, _, _, _) ->
-            mapM_ (hPutStrLn stderr . (("Warning: " ++ name ++ ": ") ++))
-              (printabilityWarnings (analysePrintability tris))) variants
-          let footOf k = head [(w, d) | (k', _, _, (w, d, _), _, _, _, _) <- variants, k' == k]
-              meshOf k = head [n | (k', _, n, _, _, _, _, _) <- variants, k' == k]
+          mapM_ (\v ->
+            mapM_ (hPutStrLn stderr . (("Warning: " ++ vName v ++ ": ") ++))
+              (printabilityWarnings (vPrint v))) variants
+          let footOf k = head [(w, d) | v <- variants, vKey v == k, let (w, d, _) = vDims v]
+              meshOf k = head [vMesh v | v <- variants, vKey v == k]
               instances = [(instId fp i, vkey fp) | fp <- printable, i <- [1 .. fpCount fp]]
           case packBeds (pw, pd, marg) [(iid, k, footOf k) | (iid, k) <- instances] of
             Left err -> hPutStrLn stderr ("Error: " ++ err) >> exitFailure
@@ -168,7 +207,7 @@ nextManifest ::
   String ->
   (Double, Double, Double) ->
   Double ->
-  [(VKey, FlatPart, [Tri], (Double, Double, Double), String, String, String, Double)] ->
+  [Variant] ->
   [[(String, VKey, (Double, Double), (Double, Double))]] ->
   [FlatPart] ->
   String
@@ -183,7 +222,7 @@ nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
       , ("assembly_only", jlist (map aj asmOnly))
       ]
   where
-    vj ((srcf, _), fp, tris, (w, d, h), vname, lbl, mode, sc) =
+    vj (Variant (srcf, _) fp _ (w, d, h) vname lbl mode sc p) =
       jobj
         [ ("id", JString vname)
         , ("part", JString (fpName fp))
@@ -191,7 +230,7 @@ nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
         , ("down", JString lbl)
         , ("orientation_mode", JString mode)
         , ("fff_score", jnum3 sc)
-        , ("printability", let p = analysePrintability tris in jobj
+        , ("printability", jobj
             [("bed_contact_mm2", jnum3 (bedContactMm2 p))
             ,("elevated_start_heights_mm", jlist (map jnum3 (elevatedStartsMm p)))
             ,("warnings", jlist (map JString (printabilityWarnings p)))])
@@ -207,5 +246,5 @@ nextManifest src base (pw, pd, m) bedZ variants beds asmOnly =
         ]
     pj (iid, k, (w, d), (x, y)) =
       jobj [("instance", JString iid), ("variant", JString (vn k)), ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d)]
-    vn k = head [vname | (k', _, _, _, vname, _, _, _) <- variants, k' == k]
+    vn k = head [vName v | v <- variants, vKey v == k]
     aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]
