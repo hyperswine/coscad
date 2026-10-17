@@ -21,7 +21,7 @@ module Main (main) where
 
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
-import Coscad.Assemble (AsmResult (..), FlatPart (..), loadAssembleFile, packBeds, processAssemble, resolveAssembly)
+import Coscad.Assemble (AsmResult (..), FlatPart (..), loadAssembleFile, packBeds, processAssemble, resolveAssembly, variantNames)
 import Coscad.Check (processCheckIn, processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
 import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3, vlen, vsub, scale3, vadd, vmul, rodMat, mirrorMat)
@@ -1271,6 +1271,21 @@ geometry t update bin = do
       assertT t (printf "coscad next: placements inside the %.0fx%.0f bed with %.0fmm margin, on z=0" pw pd marg)
         (x0 >= marg - 1e-6 && y0 >= marg - 1e-6 && x1 <= pw - marg + 1e-6 && y1 <= pd - marg + 1e-6 && abs z0 < 1e-6)
         (show (meshBounds bed, pw, pd, marg))
+  collisions <- tempDir "variant-collisions"
+  writeVariantCollisions collisions
+  forM_ [("top", [1000, 27000]), ("alike", [125, 729])] $ \(asm, volumes) -> do
+    rv <- try (processNext (collisions </> asm <.> "assemble")) :: IO (Either SomeException ())
+    case rv of
+      Left e -> failT t ("coscad next " ++ asm ++ ": distinct variants") (show e)
+      Right () -> do
+        m <- manifestVariants "mesh" <$> readFile (collisions </> asm ++ "_manifest.json")
+        case m of
+          Left e -> failT t ("coscad next " ++ asm ++ ": manifest") e
+          Right vs@(_, meshes, _) -> do
+            assertT t ("coscad next " ++ asm ++ ": distinct variant ids, meshes and placements") (distinctVariants vs) (show vs)
+            got <- mapM (fmap meshVolume . readStl) meshes
+            assertT t ("coscad next " ++ asm ++ ": each variant mesh is its own part, not overwritten")
+              (length got == length volumes && and (zipWith (\g w -> abs (g - w) < 1e-6 * w) got volumes)) (show (meshes, got))
   rc <- try (processCheckWith False (bow </> "bow3.assemble")) :: IO (Either SomeException ())
   assertT t "coscad check bow3: no overlaps" (either (const False) (const True) rc) (either show (const "") rc)
   leftovers <- filter ("chk" `isInfixOf`) <$> listDirectory bow
@@ -1425,6 +1440,14 @@ cliTier t = do
       assertT t "missing file: exit 1, Error: on stderr, nothing on stdout" (c2 == ExitFailure 1 && "Error: " `isPrefixOf` e2 && "not found" `isInfixOf` e2 && null o2) (show (c2, o2, e2))
       (c2v, o2v, e2v) <- run ["validate", dir </> "missing.coscad"]
       assertT t "validate missing file: exit 1, Error: on stderr" (c2v == ExitFailure 1 && "Error: " `isPrefixOf` e2v && "not found" `isInfixOf` e2v && null o2v) (show (c2v, o2v, e2v))
+      let variantsDir = dir </> "variants"
+      writeVariantCollisions variantsDir
+      (cv, _, ev) <- run [variantsDir </> "top.assemble"]
+      design <- manifestVariants "scad" <$> readFile (variantsDir </> "top_manifest.json")
+      scads <- mapM (doesFileExist . (variantsDir </>)) ["top_part_a_base_asis.scad", "top_part_b_base_asis.scad"]
+      assertT t "design stage: same part name in two subassemblies gets two variant ids and scads"
+        (cv == ExitSuccess && and scads && design == Right (["a_base_asis", "b_base_asis"], ["top_part_a_base_asis.scad", "top_part_b_base_asis.scad"], ["b_base_asis", "a_base_asis"]))
+        (show (cv, ev, design))
       writeFile (dir </> "ok.coscad") "r = 5\nmain = ● r\n"
       (c3, o3, e3) <- run ["validate", dir </> "ok.coscad"]
       assertT t "validate good part: exit 0, Valid part, empty stderr" (c3 == ExitSuccess && o3 == "Valid part\n" && null e3) (show (c3, o3, e3))
@@ -1509,6 +1532,59 @@ printabilityTier t = do
   assertT t "printability: empty input has no invented starts"
     (bedContactMm2 (analysePrintability []) == 0 && null (elevatedStartsMm (analysePrintability []))) ""
 
+-- ------------------------------------------------------------------
+-- variant names: one id and one artefact per (source, orientation)
+
+variantNameTier :: T -> IO ()
+variantNameTier t = do
+  section "variant names"
+  let fp trail n src down = FlatPart trail n src 1 down [] Empty
+      lf = Just ((-1, 0, -1), "lft+fwd")
+      fw = Just ((0, -1, 0), "fwd")
+      names = map snd . variantNames
+  assertT t "variant names: a unique part keeps its historical name"
+    (names [fp [] "bar" "bar.coscad" fw] == ["bar_fwd"]) ""
+  assertT t "variant names: one source used twice is one variant"
+    (names [fp ["a"] "base" "s/base.coscad" Nothing, fp ["b"] "base" "s/base.coscad" Nothing] == ["base_asis"]) ""
+  let nested = names [fp ["a"] "base" "s1/base.coscad" Nothing, fp ["b"] "base" "s2/base.coscad" Nothing]
+  assertT t "variant names: the same part name from two sources is qualified by its trail"
+    (nested == ["a_base_asis", "b_base_asis"]) (show nested)
+  let sanitized = names [fp [] "p_lft" "p.coscad" fw, fp [] "p" "q.coscad" lf]
+  assertT t "variant names: names equal after sanitizing are numbered apart"
+    (sanitized == ["p_lft_fwd_1", "p_lft_fwd_2"]) (show sanitized)
+  let mixed = names [fp [] "base" "x/base.coscad" Nothing, fp ["a"] "base" "s1/base.coscad" Nothing, fp ["b"] "base" "s2/base.coscad" Nothing, fp [] "p_lft" "p.coscad" fw, fp [] "p" "q.coscad" lf]
+  assertT t "variant names: every name is distinct"
+    (length mixed == 5 && and [length (filter (== n) mixed) == 1 | n <- mixed]) (show mixed)
+
+-- | Two subassemblies that each declare `base`, from different sources,
+-- plus two top-level names that sanitize alike (p_lft ▽fwd, p ▽lft+fwd).
+writeVariantCollisions :: FilePath -> IO ()
+writeVariantCollisions dir = do
+  forM_ [("s1", 10 :: Int), ("s2", 30)] $ \(sub, size) -> do
+    createDirectoryIfMissing True (dir </> sub)
+    writeFile (dir </> sub </> "base.coscad") ("main = box " ++ unwords (replicate 3 (show size)) ++ "\n")
+    writeFile (dir </> sub </> "sub.assemble") "base ← base.coscad ×1\nasm = base\n"
+  writeFile (dir </> "top.assemble") "a ← s1/sub.assemble ×1\nb ← s2/sub.assemble ×1\nasm = a ⊕ χ 50 b\n"
+  writeFile (dir </> "p.coscad") "main = box 5 5 5\n"
+  writeFile (dir </> "q.coscad") "main = box 9 9 9\n"
+  writeFile (dir </> "alike.assemble") "p_lft ← p.coscad ×1 ▽fwd\np ← q.coscad ×1 ▽lft+fwd\nasm = p_lft ⊕ χ 20 p\n"
+
+-- | Variant ids, their artefact paths, and the variant each placement names.
+manifestVariants :: String -> String -> Either String ([String], [String], [String])
+manifestVariants artefact json = do
+  v <- decode json
+  let arr k x = maybe [] id (asArray =<< lookupKey k x)
+      str k x = maybe "" id (asString =<< lookupKey k x)
+      variants = arr "variants" v
+      placements = arr "placements" v ++ concatMap (arr "placements") (arr "beds" v)
+  return (map (str "id") variants, map (str artefact) variants, map (str "variant") placements)
+
+distinctVariants :: ([String], [String], [String]) -> Bool
+distinctVariants (ids, paths, used) =
+  allDistinct ids && allDistinct paths && all (\u -> length (filter (== u) ids) == 1) used && not (null used)
+  where
+    allDistinct xs = and [length (filter (== x) xs) == 1 | x <- xs]
+
 goldenMergeTier :: T -> IO ()
 goldenMergeTier t = do
   let geo v = (v, (0, 0, 0), (1, 1, 1)) :: Geo
@@ -1533,6 +1609,7 @@ main = do
   diagnostics t
   remainingDiagnostics t
   printabilityTier t
+  variantNameTier t
   goldenMergeTier t
   topologyTier t
   frameTier t
