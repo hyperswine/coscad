@@ -198,9 +198,50 @@ def lan_print(threemf, name, spool="external"):
         sys.exit(1)
 
 
+NEXT_SCHEMA = "coscad.next/1"
+DESIGN_SCHEMA = "coscad.design/1"
+
+
+def manifest_base(path):
+    """`<base>` for `<base>_manifest.json`; other names drop only the extension."""
+    return path[: -len("_manifest.json")] if path.endswith("_manifest.json") else os.path.splitext(path)[0]
+
+
+def check_manifest(m, path):
+    """Accept a `coscad next` manifest; refuse anything else with a fix.
+
+    Manifests written before schemas existed (coscad 1.2 and earlier) carry
+    no `schema`: one with `beds` is a manufacturing manifest and is accepted;
+    one with a `plate` is the old design-stage output that shared the
+    `_manifest.json` name.
+    """
+    if not isinstance(m, dict):
+        raise ValueError(f"{path}: not a coscad manifest (expected a JSON object)")
+    stem = path[: -len("_design.json")] if path.endswith("_design.json") else manifest_base(path)
+    src = m.get("source") or stem + ".assemble"
+    rerun = f"run `coscad next {src}` and slice the {os.path.basename(stem)}_manifest.json it writes"
+    schema = m.get("schema")
+    if schema == NEXT_SCHEMA:
+        if not isinstance(m.get("beds"), list):
+            raise ValueError(f"{path}: {NEXT_SCHEMA} manifest has no beds list")
+        return
+    if schema == DESIGN_SCHEMA:
+        raise ValueError(f"{path} is a design-stage manifest ({DESIGN_SCHEMA}) with plates, not print beds: {rerun}")
+    if isinstance(schema, str) and schema.startswith("coscad.next/"):
+        raise ValueError(f"{path}: manifest schema {schema} is newer than this script understands ({NEXT_SCHEMA}); update scripts/bambu-slice.py")
+    if schema is not None:
+        raise ValueError(f"{path}: unknown manifest schema {schema!r}; expected {NEXT_SCHEMA} from `coscad next`")
+    if isinstance(m.get("beds"), list):
+        return
+    if "plate" in m:
+        raise ValueError(f"{path} is a design-stage manifest from coscad 1.2 or earlier, when the design stage also wrote "
+                         f"<base>_manifest.json (it now writes <base>_design.json): {rerun}")
+    raise ValueError(f"{path} has no beds: {rerun}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("manifest", help="<base>_manifest.json written by `coscad next`")
+    ap.add_argument("manifest", help="<base>_manifest.json written by `coscad next` (schema coscad.next/1)")
     ap.add_argument("--printer", default="Bambu Lab A1 0.4 nozzle", help="machine preset name")
     ap.add_argument("--process", default=None, help="process preset (default: the printer's default profile)")
     ap.add_argument("--process-overrides", help="JSON file of explicit changes to the flattened process preset")
@@ -214,12 +255,14 @@ def main():
     a = ap.parse_args()
     spool_mapping(a.spool)
 
+    try:
+        m = json.load(open(a.manifest))
+        check_manifest(m, a.manifest)
+    except (OSError, ValueError) as error:
+        sys.exit(f"error: {error}")
     if not os.path.exists(APP):
         sys.exit(f"Bambu Studio not found at {APP} (set BAMBU_STUDIO)")
-    m = json.load(open(a.manifest))
-    if "beds" not in m:
-        sys.exit("this manifest has no beds: run `coscad next` first")
-    base = a.manifest[: -len("_manifest.json")] if a.manifest.endswith("_manifest.json") else os.path.splitext(a.manifest)[0]
+    base = manifest_base(a.manifest)
     outdir = os.path.dirname(os.path.abspath(a.manifest))
     machine = flatten("machine", a.printer)
     process = a.process or machine.get("default_print_profile")

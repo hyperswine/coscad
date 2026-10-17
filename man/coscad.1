@@ -85,8 +85,14 @@ one print-oriented
 .Pa spec_part_<variant>.scad
 per unique (part, orientation), the packed plate(s)
 .Pq Pa spec_plate.scad , or Pa spec_plate1.scad , Pa spec_plate2.scad ... ,
-and
-.Pa spec_manifest.json .
+and the design manifest
+.Pa spec_design.json
+(schema
+.Li coscad.design/1 ) .
+It never writes
+.Pa spec_manifest.json ;
+if it finds a design manifest left there by coscad 1.2 or earlier it prints a
+note to standard error and leaves the file in place.
 .It Nm Cm next Ar spec.assemble
 Manufacturing stage.
 Renders each variant once, chooses a print orientation where none was
@@ -94,7 +100,11 @@ declared (scoring bed contact, overhang, height, and slenderness on the real
 mesh), packs instances largest-first across as many beds as needed, and
 writes
 .Pa spec_bed<N>.stl
-plus a manifest recording per-variant orientation and per-instance
+plus
+.Pa spec_manifest.json
+(schema
+.Li coscad.next/1 ) ,
+recording per-variant orientation and printability and per-instance
 placements for slice-once, stamp-many slicing.
 .It Nm Cm check Ar spec.assemble Op Fl -keep-temp
 Interference and clearance check on real meshes.

@@ -22,9 +22,35 @@ asm = center ⊕ (larch |> move 55 -13 -7) ⊕ ...
 - Running `coscad foo.assemble` emits: `foo_asm.scad` (view),
   `foo_plate.scad` (packed check; `foo_plate1.scad`, `foo_plate2.scad`,
   ... when the parts need more than one plate), `foo_part_<variant>.scad`
-  (print-oriented, at origin), and `foo_manifest.json` (each placement
-  carries its `plate` index). A part whose footprint exceeds the plate
-  is an error naming the part and the plate.
+  (print-oriented, at origin), and `foo_design.json` (schema
+  `coscad.design/1`; each placement carries its `plate` index). A part
+  whose footprint exceeds the plate is an error naming the part and the
+  plate.
+
+## Manifests
+
+The two stages write different files with different shapes, and each
+carries a `schema` field so a consumer can tell them apart before reading
+anything else:
+
+| file                | written by           | `schema`          | shape                                   |
+|---------------------|----------------------|-------------------|-----------------------------------------|
+| `foo_design.json`   | `coscad foo.assemble`| `coscad.design/1` | `plate`, `variants`, `placements`       |
+| `foo_manifest.json` | `coscad next`        | `coscad.next/1`   | `bed`, `variants` (+`printability`), `beds` |
+
+`scripts/bambu-slice.py` accepts only `coscad.next/1` (and manifests with
+`beds` but no `schema`, from coscad 1.2 and earlier). It refuses a design
+manifest, or a newer `coscad.next/N`, with the command to run instead.
+
+**Migrating from 1.2.** The design stage used to write
+`foo_manifest.json` too, so running `coscad foo.assemble` after `coscad
+next` silently replaced the print manifest with one the slicer could not
+use. Now the design stage writes `foo_design.json` and never touches
+`foo_manifest.json`. If it finds an old design manifest under that name it
+prints a `Note:` to stderr and leaves the file alone; delete it or run
+`coscad next`. Scripts that read the design manifest should read
+`foo_design.json`; scripts that read the print manifest keep reading
+`foo_manifest.json` and may check `schema == "coscad.next/1"`.
 
 ## coscad next (manufacturing stage)
 
@@ -130,9 +156,9 @@ hemisphere shells and a core disc with two captive M5 hex nuts. The whole
 chain is
 
 ```
-coscad ball.assemble                     # views, plate, manifest
+coscad ball.assemble                     # views, plate, ball_design.json
 coscad check ball.assemble               # 0 overlaps, 0.17 mm gap shell/core
-coscad next ball.assemble                # ball_bed1.stl: 3 parts on one bed
+coscad next ball.assemble                # ball_bed1.stl: 3 parts on one bed, ball_manifest.json
 coscad plan --png ball.assemble          # 3 steps, 2 flips, hex-nut preload
 scripts/bambu-slice.py ball_manifest.json   # ball_bed1.gcode.3mf, 43 min, 17.6 g PLA
 ```

@@ -8,8 +8,8 @@ computed here so the emitted OpenSCAD (and the downstream slicer) stay dumb.
 
 ```
 .coscad  ──compile──▶  .scad ──openscad──▶ .stl        (one part)
-.assemble ─coscad───▶  asm view + plate + manifest      (design stage)
-.assemble ─coscad next▶ bedN.stl + manifest             (manufacturing)
+.assemble ─coscad───▶  asm view + plate + _design.json  (design stage)
+.assemble ─coscad next▶ bedN.stl + _manifest.json       (manufacturing)
 manifest  ─bambu-slice▶ bedN.gcode.3mf → printer        (scripts/bambu-slice.py)
 ```
 
@@ -79,8 +79,8 @@ coscad part.coscad           # -> part.scad
 coscad validate part.coscad # source checks, no output files
 coscad validate model.assemble # source + rigid constraint checks
 coscad stl part.coscad       # -> part.scad + part.stl, prints volume + bounds
-coscad frame.assemble        # -> _asm view, packed _plate(N) scads, manifest
-coscad next frame.assemble   # -> frame_bed1.stl ... + manifest
+coscad frame.assemble        # -> _asm view, packed _plate(N) scads, frame_design.json
+coscad next frame.assemble   # -> frame_bed1.stl ... + frame_manifest.json
 coscad check frame.assemble  # interference / clearance check on real meshes
 coscad plan frame.assemble   # numbered build steps, preload sheet, BOM, step scenes
 coscad site out/ *.assemble  # phone-first static site: step images, search across builds
@@ -158,7 +158,8 @@ A line starting with `|>` continues the previous definition.
 - **Manufacturing**: `coscad next` compiles each unique
   (part, orientation) variant once, searches FFF print orientation
   where undeclared, packs beds largest-first with spill, and emits
-  per-bed STLs plus a variants+placements manifest for slice-once /
+  per-bed STLs plus a variants+placements manifest (`foo_manifest.json`,
+  schema `coscad.next/1`) for slice-once /
   stamp-many slicing; `coscad check` verifies fits on the real meshes.
   See docs/MANUFACTURING.md.
 

@@ -152,8 +152,8 @@ asm = bracket ⊕ (corner |> move (55 + gap) -13 -7) ⊕ rail
 ```bash
 coscad part.coscad [-o part.scad]     # compile
 coscad stl part.coscad [-o part.stl]  # compile + render, prints volume and bounds
-coscad frame.assemble                 # design stage: view, plate(s), manifest
-coscad next frame.assemble            # manufacturing: beds + manifest
+coscad frame.assemble                 # design stage: view, plate(s), frame_design.json
+coscad next frame.assemble            # manufacturing: beds + frame_manifest.json
 coscad check frame.assemble           # interference / clearance on real meshes
 coscad plan frame.assemble [--png]    # numbered build steps, preload sheet, BOM, step scenes
 coscad doctor                         # verify OpenSCAD + BOSL2 + a test render
