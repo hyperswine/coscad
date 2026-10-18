@@ -389,11 +389,11 @@ an A1 mini).
 never stands a part on a face taller than that, and exits 2 when a declared
 .Ql ▽
 or every face is too tall; the design stage only warns.
-The packer turns parts 90\(de about Z when that saves a shelf or a plate
+The packer keeps the 1.2 shelf layout unless turning parts 90\(de about Z
 (recorded as
 .Ql rot_z
-in each placement) and fills gaps with later, smaller parts before it opens
-another plate.
+in each placement) and filling gaps with later, smaller parts saves a plate;
+it never needs more plates than 1.2 did.
 .Pp
 .Ql fixed
 poses and the

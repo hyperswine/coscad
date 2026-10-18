@@ -28,6 +28,10 @@ module Coscad.Variants
     turnZ,
     packBeds,
     packBedsBrim,
+    packStrategies,
+    packShelfLegacy,
+    TurnRule (..),
+    packFirstFit,
   )
 where
 
@@ -169,46 +173,137 @@ packBeds plate items = packBedsBrim plate [(iid, k, wd, 0) | (iid, k, wd) <- ite
 -- its brim. Placements are the part's own corner and size (the brim is
 -- returned alongside), so meshes are stamped exactly as before.
 --
--- First-fit decreasing over shelves, deterministic: items go largest
--- reserved area first (ties in input order). A plate stays open until
--- every remaining item has been tried; an item that fits nowhere waits
--- for the next plate. Each item takes the first of
---
---   1. the open (last) shelf, as declared;
---   2. a gap at the end of an earlier shelf, as declared;
---   3. any shelf, turned 90° about Z;
---   4. a new shelf, as declared;
---   5. a new shelf, turned.
---
--- so a layout the old next-fit packer could finish is kept unless a
--- later, smaller item can fill a gap it left. Square cells never turn.
+-- Deterministic portfolio: every strategy in 'packStrategies' packs the
+-- same items, and the layout with the fewest plates wins; ties go to the
+-- earlier strategy. The first is the 1.2 next-fit shelf packer, with
+-- the brim reservation ('packShelfLegacy'), so a layout it could already
+-- finish on as few plates is kept exactly, and the packer never needs more plates than
+-- it did. The first-fit decreasing strategies ('packFirstFit') fill gaps
+-- and turn parts 90° about Z, and win only when they save a plate.
 packBedsBrim ::
   (Double, Double, Double) ->
   [(String, VKey, (Double, Double), Double)] ->
   Either String [[Placement]]
-packBedsBrim (pw, pd, m) items0 = do
+packBedsBrim plate items0 = do
+  validatePack plate items0
+  case [r | (_, s) <- packStrategies, Just r <- [s plate items0]] of
+    [] -> Left "internal error: no packing strategy placed every item"
+    r : rs -> Right (foldl' (\best c -> if length c < length best then c else best) r rs)
+
+-- | The packing strategies 'packBedsBrim' compares, in tie-break order,
+-- with a short name for tests and diagnostics. A strategy returns
+-- 'Nothing' when it cannot place every item (the legacy packer never
+-- turns, so a part that fits only turned is beyond it).
+packStrategies ::
+  [ ( String
+    , (Double, Double, Double) -> [(String, VKey, (Double, Double), Double)] -> Maybe [[Placement]]
+    )
+  ]
+packStrategies =
+  [ ("shelf", packShelfLegacy)
+  , ("first-fit", \p xs -> packFirstFit TurnAnyShelf p (sortBy byArea xs))
+  , ("first-fit, no deepening turns", \p xs -> packFirstFit TurnWithinShelf p (sortBy byArea xs))
+  , ("first-fit by longest side", \p xs -> packFirstFit TurnWithinShelf p (sortBy byLongest xs))
+  ]
+  where
+    -- stable sorts: ties stay in declaration order
+    byArea (_, _, f1, b1) (_, _, f2, b2) =
+      let (w1, d1) = brimCell f1 b1
+          (w2, d2) = brimCell f2 b2
+       in compare (w2 * d2) (w1 * d1)
+    byLongest (_, _, f1, b1) (_, _, f2, b2) =
+      let (w1, d1) = brimCell f1 b1
+          (w2, d2) = brimCell f2 b2
+       in compare (max w2 d2, w2 * d2) (max w1 d1, w1 * d1)
+
+-- | The checks every strategy relies on: a usable plate, finite positive
+-- footprints and brims, and each reserved cell fitting an empty plate
+-- one way round or the other.
+validatePack :: (Double, Double, Double) -> [(String, VKey, (Double, Double), Double)] -> Either String ()
+validatePack (pw, pd, m) items0 = do
   unless (all finite [pw, pd, m] && pw > 0 && pd > 0 && m >= 0 && m < pw / 2 && m < pd / 2) $
     Left "plate dimensions must be finite and positive; margin must be non-negative and leave usable space"
   mapM_ (\(iid, _, (w, d), b) -> do
     unless (finite w && finite d && w > 0 && d > 0) (Left (iid ++ " footprint must be finite and positive"))
     unless (finite b && b >= 0) (Left (iid ++ " brim must be a finite, non-negative width"))
-    let (cw, cd) = cell (w, d) b
-        fits (a, c) = m + a <= pw - m + eps && m + c <= pd - m + eps
+    let (cw, cd) = brimCell (w, d) b
+        fits (a, c) = m + a <= pw - m + packEps && m + c <= pd - m + packEps
     unless (fits (cw, cd) || fits (cd, cw)) $
       Left (iid ++ " footprint " ++ show w ++ "x" ++ show d ++ (if b > 0 then " with a " ++ show b ++ " mm brim" else "")
         ++ " exceeds the " ++ show pw ++ "x" ++ show pd ++ " plate with " ++ show m ++ " margin, even turned 90 degrees")) items0
-  Right (go (sortBy bigger items0))
+
+packEps :: Double
+packEps = 1e-9
+
+-- | A footprint grown by its brim on every side.
+brimCell :: (Double, Double) -> Double -> (Double, Double)
+brimCell (w, d) b = (w + 2 * b, d + 2 * b)
+
+-- | The coscad 1.2 packer, kept bit for bit: largest reserved area first
+-- (ties in input order), next-fit over shelves, never turned. A part
+-- that doesn't fit on the open shelf starts a new one; a shelf that
+-- doesn't fit closes the plate, and everything left goes to the next.
+-- 'Nothing' when an item fits an empty plate only turned.
+packShelfLegacy ::
+  (Double, Double, Double) ->
+  [(String, VKey, (Double, Double), Double)] ->
+  Maybe [[Placement]]
+packShelfLegacy (pw, pd, m) items0 = go (sortBy bigger items0)
   where
-    eps = 1e-9
-    cell (w, d) b = (w + 2 * b, d + 2 * b)
     bigger (_, _, f1, b1) (_, _, f2, b2) =
-      let (w1, d1) = cell f1 b1
-          (w2, d2) = cell f2 b2
+      let (w1, d1) = brimCell f1 b1
+          (w2, d2) = brimCell f2 b2
        in compare (w2 * d2) (w1 * d1)
-    -- every item fits an empty plate (checked above), so each plate
-    -- takes at least one and this terminates
-    go [] = []
-    go xs = let (placed, rest) = fillPlate xs in placed : go rest
+    go [] = Just []
+    go xs = do
+      (placed, rest) <- fit m m 0 [] xs
+      (placed :) <$> go rest
+    fit _ _ _ acc [] = Just (reverse acc, [])
+    fit x y rowD acc (item@(iid, k, (w, d), b) : rest)
+      | cw > pw - 2 * m || cd > pd - 2 * m = Nothing
+      | x + cw > pw - m = fit m (y + rowD + m) 0 acc (item : rest)
+      | y + cd > pd - m = if null acc then Nothing else Just (reverse acc, item : rest)
+      | otherwise = fit (x + cw + m) y (max rowD cd) (Placement iid k (w, d) (x + b, y + b) b 0 : acc) rest
+      where
+        (cw, cd) = brimCell (w, d) b
+
+-- | Where 'packFirstFit' may turn a part about Z before opening a shelf.
+data TurnRule
+  = -- | onto any shelf, the open one growing as deep as the turned part
+    -- (the original first-fit rule: one long part turned onto the open
+    -- shelf deepens it for good)
+    TurnAnyShelf
+  | -- | onto a shelf only within its current depth; turning onto the open
+    -- shelf and deepening it comes after opening a new shelf as declared
+    TurnWithinShelf
+  deriving (Eq, Show)
+
+-- | First-fit decreasing over shelves, in the order given. A plate stays
+-- open until every remaining item has been tried; an item that fits
+-- nowhere waits for the next plate. Each item takes the first of
+--
+--   1. the open (last) shelf, as declared;
+--   2. a gap at the end of an earlier shelf, as declared;
+--   3. any shelf, turned 90° about Z ('TurnWithinShelf': without
+--      deepening it);
+--   4. a new shelf, as declared;
+--   5. ('TurnWithinShelf' only) the open shelf turned, deepening it;
+--   6. a new shelf, turned.
+--
+-- Square cells never turn. 'Nothing' when an item fits no empty plate
+-- either way round ('validatePack' rules that out first).
+packFirstFit ::
+  TurnRule ->
+  (Double, Double, Double) ->
+  [(String, VKey, (Double, Double), Double)] ->
+  Maybe [[Placement]]
+packFirstFit rule (pw, pd, m) = go
+  where
+    eps = packEps
+    go [] = Just []
+    go xs = case fillPlate xs of
+      ([], _) -> Nothing -- an item that fits no empty plate
+      (placed, rest) -> (placed :) <$> go rest
     -- shelves are (y, depth, next free x), bottom first
     fillPlate = loop [] [] []
       where
@@ -220,13 +315,12 @@ packBedsBrim (pw, pd, m) items0 = do
       firstJust (map try (candidates shelves))
       where
         turnable = abs (w - d) > eps
-        try (Left i, turned)
+        try (Left (i, deepen), turned)
           | turned && not turnable = Nothing
           | otherwise =
               let (y, depth, x) = shelves !! i
-                  isOpen = i == length shelves - 1
                   (cw, cd) = orient turned
-               in if x + cw <= pw - m + eps && (if isOpen then y + cd <= pd - m + eps else cd <= depth + eps)
+               in if x + cw <= pw - m + eps && (if deepen then y + cd <= pd - m + eps else cd <= depth + eps)
                     then Just (update i (y, max depth cd, x + cw + m), mk x y turned)
                     else Nothing
         try (Right (), turned)
@@ -239,19 +333,27 @@ packBedsBrim (pw, pd, m) items0 = do
                in if m + cw <= pw - m + eps && y + cd <= pd - m + eps
                     then Just (shelves ++ [(y, cd, m + cw + m)], mk m y turned)
                     else Nothing
-        orient turned = let (cw, cd) = cell (w, d) b in if turned then (cd, cw) else (cw, cd)
+        orient turned = let (cw, cd) = brimCell (w, d) b in if turned then (cd, cw) else (cw, cd)
         mk x y turned =
           Placement iid k (if turned then (d, w) else (w, d)) (x + b, y + b) b (if turned then 90 else 0)
         update i sh = [if j == i then sh else s0 | (j, s0) <- zip [0 ..] shelves]
-    -- preference order documented above
+    -- preference order documented above; (shelf, may deepen it)
     candidates shelves =
       let n = length shelves
           open = [n - 1 | n > 0]
           earlier = [0 .. n - 2]
-       in [(Left i, False) | i <- open]
-            ++ [(Left i, False) | i <- earlier]
-            ++ [(Left i, True) | i <- open ++ earlier]
-            ++ [(Right (), False), (Right (), True)]
+          declared = [(Left (i, True), False) | i <- open] ++ [(Left (i, False), False) | i <- earlier]
+       in case rule of
+            TurnAnyShelf ->
+              declared
+                ++ [(Left (i, True), True) | i <- open] ++ [(Left (i, False), True) | i <- earlier]
+                ++ [(Right (), False), (Right (), True)]
+            TurnWithinShelf ->
+              declared
+                ++ [(Left (i, False), True) | i <- open ++ earlier]
+                ++ [(Right (), False)]
+                ++ [(Left (i, True), True) | i <- open]
+                ++ [(Right (), True)]
     firstJust xs = case [x | Just x <- xs] of
       x : _ -> Just x
       [] -> Nothing

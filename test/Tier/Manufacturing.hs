@@ -4,6 +4,7 @@ module Tier.Manufacturing
   ( printabilityTier
   , brimTier
   , packTier
+  , packNeverWorseTier
   , lyingRod
   , printabilityProbes
   , bedHeightProbes
@@ -19,7 +20,7 @@ where
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_)
 import Coscad.Assemble (AsmResult (..), defaultMaxZ, loadAssembleFile)
-import Coscad.Variants (FlatPart (..), Placement (..), brimHint, lookupVariant, packBeds, packBedsBrim, placedVariants, printInstances, printVariants, turnZ, variantMap, variantNames)
+import Coscad.Variants (FlatPart (..), Placement (..), brimHint, lookupVariant, packBeds, packBedsBrim, packShelfLegacy, packStrategies, placedVariants, printInstances, printVariants, turnZ, variantMap, variantNames)
 import Coscad.Geometry (mApply, rodMat)
 import Coscad.Linalg (downMat)
 import Coscad.Json (asArray, asNumber, asString, decode, lookupKey)
@@ -28,6 +29,7 @@ import Coscad.Next (FffTerms (..), fffTerms, instanceBrim, processNext)
 import Coscad.Printability
 import Coscad.Shape (Shape (..))
 import Data.List (isInfixOf, isPrefixOf, sort)
+import qualified Data.Map as Map
 import Data.Maybe (fromMaybe)
 import System.Directory
 import System.Exit (ExitCode (..))
@@ -163,6 +165,7 @@ packTier t = do
   section "bed height and packing"
   let k = ("b", "top")
       ids r = [[plInstance p | p <- bed] | bed <- r]
+      strategy name plate xs = (\s -> s plate xs) <$> lookup name packStrategies
   -- tall item first: A takes a 60-deep shelf, B a new one; C is too
   -- deep for B's shelf, so the old next-fit packer opened plate 2 for it.
   -- It fits the gap after A.
@@ -173,10 +176,14 @@ packTier t = do
         (show [pa, pb, pc])
     r -> failT t "packer: a later item fills the gap an earlier shelf left" (show (ids <$> r))
   -- an item that fits nowhere waits for the next plate, and the rest
-  -- still fill this one
-  case packBeds (100, 100, 5) [("a", k, (60, 60)), ("b", k, (50, 40)), ("c", k, (20, 50))] of
-    Right r -> assertT t "packer: an item that fits nowhere moves to the next plate without closing this one" (ids r == [["a", "c"], ["b"]]) (show (ids r))
-    Left e -> failT t "packer: an item that fits nowhere moves to the next plate" e
+  -- still fill this one (the first-fit strategy); both layouts take two
+  -- plates, so the packer keeps the 1.2 shelf layout
+  let abc = [("a", k, (60, 60), 0), ("b", k, (50, 40), 0), ("c", k, (20, 50), 0)]
+  assertT t "first-fit: an item that fits nowhere moves to the next plate without closing this one"
+    ((fmap ids <$> strategy "first-fit" (100, 100, 5) abc) == Just (Just [["a", "c"], ["b"]])) (show (fmap ids <$> strategy "first-fit" (100, 100, 5) abc))
+  case packBedsBrim (100, 100, 5) abc of
+    Right r -> assertT t "packer: on equal plate counts the 1.2 shelf layout is kept" (ids r == [["a"], ["b", "c"]]) (show (ids r))
+    Left e -> failT t "packer: on equal plate counts the 1.2 shelf layout is kept" e
   -- rotation: B (25×80) fits neither beside A nor below it as declared,
   -- but turned (80×25) it fits a new shelf below A
   case packBeds (100, 100, 5) [("a", k, (90, 50)), ("b", k, (25, 80))] of
@@ -230,6 +237,129 @@ packTier t = do
         , ("plate 256 256 6 180 7\np ← p.coscad ×1\n", "bad.assemble:1:") ] $ \(src, want) -> do
     r <- load "bad.assemble" src
     assertT t ("plate max height errors: " ++ want) (either (want `isInfixOf`) (const False) r) (either id (const "loaded") r)
+
+-- | The packer never needs more beds than the coscad 1.2 shelf packer
+-- (step 8's first-fit turned bars onto the open shelf and pushed the
+-- 38-part tesseract onto two beds), keeps the 1.2 layout when it needs
+-- no more, and keeps the bed first-fit saves on enclosure2x2. Pure: the
+-- footprints are the `coscad next` variant meshes as their manifests
+-- record them, applied to the real assemblies' instances.
+packNeverWorseTier :: T -> IO ()
+packNeverWorseTier t = do
+  section "packing never needs more beds than the 1.2 shelf packer"
+  let nextFoot = Map.fromList
+        [ ("corner1_lft_fwd_bot", (16.52, 16.52)), ("cap1_lft_fwd_bot", (17.832, 17.832)), ("bar1_asis", (81.6, 7))
+        , ("strut1_bot", (54.337, 4.99)), ("inner_bot", (30, 30)), ("jig_bot", (26, 26))
+        , ("corner_lft_fwd_bot", (16.52, 16.52)), ("cap_lft_fwd_bot", (17.832, 17.832)), ("bar_rt", (7, 7)), ("fullbar_fwd", (81.6, 7))
+        , ("bracket1_fwd", (17, 20)), ("panel1_bot", (210, 210)) ]
+      strategy name plate xs = (\s -> s plate xs) <$> lookup name packStrategies
+      counts r = fmap (map length) r
+      -- the instances `coscad next` packs, in declaration order, with
+      -- their mesh footprints and brim=N hints (no plate brim= here)
+      itemsOf f = do
+        r <- loadAssembleFile [] f
+        return $ case r of
+          Left e -> Left e
+          Right ar
+            | arPlateBrim ar /= Nothing -> Left (f ++ ": plate brim= needs mesh printability")
+            | otherwise ->
+                let names = Map.fromList [(vk, n) | (vk, n, _) <- printVariants (arFlat ar)]
+                    foot vk = Map.lookup vk names >>= (`Map.lookup` nextFoot)
+                 in case sequence [(\wd -> (iid, vk, wd, fromMaybe 0 (brimHint fp))) <$> foot vk | (iid, vk, fp) <- printInstances (arFlat ar)] of
+                      Just xs -> Right (arPlate ar, xs)
+                      Nothing -> Left (f ++ ": a variant without a recorded footprint: " ++ show (Map.elems names))
+      dir = "examples/assemble/tesseract"
+  tess <- itemsOf (dir </> "tesseract.assemble")
+  case tess of
+    Left e -> failT t "tesseract packs onto one bed" e
+    Right (plate, xs) -> do
+      assertT t "tesseract: all 38 parts pack onto one 256×256 bed (two under first-fit alone)"
+        (length xs == 38 && counts (packBedsBrim plate xs) == Right [38] && fmap counts (strategy "first-fit" plate xs) == Just (Just [31, 7]))
+        (show (counts (packBedsBrim plate xs), fmap counts (strategy "first-fit" plate xs)))
+      assertT t "tesseract: the one-bed layout is the 1.2 shelf layout, nothing turned"
+        (either (const False) (\r -> Just r == packShelfLegacy plate xs && all ((== 0) . plRotZ) (concat r)) (packBedsBrim plate xs)) ""
+  coupon <- itemsOf (dir </> "fit-test.assemble")
+  case coupon of
+    Left e -> failT t "fit test packs onto one bed" e
+    Right (plate, xs) -> assertT t "tesseract fit test: 3 parts on one bed" (counts (packBedsBrim plate xs) == Right [3]) (show (counts (packBedsBrim plate xs)))
+  -- adhesion-retry: its slice and verification.json are tied to this
+  -- exact layout; it must not move
+  retry <- itemsOf (dir </> "adhesion-retry" </> "fit-test.assemble")
+  case retry >>= \(plate, xs) -> (,) xs <$> packBedsBrim plate xs of
+    Right (_, [bed]) -> do
+      let got = [(plInstance p, plAt p, plBrim p, plRotZ p) | p <- bed]
+          want = [("fullbar_1", (14, 14), 8, 0), ("cap_1", (117.6, 14), 8, 0), ("corner_1", (157.432, 14), 8, 0), ("bar_1", (195.952, 14), 8, 0 :: Int)]
+          same (i, (x, y), b, z) (i', (x', y'), b', z') = i == i' && abs (x - x') < 1e-6 && abs (y - y') < 1e-6 && b == (b' :: Double) && z == z'
+      assertT t "adhesion retry: the 4-part, 8 mm-brim layout is unchanged since 1.2 (its slice depends on it)"
+        (length got == length want && and (zipWith same got want)) (show got)
+    r -> failT t "adhesion retry: one bed" (either id (show . map length . snd) r)
+  encl <- itemsOf "examples-next/enclosure2x2.assemble"
+  case encl of
+    Left e -> failT t "enclosure2x2 packs onto 4 beds" e
+    Right (plate, xs) ->
+      assertT t "enclosure2x2: first-fit's saving is kept, 4 beds (5 with the 1.2 shelf packer)"
+        (counts (packBedsBrim plate xs) == Right [12, 6, 1, 1] && fmap length (packShelfLegacy plate xs) == Just 5)
+        (show (counts (packBedsBrim plate xs), fmap length (packShelfLegacy plate xs)))
+  -- property on seeded pseudo-random inputs (deterministic, CI-friendly)
+  let cases = take 400 (randomPackCases 20261018)
+      check (plate@(pw, pd, m), xs) = case packBedsBrim plate xs of
+        Left e -> Just ("refused: " ++ e)
+        Right r ->
+          let n = length r
+              others = [(name, length o) | (name, s) <- packStrategies, Just o <- [s plate xs]]
+              legacy = packShelfLegacy plate xs
+              cellOf p = let (x, y) = plAt p; (w, d) = plSize p; b = plBrim p in (x - b, y - b, w + 2 * b, d + 2 * b)
+              inside p = let (x, y, w, d) = cellOf p in x >= m - 1e-6 && y >= m - 1e-6 && x + w <= pw - m + 1e-6 && y + d <= pd - m + 1e-6
+              apart a b = let (ax, ay, aw, ad) = cellOf a; (bx, by, bw, bd) = cellOf b
+                           in ax + aw + m <= bx + 1e-6 || bx + bw + m <= ax + 1e-6 || ay + ad + m <= by + 1e-6 || by + bd + m <= ay + 1e-6
+              sized p = or [if plRotZ p == 90 then plSize p == (d, w) else plSize p == (w, d) | (i, _, (w, d), _) <- xs, i == plInstance p]
+              problems =
+                [ "more beds than " ++ name ++ " " ++ show (n, o) | (name, o) <- others, n > o ]
+                  ++ [ "equal to the shelf packer's count but not its layout" | Just l <- [legacy], length l == n, l /= r ]
+                  ++ [ "instances placed /= instances given" | sort (map plInstance (concat r)) /= sort [i | (i, _, _, _) <- xs] ]
+                  ++ [ "outside the margin" | not (all (all inside) r) ]
+                  ++ [ "overlapping or closer than the margin" | not (and [apart a b | bed <- r, (j, a) <- zip [0 :: Int ..] bed, (l, b) <- zip [0 ..] bed, j < l]) ]
+                  ++ [ "size not as placed" | not (all sized (concat r)) ]
+           in if null problems then Nothing else Just (show (plate, [(w, d, b) | (_, _, (w, d), b) <- xs]) ++ ": " ++ unwords problems)
+      bad = [e | c <- cases, Just e <- [check c]]
+      wins = length [() | (plate, xs) <- cases, Just l <- [packShelfLegacy plate xs], Right r <- [packBedsBrim plate xs], length r < length l]
+  assertT t ("packer property (" ++ show (length cases) ++ " seeded random plates): never more beds than any strategy, the 1.2 shelf layout on ties, every part inside the margin and apart")
+    (null bad) (unlines (take 3 bad))
+  assertT t "packer property: first-fit still saves beds on some random inputs" (wins > 0) (show wins)
+  assertT t "packer property: deterministic" (map (fmap (map (map plAt)) . uncurry packBedsBrim) cases == map (fmap (map (map plAt)) . uncurry packBedsBrim) cases) ""
+
+-- | Seeded pseudo-random packing inputs (a 64-bit LCG, so the cases are
+-- the same on every machine): plate size and margin, and 1-40 parts that
+-- each fit the plate one way round (some only turned), some with a
+-- brim, many repeated.
+randomPackCases :: Integer -> [((Double, Double, Double), [(String, (String, String), (Double, Double), Double)])]
+randomPackCases = go
+  where
+    next s = (s * 6364136223846793005 + 1442695040888963407) `mod` (2 ^ (64 :: Int))
+    -- a value in [0, n) from the high bits
+    pick n s = (s `div` (2 ^ (33 :: Int))) `mod` n
+    go s0 =
+      let s1 = next s0; s2 = next s1; s3 = next s2; s4 = next s3
+          pw = fromInteger (100 + pick 200 s1)
+          pd = fromInteger (100 + pick 200 s2)
+          m = fromInteger (pick 9 s3)
+          n = 1 + pick 40 s4
+          (xs, s') = parts (n :: Integer) s4 pw pd m []
+       in ((pw, pd, m), reverse xs) : go s'
+    parts 0 s _ _ _ acc = (acc, s)
+    parts k s pw pd m acc =
+      let s1 = next s; s2 = next s1; s3 = next s2; s4 = next s3
+          kinds = 1 + pick 6 s1
+          lim = min pw pd - 2 * m
+          -- up to 95% of the longer side: some parts fit only turned
+          w = 3 + fromInteger (pick 1000 s2) / 1000 * (0.95 * (max pw pd - 2 * m) - 3)
+          d = 3 + fromInteger (pick 1000 s3) / 1000 * (0.6 * lim - 3)
+          b = if pick 4 s4 == 0 then fromInteger (pick 4 (next s4)) else 0
+          copies = 1 + pick (if kinds > 3 then 6 else 2) (next (next s4))
+          fits = (w + 2 * b <= pw - 2 * m && d + 2 * b <= pd - 2 * m) || (d + 2 * b <= pw - 2 * m && w + 2 * b <= pd - 2 * m)
+          item c = ("p" ++ show k ++ "_" ++ show c, ("v" ++ show k, "top"), (w, d), b)
+          new = if fits then [item c | c <- [1 .. copies]] else []
+       in parts (k - 1) (next (next (next s4))) pw pd m (reverse new ++ acc)
 
 -- | A closed n-gon prism of radius r along x, lying on the bed with a
 -- vertex at the bottom.
