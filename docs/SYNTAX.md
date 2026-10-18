@@ -9,7 +9,6 @@ A pragma on the first code line selects the vocabulary:
 ```
 
 The pragma line is blanked, not stripped, so error line numbers stay right.
-`.assemble` files always resolve in legacy mode.
 
 ## Available everywhere (any mode)
 - `|>` pipelines and all pipe-stage words (`x`, `y`, `z`, `rotx`, `move`,
@@ -78,6 +77,7 @@ wing#1, wing#2), and for each AABB-close pair:
   retried with swapped operands, else falls back to a grid-accelerated
   vertex-to-triangle distance verdict (annotated in the output)
 - `contact` = touching mating faces (< 0.02mm); `WARN` = gap below clearance
-Exit code 1 iff any OVERLAP. Distance verdicts are vertex-sampled: exact for
+Exit code 2 if any pair overlaps (the design has a problem), 0 otherwise;
+1 if the check could not run (no `asm`, a part that fails to render). Distance verdicts are vertex-sampled: exact for
 vertex-involved closest features; pathological edge-edge-only cases can read
 slightly high.

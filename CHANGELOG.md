@@ -8,6 +8,18 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Docs.**
+  - `docs/SYNTAX.md` said `coscad check` exits 1 on an overlap; it exits 2.
+  - Dropped the stale "`.assemble` files always resolve in legacy mode".
+  - The README and `--help` exit-status text now lists every exit-2 case
+    the man page lists: `next --strict`, and a part that does not fit the
+    plate.
+  - The README module map lists every module.
+  - CI runs `scripts/check-docs.py`, which fails when the README, man
+    page and `--help` disagree on the command list or the exit-2 cases,
+    when known stale text comes back, or when a module is missing from
+    the map.
+
 - **Faster name resolution.** Definitions still resolve in rounds,
   dependencies first, but a pending definition is parsed again only when
   a name in its text was resolved in the previous round. Before, every
