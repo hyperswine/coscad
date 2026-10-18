@@ -61,6 +61,21 @@ assert.deepEqual(
 )
 checks += 3
 
+// --- plate W D [margin [maxZ]] [brim=N|auto] ------------------------
+const plateOf = code => parser.parse(code, { fileType: 'assemble' }).body.find(node => node.type === 'plate_declaration')
+for (const [line, want] of [
+  ['plate 180 180 6 180', [6, 180, null]], ['plate 256 256 6', [6, 250, null]], ['plate 256 256 6 brim=8', [6, 250, 8]],
+  ['plate 256 256 brim=auto', [6, 250, 5]], ['plate 256 256 6 220 brim=auto', [6, 220, 5]]]) {
+  const code = `${line}\nx ← a.coscad ×1\n`
+  assert.deepEqual(messages(code, 'assemble'), [], line)
+  const p = plateOf(code)
+  assert.deepEqual([p.margin, p.maxZ, p.brim], want, line)
+  checks += 2
+}
+assert.deepEqual(messages('plate 256 256 6 0\nx ← a.coscad ×1\n', 'assemble'), ['plate max height must be a finite distance in mm, greater than zero'])
+assert.deepEqual(messages('plate 256 256 6 180 7\nx ← a.coscad ×1\n', 'assemble'), ['Unexpected value in plate declaration'])
+checks += 2
+
 // --- fasteners, plan, continuation lines ----------------------------
 const planCode = `!glyph
 plate 250 250 6

@@ -1,5 +1,11 @@
 # Changelog for the CoScad VS Code extension
 
+## Unreleased
+
+- `.assemble` diagnostics accept `plate W D [margin [maxZ]] [brim=N|auto]`:
+  the 4th max-height argument and the `brim=` option no longer show
+  "Unexpected value in plate declaration".
+
 ## 0.4.0
 
 - Lives in the compiler repository under `vscode/`, versioned with it.

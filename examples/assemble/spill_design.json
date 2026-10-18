@@ -5,6 +5,7 @@
     "w": 120,
     "d": 120,
     "margin": 6,
+    "max_z": 250,
     "count": 2
   },
   "variants": [

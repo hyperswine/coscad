@@ -7,7 +7,7 @@ Union inside a `.coscad` = one printed solid. A separate reference in a
 decomposition primitive for the whole pipeline.
 
 ```
-plate 250 250 6                       # bed W D margin (optional) [brim=N|auto]
+plate 250 250 6 250                   # bed W D [margin [max height]] [brim=N|auto]
 center ← center3.coscad ×1
 larch  ← l_arch3.coscad ×1 seam=rear  # free key=value hints ride to the slicer
 screws ← m4x20.coscad ×0              # ×0 = assembly-only (premade part)
@@ -15,6 +15,10 @@ sub    ← corner.assemble ×2           # recursive; counts multiply, cycles de
 asm = center ⊕ (larch |> move 55 -13 -7) ⊕ ...
 ```
 
+- `plate W D margin maxZ`: the optional 4th argument is the tallest part
+  the printer can build, in mm. It defaults to 250 (A1, P1, X1); set it
+  for smaller printers, e.g. `plate 180 180 6 180` for an A1 mini. Give
+  the margin to give a height (the margin defaults to 6).
 - `▽anchor` on a reference declares print orientation (that face on the
   bed). Undeclared parts get the automatic search in `next`.
 - `brim=N` on a reference reserves an N mm brim around each of its
@@ -26,9 +30,14 @@ asm = center ⊕ (larch |> move 55 -13 -7) ⊕ ...
   `foo_plate.scad` (packed check; `foo_plate1.scad`, `foo_plate2.scad`,
   ... when the parts need more than one plate), `foo_part_<variant>.scad`
   (print-oriented, at origin), and `foo_design.json` (schema
-  `coscad.design/1`; each placement carries its `plate` index). A part
-  whose footprint exceeds the plate is an error naming the part and the
-  plate.
+  `coscad.design/1`; each placement carries its `plate` index, and
+  `rot_z` when the packer turned it). A part whose footprint exceeds the
+  plate either way round is a design error (exit 2) naming the part and
+  the plate. The design-stage plate is an approximation: it packs the
+  CoScad shape's bounding box in its declared orientation (undeclared
+  parts as modelled), while `next` packs the rendered, oriented mesh. A
+  part taller than the plate's max height there only warns; `next`
+  refuses it.
 
 ## Manifests
 
@@ -69,6 +78,11 @@ prints a `Note:` to stderr and leaves the file alone; delete it or run
    0.3 mm, the first-layer band, above the bed — lying cylinders' flanks
    deliberately don't count, they self-support), − height, − a slenderness
    penalty (tall skinny prints wobble).
+   Faces taller than the plate's max height (`bed.max_z`, the 4th `plate`
+   argument) are never chosen. A part that is too tall in its declared
+   `▽`, or on every face, is a design error (exit 2): the message gives
+   its height, the limit, and the faces it would fit on. No beds or
+   manifest are written.
    Chosen face, mode, and score are recorded in the manifest for audit.
    Each variant also records `printability` (analysed once, on the oriented
    mesh): `bed_contact_mm2`, `first_layer_mm2`, `overhang_mm2`,
@@ -105,9 +119,22 @@ prints a `Note:` to stderr and leaves the file alone; delete it or run
    enough for STL quantisation and faces put down along a diagonal `▽`.
    These are conservative mesh diagnostics: curved first-layer contact,
    bridges, cooling and complete support coverage still need slicer review.
-3. **Packing**: largest-footprint-first shelf packing, spilling to as
-   many beds as needed; each `foo_bedN.stl` is one watertight multi-body
+3. **Packing**: first-fit decreasing shelf packing, spilling to as many
+   beds as needed; each `foo_bedN.stl` is one watertight multi-body
    solid, every placement inside margins.
+   - **Order and fit:** instances go largest reserved area first (ties in
+     declaration order, so packing is deterministic). A bed stays open
+     until every remaining instance has been tried; one that fits
+     nowhere waits for the next bed, and later, smaller ones still fill
+     the gaps. Each instance takes the first of: the open shelf as
+     declared, a gap at the end of an earlier shelf, any shelf turned
+     90° about Z, a new shelf, a new shelf turned.
+   - **Turning:** a turned instance is rotated +90° about Z (and shifted
+     back onto its corner) in the bed mesh. The placement records
+     `rot_z: 90` and its footprint as placed (`w` and `d` swapped);
+     `rot_z` is 0 otherwise. The variant mesh and its `footprint` stay
+     as oriented. A part that fits the plate only turned is turned
+     instead of refused.
    - **Brim reservation:** an instance with a brim is packed as its
      footprint grown by the brim on every side. The plate margin and the
      gap to its neighbours are kept outside the brim. With margin 6 and
@@ -134,12 +161,11 @@ bed you want to print.
 
 ## Known limitations / roadmap
 
-- Shelf packing is axis-aligned bounding boxes: no rotation (a 246 mm
-  limb fits a 220 bed diagonally but won't be placed), no nesting of
-  L-shapes.
+- Shelf packing is axis-aligned bounding boxes turned by 0° or 90° only:
+  no other angles (a 246 mm limb fits a 220 bed diagonally but won't be
+  placed), no stacking within a shelf, no nesting of L-shapes.
 - Orientation candidates are the six axis faces; tilted optima aren't
   searched.
-- Bed Z is currently a constant (250) pending a fourth `plate` arg.
 - The brim is reserved per instance, but Bambu Studio slices each bed as
   one object with one brim width. `bambu-slice.py` reports parts whose
   reservation is narrower than the brim it prints.
@@ -166,6 +192,10 @@ filament per bed. Options: `--printer` (machine preset, default
 profile), `--filament` (default: from the parts' `material=` hint, else
 the printer's default), `--plate textured|cool|engineering|hightemp`,
 `--bed N` for one bed, `--slicer-arg` to pass anything else through.
+It warns when the manifest's plate is bigger than the printer: its area
+against the machine's `printable_area`, and its `bed.max_z` and any part
+on the selected beds against `printable_height` (an A1 mini builds
+180 mm; set `plate W D margin 180` and rerun `coscad next`).
 
 The script flattens Bambu Studio's own system presets before loading them:
 the CLI does not resolve `inherits`, and an unflattened filament preset
