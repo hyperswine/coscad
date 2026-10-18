@@ -24,9 +24,9 @@ import Coscad.IO (writeFileUtf8)
 import Coscad.OpenScad (openscadFullRender, openscadPngArgs, runOpenscadRaw)
 import Data.List (nub)
 import qualified Data.Map as Map
-import System.Exit (ExitCode (..), exitFailure, exitWith)
+import System.Exit (ExitCode (..))
+import Coscad.Report
 import System.FilePath (dropExtension, takeFileName)
-import System.IO (hPutStrLn, stderr)
 import Text.Printf (printf)
 
 
@@ -87,27 +87,28 @@ summarise model errs st =
    in PlanSummary (map iName (mInsts model)) (length (mFasts model)) errs (map summ steps) (sCost st) (map hardware (mFasts model))
 
 -- ------------------------------------------------------------------
-processPlan :: Bool -> FilePath -> IO ()
-processPlan png path = processPlanSummary png path >> return ()
+processPlan :: Emit -> Bool -> FilePath -> IO (Either Failure ())
+processPlan emit png path = fmap (const ()) <$> processPlanSummary emit png path
 
 -- Also return the plan metadata so site counts use physical instances and
 -- actual steps, rather than declarations or stale image files.
-processPlanSummary :: Bool -> FilePath -> IO PlanSummary
-processPlanSummary png path = do
-  res <- loadAssembly [] path
-  ar <- either failAsm return res
-  (model, errs) <- either (\e -> hPutStrLn stderr ("Error: " ++ e) >> exitFailure) return (buildModel ar)
+-- Design errors (colliding screws, too little reach, an unsolvable
+-- order) still write what can be written, then fail with exit 2.
+processPlanSummary :: Emit -> Bool -> FilePath -> IO (Either Failure PlanSummary)
+processPlanSummary emit png path = runCommand $ do
+  res <- loadAssembly emit [] path
+  ar <- either (abort . asmFailure) return res
+  (model, errs) <- either (abort . inputFailure) return (buildModel ar)
   let insts = mInsts model
       fasts = mFasts model
       base = dropExtension path
       title = takeFileName base
   printf "plan: %d part instances, %d fasteners on %d hosts\n" (length insts) (length fasts) (length (nub (map fHost fasts)))
-  unless (null errs) $ mapM_ (hPutStrLn stderr . (("Error: " ++ path ++ ": design: ") ++)) errs
+  let designLines = map ((path ++ ": design: ") ++) errs
   case runSearch ar model of
     Left why -> do
-      mapM_ (hPutStrLn stderr . (("Error: " ++ path ++ ": ") ++)) why
       writeFileUtf8 (base ++ "_plan.md") (planMarkdown title model [] (errs ++ why))
-      exitWith (ExitFailure 2)
+      abort (designFailures (designLines ++ map ((path ++ ": ") ++) why))
     Right st -> do
       let steps = toSteps (reverse (sMoves st))
       writeFileUtf8 (base ++ "_plan.md") (planMarkdown title model steps errs)
@@ -115,7 +116,7 @@ processPlanSummary png path = do
       printf "Wrote %s_plan.md (%d steps, %d flips, cost %s)\n" base (length steps) (length (filter stFlip steps)) (showD (sCost st))
       full <- if png then openscadFullRender else return False
       when (png && not full) $
-        hPutStrLn stderr "note: step images use the OpenSCAD preview (coincident faces may flicker); OpenSCAD 2025.05 or newer renders them fully at the same speed"
+        emit $ Note "step images use the OpenSCAD preview (coincident faces may flicker); OpenSCAD 2025.05 or newer renders them fully at the same speed"
       forM_ (zip [1 :: Int ..] steps) $ \(k, _) -> do
         let f = base ++ "_step" ++ show k ++ ".scad"
         writeFileUtf8 f (stepScad model steps k)
@@ -123,8 +124,8 @@ processPlanSummary png path = do
           r <- runOpenscadRaw (openscadPngArgs full (base ++ "_step" ++ show k ++ ".png") f)
           case r of
             Right (ExitSuccess, _, _) -> return ()
-            Right (_, _, e) -> hPutStrLn stderr ("warning: png for step " ++ show k ++ ": " ++ take 200 e)
-            Left e -> hPutStrLn stderr ("warning: " ++ e)
+            Right (_, _, e) -> emit (Warning ("png for step " ++ show k ++ ": " ++ take 200 e))
+            Left e -> emit (Warning e)
       putStrLn ("Wrote " ++ base ++ "_step1.." ++ show (length steps) ++ ".scad" ++ (if png then " and .png" else ""))
-      unless (null errs) (exitWith (ExitFailure 2))
+      unless (null errs) (abort (designFailures designLines))
       return (summarise model errs st)

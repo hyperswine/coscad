@@ -35,6 +35,14 @@ exportListTier t = do
     src <- readFile f
     return [f | l <- lines src, "module " `isPrefixOf` l, let ws = words l, length ws > 2, "(module" `elem` ws, (ws !! 1) `elem` map (filter (`notElem` ",)")) (drop 2 ws)]
   assertT t "every module under src/Coscad has an explicit export list" (null selfExports) (show selfExports)
+  -- library code never exits or prints diagnostics: commands return a
+  -- Failure and take an Emit for warnings; only app/Main.hs prints and exits
+  offenders <- fmap concat $ forM files $ \f -> do
+    src <- readFile f
+    let exits = ["exitWith", "exitFailure", "exitSuccess"]
+        prints = if takeFileName f == "Report.hs" then [] else ["hPutStrLn stderr", "hPutStr stderr"]
+    return [f ++ ": " ++ l | l <- lines src, any (`isInfixOf` l) (exits ++ prints)]
+  assertT t "no library module exits, and only Coscad.Report writes to stderr" (null offenders) (unlines offenders)
   assertT t "coscad plan is split into Model, Search and Render"
     (all (`elem` files) ["src/Coscad/Plan/Model.hs", "src/Coscad/Plan/Search.hs", "src/Coscad/Plan/Render.hs"]) (show files)
 

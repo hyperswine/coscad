@@ -8,6 +8,20 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Library commands return their failures.** No module under `src/`
+  exits the process or prints diagnostics any more. Commands
+  (`processAssemble`, `processNextWith`, `processPlan`, `processCheck*`,
+  `processSite`, `compilePart`, `renderPart`, `runDoctor`) return
+  `IO (Either Failure ...)`, where a `Failure` carries the exit status
+  and the exact lines to print, and take an `Emit` callback for warnings
+  and notes (`Coscad.Report`: `stderrEmit`, `silent`, `collecting`).
+  `loadAssembly` takes the emitter too. `app/Main.hs` prints and exits.
+  CLI messages and exit statuses are unchanged, except that `plan`'s
+  `note:` / `warning:` lines are now `Note:` / `Warning:` like every
+  other command, and `plan` design errors print after its progress lines.
+  A test forbids exits, and stderr writes outside `Coscad.Report`, in
+  library code.
+
 - **Anchor warnings point at the call and reach the editor.** Attachment
   nodes now carry the line and column of their keyword or glyph, so a
   floating anchor is reported as `Warning: file:line:col: 'at top' ...`,

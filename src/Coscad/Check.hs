@@ -32,14 +32,14 @@ import Coscad.Linalg (V3, dot3, scale3, vadd, vlen, vsub)
 import Coscad.Mesh (Tri, meshVolume, parseStlAscii)
 import Coscad.OpenScad (openscadStlArgs, renderStlFile, runOpenscadRaw)
 import Coscad.Shape
+import Coscad.Report
+import System.Exit (ExitCode (..))
 import Control.Monad (forM, forM_, unless, when)
 import Data.IORef
 import Data.List (foldl', intercalate)
 import qualified Data.Map as Map
 import System.Directory (createDirectoryIfMissing, removePathForcibly)
-import System.Exit (ExitCode (..), exitFailure, exitWith)
 import System.FilePath ((</>))
-import System.IO (hPutStrLn, stderr)
 
 contactEps :: Double
 contactEps = 0.02
@@ -202,25 +202,26 @@ runOpenscadChecked scadF stlF = do
     isInfixOfS pat l = any (\i -> take (length pat) (drop i l) == pat) [0 .. length l - length pat]
 
 -- ------------------------------------------------------------------
-processCheck :: FilePath -> IO ()
-processCheck = processCheckWith False
+processCheck :: Emit -> FilePath -> IO (Either Failure ())
+processCheck emit = processCheckWith emit False
 
 -- | Scratch renders go to a fresh folder under the system temp directory
 -- (never shared with another running check) and are deleted afterwards
 -- unless `keepTemp` (--keep-temp), which names the folder.
-processCheckWith :: Bool -> FilePath -> IO ()
-processCheckWith keepTemp = processCheckIn keepTemp Nothing
+processCheckWith :: Emit -> Bool -> FilePath -> IO (Either Failure ())
+processCheckWith emit keepTemp = processCheckIn emit keepTemp Nothing
 
 -- | As 'processCheckWith', with an explicit scratch directory (tests).
-processCheckIn :: Bool -> Maybe FilePath -> FilePath -> IO ()
-processCheckIn keepTemp scratch path = do
+-- Overlaps are listed on stdout and fail with exit 2 and no further text.
+processCheckIn :: Emit -> Bool -> Maybe FilePath -> FilePath -> IO (Either Failure ())
+processCheckIn emit keepTemp scratch path = runCommand $ do
   dir <- maybe (scratchDir "check") return scratch
   createDirectoryIfMissing True dir
-  res <- loadAssembly [] path
+  res <- loadAssembly emit [] path
   case res of
-    Left err -> failAsm err
+    Left err -> abort (asmFailure err)
     Right ar -> case arAsm ar of
-      Nothing -> hPutStrLn stderr "Error: check needs an `asm = ...` definition." >> exitFailure
+      Nothing -> abort (inputFailure "check needs an `asm = ...` definition.")
       Just _ -> do
         let clr = arClearance ar
             names = map fst (arParts ar)
@@ -229,7 +230,7 @@ processCheckIn keepTemp scratch path = do
         bodiesPer <- forM (arParts ar) $ \(pn, _) -> do
           let table0 = Map.fromList [(n, if n == pn then s else Hidden s) | (n, s) <- arParts ar]
           case resolveAssembly ar table0 of
-            Left err -> hPutStrLn stderr ("Error isolating " ++ pn ++ ": " ++ err) >> exitFailure >> return (pn, [])
+            Left err -> abort (Failure 1 ["Error isolating " ++ pn ++ ": " ++ err])
             Right table -> case Map.lookup "asm" table of
               Nothing -> return (pn, [])
               Just asmS -> do
@@ -239,7 +240,7 @@ processCheckIn keepTemp scratch path = do
                 appendFile scadF ("\n" ++ marker ++ "\n")
                 r <- renderStlFile scadF stlF
                 case r of
-                  Left err -> hPutStrLn stderr ("Error rendering " ++ pn ++ ": " ++ err) >> exitFailure >> return (pn, [])
+                  Left err -> abort (Failure 1 ["Error rendering " ++ pn ++ ": " ++ err])
                   Right tris -> do
                     let real = [b | b <- splitBodies tris, farFromMarker b]
                     return (pn, real)
@@ -261,16 +262,16 @@ processCheckIn keepTemp scratch path = do
               -- exact overlap via OpenSCAD boolean
               let scadF = dir </> ("chk_pair" ++ show i ++ ".scad")
                   stlF = dir </> ("chk_pair" ++ show i ++ ".stl")
-              let emit x y = writeFile scadF ("intersection() {\n union() { " ++ polyScad x ++ marker ++ " }\n union() { " ++ polyScad y ++ marker ++ " }\n}\n")
+              let writePair x y = writeFile scadF ("intersection() {\n union() { " ++ polyScad x ++ marker ++ " }\n union() { " ++ polyScad y ++ marker ++ " }\n}\n")
                   measure = do
                     tris <- either (const []) id . parseStlAscii <$> readFileLatin1 stlF
                     return (sum (map meshVolume (filter farFromMarkerNot (splitBodies tris))))
-              emit ba bb
+              writePair ba bb
               r1 <- runOpenscadChecked scadF stlF
               volM <- case r1 of
                 Right False -> Just <$> measure
                 _ -> do
-                  emit bb ba -- CGAL assertions are often operand-order dependent
+                  writePair bb ba -- CGAL assertions are often operand-order dependent
                   r2 <- runOpenscadChecked scadF stlF
                   case r2 of
                     Right False -> Just <$> measure
@@ -295,7 +296,7 @@ processCheckIn keepTemp scratch path = do
         nw <- readIORef warnsR
         putStrLn ("check: " ++ show no ++ " overlaps, " ++ show nw ++ " clearance warnings")
         if keepTemp then putStrLn ("scratch renders kept in " ++ dir) else removePathForcibly dir
-        when (no > 0) (exitWith (ExitFailure 2))
+        when (no > 0) (abort (Failure 2 []))
   where
     rnd x = fromIntegral (round (x * 1000) :: Integer) / 1000 :: Double
     tails' [] = []

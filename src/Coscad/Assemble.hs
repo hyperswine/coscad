@@ -7,7 +7,7 @@ module Coscad.Assemble
   ( AsmResult (..)
   , FastDecl (..)
   , defaultMaxZ
-  , failAsm
+  , asmFailure
   , loadAssembleFile
   , loadAssembly
   , nextManifestPath
@@ -28,6 +28,7 @@ import Coscad.Geometry
 import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Json
 import Coscad.Parser
+import Coscad.Report
 import Coscad.Shape
 import Coscad.Validate (finite, readFinite, suggestion, maxQuantity)
 import Coscad.Variants
@@ -37,10 +38,8 @@ import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
 import Data.Maybe (isJust, isNothing)
 import System.Directory (doesFileExist)
-import System.Exit (ExitCode (..), exitWith)
 import System.FilePath (dropExtension, takeDirectory, takeExtension, takeFileName, (</>))
 import Data.Void (Void)
-import System.IO (hPutStrLn, stderr)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
@@ -503,23 +502,25 @@ partOpt =
         return (OHint (k, v))
     ]
 
--- | Load an assembly, flattening any error to its text (tests and tools
--- that only need the message). Commands use 'loadAssembly' and 'failAsm'.
+-- | Load an assembly, flattening any error to its text and discarding
+-- warnings (tests and tools that only need the message). Commands use
+-- 'loadAssembly' and 'asmFailure'.
 loadAssembleFile :: [FilePath] -> FilePath -> IO (Either String AsmResult)
-loadAssembleFile visited path = either (Left . errorText) Right <$> loadAssembly visited path
+loadAssembleFile visited path = either (Left . errorText) Right <$> loadAssembly silent visited path
 
--- | Report a load error the way every command does: the first line is
+-- | A load error as every command reports it: the first line is
 -- `Error: file:line:col: reason`, any further lines (`  note: ...`) follow
 -- verbatim. Input errors exit 1, design errors exit 2.
-failAsm :: AsmError -> IO a
-failAsm e = do
-  case lines (errorText e) of
-    [] -> hPutStrLn stderr "Error: assembly could not be loaded"
-    first : rest -> mapM_ (hPutStrLn stderr) (("Error: " ++ first) : rest)
-  exitWith (ExitFailure (case e of DesignError _ -> 2; InputError _ -> 1))
+asmFailure :: AsmError -> Failure
+asmFailure e = case e of
+  DesignError _ -> designFailure (errorText e)
+  InputError _ -> inputFailure (errorText e)
 
-loadAssembly :: [FilePath] -> FilePath -> IO (Either AsmError AsmResult)
-loadAssembly visited path
+-- | Load an assembly and everything it references. Warnings (anchors that
+-- miss their geometry, print counts that differ from the placements) go
+-- to @emit@ as they are found.
+loadAssembly :: Emit -> [FilePath] -> FilePath -> IO (Either AsmError AsmResult)
+loadAssembly emit visited path
   | path `elem` visited = return (Left (InputError (path ++ ": cycle in .assemble references involving this file" ++ concatMap (" <- " ++) (reverse visited))))
   | otherwise = do
       exists <- doesFileExist path
@@ -541,7 +542,7 @@ loadAssembly visited path
                     plateMaxZ = last (defaultMaxZ : [z | APlate _ _ _ z _ <- stmts])
                     plateBrim = last (Nothing : [b | APlate _ _ _ _ b <- stmts])
                     clr = last (0 : [c | AClearance c <- stmts])
-                loaded <- mapM (loadRef (path : visited) dir) partsS
+                loaded <- mapM (loadRef emit (path : visited) dir) partsS
                 case sequence loaded of
                   Left err -> return (Left err)
                   Right entries | sum [toInteger (fpCount f) | (_, _, fs) <- entries, f <- fs] > toInteger maxQuantity ->
@@ -561,9 +562,9 @@ loadAssembly visited path
                        -- warnings were printed when each part was loaded
                        let partWarnings = concat [anchorWarnings sh | (_, sh, _) <- entries]
                        case Map.lookup "asm" table of
-                         Just a -> mapM_ (hPutStrLn stderr . ("Warning: " ++) . formatAnchorWarning path) (filter (`notElem` partWarnings) (anchorWarnings a))
+                         Just a -> mapM_ (emit . Warning . formatAnchorWarning path) (filter (`notElem` partWarnings) (anchorWarnings a))
                          Nothing -> return ()
-                       mapM_ (\w -> hPutStrLn stderr ("Warning: " ++ w)) (countMismatches fmode tol defs meta positions constraints table0)
+                       mapM_ (emit . Warning) (countMismatches fmode tol defs meta positions constraints table0)
                        return $
                           Right
                             AsmResult
@@ -611,8 +612,8 @@ countMismatches mode tol defs meta positions constraints table0 =
       Tag n _ -> [n]
       _ -> concatMap tags (shapeChildren sh)
 
-loadRef :: [FilePath] -> FilePath -> AsmStmt -> IO (Either AsmError (String, Shape, [FlatPart]))
-loadRef visited dir (APart name rel cnt down hints) = do
+loadRef :: Emit -> [FilePath] -> FilePath -> AsmStmt -> IO (Either AsmError (String, Shape, [FlatPart]))
+loadRef emit visited dir (APart name rel cnt down hints) = do
   let p = dir </> rel
       referrer = case visited of (v : _) -> takeFileName v; [] -> "the assembly"
   case takeExtension p of
@@ -625,10 +626,10 @@ loadRef visited dir (APart name rel cnt down hints) = do
           case parseProgramNamed p c of
             Left err -> return (Left (InputError err))
             Right (_, shape) -> do
-              mapM_ (hPutStrLn stderr . ("Warning: " ++) . formatAnchorWarning p) (anchorWarnings shape)
+              mapM_ (emit . Warning . formatAnchorWarning p) (anchorWarnings shape)
               return (Right (name, shape, [FlatPart [] name p cnt down hints shape]))
     ".assemble" -> do
-      r <- loadAssembly visited p
+      r <- loadAssembly emit visited p
       case r of
         Left err -> return (Left err)
         Right ar -> case arAsm ar of
@@ -649,7 +650,7 @@ loadRef visited dir (APart name rel cnt down hints) = do
                   ]
                 )
     ext -> return (Left (InputError (p ++ ": unsupported part reference (" ++ ext ++ "); use a .coscad or .assemble file")))
-loadRef _ _ _ = return (Left (InputError "internal error: loadRef on non-part statement"))
+loadRef _ _ _ _ = return (Left (InputError "internal error: loadRef on non-part statement"))
 
 -- | Manifest schema identifiers. The design stage and `coscad next` write
 -- different files with different shapes; consumers check `schema` first.
@@ -725,11 +726,13 @@ manifestJson src base (pw, pd, m) maxZ variants plates asmOnly =
             ++ [("rot_z", JNumber (fromIntegral r)) | r /= 0]
         )
     aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]
-processAssemble :: FilePath -> IO ()
-processAssemble inputFile = do
-  r <- loadAssembly [] inputFile
+-- | The design stage (@coscad spec.assemble@): assembled view, packed
+-- plates, per-variant scads and the design manifest.
+processAssemble :: Emit -> FilePath -> IO (Either Failure ())
+processAssemble emit inputFile = runCommand $ do
+  r <- loadAssembly emit [] inputFile
   case r of
-    Left err -> failAsm err
+    Left err -> abort (asmFailure err)
     Right ar -> do
       let base = dropExtension inputFile
           baseName = takeFileName base
@@ -754,7 +757,7 @@ processAssemble inputFile = do
       -- approximation of the mesh `coscad next` checks (and refuses).
       mapM_ (\(DesignVariant _ fp _ (_, _, h) vname) ->
         when (h > maxZ + 1e-9) $
-          hPutStrLn stderr ("Warning: " ++ vname ++ ": about " ++ showD (roundTo3 h) ++ " mm tall " ++ orientNote fp
+          emit $ Warning (vname ++ ": about " ++ showD (roundTo3 h) ++ " mm tall " ++ orientNote fp
             ++ ", over the plate's max height of " ++ showD maxZ ++ " mm; `coscad next` will refuse it unless it is turned"
             ++ " (declare another ▽face) or the plate's 4th argument is raised")) variants
       mapM_
@@ -770,10 +773,8 @@ processAssemble inputFile = do
       -- printability that `coscad next` measures
       items <- orInternal (mapM (\(iid, k, fp) -> (\v -> (iid, k, footprint v, maybe 0 id (brimHint fp))) <$> lookupVariant byKey k) instances)
       case packBedsBrim plate items of
-        Left err -> do
-          -- a part bigger than the plate: the input is fine, the design is not
-          hPutStrLn stderr ("Error: " ++ inputFile ++ ": " ++ err)
-          exitWith (ExitFailure 2)
+        -- a part bigger than the plate: the input is fine, the design is not
+        Left err -> abort (designFailure (inputFile ++ ": " ++ err))
         Right packed -> do
           plates <- orInternal (placedVariants byKey packed)
           let nPlates = length plates
@@ -792,7 +793,7 @@ processAssemble inputFile = do
             putStrLn ("(" ++ show (length instances) ++ " parts need " ++ show nPlates ++ " plates of " ++ showD pw ++ "x" ++ showD pd ++ ")")
           writeFileUtf8 (designManifestPath base) (manifestJson inputFile baseName plate (arPlateMaxZ ar) variants plates asmOnly)
           putStrLn ("Wrote " ++ designManifestPath base)
-          noteLegacyManifest base
+          noteLegacyManifest emit base
 
 -- | How a variant stands on the bed, for messages: its declared face, or
 -- as modelled.
@@ -805,12 +806,12 @@ roundTo3 x = fromIntegral (round (x * 1000) :: Integer) / 1000
 -- | Explain a stale design manifest under the manufacturing name instead of
 -- leaving a file that `bambu-slice.py` will refuse without context. The
 -- file is left in place: it may be referenced by the user's own scripts.
-noteLegacyManifest :: FilePath -> IO ()
-noteLegacyManifest base = do
+noteLegacyManifest :: Emit -> FilePath -> IO ()
+noteLegacyManifest emit base = do
   let old = nextManifestPath base
   exists <- doesFileExist old
   when exists $ do
     txt <- readFileUtf8 old
     when (legacyDesignManifest txt) $
-      hPutStrLn stderr ("Note: " ++ old ++ " is a design manifest from coscad 1.2 or earlier. The design stage now writes "
+      emit $ Note (old ++ " is a design manifest from coscad 1.2 or earlier. The design stage now writes "
         ++ designManifestPath base ++ "; " ++ takeFileName old ++ " is reserved for `coscad next`. Delete it or run `coscad next` to replace it.")
