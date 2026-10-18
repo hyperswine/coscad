@@ -14,7 +14,7 @@ module Coscad.Plan (processPlan, processPlanSummary, planSummary, validateHardwa
 
 import Control.Monad (forM_, unless, when)
 import Coscad.Assemble
-import Coscad.Codegen (gen, renderScad, showD, usesBosl2)
+import Coscad.Codegen (gen, showD, usesBosl2)
 import Coscad.Geometry
 import Coscad.IO (writeFileUtf8)
 import Coscad.OpenScad (openscadFullRender, openscadPngArgs, runOpenscadRaw)
@@ -22,10 +22,9 @@ import Coscad.Validate (finite, readFinite, maxQuantity)
 import Coscad.Shape
 import Data.Char (isDigit, toLower)
 import Data.Graph (SCC (..), stronglyConnComp)
-import Data.List (foldl', intercalate, nub, sort, sortBy, sortOn, zip4)
+import Data.List (foldl', intercalate, nub, sort, sortOn, zip4)
 import qualified Data.Map as Map
-import Data.Maybe (fromMaybe, mapMaybe)
-import Data.Ord (comparing)
+import Data.Maybe (fromMaybe, listToMaybe, mapMaybe)
 import qualified Data.Set as Set
 import Coscad.Json
 import System.Exit (ExitCode (..), exitFailure, exitWith)
@@ -142,9 +141,6 @@ data Move = MPlace Node [String] | MFlip V3 [String] deriving (Show)
 
 data Weights = Weights {wFlip, wVertical, wDriver, wShrink, wSibling, wLoose :: Double}
 
-defaultWeights :: Weights
-defaultWeights = Weights 10 6 3 2 1 1
-
 eps :: Double
 eps = 0.5
 
@@ -226,7 +222,7 @@ mkInstances ar asmShape = do
       counts = Map.fromListWith (+) [(n, 1 :: Int) | (n, _, _) <- occ]
       numbered = snd (foldl' step (Map.empty, []) occ)
       step (seen, acc) (n, aff, sh) =
-        let k = Map.findWithDefault 0 n seen + 1
+        let k = Map.findWithDefault (0 :: Int) n seen + 1
             nm = if Map.findWithDefault 1 n counts > 1 then n ++ "#" ++ show k else n
          in (Map.insert n k seen, acc ++ [(nm, n, aff, sh)])
   mapM mk numbered
@@ -331,9 +327,14 @@ mkFasteners srcFile insts decls = do
           ranges = map overlap axes
       when (any (\(lo, hi) -> hi < lo) ranges) $
         Left (at ++ iName clamped ++ " does not overlap " ++ iName host ++ " on its " ++ fdFace fd ++ " face")
-      let along = if abs (dot3 (iAxis host) n) < 0.5 then iAxis host else head axes
-          other = head [a | a <- axes, a /= along]
-          (l0, l1) = overlap along
+      axis0 <- case axes of
+        a : _ -> Right a
+        [] -> Left (at ++ "internal error: the " ++ fdFace fd ++ " face of " ++ iName host ++ " has no in-plane axis")
+      let along = if abs (dot3 (iAxis host) n) < 0.5 then iAxis host else axis0
+      other <- case [a | a <- axes, a /= along] of
+        a : _ -> Right a
+        [] -> Left (at ++ "internal error: the " ++ fdFace fd ++ " face of " ++ iName host ++ " has one in-plane axis")
+      let (l0, l1) = overlap along
           (o0, o1) = overlap other
           (hostMin, _) = extentAlong along hb
           -- A 2020 side slot is centred on the host cross-section. Cropping
@@ -357,7 +358,7 @@ mkFasteners srcFile insts decls = do
       let (pocketInClamped, pocketFace) = case lookup "pocket" (fdOpts fd) of
             Just ('c' : 'l' : 'a' : 'm' : 'p' : 'e' : 'd' : '.' : pf) -> (True, Just pf)
             Just ('h' : 'o' : 's' : 't' : '.' : pf) -> (False, Just pf)
-            other -> (False, other)
+            plain -> (False, plain)
       pocket <- case pocketFace of
         Nothing -> Right Nothing
         Just pf -> maybe (Left (at ++ "unknown pocket face '" ++ pf ++ "' (top bot lft rt fwd bak, optionally clamped.<face>)")) (Right . Just . (,) pf) (anchorDir pf)
@@ -593,7 +594,7 @@ convexHull pts
 
 polyArea :: [(Double, Double)] -> Double
 polyArea ps | length ps < 3 = 0
-polyArea ps = abs (sum [x1 * y2 - x2 * y1 | ((x1, y1), (x2, y2)) <- zip ps (tail ps ++ [head ps])]) / 2
+polyArea ps = abs (sum [x1 * y2 - x2 * y1 | ((x1, y1), (x2, y2)) <- zip ps (drop 1 ps ++ take 1 ps)]) / 2
 
 insidePoly :: (Double, Double) -> [(Double, Double)] -> Bool
 insidePoly (px, py) ps
@@ -602,7 +603,7 @@ insidePoly (px, py) ps
       [(x1, y1), (x2, y2)] -> let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / max 1e-9 ((x2 - x1) ^ (2 :: Int) + (y2 - y1) ^ (2 :: Int)); tc = max 0 (min 1 t)
                                   in sqrt ((x1 + tc * (x2 - x1) - px) ^ (2 :: Int) + (y1 + tc * (y2 - y1) - py) ^ (2 :: Int)) < 2
       _ -> False
-  | otherwise = all (\((x1, y1), (x2, y2)) -> (x2 - x1) * (py - y1) - (y2 - y1) * (px - x1) >= -eps * 4) (zip ps (tail ps ++ [head ps]))
+  | otherwise = all (\((x1, y1), (x2, y2)) -> (x2 - x1) * (py - y1) - (y2 - y1) * (px - x1) >= -eps * 4) (zip ps (drop 1 ps ++ take 1 ps))
 
 supportPoly :: V3 -> [Inst] -> [(Double, Double)]
 supportPoly d is =
@@ -653,7 +654,7 @@ driverBox f =
    in fromCorners corners
 
 accessible :: Map.Map String Inst -> [Inst] -> Fast -> Maybe String
-accessible byName placed f =
+accessible _byName placed f =
   -- the driver must really enter another part's box, not merely touch it:
   -- a hemisphere shell whose box brushes the neighbouring shell's box
   -- (the ball example) does not put that shell in the driver's way.
@@ -663,7 +664,7 @@ accessible byName placed f =
   -- swallows every corner of the frame, its oriented box is a thin rod.
   let db = bExpand (negate (2 * eps)) (driverBox f)
       hits = [iName i | i <- placed, iName i /= fClamped f, iName i /= fHost f, bIntersects (iBox i) db, obbIntersects db i]
-   in if null hits then Nothing else Just (head hits)
+   in listToMaybe hits
 
 -- | Separating-axis test between an axis-aligned box and a part's oriented
 -- box (its local box carried by its placement transform).
@@ -718,7 +719,7 @@ nutCanEnter byName rest placed fasts h =
       else case [why | f <- here, fNut f == Hex, Just why <- [hexBlocked f]] of
         (why : _) -> Just why
         [] -> case [b | f <- here, fNut f == DropIn, b <- take 1 (dropInOk f)] of
-          (b : _) -> Just ("the " ++ fFaceName (head here) ++ " slot of " ++ h ++ " is already covered by " ++ b)
+          (b : _) -> Just ("the " ++ maybe "?" fFaceName (listToMaybe here) ++ " slot of " ++ h ++ " is already covered by " ++ b)
           [] -> if any ((== SlideIn) . fNut) here && not slideOk then Just ("both ends of " ++ h ++ " are sealed; slide-in nuts cannot enter") else Nothing
 
 -- ------------------------------------------------------------------
@@ -951,8 +952,10 @@ beamSearch m width = go (0 :: Int) [St Set.empty Nothing 0 []] [] Nothing
                 Just b | all (\s -> sCost s >= sCost b) pruned -> Right b
                 _ -> go (round' + 1) pruned beam best'
     stuck _ [] = []
-    stuck round' beam =
-      let s = head (sortOn (negate . Set.size . sPlaced) beam)
+    stuck round' beam@(b0 : rest) =
+      -- the first of the most-placed states, as sortOn would give
+      let placedCount = Set.size . sPlaced
+          s = foldl' (\a x -> if placedCount x > placedCount a then x else a) b0 rest
        in ("planner stuck after placing " ++ show (Set.size (sPlaced s)) ++ " of " ++ show total ++ " nodes on the " ++ maybe "?" dirName (sRest s) ++ " (round " ++ show round' ++ ", beam " ++ show (length beam) ++ ")")
             : [describe n ++ ": " ++ why | n <- available m s, Left why <- [tryPlace m s n]]
             ++ ["flip to " ++ dirName d ++ ": " ++ maybe "not stable" (const "ok") (tryFlip m s d) | d <- mRestDirs m]
@@ -990,11 +993,11 @@ fmtMm :: Double -> String
 fmtMm x = showD (fromIntegral (round (x * 10) :: Integer) / 10)
 
 planMarkdown :: String -> Model -> [Step] -> [String] -> String
-planMarkdown title m steps designErrors = unlines $
+planMarkdown title m steps errs = unlines $
   [ "# Build plan: " ++ title, ""
   , printf "%d parts, %d fasteners, %d steps, %d flips." (length (mInsts m)) (length (mFasts m)) (length steps) (length (filter stFlip steps))
   , "" ]
-  ++ (if null designErrors then [] else "## Design errors" : "" : map ("- " ++) designErrors ++ [""])
+  ++ (if null errs then [] else "## Design errors" : "" : map ("- " ++) errs ++ [""])
   ++ ["## Before you start", "", "### Bill of materials", ""] ++ bom ++ [""]
   ++ ["### Preload sheet (nuts)", ""] ++ preload ++ [""]
   ++ ["## Steps", ""] ++ concat (zipWith stepMd [1 :: Int ..] steps)
@@ -1002,7 +1005,7 @@ planMarkdown title m steps designErrors = unlines $
     byId = mFastById m
     bom =
       [ printf "- %d × %s %s head screw" c s h | ((s, h), c) <- Map.toList (Map.fromListWith (+) [((fSpec f, fHead f), 1 :: Int) | f <- mFasts m, not (isPegF f)]) ]
-      ++ [ printf "- %d × M%s %s" c (showD d) (nutName k) | ((d, k), c) <- Map.toList (Map.fromListWith (+) [((fDiam f, show (fNut f)), 1 :: Int) | f <- mFasts m, fNut f /= NoNut]) ]
+      ++ [ printf "- %d × M%s %s" c (showD d) (nutLabel k) | ((d, k), c) <- Map.toList (Map.fromListWith (+) [((fDiam f, show (fNut f)), 1 :: Int) | f <- mFasts m, fNut f /= NoNut]) ]
       ++ [ printf "- %d × %s (%s)" c p (matName (iMat i)) | (p, (c, i)) <- Map.toList (Map.fromListWith (\(a, x) (b, _) -> (a + b, x)) [(iPart i, (1 :: Int, i)) | i <- mInsts m]) ]
     matName mt = case mt of Aluminium -> "aluminium"; Printed -> "printed"; Steel -> "steel"
     preload =
@@ -1040,13 +1043,14 @@ planMarkdown title m steps designErrors = unlines $
       ++ [""]
     hostsNote p = let hs = nub [fHost f | f <- mFasts m, fClamped f == p] in if null hs then "" else " (on " ++ intercalate ", " hs ++ ")"
     nutsOn :: String -> String
-    nutsOn h = let fs = [f | f <- mFasts m, nutHolder f == h, fNut f /= NoNut] in
-      if all ((== Hex) . fNut) fs
-        then printf "%d × M%s hex nut%s into the pocket%s %s" (length fs) (showD (fDiam (head fs))) (if length fs == 1 then "" else "s" :: String) (if length fs == 1 then "" else "s" :: String)
+    nutsOn h = case [f | f <- mFasts m, nutHolder f == h, fNut f /= NoNut] of
+      [] -> "no nuts"
+      fs@(f0 : _) -> if all ((== Hex) . fNut) fs
+        then printf "%d × M%s hex nut%s into the pocket%s %s" (length fs) (showD (fDiam f0)) (if length fs == 1 then "" else "s" :: String) (if length fs == 1 then "" else "s" :: String)
                (intercalate ", " [maybe ("for the " ++ fFaceName f ++ " screw") (\(pf, _) -> pocketLocation pf) (fPocket f) | f <- fs])
-        else printf "%d × M%s %s nut%s (%s)" (length fs) (showD (fDiam (head fs))) (nutWord (head fs)) (if length fs == 1 then "" else "s" :: String) (intercalate ", " [fFaceName f ++ " @ " ++ fmtMm (fAlong f) | f <- fs])
+        else printf "%d × M%s %s nut%s (%s)" (length fs) (showD (fDiam f0)) (nutWord f0) (if length fs == 1 then "" else "s" :: String) (intercalate ", " [fFaceName f ++ " @ " ++ fmtMm (fAlong f) | f <- fs])
     nutWord f = case fNut f of DropIn -> "drop-in"; SlideIn -> "slide-in"; Hex -> "hex"; NoNut -> "no"
-    nutName k = case k of "DropIn" -> "drop-in T-nut"; "SlideIn" -> "slide-in T-nut"; _ -> "hex nut"
+    nutLabel k = case k of "DropIn" -> "drop-in T-nut"; "SlideIn" -> "slide-in T-nut"; _ -> "hex nut"
     hostMat f = maybe Aluminium iMat (Map.lookup (fHost f) (mByName m))
 
 planJson :: String -> Model -> [Step] -> [String] -> String

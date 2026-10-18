@@ -220,7 +220,7 @@ processCheckIn keepTemp scratch path = do
             names = map fst (arParts ar)
         putStrLn ("check: " ++ show (length names) ++ " parts, clearance = " ++ show clr ++ "mm")
         -- 1. isolate each part inside the asm expression
-        bodiesPer <- forM (arParts ar) $ \(pn, ps) -> do
+        bodiesPer <- forM (arParts ar) $ \(pn, _) -> do
           let table0 = Map.fromList [(n, if n == pn then s else Hidden s) | (n, s) <- arParts ar]
           case resolveAssembly ar table0 of
             Left err -> hPutStrLn stderr ("Error isolating " ++ pn ++ ": " ++ err) >> exitFailure >> return (pn, [])

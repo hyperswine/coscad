@@ -364,8 +364,8 @@ numberHint key units valid range raw = case readFinite raw of
   _ -> Left (key ++ "=" ++ raw ++ ": expected a finite " ++ units ++ ", " ++ range)
 
 enum :: String -> [String] -> String -> Either String ()
-enum label values raw = unless (map toLower raw `elem` values) $
-  Left ("unknown " ++ label ++ " '" ++ raw ++ "'" ++ suggestion values raw ++ "; choose " ++ intercalate ", " values)
+enum what values raw = unless (map toLower raw `elem` values) $
+  Left ("unknown " ++ what ++ " '" ++ raw ++ "'" ++ suggestion values raw ++ "; choose " ++ intercalate ", " values)
 
 splitComma :: String -> [String]
 splitComma s = case break (== ',') s of
@@ -469,14 +469,14 @@ partOpt :: Parser POpt
 partOpt =
   choice
     [ do
-        symbol "×"
+        _ <- symbol "×"
         off <- getOffset
         n <- lexeme L.decimal :: Parser Integer
         if n > toInteger maxQuantity
           then setOffset off *> fail ("part/fastener count is too large; maximum is " ++ show maxQuantity)
           else return (OCount (fromInteger n))
     , do
-        symbol "▽"
+        _ <- symbol "▽"
         (raw, v) <- match anchorVec
         return (ODown v (trim raw))
     , do

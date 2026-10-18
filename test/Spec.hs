@@ -161,7 +161,7 @@ migrationPoses ar = do
   let occurrences = go id (resolve asm)
       counts = Map.fromListWith (+) [(n,1::Int) | (n,_) <- occurrences]
       named = snd $ foldl (\(seen,acc) (n,ps) ->
-        let i = Map.findWithDefault 0 n seen + 1
+        let i = Map.findWithDefault (0 :: Int) n seen + 1
             key = if counts Map.! n > 1 then n ++ "#" ++ show i else n
         in (Map.insert n i seen, acc ++ [(key,ps)])) (Map.empty,[]) occurrences
   return (Map.fromList named)
@@ -192,11 +192,12 @@ migrationTier t = do
     b <- loadAssembleFile [] ref
     case (a,b) of
       (Right actual,Right original) -> do
-        let Just sh = arAsm actual
-            Just old = arAsm original
+        let sh = maybe Empty id (arAsm actual)
+            old = maybe Empty id (arAsm original)
             (lo,hi) = bbox sh
             (ol,oh) = bbox old
             near (x,y,z) (u,v,w) = maximum [abs(x-u),abs(y-v),abs(z-w)] <= tolerance
+        assertT t (file ++ ": both versions define asm") (isJust (arAsm actual) && isJust (arAsm original)) "missing asm"
         assertT t (file ++ ": bounds preserved") (near lo ol && near hi oh) (show (bbox sh,bbox old))
         assertT t (file ++ ": manufacturing count preserved")
           (sum(map fpCount(arFlat actual)) == sum(map fpCount(arFlat original))) (show (map fpCount(arFlat actual),map fpCount(arFlat original)))
@@ -533,7 +534,7 @@ planTier t = do
     Right ps -> do
       checkInvariants t "orbit tower" ps
       let steps = zip [1 :: Int ..] (psSteps ps)
-          stepOf p = head ([k | (k, s) <- steps, p `elem` ssParts s] ++ [maxBound])
+          stepOf p = firstOr maxBound [k | (k, s) <- steps, p `elem` ssParts s]
           joints = concatMap ssFasteners (psSteps ps)
       assertT t "orbit tower: 20 parts and all 19 peg joints, no hardware or errors"
         (length (psParts ps) == 20 && length joints == 19 && all (\(s, _, _, n) -> s == "peg" && n == "none") joints && null (psDesignErrors ps) && all (null . ssPreload) (psSteps ps)) (show ps)
@@ -584,7 +585,7 @@ framedFastenerTier t = do
       assertT t "framed joint: measured grip and nut reach"
         (case psFasteners ps of [f] -> near (fsPosition f) (-4,-4,5) && near (fsHeadPosition f) (-4,-4,9) && maybe False (`near` (-4,-4,-2)) (fsNutSeat f) && abs(fsThreadReach f - 5) < 1e-7; _ -> False) (show ps)
       assertT t "framed joint: in-hand preload precedes the host placement"
-        (take 1 (concatMap ssPreload (psSteps ps)) == ["block"] && null (ssParts (head (psSteps ps)))) (show (psSteps ps))
+        (take 1 (concatMap ssPreload (psSteps ps)) == ["block"] && all (null . ssParts) (take 1 (psSteps ps))) (show (psSteps ps))
       assertT t "framed joint: preload preparation warning survives step grouping"
         (any ("in hand" `isInfixOf`) (concatMap ssWarnings (psSteps ps))) (show(psSteps ps))
   let transform = " |> rotx 23 |> rotz 37 |> move 31 -17 9"
@@ -682,8 +683,8 @@ framedFastenerTier t = do
 checkInvariants :: T -> String -> PlanSummary -> IO ()
 checkInvariants t name ps = do
   let steps = zip [1 :: Int ..] (psSteps ps)
-      stepOfPart p = head ([k | (k, s) <- steps, p `elem` ssParts s] ++ [maxBound])
-      stepOfPreload h = head ([k | (k, s) <- steps, h `elem` ssPreload s] ++ [maxBound])
+      stepOfPart p = firstOr maxBound [k | (k, s) <- steps, p `elem` ssParts s]
+      stepOfPreload h = firstOr maxBound [k | (k, s) <- steps, h `elem` ssPreload s]
       screws = [(k, f) | (k, s) <- steps, f <- ssFasteners s]
       lateHost = [f | (k, f@(_, c, h, _)) <- screws, stepOfPart h > k || stepOfPart c > k]
       lateNut = [f | (k, f@(_, c, h, nut)) <- screws, nut /= "none", min (stepOfPreload h) (stepOfPreload c) > k]
@@ -1176,7 +1177,7 @@ geometry t update bin = do
               inward v = if v == 10 then 30 else 170
               ringHoles = concat [[(inward x,y,z),(x,inward y,z)] | x <- [10,190], y <- [10,190], z <- [-3,203]]
               sideHoles = concat [[(inward x,y,z),(x,y,inward z)] | x <- [10,190], y <- [-3,203], z <- [10,190]]
-              probe dims (x,y,z) = "translate(" ++ show [x,y,z] ++ ") cube(" ++ show dims ++ ",center=true);"
+              probe dims (x,y,z) = "translate(" ++ show ([x,y,z] :: [Int]) ++ ") cube(" ++ show (dims :: [Int]) ++ ",center=true);"
               checkProbes name probes want = do
                 let scad = "include <BOSL2/std.scad>\n$fn=50;\nunion(){translate([-1000,-1000,-1000]) cube(1); intersection(){" ++ gen brackets ++ "union(){" ++ concat probes ++ "}}}"
                 r <- renderMesh bin dir scad
@@ -1264,7 +1265,7 @@ geometry t update bin = do
       parts <- mapM (\n -> readStl (bow </> ("bow3_next_" ++ n ++ "_asis.stl"))) ["center", "larch", "rarch"]
       mf <- decode <$> readFile (bow </> "bow3_manifest.json")
       assertT t "coscad next manifest is valid JSON with one bed of three placements"
-        (case mf of Right v -> maybe False (\bs -> length bs == 1 && maybe False ((== 3) . length) (asArray =<< lookupKey "placements" (head bs))) (asArray =<< lookupKey "beds" v); Left _ -> False) (either id (const "parsed") mf)
+        (case mf of Right v -> maybe False (\bs -> case bs of [b] -> maybe False ((== 3) . length) (asArray =<< lookupKey "placements" b); _ -> False) (asArray =<< lookupKey "beds" v); Left _ -> False) (either id (const "parsed") mf)
       let vb = meshVolume bed
           vp = sum (map meshVolume parts)
           ((x0, y0, z0), (x1, y1, _)) = meshBounds bed
@@ -1405,12 +1406,12 @@ geometry t update bin = do
         (either (const False) (\(c, out, err) -> c == ExitSuccess && not (any ("ERROR" `isPrefixOf`) (lines (out ++ err)))) rp && pngOk && pngSize > 5000)
         (show rp ++ " size " ++ show pngSize)
       when full $ do
-        rs <- runOpenscadRaw ["-o", sceneStl, "--export-format", "asciistl", "--backend=manifold", "--render=force", sceneF]
+        rsFull <- runOpenscadRaw ["-o", sceneStl, "--export-format", "asciistl", "--backend=manifold", "--render=force", sceneF]
         tris <- either (const []) id . parseStlAscii <$> readFile sceneStl
         let ((_, _, z0), (_, _, z1)) = meshBounds tris
         assertT t "full render keeps the bench slab under the parts (scene extends 2.5 mm below the rest face)"
-          (either (const False) (\(c, _, _) -> c == ExitSuccess) rs && not (null tris) && z0 < -2.4 && z1 > 0)
-          (show rs ++ " bounds z " ++ show (z0, z1))
+          (either (const False) (\(c, _, _) -> c == ExitSuccess) rsFull && not (null tris) && z0 < -2.4 && z1 > 0)
+          (show rsFull ++ " bounds z " ++ show (z0, z1))
   -- toolchain probes used by `coscad doctor`
   ov <- openscadVersion
   assertT t "openscad --version is parsed" (maybe False (not . null) ov) (show ov)
@@ -1650,7 +1651,7 @@ brimTier t = do
       pos r = [[(plInstance p, plAt p, plBrim p) | p <- bed] | bed <- r]
       items b = [("a", k, (10, 10), b), ("b", k, (10, 10), b)]
   assertT t "packBedsBrim with no brim places exactly as packBeds"
-    (packBedsBrim (100, 100, 6) (items 0) == packBeds (100, 100, 6) [(i, kk, wd) | (i, kk, wd, _) <- items 0])
+    (packBedsBrim (100, 100, 6) (items 0) == packBeds (100, 100, 6) [(i, kk, wd) | (i, kk, wd, _) <- items (0 :: Double)])
     (show (pos <$> packBedsBrim (100, 100, 6) (items 0)))
   case packBedsBrim (100, 100, 6) (items 4) of
     Right [[Placement _ _ _ (ax, ay) 4 0, Placement _ _ _ (bx, by) 4 0]] ->
@@ -1853,8 +1854,8 @@ printabilityProbes t = do
       (cb, _, eb) <- readProcessWithExitCode bin ["next", dir </> "brim.assemble"] ""
       mb <- decode <$> readFile (dir </> "brim_manifest.json")
       let placementsB = either (const []) (\v -> [pl | Just bs <- [asArray =<< lookupKey "beds" v], b <- bs, Just ps <- [asArray =<< lookupKey "placements" b], pl <- ps]) mb
-          brimOf i = head ([n | pl <- placementsB, (asString =<< lookupKey "instance" pl) == Just i, Just n <- [asNumber =<< lookupKey "brim_mm" pl]] ++ [-1])
-          xyOf i = head ([(x, y) | pl <- placementsB, (asString =<< lookupKey "instance" pl) == Just i, Just x <- [asNumber =<< lookupKey "x" pl], Just y <- [asNumber =<< lookupKey "y" pl]] ++ [(-1, -1)])
+          brimOf i = firstOr (-1) [n | pl <- placementsB, (asString =<< lookupKey "instance" pl) == Just i, Just n <- [asNumber =<< lookupKey "brim_mm" pl]]
+          xyOf i = firstOr (-1, -1) [(x, y) | pl <- placementsB, (asString =<< lookupKey "instance" pl) == Just i, Just x <- [asNumber =<< lookupKey "x" pl], Just y <- [asNumber =<< lookupKey "y" pl]]
           bedBrim = either (const Nothing) (\v -> asNumber =<< lookupKey "brim_mm" =<< lookupKey "bed" v) mb
       assertT t "plate brim=8: the warned pillars reserve 8 mm, the clean block and the brim=0 instance none"
         (cb == ExitSuccess && map brimOf ["pillar_1", "pillar_2", "blk_1", "bare_1"] == [8, 8, 0, 0] && bedBrim == Just 8)
@@ -1905,7 +1906,7 @@ bedHeightProbes t = do
       mt <- manifest "turn"
       bed <- readStl (dir </> "turn_bed1.stl")
       let placements = either (const []) (\v -> [(n, pl) | Just bs <- [asArray =<< lookupKey "beds" v], b <- bs, Just ps <- [asArray =<< lookupKey "placements" b], pl <- ps, let n = length bs]) mt
-          field k i = head ([x | (_, pl) <- placements, (asString =<< lookupKey "instance" pl) == Just i, Just x <- [asNumber =<< lookupKey k pl]] ++ [-1])
+          field k i = firstOr (-1) [x | (_, pl) <- placements, (asString =<< lookupKey "instance" pl) == Just i, Just x <- [asNumber =<< lookupKey k pl]]
           ((x0, y0, z0), (x1, y1, z1)) = meshBounds bed
           near a b = abs (a - b) < 1e-6
       assertT t "next: the packer turns the 25×80 bar 90° to share one bed; rot_z, the turned size and the bed mesh agree"
@@ -1944,7 +1945,7 @@ adhesionRetryContact t = do
           let variants = fromMaybe [] (asArray =<< lookupKey "variants" mv)
               field k v = asString =<< lookupKey k v
               printab v = lookupKey "printability" v
-              contactOf part = head ([n | v <- variants, field "part" v == Just part, Just n <- [asNumber =<< lookupKey "bed_contact_mm2" =<< printab v]] ++ [-1])
+              contactOf part = firstOr (-1) [n | v <- variants, field "part" v == Just part, Just n <- [asNumber =<< lookupKey "bed_contact_mm2" =<< printab v]]
               measured inst = fromMaybe (-1) (asNumber =<< lookupKey "bed_contact_mm2" =<< lookupKey inst =<< lookupKey "measured_parts" vv)
           forM_ [("cap", "cap_1"), ("corner", "corner_1"), ("bar", "bar_1"), ("fullbar", "fullbar_1")] $ \(part, inst) ->
             assertT t ("coscad next: " ++ part ++ " bed contact matches the trimesh measurement within 0.05 mm²")
@@ -2217,6 +2218,12 @@ goldenMergeTier t = do
   assertT t "golden update retains entries that did not render" (Map.lookup "absent.coscad" updated == Just (geo 7)) (show updated)
   assertT t "without update, drift is never accepted" (Map.lookup "drift.coscad" checked == Just (geo 50)) (show checked)
   assertT t "a run with nothing drifted leaves the golden unchanged" (mergeGeometryGolden True golden [("kept.coscad", geo 100.004)] == golden) ""
+
+-- | The first element, or a default for an empty list.
+firstOr :: a -> [a] -> a
+firstOr d xs = case xs of
+  x : _ -> x
+  [] -> d
 
 main :: IO ()
 main = do

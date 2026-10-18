@@ -8,6 +8,15 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Internal: zero GHC warnings, `-Werror` in CI.** The library, CLI and
+  test suite build without warnings under the package's `-Wall` set. The
+  fixes: signatures for the embedded DSL and Codegen helpers, `_ <-` for
+  discarded parser results, renamed shadowing bindings, and total code
+  instead of `head`/`tail` in `coscad plan`. CI writes
+  `cabal.project.local` with `-Werror`, so new warnings fail CI. A user's
+  `cabal build` is unaffected, so a newer GHC that adds warnings will not
+  break it. No behaviour change.
+
 - **Internal: `Coscad.Variants`.** Variant naming, instance ids, bed
   orientation and plate packing moved out of `Coscad.Assemble` into
   `Coscad.Variants`, shared by the design stage and `coscad next`. Both
