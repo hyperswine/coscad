@@ -89,7 +89,16 @@ test-suite coscad-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Harness
       MigrationCases
+      Tier.Assembly
+      Tier.Cli
+      Tier.Diagnostics
+      Tier.Examples
+      Tier.Geometry
+      Tier.Linalg
+      Tier.Manufacturing
+      Tier.Plan
       Paths_coscad
   autogen-modules:
       Paths_coscad
