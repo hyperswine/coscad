@@ -8,6 +8,14 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Internal: `Coscad.Variants`.** Variant naming, instance ids, bed
+  orientation and plate packing moved out of `Coscad.Assemble` into
+  `Coscad.Variants`, shared by the design stage and `coscad next`. Both
+  stages now look variants up in a `Map` keyed by (source, orientation)
+  instead of with `head` over lists; an impossible miss is reported as an
+  internal error (exit 1) instead of crashing. No behaviour change: every
+  generated file is byte-identical.
+
 - **Internal: one linear-algebra module.** `Coscad.Linalg` now holds the
   vector and matrix helpers, the rotations and the bed-orientation helpers
   (`downRot`, `downMat`) that were copied across `Geometry`, `Next`,

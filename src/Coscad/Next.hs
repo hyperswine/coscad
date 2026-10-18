@@ -11,6 +11,7 @@ import Coscad.Json
 import Coscad.Mesh
 import Coscad.OpenScad (renderStlFile)
 import Coscad.Printability
+import Coscad.Variants
 import Control.Monad (when)
 import Data.List (intercalate)
 import System.Exit (ExitCode (..), exitFailure, exitWith)
@@ -170,17 +171,13 @@ processNextWith strict inputFile = do
           bedZ = arPlateMaxZ ar
           printable = [fp | fp <- arFlat ar, fpCount fp > 0]
           asmOnly = [fp | fp <- arFlat ar, fpCount fp <= 0]
-          names = variantNames printable
-          vkeys = map fst names
       when (null printable) $ do
         hPutStrLn stderr ("Error: " ++ inputFile ++ ": nothing to print: every part is ×0 (assembly-only) or no part is declared")
         exitFailure
       -- compile each variant to a mesh once
       variantsE <- mapM
-        ( \k -> do
-            let fp = head [f | f <- printable, vkey f == k]
-                vname = maybe (sanitize (fpName fp)) id (lookup k names)
-                scadF = base ++ "_next_" ++ vname ++ ".scad"
+        ( \(k, vname, fp) -> do
+            let scadF = base ++ "_next_" ++ vname ++ ".scad"
                 stlF = base ++ "_next_" ++ vname ++ ".stl"
             writeScad (resolve (fpShape fp)) scadF
             ro <- renderStlFile scadF stlF
@@ -210,24 +207,24 @@ processNextWith strict inputFile = do
                             }
                       )
         )
-        vkeys
+        (printVariants printable)
       case sequence variantsE of
         Left (code, err) -> hPutStrLn stderr ("Error: " ++ err) >> exitWith (ExitFailure code)
         Right variants -> do
           mapM_ (\v ->
             mapM_ (hPutStrLn stderr . (("Warning: " ++ vName v ++ ": ") ++))
               (printabilityWarnings (vPrint v))) variants
-          let footOf k = head [(w, d) | v <- variants, vKey v == k, let (w, d, _) = vDims v]
-              meshOf k = head [vMesh v | v <- variants, vKey v == k]
-              printOf k = head [vPrint v | v <- variants, vKey v == k]
-              instances = [(instId fp i, vkey fp, instanceBrim (arPlateBrim ar) fp (printOf (vkey fp))) | fp <- printable, i <- [1 .. fpCount fp]]
-          case packBedsBrim (pw, pd, marg) [(iid, k, footOf k, b) | (iid, k, b) <- instances] of
+          let byKey = variantMap vKey variants
+              footprint v = let (w, d, _) = vDims v in (w, d)
+          items <- orInternal (mapM (\(iid, k, fp) -> (\v -> (iid, k, footprint v, instanceBrim (arPlateBrim ar) fp (vPrint v))) <$> lookupVariant byKey k) (printInstances printable))
+          case packBedsBrim (pw, pd, marg) items of
             -- a footprint bigger than the plate: a design problem (exit 2)
             Left err -> hPutStrLn stderr ("Error: " ++ inputFile ++ ": " ++ err) >> exitWith (ExitFailure 2)
-            Right beds -> do
+            Right packed -> do
+              beds <- orInternal (placedVariants byKey packed)
               mapM_
                 ( \(i, placed) -> do
-                    let tris = concat [meshMap (vadd (x, y, 0) . turn p) (meshOf (plKey p)) | p <- placed, let (x, y) = plAt p]
+                    let tris = concat [meshMap (vadd (x, y, 0) . turn p) (vMesh v) | (p, v) <- placed, let (x, y) = plAt p]
                         turn p = if plRotZ p == 0 then id else turnZ (fst (plSize p))
                         f = base ++ "_bed" ++ show i ++ ".stl"
                     writeFileUtf8 f (stlAscii ("bed" ++ show i) tris)
@@ -261,7 +258,7 @@ nextManifest ::
   Maybe Double ->
   Double ->
   [Variant] ->
-  [[Placement]] ->
+  [[(Placement, Variant)]] ->
   [FlatPart] ->
   String
 nextManifest src base (pw, pd, m) plateBrim bedZ variants beds asmOnly =
@@ -306,7 +303,6 @@ nextManifest src base (pw, pd, m) plateBrim bedZ variants beds asmOnly =
         , ("stl", JString (base ++ "_bed" ++ show i ++ ".stl"))
         , ("placements", jlist (map pj placed))
         ]
-    pj (Placement iid k (w, d) (x, y) b r) =
-      jobj [("instance", JString iid), ("variant", JString (vn k)), ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d), ("brim_mm", jnum3 b), ("rot_z", JNumber (fromIntegral r))]
-    vn k = head [vName v | v <- variants, vKey v == k]
+    pj (Placement iid _ (w, d) (x, y) b r, v) =
+      jobj [("instance", JString iid), ("variant", JString (vName v)), ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d), ("brim_mm", jnum3 b), ("rot_z", JNumber (fromIntegral r))]
     aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]

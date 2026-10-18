@@ -43,6 +43,7 @@ library
       Coscad.Shape
       Coscad.Site
       Coscad.Validate
+      Coscad.Variants
       Lib
   other-modules:
       Paths_coscad

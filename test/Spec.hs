@@ -21,7 +21,8 @@ module Main (main) where
 
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
-import Coscad.Assemble (AsmResult (..), FlatPart (..), Placement (..), brimHint, defaultMaxZ, loadAssembleFile, loadAssembly, packBeds, packBedsBrim, processAssemble, resolveAssembly, turnZ, variantNames)
+import Coscad.Assemble (AsmResult (..), defaultMaxZ, loadAssembleFile, loadAssembly, processAssemble, resolveAssembly)
+import Coscad.Variants (FlatPart (..), Placement (..), brimHint, lookupVariant, packBeds, packBedsBrim, placedVariants, printInstances, printVariants, turnZ, variantMap, variantNames)
 import Coscad.Constraint (AsmError (..))
 import Coscad.Check (processCheckIn, processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
@@ -2056,6 +2057,20 @@ variantNameTier t = do
   let mixed = names [fp [] "base" "x/base.coscad" Nothing, fp ["a"] "base" "s1/base.coscad" Nothing, fp ["b"] "base" "s2/base.coscad" Nothing, fp [] "p_lft" "p.coscad" fw, fp [] "p" "q.coscad" lf]
   assertT t "variant names: every name is distinct"
     (length mixed == 5 && and [length (filter (== n) mixed) == 1 | n <- mixed]) (show mixed)
+  let parts = [fp ["a"] "base" "s1/base.coscad" Nothing, fp ["b"] "base" "s2/base.coscad" Nothing, (fp [] "bar" "bar.coscad" fw) {fpCount = 3}, fp ["c"] "base" "s1/base.coscad" Nothing]
+      pv = printVariants parts
+  assertT t "print variants: keys and names match variantNames, one first part per variant"
+    ([(k, n) | (k, n, _) <- pv] == variantNames parts && [fpTrail f | (_, _, f) <- pv] == [["a"], ["b"], []]) (show [(k, n) | (k, n, _) <- pv])
+  let insts = printInstances parts
+  assertT t "print instances: counts expanded, one id per copy"
+    (length insts == 6 && [i | (i, _, _) <- insts] == ["a/base_1", "b/base_1", "bar_1", "bar_2", "bar_3", "c/base_1"]) (show [i | (i, _, _) <- insts])
+  let m = variantMap fst [(k, n) | (k, n, _) <- pv]
+  assertT t "print variants: a missing variant is an internal error, not a crash"
+    (either ("internal error: no print variant for nope.coscad" `isPrefixOf`) (const False) (lookupVariant m ("nope.coscad", "top"))) ""
+  case packBeds (100, 100, 6) [(i, k, (10, 10)) | (i, k, _) <- insts] of
+    Left e -> failT t "print variants: every placement resolves to its variant" e
+    Right beds -> assertT t "print variants: every placement resolves to its variant"
+      (fmap (map (map (\(p, (k, _)) -> plKey p == k))) (placedVariants m beds) == Right (map (map (const True)) beds)) ""
 
 -- | Two subassemblies that each declare `base`, from different sources,
 -- plus two top-level names that sanitize alike (p_lft ▽fwd, p ▽lft+fwd).
