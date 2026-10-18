@@ -57,6 +57,11 @@ jobs:
       # unittest, not bare asserts, so nothing is stripped under -O.
       - name: bambu-slice tests
         run: python3 -m unittest -v scripts/test-bambu-slice.py
+      # Warnings are errors in CI only: a newer GHC with new warnings must
+      # not break a user's `cabal build`, but nothing new lands warning.
+      - name: Warnings are errors (CI only)
+        run: |
+          printf 'package coscad\n  ghc-options: -Werror\n' > cabal.project.local
       - run: cabal update
       - run: cabal build --enable-tests all
       - name: coscad doctor

@@ -14,8 +14,9 @@ import Coscad.Json
 import Coscad.Parser
 import Coscad.Shape
 import Coscad.Validate (finite, readFinite, suggestion, maxQuantity)
+import Coscad.Variants
 import Data.Char (isAlphaNum, isDigit, isLetter, isSpace, toLower)
-import Data.List (foldl', intercalate, sortBy)
+import Data.List (intercalate)
 import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
 import Data.Maybe (isJust, isNothing)
@@ -130,16 +131,6 @@ data FastDecl = FastDecl
   , fdLine :: Int
   }
   deriving (Show)
-
-data FlatPart = FlatPart
-  { fpTrail :: [String]
-  , fpName :: String
-  , fpSource :: FilePath
-  , fpCount :: Int
-  , fpDown :: Maybe ((Double, Double, Double), String)
-  , fpHints :: [(String, String)]
-  , fpShape :: Shape
-  }
 
 data AsmResult = AsmResult
   { arSource :: FilePath          -- the .assemble file this came from (for diagnostics)
@@ -373,8 +364,8 @@ numberHint key units valid range raw = case readFinite raw of
   _ -> Left (key ++ "=" ++ raw ++ ": expected a finite " ++ units ++ ", " ++ range)
 
 enum :: String -> [String] -> String -> Either String ()
-enum label values raw = unless (map toLower raw `elem` values) $
-  Left ("unknown " ++ label ++ " '" ++ raw ++ "'" ++ suggestion values raw ++ "; choose " ++ intercalate ", " values)
+enum what values raw = unless (map toLower raw `elem` values) $
+  Left ("unknown " ++ what ++ " '" ++ raw ++ "'" ++ suggestion values raw ++ "; choose " ++ intercalate ", " values)
 
 splitComma :: String -> [String]
 splitComma s = case break (== ',') s of
@@ -448,14 +439,6 @@ defaultMaxZ = 250
 defaultBrimMm :: Double
 defaultBrimMm = 5
 
--- | The brim an instance asks for with its own @brim=N@ hint. The
--- outermost reference wins, as hints from an enclosing @.assemble@ come
--- after the subassembly's own.
-brimHint :: FlatPart -> Maybe Double
-brimHint fp = case [v | ("brim", v) <- reverse (fpHints fp)] of
-  v : _ -> readFinite v
-  [] -> Nothing
-
 distance :: String -> (Double -> Bool) -> String -> Parser Double
 distance name valid range = do
   off <- getOffset
@@ -486,14 +469,14 @@ partOpt :: Parser POpt
 partOpt =
   choice
     [ do
-        symbol "×"
+        _ <- symbol "×"
         off <- getOffset
         n <- lexeme L.decimal :: Parser Integer
         if n > toInteger maxQuantity
           then setOffset off *> fail ("part/fastener count is too large; maximum is " ++ show maxQuantity)
           else return (OCount (fromInteger n))
     , do
-        symbol "▽"
+        _ <- symbol "▽"
         (raw, v) <- match anchorVec
         return (ODown v (trim raw))
     , do
@@ -618,177 +601,6 @@ loadRef visited dir (APart name rel cnt down hints) = do
     ext -> return (Left (InputError (p ++ ": unsupported part reference (" ++ ext ++ "); use a .coscad or .assemble file")))
 loadRef _ _ _ = return (Left (InputError "internal error: loadRef on non-part statement"))
 
--- | Rotate a shape so the declared anchor faces the bed (-Z),
--- rotating about its own bbox center. Nothing = already print-ready.
-orientForBed :: Maybe ((Double, Double, Double), String) -> Shape -> Shape
-orientForBed Nothing s = s
-orientForBed (Just (v, _)) s = case downRot v of
-  Nothing -> s
-  Just (ang, ax) ->
-    let c = bcenter (bbox s)
-     in Translate c (RotAxis ang ax (Translate (vneg c) s))
-
-type VKey = (FilePath, String)
-
-vkey :: FlatPart -> VKey
-vkey fp = (fpSource fp, maybe "asis" snd (fpDown fp))
-
-sanitize :: String -> String
-sanitize = map (\c -> if isAlphaNum c then c else '_')
-
--- | One file-safe name per print variant (distinct source and orientation),
--- in first-seen order. Both stages name their per-variant artefacts and
--- manifest ids with these. The historical `part_down` name is kept when it
--- is unique. Colliding names (the same part name from two sources, e.g. a
--- `base` in two subassemblies, or names equal after sanitizing) are
--- qualified by the assembly trail, then numbered; the result is unique.
-variantNames :: [FlatPart] -> [(VKey, String)]
-variantNames printable = zip keys (unique (zipWith pick plain qualified))
-  where
-    keys = foldl' (\acc fp -> if vkey fp `elem` acc then acc else acc ++ [vkey fp]) [] printable
-    firsts = [fp | k <- keys, fp <- take 1 [f | f <- printable, vkey f == k]]
-    downOf = maybe "asis" snd . fpDown
-    plain = [sanitize (fpName fp ++ "_" ++ downOf fp) | fp <- firsts]
-    qualified = [sanitize (intercalate "_" (fpTrail fp ++ [fpName fp, downOf fp])) | fp <- firsts]
-    occurrences xs x = length (filter (== x) xs)
-    pick p q = if occurrences plain p > 1 then q else p
-    -- Number whatever still collides, skipping numbered names that are taken.
-    unique names = reverse (foldl' step [] names)
-      where
-        step used n
-          | occurrences names n == 1 = n : used
-          | otherwise = free (1 :: Int) : used
-          where
-            free i =
-              let c = n ++ "_" ++ show i
-               in if c `elem` used || c `elem` names then free (i + 1) else c
-
-instId :: FlatPart -> Int -> String
-instId fp i = intercalate "/" (fpTrail fp ++ [fpName fp]) ++ "_" ++ show i
-
--- | One packed instance: its id and variant, its footprint as placed
--- (width and depth swapped when turned), the corner of the part itself
--- (inside any reserved brim), the brim reserved around it, and its turn
--- about Z: 0, or 90 degrees counter-clockwise about the variant's
--- origin followed by a shift of its original depth along +X, so the
--- turned part still starts at its local (0, 0) (see 'turnZ').
-data Placement = Placement
-  { plInstance :: String
-  , plKey :: VKey
-  , plSize :: (Double, Double)
-  , plAt :: (Double, Double)
-  , plBrim :: Double
-  , plRotZ :: Int
-  }
-  deriving (Eq, Show)
-
--- | The point a variant-local point (at the origin, footprint @w × d@)
--- moves to when its placement is turned 90° about Z: @(d - y, x)@.
-turnZ :: Double -> (Double, Double, Double) -> (Double, Double, Double)
-turnZ d (x, y, z) = (d - y, x, z)
-
--- | Shelf-pack footprints onto as many plates as needed, with the margin
--- around and between them. Shared by the design stage
--- (`coscad foo.assemble`) and the manufacturing stage (`coscad next`).
-packBeds ::
-  (Double, Double, Double) ->
-  [(String, VKey, (Double, Double))] ->
-  Either String [[Placement]]
-packBeds plate items = packBedsBrim plate [(iid, k, wd, 0) | (iid, k, wd) <- items]
-
--- | 'packBeds' with a brim width reserved around each footprint: the
--- packer places the footprint grown by the brim on every side, so the
--- part keeps the margin to its neighbours and the plate edge *outside*
--- its brim. Placements are the part's own corner and size (the brim is
--- returned alongside), so meshes are stamped exactly as before.
---
--- First-fit decreasing over shelves, deterministic: items go largest
--- reserved area first (ties in input order). A plate stays open until
--- every remaining item has been tried; an item that fits nowhere waits
--- for the next plate. Each item takes the first of
---
---   1. the open (last) shelf, as declared;
---   2. a gap at the end of an earlier shelf, as declared;
---   3. any shelf, turned 90° about Z;
---   4. a new shelf, as declared;
---   5. a new shelf, turned.
---
--- so a layout the old next-fit packer could finish is kept unless a
--- later, smaller item can fill a gap it left. Square cells never turn.
-packBedsBrim ::
-  (Double, Double, Double) ->
-  [(String, VKey, (Double, Double), Double)] ->
-  Either String [[Placement]]
-packBedsBrim (pw, pd, m) items0 = do
-  unless (all finite [pw, pd, m] && pw > 0 && pd > 0 && m >= 0 && m < pw / 2 && m < pd / 2) $
-    Left "plate dimensions must be finite and positive; margin must be non-negative and leave usable space"
-  mapM_ (\(iid, _, (w, d), b) -> do
-    unless (finite w && finite d && w > 0 && d > 0) (Left (iid ++ " footprint must be finite and positive"))
-    unless (finite b && b >= 0) (Left (iid ++ " brim must be a finite, non-negative width"))
-    let (cw, cd) = cell (w, d) b
-        fits (a, c) = m + a <= pw - m + eps && m + c <= pd - m + eps
-    unless (fits (cw, cd) || fits (cd, cw)) $
-      Left (iid ++ " footprint " ++ show w ++ "x" ++ show d ++ (if b > 0 then " with a " ++ show b ++ " mm brim" else "")
-        ++ " exceeds the " ++ show pw ++ "x" ++ show pd ++ " plate with " ++ show m ++ " margin, even turned 90 degrees")) items0
-  Right (go (sortBy bigger items0))
-  where
-    eps = 1e-9
-    cell (w, d) b = (w + 2 * b, d + 2 * b)
-    bigger (_, _, f1, b1) (_, _, f2, b2) =
-      let (w1, d1) = cell f1 b1
-          (w2, d2) = cell f2 b2
-       in compare (w2 * d2) (w1 * d1)
-    -- every item fits an empty plate (checked above), so each plate
-    -- takes at least one and this terminates
-    go [] = []
-    go xs = let (placed, rest) = fillPlate xs in placed : go rest
-    -- shelves are (y, depth, next free x), bottom first
-    fillPlate = loop [] [] []
-      where
-        loop _ acc deferred [] = (reverse acc, reverse deferred)
-        loop shelves acc deferred (item : rest) = case place shelves item of
-          Just (shelves', p) -> loop shelves' (p : acc) deferred rest
-          Nothing -> loop shelves acc (item : deferred) rest
-    place shelves (iid, k, (w, d), b) =
-      firstJust (map try (candidates shelves))
-      where
-        turnable = abs (w - d) > eps
-        try (Left i, turned)
-          | turned && not turnable = Nothing
-          | otherwise =
-              let (y, depth, x) = shelves !! i
-                  isOpen = i == length shelves - 1
-                  (cw, cd) = orient turned
-               in if x + cw <= pw - m + eps && (if isOpen then y + cd <= pd - m + eps else cd <= depth + eps)
-                    then Just (update i (y, max depth cd, x + cw + m), mk x y turned)
-                    else Nothing
-        try (Right (), turned)
-          | turned && not turnable = Nothing
-          | otherwise =
-              let y = case reverse shelves of
-                    (ly, ld, _) : _ -> ly + ld + m
-                    [] -> m
-                  (cw, cd) = orient turned
-               in if m + cw <= pw - m + eps && y + cd <= pd - m + eps
-                    then Just (shelves ++ [(y, cd, m + cw + m)], mk m y turned)
-                    else Nothing
-        orient turned = let (cw, cd) = cell (w, d) b in if turned then (cd, cw) else (cw, cd)
-        mk x y turned =
-          Placement iid k (if turned then (d, w) else (w, d)) (x + b, y + b) b (if turned then 90 else 0)
-        update i sh = [if j == i then sh else s0 | (j, s0) <- zip [0 ..] shelves]
-    -- preference order documented above
-    candidates shelves =
-      let n = length shelves
-          open = [n - 1 | n > 0]
-          earlier = [0 .. n - 2]
-       in [(Left i, False) | i <- open]
-            ++ [(Left i, False) | i <- earlier]
-            ++ [(Left i, True) | i <- open ++ earlier]
-            ++ [(Right (), False), (Right (), True)]
-    firstJust xs = case [x | Just x <- xs] of
-      x : _ -> Just x
-      [] -> Nothing
-
 -- | Manifest schema identifiers. The design stage and `coscad next` write
 -- different files with different shapes; consumers check `schema` first.
 designSchema, nextSchema :: String
@@ -826,7 +638,7 @@ manifestJson ::
   (Double, Double, Double) ->
   Double ->
   [DesignVariant] ->
-  [[Placement]] ->
+  [[(Placement, DesignVariant)]] ->
   [FlatPart] ->
   String
 manifestJson src base (pw, pd, m) maxZ variants plates asmOnly =
@@ -840,7 +652,7 @@ manifestJson src base (pw, pd, m) maxZ variants plates asmOnly =
       , ("assembly_only", jlist (map aj asmOnly))
       ]
   where
-    placed = concat plates
+    placed = map fst (concat plates)
     vj (DesignVariant k@(srcf, dk) fp _ (w, d, h) vname) =
       jobj
         [ ("id", JString vname)
@@ -852,17 +664,16 @@ manifestJson src base (pw, pd, m) maxZ variants plates asmOnly =
         , ("scad", JString (base ++ "_part_" ++ vname ++ ".scad"))
         , ("hints", jobj [(hk, JString hv) | (hk, hv) <- fpHints fp])
         ]
-    pj i (Placement iid k (w, d) (x, y) b r) =
+    pj i (Placement iid _ (w, d) (x, y) b r, v) =
       jobj
         ( [ ("instance", JString iid)
-          , ("variant", JString (vnameOfK k))
+          , ("variant", JString (dvName v))
           , ("plate", JNumber (fromIntegral i))
           , ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d)
           ]
             ++ [("brim_mm", jnum3 b) | b > 0]
             ++ [("rot_z", JNumber (fromIntegral r)) | r /= 0]
         )
-    vnameOfK k = head [dvName v | v <- variants, dvKey v == k]
     aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]
 processAssemble :: FilePath -> IO ()
 processAssemble inputFile = do
@@ -880,17 +691,14 @@ processAssemble inputFile = do
           writeScad s (base ++ "_asm.scad")
           putStrLn ("Wrote " ++ base ++ "_asm.scad")
         Nothing -> putStrLn "(no 'asm' defined; skipping assembled view)"
-      let names = variantNames printable
-          vkeys = map fst names
-          mkVariant k =
-            let fp = head [f | f <- printable, vkey f == k]
-                oriented = resolve (orientForBed (fpDown fp) (fpShape fp))
+      let mkVariant (k, vname, fp) =
+            let oriented = resolve (orientForBed (fpDown fp) (fpShape fp))
                 (lo, hi) = bbox oriented
                 norm = Translate (vneg lo) oriented
                 dims = vsub hi lo
-                vname = maybe (sanitize (fpName fp)) id (lookup k names)
              in DesignVariant {dvKey = k, dvPart = fp, dvShape = norm, dvDims = dims, dvName = vname}
-          variants = map mkVariant vkeys
+          variants = map mkVariant (printVariants printable)
+          byKey = variantMap dvKey variants
           maxZ = arPlateMaxZ ar
       -- The design stage measures the Shape's bounding box, an
       -- approximation of the mesh `coscad next` checks (and refuses).
@@ -906,23 +714,24 @@ processAssemble inputFile = do
             putStrLn ("Wrote " ++ f)
         )
         variants
-      let footOf k = head [(w, d) | v <- variants, dvKey v == k, let (w, d, _) = dvDims v]
-          normOf k = head [dvShape v | v <- variants, dvKey v == k]
-          instances = [(instId fp i, vkey fp, maybe 0 id (brimHint fp)) | fp <- printable, i <- [1 .. fpCount fp]]
+      let instances = printInstances printable
+          footprint v = let (w, d, _) = dvDims v in (w, d)
       -- only explicit brim=N hints here: plate brim=N follows the mesh
       -- printability that `coscad next` measures
-      case packBedsBrim plate [(iid, k, footOf k, b) | (iid, k, b) <- instances] of
+      items <- orInternal (mapM (\(iid, k, fp) -> (\v -> (iid, k, footprint v, maybe 0 id (brimHint fp))) <$> lookupVariant byKey k) instances)
+      case packBedsBrim plate items of
         Left err -> do
           -- a part bigger than the plate: the input is fine, the design is not
           hPutStrLn stderr ("Error: " ++ inputFile ++ ": " ++ err)
           exitWith (ExitFailure 2)
-        Right plates -> do
+        Right packed -> do
+          plates <- orInternal (placedVariants byKey packed)
           let nPlates = length plates
               plateFile i = base ++ (if nPlates == 1 then "_plate" else "_plate" ++ show i) ++ ".scad"
           mapM_
             ( \(i, placed) -> do
                 let slab = Translate (0, 0, -0.8) (Rectangle pw pd 0.6)
-                    plateShape = Union (slab : [Translate (x, y, 0) (turned p (normOf (plKey p))) | p <- placed, let (x, y) = plAt p])
+                    plateShape = Union (slab : [Translate (x, y, 0) (turned p (dvShape v)) | (p, v) <- placed, let (x, y) = plAt p])
                     -- the same turn as 'turnZ': +90 about Z, then the original depth along +X
                     turned p s = if plRotZ p == 0 then s else Translate (fst (plSize p), 0, 0) (RotAxis 90 (0, 0, 1) s)
                 writeScad plateShape (plateFile i)
@@ -934,6 +743,11 @@ processAssemble inputFile = do
           writeFileUtf8 (designManifestPath base) (manifestJson inputFile baseName plate (arPlateMaxZ ar) variants plates asmOnly)
           putStrLn ("Wrote " ++ designManifestPath base)
           noteLegacyManifest base
+
+-- | Unwrap a result that can only fail through an internal inconsistency
+-- (a variant missing for a key): report it and exit 1 instead of crashing.
+orInternal :: Either String a -> IO a
+orInternal = either (\e -> hPutStrLn stderr ("Error: " ++ e) >> exitWith (ExitFailure 1)) return
 
 -- | How a variant stands on the bed, for messages: its declared face, or
 -- as modelled.

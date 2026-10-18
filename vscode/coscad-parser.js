@@ -397,7 +397,13 @@ class ExpressionParser {
       token = this.current()
       if (!token || !/^[\p{L}_][\p{L}\p{N}_₀-₉]*$/u.test(token.value)) throw new ParseError('Expected a named reference after @', token || this.last())
       this.index++
-      return '@' + token.value
+      let name = token.value
+      // @instance.frame: a dotted path through assembly instance aliases
+      while (this.current()?.value === '.' && /^[\p{L}_][\p{L}\p{N}_₀-₉]*$/u.test(this.tokens[this.index + 1]?.value || '')) {
+        name += '.' + this.tokens[this.index + 1].value
+        this.index += 2
+      }
+      return '@' + name
     }
     if (token?.type !== 'anchor') throw new ParseError('Expected an anchor (top bot lft rt fwd bak ctr, combinable with +)', token || this.last())
     words.push(token.value)

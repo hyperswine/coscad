@@ -37,8 +37,8 @@ import System.Timeout (timeout)
 -- usual install locations.
 findOpenscad :: IO (Maybe FilePath)
 findOpenscad = do
-  env <- lookupEnv "COSCAD_OPENSCAD"
-  case env of
+  override <- lookupEnv "COSCAD_OPENSCAD"
+  case override of
     Just b | not (null b) -> return (Just b)
     _ -> do
       onPath <- findExecutable "openscad"
@@ -98,8 +98,8 @@ libraryDirs = do
 -- directory itself), else the first library dir holding BOSL2/std.scad.
 findBosl2 :: IO (Maybe FilePath)
 findBosl2 = do
-  env <- lookupEnv "COSCAD_BOSL2"
-  case env of
+  override <- lookupEnv "COSCAD_BOSL2"
+  case override of
     Just d | not (null d) -> return (Just d)
     _ -> do
       dirs <- libraryDirs
@@ -115,15 +115,15 @@ findBosl2 = do
 -- OPENSCADPATH so the emitted `include <BOSL2/std.scad>` resolves.
 openscadEnv :: IO [(String, String)]
 openscadEnv = do
-  env <- getEnvironment
+  vars <- getEnvironment
   b <- lookupEnv "COSCAD_BOSL2"
   case b of
     Just d | not (null d) ->
       let parent = takeDirectory (dropTrailingPathSeparator d)
-          old = maybe "" id (lookup "OPENSCADPATH" env)
+          old = maybe "" id (lookup "OPENSCADPATH" vars)
           new = if null old then parent else parent ++ [pathSep] ++ old
-       in return (("OPENSCADPATH", new) : filter ((/= "OPENSCADPATH") . fst) env)
-    _ -> return env
+       in return (("OPENSCADPATH", new) : filter ((/= "OPENSCADPATH") . fst) vars)
+    _ -> return vars
 
 -- | Arguments for a headless STL export. ASCII is requested explicitly:
 -- the mesh reader is ASCII-only and OpenSCAD's default format depends
@@ -158,9 +158,9 @@ runOpenscadRaw args = do
   case found of
     Nothing -> return (Left "OpenSCAD not found: install it, put `openscad` on PATH, or set COSCAD_OPENSCAD (see `coscad doctor`)")
     Just bin -> do
-      env <- openscadEnv
+      vars <- openscadEnv
       secs <- openscadTimeoutSeconds
-      r <- try (runWithTimeout secs bin (proc bin args) {env = Just env, std_in = NoStream, std_out = CreatePipe, std_err = CreatePipe})
+      r <- try (runWithTimeout secs bin (proc bin args) {env = Just vars, std_in = NoStream, std_out = CreatePipe, std_err = CreatePipe})
       return $ case r of
         Left e -> Left ("could not run " ++ bin ++ ": " ++ show (e :: SomeException))
         Right (Left e) -> Left e

@@ -8,7 +8,7 @@ import Control.Monad (forM, forM_, unless)
 import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Plan (PlanSummary (..), StepSummary (..), processPlanSummary)
 import Data.Char (isSpace)
-import Data.List (intercalate, isPrefixOf, sort)
+import Data.List (isPrefixOf, sort)
 import System.Directory (copyFile, createDirectoryIfMissing, doesFileExist)
 import Coscad.Json
 import System.Exit (exitFailure)

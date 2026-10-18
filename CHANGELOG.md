@@ -8,6 +8,31 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Internal: zero GHC warnings, `-Werror` in CI.** The library, CLI and
+  test suite build without warnings under the package's `-Wall` set. The
+  fixes: signatures for the embedded DSL and Codegen helpers, `_ <-` for
+  discarded parser results, renamed shadowing bindings, and total code
+  instead of `head`/`tail` in `coscad plan`. CI writes
+  `cabal.project.local` with `-Werror`, so new warnings fail CI. A user's
+  `cabal build` is unaffected, so a newer GHC that adds warnings will not
+  break it. No behaviour change.
+
+- **Internal: `Coscad.Variants`.** Variant naming, instance ids, bed
+  orientation and plate packing moved out of `Coscad.Assemble` into
+  `Coscad.Variants`, shared by the design stage and `coscad next`. Both
+  stages now look variants up in a `Map` keyed by (source, orientation)
+  instead of with `head` over lists; an impossible miss is reported as an
+  internal error (exit 1) instead of crashing. No behaviour change: every
+  generated file is byte-identical.
+
+- **Frames through nested subassemblies (additive).** A constraint-solved
+  assembly now tags each placed instance with its alias, so a parent can
+  pick one copy of a frame with a dotted path: `mate l @a s @q.b`, or
+  `@s.q.b` one level further up. An unqualified frame present in several
+  instances is still ambiguous, and the error now lists the qualified
+  choices (`@p.b, @q.b`); an unknown frame lists the instance aliases. The
+  generated `.scad` is unchanged (tags emit nothing).
+
 - **Numeric expressions and a tolerance for assembly constraints (additive).**
   - `fixed` poses and the `roll=` / `gap=` options of `mate` now take a
     numeric atom, as `.coscad` arguments do: a literal, a numeric binding

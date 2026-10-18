@@ -175,7 +175,8 @@ src/Coscad/Codegen.hs   OpenSCAD emission
 src/Coscad/Dsl.hs       Haskell-embedded glyph DSL
 src/Coscad/Parser.hs    .coscad parser (glyphs, words, pipelines)
 src/Coscad/Dim.hs       2D/3D dimensionality check
-src/Coscad/Assemble.hs  .assemble design stage (+ plate packing)
+src/Coscad/Assemble.hs  .assemble design stage
+src/Coscad/Variants.hs  print variants: names, instance ids, orientation, plate packing
 src/Coscad/Next.hs      manufacturing stage (orientation, beds, manifest)
 src/Coscad/Check.hs     assembly interference / clearance checker
 src/Coscad/Mesh.hs      ASCII STL in/out, volume, bounds

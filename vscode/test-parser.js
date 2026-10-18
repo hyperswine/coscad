@@ -118,6 +118,10 @@ ok(messages('a ← a.coscad ×1\nb ← b.coscad ×1\nfixed a\nmate b @x a @y rol
 ok(messages('a ← a.coscad ×1\nfixed a 1 2 3\n', 'assemble').some(m => m.includes('fixed needs six pose numbers')), 'short pose')
 ok(messages('a ← a.coscad ×1\ntolerance 0\nfixed a\n', 'assemble').some(m => m.includes('position tolerance must be')), 'zero tolerance')
 checks += 8
+const dotted = parser.parse('s ← sub.assemble ×1\nl ← link.coscad ×1\nfixed s\nmate l @a s @q.b\n', { fileType: 'assemble' })
+assert.equal(dotted.body.find(node => node.type === 'constraint_declaration' && node.name === 'mate').targetRef, '@q.b')
+assert.deepEqual(messages('s ← sub.assemble ×1\nl ← link.coscad ×1\nfixed s\nmate l @a s @s.q.b\n', 'assemble'), [])
+checks += 2
 
 // --- diagnostics wording (matches the compiler) ---------------------
 const modeErrors = diagnostics(`!glyph

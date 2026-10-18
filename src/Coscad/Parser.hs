@@ -158,7 +158,7 @@ identifier = lexeme $ do
     subscriptChar = oneOf "₀₁₂₃₄₅₆₇₈₉"
 
 double :: Parser Double
-double = lexeme $ L.signed sc (try L.float <|> fromIntegral <$> L.decimal)
+double = lexeme $ L.signed sc (try L.float <|> fromIntegral <$> (L.decimal :: Parser Integer))
 
 -- NUMBERS -------------------------------------------------------
 -- A numeric argument is a single atom: a literal, a numeric binding's
@@ -202,7 +202,7 @@ numExpr ctx = do
     factor = (symbol "-" *> (negate <$> factor)) <|> atom
     atom =
       choice
-        [ lexeme (try L.float <|> fromIntegral <$> L.decimal)
+        [ lexeme (try L.float <|> fromIntegral <$> (L.decimal :: Parser Integer))
         , between (symbol "(") (symbol ")") (numExpr ctx)
         , numName ctx
         ]
@@ -315,18 +315,18 @@ variableDefinition = do
 expressionString :: Parser String
 expressionString = lexeme (dropWhileEnd isSpace . fst <$> match (firstLine *> many contLine))
   where
-    eol = try (void newline) <|> eof
-    firstLine = manyTill anySingle eol
+    lineEnd = try (void newline) <|> eof
+    firstLine = manyTill anySingle lineEnd
     -- comment-only lines may sit between continuation lines
     commentLine = try $ do
       _ <- many (char ' ' <|> char '\t')
       _ <- string "//"
-      manyTill anySingle eol
+      manyTill anySingle lineEnd
     contLine = try $ do
       _ <- many commentLine
       _ <- many (char ' ' <|> char '\t')
       _ <- lookAhead (string "|>" <|> (pure <$> oneOf "⊕⊛⊖⊝∩⇓⊞↯"))
-      manyTill anySingle eol
+      manyTill anySingle lineEnd
 
 -- Parse an expression with variable context
 parseExpression :: Ctx -> String -> Either String Shape
@@ -502,7 +502,7 @@ pipeStage ctx = choice
     num1 w f = keyword w *> (f <$> num ctx)
     num3 w f = keyword w *> (f <$> ((,,) <$> num ctx <*> num ctx <*> num ctx))
     rel w f = do
-      keyword w
+      _ <- keyword w
       v <- anchorVec
       off <- offsets w
       child <- shapeArg ctx
@@ -517,7 +517,7 @@ pipeStage ctx = choice
       <|> vectorArgs w "third offset z (three offsets are required)"
     vectorArgs w third = (,,) <$> arg ctx w "first offset x" <*> arg ctx w "second offset y" <*> arg ctx w third
     bin w f = do
-      keyword w
+      _ <- keyword w
       s <- shapeArg ctx
       return (`f` s)
     -- `p |> loft z q`: start a loft from p (at z = 0), or extend one
@@ -583,8 +583,11 @@ anchorVec = do
 pointRef :: Parser PointRef
 pointRef = (symbol "@" *> (NamedPoint <$> identifier)) <|> (BoxPoint <$> anchorVec)
 
+-- | @name, or a dotted path through assembly instance aliases (@q.b).
 frameRef :: Parser String
-frameRef = symbol "@" *> identifier <?> "oriented frame reference (@name)"
+frameRef = symbol "@" *> lexeme (intercalate "." <$> ((:) <$> rawIdent <*> many (try (char '.' *> rawIdent)))) <?> "oriented frame reference (@name or @instance.name)"
+  where
+    rawIdent = (:) <$> letterChar <*> many (alphaNumChar <|> char '_' <|> oneOf "₀₁₂₃₄₅₆₇₈₉")
 
 -- Parse attachment expressions: bind tighter than boolean ops.
 --   a ⌖ top b   -- position: b's bottom snapped to a's top (translate only)
@@ -598,12 +601,12 @@ attachExpression ctx = do
     steps
       | glyphOK ctx =
           [ do
-              symbol "⌖"
+              _ <- symbol "⌖"
               v <- anchorVec
               right <- transformExpression ctx
               return (\l -> Position v (0, 0, 0) l right),
             do
-              symbol "⋈"
+              _ <- symbol "⋈"
               v <- anchorVec
               right <- transformExpression ctx
               return (\l -> AttachTo v (0, 0, 0) l right)
@@ -649,7 +652,7 @@ transformation ctx =
           , g1 "⮕" Extrude
           , symbol "⟰" *> loftPairs
           , do
-              symbol "⚓"
+              _ <- symbol "⚓"
               v <- anchorVec
               Anchor v <$> shapeArg ctx
           ]
@@ -764,32 +767,32 @@ primaryExpression ctx =
         [cube, sphere, cylinder, cone, rectangle, prism]
 
     cube = do
-      symbol "■"
+      _ <- symbol "■"
       size <- num ctx
       return $ Rectangle size size size
 
     sphere = do
-      symbol "●"
+      _ <- symbol "●"
       Sphere <$> num ctx
 
     cylinder = do
-      symbol "◎"
+      _ <- symbol "◎"
       radius <- num ctx
       Cylinder radius <$> num ctx
 
     cone = do
-      symbol "▻"
+      _ <- symbol "▻"
       radius <- num ctx
       Cone radius <$> num ctx
 
     rectangle = do
-      symbol "▬"
+      _ <- symbol "▬"
       x <- arg ctx "box / ▬" "width"
       y <- arg ctx "box / ▬" "depth"
       Rectangle x y <$> arg ctx "box / ▬" "height"
 
     prism = do
-      symbol "⎏"
+      _ <- symbol "⎏"
       off <- getOffset
       n <- num ctx
       if n >= 3 && n <= fromIntegral maxSides && n == fromInteger (truncate n)
@@ -812,7 +815,7 @@ primaryExpression ctx =
         ]
 
     cuboidChamfer = do
-      symbol "▣"
+      _ <- symbol "▣"
       x <- num ctx
       y <- num ctx
       z <- num ctx
@@ -820,7 +823,7 @@ primaryExpression ctx =
       return $ Cuboid (x, y, z) c 0
 
     cuboidRound = do
-      symbol "◙"
+      _ <- symbol "◙"
       x <- num ctx
       y <- num ctx
       z <- num ctx
@@ -828,27 +831,27 @@ primaryExpression ctx =
       return $ Cuboid (x, y, z) 0 r
 
     cylChamfer = do
-      symbol "⌭"
+      _ <- symbol "⌭"
       r <- num ctx
       h <- num ctx
       c <- num ctx
       return $ Cyl r h c 0
 
     cylRound = do
-      symbol "⌽"
+      _ <- symbol "⌽"
       r <- num ctx
       h <- num ctx
       ro <- num ctx
       return $ Cyl r h 0 ro
 
     tubeShape = do
-      symbol "⊚"
+      _ <- symbol "⊚"
       ro <- num ctx
       ri <- num ctx
       Tube ro ri <$> num ctx
 
     prismoidShape = do
-      symbol "⏢"
+      _ <- symbol "⏢"
       x1 <- num ctx
       y1 <- num ctx
       x2 <- num ctx
@@ -856,29 +859,29 @@ primaryExpression ctx =
       Prismoid (x1, y1) (x2, y2) <$> num ctx
 
     torusShape = do
-      symbol "◉"
+      _ <- symbol "◉"
       rj <- num ctx
       Torus rj <$> num ctx
 
     wedgeShape = do
-      symbol "⊿"
+      _ <- symbol "⊿"
       x <- num ctx
       y <- num ctx
       z <- num ctx
       return $ Wedge (x, y, z)
 
     xcylShape = do
-      keyword "xcyl"
+      _ <- keyword "xcyl"
       r <- num ctx
       XCyl r <$> num ctx
 
     ycylShape = do
-      keyword "ycyl"
+      _ <- keyword "ycyl"
       r <- num ctx
       YCyl r <$> num ctx
 
     zcylShape = do
-      keyword "zcyl"
+      _ <- keyword "zcyl"
       r <- num ctx
       ZCyl r <$> num ctx
 
@@ -904,15 +907,15 @@ primaryExpression ctx =
     bezier = symbol "✎" *> bezierBody ctx
 
     triangle = do
-      symbol "△"
+      _ <- symbol "△"
       Shape2D 3 <$> num ctx
 
     pentagon = do
-      symbol "⬠"
+      _ <- symbol "⬠"
       Shape2D 5 <$> num ctx
 
     circle = do
-      symbol "⭘"
+      _ <- symbol "⭘"
       Shape2D 100 <$> num ctx
 
 -- | Shared body for ✎ / Bezier: 3k+1 control points as x y pairs
