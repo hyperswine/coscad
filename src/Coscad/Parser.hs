@@ -583,8 +583,11 @@ anchorVec = do
 pointRef :: Parser PointRef
 pointRef = (symbol "@" *> (NamedPoint <$> identifier)) <|> (BoxPoint <$> anchorVec)
 
+-- | @name, or a dotted path through assembly instance aliases (@q.b).
 frameRef :: Parser String
-frameRef = symbol "@" *> identifier <?> "oriented frame reference (@name)"
+frameRef = symbol "@" *> lexeme (intercalate "." <$> ((:) <$> rawIdent <*> many (try (char '.' *> rawIdent)))) <?> "oriented frame reference (@name or @instance.name)"
+  where
+    rawIdent = (:) <$> letterChar <*> many (alphaNumChar <|> char '_' <|> oneOf "₀₁₂₃₄₅₆₇₈₉")
 
 -- Parse attachment expressions: bind tighter than boolean ops.
 --   a ⌖ top b   -- position: b's bottom snapped to a's top (translate only)

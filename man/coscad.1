@@ -408,6 +408,9 @@ or
 .Ql (w / 2) .
 .Ql tolerance mm [rotation]
 sets how far a mating loop may miss and still close.
+A frame inside a constrained subassembly is addressed through instance
+aliases:
+.Ql mate l @a s @q.b .
 .Ql brim=N
 reserves an N mm brim around each instance when packing;
 .Ql plate … brim=N
