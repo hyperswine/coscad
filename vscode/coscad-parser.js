@@ -397,7 +397,13 @@ class ExpressionParser {
       token = this.current()
       if (!token || !/^[\p{L}_][\p{L}\p{N}_₀-₉]*$/u.test(token.value)) throw new ParseError('Expected a named reference after @', token || this.last())
       this.index++
-      return '@' + token.value
+      let name = token.value
+      // @instance.frame: a dotted path through assembly instance aliases
+      while (this.current()?.value === '.' && /^[\p{L}_][\p{L}\p{N}_₀-₉]*$/u.test(this.tokens[this.index + 1]?.value || '')) {
+        name += '.' + this.tokens[this.index + 1].value
+        this.index += 2
+      }
+      return '@' + name
     }
     if (token?.type !== 'anchor') throw new ParseError('Expected an anchor (top bot lft rt fwd bak ctr, combinable with +)', token || this.last())
     words.push(token.value)
@@ -693,9 +699,10 @@ class COSCADParser {
     const identifierLike = ['identifier', 'anchor', 'pipeline_stage'].includes(first.type)
     if (identifierLike && first.value === 'plate' && tokens[1]?.type !== 'assignment') return this.parsePlate(tokens)
     if (identifierLike && first.value === 'clearance' && tokens[1]?.type !== 'assignment') return this.parseClearance(tokens)
+    if (identifierLike && first.value === 'tolerance' && tokens[1]?.type !== 'assignment') return this.parseTolerance(tokens)
     if (identifierLike && first.value === 'fastener' && tokens[1]?.type !== 'assignment') return this.parseFastener(tokens)
     if (identifierLike && first.value === 'plan' && tokens[1]?.type !== 'assignment') return this.parsePlan(tokens)
-    if (identifierLike && ['fixed', 'mate'].includes(first.value) && tokens[1]?.type !== 'assignment') return this.parseConstraint(tokens)
+    if (identifierLike && ['fixed', 'mate'].includes(first.value) && tokens[1]?.type !== 'assignment') return this.parseConstraint(tokens, numericNames)
     if (identifierLike && tokens[1]?.type === 'part_arrow') return this.parsePart(tokens)
     if (identifierLike && tokens[1]?.type === 'assignment') {
       return {
@@ -726,8 +733,10 @@ class COSCADParser {
     return { type: 'plate_declaration', width, depth, margin, maxZ, brim, position: tokens[0].position, line: tokens[0].line, column: tokens[0].column }
   }
 
-  parseConstraint(tokens) {
-    const parser = new ExpressionParser(this, tokens.slice(1), 'legacy')
+  parseConstraint(tokens, numericNames = new Set()) {
+    // pose numbers and roll=/gap= take numeric atoms, as in .coscad:
+    // a literal, a numeric binding, -atom, or (arithmetic)
+    const parser = new ExpressionParser(this, tokens.slice(1), 'legacy', numericNames)
     const readName = () => {
       const t = parser.current()
       if (!t || !/^[\p{L}_][\p{L}\p{N}_₀-₉]*$/u.test(t.value)) throw new ParseError('Expected a part alias', t || tokens[0])
@@ -737,7 +746,7 @@ class COSCADParser {
     const child = readName()
     const node = { type: 'constraint_declaration', name: tokens[0].value, refs: [child], position: tokens[0].position, line: tokens[0].line, column: tokens[0].column }
     if (node.name === 'fixed') {
-      node.pose = parser.atEnd() ? [0,0,0,0,0,0] : Array.from({length:6}, () => parser.number('fixed needs x y z rx ry rz'))
+      node.pose = parser.atEnd() ? [0,0,0,0,0,0] : Array.from({length:6}, () => parser.numArg('fixed needs six pose numbers: x y z rx ry rz'))
     } else {
       node.ownRef = parser.anchor()
       node.refs.push(readName())
@@ -748,13 +757,27 @@ class COSCADParser {
         const key = parser.current(); parser.index++
         if (!['roll','gap'].includes(key.value) || node.options.some(o => o.key === key.value)) throw new ParseError('mate accepts unique roll= and gap= options', key)
         parser.expect('=')
-        const value = parser.number()
-        if (!Number.isFinite(value)) throw new ParseError('mate options must be finite', key)
+        const value = parser.numArg(`missing value after '${key.value}='`)
         node.options.push({key:key.value,value})
       }
     }
     if (!parser.atEnd()) throw new ParseError('Unexpected value in constraint', parser.current())
     return node
+  }
+
+  parseTolerance(tokens) {
+    // tolerance <mm> [<rotation>]: how far a mating loop may miss and still close
+    const parser = new ExpressionParser(this, tokens.slice(1), 'legacy')
+    const position = parser.number('tolerance needs a position tolerance in mm')
+    if (!(position > 0)) throw new ParseError('position tolerance must be a finite distance in mm, greater than zero', tokens[1] || tokens[0])
+    let rotation = 1e-8
+    if (!parser.atEnd()) {
+      const tok = parser.current()
+      rotation = parser.number('rotation tolerance must be a number')
+      if (!(rotation > 0)) throw new ParseError('rotation tolerance must be a finite number, greater than zero', tok)
+    }
+    if (!parser.atEnd()) throw new ParseError('Unexpected value in tolerance declaration', parser.current())
+    return { type: 'tolerance_declaration', positionTolerance: position, rotationTolerance: rotation, position: tokens[0].position, line: tokens[0].line, column: tokens[0].column }
   }
 
   parseClearance(tokens) {

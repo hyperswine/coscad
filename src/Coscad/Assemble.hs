@@ -7,7 +7,7 @@ module Coscad.Assemble (module Coscad.Assemble) where
 
 import Control.Monad (unless, void, when)
 import Coscad.Codegen
-import Coscad.Constraint (AsmError (..), Constraint (..), errorText, solveConstraints)
+import Coscad.Constraint (AsmError (..), Constraint (..), Tolerance (..), defaultTolerance, errorText, solveConstraints)
 import Coscad.Geometry
 import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Json
@@ -15,7 +15,7 @@ import Coscad.Parser
 import Coscad.Shape
 import Coscad.Validate (finite, readFinite, suggestion, maxQuantity)
 import Coscad.Variants
-import Data.Char (isAlphaNum, isLetter, isSpace, toLower)
+import Data.Char (isAlphaNum, isDigit, isLetter, isSpace, toLower)
 import Data.List (intercalate)
 import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
@@ -23,6 +23,7 @@ import Data.Maybe (isJust, isNothing)
 import System.Directory (doesFileExist)
 import System.Exit (ExitCode (..), exitWith)
 import System.FilePath (dropExtension, takeDirectory, takeExtension, takeFileName, (</>))
+import Data.Void (Void)
 import System.IO (hPutStrLn, stderr)
 import Text.Megaparsec
 import Text.Megaparsec.Char
@@ -61,12 +62,65 @@ data AsmStmt
   | AClearance Double
   | AFastener FastDecl
   | APlan [(String, String)]
-  | AConstraint Constraint
+  | AConstraint (NumEnv -> Either (ParseErrorBundle String Void) Constraint) -- ^ evaluated once the file's numeric bindings are known
+  | ATolerance Tolerance
   | ADef Def
 
 -- | `fastener M5x8 bracket railA top ×2 nut=dropin at=350,370`: a screw
 -- (spec) through the clamped instance into a slot/hole on the host
 -- instance's named face (world-frame anchor word). Consumed by `coscad plan`.
+-- | A numeric argument of `fixed` or a `mate` option: a literal, or an
+-- atom (numeric binding, -atom, parenthesized arithmetic) kept with its
+-- offset in the file so it can be evaluated after the bindings resolve
+-- and still report errors at its own token.
+data NumArg = NumLit Double | NumSrc Int String
+
+-- | What evaluating a 'NumArg' needs: the file (for error positions and
+-- excerpts) and the numeric bindings.
+data NumEnv = NumEnv FilePath String Ctx
+
+evalNumArg :: NumEnv -> NumArg -> Either (ParseErrorBundle String Void) Double
+evalNumArg _ (NumLit v) = Right v
+evalNumArg (NumEnv path body ctx) (NumSrc off txt) = snd (runParser' (num ctx <* eof) st)
+  where
+    st =
+      State
+        { stateInput = txt
+        , stateOffset = off
+        , statePosState = PosState {pstateInput = body, pstateOffset = 0, pstateSourcePos = initialPos path, pstateTabWidth = defaultTabWidth, pstateLinePrefix = ""}
+        , stateParseErrors = []
+        }
+
+-- | Parse one numeric argument without evaluating it. A plain literal is
+-- kept as its value; anything else must be one atom, as in `.coscad`
+-- argument position: a name, @-atom@, or @( arithmetic )@.
+numArg :: String -> String -> (String -> String) -> Parser NumArg
+numArg what missing nonFinite = do
+  off <- getOffset
+  tok <- lookAhead (many (satisfy (not . isSpace)))
+  lit <- optional (try (L.signed (pure ()) (try L.float <|> fromIntegral <$> (L.decimal :: Parser Integer)) <* notFollowedBy (satisfy (not . isSpace))))
+  case lit of
+    Just v -> do
+      sc
+      unless (finite v) (setOffset off *> fail (nonFinite tok))
+      return (NumLit v)
+    Nothing -> do
+      let numeric = case dropWhile (`elem` "+-") tok of
+            c : _ -> isDigit c || c == '.'
+            [] -> False
+      when (null tok || take 2 tok == "//") (fail missing)
+      when (dropWhile (`elem` "+-") tok `elem` ["NaN", "Infinity"]) (fail (nonFinite tok))
+      when numeric (fail (what ++ ": '" ++ tok ++ "' is not a number"))
+      (txt, _) <- match atomSyntax <?> what
+      next <- optional (lookAhead (satisfy (not . isSpace)))
+      when (isJust next) (setOffset off *> fail (what ++ ": '" ++ tok ++ "' is not one numeric atom; write arithmetic in parentheses, e.g. (w / 2)"))
+      sc
+      return (NumSrc off txt)
+  where
+    atomSyntax = (char '-' *> atomSyntax) <|> parens <|> void (identifier' :: Parser String)
+    identifier' = (:) <$> letterChar <*> many (alphaNumChar <|> char '_' <|> oneOf "₀₁₂₃₄₅₆₇₈₉")
+    parens = char '(' *> skipMany (parens <|> void (satisfy (\c -> c /= '(' && c /= ')'))) <* (void (char ')') <|> fail "missing ')' in a numeric expression")
+
 data FastDecl = FastDecl
   { fdSpec :: String
   , fdClamped :: String
@@ -93,6 +147,7 @@ data AsmResult = AsmResult
   , arFasteners :: [FastDecl]   -- `fastener` lines, for `coscad plan`
   , arPlanOpts :: [(String, String)] -- `plan key=value ...` line
   , arConstraints :: [Constraint] -- rigid frames, re-resolved for check/plan
+  , arTolerance :: Tolerance -- `tolerance` line: how far a mating loop may miss
   , arPartPos :: [(String, String)] -- top-level part name -> declaration file:line:col
   }
 
@@ -121,6 +176,7 @@ asmStmt =
     <|> clearanceStmt
     <|> fastenerStmt
     <|> planStmt
+    <|> toleranceStmt
     <|> fixedStmt
     <|> mateStmt
     <|> (lookAhead (try (identifier *> symbol "←")) *> partStmt)
@@ -161,14 +217,13 @@ fixedStmt = do
   statementKeyword "fixed"
   onStatementLine $ do
     name <- identifier <?> "fixed part instance"
-    (t,r) <- ((,) (0,0,0) (0,0,0) <$ lookAhead eof) <|> ((,) <$> vector <*> vector)
-    return (AConstraint (Fixed (sourcePosPretty pos) name t r))
-  where
-    vector = (,,) <$> literal <*> literal <*> literal
-    literal = do
-      n <- double <?> "six pose numbers: x y z rx ry rz (mm and degrees)"
-      unless (finite n) (fail "fixed pose must be finite")
-      return n
+    args <- ([] <$ lookAhead eof) <|> count 6 (numArg "fixed pose" "fixed needs six pose numbers: x y z rx ry rz (mm and degrees; numeric bindings and (arithmetic) allowed)" (const "fixed pose must be finite"))
+    return $ AConstraint $ \env -> do
+      vs <- mapM (evalNumArg env) args
+      let (t, r) = case vs of
+            [x, y, z, rx, ry, rz] -> ((x, y, z), (rx, ry, rz))
+            _ -> ((0, 0, 0), (0, 0, 0))
+      return (Fixed (sourcePosPretty pos) name t r)
 
 mateStmt :: Parser AsmStmt
 mateStmt = do
@@ -179,12 +234,31 @@ mateStmt = do
     cf <- frameRef
     parent <- identifier <?> "parent part instance"
     pf <- frameRef
-    opts <- options "mate" $ \opt -> case opt of
-      OHint (k,v) | k `elem` ["roll", "gap"] -> numberHint k (if k == "roll" then "angle in degrees" else "distance in mm") (const True) "positive, zero or negative" v
-      OHint (k,_) -> Left ("unknown mate option '" ++ k ++ "'" ++ suggestion ["roll", "gap"] k ++ "; choose roll or gap")
-      _ -> Left "mate takes roll=degrees and gap=mm options"
-    let get k = maybe 0 id (lookup k [h | OHint h <- opts] >>= readFinite)
-    return (AConstraint (Mate (sourcePosPretty pos) child cf parent pf (get "roll") (get "gap")))
+    opts <- mateOptions []
+    return $ AConstraint $ \env -> do
+      let get k = maybe (Right 0) (evalNumArg env) (lookup k opts)
+      roll <- get "roll"
+      gap <- get "gap"
+      return (Mate (sourcePosPretty pos) child cf parent pf roll gap)
+  where
+    mateOptions seen =
+      ( do
+          off <- getOffset
+          _ <- lookAhead (try (identifier *> symbol "="))
+          k <- identifier
+          _ <- char '=' <* hspace
+          when (k `elem` seen) (setOffset off *> fail ("duplicate mate option '" ++ k ++ "'; specify it once"))
+          unless (k `elem` ["roll", "gap"]) (setOffset off *> fail ("unknown mate option '" ++ k ++ "'" ++ suggestion ["roll", "gap"] k ++ "; choose roll or gap"))
+          let units = if k == "roll" then "angle in degrees" else "distance in mm"
+              what = "mate " ++ k ++ " (" ++ units ++ ")"
+          v <- numArg what ("missing value after '" ++ k ++ "='") (\raw -> k ++ "=" ++ raw ++ ": expected a finite " ++ units ++ ", positive, zero or negative")
+          ((k, v) :) <$> mateOptions (k : seen)
+      )
+        <|> ( do
+                bad <- optional (lookAhead (symbol "×" <|> symbol "▽"))
+                when (isJust bad) (fail "mate takes roll=degrees and gap=mm options")
+                pure []
+            )
 
 -- One shared resolution path for assembled views, tagged planner instances
 -- and checker-hidden references. Counts are manufacturing multiplicities;
@@ -194,10 +268,10 @@ resolveAssembly ar = either (Left . errorText) Right . resolveAssemblyChecked ar
 
 -- | 'resolveAssembly' keeping the input/design distinction for exit codes.
 resolveAssemblyChecked :: AsmResult -> VarTable -> Either AsmError VarTable
-resolveAssemblyChecked ar = resolveWithConstraints (arMode ar) (arDefs ar) (arPartMeta ar) (arPartPos ar) (arConstraints ar)
+resolveAssemblyChecked ar = resolveWithConstraints (arMode ar) (arTolerance ar) (arDefs ar) (arPartMeta ar) (arPartPos ar) (arConstraints ar)
 
-resolveWithConstraints :: SynMode -> [Def] -> [(String, (Int, [(String,String)]))] -> [(String, String)] -> [Constraint] -> VarTable -> Either AsmError VarTable
-resolveWithConstraints mode defs meta positions constraints table0 = do
+resolveWithConstraints :: SynMode -> Tolerance -> [Def] -> [(String, (Int, [(String,String)]))] -> [(String, String)] -> [Constraint] -> VarTable -> Either AsmError VarTable
+resolveWithConstraints mode tol defs meta positions constraints table0 = do
   case [d | d <- defs, defName d == "asm", not (null constraints)] of
     d : _ -> Left (InputError (sourcePosPretty (defPos d) ++ ": assembly constraints generate asm; remove the manual asm = definition or remove fixed/mate statements"))
     [] -> return ()
@@ -207,7 +281,7 @@ resolveWithConstraints mode defs meta positions constraints table0 = do
   table <- either (Left . InputError) Right (resolveVariables mode defs table0)
   if null constraints then return table else do
     parts <- mapM (\(n,_) -> maybe (Left (InputError (declared n ++ ": missing constrained instance '" ++ n ++ "'"))) (\s -> Right (n, declared n, s)) (Map.lookup n table0)) meta
-    asm <- solveConstraints parts constraints
+    asm <- solveConstraints tol parts constraints
     return (Map.insert "asm" asm table)
   where
     location = case constraints of Fixed loc _ _ _ : _ -> loc; Mate loc _ _ _ _ _ _ : _ -> loc; [] -> "assembly"
@@ -218,12 +292,18 @@ onStatementLine :: Parser a -> Parser a
 onStatementLine p = do
   off <- getOffset
   rest <- expressionString
-  case parse (sc *> p <* eof) "" rest of
-    Left e -> parseError (shiftErr off (NE.head (bundleErrors e)))
+  -- the inner parse starts at the line's offset in the file, so offsets
+  -- inside it (and in its errors) are file offsets
+  let st =
+        State
+          { stateInput = rest
+          , stateOffset = off
+          , statePosState = PosState {pstateInput = rest, pstateOffset = off, pstateSourcePos = initialPos "", pstateTabWidth = defaultTabWidth, pstateLinePrefix = ""}
+          , stateParseErrors = []
+          }
+  case snd (runParser' (sc *> p <* eof) st) of
+    Left e -> parseError (NE.head (bundleErrors e))
     Right a -> return a
-  where
-    shiftErr k (TrivialError o u e) = TrivialError (o + k) u e
-    shiftErr k (FancyError o e) = FancyError (o + k) e
 
 -- Check each option at its token, including duplicates, before losing positions.
 options :: String -> (POpt -> Either String ()) -> Parser [POpt]
@@ -323,6 +403,14 @@ validatePlanOpt (key, raw)
     face s = case parse (anchorVec <* eof) "" s of
       Right (x, y, z) | abs x + abs y + abs z == 1 -> Right ()
       _ -> Left (at ++ "unknown rest face '" ++ s ++ "'; choose top, bot, lft, rt, fwd, or bak (aliases allowed)")
+
+-- | `tolerance <mm> [<rotation>]`: how far a mating loop may miss and
+-- still close (defaults 1e-6 mm and 1e-8; see 'Tolerance').
+toleranceStmt :: Parser AsmStmt
+toleranceStmt = statementKeyword "tolerance" *> onStatementLine (do
+  p <- distance "position tolerance" (> 0) "greater than zero"
+  r <- distance "rotation tolerance" (> 0) "greater than zero" <|> pure (tolRotation defaultTolerance)
+  return (ATolerance (Tolerance p r)))
 
 clearanceStmt :: Parser AsmStmt
 clearanceStmt = statementKeyword "clearance" *> onStatementLine (AClearance <$> distance "clearance" (>= 0) "non-negative")
@@ -445,10 +533,14 @@ loadAssembly visited path
                   Right entries -> do
                     let table0 = Map.fromList [(n, s) | (n, s, _) <- entries]
                         meta = [(n, (c, h)) | APart n _ c _ h <- partsS]
-                        constraints = [c | AConstraint c <- stmts]
-                    case resolveWithConstraints fmode defs meta positions constraints table0 of
+                        tol = last (defaultTolerance : [t | ATolerance t <- stmts])
+                        evaluated = do
+                          (nums, _) <- either (Left . InputError) Right (numericPhase fmode defs table0)
+                          let env = NumEnv path fbody (Ctx fmode table0 nums)
+                          mapM (\c -> either (Left . InputError . prettyBundle) Right (c env)) [c | AConstraint c <- stmts]
+                    case evaluated >>= \constraints -> (,) constraints <$> resolveWithConstraints fmode tol defs meta positions constraints table0 of
                       Left err -> return (Left err)
-                      Right table ->
+                      Right (constraints, table) ->
                         return $
                           Right
                             AsmResult
@@ -465,6 +557,7 @@ loadAssembly visited path
                               , arFasteners = [f | AFastener f <- stmts]
                               , arPlanOpts = concat [o | APlan o <- stmts]
                               , arConstraints = constraints
+                              , arTolerance = tol
                               , arPartPos = positions
                               , arFlat = concat [f | (_, _, f) <- entries]
                               }

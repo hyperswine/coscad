@@ -16,6 +16,28 @@ and this project adheres to the
   internal error (exit 1) instead of crashing. No behaviour change: every
   generated file is byte-identical.
 
+- **Frames through nested subassemblies (additive).** A constraint-solved
+  assembly now tags each placed instance with its alias, so a parent can
+  pick one copy of a frame with a dotted path: `mate l @a s @q.b`, or
+  `@s.q.b` one level further up. An unqualified frame present in several
+  instances is still ambiguous, and the error now lists the qualified
+  choices (`@p.b, @q.b`); an unknown frame lists the instance aliases. The
+  generated `.scad` is unchanged (tags emit nothing).
+
+- **Numeric expressions and a tolerance for assembly constraints (additive).**
+  - `fixed` poses and the `roll=` / `gap=` options of `mate` now take a
+    numeric atom, as `.coscad` arguments do: a literal, a numeric binding
+    of the `.assemble` file (defined anywhere in it), `-atom`, or
+    parenthesized arithmetic, e.g. `fixed l2 w (w / 2) 0 0 0 -45` or
+    `roll=(a / 2)`. Existing files parse as before.
+  - `tolerance <mm> [<rotation>]` sets how far a mating loop may miss and
+    still close; the defaults stay 1e-6 mm and 1e-8. A loop that does not
+    close now reports the tolerance next to its residuals.
+  - Errors in these values are input errors (exit 1) at their token: an
+    undefined name, a part name used as a number, a non-finite result,
+    arithmetic outside parentheses. `roll=abc` used to say "expected a
+    finite angle in degrees"; it now says `undefined variable 'abc'`.
+
 - **Internal: one linear-algebra module.** `Coscad.Linalg` now holds the
   vector and matrix helpers, the rotations and the bed-orientation helpers
   (`downRot`, `downMat`) that were copied across `Geometry`, `Next`,

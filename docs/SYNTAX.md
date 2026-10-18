@@ -63,7 +63,12 @@ asm-side expressions; each referenced part file keeps its own pragma), plus:
 
 ```
 clearance 0.15        -- required minimum gap in mm (0 = report contacts only)
+tolerance 0.00001     -- how far a mating loop may miss and still close (mm [rotation])
 ```
+
+`fixed` poses and `mate` `roll=`/`gap=` values take numeric atoms (literal,
+binding, `-w`, `(w / 2)`); see docs/LANGEXTENSION.md, "Rigid assembly
+constraints".
 
 `coscad check` isolates each part inside the asm expression (all other parts
 bound to Empty), renders real meshes, splits instances (a mirrored pair =

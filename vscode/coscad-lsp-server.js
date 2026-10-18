@@ -382,7 +382,7 @@ connection.onCompletion((params) => {
     }
   }
 
-  for (const keyword of ['!glyph', '!simple', 'plate', 'clearance', 'fastener', 'plan', 'fixed', 'mate', '@', '←', '×', '▽', 'loft']) {
+  for (const keyword of ['!glyph', '!simple', 'plate', 'clearance', 'tolerance', 'fastener', 'plan', 'fixed', 'mate', '@', '←', '×', '▽', 'loft']) {
     completionItems.push({
       label: keyword,
       kind: 14,

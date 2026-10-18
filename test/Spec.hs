@@ -23,7 +23,7 @@ import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
 import Coscad.Assemble (AsmResult (..), defaultMaxZ, loadAssembleFile, loadAssembly, processAssemble, resolveAssembly)
 import Coscad.Variants (FlatPart (..), Placement (..), brimHint, lookupVariant, packBeds, packBedsBrim, placedVariants, printInstances, printVariants, turnZ, variantMap, variantNames)
-import Coscad.Constraint (AsmError (..))
+import Coscad.Constraint (AsmError (..), Constraint (..), Tolerance (..), defaultTolerance, errorText)
 import Coscad.Check (processCheckIn, processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
 import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3, vlen, vsub, scale3, vadd, vmul, rodMat, mirrorMat)
@@ -2033,6 +2033,73 @@ constraintLoopTier t dir = do
   ro <- loadAssembly [] (dir </> "outer.assemble")
   assertT t "a loop conflict in a subassembly is a design error of the parent too, located in the subassembly"
     (case ro of Left (DesignError m) -> ((dir </> "ring.assemble") ++ ":17:1:") `isPrefixOf` m; _ -> False) (either show (const "loaded") ro)
+  -- numeric bindings and arithmetic in fixed / mate, and the tolerance statement (step 10)
+  let posAt n c = file ++ ":" ++ show (n :: Int) ++ ":" ++ show (c :: Int) ++ ":"
+      poses r = case r of
+        Right ar -> Right [(n, tr, rot) | Fixed _ n tr rot <- arConstraints ar]
+        Left e -> Left (errorText e)
+      mates r = case r of
+        Right ar -> Right [(roll, gap) | Mate _ _ _ _ _ roll gap <- arConstraints ar]
+        Left e -> Left (errorText e)
+  rb <- load ("w = 8.535533906\n" ++ links 2 ++ "fixed l1\nfixed l2 w 0 0 0 0 0\n")
+  assertT t "fixed: a numeric binding is a pose number" (poses rb == Right [("l1", (0, 0, 0), (0, 0, 0)), ("l2", (8.535533906, 0, 0), (0, 0, 0))]) (show (poses rb))
+  re <- load (links 2 ++ "fixed l1\nfixed l2 (w / 2) -w (-(w - 4)) 0 0 (a * 3)\nw = 10\na = w + 5\n")
+  assertT t "fixed: atoms, negation, parenthesized arithmetic and forward bindings"
+    (poses re == Right [("l1", (0, 0, 0), (0, 0, 0)), ("l2", (5, -10, -6), (0, 0, 45))]) (show (poses re))
+  rm1 <- load ("a = 90\n" ++ links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=(a / 2) gap=-g\ng = 0.5\n")
+  assertT t "mate: roll and gap take bindings and arithmetic" (mates rm1 == Right [(45, -0.5)]) (show (mates rm1))
+  rm2 <- load (links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=45 gap=-0.5\n")
+  assertT t "mate: an expression gives the same assembly as the literal"
+    (case (rm1, rm2) of (Right a1, Right a2) -> fmap show (arAsm a1) == fmap show (arAsm a2); _ -> False) ""
+  let two5 = links 2 ++ "fixed l1\nfixed l2 8.53553 -8.53553 0 0 0 -45\nmate l2 @a l1 @b\n"
+  design "tolerance: a 5-decimal irrational pose misses the default tolerance, and the error says so"
+    two5 (\m -> "position residual 3.9" `isInfixOf` m && "tolerance 1.0e-6 mm, 1.0e-8" `isInfixOf` m)
+  rt <- load ("tolerance 0.00001\n" ++ two5)
+  assertT t "tolerance: tolerance 0.00001 closes the same loop" (either (const False) (const True) rt) (either errorText (const "") rt)
+  assertT t "tolerance: recorded, with the default rotation tolerance"
+    (either (const False) ((== Tolerance 0.00001 1e-8) . arTolerance) rt) ""
+  rt2 <- load ("tolerance 0.000001 0.001\n" ++ links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=0.01\nmate l2 @a l1 @b\n")
+  assertT t "tolerance: a rotation tolerance admits a small closing roll" (either (const False) (const True) rt2) (either errorText (const "") rt2)
+  rd0 <- load (links 1 ++ "fixed l1\n")
+  assertT t "tolerance: default when not declared" (either (const False) ((== defaultTolerance) . arTolerance) rd0) ""
+  inputErr "tolerance must be positive" (links 2 ++ "tolerance 0\nfixed l1\nmate l2 @a l1 @b\n") [posAt 3 11, "position tolerance must be a finite distance in mm, greater than zero"]
+  inputErr "fixed: an unknown binding is an undefined variable at its token" (links 2 ++ "fixed l1\nfixed l2 0 q 0 0 0 0\n") [posAt 4 12, "undefined variable 'q'"]
+  inputErr "fixed: a non-finite expression is an error at its token" (links 2 ++ "fixed l1\nfixed l2 0 0 (1 / 0) 0 0 0\n") [posAt 4 14, "must be finite"]
+  inputErr "fixed: a part name is not a number" (links 2 ++ "fixed l1\nfixed l2 l1 0 0 0 0 0\n") [posAt 4 10, "'l1' is a shape, not a number"]
+  inputErr "fixed: arithmetic outside parentheses is refused with a fix" ("w = 1\n" ++ links 2 ++ "fixed l1\nfixed l2 w+1 0 0 0 0 0\n") [posAt 5 10, "write arithmetic in parentheses"]
+  inputErr "mate: an unknown binding in roll= is an undefined variable at its token" (links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=(r / 2)\n") [posAt 4 24, "undefined variable 'r'"]
+  inputErr "mate: a value that is not a number" (links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=90deg\n") [posAt 4 23, "'90deg' is not a number"]
+  inputErr "mate: unknown options are still refused" (links 2 ++ "fixed l1\nmate l2 @a l1 @b spin=2\n") [posAt 4 18, "unknown mate option 'spin'"]
+  inputErr "mate: duplicate options are still refused" (links 2 ++ "fixed l1\nmate l2 @a l1 @b gap=1 gap=2\n") [posAt 4 24, "duplicate mate option 'gap'"]
+  -- frames of nested constraint assemblies, addressed through instance aliases (step 11)
+  writeFile (dir </> "sub.assemble") "p ← link.coscad ×1\nq ← link.coscad ×1\nfixed p\nmate q @a p @b\n"
+  let nested ref = "s ← sub.assemble ×1\nl ← link.coscad ×1\nfixed s\nmate l @a s " ++ ref ++ "\n"
+      near3 (a, b, c) (x, y, z) = all (< 1e-9) [abs (a - x), abs (b - y), abs (c - z)]
+      zAxis (MatingFrame _ m) = let (_, _, z) = matTranspose m in z
+  inputErr "nested: an unqualified frame present in two instances is ambiguous and names the qualified choices"
+    (nested "@b") [at 4, "ambiguous frame '@b': 2 copies", "qualify it with its instance: @p.b, @q.b"]
+  rq <- load (nested "@q.b")
+  case rq >>= maybe (Left (InputError "no asm")) Right . arAsm of
+    Left e -> failT t "nested: @q.b selects one copy" (errorText e)
+    Right asm -> case (frameOf "l.a" asm, frameOf "s.q.b" asm, frameOf "s.p.b" asm) of
+      (Right la, Right qb, Right pb) -> do
+        assertT t "nested: @q.b mates l to q's frame (origins meet, normals oppose)"
+          (near3 (frameOrigin la) (frameOrigin qb) && near3 (zAxis la) (vneg (zAxis qb))) (show (la, qb))
+        assertT t "nested: and not to p's" (not (near3 (frameOrigin la) (frameOrigin pb))) (show (la, pb))
+      other -> failT t "nested: qualified frames of the solved assembly" (show other)
+  inputErr "nested: an unknown qualified frame lists the instance aliases" (nested "@p.zz") [at 4, "unknown frame '@p.zz'", "qualify with an instance alias: p q"]
+  writeFile (dir </> "nested.assemble") (nested "@q.b")
+  let outer ref = "n ← nested.assemble ×1\nm ← link.coscad ×1\nfixed n\nmate m @a n " ++ ref ++ "\n"
+  r2 <- load (outer "@s.q.b")
+  assertT t "nested: a path through two levels (@s.q.b)" (either (const False) (const True) r2) (either errorText (const "") r2)
+  r3 <- load (outer "@q.b")
+  assertT t "nested: a unique partial path also resolves (@q.b from the grandparent)" (either (const False) (const True) r3) (either errorText (const "") r3)
+  rpl <- load (nested "@q.b")
+  case rpl of
+    Left e -> failT t "nested: planner tags" (errorText e)
+    Right ar -> assertT t "nested: planner substitution keeps one Tag per instance"
+      (either (const False) (\tbl -> maybe False (\a -> length (filter (== "Tag \"l\"") (tagNames a)) == 1) (Map.lookup "asm" tbl))
+        (resolveAssembly ar (Map.fromList [(n, Tag n sh) | (n, sh) <- arParts ar]))) ""
 
 -- ------------------------------------------------------------------
 -- variant names: one id and one artefact per (source, orientation)
@@ -2100,6 +2167,12 @@ distinctVariants (ids, paths, used) =
   allDistinct ids && allDistinct paths && all (\u -> length (filter (== u) ids) == 1) used && not (null used)
   where
     allDistinct xs = and [length (filter (== x) xs) == 1 | x <- xs]
+
+-- | Every Tag in a shape, outermost first, rendered as `Tag "name"`.
+tagNames :: Shape -> [String]
+tagNames sh = case sh of
+  Tag n x -> ("Tag " ++ show n) : tagNames x
+  _ -> concatMap tagNames (shapeChildren sh)
 
 linalgTier :: T -> IO ()
 linalgTier t = do

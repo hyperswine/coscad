@@ -366,6 +366,7 @@ attaches.
 .Bd -literal -offset indent
 plate 250 250 6 180 brim=8           // bed width depth [margin [max height]] [brim=N|auto]
 clearance 0.15                       // minimum gap for `coscad check`
+tolerance 0.00001                    // loop closure: mm [rotation] (defaults 1e-6, 1e-8)
 gap = 2                              // numbers work here too
 center ← center.coscad ×1
 larch  ← l_arch.coscad ×1 ▽top seam=rear
@@ -393,6 +394,23 @@ The packer turns parts 90\(de about Z when that saves a shelf or a plate
 .Ql rot_z
 in each placement) and fills gaps with later, smaller parts before it opens
 another plate.
+.Pp
+.Ql fixed
+poses and the
+.Ql roll=
+/
+.Ql gap=
+options of
+.Ql mate
+take numeric atoms: a literal, a numeric binding,
+.Ql -w ,
+or
+.Ql (w / 2) .
+.Ql tolerance mm [rotation]
+sets how far a mating loop may miss and still close.
+A frame inside a constrained subassembly is addressed through instance
+aliases:
+.Ql mate l @a s @q.b .
 .Ql brim=N
 reserves an N mm brim around each instance when packing;
 .Ql plate … brim=N
