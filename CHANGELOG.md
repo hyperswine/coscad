@@ -8,6 +8,15 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Faster name resolution.** Definitions still resolve in rounds,
+  dependencies first, but a pending definition is parsed again only when
+  a name in its text was resolved in the previous round. Before, every
+  pending definition was re-parsed each round. A 1200-definition chain
+  now validates in about 0.2 s instead of 6.5 s; a 400-definition chain
+  takes 0.04 s instead of 0.7 s. That helps validate-on-save in VS Code.
+  Results and error messages are the same, including which error is
+  reported when several apply.
+
 - **Internal: the test suite is split by tier.** `test/Spec.hs` (2284
   lines) is now the entry point. The tiers live in `test/Tier/*.hs`, and
   `test/Harness.hs` holds the shared helpers. The tests themselves are
