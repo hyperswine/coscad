@@ -8,6 +8,12 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Print photos in Git LFS.** Camera photos under `models/` (27 files,
+  2.8 MB) are now stored in Git LFS (`.gitattributes`); renders and
+  diagrams stay in git. History is not rewritten: earlier commits still
+  hold the original images. Run `git lfs install` (or `git lfs pull`
+  after cloning) to get the photos rather than pointer files.
+
 - **Repo hygiene: generated files are no longer committed.**
   - 191 generated files were removed from git (they stay on disk). These are
     example scenes (`_asm`, `_plate`, `_part_`, `_next_`, `_step*`
