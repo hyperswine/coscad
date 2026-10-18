@@ -229,6 +229,24 @@ instance. Counts above one are rejected in constrained assemblies because
 they do not identify individual poses. A nested assembly acts as one rigid
 instance. Each connected component needs at least one fixed instance.
 
+A constrained subassembly keeps its instances apart: each placed instance
+carries its alias, so the parent can address one copy of a frame with a
+dotted path, `@alias.frame`. With `sub.assemble` placing `p` and `q` (both
+from `link.coscad`, which has frames `a` and `b`):
+
+```
+s ← sub.assemble ×1
+l ← link.coscad ×1
+fixed s
+mate l @a s @q.b        // @b alone is ambiguous: 2 copies
+```
+
+Paths go through as many levels as needed (`@s.q.b` from a grandparent), and
+a shorter path works when it is unique. An unqualified frame that exists in
+several instances is still an error; the message lists the qualified choices
+(`@p.b, @q.b`). Only constraint-generated assemblies tag their instances; a
+manual `asm = …` expression does not.
+
 `fixed instance [x y z rx ry rz]` defaults to the identity pose. If provided,
 all six numbers are required: mm translation and XYZ rotation in degrees (X,
 then Y, then Z). Each pose number, and the `roll=degrees` / `gap=mm` mate

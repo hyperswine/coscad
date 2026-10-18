@@ -2070,6 +2070,35 @@ constraintLoopTier t dir = do
   inputErr "mate: a value that is not a number" (links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=90deg\n") [posAt 4 23, "'90deg' is not a number"]
   inputErr "mate: unknown options are still refused" (links 2 ++ "fixed l1\nmate l2 @a l1 @b spin=2\n") [posAt 4 18, "unknown mate option 'spin'"]
   inputErr "mate: duplicate options are still refused" (links 2 ++ "fixed l1\nmate l2 @a l1 @b gap=1 gap=2\n") [posAt 4 24, "duplicate mate option 'gap'"]
+  -- frames of nested constraint assemblies, addressed through instance aliases (step 11)
+  writeFile (dir </> "sub.assemble") "p ← link.coscad ×1\nq ← link.coscad ×1\nfixed p\nmate q @a p @b\n"
+  let nested ref = "s ← sub.assemble ×1\nl ← link.coscad ×1\nfixed s\nmate l @a s " ++ ref ++ "\n"
+      near3 (a, b, c) (x, y, z) = all (< 1e-9) [abs (a - x), abs (b - y), abs (c - z)]
+      zAxis (MatingFrame _ m) = let (_, _, z) = matTranspose m in z
+  inputErr "nested: an unqualified frame present in two instances is ambiguous and names the qualified choices"
+    (nested "@b") [at 4, "ambiguous frame '@b': 2 copies", "qualify it with its instance: @p.b, @q.b"]
+  rq <- load (nested "@q.b")
+  case rq >>= maybe (Left (InputError "no asm")) Right . arAsm of
+    Left e -> failT t "nested: @q.b selects one copy" (errorText e)
+    Right asm -> case (frameOf "l.a" asm, frameOf "s.q.b" asm, frameOf "s.p.b" asm) of
+      (Right la, Right qb, Right pb) -> do
+        assertT t "nested: @q.b mates l to q's frame (origins meet, normals oppose)"
+          (near3 (frameOrigin la) (frameOrigin qb) && near3 (zAxis la) (vneg (zAxis qb))) (show (la, qb))
+        assertT t "nested: and not to p's" (not (near3 (frameOrigin la) (frameOrigin pb))) (show (la, pb))
+      other -> failT t "nested: qualified frames of the solved assembly" (show other)
+  inputErr "nested: an unknown qualified frame lists the instance aliases" (nested "@p.zz") [at 4, "unknown frame '@p.zz'", "qualify with an instance alias: p q"]
+  writeFile (dir </> "nested.assemble") (nested "@q.b")
+  let outer ref = "n ← nested.assemble ×1\nm ← link.coscad ×1\nfixed n\nmate m @a n " ++ ref ++ "\n"
+  r2 <- load (outer "@s.q.b")
+  assertT t "nested: a path through two levels (@s.q.b)" (either (const False) (const True) r2) (either errorText (const "") r2)
+  r3 <- load (outer "@q.b")
+  assertT t "nested: a unique partial path also resolves (@q.b from the grandparent)" (either (const False) (const True) r3) (either errorText (const "") r3)
+  rpl <- load (nested "@q.b")
+  case rpl of
+    Left e -> failT t "nested: planner tags" (errorText e)
+    Right ar -> assertT t "nested: planner substitution keeps one Tag per instance"
+      (either (const False) (\tbl -> maybe False (\a -> length (filter (== "Tag \"l\"") (tagNames a)) == 1) (Map.lookup "asm" tbl))
+        (resolveAssembly ar (Map.fromList [(n, Tag n sh) | (n, sh) <- arParts ar]))) ""
 
 -- ------------------------------------------------------------------
 -- variant names: one id and one artefact per (source, orientation)
@@ -2123,6 +2152,12 @@ distinctVariants (ids, paths, used) =
   allDistinct ids && allDistinct paths && all (\u -> length (filter (== u) ids) == 1) used && not (null used)
   where
     allDistinct xs = and [length (filter (== x) xs) == 1 | x <- xs]
+
+-- | Every Tag in a shape, outermost first, rendered as `Tag "name"`.
+tagNames :: Shape -> [String]
+tagNames sh = case sh of
+  Tag n x -> ("Tag " ++ show n) : tagNames x
+  _ -> concatMap tagNames (shapeChildren sh)
 
 linalgTier :: T -> IO ()
 linalgTier t = do

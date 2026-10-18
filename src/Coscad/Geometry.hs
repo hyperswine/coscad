@@ -5,6 +5,7 @@ module Coscad.Geometry (module Coscad.Geometry, module Coscad.Linalg) where
 
 import Coscad.Linalg
 import Coscad.Shape
+import Data.List (intercalate, isSuffixOf, nub)
 import qualified Data.Map.Strict as Map
 
 -- ANCHOR / ATTACHMENT ENGINE -----------------------------------
@@ -80,6 +81,9 @@ framePoints = Map.fromListWith (++) . map (\(n,f) -> (n,[f])) . go . resolve
     moved m t = map (\(n, MatingFrame p b) -> (n, MatingFrame (vadd t (mApply m p)) (matMul m b)))
     go s = case s of
       Frame n p b x -> (n, MatingFrame p b) : go x
+      -- an assembly instance publishes its frames twice: as themselves
+      -- and qualified by its alias (@q.b, and @s.q.b one level up)
+      Tag n x -> let fs = go x in fs ++ [(n ++ "." ++ k, f) | (k, f) <- fs]
       Tx d x -> moved matIdentity (d,0,0) (go x)
       Ty d x -> moved matIdentity (0,d,0) (go x)
       Tz d x -> moved matIdentity (0,0,d) (go x)
@@ -100,9 +104,20 @@ frameOf name s = case Map.lookup name (framePoints s) of
   Just [MatingFrame p b] -> case rigidFrameBasis b of
     Left err -> Left ("frame '@" ++ name ++ "': " ++ err)
     Right normalized -> Right (MatingFrame p normalized)
-  Just fs -> Left ("ambiguous frame '@" ++ name ++ "': " ++ show (length fs) ++ " copies; select one instance or define a new frame on the result")
+  Just fs -> Left ("ambiguous frame '@" ++ name ++ "': " ++ show (length fs) ++ " copies; " ++ qualify)
   where
-    available = case Map.keys (framePoints s) of [] -> "none"; ns -> unwords (map ('@':) ns)
+    frames = framePoints s
+    available = case [n | n <- Map.keys frames, '.' `notElem` n] of
+      [] -> "none"
+      ns -> unwords (map ('@':) ns) ++ case nub [takeWhile (/= '.') n | n <- Map.keys frames, '.' `elem` n] of
+        [] -> ""
+        is@(i : _) -> " (qualify with an instance alias: " ++ unwords is ++ ", e.g. @" ++ i ++ "." ++ head' ns ++ ")"
+    head' ns = case ns of n : _ -> n; [] -> "name"
+    -- the shortest unambiguous qualified names for this frame
+    qualified = [q | (q, [_]) <- Map.toList frames, ('.' : name) `isSuffixOf` q, length (filter (== '.') q) == 1 + length (filter (== '.') name)]
+    qualify = case qualified of
+      [] -> "select one instance or define a new frame on the result"
+      qs -> "qualify it with its instance: " ++ intercalate ", " (map ('@' :) qs)
 
 rigidFrameBasis :: M3 -> Either String M3
 rigidFrameBasis b

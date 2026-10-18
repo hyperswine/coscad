@@ -84,13 +84,18 @@ solveConstraints tol parts constraints = do
       (loc ++ ": underconstrained assembly: no fixed root reaches " ++ unwords (map fst floating) ++ "; add fixed <instance> to each disconnected component or connect it with mate")
       : ["  note: " ++ l ++ ": '" ++ n ++ "' is declared here and is not placed" | (n, l) <- drop 1 floating])))
   placed <- mapM (\(n,_,s) -> case Map.lookup n poses of
-    Just (r,t) -> Right (Transform3 r t s)
+    Just (r,t) -> Right (Transform3 r t (tagged n s))
     Nothing -> input firstLoc ("missing pose for '" ++ n ++ "'")) parts
   let assembled = Union placed
   either (input firstLoc) Right (validateShape assembled)
   return assembled
   where
     indexed = zip [0 :: Int ..] constraints
+    -- each placed instance keeps its alias, so a parent can address its
+    -- frames as @alias.frame (the planner may have tagged it already)
+    tagged n s = case s of
+      Tag m _ | m == n -> s
+      _ -> Tag n s
     table = Map.fromList [(n, s) | (n,_,s) <- parts]
     firstLoc = case (constraints, parts) of
       (Fixed loc _ _ _ : _, _) -> loc

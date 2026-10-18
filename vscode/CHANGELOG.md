@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Frame references accept dotted instance paths (`@q.b`, `@s.q.b`).
 - `.assemble` diagnostics accept numeric atoms in `fixed` poses and `mate`
   `roll=` / `gap=` (`w`, `-w`, `(w / 2)`), report undefined or shape names
   there, and know the `tolerance <mm> [<rotation>]` statement (keyword
