@@ -1,4 +1,6 @@
 # Only needed for verify.py, not CoScad compilation or printing.
-trimesh>=4,<6
-manifold3d>=3,<4
-networkx>=3,<4
+# Exact pins, in line with pipeline.lock.json: upgrade deliberately and
+# re-run verify.py when changing them.
+trimesh==5.1.1
+manifold3d==3.5.4
+networkx==3.7

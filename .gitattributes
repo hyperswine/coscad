@@ -1,0 +1,9 @@
+# macOS AppleDouble metadata (`._*`) never belongs in an archive: a stray
+# `._coscad.cabal` breaks cabal. Package tarballs with `git archive`, or
+# with `tar --no-mac-metadata` on macOS.
+._* export-ignore
+.DS_Store export-ignore
+# Generated example scenes and manifests are not committed (see .gitignore).
+*.pdf binary
+*.png binary
+*.jpg binary
