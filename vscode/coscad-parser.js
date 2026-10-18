@@ -708,10 +708,22 @@ class COSCADParser {
   }
 
   parsePlate(tokens) {
+    // plate W D [margin [maxZ]] [brim=N|auto]
     const parser = new ExpressionParser(this, tokens.slice(1), 'legacy')
-    const values = [parser.number(), parser.number(), parser.atEnd() ? 6 : parser.number()]
+    const optionNext = () => parser.atEnd() || parser.current().value === 'brim'
+    const width = parser.number(), depth = parser.number()
+    const margin = optionNext() ? 6 : parser.number()
+    const maxZTok = parser.current()
+    const maxZ = optionNext() ? 250 : parser.number()
+    if (!(maxZ > 0)) throw new ParseError('plate max height must be a finite distance in mm, greater than zero', maxZTok || tokens[0])
+    let brim = null
+    if (!parser.atEnd() && parser.current().value === 'brim') {
+      parser.index++
+      parser.expect('=')
+      if (!parser.atEnd() && parser.current().value === 'auto') { parser.index++; brim = 5 } else brim = parser.number()
+    }
     if (!parser.atEnd()) throw new ParseError('Unexpected value in plate declaration', parser.current())
-    return { type: 'plate_declaration', width: values[0], depth: values[1], margin: values[2], position: tokens[0].position, line: tokens[0].line, column: tokens[0].column }
+    return { type: 'plate_declaration', width, depth, margin, maxZ, brim, position: tokens[0].position, line: tokens[0].line, column: tokens[0].column }
   }
 
   parseConstraint(tokens) {

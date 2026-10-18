@@ -36,7 +36,7 @@ import qualified Text.Megaparsec.Char.Lexer as L
 -- subassembly looks like any other shape from the parent's view.
 --
 -- Syntax (line oriented, like .coscad):
---   plate 220 220 6                       -- bed W D margin (optional)
+--   plate 220 220 6 180                   -- bed W D [margin [max height]]
 --   bracket ← bracket90.coscad ×4 ▽top seam=rear
 --   rail    ← rail200.coscad ×0           -- ×0: assembly-only (premade)
 --   corner  ← corner.assemble ×2          -- recursive subassembly
@@ -56,7 +56,7 @@ data POpt = OCount Int | ODown (Double, Double, Double) String | OHint (String, 
 
 data AsmStmt
   = APart String FilePath Int (Maybe ((Double, Double, Double), String)) [(String, String)]
-  | APlate Double Double Double (Maybe Double) -- ^ width, depth, margin, brim=N for parts that recommend one
+  | APlate Double Double Double Double (Maybe Double) -- ^ width, depth, margin, max print height, brim=N for parts that recommend one
   | AClearance Double
   | AFastener FastDecl
   | APlan [(String, String)]
@@ -91,6 +91,7 @@ data AsmResult = AsmResult
   { arSource :: FilePath          -- the .assemble file this came from (for diagnostics)
   , arPlate :: (Double, Double, Double)
   , arPlateBrim :: Maybe Double  -- `plate … brim=N`: brim reserved by `next` for parts whose printability recommends one
+  , arPlateMaxZ :: Double        -- `plate W D margin maxZ`: tallest part the printer can build (default 'defaultMaxZ')
   , arAsm :: Maybe Shape
   , arFlat :: [FlatPart]
   , arMode :: SynMode           -- pragma of this .assemble file
@@ -342,11 +343,18 @@ plateStmt = statementKeyword "plate" *> onStatementLine (do
   off <- getOffset
   m <- distance "plate margin" (>= 0) "non-negative" <|> pure 6
   when (m >= w / 2 || m >= d / 2) (setOffset off *> fail "plate margin must leave usable space: twice the margin must be smaller than width and depth")
+  z <- distance "plate max height" (> 0) "greater than zero" <|> pure defaultMaxZ
   brim <- optional (do
     _ <- symbol "brim"
     _ <- char '=' <* hspace
     (symbol "auto" *> pure defaultBrimMm) <|> distance "plate brim" (>= 0) "non-negative (or brim=auto)")
-  return (APlate w d m brim))
+  return (APlate w d m z brim))
+
+-- | Print height `plate W D margin` assumes without a 4th argument: the
+-- 250 mm `coscad next` always used (A1, X1, P1). Set it for smaller
+-- printers, e.g. @plate 180 180 6 180@ for an A1 mini.
+defaultMaxZ :: Double
+defaultMaxZ = 250
 
 -- | Width `plate … brim=auto` reserves: Bambu Studio's default brim width.
 defaultBrimMm :: Double
@@ -442,8 +450,9 @@ loadAssembly visited path
                     dir = takeDirectory path
                     partsS = [p | p@APart {} <- stmts]
                     defs = [d | ADef d <- stmts]
-                    plate = last ((220, 220, 6) : [(w, d, m) | APlate w d m _ <- stmts])
-                    plateBrim = last (Nothing : [b | APlate _ _ _ b <- stmts])
+                    plate = last ((220, 220, 6) : [(w, d, m) | APlate w d m _ _ <- stmts])
+                    plateMaxZ = last (defaultMaxZ : [z | APlate _ _ _ z _ <- stmts])
+                    plateBrim = last (Nothing : [b | APlate _ _ _ _ b <- stmts])
                     clr = last (0 : [c | AClearance c <- stmts])
                 loaded <- mapM (loadRef (path : visited) dir) partsS
                 case sequence loaded of
@@ -463,6 +472,7 @@ loadAssembly visited path
                               { arSource = path
                               , arPlate = plate
                               , arPlateBrim = plateBrim
+                              , arPlateMaxZ = plateMaxZ
                               , arAsm = Map.lookup "asm" table
                               , arMode = fmode
                               , arClearance = clr
@@ -569,54 +579,128 @@ variantNames printable = zip keys (unique (zipWith pick plain qualified))
 instId :: FlatPart -> Int -> String
 instId fp i = intercalate "/" (fpTrail fp ++ [fpName fp]) ++ "_" ++ show i
 
--- | Shelf-pack footprints onto as many plates as needed, largest
--- first; margin around and between. Shared by the design stage
+-- | One packed instance: its id and variant, its footprint as placed
+-- (width and depth swapped when turned), the corner of the part itself
+-- (inside any reserved brim), the brim reserved around it, and its turn
+-- about Z: 0, or 90 degrees counter-clockwise about the variant's
+-- origin followed by a shift of its original depth along +X, so the
+-- turned part still starts at its local (0, 0) (see 'turnZ').
+data Placement = Placement
+  { plInstance :: String
+  , plKey :: VKey
+  , plSize :: (Double, Double)
+  , plAt :: (Double, Double)
+  , plBrim :: Double
+  , plRotZ :: Int
+  }
+  deriving (Eq, Show)
+
+-- | The point a variant-local point (at the origin, footprint @w × d@)
+-- moves to when its placement is turned 90° about Z: @(d - y, x)@.
+turnZ :: Double -> (Double, Double, Double) -> (Double, Double, Double)
+turnZ d (x, y, z) = (d - y, x, z)
+
+-- | Shelf-pack footprints onto as many plates as needed, with the margin
+-- around and between them. Shared by the design stage
 -- (`coscad foo.assemble`) and the manufacturing stage (`coscad next`).
 packBeds ::
   (Double, Double, Double) ->
   [(String, VKey, (Double, Double))] ->
-  Either String [[(String, VKey, (Double, Double), (Double, Double))]]
-packBeds plate items =
-  map (map (\(iid, k, wd, xy, _) -> (iid, k, wd, xy))) <$> packBedsBrim plate [(iid, k, wd, 0) | (iid, k, wd) <- items]
+  Either String [[Placement]]
+packBeds plate items = packBedsBrim plate [(iid, k, wd, 0) | (iid, k, wd) <- items]
 
 -- | 'packBeds' with a brim width reserved around each footprint: the
 -- packer places the footprint grown by the brim on every side, so the
 -- part keeps the margin to its neighbours and the plate edge *outside*
 -- its brim. Placements are the part's own corner and size (the brim is
--- returned alongside), so meshes are stamped exactly as before. Order is
--- deterministic: largest reserved area first, ties in input order.
+-- returned alongside), so meshes are stamped exactly as before.
+--
+-- First-fit decreasing over shelves, deterministic: items go largest
+-- reserved area first (ties in input order). A plate stays open until
+-- every remaining item has been tried; an item that fits nowhere waits
+-- for the next plate. Each item takes the first of
+--
+--   1. the open (last) shelf, as declared;
+--   2. a gap at the end of an earlier shelf, as declared;
+--   3. any shelf, turned 90° about Z;
+--   4. a new shelf, as declared;
+--   5. a new shelf, turned.
+--
+-- so a layout the old next-fit packer could finish is kept unless a
+-- later, smaller item can fill a gap it left. Square cells never turn.
 packBedsBrim ::
   (Double, Double, Double) ->
   [(String, VKey, (Double, Double), Double)] ->
-  Either String [[(String, VKey, (Double, Double), (Double, Double), Double)]]
+  Either String [[Placement]]
 packBedsBrim (pw, pd, m) items0 = do
   unless (all finite [pw, pd, m] && pw > 0 && pd > 0 && m >= 0 && m < pw / 2 && m < pd / 2) $
     Left "plate dimensions must be finite and positive; margin must be non-negative and leave usable space"
   mapM_ (\(iid, _, (w, d), b) -> do
     unless (finite w && finite d && w > 0 && d > 0) (Left (iid ++ " footprint must be finite and positive"))
-    unless (finite b && b >= 0) (Left (iid ++ " brim must be a finite, non-negative width"))) items0
-  go (sortBy bigger items0)
+    unless (finite b && b >= 0) (Left (iid ++ " brim must be a finite, non-negative width"))
+    let (cw, cd) = cell (w, d) b
+        fits (a, c) = m + a <= pw - m + eps && m + c <= pd - m + eps
+    unless (fits (cw, cd) || fits (cd, cw)) $
+      Left (iid ++ " footprint " ++ show w ++ "x" ++ show d ++ (if b > 0 then " with a " ++ show b ++ " mm brim" else "")
+        ++ " exceeds the " ++ show pw ++ "x" ++ show pd ++ " plate with " ++ show m ++ " margin, even turned 90 degrees")) items0
+  Right (go (sortBy bigger items0))
   where
+    eps = 1e-9
     cell (w, d) b = (w + 2 * b, d + 2 * b)
     bigger (_, _, f1, b1) (_, _, f2, b2) =
       let (w1, d1) = cell f1 b1
           (w2, d2) = cell f2 b2
        in compare (w2 * d2) (w1 * d1)
-    go [] = Right []
-    go xs = do
-      (placed, rest) <- fitOne xs
-      (placed :) <$> go rest
-    fitOne = fit m m 0 []
-    fit _ _ _ acc [] = Right (reverse acc, [])
-    fit x y rowD acc (item@(iid, k, (w, d), b) : rest)
-      | cw > pw - 2 * m || cd > pd - 2 * m =
-          Left (iid ++ " footprint " ++ show w ++ "x" ++ show d ++ (if b > 0 then " with a " ++ show b ++ " mm brim" else "")
-            ++ " exceeds the " ++ show pw ++ "x" ++ show pd ++ " plate with " ++ show m ++ " margin")
-      | x + cw > pw - m = fit m (y + rowD + m) 0 acc (item : rest)
-      | y + cd > pd - m = Right (reverse acc, item : rest)
-      | otherwise = fit (x + cw + m) y (max rowD cd) ((iid, k, (w, d), (x + b, y + b), b) : acc) rest
+    -- every item fits an empty plate (checked above), so each plate
+    -- takes at least one and this terminates
+    go [] = []
+    go xs = let (placed, rest) = fillPlate xs in placed : go rest
+    -- shelves are (y, depth, next free x), bottom first
+    fillPlate = loop [] [] []
       where
-        (cw, cd) = cell (w, d) b
+        loop _ acc deferred [] = (reverse acc, reverse deferred)
+        loop shelves acc deferred (item : rest) = case place shelves item of
+          Just (shelves', p) -> loop shelves' (p : acc) deferred rest
+          Nothing -> loop shelves acc (item : deferred) rest
+    place shelves (iid, k, (w, d), b) =
+      firstJust (map try (candidates shelves))
+      where
+        turnable = abs (w - d) > eps
+        try (Left i, turned)
+          | turned && not turnable = Nothing
+          | otherwise =
+              let (y, depth, x) = shelves !! i
+                  isOpen = i == length shelves - 1
+                  (cw, cd) = orient turned
+               in if x + cw <= pw - m + eps && (if isOpen then y + cd <= pd - m + eps else cd <= depth + eps)
+                    then Just (update i (y, max depth cd, x + cw + m), mk x y turned)
+                    else Nothing
+        try (Right (), turned)
+          | turned && not turnable = Nothing
+          | otherwise =
+              let y = case reverse shelves of
+                    (ly, ld, _) : _ -> ly + ld + m
+                    [] -> m
+                  (cw, cd) = orient turned
+               in if m + cw <= pw - m + eps && y + cd <= pd - m + eps
+                    then Just (shelves ++ [(y, cd, m + cw + m)], mk m y turned)
+                    else Nothing
+        orient turned = let (cw, cd) = cell (w, d) b in if turned then (cd, cw) else (cw, cd)
+        mk x y turned =
+          Placement iid k (if turned then (d, w) else (w, d)) (x + b, y + b) b (if turned then 90 else 0)
+        update i sh = [if j == i then sh else s0 | (j, s0) <- zip [0 ..] shelves]
+    -- preference order documented above
+    candidates shelves =
+      let n = length shelves
+          open = [n - 1 | n > 0]
+          earlier = [0 .. n - 2]
+       in [(Left i, False) | i <- open]
+            ++ [(Left i, False) | i <- earlier]
+            ++ [(Left i, True) | i <- open ++ earlier]
+            ++ [(Right (), False), (Right (), True)]
+    firstJust xs = case [x | Just x <- xs] of
+      x : _ -> Just x
+      [] -> Nothing
 
 -- | Manifest schema identifiers. The design stage and `coscad next` write
 -- different files with different shapes; consumers check `schema` first.
@@ -643,16 +727,17 @@ manifestJson ::
   FilePath ->
   String ->
   (Double, Double, Double) ->
+  Double ->
   [(VKey, FlatPart, Shape, (Double, Double, Double), String)] ->
-  [[(String, VKey, (Double, Double), (Double, Double), Double)]] ->
+  [[Placement]] ->
   [FlatPart] ->
   String
-manifestJson src base (pw, pd, m) variants plates asmOnly =
+manifestJson src base (pw, pd, m) maxZ variants plates asmOnly =
   encodePretty $
     jobj
       [ ("schema", JString designSchema)
       , ("source", JString src)
-      , ("plate", jobj [("w", jnum3 pw), ("d", jnum3 pd), ("margin", jnum3 m), ("count", JNumber (fromIntegral (length plates)))])
+      , ("plate", jobj [("w", jnum3 pw), ("d", jnum3 pd), ("margin", jnum3 m), ("max_z", jnum3 maxZ), ("count", JNumber (fromIntegral (length plates)))])
       , ("variants", jlist (map vj variants))
       , ("placements", jlist [pj i p | (i, ps) <- zip [(1 :: Int) ..] plates, p <- ps])
       , ("assembly_only", jlist (map aj asmOnly))
@@ -665,12 +750,12 @@ manifestJson src base (pw, pd, m) variants plates asmOnly =
         , ("part", JString (fpName fp))
         , ("source", JString srcf)
         , ("down", JString dk)
-        , ("count", JNumber (fromIntegral (length [() | (_, k', _, _, _) <- placed, k' == k])))
+        , ("count", JNumber (fromIntegral (length [() | p <- placed, plKey p == k])))
         , ("footprint", jlist (map jnum3 [w, d, h]))
         , ("scad", JString (base ++ "_part_" ++ vname ++ ".scad"))
         , ("hints", jobj [(hk, JString hv) | (hk, hv) <- fpHints fp])
         ]
-    pj i (iid, k, (w, d), (x, y), b) =
+    pj i (Placement iid k (w, d) (x, y) b r) =
       jobj
         ( [ ("instance", JString iid)
           , ("variant", JString (vnameOfK k))
@@ -678,6 +763,7 @@ manifestJson src base (pw, pd, m) variants plates asmOnly =
           , ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d)
           ]
             ++ [("brim_mm", jnum3 b) | b > 0]
+            ++ [("rot_z", JNumber (fromIntegral r)) | r /= 0]
         )
     vnameOfK k = head [vn | (k', _, _, _, vn) <- variants, k' == k]
     aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]
@@ -708,6 +794,14 @@ processAssemble inputFile = do
                 vname = maybe (sanitize (fpName fp)) id (lookup k names)
              in (k, fp, norm, dims, vname)
           variants = map mkVariant vkeys
+          maxZ = arPlateMaxZ ar
+      -- The design stage measures the Shape's bounding box, an
+      -- approximation of the mesh `coscad next` checks (and refuses).
+      mapM_ (\(_, fp, _, (_, _, h), vname) ->
+        when (h > maxZ + 1e-9) $
+          hPutStrLn stderr ("Warning: " ++ vname ++ ": about " ++ showD (roundTo3 h) ++ " mm tall " ++ orientNote fp
+            ++ ", over the plate's max height of " ++ showD maxZ ++ " mm; `coscad next` will refuse it unless it is turned"
+            ++ " (declare another ▽face) or the plate's 4th argument is raised")) variants
       mapM_
         ( \(_, _, norm, _, vname) -> do
             let f = base ++ "_part_" ++ vname ++ ".scad"
@@ -722,24 +816,35 @@ processAssemble inputFile = do
       -- printability that `coscad next` measures
       case packBedsBrim plate [(iid, k, footOf k, b) | (iid, k, b) <- instances] of
         Left err -> do
-          hPutStrLn stderr ("Error: " ++ err)
-          exitWith (ExitFailure 1)
+          -- a part bigger than the plate: the input is fine, the design is not
+          hPutStrLn stderr ("Error: " ++ inputFile ++ ": " ++ err)
+          exitWith (ExitFailure 2)
         Right plates -> do
           let nPlates = length plates
               plateFile i = base ++ (if nPlates == 1 then "_plate" else "_plate" ++ show i) ++ ".scad"
           mapM_
             ( \(i, placed) -> do
                 let slab = Translate (0, 0, -0.8) (Rectangle pw pd 0.6)
-                    plateShape = Union (slab : [Translate (x, y, 0) (normOf k) | (_, k, _, (x, y), _) <- placed])
+                    plateShape = Union (slab : [Translate (x, y, 0) (turned p (normOf (plKey p))) | p <- placed, let (x, y) = plAt p])
+                    -- the same turn as 'turnZ': +90 about Z, then the original depth along +X
+                    turned p s = if plRotZ p == 0 then s else Translate (fst (plSize p), 0, 0) (RotAxis 90 (0, 0, 1) s)
                 writeScad plateShape (plateFile i)
                 putStrLn ("Wrote " ++ plateFile i ++ " (" ++ show (length placed) ++ " parts)")
             )
             (zip [(1 :: Int) ..] plates)
           when (nPlates > 1) $
             putStrLn ("(" ++ show (length instances) ++ " parts need " ++ show nPlates ++ " plates of " ++ showD pw ++ "x" ++ showD pd ++ ")")
-          writeFileUtf8 (designManifestPath base) (manifestJson inputFile baseName plate variants plates asmOnly)
+          writeFileUtf8 (designManifestPath base) (manifestJson inputFile baseName plate (arPlateMaxZ ar) variants plates asmOnly)
           putStrLn ("Wrote " ++ designManifestPath base)
           noteLegacyManifest base
+
+-- | How a variant stands on the bed, for messages: its declared face, or
+-- as modelled.
+orientNote :: FlatPart -> String
+orientNote fp = maybe "as modelled" (\(_, l) -> "standing on ▽" ++ l) (fpDown fp)
+
+roundTo3 :: Double -> Double
+roundTo3 x = fromIntegral (round (x * 1000) :: Integer) / 1000
 
 -- | Explain a stale design manifest under the manufacturing name instead of
 -- leaving a file that `bambu-slice.py` will refuse without context. The

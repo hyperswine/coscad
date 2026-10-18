@@ -454,16 +454,39 @@ def main():
         lan_print(hit[0]["3mf"], os.path.basename(hit[0]["3mf"]), a.spool)
 
 
-def slice_beds(a, m, beds, presets, process, filament, bed_name, machine, outdir, base, issues, measures, derived):
-    """Slice the selected beds and write `<base>_print.json`."""
-    print(f"printer {a.printer} | process {process} | filament {filament} | {bed_name}")
-
-    pw, pd = m["bed"]["w"], m["bed"]["d"]
+def printer_fit_warnings(m, beds, machine):
+    """Where the manifest's plate is bigger than the printer: its area
+    against `printable_area`, its `max_z` (the 4th `plate` argument,
+    250 mm by default) against `printable_height`, and any part on these
+    beds taller than the printer can build."""
+    out = []
+    bed = m.get("bed") or {}
+    pw, pd = _number(bed.get("w")), _number(bed.get("d"))
     area = machine.get("printable_area") or []
     if area:
         xs = [float(p.split("x")[0]) for p in area]; ys = [float(p.split("x")[1]) for p in area]
         if pw > max(xs) - min(xs) + 1e-6 or pd > max(ys) - min(ys) + 1e-6:
-            print(f"warning: the assembly's plate ({pw}x{pd}) is larger than the printer's bed ({max(xs)-min(xs):g}x{max(ys)-min(ys):g})", file=sys.stderr)
+            out.append(f"the assembly's plate ({pw:g}x{pd:g}) is larger than the printer's bed ({max(xs)-min(xs):g}x{max(ys)-min(ys):g})")
+    height = _number(_setting(machine, "printable_height"))
+    if height > 0:
+        max_z = _number(bed.get("max_z"))
+        if max_z > height + 1e-6:
+            out.append(f"the assembly's plate allows parts up to {max_z:g} mm but the printer builds {height:g} mm; "
+                       f"set it with `plate W D margin {height:g}` and rerun `coscad next`")
+        used = {p.get("variant") for b in beds for p in b.get("placements", [])}
+        for v in m.get("variants", []):
+            fp = v.get("footprint") or []
+            if v.get("id") in used and len(fp) == 3 and _number(fp[2]) > height + 1e-6:
+                out.append(f"{v['id']} is {_number(fp[2]):g} mm tall, over the printer's {height:g} mm build height")
+    return out
+
+
+def slice_beds(a, m, beds, presets, process, filament, bed_name, machine, outdir, base, issues, measures, derived):
+    """Slice the selected beds and write `<base>_print.json`."""
+    print(f"printer {a.printer} | process {process} | filament {filament} | {bed_name}")
+
+    for warning in printer_fit_warnings(m, beds, machine):
+        print(f"warning: {warning}", file=sys.stderr)
 
     summary = {"source": m.get("source"), "printer": a.printer, "process": process, "filament": filament, "plate": bed_name, "beds": []}
     if a.process_overrides:

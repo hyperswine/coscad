@@ -133,8 +133,9 @@ rail ← rail.coscad ×0
 asm = bracket ⊕ (corner |> move (55 + gap) -13 -7) ⊕ rail
 ```
 
-- `plate width depth [margin]` configures the bed; parts pack across as
-  many plates as needed.
+- `plate width depth [margin [maxZ]]` configures the bed; parts pack across
+  as many plates as needed, turned 90° when that fits more. `maxZ` is the
+  printer's build height (default 250; 180 for an A1 mini).
 - `clearance distance` is the minimum gap `coscad check` enforces.
 - `×count` sets printable instances; `×0` marks premade assembly-only parts.
 - `▽anchor` declares the face placed on the bed.

@@ -233,6 +233,43 @@ class PrintabilityGateTests(unittest.TestCase):
         self.assertEqual(slicer.brim_conflicts(manifest(), manifest()["beds"], 8), [], "old manifests reserve nothing to check")
 
 
+class PrinterFitTests(unittest.TestCase):
+    MINI = {"printable_area": ["0x0", "180x0", "180x180", "0x180"], "printable_height": "180"}
+
+    def bed(self, max_z=None, height=50, w=150):
+        m = manifest()
+        m["bed"]["w"] = m["bed"]["d"] = w
+        if max_z is not None:
+            m["bed"]["max_z"] = max_z
+        m["variants"][0]["footprint"] = [10, 10, height]
+        m["beds"][0]["placements"][0]["variant"] = "p_bot"
+        return m
+
+    def test_a_plate_within_the_printer_is_quiet(self):
+        m = self.bed(max_z=180)
+        self.assertEqual(slicer.printer_fit_warnings(m, m["beds"], self.MINI), [])
+
+    def test_max_z_over_the_printers_height_warns_with_the_plate_fix(self):
+        m = self.bed(max_z=250)
+        warnings = slicer.printer_fit_warnings(m, m["beds"], self.MINI)
+        self.assertEqual(len(warnings), 1)
+        self.assertIn("up to 250 mm but the printer builds 180 mm", warnings[0])
+        self.assertIn("plate W D margin 180", warnings[0])
+
+    def test_a_part_taller_than_the_printer_is_named(self):
+        m = self.bed(max_z=250, height=200)
+        warnings = slicer.printer_fit_warnings(m, m["beds"], self.MINI)
+        self.assertTrue(any(w.startswith("p_bot is 200 mm tall, over the printer's 180 mm") for w in warnings), warnings)
+
+    def test_area_and_height_both_checked_and_old_manifests_skip_height(self):
+        m = self.bed(w=256)
+        warnings = slicer.printer_fit_warnings(m, m["beds"], self.MINI)
+        self.assertEqual(warnings, ["the assembly's plate (256x256) is larger than the printer's bed (180x180)"])
+        self.assertEqual(slicer.printer_fit_warnings(m, m["beds"], {}), [])
+        list_height = dict(self.MINI, printable_height=["180"])
+        self.assertEqual(len(slicer.printer_fit_warnings(self.bed(max_z=250), self.bed(max_z=250)["beds"], list_height)), 1)
+
+
 class MainTests(unittest.TestCase):
     """bambu-slice.py end to end with the presets and the slicer mocked."""
     CONTACT = PrintabilityGateTests.CONTACT

@@ -364,7 +364,7 @@ positions,
 attaches.
 .Sh ASSEMBLIES
 .Bd -literal -offset indent
-plate 250 250 6 brim=8               // bed width depth [margin] [brim=N|auto]
+plate 250 250 6 180 brim=8           // bed width depth [margin [max height]] [brim=N|auto]
 clearance 0.15                       // minimum gap for `coscad check`
 gap = 2                              // numbers work here too
 center ← center.coscad ×1
@@ -380,6 +380,19 @@ orientation search in
 .Cm next .
 .Ql key=value
 entries are free hints carried into the manifest.
+The optional 4th
+.Ql plate
+argument is the tallest part the printer builds in mm (default 250; 180 for
+an A1 mini).
+.Cm next
+never stands a part on a face taller than that, and exits 2 when a declared
+.Ql ▽
+or every face is too tall; the design stage only warns.
+The packer turns parts 90\(de about Z when that saves a shelf or a plate
+(recorded as
+.Ql rot_z
+in each placement) and fills gaps with later, smaller parts before it opens
+another plate.
 .Ql brim=N
 reserves an N mm brim around each instance when packing;
 .Ql plate … brim=N
@@ -482,7 +495,11 @@ its host face),
 .Cm check
 when any overlap is found, and
 .Cm next Fl -strict
-when any part has a printability warning.
+when any part has a printability warning, and the design stage and
+.Cm next
+when a part does not fit the plate (its footprint either way round, or, in
+.Cm next ,
+its height over the plate's max height).
 Every command that loads an assembly
 .Pq Cm validate , the design stage, Cm next , Cm plan , Cm check , Cm site
 also exits 2 when its mating constraints contradict each other (a loop that

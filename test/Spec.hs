@@ -21,7 +21,7 @@ module Main (main) where
 
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
-import Coscad.Assemble (AsmResult (..), FlatPart (..), brimHint, loadAssembleFile, loadAssembly, packBeds, packBedsBrim, processAssemble, resolveAssembly, variantNames)
+import Coscad.Assemble (AsmResult (..), FlatPart (..), Placement (..), brimHint, defaultMaxZ, loadAssembleFile, loadAssembly, packBeds, packBedsBrim, processAssemble, resolveAssembly, turnZ, variantNames)
 import Coscad.Constraint (AsmError (..))
 import Coscad.Check (processCheckIn, processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
@@ -1249,6 +1249,7 @@ geometry t update bin = do
            in assertT t "loft frustum volume" (abs (got - want) < 1e-3 * want) (printf "got %.3f want %.3f" got want)
   adhesionRetryContact t
   printabilityProbes t
+  bedHeightProbes t
   -- cross-check: `coscad next` conserves volume across bed packing
   bow <- tempDir "bow3"
   srcs <- listDirectory "examples/assemble/bow3"
@@ -1462,6 +1463,20 @@ cliTier t = do
       assertT t "design stage: same part name in two subassemblies gets two variant ids and scads"
         (cv == ExitSuccess && and scads && design == Right (["a_base_asis", "b_base_asis"], ["top_part_a_base_asis.scad", "top_part_b_base_asis.scad"], ["b_base_asis", "a_base_asis"]))
         (show (cv, ev, design))
+      -- design stage and the plate's max height / size
+      writeFile (dir </> "post.coscad") "main = box 10 10 200\n"
+      writeFile (dir </> "tallplate.assemble") "plate 180 180 6 180\npost ← post.coscad ×1 ▽bot\n"
+      (ch, _, eh) <- run [dir </> "tallplate.assemble"]
+      dh <- readJson (dir </> "tallplate_design.json")
+      assertT t "design stage: a part over the plate's max height warns (exit 0) and plate.max_z is recorded"
+        (ch == ExitSuccess && any (\l -> "Warning: post_bot: about 200 mm tall standing on ▽bot, over the plate's max height of 180 mm" `isPrefixOf` l) (lines eh)
+          && either (const False) (\v -> (asNumber =<< lookupKey "max_z" =<< lookupKey "plate" v) == Just 180) dh)
+        (show (ch, eh))
+      writeFile (dir </> "wide.coscad") "main = box 300 20 5\n"
+      writeFile (dir </> "wide.assemble") "plate 180 180 6\nwide ← wide.coscad ×1\n"
+      (cw, _, ew) <- run [dir </> "wide.assemble"]
+      assertT t "design stage: a footprint bigger than the plate either way is a design error (exit 2) naming the file and part"
+        (cw == ExitFailure 2 && ("Error: " ++ dir </> "wide.assemble: wide_1 footprint") `isPrefixOf` firstLine ew && "even turned 90 degrees" `isInfixOf` ew) (show (cw, ew))
       writeFile (dir </> "ok.coscad") "r = 5\nmain = ● r\n"
       (c3, o3, e3) <- run ["validate", dir </> "ok.coscad"]
       assertT t "validate good part: exit 0, Valid part, empty stderr" (c3 == ExitSuccess && o3 == "Valid part\n" && null e3) (show (c3, o3, e3))
@@ -1630,19 +1645,18 @@ brimTier :: T -> IO ()
 brimTier t = do
   section "brim reservation"
   let k = ("b", "top")
-      pos r = [[(iid, xy, b) | (iid, _, _, xy, b) <- bed] | bed <- r]
+      pos r = [[(plInstance p, plAt p, plBrim p) | p <- bed] | bed <- r]
       items b = [("a", k, (10, 10), b), ("b", k, (10, 10), b)]
   assertT t "packBedsBrim with no brim places exactly as packBeds"
-    (fmap (map (map (\(i, _, wd, xy, _) -> (i, wd, xy)))) (packBedsBrim (100, 100, 6) (items 0))
-      == fmap (map (map (\(i, _, wd, xy) -> (i, wd, xy)))) (packBeds (100, 100, 6) [(i, kk, wd) | (i, kk, wd, _) <- items 0]))
+    (packBedsBrim (100, 100, 6) (items 0) == packBeds (100, 100, 6) [(i, kk, wd) | (i, kk, wd, _) <- items 0])
     (show (pos <$> packBedsBrim (100, 100, 6) (items 0)))
   case packBedsBrim (100, 100, 6) (items 4) of
-    Right [[(_, _, _, (ax, ay), 4), (_, _, _, (bx, by), 4)]] ->
+    Right [[Placement _ _ _ (ax, ay) 4 0, Placement _ _ _ (bx, by) 4 0]] ->
       assertT t "a 4 mm brim keeps the 6 mm margin outside it: part at 10 mm, 14 mm (6 + 2·4) between parts"
         (ax == 10 && ay == 10 && by == 10 && bx - (ax + 10) == 14) (show ((ax, ay), (bx, by)))
     r -> failT t "a 4 mm brim keeps the 6 mm margin outside it" (show (pos <$> r))
   case packBedsBrim (100, 100, 6) [("a", k, (10, 10), 0), ("b", k, (10, 10), 3)] of
-    Right [[(i1, _, _, (x1, _), _), (i2, _, _, (x2, _), _)]] ->
+    Right [[Placement i1 _ _ (x1, _) _ _, Placement i2 _ _ (x2, _) _ _]] ->
       assertT t "the brim counts in the area order: the 16×16 reservation packs first, then 6 + 3 mm to the bare part"
         (i1 == "b" && x1 == 9 && i2 == "a" && x2 == 9 + 10 + 3 + 6) (show (i1, x1, i2, x2))
     r -> failT t "the brim counts in the area order" (show (pos <$> r))
@@ -1682,6 +1696,82 @@ brimTier t = do
         , ("p ← p.coscad ×1 brim=-2\n", "brim=-2: expected a finite brim width in mm, non-negative") ] $ \(src, want) -> do
     r <- load "bad.assemble" src
     assertT t ("brim errors: " ++ want) (either (want `isInfixOf`) (const False) r) (either id (const "loaded") r)
+
+-- | Bed height and packing quality: the 4th `plate` argument, and a
+-- packer that fills gaps with later items and turns parts 90° about Z
+-- before it opens another plate.
+packTier :: T -> IO ()
+packTier t = do
+  section "bed height and packing"
+  let k = ("b", "top")
+      ids r = [[plInstance p | p <- bed] | bed <- r]
+  -- tall item first: A takes a 60-deep shelf, B a new one; C is too
+  -- deep for B's shelf, so the old next-fit packer opened plate 2 for it.
+  -- It fits the gap after A.
+  case packBeds (100, 100, 5) [("a", k, (75, 60)), ("b", k, (70, 25)), ("c", k, (10, 30))] of
+    Right [[pa, pb, pc]] ->
+      assertT t "packer: a later item fills the gap an earlier shelf left (1 plate, was 2)"
+        (map plInstance [pa, pb, pc] == ["a", "b", "c"] && plAt pa == (5, 5) && plAt pb == (5, 70) && plAt pc == (85, 5) && all ((== 0) . plRotZ) [pa, pb, pc])
+        (show [pa, pb, pc])
+    r -> failT t "packer: a later item fills the gap an earlier shelf left" (show (ids <$> r))
+  -- an item that fits nowhere waits for the next plate, and the rest
+  -- still fill this one
+  case packBeds (100, 100, 5) [("a", k, (60, 60)), ("b", k, (50, 40)), ("c", k, (20, 50))] of
+    Right r -> assertT t "packer: an item that fits nowhere moves to the next plate without closing this one" (ids r == [["a", "c"], ["b"]]) (show (ids r))
+    Left e -> failT t "packer: an item that fits nowhere moves to the next plate" e
+  -- rotation: B (25×80) fits neither beside A nor below it as declared,
+  -- but turned (80×25) it fits a new shelf below A
+  case packBeds (100, 100, 5) [("a", k, (90, 50)), ("b", k, (25, 80))] of
+    Right [[pa, pb]] ->
+      assertT t "packer: a 90° turn avoids a new plate; the placement records rot_z and the turned size"
+        (plRotZ pa == 0 && plRotZ pb == 90 && plSize pb == (80, 25) && plAt pb == (5, 60)) (show [pa, pb])
+    r -> failT t "packer: a 90° turn avoids a new plate" (show (ids <$> r))
+  case packBeds (80, 120, 5) [("long", k, (100, 60))] of
+    Right [[p]] -> assertT t "packer: a part wider than the plate but not deeper is turned instead of refused" (plRotZ p == 90 && plSize p == (60, 100) && plAt p == (5, 5)) (show p)
+    r -> failT t "packer: a part that only fits turned" (show (ids <$> r))
+  case packBeds (100, 100, 5) [("sq", k, (95, 95))] of
+    Left e -> assertT t "packer: a part that fits neither way is refused, saying it was tried turned" ("even turned 90 degrees" `isInfixOf` e && "sq footprint" `isInfixOf` e) e
+    Right r -> failT t "packer: a part that fits neither way is refused" (show (ids r))
+  -- layouts the old packer could finish without gaps are unchanged:
+  -- seven 43×43 brackets on 120×120 still need 4 + 3
+  case packBeds (120, 120, 6) [("br_" ++ show i, k, (43, 42.98)) | i <- [1 .. 7 :: Int]] of
+    Right r -> assertT t "packer: square-ish parts never turn, and a full plate still spills" (map length r == [4, 3] && all ((== 0) . plRotZ) (concat r)) (show (map length r))
+    Left e -> failT t "packer: square-ish parts" e
+  let many = [("p" ++ show i, k, (fromIntegral (7 + i `mod` 11) * 3, fromIntegral (5 + i `mod` 7) * 4)) | i <- [1 .. 60 :: Int]]
+      packed = packBeds (150, 150, 4) many
+      inside p = let (x, y) = plAt p; (w, d) = plSize p in x >= 4 - 1e-9 && y >= 4 - 1e-9 && x + w <= 146 + 1e-9 && y + d <= 146 + 1e-9
+      apart a b = let ((ax, ay), (aw, ad)) = (plAt a, plSize a); ((bx, by), (bw, bd)) = (plAt b, plSize b)
+                   in ax + aw + 4 <= bx + 1e-9 || bx + bw + 4 <= ax + 1e-9 || ay + ad + 4 <= by + 1e-9 || by + bd + 4 <= ay + 1e-9
+  assertT t "packer: deterministic, every instance placed once, inside the margin, with the margin between parts"
+    (packed == packBeds (150, 150, 4) many
+      && either (const False) (\r -> sort (concat (ids r)) == sort [i | (i, _, _) <- many]
+        && all (all inside) r && and [apart a b | bed <- r, (j, a) <- zip [0 :: Int ..] bed, (l, b) <- zip [0 ..] bed, j < l]) packed)
+    (either id (show . map length) packed)
+  assertT t "turnZ maps a w×d footprint at the origin onto d×w at the origin"
+    (map (turnZ 20) [(0, 0, 1), (30, 0, 1), (0, 20, 1), (30, 20, 1)] == [(20, 0, 1), (20, 30, 1), (0, 0, 1), (0, 30, 1)]) ""
+  -- the 4th plate argument
+  dir <- tempDir "plate-height"
+  writeFile (dir </> "p.coscad") "main = box 6 6 20\n"
+  let load name src = do
+        writeFile (dir </> name) src
+        loadAssembleFile [] (dir </> name)
+      maxZOf = either (const Nothing) (Just . arPlateMaxZ)
+  ra <- load "a.assemble" "plate 180 180 6 180\np ← p.coscad ×1\n"
+  assertT t "plate W D margin maxZ parses the max print height (A1 mini: 180)"
+    (maxZOf ra == Just 180 && either (const False) ((== (180, 180, 6)) . arPlate) ra) (either id (show . arPlateMaxZ) ra)
+  rb <- load "b.assemble" "plate 256 256 6 brim=8\np ← p.coscad ×1\n"
+  rc <- load "c.assemble" "plate 256 256\np ← p.coscad ×1\n"
+  rd <- load "d.assemble" "p ← p.coscad ×1\n"
+  assertT t "without a 4th argument the max height stays 250 mm (also with brim=, no margin, or no plate line)"
+    (defaultMaxZ == 250 && all ((== Just 250) . maxZOf) [rb, rc, rd]) (show (map maxZOf [rb, rc, rd]))
+  re <- load "e.assemble" "plate 256 256 6 220 brim=auto\np ← p.coscad ×1\n"
+  assertT t "plate W D margin maxZ brim=auto: both options parse"
+    (maxZOf re == Just 220 && either (const False) ((== Just 5) . arPlateBrim) re) (either id (show . arPlateMaxZ) re)
+  forM_ [ ("plate 256 256 6 0\np ← p.coscad ×1\n", "plate max height must be a finite distance in mm, greater than zero")
+        , ("plate 256 256 6 -10\np ← p.coscad ×1\n", "plate max height must be a finite distance in mm, greater than zero")
+        , ("plate 256 256 6 180 7\np ← p.coscad ×1\n", "bad.assemble:1:") ] $ \(src, want) -> do
+    r <- load "bad.assemble" src
+    assertT t ("plate max height errors: " ++ want) (either (want `isInfixOf`) (const False) r) (either id (const "loaded") r)
 
 -- | A closed n-gon prism of radius r along x, lying on the bed with a
 -- vertex at the bottom.
@@ -1773,6 +1863,54 @@ printabilityProbes t = do
       assertT t "plate brim=8: placements step by margin + brim exactly"
         (map xyOf ["blk_1", "pillar_1", "pillar_2", "bare_1"] == [(62, 6), (14, 14), (42, 14), (88, 6)])
         (show (map xyOf ["blk_1", "pillar_1", "pillar_2", "bare_1"]))
+
+-- | `coscad next` against the plate's max height (the 4th `plate`
+-- argument) and with a part the packer turns 90° about Z.
+bedHeightProbes :: T -> IO ()
+bedHeightProbes t = do
+  exe <- findExecutable "coscad"
+  dir <- tempDir "bed-height"
+  forM_ [("post", "box 10 10 200"), ("cube", "box 190 190 190"), ("slab", "box 90 50 10"), ("bar", "box 25 80 10")] $ \(n, src) ->
+    writeFile (dir </> n <.> "coscad") ("main = " ++ src ++ "\n")
+  forM_ [ ("declared", "plate 256 256 6 180\npost ← post.coscad ×1 ▽bot\n"), ("auto", "plate 256 256 6 180\npost ← post.coscad ×1\n")
+        , ("default", "plate 256 256 6\npost ← post.coscad ×1 ▽bot\n"), ("cube", "plate 256 256 6 180\nblock ← cube.coscad ×1\n")
+        , ("turn", "plate 100 100 5\nslab ← slab.coscad ×1 ▽bot\nbar ← bar.coscad ×1 ▽bot\n") ] $ \(n, src) ->
+    writeFile (dir </> n <.> "assemble") src
+  case exe of
+    Nothing -> failT t "bed height: coscad on PATH" "run the suite with `cabal test`"
+    Just bin -> do
+      let next n = readProcessWithExitCode bin ["next", dir </> n <.> "assemble"] ""
+          manifest n = decode <$> readFile (dir </> n ++ "_manifest.json")
+          maxZ = either (const Nothing) (\v -> asNumber =<< lookupKey "max_z" =<< lookupKey "bed" v)
+          downs = either (const []) (\v -> [d | Just vs <- [asArray =<< lookupKey "variants" v], x <- vs, Just d <- [asString =<< lookupKey "down" x]])
+      (cd, od, ed) <- next "declared"
+      wroteD <- doesFileExist (dir </> "declared_manifest.json")
+      assertT t "next: a declared ▽ taller than plate maxZ exits 2 with the height, the limit and the faces that fit; nothing is written"
+        (cd == ExitFailure 2 && not wroteD && not (("Wrote " ++ dir </> "declared_bed1") `isInfixOf` od)
+          && any (\l -> ("Error: " ++ dir </> "declared.assemble: post_bot: ") `isPrefixOf` l && "200 mm tall, over the plate's max height of 180 mm" `isInfixOf` l
+                    && "fits standing on ▽rt, ▽lft, ▽fwd, ▽bak" `isInfixOf` l) (lines ed))
+        (show (cd, ed))
+      (ca, _, ea) <- next "auto"
+      ma <- manifest "auto"
+      assertT t "next: without ▽ the part lies down to fit maxZ 180, and the manifest records bed.max_z 180"
+        (ca == ExitSuccess && maxZ ma == Just 180 && all (`notElem` ["bot", "top"]) (downs ma) && not (null (downs ma))) (show (ca, ea, maxZ ma, downs ma))
+      (cf, _, ef) <- next "default"
+      mf <- manifest "default"
+      assertT t "next: without a 4th plate argument the same 200 mm post fits the default 250 mm" (cf == ExitSuccess && maxZ mf == Just 250 && downs mf == ["bot"]) (show (cf, ef, maxZ mf))
+      (cc, _, ec) <- next "cube"
+      assertT t "next: a part too tall on every face exits 2 naming the lowest height" (cc == ExitFailure 2 && "190 mm tall, over the plate's max height of 180 mm on every face" `isInfixOf` ec) (show (cc, ec))
+      (ct, _, et) <- next "turn"
+      mt <- manifest "turn"
+      bed <- readStl (dir </> "turn_bed1.stl")
+      let placements = either (const []) (\v -> [(n, pl) | Just bs <- [asArray =<< lookupKey "beds" v], b <- bs, Just ps <- [asArray =<< lookupKey "placements" b], pl <- ps, let n = length bs]) mt
+          field k i = head ([x | (_, pl) <- placements, (asString =<< lookupKey "instance" pl) == Just i, Just x <- [asNumber =<< lookupKey k pl]] ++ [-1])
+          ((x0, y0, z0), (x1, y1, z1)) = meshBounds bed
+          near a b = abs (a - b) < 1e-6
+      assertT t "next: the packer turns the 25×80 bar 90° to share one bed; rot_z, the turned size and the bed mesh agree"
+        (ct == ExitSuccess && map fst placements == [1, 1] && map (`field` "bar_1") ["rot_z", "w", "d", "x", "y"] == [90, 80, 25, 5, 60]
+          && field "rot_z" "slab_1" == 0 && and (zipWith near [x0, y0, z0, x1, y1, z1] [5, 5, 0, 95, 85, 10]))
+        (show (ct, et, placements, meshBounds bed))
+      assertT t "next: the turned bed conserves volume" (abs (meshVolume bed - (90 * 50 * 10 + 25 * 80 * 10)) < 1e-6 * meshVolume bed) (show (meshVolume bed))
 
 -- | Closed axis-aligned box with its min corner at the origin, outward
 -- normals (counter-clockwise seen from outside).
@@ -1972,6 +2110,7 @@ main = do
   remainingDiagnostics t
   printabilityTier t
   brimTier t
+  packTier t
   variantNameTier t
   goldenMergeTier t
   topologyTier t

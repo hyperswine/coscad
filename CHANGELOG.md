@@ -8,6 +8,39 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Bed height and packing (bed layouts change).**
+  - `plate W D margin maxZ`: an optional 4th argument gives the printer's
+    build height in mm. It defaults to 250, the value `coscad next` always
+    used, so existing assemblies are unchanged; an A1 mini is
+    `plate 180 180 6 180`. Both manifests record it (`bed.max_z` in
+    `coscad.next/1`; the design manifest's `plate` gains `max_z`).
+  - `coscad next` refuses a part that is taller than `maxZ` in its
+    declared `▽`, or on every face, with **exit 2** (a design problem) and
+    a message naming the part, its height, the limit and the faces it
+    would fit on. It used to exit 1 with "declared ▽… exceeds bed
+    height". An undeclared part still lies on the best face that fits.
+  - The design stage warns (exit 0) when a part's bounding box is taller
+    than `maxZ`, since it doesn't render meshes.
+  - A footprint bigger than the plate either way round is now a design
+    error too: **exit 2** instead of 1, from both stages, and the message
+    starts with the `.assemble` path.
+  - The packer is now first-fit decreasing over shelves. A bed stays open
+    until every remaining part has been tried, so smaller, later parts
+    fill the gaps, and a part is turned 90° about Z when that fits it on
+    an existing shelf or a new one. A part that fits the plate only
+    turned is turned instead of refused. Layouts the old packer filled
+    without gaps are unchanged. Every placement in `coscad.next/1`
+    records `rot_z` (0 or 90) with `w`/`d` as placed, and the bed STL
+    carries the turned part. Design placements carry `rot_z` only when
+    it is 90. Readers that ignore `rot_z` still get correct bounding
+    boxes from `x`, `y`, `w`, `d`.
+  - `examples-next/enclosure2x2` now packs on 4 beds instead of 5 (the
+    brackets fill the two panel beds). The committed example manifest is
+    regenerated; it was also stale from before `schema` and
+    `printability`.
+  - `bambu-slice.py` warns when the manifest's `bed.max_z`, or a part on
+    the selected beds, is taller than the printer's `printable_height`.
+
 - **Printability you can act on.**
   - `coscad next --strict` exits 2 when any part has a printability
     warning. It still writes the beds and manifest so you can inspect them.

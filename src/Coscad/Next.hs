@@ -112,14 +112,36 @@ data Variant = Variant
   , vPrint :: Printability
   }
 
+-- | Height of a mesh standing on each of the six axis faces.
+faceHeights :: [Tri] -> [(String, Double)]
+faceHeights tris =
+  [ (lbl, z1 - z0)
+    | (v, lbl) <- faceCandidates
+    , let ((_, _, z0), (_, _, z1)) = meshBounds (meshMap (mApply (downMat v)) tris)
+  ]
+
+-- | Why a part cannot stand within the plate's max height, with the
+-- faces it would fit on (if any) so the fix is obvious.
+tooTall :: Double -> String -> Double -> [Tri] -> String
+tooTall maxZ what h tris =
+  let fitting = [l | (l, fh) <- faceHeights tris, fh <= maxZ]
+   in what ++ " is " ++ showD (roundTo3 h) ++ " mm tall, over the plate's max height of " ++ showD maxZ ++ " mm"
+        ++ case fitting of
+          [] -> " on every face (lowest " ++ showD (roundTo3 (minimum (map snd (faceHeights tris)))) ++ " mm); split the part or print it on a taller printer"
+          _ -> "; it fits standing on ▽" ++ intercalate ", ▽" fitting
+        ++ " (raise the limit with `plate W D margin maxZ`)"
+
 -- | Choose orientation: declared ▽ wins; otherwise best FFF score.
--- Returns (rotation matrix, chosen face label, mode, score).
+-- Returns (rotation matrix, chosen face label, mode, score). A part
+-- taller than @maxZ@ in its declared orientation, or on every face, is
+-- refused with the heights and the faces that would fit.
 chooseOrientation :: Double -> Maybe ((Double, Double, Double), String) -> [Tri] -> Either String (M3, String, String, Double)
 chooseOrientation maxZ (Just (v, lbl)) tris =
   let m = downMat v
       rot = meshMap (mApply m) tris
+      ((_, _, z0), (_, _, z1)) = meshBounds rot
    in case fffScore maxZ rot of
-        Nothing -> Left ("declared ▽" ++ lbl ++ " exceeds bed height")
+        Nothing -> Left (tooTall maxZ ("standing on its declared ▽" ++ lbl ++ " it") (z1 - z0) tris)
         Just sc -> Right (m, lbl, "declared", sc)
 chooseOrientation maxZ Nothing tris =
   let scored =
@@ -129,7 +151,7 @@ chooseOrientation maxZ Nothing tris =
           , Just sc <- [fffScore maxZ (meshMap (mApply m) tris)]
         ]
    in case scored of
-        [] -> Left "no orientation fits within bed height"
+        [] -> Left (tooTall maxZ "it" (minimum (map snd (faceHeights tris))) tris)
         _ ->
           let (sc, m, lbl) = foldl1 (\a@(s1, _, _) b@(s2, _, _) -> if s2 > s1 then b else a) scored
            in Right (m, lbl, "auto", sc)
@@ -148,7 +170,7 @@ processNextWith strict inputFile = do
     Right ar -> do
       let base = dropExtension inputFile
           (pw, pd, marg) = arPlate ar
-          bedZ = 250 -- default max print height; TODO: plate stmt 4th arg
+          bedZ = arPlateMaxZ ar
           printable = [fp | fp <- arFlat ar, fpCount fp > 0]
           asmOnly = [fp | fp <- arFlat ar, fpCount fp <= 0]
           names = variantNames printable
@@ -166,10 +188,11 @@ processNextWith strict inputFile = do
             writeScad (resolve (fpShape fp)) scadF
             ro <- renderStlFile scadF stlF
             case ro of
-              Left err -> return (Left err)
+              Left err -> return (Left (1 :: Int, err))
               Right mesh -> do
                 case chooseOrientation bedZ (fpDown fp) mesh of
-                  Left err -> return (Left (vname ++ ": " ++ err))
+                  -- too tall for the printer: a design problem (exit 2)
+                  Left err -> return (Left (2, inputFile ++ ": " ++ vname ++ ": " ++ err))
                   Right (m, lbl, mode, sc) -> do
                     let rot = meshMap (mApply m) mesh
                         (lo, hi) = meshBounds rot
@@ -179,7 +202,7 @@ processNextWith strict inputFile = do
         )
         vkeys
       case sequence variantsE of
-        Left err -> hPutStrLn stderr ("Error: " ++ err) >> exitFailure
+        Left (code, err) -> hPutStrLn stderr ("Error: " ++ err) >> exitWith (ExitFailure code)
         Right variants -> do
           mapM_ (\v ->
             mapM_ (hPutStrLn stderr . (("Warning: " ++ vName v ++ ": ") ++))
@@ -189,11 +212,13 @@ processNextWith strict inputFile = do
               printOf k = head [vPrint v | v <- variants, vKey v == k]
               instances = [(instId fp i, vkey fp, instanceBrim (arPlateBrim ar) fp (printOf (vkey fp))) | fp <- printable, i <- [1 .. fpCount fp]]
           case packBedsBrim (pw, pd, marg) [(iid, k, footOf k, b) | (iid, k, b) <- instances] of
-            Left err -> hPutStrLn stderr ("Error: " ++ err) >> exitFailure
+            -- a footprint bigger than the plate: a design problem (exit 2)
+            Left err -> hPutStrLn stderr ("Error: " ++ inputFile ++ ": " ++ err) >> exitWith (ExitFailure 2)
             Right beds -> do
               mapM_
                 ( \(i, placed) -> do
-                    let tris = concat [meshMap (vadd (x, y, 0)) (meshOf k) | (_, k, _, (x, y), _) <- placed]
+                    let tris = concat [meshMap (vadd (x, y, 0) . turn p) (meshOf (plKey p)) | p <- placed, let (x, y) = plAt p]
+                        turn p = if plRotZ p == 0 then id else turnZ (fst (plSize p))
                         f = base ++ "_bed" ++ show i ++ ".stl"
                     writeFileUtf8 f (stlAscii ("bed" ++ show i) tris)
                     putStrLn ("Wrote " ++ f ++ " (" ++ show (length placed) ++ " parts)")
@@ -226,7 +251,7 @@ nextManifest ::
   Maybe Double ->
   Double ->
   [Variant] ->
-  [[(String, VKey, (Double, Double), (Double, Double), Double)]] ->
+  [[Placement]] ->
   [FlatPart] ->
   String
 nextManifest src base (pw, pd, m) plateBrim bedZ variants beds asmOnly =
@@ -267,7 +292,7 @@ nextManifest src base (pw, pd, m) plateBrim bedZ variants beds asmOnly =
         , ("stl", JString (base ++ "_bed" ++ show i ++ ".stl"))
         , ("placements", jlist (map pj placed))
         ]
-    pj (iid, k, (w, d), (x, y), b) =
-      jobj [("instance", JString iid), ("variant", JString (vn k)), ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d), ("brim_mm", jnum3 b)]
+    pj (Placement iid k (w, d) (x, y) b r) =
+      jobj [("instance", JString iid), ("variant", JString (vn k)), ("x", jnum3 x), ("y", jnum3 y), ("w", jnum3 w), ("d", jnum3 d), ("brim_mm", jnum3 b), ("rot_z", JNumber (fromIntegral r))]
     vn k = head [vName v | v <- variants, vKey v == k]
     aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]
