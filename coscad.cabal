@@ -99,6 +99,7 @@ test-suite coscad-test
       Tier.Linalg
       Tier.Manufacturing
       Tier.Plan
+      Tier.Resolution
       Paths_coscad
   autogen-modules:
       Paths_coscad
