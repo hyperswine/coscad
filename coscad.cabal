@@ -118,3 +118,23 @@ test-suite coscad-test
     , process
     , time
   default-language: Haskell2010
+
+-- examples/haskell/ are ghci samples, not library code; this suite only
+-- keeps them compiling. Warnings are off because the samples are written
+-- for reading (unsigned top-level bindings, shadowing), not for -Wall.
+test-suite haskell-examples
+  type: exitcode-stdio-1.0
+  main-is: HaskellExamples.hs
+  other-modules:
+      ExampleBookend
+      ExampleBookend2
+      ExampleGear
+      ExampleZigZag
+  hs-source-dirs:
+      test
+      examples/haskell
+  ghc-options: -w
+  build-depends:
+      base >=4.7 && <5
+    , coscad
+  default-language: Haskell2010
