@@ -6,7 +6,8 @@ module Coscad.Parser (module Coscad.Parser) where
 import Control.Monad (foldM, void, when)
 import Coscad.Codegen (loftErrors)
 import Coscad.Dim (Dim (..), dimOf)
-import Coscad.Geometry (PointRef (..), MatingFrame (..), datumPoints, pointOf, vadd, vneg, vsub, makeFrame, frameOf, matingPose)
+import Coscad.Geometry (PointRef (..), MatingFrame (..), datumPoints, pointOf, makeFrame, frameOf, matingPose)
+import Coscad.Linalg (vadd, vneg, vsub)
 import Coscad.Shape
 import Coscad.Validate (maxQuantity, maxSides, suggestion, validateShape)
 import Data.Char (isSpace)

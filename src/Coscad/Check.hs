@@ -22,6 +22,7 @@ module Coscad.Check (module Coscad.Check) where
 import Coscad.Assemble
 import Coscad.Codegen
 import Coscad.IO (readFileLatin1, scratchDir)
+import Coscad.Linalg (V3, dot3, scale3, vadd, vlen, vsub)
 import Coscad.Mesh (Tri, meshVolume, parseStlAscii)
 import Coscad.OpenScad (openscadStlArgs, renderStlFile, runOpenscadRaw)
 import Coscad.Shape
@@ -34,29 +35,11 @@ import System.Exit (ExitCode (..), exitFailure, exitWith)
 import System.FilePath ((</>))
 import System.IO (hPutStrLn, stderr)
 
-type V3 = (Double, Double, Double)
-
 contactEps :: Double
 contactEps = 0.02
 
 volEps :: Double
 volEps = 0.01 -- mm^3; below this an intersection is tessellation noise
-
--- ------------------------------------------------------------------
--- small vector kit (local to keep the module self-contained)
-vsub3, vadd3, vcross3 :: V3 -> V3 -> V3
-vsub3 (a, b, c) (x, y, z) = (a - x, b - y, c - z)
-vadd3 (a, b, c) (x, y, z) = (a + x, b + y, c + z)
-vcross3 (a, b, c) (x, y, z) = (b * z - c * y, c * x - a * z, a * y - b * x)
-
-vdot3 :: V3 -> V3 -> Double
-vdot3 (a, b, c) (x, y, z) = a * x + b * y + c * z
-
-vscale3 :: Double -> V3 -> V3
-vscale3 k (a, b, c) = (k * a, k * b, k * c)
-
-vlen3 :: V3 -> Double
-vlen3 v = sqrt (vdot3 v v)
 
 -- ------------------------------------------------------------------
 -- connected-body split (union-find over exact shared vertices)
@@ -103,44 +86,44 @@ aabbGap ((ax0, ay0, az0), (ax1, ay1, az1)) ((bx0, by0, bz0), (bx1, by1, bz1)) =
 -- point-triangle distance (Ericson, Real-Time Collision Detection)
 pointTriDist :: V3 -> Tri -> Double
 pointTriDist p (a, b, c) =
-  let ab = vsub3 b a
-      ac = vsub3 c a
-      ap = vsub3 p a
-      d1 = vdot3 ab ap
-      d2 = vdot3 ac ap
+  let ab = vsub b a
+      ac = vsub c a
+      ap = vsub p a
+      d1 = dot3 ab ap
+      d2 = dot3 ac ap
    in if d1 <= 0 && d2 <= 0
-        then vlen3 (vsub3 p a)
+        then vlen (vsub p a)
         else
-          let bp = vsub3 p b
-              d3 = vdot3 ab bp
-              d4 = vdot3 ac bp
+          let bp = vsub p b
+              d3 = dot3 ab bp
+              d4 = dot3 ac bp
            in if d3 >= 0 && d4 <= d3
-                then vlen3 (vsub3 p b)
+                then vlen (vsub p b)
                 else
                   let vc = d1 * d4 - d3 * d2
                    in if vc <= 0 && d1 >= 0 && d3 <= 0
-                        then vlen3 (vsub3 p (vadd3 a (vscale3 (d1 / (d1 - d3)) ab)))
+                        then vlen (vsub p (vadd a (scale3 (d1 / (d1 - d3)) ab)))
                         else
-                          let cp = vsub3 p c
-                              d5 = vdot3 ab cp
-                              d6 = vdot3 ac cp
+                          let cp = vsub p c
+                              d5 = dot3 ab cp
+                              d6 = dot3 ac cp
                            in if d6 >= 0 && d5 <= d6
-                                then vlen3 (vsub3 p c)
+                                then vlen (vsub p c)
                                 else
                                   let vb = d5 * d2 - d1 * d6
                                    in if vb <= 0 && d2 >= 0 && d6 <= 0
-                                        then vlen3 (vsub3 p (vadd3 a (vscale3 (d2 / (d2 - d6)) ac)))
+                                        then vlen (vsub p (vadd a (scale3 (d2 / (d2 - d6)) ac)))
                                         else
                                           let va = d3 * d6 - d5 * d4
                                            in if va <= 0 && (d4 - d3) >= 0 && (d5 - d6) >= 0
                                                 then
                                                   let w = (d4 - d3) / ((d4 - d3) + (d5 - d6))
-                                                   in vlen3 (vsub3 p (vadd3 b (vscale3 w (vsub3 c b))))
+                                                   in vlen (vsub p (vadd b (scale3 w (vsub c b))))
                                                 else
                                                   let denom = 1 / (va + vb + vc)
                                                       v = vb * denom
                                                       w = vc * denom
-                                                   in vlen3 (vsub3 p (vadd3 a (vadd3 (vscale3 v ab) (vscale3 w ac))))
+                                                   in vlen (vsub p (vadd a (vadd (scale3 v ab) (scale3 w ac))))
 
 -- | Minimum vertex<->triangle distance between two bodies, early-exit
 -- once below `stop`. Grid-accelerated on the larger triangle set.

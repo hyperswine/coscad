@@ -36,19 +36,6 @@ import System.IO (hPutStrLn, stderr)
 -- chosen orientation + per-bed placements — the slicer slices each
 -- variant once and stamps it at the recorded offsets.
 
--- | Rotation matrix taking direction v to straight down.
-downMat :: (Double, Double, Double) -> M3
-downMat v =
-  let d = vnormed v
-   in if vlen (vsub d (0, 0, -1)) < 1e-9
-        then ((1, 0, 0), (0, 1, 0), (0, 0, 1))
-        else
-          if vlen (vsub d (0, 0, 1)) < 1e-9
-            then rodMat 180 (1, 0, 0)
-            else
-              let (_, _, dz) = d
-               in rodMat (acos (max (-1) (min 1 (-dz))) * 180 / pi) (cross d (0, 0, -1))
-
 faceCandidates :: [((Double, Double, Double), String)]
 faceCandidates =
   [ ((0, 0, -1), "bot")
@@ -91,7 +78,9 @@ fffTerms tris =
 -- candidate orientation. Higher is better; Nothing = exceeds bed Z.
 fffScore :: Double -> [Tri] -> Maybe Double
 fffScore maxZ tris =
-  let FffTerms contact overhang total h maxdim slender = fffTerms tris
+  let t = fffTerms tris
+      (contact, overhang, total) = (fffContact t, fffOverhang t, fffTotal t)
+      (h, maxdim, slender) = (fffHeight t, fffMaxDim t, fffSlender t)
       -- stability: punish tall skinny prints (wobble, layer-shear)
       wobble = 0.1 * max 0 (slender - 2)
    in if h > maxZ
@@ -131,18 +120,26 @@ tooTall maxZ what h tris =
           _ -> "; it fits standing on ▽" ++ intercalate ", ▽" fitting
         ++ " (raise the limit with `plate W D margin maxZ`)"
 
--- | Choose orientation: declared ▽ wins; otherwise best FFF score.
--- Returns (rotation matrix, chosen face label, mode, score). A part
+-- | How a variant stands on the bed.
+data Orientation = Orientation
+  { oMat :: M3 -- ^ rotation applied to the compiled mesh
+  , oDown :: String -- ^ the face on the bed (▽ label)
+  , oMode :: String -- ^ "declared" or "auto"
+  , oScore :: Double -- ^ 'fffScore' in this orientation
+  }
+  deriving (Show)
+
+-- | Choose orientation: declared ▽ wins; otherwise best FFF score. A part
 -- taller than @maxZ@ in its declared orientation, or on every face, is
 -- refused with the heights and the faces that would fit.
-chooseOrientation :: Double -> Maybe ((Double, Double, Double), String) -> [Tri] -> Either String (M3, String, String, Double)
+chooseOrientation :: Double -> Maybe ((Double, Double, Double), String) -> [Tri] -> Either String Orientation
 chooseOrientation maxZ (Just (v, lbl)) tris =
   let m = downMat v
       rot = meshMap (mApply m) tris
       ((_, _, z0), (_, _, z1)) = meshBounds rot
    in case fffScore maxZ rot of
         Nothing -> Left (tooTall maxZ ("standing on its declared ▽" ++ lbl ++ " it") (z1 - z0) tris)
-        Just sc -> Right (m, lbl, "declared", sc)
+        Just sc -> Right (Orientation m lbl "declared" sc)
 chooseOrientation maxZ Nothing tris =
   let scored =
         [ (sc, m, lbl)
@@ -154,7 +151,7 @@ chooseOrientation maxZ Nothing tris =
         [] -> Left (tooTall maxZ "it" (minimum (map snd (faceHeights tris))) tris)
         _ ->
           let (sc, m, lbl) = foldl1 (\a@(s1, _, _) b@(s2, _, _) -> if s2 > s1 then b else a) scored
-           in Right (m, lbl, "auto", sc)
+           in Right (Orientation m lbl "auto" sc)
 
 processNext :: FilePath -> IO ()
 processNext = processNextWith False
@@ -193,12 +190,25 @@ processNextWith strict inputFile = do
                 case chooseOrientation bedZ (fpDown fp) mesh of
                   -- too tall for the printer: a design problem (exit 2)
                   Left err -> return (Left (2, inputFile ++ ": " ++ vname ++ ": " ++ err))
-                  Right (m, lbl, mode, sc) -> do
-                    let rot = meshMap (mApply m) mesh
+                  Right o -> do
+                    let rot = meshMap (mApply (oMat o)) mesh
                         (lo, hi) = meshBounds rot
                         norm = meshMap (\v -> vsub v lo) rot
                         dims = vsub hi lo
-                    return (Right (Variant k fp norm dims vname lbl mode sc (analysePrintability norm)))
+                    return
+                      ( Right
+                          Variant
+                            { vKey = k
+                            , vPart = fp
+                            , vMesh = norm
+                            , vDims = dims
+                            , vName = vname
+                            , vDown = oDown o
+                            , vMode = oMode o
+                            , vScore = oScore o
+                            , vPrint = analysePrintability norm
+                            }
+                      )
         )
         vkeys
       case sequence variantsE of
@@ -266,14 +276,18 @@ nextManifest src base (pw, pd, m) plateBrim bedZ variants beds asmOnly =
       , ("assembly_only", jlist (map aj asmOnly))
       ]
   where
-    vj (Variant (srcf, _) fp _ (w, d, h) vname lbl mode sc p) =
-      jobj
+    vj v =
+      let fp = vPart v
+          p = vPrint v
+          vname = vName v
+          (w, d, h) = vDims v
+       in jobj
         [ ("id", JString vname)
         , ("part", JString (fpName fp))
-        , ("source", JString srcf)
-        , ("down", JString lbl)
-        , ("orientation_mode", JString mode)
-        , ("fff_score", jnum3 sc)
+        , ("source", JString (fst (vKey v)))
+        , ("down", JString (vDown v))
+        , ("orientation_mode", JString (vMode v))
+        , ("fff_score", jnum3 (vScore v))
         , ("printability", jobj
             [("bed_contact_mm2", jnum3 (bedContactMm2 p))
             ,("elevated_start_heights_mm", jlist (map jnum3 (elevatedStartsMm p)))

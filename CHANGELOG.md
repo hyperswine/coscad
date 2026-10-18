@@ -8,6 +8,14 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Internal: one linear-algebra module.** `Coscad.Linalg` now holds the
+  vector and matrix helpers, the rotations and the bed-orientation helpers
+  (`downRot`, `downMat`) that were copied across `Geometry`, `Next`,
+  `Plan`, `Assemble` and `Check`. The design stage's variants and
+  `coscad next`'s chosen orientation are records instead of tuples. There
+  is no behaviour change: generated `.scad`, STL files and manifests are
+  byte-identical.
+
 - **Bed height and packing (bed layouts change).**
   - `plate W D margin maxZ`: an optional 4th argument gives the printer's
     build height in mm. It defaults to 250, the value `coscad next` always

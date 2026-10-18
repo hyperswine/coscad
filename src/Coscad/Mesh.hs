@@ -11,7 +11,8 @@ module Coscad.Mesh
   , meshVolume
   ) where
 
-import Coscad.Geometry (BBox, cross, fromCorners, vlen, vnormed, vsub)
+import Coscad.Geometry (BBox, fromCorners)
+import Coscad.Linalg (cross, dot3, vlen, vnormed, vsub)
 import Coscad.Validate (readFinite)
 import Data.Char (isSpace)
 import Data.List (isPrefixOf)
@@ -58,9 +59,7 @@ meshBounds tris = fromCorners [v | (a, b, c) <- tris, v <- [a, b, c]]
 
 -- | Signed-volume sum (absolute), exact for closed meshes.
 meshVolume :: [Tri] -> Double
-meshVolume = abs . sum . map (\(a, b, c) -> dot a (cross b c) / 6)
-  where
-    dot (x, y, z) (p, q, r) = x * p + y * q + z * r
+meshVolume = abs . sum . map (\(a, b, c) -> dot3 a (cross b c) / 6)
 
 stlAscii :: String -> [Tri] -> String
 stlAscii name tris =
