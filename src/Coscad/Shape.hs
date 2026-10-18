@@ -1,5 +1,14 @@
 -- | The CoScad shape AST. Pure data: no geometry, no codegen.
-module Coscad.Shape (module Coscad.Shape) where
+module Coscad.Shape
+  ( D
+  , I
+  , Matrix3
+  , Shape (..)
+  , PD (..)
+  , bezPoly
+  , shapeChildren
+  )
+where
 
 type D = Double
 

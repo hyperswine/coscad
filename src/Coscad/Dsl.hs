@@ -3,7 +3,73 @@
 -- | Glyph and word aliases for using CoScad as an embedded Haskell
 -- DSL (ghci, Examples.hs, ...). The .coscad file syntax lives in
 -- Coscad.Parser; this module is only for Haskell-side modelling.
-module Coscad.Dsl (module Coscad.Dsl) where
+module Coscad.Dsl
+  ( (|>)
+  , (↯)
+  , (⇋)
+  , (⇓)
+  , (∩)
+  , (⊕)
+  , (⊖)
+  , (⊚)
+  , (⊛)
+  , (⊝)
+  , (⊞)
+  , (⊿)
+  , (⌭)
+  , (⌽)
+  , (⎏)
+  , (⏢)
+  , (■)
+  , (▣)
+  , (▬)
+  , (△)
+  , (▷)
+  , (▻)
+  , (◉)
+  , (◎)
+  , (●)
+  , (◙)
+  , (✎)
+  , (⟁)
+  , (⬈)
+  , (⬠)
+  , (⭘)
+  , (⮕)
+  , anchorAt
+  , attachAt
+  , bak
+  , bot
+  , cone
+  , ctr
+  , cube
+  , cuboid
+  , cutAt
+  , cyl
+  , fwd
+  , lft
+  , loft
+  , poly
+  , posAt
+  , prism
+  , rect
+  , rt
+  , sph
+  , top
+  , torus
+  , tube
+  , wedge
+  , xcyl
+  , ycyl
+  , zcyl
+  , ζ
+  , θ
+  , χ
+  , ψ
+  , ω
+  , ϕ
+  )
+where
 
 import Coscad.Geometry
 import Coscad.Shape

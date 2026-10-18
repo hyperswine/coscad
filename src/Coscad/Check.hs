@@ -17,7 +17,13 @@
 --      (mating faces), a gap below the declared `clearance` is a WARNING.
 --
 -- Exit code 2 if any OVERLAP is found (1 means the check could not run).
-module Coscad.Check (module Coscad.Check) where
+module Coscad.Check
+  ( processCheck
+  , processCheckIn
+  , processCheckWith
+  , splitBodies
+  )
+where
 
 import Coscad.Assemble
 import Coscad.Codegen

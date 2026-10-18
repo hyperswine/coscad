@@ -39,6 +39,9 @@ library
       Coscad.Parser
       Coscad.Part
       Coscad.Plan
+      Coscad.Plan.Model
+      Coscad.Plan.Render
+      Coscad.Plan.Search
       Coscad.Printability
       Coscad.Shape
       Coscad.Site
