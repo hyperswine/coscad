@@ -106,6 +106,19 @@ ok(messages('a ← a.coscad ×1\nfastener M5 a a top\nasm = a\n', 'assemble').so
 ok(messages('a ← a.coscad ×1\nfastener M5x8 a a sideways\nasm = a\n', 'assemble').some(m => m.includes("unknown face 'sideways'")), 'bad face')
 checks += 10
 
+// --- numeric atoms in fixed / mate, and tolerance (step 10) ---------
+const loopCode = 'w = 8.5\nr = (w * 2)\na ← a.coscad ×1\nb ← b.coscad ×1\ntolerance 0.00001\nfixed a\nfixed b w -w 0 0 0 (r / 2)\nmate b @x a @y roll=(w / 2) gap=-w\n'
+assert.deepEqual(messages(loopCode, 'assemble'), [])
+const loopAst = parser.parse(loopCode, { fileType: 'assemble' })
+const tolNode = loopAst.body.find(node => node.type === 'tolerance_declaration')
+assert.deepEqual([tolNode.positionTolerance, tolNode.rotationTolerance], [0.00001, 1e-8])
+assert.equal(loopAst.body.filter(node => node.type === 'constraint_declaration')[1].pose[0].type, 'number_reference')
+ok(messages('a ← a.coscad ×1\nfixed a q 0 0 0 0 0\n', 'assemble').some(m => m.includes("undefined variable 'q'")), 'fixed unknown binding')
+ok(messages('a ← a.coscad ×1\nb ← b.coscad ×1\nfixed a\nmate b @x a @y roll=a\n', 'assemble').some(m => m.includes("'a' is a shape, not a number")), 'mate shape as number')
+ok(messages('a ← a.coscad ×1\nfixed a 1 2 3\n', 'assemble').some(m => m.includes('fixed needs six pose numbers')), 'short pose')
+ok(messages('a ← a.coscad ×1\ntolerance 0\nfixed a\n', 'assemble').some(m => m.includes('position tolerance must be')), 'zero tolerance')
+checks += 8
+
 // --- diagnostics wording (matches the compiler) ---------------------
 const modeErrors = diagnostics(`!glyph
 main = Translate.x 5 (■ 10)
