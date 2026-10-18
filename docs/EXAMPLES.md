@@ -22,11 +22,19 @@
   `example_check.assemble` with parts `a`/`b`/`c` — a `coscad check`
   demo whose lid sits 0.2 mm above the blocks, under the declared 0.3 mm
   clearance.
-- `examples/archive/` — historical debug/test scratch files.
+- `examples/archive/` — a few historical scratch files (the old `debug*` and
+  `test_*` files were removed in the repo-hygiene change).
 - `examples/haskell/` — embedded-DSL samples for ghci (`cabal repl`, then `:load`
-  examples/haskell/ExampleGear.hs`); not part of the build.
+  examples/haskell/ExampleGear.hs`). They are not library code, but the
+  `haskell-examples` test-suite compiles them and renders one shape from
+  each, so they cannot silently rot.
 
-Generated `.scad`/`.stl` are gitignored; regenerate with
-`coscad <file>` / `coscad next <file>`. Every example (outside
+Generated output is gitignored and not committed: `.scad`/`.stl`, manifests,
+`_design.json`, plan `_plan.json`/`_plan.md` and `_step*` scenes and images.
+Regenerate with `coscad <file>`, `coscad next <file>` or
+`coscad plan [--png] <file>`. Exceptions that stay committed: the print
+records under `models/` (each `next` manifest, the `_next_` part scenes and
+`print-run.json`/`validation.json`), the tesseract adhesion-retry
+`verification.json`, and the greaser reference manifest. Every example (outside
 `archive/`) is compiled, rendered, and compared against
 `test/golden/` by `cabal test`; see README "Tests".

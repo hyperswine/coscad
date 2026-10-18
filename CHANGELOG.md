@@ -8,6 +8,30 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Repo hygiene: generated files are no longer committed.**
+  - 191 generated files were removed from git (they stay on disk). These are
+    example scenes (`_asm`, `_plate`, `_part_`, `_next_`, `_step*`
+    `.scad`/`.png`), `_design.json`, `_plan.json`/`_plan.md`, and the
+    example manifests, including the 9 that had drifted from what the
+    current compiler writes. `.gitignore` now covers them, and the
+    tesseract `.gitignore` that re-included its step scenes is gone.
+  - Still committed: every print record under `models/` (the `next`
+    manifest, the `_next_` part scenes, `print-run.json`,
+    `validation.json`), the orbit-tower manifest, the tesseract
+    adhesion-retry `verification.json`, the greaser reference manifest,
+    and the hero/photo images.
+  - The plan tests for the ball and the bolted tesseract now generate
+    `_plan.md` in a scratch copy instead of reading a committed one.
+  - The design PDF moved to `docs/design/assembly-instruction-generator.pdf`.
+  - `openscad-stl.sh` moved to `scripts/openscad-stl.sh`.
+  - Removed `zip-project.sh` (use `git archive`), the unused default
+    `Setup.hs`, and `examples/archive/debug*`/`test_*` scratch files.
+  - New `haskell-examples` test-suite keeps `examples/haskell/` compiling.
+  - `examples/assemble/tesseract/requirements.txt` pins exact versions.
+  - New `.gitattributes` keeps macOS `._*` files out of `git archive`.
+  - The README says a bare `pipeline-lock.py --check` also SSHes to the
+    print host. In a plain checkout, use `--scope source --scope render`.
+
 - **Docs.**
   - `docs/SYNTAX.md` said `coscad check` exits 1 on an overlap; it exits 2.
   - Dropped the stale "`.assemble` files always resolve in legacy mode".

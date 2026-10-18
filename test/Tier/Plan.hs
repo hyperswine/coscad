@@ -8,12 +8,22 @@ where
 
 import Control.Monad (forM_)
 import Coscad.Geometry (mApply, vlen, vsub, vadd, rodMat)
-import Coscad.Plan (PlanSummary (..), StepSummary (..), FastenerSummary (..), planSummary)
+import Coscad.Plan (PlanSummary (..), StepSummary (..), FastenerSummary (..), planSummary, processPlanSummary)
 import Coscad.Site (buildPageHtml, indexHtml)
 import Data.List (isInfixOf, isPrefixOf, sort)
 import System.Directory
 import System.FilePath
 import Harness
+
+-- | Generate a plan's Markdown in a scratch copy of its sources. Plan output
+-- is not committed (step 15), so the test must not read a checked-in copy.
+generatedPlanMd :: String -> FilePath -> String -> IO String
+generatedPlanMd tag srcDir name = do
+  tmp <- tempDir tag
+  fs <- listDirectory srcDir
+  forM_ [f | f <- fs, takeExtension f `elem` [".coscad", ".assemble"]] $ \f -> copyFile (srcDir </> f) (tmp </> f)
+  _ <- processPlanSummary False (tmp </> name <.> "assemble")
+  readFile (tmp </> name ++ "_plan.md")
 
 planTier :: T -> IO ()
 planTier t = do
@@ -65,7 +75,7 @@ planTier t = do
       assertT t "ball: 3 parts, 2 fasteners, no design errors" (length (psParts ps) == 3 && psFastenerCount ps == 2 && null (psDesignErrors ps)) (show ps)
       checkInvariants t "ball" ps
       assertT t "ball: both screws driven" (sum (map (length . ssFasteners) (psSteps ps)) == 2) (show (psSteps ps))
-  ballMd <- readFile "examples/assemble/ball/ball_plan.md"
+  ballMd <- generatedPlanMd "plan-ball-md" "examples/assemble/ball" "ball"
   assertT t "ball: plan speaks of hex nuts and pockets, not T-slots" (all (`isInfixOf` ballMd) ["M5 hex nut", "pocket on the top face", "socket head through shell1"] && not ("T-nut" `isInfixOf` ballMd)) (take 600 ballMd)
   ballSrc <- readFile "examples/assemble/ball/ball.assemble"
   tmpB <- tempDir "plan-ball"
@@ -84,7 +94,7 @@ planTier t = do
       assertT t "tesseract: starts with the corner blocks on the bench" (take 4 (concatMap ssParts (psSteps ps)) == ["corner1", "corner2", "corner3", "corner4"]) (show (take 6 (concatMap ssParts (psSteps ps))))
       assertT t "tesseract: no screw is driven up through the bench" (all (\st -> ssRest st /= "bottom (-Z) face" || null [f | f@(_, _, _, _) <- ssFasteners st, False]) (psSteps ps)) "n/a"
       assertT t "tesseract: at most 2 flips" (length (filter ssFlip (psSteps ps)) <= 2) (show (length (filter ssFlip (psSteps ps))))
-  tessMd <- readFile "examples/assemble/tesseract/bolted/tesseract_plan.md"
+  tessMd <- generatedPlanMd "plan-tesseract-md" "examples/assemble/tesseract/bolted" "tesseract"
   assertT t "tesseract: plan speaks of pegs and nut pockets in the blocks, no T-nuts" (all (`isInfixOf` tessMd) ["Push: strut1 into", "24 × M3 hex nut", "into the pocket on the top face"] && not ("T-nut" `isInfixOf` tessMd)) (take 500 tessMd)
   -- A rotor must enter its recessed journal before the next axle captures it.
   ro <- planSummary "models/orbit-tower/orbit-tower.assemble"
