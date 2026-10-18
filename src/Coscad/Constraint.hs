@@ -4,6 +4,8 @@
 module Coscad.Constraint
   ( Constraint (..)
   , AsmError (..)
+  , Tolerance (..)
+  , defaultTolerance
   , errorText
   , solveConstraints
   ) where
@@ -21,6 +23,17 @@ data Constraint
   = Fixed String String V3 V3 -- location, instance, translation, XYZ degrees
   | Mate String String String String String D D -- location, child, frame, parent, frame, roll, gap
   deriving (Show)
+
+-- | How far a closing loop may miss and still count as closed: the largest
+-- position difference in mm, and the largest difference between rotation
+-- matrix entries (about radians for small angles). Set per file with
+-- `tolerance <mm> [<rotation>]`.
+data Tolerance = Tolerance {tolPosition :: Double, tolRotation :: Double}
+  deriving (Eq, Show)
+
+-- | 1e-6 mm and 1e-8, the fixed tolerance of coscad 1.2.
+defaultTolerance :: Tolerance
+defaultTolerance = Tolerance 1e-6 1e-8
 
 -- | Why an assembly could not be loaded. 'InputError' means the file could
 -- not be read as written (syntax, unknown names or frames, limits) and
@@ -51,8 +64,8 @@ data Joint = Joint {jIndex :: Int, jLoc :: String, jText :: String}
 -- parts are reported. Supplied shapes may be tagged or hidden:
 -- planner/checker substitutions retain the exact same poses and
 -- construction metadata as the normal assembled view.
-solveConstraints :: [(String, String, Shape)] -> [Constraint] -> Either AsmError Shape
-solveConstraints parts constraints = do
+solveConstraints :: Tolerance -> [(String, String, Shape)] -> [Constraint] -> Either AsmError Shape
+solveConstraints tol parts constraints = do
   when (null parts) (input firstLoc "assembly constraints need at least one part declaration")
   when (length parts > maxQuantity || length constraints > maxQuantity) (input firstLoc ("assembly constraints exceed the limit of " ++ show maxQuantity ++ " parts or constraints"))
   mapM_ (\(n,loc,s) -> do
@@ -126,7 +139,7 @@ solveConstraints parts constraints = do
           | otherwise -> do
               let distance = maximum (map abs (vec (vsub actualT t)))
                   rotation = maximum (zipWith (\a b -> abs (a-b)) (entries actualR) (entries r))
-              unless (finite distance && finite rotation && distance <= 1e-6 && rotation <= 1e-8) $
+              unless (finite distance && finite rotation && distance <= tolPosition tol && rotation <= tolRotation tol) $
                 Left (DesignError (conflict rootJoint via from child j distance rotation))
               return (poses, via, queue)
     -- The loop is the closing joint plus both tree paths up to their
@@ -155,7 +168,8 @@ solveConstraints parts constraints = do
        in intercalate "\n"
             ( (jLoc blamed ++ ": conflicting assembly constraints: " ++ shape ++ " " ++ unwords names ++ " does not close at '" ++ child
                 ++ "' (position residual " ++ show distance ++ " mm, orientation residual " ++ show rotation
-                ++ "); check fixed poses, mating frames, roll and gap. Any of its " ++ show (length members) ++ " constraints may be the wrong one:")
+                ++ "; tolerance " ++ show (tolPosition tol) ++ " mm, " ++ show (tolRotation tol)
+                ++ ", set with `tolerance <mm> [<rotation>]`); check fixed poses, mating frames, roll and gap. Any of its " ++ show (length members) ++ " constraints may be the wrong one:")
               : ["  note: " ++ jLoc m ++ ": " ++ jText m | m <- members] )
     vec (a,b,c) = [a,b,c]
     entries (a,b,c) = concatMap vec [a,b,c]

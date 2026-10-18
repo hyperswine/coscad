@@ -230,17 +230,34 @@ they do not identify individual poses. A nested assembly acts as one rigid
 instance. Each connected component needs at least one fixed instance.
 
 `fixed instance [x y z rx ry rz]` defaults to the identity pose. If provided,
-all six finite numeric literals are required: mm translation and XYZ rotation
-in degrees (X, then Y, then Z). Constraint statements currently take literal
-poses and literal `roll=degrees` / `gap=mm` options, not numeric bindings.
+all six numbers are required: mm translation and XYZ rotation in degrees (X,
+then Y, then Z). Each pose number, and the `roll=degrees` / `gap=mm` mate
+options, is one numeric atom, as in `.coscad` argument position: a literal,
+a numeric binding of the `.assemble` file, `-atom`, or parenthesized
+arithmetic. Bindings may be defined anywhere in the file:
+
+```
+w = 10
+half = w / 2
+fixed lid (w - 1) -w 0 0 0 45
+mate hinge @pin lid @hole roll=(half * 9) gap=-0.2
+```
+
+Arithmetic outside parentheses (`w+1`) is refused with a hint. An undefined
+name, a part name used as a number, or a non-finite value (`(1 / 0)`) is an
+input error at its token.
 `mate child @own parent @target` uses the same face convention as the pipeline.
 Statements and declaration order do not determine solving order: poses
 propagate in either direction from fixed roots. Every declared instance is
 included exactly once in the generated `asm`.
 
 Multiple fixed roots and closed loops are accepted only if all constraints
-agree, with per-component translation tolerance 0.000001 mm and matrix-entry
-orientation tolerance 0.00000001. A contradiction is reported as the whole
+agree, by default within a per-component translation tolerance of 0.000001 mm
+and a matrix-entry orientation tolerance of 0.00000001. `tolerance <mm>
+[<rotation>]` changes both for the file (the rotation tolerance keeps its
+default when omitted), e.g. `tolerance 0.00001` for a loop whose fixed poses
+are typed to five decimals. The error for a loop that does not close reports
+its residuals next to the tolerance in force. A contradiction is reported as the whole
 loop (or the chain between two fixed roots that disagree): the error sits on
 the constraint declared last on it, the line that closed the loop, with the
 position and orientation residuals, and every constraint on the loop follows

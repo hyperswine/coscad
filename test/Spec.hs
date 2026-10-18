@@ -22,7 +22,7 @@ module Main (main) where
 import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, unless, when)
 import Coscad.Assemble (AsmResult (..), FlatPart (..), Placement (..), brimHint, defaultMaxZ, loadAssembleFile, loadAssembly, packBeds, packBedsBrim, processAssemble, resolveAssembly, turnZ, variantNames)
-import Coscad.Constraint (AsmError (..))
+import Coscad.Constraint (AsmError (..), Constraint (..), Tolerance (..), defaultTolerance, errorText)
 import Coscad.Check (processCheckIn, processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad, showD)
 import Coscad.Geometry (PointRef (..), MatingFrame (..), bbox, bcenter, pointOf, resolve, frameOf, mApply, vneg, vnormed, dot3, vlen, vsub, scale3, vadd, vmul, rodMat, mirrorMat)
@@ -2032,6 +2032,44 @@ constraintLoopTier t dir = do
   ro <- loadAssembly [] (dir </> "outer.assemble")
   assertT t "a loop conflict in a subassembly is a design error of the parent too, located in the subassembly"
     (case ro of Left (DesignError m) -> ((dir </> "ring.assemble") ++ ":17:1:") `isPrefixOf` m; _ -> False) (either show (const "loaded") ro)
+  -- numeric bindings and arithmetic in fixed / mate, and the tolerance statement (step 10)
+  let posAt n c = file ++ ":" ++ show (n :: Int) ++ ":" ++ show (c :: Int) ++ ":"
+      poses r = case r of
+        Right ar -> Right [(n, tr, rot) | Fixed _ n tr rot <- arConstraints ar]
+        Left e -> Left (errorText e)
+      mates r = case r of
+        Right ar -> Right [(roll, gap) | Mate _ _ _ _ _ roll gap <- arConstraints ar]
+        Left e -> Left (errorText e)
+  rb <- load ("w = 8.535533906\n" ++ links 2 ++ "fixed l1\nfixed l2 w 0 0 0 0 0\n")
+  assertT t "fixed: a numeric binding is a pose number" (poses rb == Right [("l1", (0, 0, 0), (0, 0, 0)), ("l2", (8.535533906, 0, 0), (0, 0, 0))]) (show (poses rb))
+  re <- load (links 2 ++ "fixed l1\nfixed l2 (w / 2) -w (-(w - 4)) 0 0 (a * 3)\nw = 10\na = w + 5\n")
+  assertT t "fixed: atoms, negation, parenthesized arithmetic and forward bindings"
+    (poses re == Right [("l1", (0, 0, 0), (0, 0, 0)), ("l2", (5, -10, -6), (0, 0, 45))]) (show (poses re))
+  rm1 <- load ("a = 90\n" ++ links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=(a / 2) gap=-g\ng = 0.5\n")
+  assertT t "mate: roll and gap take bindings and arithmetic" (mates rm1 == Right [(45, -0.5)]) (show (mates rm1))
+  rm2 <- load (links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=45 gap=-0.5\n")
+  assertT t "mate: an expression gives the same assembly as the literal"
+    (case (rm1, rm2) of (Right a1, Right a2) -> fmap show (arAsm a1) == fmap show (arAsm a2); _ -> False) ""
+  let two5 = links 2 ++ "fixed l1\nfixed l2 8.53553 -8.53553 0 0 0 -45\nmate l2 @a l1 @b\n"
+  design "tolerance: a 5-decimal irrational pose misses the default tolerance, and the error says so"
+    two5 (\m -> "position residual 3.9" `isInfixOf` m && "tolerance 1.0e-6 mm, 1.0e-8" `isInfixOf` m)
+  rt <- load ("tolerance 0.00001\n" ++ two5)
+  assertT t "tolerance: tolerance 0.00001 closes the same loop" (either (const False) (const True) rt) (either errorText (const "") rt)
+  assertT t "tolerance: recorded, with the default rotation tolerance"
+    (either (const False) ((== Tolerance 0.00001 1e-8) . arTolerance) rt) ""
+  rt2 <- load ("tolerance 0.000001 0.001\n" ++ links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=0.01\nmate l2 @a l1 @b\n")
+  assertT t "tolerance: a rotation tolerance admits a small closing roll" (either (const False) (const True) rt2) (either errorText (const "") rt2)
+  rd0 <- load (links 1 ++ "fixed l1\n")
+  assertT t "tolerance: default when not declared" (either (const False) ((== defaultTolerance) . arTolerance) rd0) ""
+  inputErr "tolerance must be positive" (links 2 ++ "tolerance 0\nfixed l1\nmate l2 @a l1 @b\n") [posAt 3 11, "position tolerance must be a finite distance in mm, greater than zero"]
+  inputErr "fixed: an unknown binding is an undefined variable at its token" (links 2 ++ "fixed l1\nfixed l2 0 q 0 0 0 0\n") [posAt 4 12, "undefined variable 'q'"]
+  inputErr "fixed: a non-finite expression is an error at its token" (links 2 ++ "fixed l1\nfixed l2 0 0 (1 / 0) 0 0 0\n") [posAt 4 14, "must be finite"]
+  inputErr "fixed: a part name is not a number" (links 2 ++ "fixed l1\nfixed l2 l1 0 0 0 0 0\n") [posAt 4 10, "'l1' is a shape, not a number"]
+  inputErr "fixed: arithmetic outside parentheses is refused with a fix" ("w = 1\n" ++ links 2 ++ "fixed l1\nfixed l2 w+1 0 0 0 0 0\n") [posAt 5 10, "write arithmetic in parentheses"]
+  inputErr "mate: an unknown binding in roll= is an undefined variable at its token" (links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=(r / 2)\n") [posAt 4 24, "undefined variable 'r'"]
+  inputErr "mate: a value that is not a number" (links 2 ++ "fixed l1\nmate l2 @a l1 @b roll=90deg\n") [posAt 4 23, "'90deg' is not a number"]
+  inputErr "mate: unknown options are still refused" (links 2 ++ "fixed l1\nmate l2 @a l1 @b spin=2\n") [posAt 4 18, "unknown mate option 'spin'"]
+  inputErr "mate: duplicate options are still refused" (links 2 ++ "fixed l1\nmate l2 @a l1 @b gap=1 gap=2\n") [posAt 4 24, "duplicate mate option 'gap'"]
 
 -- ------------------------------------------------------------------
 -- variant names: one id and one artefact per (source, orientation)

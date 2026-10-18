@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `.assemble` diagnostics accept numeric atoms in `fixed` poses and `mate`
+  `roll=` / `gap=` (`w`, `-w`, `(w / 2)`), report undefined or shape names
+  there, and know the `tolerance <mm> [<rotation>]` statement (keyword
+  highlight, completion and hover).
 - `.assemble` diagnostics accept `plate W D [margin [maxZ]] [brim=N|auto]`:
   the 4th max-height argument and the `brim=` option no longer show
   "Unexpected value in plate declaration".

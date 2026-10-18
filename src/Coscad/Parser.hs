@@ -927,6 +927,26 @@ bezierBody ctx = do
     pairUp (a : b : r) = (a, b) : pairUp r
     pairUp _ = []
 
+-- | Resolve the numeric bindings among @defs@ (arithmetic over literals
+-- and other numeric bindings), returning them and the remaining
+-- (shape) definitions. Numbers can only depend on numbers, so they
+-- resolve first, in dependency order. A non-finite value is an error at
+-- its definition.
+numericPhase :: SynMode -> [Def] -> VarTable -> Either String (NumTable, [Def])
+numericPhase mode defs table0 = go Map.empty defs
+  where
+    go nums remaining =
+      let step d = case runAt (defPos d) (defPrefix d) (defExpr d) (sc *> numExpr (Ctx mode table0 nums) <* eof) of
+            Right v -> Right (defName d, v)
+            Left _ -> Left d
+          results = map step remaining
+          found = rights results
+       in if null found
+            then Right (nums, remaining)
+            else case [d | d <- remaining, Just v <- [lookup (defName d) found], isNaN v || isInfinite v] of
+              (d : _) -> Left (sourcePosPretty (defPos d) ++ ": in '" ++ defName d ++ "': numeric binding must be finite (check division by zero or overflow)")
+              [] -> go (foldl' (\acc (n, v) -> Map.insert n v acc) nums found) (lefts results)
+
 -- | Resolve definitions by dependency: each round parses every
 -- still-unresolved definition against the table so far; definitions
 -- that only fail because they reference not-yet-resolved names are
@@ -939,25 +959,10 @@ resolveVariables :: SynMode -> [Def] -> VarTable -> Either String VarTable
 resolveVariables mode defs table0 = do
   checkDuplicates
   checkReserved
-  (nums, shapeDefs) <- numPhase Map.empty defs
+  (nums, shapeDefs) <- numericPhase mode defs table0
   go shapeDefs table0 nums
   where
     known = Set.fromList (map defName defs ++ Map.keys table0)
-
-    -- A definition whose right-hand side is arithmetic over literals
-    -- and already-known numeric bindings is a number, not a shape.
-    -- Numbers can only depend on numbers, so they resolve first.
-    numPhase nums remaining =
-      let step d = case runAt (defPos d) (defPrefix d) (defExpr d) (sc *> numExpr (Ctx mode table0 nums) <* eof) of
-            Right v -> Right (defName d, v)
-            Left _ -> Left d
-          results = map step remaining
-          found = rights results
-       in if null found
-            then Right (nums, remaining)
-            else case [d | d <- remaining, Just v <- [lookup (defName d) found], isNaN v || isInfinite v] of
-              (d : _) -> Left (sourcePosPretty (defPos d) ++ ": in '" ++ defName d ++ "': numeric binding must be finite (check division by zero or overflow)")
-              [] -> numPhase (foldl' (\acc (n, v) -> Map.insert n v acc) nums found) (lefts results)
 
     -- Only names dispatched as prefix expressions are reserved. Pipeline
     -- stages and anchor words remain usable as bindings (e.g. x, top).
