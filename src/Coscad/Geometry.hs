@@ -8,6 +8,7 @@ module Coscad.Geometry
   , anchorName
   , anchorPt
   , anchorWarnings
+  , formatAnchorWarning
   , bbox
   , bcenter
   , bcorners
@@ -258,22 +259,22 @@ bbox s = case s of
 resolve :: Shape -> Shape
 resolve s = case s of
   Hidden x -> Hidden (resolve x)
-  Anchor v x ->
+  Anchor _ v x ->
     let x' = resolve x
      in Translate (vneg (anchorPt (bbox x') v)) x'
-  Position v off p c ->
+  Position _ v off p c ->
     let p' = resolve p
         c' = resolve c
         pa = vadd off (anchorPt (bbox p') v)
         ca = anchorPt (bbox c') (vneg v)
      in Union [p', Translate (vsub pa ca) c']
-  CutAt v off p c ->
+  CutAt _ v off p c ->
     let p' = resolve p
         c' = resolve c
         target = vadd off (anchorPt (bbox p') v)
         cc = bcenter (bbox c')
      in Diff p' (Translate (vsub target cc) c')
-  AttachTo v off p c ->
+  AttachTo _ v off p c ->
     let p' = resolve p
         c' = resolve c
         pa = vadd off (anchorPt (bbox p') v)
@@ -316,6 +317,14 @@ resolve s = case s of
   prim -> prim
 
 
+-- | A diagnostic from 'anchorWarnings' as the compiler prints it:
+-- @file:line:col: message@ when the anchor came from parsed text, and
+-- @file: message@ otherwise.
+formatAnchorWarning :: FilePath -> (SrcPos, String) -> String
+formatAnchorWarning file (pos, msg) = case pos of
+  Just (l, c) -> file ++ ":" ++ show l ++ ":" ++ show c ++ ": " ++ msg
+  Nothing -> file ++ ": " ++ msg
+
 -- | Anchor vector as the words the parser accepts (top+rt, ctr, ...).
 anchorName :: V3 -> String
 anchorName (x, y, z) = case [w | (c, pos, neg) <- [(z, "top", "bot"), (x, "rt", "lft"), (y, "bak", "fwd")], c /= 0, let w = if c > 0 then pos else neg] of
@@ -330,15 +339,15 @@ anchorName (x, y, z) = case [w | (c, pos, neg) <- [(z, "top", "bot"), (x, "rt", 
 -- the parent's combined rotation is not a multiple of 90 degrees. Pure; the commands
 -- print these as warnings. A cutter whose box covers a face but whose
 -- round sides miss its corners is still reported, hence "bounding box".
-anchorWarnings :: Shape -> [String]
+anchorWarnings :: Shape -> [(SrcPos, String)]
 anchorWarnings = nub . go
   where
     go s = here s ++ concatMap go (shapeChildren s)
     here s = case s of
-      Position v _ p _ -> check "at" v p
-      AttachTo v _ p _ -> check "on" v p
-      CutAt v _ p _ -> check "cutat" v p
-      Anchor v p -> check "anchor" v p
+      Position at v _ p _ -> map ((,) at) (check "at" v p)
+      AttachTo at v _ p _ -> map ((,) at) (check "on" v p)
+      CutAt at v _ p _ -> map ((,) at) (check "cutat" v p)
+      Anchor at v p -> map ((,) at) (check "anchor" v p)
       _ -> []
     check op v p
       | v == (0, 0, 0) = []

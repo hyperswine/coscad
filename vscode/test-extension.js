@@ -108,6 +108,24 @@ assert.equal(d.length, 1)
 assert.equal(d[0].range.start.line, 16)
 assert.match(d[0].message, /conflicting assembly constraints.*Any of its 3 constraints/)
 
+// warnings: positioned, with Warning severity, alongside errors
+d = parseCompilerErrors("Warning: /tmp/x/part.coscad:3:6: 'at top' is taken on a part turned by a non-right angle\n", '/tmp/x/part.coscad')
+assert.equal(d.length, 1)
+assert.equal(d[0].severity, 1)
+assert.deepEqual([d[0].range.start.line, d[0].range.start.character], [2, 5])
+assert.match(d[0].message, /^'at top' is taken on a part turned/)
+d = parseCompilerErrors("Warning: /tmp/x/a.assemble:1:1: 'blk' is declared ×3 but asm places it 2 times\nError: /tmp/x/a.assemble:4:9: unknown fastener option 'nutt'\n  |\n4 | fastener M5x10 a b rt nutt=hex\n  |         ^\n", '/tmp/x/a.assemble')
+assert.deepEqual(d.map(x => [x.severity, x.range.start.line]), [[1, 0], [0, 3]])
+// a warning about a referenced part lands at the top of the assembly, named
+d = parseCompilerErrors("Warning: /tmp/x/inner.coscad:5:3: 'at top' is taken on a face that lies wholly inside a cut\n", '/tmp/x/frame.assemble')
+assert.equal(d.length, 1)
+assert.equal(d[0].severity, 1)
+assert.equal(d[0].range.start.line, 0)
+assert.match(d[0].message, /^\/tmp\/x\/inner\.coscad:5:3: 'at top'/)
+// unpositioned warnings (design-stage notes) keep Warning severity
+d = parseCompilerErrors('Warning: post_bot: about 200 mm tall standing on ▽bot\n', '/tmp/x/tall.assemble')
+assert.deepEqual(d.map(x => x.severity), [1])
+
 // version probe helpers
 assert.deepEqual(parseVersion('coscad 1.1.0.0\n'), [1, 1, 0, 0])
 assert.equal(parseVersion('Error: expected a .coscad file, got --version'), null)

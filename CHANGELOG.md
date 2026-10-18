@@ -8,6 +8,13 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Anchor warnings point at the call and reach the editor.** Attachment
+  nodes now carry the line and column of their keyword or glyph, so a
+  floating anchor is reported as `Warning: file:line:col: 'at top' ...`,
+  also inside other definitions, on continuation lines and in an
+  assembly's `asm`. `coscad validate` prints these warnings for parts too
+  (exit status stays 0), which is what the editor runs on save.
+
 - **Silent cases now reported.**
   - A printed part whose `×n` differs from its placements in `asm` warns
     at its declaration: `next` prints n copies while `plan` and `check`

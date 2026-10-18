@@ -45,13 +45,13 @@ dimOf s = case s of
   Translate _ x -> dimOf x
   RotAxis _ _ x -> dimOf x
   Transform3 _ _ x -> solid "mate" x
-  Anchor _ x -> dimOf x
+  Anchor _ _ x -> dimOf x
   Tag _ x -> dimOf x
   Datum _ _ x -> dimOf x
   Frame _ _ _ x -> solid "frame" x
-  Position _ _ a b -> same "position (⌖ / at)" [a, b]
-  AttachTo _ _ a b -> same "attach (⋈ / on)" [a, b]
-  CutAt _ _ a b -> same "cutat" [a, b]
+  Position _ _ _ a b -> same "position (⌖ / at)" [a, b]
+  AttachTo _ _ _ a b -> same "attach (⋈ / on)" [a, b]
+  CutAt _ _ _ a b -> same "cutat" [a, b]
   Diff a b -> same "difference" [a, b]
   Union xs -> same "union" xs
   Intersection xs -> same "intersection" xs

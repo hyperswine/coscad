@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Compiler warnings appear as warning diagnostics on save: `Warning:` lines
+  from `coscad validate` are parsed like errors (positioned, file-level or
+  unpositioned), and a valid file keeps its warnings instead of clearing
+  every diagnostic. With a compiler that reports anchor positions, a
+  floating anchor is underlined at its `at`/`on`/`cutat`/`anchor`.
+
 - Frame references accept dotted instance paths (`@q.b`, `@s.q.b`).
 - `.assemble` diagnostics accept numeric atoms in `fixed` poses and `mate`
   `roll=` / `gap=` (`w`, `-w`, `(w / 2)`), report undefined or shape names

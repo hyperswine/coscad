@@ -561,7 +561,7 @@ loadAssembly visited path
                        -- warnings were printed when each part was loaded
                        let partWarnings = concat [anchorWarnings sh | (_, sh, _) <- entries]
                        case Map.lookup "asm" table of
-                         Just a -> mapM_ (\w -> hPutStrLn stderr ("Warning: " ++ path ++ ": asm: " ++ w)) (filter (`notElem` partWarnings) (anchorWarnings a))
+                         Just a -> mapM_ (hPutStrLn stderr . ("Warning: " ++) . formatAnchorWarning path) (filter (`notElem` partWarnings) (anchorWarnings a))
                          Nothing -> return ()
                        mapM_ (\w -> hPutStrLn stderr ("Warning: " ++ w)) (countMismatches fmode tol defs meta positions constraints table0)
                        return $
@@ -625,7 +625,7 @@ loadRef visited dir (APart name rel cnt down hints) = do
           case parseProgramNamed p c of
             Left err -> return (Left (InputError err))
             Right (_, shape) -> do
-              mapM_ (\w -> hPutStrLn stderr ("Warning: " ++ p ++ ": " ++ w)) (anchorWarnings shape)
+              mapM_ (hPutStrLn stderr . ("Warning: " ++) . formatAnchorWarning p) (anchorWarnings shape)
               return (Right (name, shape, [FlatPart [] name p cnt down hints shape]))
     ".assemble" -> do
       r <- loadAssembly visited p

@@ -5,6 +5,7 @@ module Main (main) where
 import Coscad.Assemble (failAsm, loadAssembly, processAssemble)
 import Coscad.Check (processCheckWith)
 import Coscad.Doctor (runDoctor)
+import Coscad.Geometry (anchorWarnings, formatAnchorWarning)
 import Coscad.Next (processNextWith)
 import Coscad.Part (compilePart, renderPart)
 import Coscad.Plan (processPlan, validateHardware)
@@ -47,7 +48,9 @@ runCLI = do
       ".coscad" -> do
         exists <- doesFileExist f
         unless exists (bad (f ++ ": file not found"))
-        readFileUtf8 f >>= either bad (const (putStrLn "Valid part")) . parseProgramNamed f
+        -- warnings go to stderr with file:line:col, as for compile; the
+        -- editor turns them into diagnostics (exit status stays 0)
+        readFileUtf8 f >>= either bad (\(_, shape) -> mapM_ (hPutStrLn stderr . ("Warning: " ++) . formatAnchorWarning f) (anchorWarnings shape) >> putStrLn "Valid part") . parseProgramNamed f
       _ -> bad "validate needs a .coscad or .assemble file"
     ("validate" : _) -> bad "validate needs one .coscad or .assemble file"
     ("stl" : rest) -> withInOut "stl" rest renderPart

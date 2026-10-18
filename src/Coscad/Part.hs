@@ -4,7 +4,7 @@
 module Coscad.Part (compilePart, renderPart, scadPathFor) where
 
 import Coscad.Codegen (renderScad)
-import Coscad.Geometry (anchorWarnings)
+import Coscad.Geometry (anchorWarnings, formatAnchorWarning)
 import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Mesh (meshBounds, meshVolume)
 import Coscad.OpenScad (renderStlFile)
@@ -31,7 +31,7 @@ loadPart input = do
   case parseProgramNamed input src of
     Left err -> die' err
     Right (_, shape) -> do
-      mapM_ (\w -> hPutStrLn stderr ("Warning: " ++ input ++ ": " ++ w)) (anchorWarnings shape)
+      mapM_ (hPutStrLn stderr . ("Warning: " ++) . formatAnchorWarning input) (anchorWarnings shape)
       return shape
 
 -- | .coscad -> .scad
