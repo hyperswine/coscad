@@ -236,7 +236,7 @@ COSCAD_RENDER=0 cabal test          # pure tiers only (a few seconds)
 COSCAD_UPDATE_GOLDEN=1 cabal test   # accept changed .scad / geometry snapshots
 ```
 
-Four tiers in `test/Spec.hs`: diagnostics (error messages carry
+The suite's entry point is `test/Spec.hs`; the tiers live in `test/Tier/*.hs` and share `test/Harness.hs`. The main tiers: diagnostics (error messages carry
 position and cause), examples (every example compiles, every
 `.assemble` loads, emitted `.scad` matches `test/golden/scad/`), and
 geometry (every example renders through OpenSCAD and its mesh volume +
