@@ -3,7 +3,17 @@
 # with `tar --no-mac-metadata` on macOS.
 ._* export-ignore
 .DS_Store export-ignore
-# Generated example scenes and manifests are not committed (see .gitignore).
+
 *.pdf binary
 *.png binary
 *.jpg binary
+
+# Printer and bed photos (camera captures from print runs under models/)
+# live in Git LFS. Renders and diagrams (*.png: hero images, slicer
+# first-layer plots) stay as ordinary git blobs so README images render
+# and a checkout without LFS still has them. See README "Print photos".
+models/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+models/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+models/**/*.JPG filter=lfs diff=lfs merge=lfs -text
+models/**/*.heic filter=lfs diff=lfs merge=lfs -text
+models/**/*.HEIC filter=lfs diff=lfs merge=lfs -text
