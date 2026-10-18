@@ -38,6 +38,7 @@ import Tier.Plan
 import Tier.Manufacturing
 import Tier.Cli
 import Tier.Linalg
+import Tier.Resolution
 
 main :: IO ()
 main = do
@@ -48,6 +49,7 @@ main = do
   update <- (== Just "1") <$> lookupEnv "COSCAD_UPDATE_GOLDEN"
   diagnostics t
   remainingDiagnostics t
+  resolutionTier t
   printabilityTier t
   brimTier t
   packTier t
