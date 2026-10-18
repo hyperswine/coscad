@@ -96,6 +96,7 @@ test-suite coscad-test
       Tier.Diagnostics
       Tier.Examples
       Tier.Geometry
+      Tier.Keywords
       Tier.Linalg
       Tier.Manufacturing
       Tier.Plan

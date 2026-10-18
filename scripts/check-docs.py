@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Docs drift check (CI): the command list and the exit-status contract in
 README.md, man/coscad.1 and `coscad --help` (app/Main.hs) must agree, and
-the README module map must name every module under src/Coscad.
+the README module map must name every module under src/Coscad, and the
+"Names and keywords" docs (docs/SYNTAX.md, man page) must list exactly the
+reserved, anchor, stage and statement words the parsers recognise.
 
 Run from the repository root: python3 scripts/check-docs.py
 """
@@ -30,6 +32,58 @@ def section(text, start, end):
     if i < 0: return None
     j = text.find(end, i + len(start))
     return text[i:j if j >= 0 else len(text)]
+
+def words(text):
+    """Words inside backticks, split on spaces and '/'."""
+    return {w for q in re.findall(r'`([^`]+)`', text) for w in re.split(r'[\s/]+', q) if re.fullmatch(r'[A-Za-z]+', w)}
+
+def keyword_errors(parser, assemble, syntax, man):
+    errors = []
+    res = section(parser, 'reservedNames mode =', '\n\n') or ''
+    common, _, simple = res.partition('else')
+    code = {
+        'reserved (every mode)': set(re.findall(r'"(\w+)"', common)),
+        'reserved (!simple and legacy)': set(re.findall(r'"(\w+)"', simple)),
+        'anchor words': set(re.findall(r'keyword "(\w+)"', section(parser, 'anchorWord =', '\n\n') or '')),
+        'stage words': set(re.findall(r'"(\w+)"', section(parser, 'stages = [', ']') or '')),
+        'statement words': set(re.findall(r'statementKeyword "(\w+)"', assemble)),
+    }
+    for k, v in code.items():
+        if not v: errors.append(f'parser: could not read the {k}')
+    doc = section(syntax, '## Names and keywords', '\n## ')
+    if doc is None:
+        return errors + ['docs/SYNTAX.md: no "Names and keywords" section']
+    row = lambda label: next((l for l in doc.splitlines() if l.startswith('| ' + label)), '')
+    rows = {
+        'reserved (every mode)': row('every mode'),
+        'reserved (!simple and legacy)': row('`!simple` and legacy'),
+        'anchor words': row('anchor words'),
+        'stage words': row('stage words'),
+        'statement words': row('`.assemble` statement words'),
+    }
+    for k, line in rows.items():
+        # reserved rows: | mode | words |; contextual rows: | words | where |
+        col = 2 if k.startswith('reserved') else 1
+        cells = line.split('|')
+        cell = cells[col] if len(cells) > col + 1 else ''
+        got = words(cell) - {'simple', 'assemble'}
+        if got != code[k]:
+            missing, extra = sorted(code[k] - got), sorted(got - code[k])
+            errors.append(f'docs/SYNTAX.md Names and keywords: {k} differ from the parser (missing {missing}, extra {extra})')
+    js = (ROOT / 'vscode/coscad-parser.js').read_text(encoding='utf-8')
+    m = re.search(r"this\.anchors = new Set\(\[([^\]]*)\]", js)
+    jsanchors = set(re.findall(r"'(\w+)'", m.group(1))) if m else set()
+    if jsanchors != code['anchor words']:
+        errors.append(f"vscode/coscad-parser.js: anchor words differ from the Haskell parser ({sorted(jsanchors ^ code['anchor words'])})")
+    mansec = section(man, '.Ss Names and keywords', '\n.Sh ') or ''
+    if not mansec:
+        errors.append('man/coscad.1: no "Names and keywords" subsection')
+    else:
+        manwords = set(re.findall(r'[A-Za-z]+', mansec))
+        for k in ('reserved (every mode)', 'reserved (!simple and legacy)', 'anchor words', 'statement words'):
+            for w in sorted(code[k] - manwords):
+                errors.append(f'man/coscad.1 Names and keywords: {k} omit `{w}`')
+    return errors
 
 def main():
     errors = []
@@ -72,9 +126,10 @@ def main():
         rel = f.relative_to(ROOT / 'src/Coscad').as_posix()
         if rel not in module_map:
             errors.append(f'README.md: module map does not list src/Coscad/{rel}')
+    errors += keyword_errors(read('src/Coscad/Parser.hs'), read('src/Coscad/Assemble.hs'), read('docs/SYNTAX.md'), man)
     for e in errors: print('docs: ' + e, file=sys.stderr)
     if errors: return 1
-    print(f'docs agree: {len(commands)} commands, exit status in {len(texts)} places, module map complete')
+    print(f'docs agree: {len(commands)} commands, exit status in {len(texts)} places, module map complete, keyword lists match the parser')
     return 0
 
 if __name__ == '__main__':

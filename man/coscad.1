@@ -362,6 +362,69 @@ Glyph forms:
 positions,
 .Ql a ⋈ v b
 attaches.
+.Ss Names and keywords
+Names are resolved by position.
+Only the primitive shape words are
+.Em reserved :
+.Ql cube box sphere cyl tube torus wedge xcyl ycyl zcyl loft
+in every mode and, outside
+.Ql !glyph ,
+the capitalised words
+.Ql Sphere Cube Box Cylinder Cone Tube Torus Wedge Prismoid Circle Triangle Pentagon Bezier Translate Rotate Scale Mirror Extrude Loft Anchor Hull Union Intersect Minkowski Offset .
+They start a shape wherever a shape may appear, so they cannot be
+definition or part names.
+.Pp
+Every other keyword is
+.Em contextual
+and is an ordinary name elsewhere.
+Anchor words
+.Ql top bot rt lft fwd bak ctr ,
+with aliases
+.Ql up dn down right left front back center ,
+are directions only where a direction is expected: after
+.Ql at ,
+.Ql on ,
+.Ql cutat ,
+.Ql anchor ,
+.Ql ⚓ ,
+.Ql ⌖
+and
+.Ql ⋈ ,
+in
+.Ql datum ,
+.Ql frame
+and
+.Ql place ,
+in an
+.Pa .assemble
+.Ql ▽face ,
+and as a
+.Ql fastener
+face.
+Stage words
+.Pq Ql x y z move at on cut add hull ...
+are stages only directly after
+.Ql |> .
+The
+.Pa .assemble
+statement words
+.Ql plate clearance fastener plan tolerance fixed mate
+are statements only at the start of a line, and not when followed by
+.Ql =
+or
+.Ql ← .
+So
+.Ql top = box 2 2 2
+with
+.Ql main = base ⌖ top top
+is valid: the first
+.Ql top
+is the anchor, the second the shape.
+.Pp
+Adding an anchor, stage or statement word never breaks a file.
+Adding a primitive shape word is a breaking change, because it must be
+reserved; see
+.Pa docs/SYNTAX.md .
 .Sh ASSEMBLIES
 .Bd -literal -offset indent
 plate 250 250 6 180 brim=8           // bed width depth [margin [max height]] [brim=N|auto]

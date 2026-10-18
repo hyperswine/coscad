@@ -38,6 +38,7 @@ import Tier.Plan
 import Tier.Manufacturing
 import Tier.Cli
 import Tier.Linalg
+import Tier.Keywords
 import Tier.Resolution
 
 main :: IO ()
@@ -50,6 +51,7 @@ main = do
   diagnostics t
   remainingDiagnostics t
   resolutionTier t
+  keywordsTier t
   printabilityTier t
   brimTier t
   packTier t

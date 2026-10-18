@@ -8,6 +8,22 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Names and keywords documented (no behaviour change).**
+  - `docs/SYNTAX.md` and the man page now state the rule the parser already
+    follows. Only the primitive shape words are reserved (`cube box sphere
+    cyl …`, and outside `!glyph` the capitalised `!simple` words).
+  - Anchor words (`top`, `ctr`/`center`, …), stage words (`x`, `move`,
+    `at`, `hull`, …) and `.assemble` statement words (`plate`, `mate`, …)
+    are keywords only in their own positions, and ordinary names elsewhere.
+  - Adding a new shape word is a breaking change; adding a new anchor,
+    stage or statement word is not.
+  - New `test/Tier/Keywords.hs` pins the rule with 8 cases. Each must give
+    the same scad as the program with the name changed.
+  - `scripts/check-docs.py` also fails when the documented keyword lists
+    drift from the parser's (`reservedNames`, the anchor words, the stage
+    words, the `.assemble` statement words), or when the VS Code parser's
+    anchor words differ.
+
 - **Print photos in Git LFS.** Camera photos under `models/` (27 files,
   2.8 MB) are now stored in Git LFS (`.gitattributes`); renders and
   diagrams stay in git. History is not rewritten: earlier commits still
