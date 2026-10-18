@@ -8,6 +8,12 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Print photos in Git LFS.** Camera photos under `models/` (27 files,
+  2.8 MB) are now stored in Git LFS (`.gitattributes`); renders and
+  diagrams stay in git. History is not rewritten: earlier commits still
+  hold the original images. Run `git lfs install` (or `git lfs pull`
+  after cloning) to get the photos rather than pointer files.
+
 - **The packer never needs more beds than 1.2.** The first-fit packer
   (below) turned 81.6 mm tesseract bars onto the open shelf, which deepened
   that shelf to 81.6 mm and pushed the 38-part tesseract onto two beds
