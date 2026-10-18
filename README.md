@@ -108,7 +108,8 @@ are treated as failures too. Every diagnostic goes to stderr as
 `Error: file:line:col: reason`, optionally followed by an excerpt; exit 1
 means the command could not run, exit 2 means the input was fine but the
 design has a problem (`validate`/`plan` design errors, `check` overlaps,
-and, from every command that loads an assembly, mating constraints that
+`next --strict` printability warnings, a part that does not fit the plate
+in the design stage or `next`, and, from every command that loads an assembly, mating constraints that
 contradict each other, parts no fixed root reaches, or an instance fixed
 twice). A constraint conflict is reported on the line that closed the loop,
 followed by one `  note: file:line:col: …` line per constraint on the loop.
@@ -175,15 +176,22 @@ src/Coscad/Codegen.hs   OpenSCAD emission
 src/Coscad/Dsl.hs       Haskell-embedded glyph DSL
 src/Coscad/Parser.hs    .coscad parser (glyphs, words, pipelines)
 src/Coscad/Dim.hs       2D/3D dimensionality check
+src/Coscad/Validate.hs  shared numeric/quantity checks and suggestions
+src/Coscad/Constraint.hs  mate/fixed constraint solver, conflicts, tolerance
 src/Coscad/Assemble.hs  .assemble design stage
 src/Coscad/Variants.hs  print variants: names, instance ids, orientation, plate packing
 src/Coscad/Next.hs      manufacturing stage (orientation, beds, manifest)
+src/Coscad/Printability.hs  bed contact, overhang, slenderness, warnings
 src/Coscad/Check.hs     assembly interference / clearance checker
 src/Coscad/Plan.hs      `coscad plan` CLI and summaries, over:
   Plan/Model.hs         instances, fasteners, requires-before relation
   Plan/Search.hs        stability/access predicates, A*/beam search, steps
   Plan/Render.hs        plan Markdown, JSON, per-step scenes
+src/Coscad/Site.hs      `coscad site` static build-instruction pages
 src/Coscad/Mesh.hs      ASCII STL in/out, volume, bounds
+src/Coscad/Json.hs      minimal JSON encode/decode for manifests
+src/Coscad/IO.hs        UTF-8 file IO, scratch directories
+src/Coscad/Format.hs    number formatting (showD)
 src/Coscad/OpenScad.hs  finding + running OpenSCAD and BOSL2
 src/Coscad/Part.hs      single-part compile / stl commands
 src/Coscad/Doctor.hs    `coscad doctor`

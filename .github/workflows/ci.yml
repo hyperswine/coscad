@@ -53,6 +53,9 @@ jobs:
         run: |
           python3 scripts/pipeline-lock.py --check-ci
           python3 scripts/test-pipeline-lock.py
+      # README, man page and --help must agree on commands and exit codes.
+      - name: docs agree
+        run: python3 scripts/check-docs.py
       # Offline: presets and the slicer are mocked, no Bambu Studio needed.
       # unittest, not bare asserts, so nothing is stripped under -O.
       - name: bambu-slice tests
