@@ -8,6 +8,11 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Internal: the test suite is split by tier.** `test/Spec.hs` (2284
+  lines) is now the entry point. The tiers live in `test/Tier/*.hs`, and
+  `test/Harness.hs` holds the shared helpers. The tests themselves are
+  unchanged.
+
 - **Internal: export lists and a split planner.** Every module now has an
   explicit export list. `Coscad.Plan` keeps its API and sits over
   `Coscad.Plan.Model`, `Coscad.Plan.Search` and `Coscad.Plan.Render`. The
