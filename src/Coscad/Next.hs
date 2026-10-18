@@ -1,7 +1,14 @@
 -- | CoScadNext, the manufacturing stage: per-variant mesh
 -- compilation, FFF orientation search, multi-bed packing, and
 -- per-bed STL + manifest emission for the slicer.
-module Coscad.Next (module Coscad.Next) where
+module Coscad.Next
+  ( FffTerms (..)
+  , fffTerms
+  , instanceBrim
+  , processNext
+  , processNextWith
+  )
+where
 
 import Coscad.Assemble
 import Coscad.Codegen

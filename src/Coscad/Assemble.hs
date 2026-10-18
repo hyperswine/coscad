@@ -3,7 +3,23 @@
 -- | The .assemble subsystem: recursive part references with print
 -- counts, orientation declarations, and hints; design-stage outputs
 -- (assembled view, packed plate, per-variant scads, manifest).
-module Coscad.Assemble (module Coscad.Assemble) where
+module Coscad.Assemble
+  ( AsmResult (..)
+  , FastDecl (..)
+  , defaultMaxZ
+  , failAsm
+  , loadAssembleFile
+  , loadAssembly
+  , nextManifestPath
+  , nextSchema
+  , processAssemble
+  , resolveAssembly
+  , roundTo3
+  , validateFastenerHint
+  , validatePartHint
+  , validFrameOption
+  )
+where
 
 import Control.Monad (unless, void, when)
 import Coscad.Codegen
@@ -743,11 +759,6 @@ processAssemble inputFile = do
           writeFileUtf8 (designManifestPath base) (manifestJson inputFile baseName plate (arPlateMaxZ ar) variants plates asmOnly)
           putStrLn ("Wrote " ++ designManifestPath base)
           noteLegacyManifest base
-
--- | Unwrap a result that can only fail through an internal inconsistency
--- (a variant missing for a key): report it and exit 1 instead of crashing.
-orInternal :: Either String a -> IO a
-orInternal = either (\e -> hPutStrLn stderr ("Error: " ++ e) >> exitWith (ExitFailure 1)) return
 
 -- | How a variant stands on the bed, for messages: its declared face, or
 -- as modelled.

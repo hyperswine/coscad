@@ -1,7 +1,23 @@
 -- | OpenSCAD emission: 'gen' renders a resolved Shape tree,
 -- 'writeScad' resolves attachments first and prepends the BOSL2
 -- include when any BOSL2 primitive is present.
-module Coscad.Codegen (module Coscad.Codegen, showD) where
+module Coscad.Codegen
+  ( boslMod
+  , fn50
+  , gen
+  , indent
+  , loftErrors
+  , loftMethod
+  , pathOf
+  , profileVerts
+  , renderScad
+  , showD
+  , showPaths
+  , showPoints
+  , usesBosl2
+  , writeScad
+  )
+where
 
 import Coscad.Format (showD)
 import Coscad.Geometry

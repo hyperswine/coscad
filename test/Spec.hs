@@ -1440,6 +1440,25 @@ readStl f = either (\e -> error (f ++ ": " ++ e)) id . parseStlAscii <$> readFil
 -- ------------------------------------------------------------------
 -- cli: the built binary, as an editor or pipeline sees it
 
+-- | Every library module states its interface: no `module X (module X)`
+-- self-export, which would defeat -Wmissing-export-lists.
+exportListTier :: T -> IO ()
+exportListTier t = do
+  section "export lists"
+  let walk d = do
+        es <- listDirectory d
+        fmap concat $ forM es $ \e -> do
+          let p = d </> e
+          isDir <- doesDirectoryExist p
+          if isDir then walk p else return [p | takeExtension p == ".hs"]
+  files <- walk "src/Coscad"
+  selfExports <- fmap concat $ forM files $ \f -> do
+    src <- readFile f
+    return [f | l <- lines src, "module " `isPrefixOf` l, let ws = words l, length ws > 2, "(module" `elem` ws, (ws !! 1) `elem` map (filter (`notElem` ",)")) (drop 2 ws)]
+  assertT t "every module under src/Coscad has an explicit export list" (null selfExports) (show selfExports)
+  assertT t "coscad plan is split into Model, Search and Render"
+    (all (`elem` files) ["src/Coscad/Plan/Model.hs", "src/Coscad/Plan/Search.hs", "src/Coscad/Plan/Render.hs"]) (show files)
+
 cliTier :: T -> IO ()
 cliTier t = do
   section "cli"
@@ -2249,6 +2268,7 @@ main = do
   planTier t
   framedFastenerTier t
   cliTier t
+  exportListTier t
   render <- lookupEnv "COSCAD_RENDER"
   bin <- findOpenscad
   case (render, bin) of
