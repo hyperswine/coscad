@@ -179,6 +179,10 @@ src/Coscad/Assemble.hs  .assemble design stage
 src/Coscad/Variants.hs  print variants: names, instance ids, orientation, plate packing
 src/Coscad/Next.hs      manufacturing stage (orientation, beds, manifest)
 src/Coscad/Check.hs     assembly interference / clearance checker
+src/Coscad/Plan.hs      `coscad plan` CLI and summaries, over:
+  Plan/Model.hs         instances, fasteners, requires-before relation
+  Plan/Search.hs        stability/access predicates, A*/beam search, steps
+  Plan/Render.hs        plan Markdown, JSON, per-step scenes
 src/Coscad/Mesh.hs      ASCII STL in/out, volume, bounds
 src/Coscad/OpenScad.hs  finding + running OpenSCAD and BOSL2
 src/Coscad/Part.hs      single-part compile / stl commands
