@@ -162,8 +162,9 @@ A line starting with `|>` continues the previous definition.
 - **Manufacturing**: `coscad next` compiles each unique
   (part, orientation) variant once, searches FFF print orientation
   where undeclared within the bed height (`plate W D margin maxZ`,
-  default 250 mm; 180 for an A1 mini), packs beds first-fit decreasing
-  (gaps filled by later parts, 90° turns when they save a bed), and emits
+  default 250 mm; 180 for an A1 mini), packs beds with the fewest of
+  the 1.2 shelf layout and first-fit decreasing (gaps filled by later
+  parts, 90° turns) — never more beds than 1.2 — and emits
   per-bed STLs plus a variants+placements manifest (`foo_manifest.json`,
   schema `coscad.next/1`) for slice-once /
   stamp-many slicing; `coscad check` verifies fits on the real meshes.
@@ -228,6 +229,15 @@ OpenSCAD). manual.cswine.cloud rebuilds it from `main` automatically; see
    tiers, checks the tag against `coscad --version`, and attaches binaries.
 2. `scripts/update-formula.sh <version>` rewrites the formula's `url` and
    `sha256` for that tag; commit `Formula/coscad.rb`.
+
+## Print photos
+
+Camera photos from print runs (`models/**/*.jpg`, `.jpeg`, `.heic`, such as
+`photos-before/` and `*-bed-photos/`) are stored in [Git LFS](https://git-lfs.com).
+Install it once with `git lfs install` before cloning, or run `git lfs pull`
+afterwards. Without LFS those files check out as small pointer files.
+Nothing in the build or the test suite reads them. Renders and diagrams
+(`*.png`) stay as ordinary files.
 
 ## Docs
 

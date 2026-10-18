@@ -119,16 +119,23 @@ prints a `Note:` to stderr and leaves the file alone; delete it or run
    enough for STL quantisation and faces put down along a diagonal `▽`.
    These are conservative mesh diagnostics: curved first-layer contact,
    bridges, cooling and complete support coverage still need slicer review.
-3. **Packing**: first-fit decreasing shelf packing, spilling to as many
-   beds as needed; each `foo_bedN.stl` is one watertight multi-body
-   solid, every placement inside margins.
-   - **Order and fit:** instances go largest reserved area first (ties in
-     declaration order, so packing is deterministic). A bed stays open
-     until every remaining instance has been tried; one that fits
-     nowhere waits for the next bed, and later, smaller ones still fill
-     the gaps. Each instance takes the first of: the open shelf as
-     declared, a gap at the end of an earlier shelf, any shelf turned
-     90° about Z, a new shelf, a new shelf turned.
+3. **Packing**: shelf packing, spilling to as many beds as needed; each
+   `foo_bedN.stl` is one watertight multi-body solid, every placement
+   inside margins.
+   - **Never worse than 1.2:** a few deterministic strategies pack the
+     same instances and the layout with the fewest beds wins. Ties go to
+     the 1.2 next-fit shelf packer (largest reserved area first, never
+     turned), so a layout it already finished on as few beds stays
+     exactly as it was, and no assembly needs more beds than it did.
+   - **First-fit strategies:** largest reserved area first (or longest
+     side first), ties in declaration order. A bed stays open until every
+     remaining instance has been tried; one that fits nowhere waits for
+     the next bed, and later, smaller ones still fill the gaps. Each
+     instance takes the first of: the open shelf as declared, a gap at
+     the end of an earlier shelf, a shelf turned 90° about Z (within its
+     depth), a new shelf, the open shelf turned and deepened, a new shelf
+     turned. One variant also lets a turn deepen the open shelf before a
+     new shelf opens (the original first-fit rule).
    - **Turning:** a turned instance is rotated +90° about Z (and shifted
      back onto its corner) in the bed mesh. The placement records
      `rot_z: 90` and its footprint as placed (`w` and `d` swapped);
@@ -149,8 +156,9 @@ prints a `Note:` to stderr and leaves the file alone; delete it or run
      setting.
    - **Design stage:** it reserves only the hints, because it doesn't
      analyse meshes.
-   - **Ordering:** by reserved area, ties in declaration order, so packing
-     stays deterministic.
+   - **Ordering:** by reserved area (or longest side), ties in declaration
+     order, and ties between strategies go to the first, so packing stays
+     deterministic.
 
 `COSCAD_OPENSCAD` overrides the OpenSCAD binary (point it at an
 `xvfb-run -a openscad "$@"` wrapper on headless machines);

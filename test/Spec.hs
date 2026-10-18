@@ -53,6 +53,7 @@ main = do
   printabilityTier t
   brimTier t
   packTier t
+  packNeverWorseTier t
   variantNameTier t
   goldenMergeTier t
   linalgTier t

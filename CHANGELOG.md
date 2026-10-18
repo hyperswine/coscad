@@ -8,6 +8,25 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Print photos in Git LFS.** Camera photos under `models/` (27 files,
+  2.8 MB) are now stored in Git LFS (`.gitattributes`); renders and
+  diagrams stay in git. History is not rewritten: earlier commits still
+  hold the original images. Run `git lfs install` (or `git lfs pull`
+  after cloning) to get the photos rather than pointer files.
+
+- **The packer never needs more beds than 1.2.** The first-fit packer
+  (below) turned 81.6 mm tesseract bars onto the open shelf, which deepened
+  that shelf to 81.6 mm and pushed the 38-part tesseract onto two beds
+  (31 + 7); 1.2 packed it on one. Packing now runs the 1.2 next-fit shelf
+  packer and three first-fit strategies (the first-fit rule as before, one
+  that turns a part onto a shelf only within its depth, and one ordered by
+  longest side) and keeps the layout with the fewest beds. Ties go to the
+  1.2 layout, so every example except `examples-next/enclosure2x2` (still 4
+  beds instead of 5) packs exactly as in 1.2, including the tesseract
+  adhesion retry its slice was made from. New pure tests pin the tesseract
+  (1 bed), fit test (1 bed), adhesion-retry layout and enclosure2x2
+  (4 beds), plus a seeded random property: never more beds than any
+  strategy, the 1.2 layout on ties, every part inside the margin and apart.
 - **Repo hygiene: generated files are no longer committed.**
   - 191 generated files were removed from git (they stay on disk). These are
     example scenes (`_asm`, `_plate`, `_part_`, `_next_`, `_step*`
