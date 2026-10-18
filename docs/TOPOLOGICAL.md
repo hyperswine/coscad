@@ -28,6 +28,17 @@ by half the child's size.
 
 `⚓ v shape` / `\|> anchor v` re-origins a shape at its own anchor.
 
+Two cases where a bounding-box anchor does not sit on the geometry print
+a warning when the part is compiled:
+
+- `at` or `on` on a face that lies wholly inside a cut's bounding box,
+  cut from the inside. The face is gone, so the child floats where it was.
+  A `cutat` there is not reported: it only cuts air around a point that is
+  still meaningful.
+- Any anchor on a part whose combined rotation is not a multiple of 90°.
+  Its axis-aligned box is larger than the part, so the anchor misses it.
+  Anchor before turning it, or name a datum or frame (below).
+
 ## The stable-datum rule (learned by breaking things)
 
 Composite anchors move as the part grows. Two real failures from the

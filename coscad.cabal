@@ -100,6 +100,7 @@ test-suite coscad-test
       Tier.Manufacturing
       Tier.Plan
       Tier.Resolution
+      Tier.Silence
       Paths_coscad
   autogen-modules:
       Paths_coscad

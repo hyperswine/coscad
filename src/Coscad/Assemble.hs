@@ -556,8 +556,15 @@ loadAssembly visited path
                           mapM (\c -> either (Left . InputError . prettyBundle) Right (c env)) [c | AConstraint c <- stmts]
                     case evaluated >>= \constraints -> (,) constraints <$> resolveWithConstraints fmode tol defs meta positions constraints table0 of
                       Left err -> return (Left err)
-                      Right (constraints, table) ->
-                        return $
+                      Right (constraints, table) -> do
+                       -- anchors in the asm expression itself; part-level
+                       -- warnings were printed when each part was loaded
+                       let partWarnings = concat [anchorWarnings sh | (_, sh, _) <- entries]
+                       case Map.lookup "asm" table of
+                         Just a -> mapM_ (\w -> hPutStrLn stderr ("Warning: " ++ path ++ ": asm: " ++ w)) (filter (`notElem` partWarnings) (anchorWarnings a))
+                         Nothing -> return ()
+                       mapM_ (\w -> hPutStrLn stderr ("Warning: " ++ w)) (countMismatches fmode tol defs meta positions constraints table0)
+                       return $
                           Right
                             AsmResult
                               { arSource = path
@@ -578,6 +585,32 @@ loadAssembly visited path
                               , arFlat = concat [f | (_, _, f) <- entries]
                               }
 
+-- | Printed parts (×n, n > 0) whose count differs from their placements
+-- in asm. `next` prints n copies while `plan` and `check` see only the
+-- placements, so the difference is reported rather than left silent. It
+-- is a warning, not an error: printing spares while showing one copy is a
+-- deliberate use. ×0 (assembly-only) parts may be placed any number of
+-- times. Placements are counted on asm resolved with every part tagged,
+-- the way `plan` builds its instances; a tagged part is not entered, so
+-- nested subassemblies count as their own placements.
+countMismatches :: SynMode -> Tolerance -> [Def] -> [(String, (Int, [(String, String)]))] -> [(String, String)] -> [Constraint] -> VarTable -> [String]
+countMismatches mode tol defs meta positions constraints table0 =
+  case resolveWithConstraints mode tol defs meta positions constraints (Map.mapWithKey Tag table0) of
+    Left _ -> [] -- the untagged resolve succeeded; nothing to compare
+    Right tagged -> case Map.lookup "asm" tagged of
+      Nothing -> []
+      Just a ->
+        let placed = Map.fromListWith (+) [(n, 1 :: Int) | n <- tags (resolve a)]
+         in [ maybe "assembly" id (lookup n positions) ++ ": '" ++ n ++ "' is declared ×" ++ show c ++ " but asm places it "
+                ++ (if k == 0 then "nowhere" else show k ++ (if k == 1 then " time" else " times"))
+                ++ ": next prints " ++ show c ++ " while plan and check see " ++ show k
+                ++ "; match ×" ++ show c ++ " to the placements unless the extra copies are spares"
+            | (n, (c, _)) <- meta, c > 0, let k = Map.findWithDefault 0 n placed, k /= c ]
+  where
+    tags sh = case sh of
+      Tag n _ -> [n]
+      _ -> concatMap tags (shapeChildren sh)
+
 loadRef :: [FilePath] -> FilePath -> AsmStmt -> IO (Either AsmError (String, Shape, [FlatPart]))
 loadRef visited dir (APart name rel cnt down hints) = do
   let p = dir </> rel
@@ -591,7 +624,8 @@ loadRef visited dir (APart name rel cnt down hints) = do
           c <- readFileUtf8 p
           case parseProgramNamed p c of
             Left err -> return (Left (InputError err))
-            Right (_, shape) ->
+            Right (_, shape) -> do
+              mapM_ (\w -> hPutStrLn stderr ("Warning: " ++ p ++ ": " ++ w)) (anchorWarnings shape)
               return (Right (name, shape, [FlatPart [] name p cnt down hints shape]))
     ".assemble" -> do
       r <- loadAssembly visited p

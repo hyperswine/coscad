@@ -219,11 +219,21 @@ numExpr :: Ctx -> Parser Double
 numExpr ctx = do
   t <- term
   rest <- many ((,) <$> (symbol "+" <|> symbol "-") <*> term)
+  unsupportedOperator
   return (foldl (\a (o, b) -> if o == "+" then a + b else a - b) t rest)
   where
+    -- `^` and `**` look like arithmetic but are not operators here; say so
+    -- instead of letting the shape parser report "expecting a shape".
+    unsupportedOperator = do
+      o <- getOffset
+      op <- optional (lookAhead (string "**" <|> string "^"))
+      case op of
+        Just w -> setOffset o *> fail (unsupportedOpPfx ++ "'" ++ w ++ "' is not an arithmetic operator; numbers use + - * / and parentheses (write w * w for w squared)")
+        Nothing -> return ()
     term = do
       f <- factor
-      rest <- many ((,) <$> (symbol "*" <|> symbol "/") <*> factor)
+      -- `**` is not multiplication; leave it for unsupportedOperator
+      rest <- many ((,) <$> (lexeme (try (string "*" <* notFollowedBy (char '*'))) <|> symbol "/") <*> factor)
       return (foldl (\a (o, b) -> if o == "*" then a * b else a / b) f rest)
     factor = (symbol "-" *> (negate <$> factor)) <|> atom
     atom =
@@ -233,6 +243,15 @@ numExpr ctx = do
         , numName ctx
         ]
         <?> "a number, a numeric binding, or '('"
+
+-- | Prefix of the error for `^` / `**`; the numeric phase reports it
+-- directly rather than retrying the definition as a shape.
+unsupportedOpPfx :: String
+unsupportedOpPfx = "unsupported operator: "
+
+hasUnsupportedOp :: ParseErrorBundle String Void -> Bool
+hasUnsupportedOp b =
+  or [unsupportedOpPfx `isPrefixOf` m | FancyError _ fs <- NE.toList (bundleErrors b), ErrorFail m <- Set.toList fs]
 
 -- | A numeric binding by name; a shape's name here is its own error.
 numName :: Ctx -> Parser Double
@@ -391,6 +410,14 @@ pipeExpression ctx = do
     off <- getOffset
     stage <- pipeStage ctx
     return (off, stage)
+  -- `|>` binds loosest, so a boolean operator cannot follow a pipeline;
+  -- point at the fix instead of "expecting |> or end of input"
+  when (not (null rest)) $ do
+    o <- getOffset
+    op <- optional (lookAhead (oneOf ("\x2295\x229B\x2296\x229D\x2229\x21D3\x229E\x21AF*" :: String)))
+    case op of
+      Just c -> setOffset o *> fail ("'" ++ [c] ++ "' cannot follow a pipeline: |> binds loosest, so wrap the pipeline in parentheses, e.g. (a |> move 1 2 3) " ++ [c] ++ " b")
+      Nothing -> return ()
   foldM apply left rest
   where
     apply s (off, stage) = either (\e -> setOffset off *> fail e) return (stage s)
@@ -969,13 +996,19 @@ numericPhase mode defs table0 = go Map.empty Nothing (map withTokens defs)
     -- freshly resolved name; otherwise it would fail exactly as before.
     go nums fresh remaining =
       let step (d, toks)
-            | not (retry fresh toks) = Left (d, toks)
+            | not (retry fresh toks) = (Left (d, toks), Nothing)
             | otherwise = case runAt (defPos d) (defPrefix d) (defExpr d) (sc *> numExpr (Ctx mode table0 nums) <* eof) of
-                Right v -> Right (defName d, v)
-                Left _ -> Left (d, toks)
-          results = map step remaining
+                Right v -> (Right (defName d, v), Nothing)
+                -- a numeric definition using ^ or ** is reported as such, not
+                -- retried as a shape (which would say "expecting a shape")
+                Left e -> (Left (d, toks), if hasUnsupportedOp e then Just e else Nothing)
+          attempts = map step remaining
+          results = map fst attempts
           found = rights results
-       in if null found
+          misusedOp = [e | (_, Just e) <- attempts]
+       in case misusedOp of
+          (e : _) -> Left (prettyBundle e)
+          [] -> if null found
             then Right (nums, map fst remaining)
             else case [d | (d, _) <- remaining, Just v <- [lookup (defName d) found], isNaN v || isInfinite v] of
               (d : _) -> Left (sourcePosPretty (defPos d) ++ ": in '" ++ defName d ++ "': numeric binding must be finite (check division by zero or overflow)")

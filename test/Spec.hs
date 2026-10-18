@@ -39,6 +39,7 @@ import Tier.Manufacturing
 import Tier.Cli
 import Tier.Linalg
 import Tier.Resolution
+import Tier.Silence
 
 main :: IO ()
 main = do
@@ -65,6 +66,7 @@ main = do
   planTier t
   framedFastenerTier t
   cliTier t
+  silenceTier t
   exportListTier t
   render <- lookupEnv "COSCAD_RENDER"
   bin <- findOpenscad

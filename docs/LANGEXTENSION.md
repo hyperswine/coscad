@@ -261,7 +261,8 @@ fixed lid (w - 1) -w 0 0 0 45
 mate hinge @pin lid @hole roll=(half * 9) gap=-0.2
 ```
 
-Arithmetic outside parentheses (`w+1`) is refused with a hint. An undefined
+Arithmetic outside parentheses (`w+1`) is refused with a hint, and so are
+`^` and `**`, which are not operators (write `w * w`). An undefined
 name, a part name used as a number, or a non-finite value (`(1 / 0)`) is an
 input error at its token.
 `mate child @own parent @target` uses the same face convention as the pipeline.

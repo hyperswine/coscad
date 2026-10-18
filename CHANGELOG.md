@@ -8,6 +8,20 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Silent cases now reported.**
+  - A printed part whose `×n` differs from its placements in `asm` warns
+    at its declaration: `next` prints n copies while `plan` and `check`
+    see the placements. It is a warning, since printing spares while
+    showing one copy is deliberate in some assemblies. `×0` parts and
+    subassembly placements are unaffected.
+  - An anchor that does not sit on its geometry warns when the part is
+    compiled: `at` or `on` on a face a cut removed entirely, and any
+    anchor on a part turned by a non-right angle (see TOPOLOGICAL.md).
+  - `k = 2 ^ 3` (and `**`) now says `^` is not an arithmetic operator
+    instead of "expecting a shape". A boolean operator after a pipeline
+    (`a |> move 1 2 3 ⊕ b`) now asks for parentheses instead of
+    "expecting |> or end of input".
+
 - **Print photos in Git LFS.** Camera photos under `models/` (27 files,
   2.8 MB) are now stored in Git LFS (`.gitattributes`); renders and
   diagrams stay in git. History is not rewritten: earlier commits still

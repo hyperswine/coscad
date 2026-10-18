@@ -5,7 +5,9 @@ module Coscad.Geometry
   ( BBox
   , MatingFrame (..)
   , PointRef (..)
+  , anchorName
   , anchorPt
+  , anchorWarnings
   , bbox
   , bcenter
   , bcorners
@@ -313,3 +315,69 @@ resolve s = case s of
   Minkowski xs -> Minkowski (map resolve xs)
   prim -> prim
 
+
+-- | Anchor vector as the words the parser accepts (top+rt, ctr, ...).
+anchorName :: V3 -> String
+anchorName (x, y, z) = case [w | (c, pos, neg) <- [(z, "top", "bot"), (x, "rt", "lft"), (y, "bak", "fwd")], c /= 0, let w = if c > 0 then pos else neg] of
+  [] -> "ctr"
+  ws -> intercalate "+" ws
+
+-- | Anchors that do not sit on the geometry they name. Anchors use the
+-- axis-aligned bounding box, which no cut changes and a rotation inflates,
+-- so two cases are reported: something is placed (at, on) on a face that
+-- lies wholly inside a cut's bounding box (cut from inside, so the face is
+-- gone; a cutat there only cuts air around a still-meaningful point), and
+-- the parent's combined rotation is not a multiple of 90 degrees. Pure; the commands
+-- print these as warnings. A cutter whose box covers a face but whose
+-- round sides miss its corners is still reported, hence "bounding box".
+anchorWarnings :: Shape -> [String]
+anchorWarnings = nub . go
+  where
+    go s = here s ++ concatMap go (shapeChildren s)
+    here s = case s of
+      Position v _ p _ -> check "at" v p
+      AttachTo v _ p _ -> check "on" v p
+      CutAt v _ p _ -> check "cutat" v p
+      Anchor v p -> check "anchor" v p
+      _ -> []
+    check op v p
+      | v == (0, 0, 0) = []
+      | otherwise =
+          let p' = resolve p
+              bb = bbox p'
+              what = "'" ++ op ++ " " ++ anchorName v ++ "'"
+           in [ what ++ " is taken on a face that lies wholly inside a cut's bounding box: anchors use the uncut shape's box, so the result can float; anchor to geometry that remains, or name a datum"
+              | op `elem` ["at", "on"], any (\c -> removesFace (bbox c) bb v) (cuttersOf p') ]
+                ++ [ what ++ " is taken on a part turned by a non-right angle: anchors use its axis-aligned bounding box, which is larger than the part; anchor before turning it, or name a datum or frame"
+                   | not (signedPermutation (rotationOf p' matIdentity)) ]
+    cuttersOf s = case s of
+      Diff a c -> c : cuttersOf a
+      _ -> []
+    eps = 1e-6
+    -- the cutter covers the anchored region in-plane and reaches into the
+    -- part across it (a cut starting exactly at the face removes nothing there)
+    removesFace ((cx0, cy0, cz0), (cx1, cy1, cz1)) ((x0, y0, z0), (x1, y1, z1)) (vx, vy, vz) =
+      axis vx cx0 cx1 x0 x1 && axis vy cy0 cy1 y0 y1 && axis vz cz0 cz1 z0 z1
+    axis c clo chi lo hi
+      | c > 0 = clo < hi - eps && chi >= hi - eps
+      | c < 0 = chi > lo + eps && clo <= lo + eps
+      | otherwise = clo <= lo + eps && chi >= hi - eps
+    -- composed rotation above the first non-rigid, non-translating node
+    rotationOf s m = case s of
+      Tx _ x -> rotationOf x m
+      Ty _ x -> rotationOf x m
+      Tz _ x -> rotationOf x m
+      Translate _ x -> rotationOf x m
+      Tag _ x -> rotationOf x m
+      Datum _ _ x -> rotationOf x m
+      Frame _ _ _ x -> rotationOf x m
+      Hidden x -> rotationOf x m
+      Rx a x -> rotationOf x (matMul m (rodMat a (1, 0, 0)))
+      Ry a x -> rotationOf x (matMul m (rodMat a (0, 1, 0)))
+      Rz a x -> rotationOf x (matMul m (rodMat a (0, 0, 1)))
+      RotAxis a ax x -> rotationOf x (matMul m (rodMat a ax))
+      Transform3 r _ x -> rotationOf x (matMul m r)
+      Mirror n x -> rotationOf x (matMul m (mirrorMat n))
+      _ -> m
+    signedPermutation ((a, b, c), (d, e, f), (g, h, i)) =
+      all (\x -> abs x < 1e-6 || abs (abs x - 1) < 1e-6) [a, b, c, d, e, f, g, h, i]
