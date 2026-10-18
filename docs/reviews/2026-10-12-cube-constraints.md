@@ -77,11 +77,12 @@ faces: 32 bracket screws and six panel screws.
   [recorded measurements](../../experiments/topological/cube-results.json)
   preserve source hashes, per-part mesh measurements and actual screw positions.
 
-The regenerated [instructions](../../examples/assemble/plan/cube_plan.md),
-[plan data](../../examples/assemble/plan/cube_plan.json) and
-[final render](../../examples/assemble/plan/cube_step28.png) accompany the
-converted example. The manual deployment regenerates the companion website
-from the assembly source.
+The instructions, plan data and step renders are generated output and are no
+longer committed (repo hygiene, CHANGELOG). Regenerate them with
+`coscad plan examples/assemble/plan/cube.assemble`, which writes
+`cube_plan.md`, `cube_plan.json` and `cube_step*.png` next to the source
+(the final render is `cube_step28.png`). The manual deployment regenerates the
+companion website from the assembly source.
 
 These are nominal CAD and instruction checks. Rails are 20 mm envelope
 solids, not detailed T-slot profiles; nuts and screw heads are instruction

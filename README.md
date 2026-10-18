@@ -69,9 +69,12 @@ boolean test part against a known volume.
 The working compiler-to-printer toolchain is recorded in
 [`pipeline.lock.json`](pipeline.lock.json), with QOS-style repository revisions
 and content hashes for local tools, profiles and deployed artifacts. Use
-`python3 scripts/pipeline-lock.py --check` to detect drift, or
+`python3 scripts/pipeline-lock.py --scope source --scope render --check` to
+detect drift in a plain checkout, or
 `python3 scripts/pipeline-lock.py --scope source --scope render --run coscad doctor`
-to run through the checked entry point. See
+to run through the checked entry point. A bare `--check` (no `--scope`) is the
+complete check: it also SSHes to the print host (`root@localhost-0`) and hashes
+the local printer profiles, so it only passes on the maintainer's machine. See
 [pins, deliberate upgrades and graceful recovery](docs/PIPELINE-LOCK.md).
 
 ```sh
@@ -197,7 +200,7 @@ src/Coscad/Part.hs      single-part compile / stl commands
 src/Coscad/Doctor.hs    `coscad doctor`
 src/Lib.hs              re-export shim for the embedded Haskell DSL
 app/Main.hs             CLI dispatch only
-examples/haskell/       embedded-DSL samples (not built)
+examples/haskell/       embedded-DSL samples (compile-checked by the haskell-examples suite)
 ```
 
 ## Manual
@@ -259,6 +262,13 @@ Geometry entries still within tolerance keep their recorded values, so
 an update only rewrites the lines that drifted or were missing.
 OpenSCAD is found via `COSCAD_OPENSCAD`, then PATH, then the macOS app
 bundle.
+A second, small suite, `haskell-examples`, only compiles
+`examples/haskell/` and renders one shape from each sample.
+
+Tests generate everything they read. Build output (scenes, manifests,
+plans, step images) is gitignored; only the print records under `models/`
+and the tesseract `verification.json` are committed. See
+[Examples](docs/EXAMPLES.md) for the list.
 
 ## Verification culture
 
