@@ -21,6 +21,12 @@ asm = center ⊕ (larch |> move 55 -13 -7) ⊕ ...
   the margin to give a height (the margin defaults to 6).
 - `▽anchor` on a reference declares print orientation (that face on the
   bed). Undeclared parts get the automatic search in `next`.
+- `×n` with n > 0 is the print count. `next` prints n copies, while `plan`
+  and `check` see the placements in `asm`. When the two differ, every
+  command warns at the declaration (exit status unchanged): printing
+  spares while showing one copy is allowed, but no longer silent. `×0`
+  parts may be placed any number of times. A subassembly reference counts
+  its own placements in the parent.
 - `brim=N` on a reference reserves an N mm brim around each of its
   instances when packing (see Packing below); `brim=0` opts out of a
   plate-wide brim.
