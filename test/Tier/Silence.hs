@@ -6,7 +6,7 @@ module Tier.Silence
   )
 where
 
-import Coscad.Geometry (anchorWarnings)
+import Coscad.Geometry (anchorWarnings, formatAnchorWarning)
 import Coscad.Parser (parseProgramNamed)
 import Data.List (isInfixOf)
 import System.Directory (findExecutable)
@@ -19,7 +19,7 @@ silenceTier :: T -> IO ()
 silenceTier t = do
   section "silent cases now reported"
   let p = parseProgramNamed "s.coscad"
-      warns src = either (const ["<parse error>"]) (anchorWarnings . snd) (p src)
+      warns src = either (const ["<parse error>"]) (map (formatAnchorWarning "s.coscad") . anchorWarnings . snd) (p src)
   -- messages
   expectErr t "'^' in a numeric binding is named, not 'expecting a shape'"
     (p "k = 2 ^ 3\nmain = box k 1 1\n") ["s.coscad:1:7:", "'^' is not an arithmetic operator", "+ - * /"] ["expecting a shape"]
@@ -30,8 +30,8 @@ silenceTier t = do
   assertT t "a parenthesised pipeline still combines" (null (warns "main = (box 10 10 10 |> move 1 2 3) ⊕ box 1 1 1\n")) ""
   -- anchors on removed faces
   let cutFace = warns "main = box 10 10 10 |> cut (box 20 20 20 |> move 0 0 10) |> at top 0 0 0 (box 1 1 1)\n"
-  assertT t "anchor: at top on a face a cut removed warns"
-    (any (\w -> "'at top'" `isInfixOf` w && "inside a cut" `isInfixOf` w) cutFace) (show cutFace)
+  assertT t "anchor: at top on a face a cut removed warns, at the 'at' keyword"
+    (any (\w -> "s.coscad:1:61: 'at top'" `isInfixOf` w && "inside a cut" `isInfixOf` w) cutFace) (show cutFace)
   assertT t "anchor: a cut that starts at the face leaves it, no warning"
     (null (warns "main = box 10 10 10 |> cut (box 20 20 20 |> move 0 0 15) |> at top 0 0 0 (box 1 1 1)\n")) ""
   assertT t "anchor: a hole drilled at the face, no warning"
@@ -40,8 +40,17 @@ silenceTier t = do
     (null (warns "main = box 10 10 10 |> cut (box 4 4 40 |> move 5 5 0) |> cutat top+rt+bak 0 0 0 (sphere 1)\n")) ""
   -- anchors on turned parts
   let turned = warns "main = box 10 10 10 |> roty 45 |> at top 0 0 0 (box 1 1 1)\n"
-  assertT t "anchor: at top on a part turned 45 degrees warns"
-    (any (\w -> "'at top'" `isInfixOf` w && "non-right angle" `isInfixOf` w) turned) (show turned)
+  assertT t "anchor: at top on a part turned 45 degrees warns, at the 'at' keyword"
+    (any (\w -> "s.coscad:1:35: 'at top'" `isInfixOf` w && "non-right angle" `isInfixOf` w) turned) (show turned)
+  let continued = warns "base = box 10 10 10\n  |> roty 30\nmain = base\n  |> on top (box 1 1 1)\n"
+  assertT t "anchor: position on a continuation line of a definition"
+    (any ("s.coscad:4:6: 'on top'" `isInfixOf`) continued) (show continued)
+  let elsewhere = warns "part = box 10 10 10 |> rotz 30 |> anchor bot\nmain = part ⊕ box 1 1 1\n"
+  assertT t "anchor: position inside a definition other than main, reported once"
+    (length elsewhere == 1 && any ("s.coscad:1:35: 'anchor bot'" `isInfixOf`) elsewhere) (show elsewhere)
+  let glyph = warns "main = θ 45 (box 10 10 10) ⌖ top box 1 1 1\n"
+  assertT t "anchor: the ⌖ glyph carries its position too"
+    (any ("s.coscad:1:28: 'at top'" `isInfixOf`) glyph) (show glyph)
   assertT t "anchor: a part turned 90 degrees, no warning"
     (null (warns "main = box 10 20 4 |> rotz 90 |> at top 0 0 0 (box 1 1 1)\n")) ""
   assertT t "anchor: two 45 degree turns compose to a right angle, no warning"
@@ -58,6 +67,10 @@ silenceTier t = do
       writeFile (dir </> "ok.assemble") "blk ← blk.coscad ×2\nnut ← blk.coscad ×0\nasm = blk ⊕ (blk |> move 30 0 0) ⊕ (nut |> move 60 0 0) ⊕ (nut |> move 90 0 0)\n"
       writeFile (dir </> "nested.assemble") "pair ← ok.assemble ×2\nasm = pair ⊕ (pair |> move 0 40 0)\n"
       let run f = readProcessWithExitCode bin [dir </> f] ""
+      writeFile (dir </> "floating.coscad") "main = box 10 10 10\n  |> roty 45\n  |> at top 0 0 0 (box 1 1 1)\n"
+      (cv, ov, ev) <- readProcessWithExitCode bin ["validate", dir </> "floating.coscad"] ""
+      assertT t "validate: prints anchor warnings with file:line:col on stderr, exit 0 (the editor reads them)"
+        (cv == ExitSuccess && "Valid part" `isInfixOf` ov && ("Warning: " ++ (dir </> "floating.coscad") ++ ":3:6: 'at top'") `isInfixOf` ev) (show (cv, ov, ev))
       (c1, _, e1) <- run "under.assemble"
       assertT t "count: ×3 placed twice warns at the declaration and still succeeds"
         (c1 == ExitSuccess && any (\l -> "under.assemble:1:1: 'blk' is declared ×3 but asm places it 2 times" `isInfixOf` l) (lines e1)) (show (c1, e1))

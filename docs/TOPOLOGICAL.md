@@ -29,7 +29,9 @@ by half the child's size.
 `⚓ v shape` / `\|> anchor v` re-origins a shape at its own anchor.
 
 Two cases where a bounding-box anchor does not sit on the geometry print
-a warning when the part is compiled:
+a warning, with the file, line and column of the `at`/`on`/`cutat`/`anchor`
+(or glyph) that took it, whenever the part is compiled or validated. The
+VS Code extension shows them as warnings on save:
 
 - `at` or `on` on a face that lies wholly inside a cut's bounding box,
   cut from the inside. The face is gone, so the child floats where it was.

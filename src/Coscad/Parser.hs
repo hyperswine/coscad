@@ -244,6 +244,12 @@ numExpr ctx = do
         ]
         <?> "a number, a numeric binding, or '('"
 
+-- | Where the next token starts, for attachment nodes (see 'SrcPos').
+-- Definitions are parsed at their own position in the file ('runAt'),
+-- so this is the real line and column.
+srcPos :: Parser SrcPos
+srcPos = (\p -> Just (unPos (sourceLine p), unPos (sourceColumn p))) <$> getSourcePos
+
 -- | Prefix of the error for `^` / `**`; the numeric phase reports it
 -- directly rather than retrying the definition as a shape.
 unsupportedOpPfx :: String
@@ -463,10 +469,11 @@ pipeStage ctx = choice
       ]
     stages = ["x", "y", "z", "rotx", "roty", "rotz", "extrude", "move", "scale", "mirror", "anchor", "datum", "frame", "mate", "place", "grid", "loft", "at", "on", "cutat", "add", "cut", "isect", "hull", "mink"]
     anchorStage = do
+      at <- srcPos
       _ <- keyword "anchor"
       ref <- pointRef
       return $ \p -> case ref of
-        BoxPoint v -> Right (Anchor v p)
+        BoxPoint v -> Right (Anchor at v p)
         NamedPoint _ -> (\v -> Translate (vneg v) p) <$> pointOf ref p
     datumStage = do
       _ <- keyword "datum"
@@ -555,11 +562,12 @@ pipeStage ctx = choice
     num1 w f = keyword w *> (f <$> num ctx)
     num3 w f = keyword w *> (f <$> ((,,) <$> num ctx <*> num ctx <*> num ctx))
     rel w f = do
+      at <- srcPos
       _ <- keyword w
       v <- anchorVec
       off <- offsets w
       child <- shapeArg ctx
-      return (\p -> f v off p child)
+      return (\p -> f at v off p child)
     offsets w = option (0, 0, 0) $ do
       _ <- lookAhead (try (num ctx))
       vectorArgs w "third offset z (three offsets followed by a child shape are required)"
@@ -654,15 +662,17 @@ attachExpression ctx = do
     steps
       | glyphOK ctx =
           [ do
+              at <- srcPos
               _ <- symbol "⌖"
               v <- anchorVec
               right <- transformExpression ctx
-              return (\l -> Position v (0, 0, 0) l right),
+              return (\l -> Position at v (0, 0, 0) l right),
             do
+              at <- srcPos
               _ <- symbol "⋈"
               v <- anchorVec
               right <- transformExpression ctx
-              return (\l -> AttachTo v (0, 0, 0) l right)
+              return (\l -> AttachTo at v (0, 0, 0) l right)
           ]
       | otherwise = []
 
@@ -705,9 +715,10 @@ transformation ctx =
           , g1 "⮕" Extrude
           , symbol "⟰" *> loftPairs
           , do
+              at <- srcPos
               _ <- symbol "⚓"
               v <- anchorVec
-              Anchor v <$> shapeArg ctx
+              Anchor at v <$> shapeArg ctx
           ]
       | otherwise = []
     g1 s f = do
@@ -735,7 +746,7 @@ transformation ctx =
           , nsMirror
           , keyword "Extrude" *> (Extrude <$> num ctx <*> shapeArg ctx)
           , keyword "Loft" *> loftPairs
-          , keyword "Anchor" *> (Anchor <$> anchorVec <*> shapeArg ctx)
+          , srcPos >>= \at -> keyword "Anchor" *> (Anchor at <$> anchorVec <*> shapeArg ctx)
           , bin2 "Hull" (\a b -> Hull [a, b])
           , bin2 "Union" (\a b -> Union [a, b])
           , bin2 "Intersect" (\a b -> Intersection [a, b])

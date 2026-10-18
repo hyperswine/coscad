@@ -88,19 +88,19 @@ ctr = (0, 0, 0)
 
 -- | posAt v parent child: child snapped to parent's anchor v (glyph ⌖)
 posAt :: (D, D, D) -> Shape -> Shape -> Shape
-posAt v = Position v (0, 0, 0)
+posAt v = Position Nothing v (0, 0, 0)
 
 -- | attachAt v parent child: child oriented +Z along v, bottom mated (glyph ⋈)
 attachAt :: (D, D, D) -> Shape -> Shape -> Shape
-attachAt v = AttachTo v (0, 0, 0)
+attachAt v = AttachTo Nothing v (0, 0, 0)
 
 -- | cutAt v parent cutter: cutter centered at parent's anchor v, subtracted
 cutAt :: (D, D, D) -> Shape -> Shape -> Shape
-cutAt v = CutAt v (0, 0, 0)
+cutAt v = CutAt Nothing v (0, 0, 0)
 
 -- | anchorAt v shape: re-origin shape at its own anchor point (glyph ⚓)
 anchorAt :: (D, D, D) -> Shape -> Shape
-anchorAt = Anchor
+anchorAt = Anchor Nothing
 
 -- | loft [(z, profile), ...]: skin 2D profiles into a solid (word `loft`, glyph ⟰)
 loft :: [(D, Shape)] -> Shape

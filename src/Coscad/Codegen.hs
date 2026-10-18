@@ -223,13 +223,13 @@ loftErrors s = case s of
   Translate _ x -> loftErrors x
   RotAxis _ _ x -> loftErrors x
   Transform3 _ _ x -> loftErrors x
-  Anchor _ x -> loftErrors x
+  Anchor _ _ x -> loftErrors x
   Tag _ x -> loftErrors x
   Datum _ _ x -> loftErrors x
   Frame _ _ _ x -> loftErrors x
-  Position _ _ a b -> loftErrors a >> loftErrors b
-  AttachTo _ _ a b -> loftErrors a >> loftErrors b
-  CutAt _ _ a b -> loftErrors a >> loftErrors b
+  Position _ _ _ a b -> loftErrors a >> loftErrors b
+  AttachTo _ _ _ a b -> loftErrors a >> loftErrors b
+  CutAt _ _ _ a b -> loftErrors a >> loftErrors b
   Extrude _ x -> loftErrors x
   Offset _ x -> loftErrors x
   Diff a b -> loftErrors a >> loftErrors b
@@ -262,13 +262,13 @@ usesBosl2 s = case s of
   Translate _ x -> usesBosl2 x
   RotAxis _ _ x -> usesBosl2 x
   Transform3 _ _ x -> usesBosl2 x
-  Anchor _ x -> usesBosl2 x
+  Anchor _ _ x -> usesBosl2 x
   Tag _ x -> usesBosl2 x
   Datum _ _ x -> usesBosl2 x
   Frame _ _ _ x -> usesBosl2 x
-  Position _ _ a b -> usesBosl2 a || usesBosl2 b
-  AttachTo _ _ a b -> usesBosl2 a || usesBosl2 b
-  CutAt _ _ a b -> usesBosl2 a || usesBosl2 b
+  Position _ _ _ a b -> usesBosl2 a || usesBosl2 b
+  AttachTo _ _ _ a b -> usesBosl2 a || usesBosl2 b
+  CutAt _ _ _ a b -> usesBosl2 a || usesBosl2 b
   Extrude _ x -> usesBosl2 x
   Loft _ -> True
   Offset _ x -> usesBosl2 x

@@ -3,6 +3,7 @@ module Coscad.Shape
   ( D
   , I
   , Matrix3
+  , SrcPos
   , Shape (..)
   , PD (..)
   , bezPoly
@@ -15,6 +16,11 @@ type D = Double
 type I = Int
 
 type Matrix3 = ((D, D, D), (D, D, D), (D, D, D)) -- rows
+
+-- | Source line and column of an attachment's keyword or glyph, when the
+-- node came from parsed text; Nothing when it was built in Haskell (the
+-- DSL). Lets diagnostics about an anchor point at the call.
+type SrcPos = Maybe (Int, Int)
 
 data Shape
   = Empty -- renders nothing
@@ -50,10 +56,10 @@ data Shape
   | RotAxis D (D, D, D) Shape -- axis-angle rotation (used by attachment desugaring)
   | Transform3 Matrix3 (D, D, D) Shape -- rigid rotation and translation
   | -- Attachment sugar (desugared by 'resolve' before codegen) ----
-    Anchor (D, D, D) Shape -- re-origin shape at its own anchor point
-  | Position (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, child: snap child at anchor+offset
-  | AttachTo (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, child: rotate-mate at anchor+offset
-  | CutAt (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, cutter: SUBTRACT cutter centered there
+    Anchor SrcPos (D, D, D) Shape -- re-origin shape at its own anchor point
+  | Position SrcPos (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, child: snap child at anchor+offset
+  | AttachTo SrcPos (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, child: rotate-mate at anchor+offset
+  | CutAt SrcPos (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, cutter: SUBTRACT cutter centered there
   | Diff Shape Shape
   | Extrude D Shape
   | Loft [(D, Shape)] -- (z, 2D profile) pairs, skinned bottom to top (BOSL2 skin)
@@ -82,10 +88,10 @@ shapeChildren s = case s of
   Translate _ x -> [x]
   RotAxis _ _ x -> [x]
   Transform3 _ _ x -> [x]
-  Anchor _ x -> [x]
-  Position _ _ a b -> [a, b]
-  AttachTo _ _ a b -> [a, b]
-  CutAt _ _ a b -> [a, b]
+  Anchor _ _ x -> [x]
+  Position _ _ _ a b -> [a, b]
+  AttachTo _ _ _ a b -> [a, b]
+  CutAt _ _ _ a b -> [a, b]
   Diff a b -> [a, b]
   Extrude _ x -> [x]
   Loft ps -> map snd ps

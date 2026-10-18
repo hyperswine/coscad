@@ -96,6 +96,8 @@ function registerFileCommand(context, id, allowedExtensions, makeArgs) {
 //   Error: file: design: reason           (plan design errors; exit 2)
 //   Error: file: reason                   (file-level: missing part file)
 //   Error: reason                         (unpositioned: circular dependency)
+//   Warning: file:line:col: reason        (same layouts; exit status 0, e.g. an
+//                                          anchor that misses its geometry)
 //
 // `isExcerpt` lines are never diagnostics themselves.
 function parseCompilerErrors(stderr, filePath) {
@@ -105,13 +107,14 @@ function parseCompilerErrors(stderr, filePath) {
   const fileLevel = /^([^:\n]*\.(?:coscad|assemble)):\s+(.*)$/
   const isExcerpt = line => /^\s*(\d+\s*)?\|/.test(line)
   const same = file => path.resolve(file) === path.resolve(filePath)
-  const sev = vscode.DiagnosticSeverity.Error
+  const prefixed = /^(Error|Warning):\s/
   let index = 0
   let sawError = false
   while (index < lines.length) {
     const raw = lines[index]
-    const hasPrefix = /^Error:\s/.test(raw)
-    const line = raw.replace(/^Error:\s*/, '')
+    const hasPrefix = prefixed.test(raw)
+    const sev = /^Warning:\s/.test(raw) ? vscode.DiagnosticSeverity.Warning : vscode.DiagnosticSeverity.Error
+    const line = raw.replace(/^(Error|Warning):\s*/, '')
     if (isExcerpt(raw) || !line.trim()) { index++; continue }
     // Only the first line of a multi-line unpositioned message carries "Error:";
     // continuation lines are folded into it below.
@@ -126,7 +129,7 @@ function parseCompilerErrors(stderr, filePath) {
       if (!message) {
         // pre-1.1 layout: the reason came after the excerpt
         const messageLines = []
-        while (end < lines.length && lines[end].trim() && !/^Error:/.test(lines[end]) && !positioned.test(lines[end])) messageLines.push(lines[end++].trim())
+        while (end < lines.length && lines[end].trim() && !prefixed.test(lines[end]) && !positioned.test(lines[end])) messageLines.push(lines[end++].trim())
         message = messageLines.join(' ')
       }
       if (same(file)) {
@@ -152,7 +155,7 @@ function parseCompilerErrors(stderr, filePath) {
     // unpositioned: take the continuation lines (no Error: prefix) with it
     let end = index + 1
     const block = [line.trim()]
-    while (end < lines.length && lines[end].trim() && !/^Error:/.test(lines[end]) && !isExcerpt(lines[end])) block.push(lines[end++].trim())
+    while (end < lines.length && lines[end].trim() && !prefixed.test(lines[end]) && !isExcerpt(lines[end])) block.push(lines[end++].trim())
     diagnostics.push(new vscode.Diagnostic(new vscode.Range(0, 0, 0, 1), block.join(' '), sev))
     index = end
   }
@@ -231,7 +234,13 @@ async function compileForDiagnostics(document) {
   const version = document.version
   const { error, stdout, stderr } = await runCompiler(['validate', document.fileName], workingDirectory, VALIDATE_TIMEOUT_MS)
   if (document.version !== version || document.isClosed || !config().compilerDiagnostics) return
-  if (!error) { compilerDiagnostics.set(document.uri, []); return }
+  // a valid file can still carry warnings on stderr; keep only those
+  // (unprefixed output on success is never turned into an error)
+  if (!error) {
+    const warnings = parseCompilerErrors(stderr || '', document.fileName).filter(d => d.severity === vscode.DiagnosticSeverity.Warning)
+    compilerDiagnostics.set(document.uri, warnings)
+    return
+  }
   if (error.killed || error.signal) {
     const d = new vscode.Diagnostic(new vscode.Range(0, 0, 0, 1), `coscad validate did not finish within ${VALIDATE_TIMEOUT_MS / 1000} s; compiler diagnostics for this file are stale`, vscode.DiagnosticSeverity.Warning)
     compilerDiagnostics.set(document.uri, [d])
