@@ -11,6 +11,13 @@ async function run() {
   let stderr = ''; child.stderr.on('data', chunk => stderr += chunk)
   const connection = createMessageConnection(new StreamMessageReader(child.stdout),new StreamMessageWriter(child.stdin))
   const timeout = setTimeout(() => { child.kill(); throw new Error('LSP protocol timeout: '+stderr) },15000)
+  // the latest diagnostics the server published, per URI, and waiters for the next ones
+  const published = new Map(), waiting = new Map()
+  connection.onNotification('textDocument/publishDiagnostics', p => {
+    published.set(p.uri, p.diagnostics)
+    const w = waiting.get(p.uri); if (w) { waiting.delete(p.uri); w(p.diagnostics) }
+  })
+  const nextDiagnostics = uri => new Promise(resolve => waiting.set(uri, resolve))
   connection.listen()
   try {
     const init = await connection.sendRequest('initialize',{processId:process.pid,rootUri:pathToFileURL(dir).href,capabilities:{}})
@@ -63,9 +70,24 @@ async function run() {
     const seats=await connection.sendRequest('textDocument/completion',{textDocument:{uri:asmUri},position:at(hw,'seat=@head',8)})
     assert(seats.some(c=>c.label==='@head'))
     assert(!seats.some(c=>c.label==='@updated'))
+    // The compiler owns diagnostics while the extension says so: the server's
+    // parser then publishes none, and resumes when switched back.
+    const brokenUri = pathToFileURL(path.join(dir,'broken.coscad')).href
+    let next = nextDiagnostics(brokenUri)
+    connection.sendNotification('textDocument/didOpen',{textDocument:{uri:brokenUri,languageId:'coscad',version:1,text:'main = box 1 1 1 ⊕\n'}})
+    assert((await next).length > 0, 'own diagnostics while the compiler is not live')
+    next = nextDiagnostics(brokenUri)
+    connection.sendNotification('coscad/compilerDiagnostics',{active:true})
+    assert.deepEqual(await next, [], 'cleared once the compiler owns diagnostics')
+    next = nextDiagnostics(brokenUri)
+    connection.sendNotification('textDocument/didChange',{textDocument:{uri:brokenUri,version:2},contentChanges:[{text:'main = box 1 1 ⊕\n'}]})
+    assert.deepEqual(await next, [], 'edits stay quiet while the compiler owns diagnostics')
+    next = nextDiagnostics(brokenUri)
+    connection.sendNotification('coscad/compilerDiagnostics',{active:false})
+    assert((await next).length > 0, 'own diagnostics resume as the fallback')
     await connection.sendRequest('shutdown',null)
     connection.sendNotification('exit',null)
-    console.log('Stdio LSP integration passed (hover, definitions, completion edits, semantic tokens, unsaved frames)')
+    console.log('Stdio LSP integration passed (hover, definitions, completion edits, semantic tokens, unsaved frames, compiler-owned diagnostics)')
   } finally { clearTimeout(timeout); connection.dispose(); child.kill(); fs.rmSync(dir,{recursive:true,force:true}) }
 }
 run().catch(e=>{console.error(e);process.exitCode=1})

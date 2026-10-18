@@ -459,12 +459,28 @@ connection.onDefinition((params) => {
   }
 })
 
+// While the extension has the compiler's diagnostics live (`coscad validate
+// --json --stdin` on every edit), the compiler is the single source of
+// diagnostics: this server's parser keeps powering hover, completion,
+// highlighting, symbols and definitions, but publishes nothing, so two
+// implementations of the language rules cannot disagree in the editor.
+// Without a usable compiler the server's own diagnostics are the fallback.
+let compilerOwnsDiagnostics = false
+connection.onNotification('coscad/compilerDiagnostics', params => {
+  compilerOwnsDiagnostics = Boolean(params && params.active)
+  for (const document of documents.all()) validateTextDocument(document)
+})
+
 // Document change handler for diagnostics
 documents.onDidChangeContent(change => {
   validateTextDocument(change.document)
 })
 
 async function validateTextDocument(textDocument) {
+  if (compilerOwnsDiagnostics) {
+    connection.sendDiagnostics({ uri: textDocument.uri, diagnostics: [] })
+    return
+  }
   const text = textDocument.getText()
   const fileType = getFileType(textDocument.uri)
   const diagnostics = parser.getDiagnostics(text, { fileType })

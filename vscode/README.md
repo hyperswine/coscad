@@ -14,13 +14,18 @@ diagnostics, named datums, oriented mating frames and rigid assembly constraints
   explain lengths, angles and counts. Unresolved symbols are identified honestly.
 - Completion, hover and go to definition for named datums and mating frames,
   including frames in referenced part files and unsaved open buffers
-- Diagnostics that mirror the compiler's own checks and wording:
+- Diagnostics from the extension's own parser when no compiler is available
+  (with a compiler that supports `validate --json`, the compiler's diagnostics
+  replace them, so only one set of rules applies):
   syntax and mode errors, undefined names, circular dependencies, duplicates,
   missing `main`, a number used as a shape (and vice versa), 2D/3D mismatches
   (extruding a solid, offsetting a solid, unioning a profile with a box, a 2D
   `main`), loft profile rules, and missing assembly part files
-- Compiler diagnostics: on open/save, parts and assemblies are checked with
-  `coscad validate`, without producing files or running a renderer. This catches
+- Compiler diagnostics: parts and assemblies are checked with `coscad validate`,
+  without producing files or running a renderer. A compiler with
+  `validate --json --stdin` checks the buffer as you type (after a short pause)
+  as well as on open and save, warnings included; older compilers are run on
+  open and save. This catches
   missing or ambiguous frames, inconsistent loops and invalid rigid poses in
   the actual compiler. A missing or pre-1.1 compiler is reported once; a
   design problem (exit 2) and a compile error (exit 1) both show inline
@@ -57,7 +62,7 @@ See COSCADLANG.md for examples and a compact syntax reference.
 |---|---|---|
 | `coscad.executableCommand` | `coscad` | command that runs the compiler: a binary on PATH, a full path, or `cabal run coscad --` inside a checkout |
 | `coscad.workingDirectory` | `""` | working directory for that command; empty = the file's folder (`coscad.executablePath` is the deprecated name) |
-| `coscad.compilerDiagnostics` | `true` | validate parts and assemblies on open/save and show compiler errors; needs compiler 1.2.0.0 or newer |
+| `coscad.compilerDiagnostics` | `true` | validate parts and assemblies with the compiler and show its errors and warnings (as you type with `validate --json --stdin`, else on open/save); needs compiler 1.2.0.0 or newer |
 
 For a local checkout:
 

@@ -8,13 +8,13 @@ Module._load = function (request, ...rest) {
     return {
       Range: class { constructor(l0, c0, l1, c1) { Object.assign(this, { start: { line: l0, character: c0 }, end: { line: l1, character: c1 } }) } },
       Diagnostic: class { constructor(range, message, severity) { Object.assign(this, { range, message, severity }) } },
-      DiagnosticSeverity: { Error: 0, Warning: 1 }
+      DiagnosticSeverity: { Error: 0, Warning: 1, Information: 2 }
     }
   }
   if (request === 'vscode-languageclient/node') return { LanguageClient: class {}, TransportKind: {} }
   return originalLoad.call(this, request, ...rest)
 }
-const { parseCompilerErrors, parseVersion, versionAtLeast, splitCommand } = require('./extension')
+const { parseCompilerErrors, diagnosticsFromJson, parseVersion, versionAtLeast, splitCommand } = require('./extension')
 
 // compiler 1.1: reason on the position line, excerpt after it
 const block = `Error: /tmp/x/part.coscad:3:14: unexpected "▼ 3"; expecting a shape (glyph or word), a variable, or '(' or a transform
@@ -125,6 +125,25 @@ assert.match(d[0].message, /^\/tmp\/x\/inner\.coscad:5:3: 'at top'/)
 // unpositioned warnings (design-stage notes) keep Warning severity
 d = parseCompilerErrors('Warning: post_bot: about 200 mm tall standing on ▽bot\n', '/tmp/x/tall.assemble')
 assert.deepEqual(d.map(x => x.severity), [1])
+
+// `coscad validate --json` documents
+const doc = diags => JSON.stringify({ schema: 'coscad.validate/1', file: '/tmp/x/part.coscad', valid: false, exit: 1, diagnostics: diags })
+d = diagnosticsFromJson(doc([
+  { severity: 'warning', file: '/tmp/x/part.coscad', line: 3, column: 6, message: "'at top' is taken on a part turned", excerpt: [] },
+  { severity: 'error', file: '/tmp/x/part.coscad', line: 1, column: 18, message: "unexpected 'j'", excerpt: ['  |', '1 | main', '  | ^'] },
+  { severity: 'error', file: '/tmp/x/part.coscad', line: null, column: null, message: 'design: screws collide', excerpt: [] },
+  { severity: 'warning', file: '/tmp/x/inner.coscad', line: 5, column: 3, message: 'floats', excerpt: [] },
+  { severity: 'note', file: null, line: null, column: null, message: 'step images use the preview', excerpt: [] }
+]), '/tmp/x/part.coscad')
+assert.deepEqual(d.map(x => [x.severity, x.range.start.line, x.range.start.character]), [[1, 2, 5], [0, 0, 17], [0, 0, 0], [1, 0, 0], [2, 0, 0]])
+assert.equal(d[1].message, "unexpected 'j'")
+assert.equal(d[2].message, 'design: screws collide')
+assert.equal(d[3].message, '/tmp/x/inner.coscad:5:3: floats')
+assert.equal(d[4].message, 'step images use the preview')
+assert.deepEqual(diagnosticsFromJson(doc([]), '/tmp/x/part.coscad'), [])
+// not that document (an older compiler printing usage text): null, so the text path is used
+assert.equal(diagnosticsFromJson('Error: validate needs one .coscad or .assemble file\n', '/tmp/x/part.coscad'), null)
+assert.equal(diagnosticsFromJson(JSON.stringify({ schema: 'other/1', diagnostics: [] }), '/tmp/x/part.coscad'), null)
 
 // version probe helpers
 assert.deepEqual(parseVersion('coscad 1.1.0.0\n'), [1, 1, 0, 0])

@@ -10,6 +10,7 @@ module Coscad.Assemble
   , asmFailure
   , loadAssembleFile
   , loadAssembly
+  , loadAssemblyText
   , nextManifestPath
   , nextSchema
   , processAssemble
@@ -528,6 +529,16 @@ loadAssembly emit visited path
         then return (Left (InputError (path ++ ": file not found")))
         else do
           contents <- readFileUtf8 path
+          loadAssemblyFrom emit visited path contents
+
+-- | 'loadAssembly' with the top file's text supplied (an unsaved editor
+-- buffer for @coscad validate --stdin@). Referenced parts and
+-- subassemblies are still read from disk, relative to @path@.
+loadAssemblyText :: Emit -> FilePath -> String -> IO (Either AsmError AsmResult)
+loadAssemblyText emit = loadAssemblyFrom emit []
+
+loadAssemblyFrom :: Emit -> [FilePath] -> FilePath -> String -> IO (Either AsmError AsmResult)
+loadAssemblyFrom emit visited path contents =
           case checkedPragma path contents of
             Left err -> return (Left (InputError err))
             Right (fmode, fbody) -> case parse (sc *> asmProgram fmode <* eof) path fbody of

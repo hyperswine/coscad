@@ -9,6 +9,7 @@ const { LanguageClient, TransportKind } = require('vscode-languageclient/node')
 // extension relies on.
 const MIN_COMPILER = [1, 2, 0, 0]
 const VALIDATE_TIMEOUT_MS = 20000
+const LIVE_DELAY_MS = 400 // pause after typing before validating the buffer
 
 let client
 let compilerDiagnostics
@@ -87,9 +88,13 @@ function registerFileCommand(context, id, allowedExtensions, makeArgs) {
 }
 
 // ---------------------------------------------------------------
-// Compiler diagnostics. On save (and open), `coscad validate` checks the
-// part or assembly without producing artifacts; its stderr is turned into
-// editor diagnostics. The compiler prints one diagnostic per line as
+// Compiler diagnostics. A compiler with `validate --json --stdin` checks the
+// buffer as it is on open, save and (debounced) every edit, and its JSON is
+// turned into diagnostics (diagnosticsFromJson); the language server's own
+// diagnostics are then switched off so only the compiler's rules apply.
+// Older compilers are run as `coscad validate <file>` on saved files and
+// their stderr is parsed (parseCompilerErrors). The compiler prints one
+// diagnostic per line as
 //
 //   Error: file:line:col: reason          (optionally followed by an excerpt:
 //     |                                     "  |", "N | source", "  | ^^^")
@@ -177,13 +182,61 @@ function versionAtLeast(have, want) {
   return true
 }
 
-function runCompiler(args, cwd, timeout) {
+// `input`, when given, is written to the compiler's stdin (an unsaved buffer
+// for `validate --stdin`).
+function runCompiler(args, cwd, timeout, input) {
   return new Promise(resolve => {
     const [exe, ...pre] = splitCommand(config().command)
-    execFile(exe, [...pre, ...args], { cwd, timeout, maxBuffer: 8 * 1024 * 1024 }, (error, stdout, stderr) => {
+    const child = execFile(exe, [...pre, ...args], { cwd, timeout, maxBuffer: 8 * 1024 * 1024 }, (error, stdout, stderr) => {
       resolve({ error, stdout: String(stdout || ''), stderr: String(stderr || '') })
     })
+    if (child.stdin) {
+      child.stdin.on('error', () => {}) // the compiler may exit before reading it all
+      child.stdin.end(input === undefined ? '' : input)
+    }
   })
+}
+
+// `coscad validate --json` output -> diagnostics for `filePath`, or null when
+// the output is not that JSON document (an older compiler without --json).
+function diagnosticsFromJson(stdout, filePath) {
+  let doc
+  try { doc = JSON.parse(stdout) } catch { return null }
+  if (!doc || doc.schema !== 'coscad.validate/1' || !Array.isArray(doc.diagnostics)) return null
+  const same = file => path.resolve(file) === path.resolve(filePath)
+  const severity = s => s === 'error' ? vscode.DiagnosticSeverity.Error
+    : s === 'warning' ? vscode.DiagnosticSeverity.Warning : vscode.DiagnosticSeverity.Information
+  return doc.diagnostics.map(d => {
+    const located = d.file && Number.isInteger(d.line)
+    if (located && same(d.file)) {
+      const l = Math.max(0, d.line - 1)
+      const c = Math.max(0, (Number.isInteger(d.column) ? d.column : 1) - 1)
+      return new vscode.Diagnostic(new vscode.Range(l, c, l, c + 1), d.message, severity(d.severity))
+    }
+    // a referenced file, or no position: show it at the top, named
+    const where = d.file && !same(d.file) ? `${d.file}${located ? `:${d.line}:${d.column}` : ''}: ` : ''
+    return new vscode.Diagnostic(new vscode.Range(0, 0, 0, 1), where + d.message, severity(d.severity))
+  })
+}
+
+// Whether the compiler understands `validate --json --stdin`: null until the
+// first run tells us; reset when settings change. With it, diagnostics follow
+// every edit and the language server's own diagnostics are switched off.
+let jsonValidate = null
+
+let compilerOwns = false // last state told (or to be told) to the language server
+
+function notifyServer() {
+  if (!client || !client.isRunning || !client.isRunning()) return // sent once the client starts
+  try {
+    Promise.resolve(client.sendNotification('coscad/compilerDiagnostics', { active: compilerOwns })).catch(() => {})
+  } catch {}
+}
+
+function setCompilerOwnsDiagnostics(active) {
+  if (compilerOwns === active) return
+  compilerOwns = active
+  notifyServer()
 }
 
 let warned = false
@@ -230,8 +283,27 @@ async function compileForDiagnostics(document) {
   if (document.uri.scheme !== 'file') return
   const workingDirectory = cwd || path.dirname(document.fileName)
   const { ok } = await compilerUsable(workingDirectory)
-  if (!ok) return
+  if (!ok) { setCompilerOwnsDiagnostics(false); return }
   const version = document.version
+  if (jsonValidate !== false) {
+    // the buffer as it is, saved or not
+    const run = await runCompiler(['validate', '--json', '--stdin', document.fileName], workingDirectory, VALIDATE_TIMEOUT_MS, document.getText())
+    if (document.version !== version || document.isClosed || !config().compilerDiagnostics) return
+    if (run.error && (run.error.killed || run.error.signal)) {
+      compilerDiagnostics.set(document.uri, [new vscode.Diagnostic(new vscode.Range(0, 0, 0, 1), `coscad validate did not finish within ${VALIDATE_TIMEOUT_MS / 1000} s; compiler diagnostics for this file are stale`, vscode.DiagnosticSeverity.Warning)])
+      return
+    }
+    const found = diagnosticsFromJson(run.stdout, document.fileName)
+    if (found) {
+      if (jsonValidate !== true) { jsonValidate = true; setCompilerOwnsDiagnostics(true) }
+      compilerDiagnostics.set(document.uri, found)
+      return
+    }
+    // an older compiler: fall back to text output on saved files
+    jsonValidate = false
+    setCompilerOwnsDiagnostics(false)
+  }
+  if (document.isDirty) return
   const { error, stdout, stderr } = await runCompiler(['validate', document.fileName], workingDirectory, VALIDATE_TIMEOUT_MS)
   if (document.version !== version || document.isClosed || !config().compilerDiagnostics) return
   // a valid file can still carry warnings on stderr; keep only those
@@ -290,17 +362,26 @@ function activate(context) {
   context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(compileForDiagnostics))
   context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(compileForDiagnostics))
   context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(document => compilerDiagnostics.delete(document.uri)))
+  // with `validate --json --stdin`, follow edits (debounced) as well as saves
+  const pending = new Map()
+  context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(event => {
+    if (jsonValidate !== true) return
+    const key = event.document.uri.toString()
+    clearTimeout(pending.get(key))
+    pending.set(key, setTimeout(() => { pending.delete(key); compileForDiagnostics(event.document) }, LIVE_DELAY_MS))
+  }))
   context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(event => {
     if (event.affectsConfiguration('coscad')) {
       warned = false
       probe = null
-      if (!config().compilerDiagnostics) compilerDiagnostics.clear()
+      jsonValidate = null
+      if (!config().compilerDiagnostics) { compilerDiagnostics.clear(); setCompilerOwnsDiagnostics(false) }
       else for (const document of vscode.workspace.textDocuments) compileForDiagnostics(document)
     }
   }))
   for (const document of vscode.workspace.textDocuments) compileForDiagnostics(document)
 
-  client.start().catch(error => {
+  client.start().then(notifyServer, error => {
     vscode.window.showErrorMessage(`Failed to start COSCAD Language Server: ${error.message}`)
   })
 }
@@ -309,4 +390,4 @@ function deactivate() {
   return client ? client.stop() : undefined
 }
 
-module.exports = { activate, deactivate, parseCompilerErrors, parseVersion, versionAtLeast, splitCommand }
+module.exports = { activate, deactivate, parseCompilerErrors, diagnosticsFromJson, parseVersion, versionAtLeast, splitCommand }
