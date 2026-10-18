@@ -25,6 +25,7 @@ library
       Coscad.Check
       Coscad.Codegen
       Coscad.Constraint
+      Coscad.Diagnose
       Coscad.Dim
       Coscad.Doctor
       Coscad.Dsl
@@ -102,6 +103,7 @@ test-suite coscad-test
       Tier.Plan
       Tier.Resolution
       Tier.Silence
+      Tier.Validate
       Paths_coscad
   autogen-modules:
       Paths_coscad

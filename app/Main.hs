@@ -3,27 +3,24 @@
 -- failures, and is the only place that exits the process.
 module Main (main) where
 
-import Coscad.Assemble (asmFailure, loadAssembly, processAssemble)
+import Coscad.Assemble (processAssemble)
 import Coscad.Check (processCheckWith)
 import Coscad.Doctor (runDoctor)
-import Coscad.Geometry (anchorWarnings, formatAnchorWarning)
 import Coscad.Next (processNextWith)
 import Coscad.Part (compilePart, renderPart)
-import Coscad.Plan (processPlan, validateHardware)
-import Coscad.Report (Failure (..), designFailures, stderrEmit)
+import Coscad.Plan (processPlan)
+import Coscad.Diagnose (validateJson, validateSource)
+import Coscad.Report (Failure (..), collecting, stderrEmit)
 import Coscad.Site (processSite)
-import Coscad.Parser (parseProgramNamed)
-import Coscad.IO (readFileUtf8)
-import Data.List (isInfixOf)
+import Data.List (isInfixOf, isPrefixOf)
 import Data.Version (showVersion)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import Paths_coscad (version)
 import System.Environment (getArgs)
 import Control.Monad (unless)
-import System.Directory (doesFileExist)
 import System.Exit (ExitCode (..), exitFailure, exitSuccess, exitWith)
 import System.FilePath (takeExtension)
-import System.IO (Handle, hPutStrLn, hSetEncoding, stderr, stdout)
+import System.IO (Handle, getContents', hPutStrLn, hSetEncoding, stderr, stdin, stdout)
 import System.IO.Error (catchIOError, ioeGetFileName)
 
 main :: IO ()
@@ -39,28 +36,30 @@ runCLI = do
   setLocaleEncoding utf8
   hSetEncoding stdout utf8
   hSetEncoding stderr utf8
+  hSetEncoding stdin utf8
   args <- getArgs
   case args of
     [] -> usage stderr >> exitFailure
     (a : _) | a `elem` ["--help", "-h", "help"] -> usage stdout >> exitSuccess
     (a : _) | a `elem` ["--version", "-V", "version"] -> putStrLn ("coscad " ++ showVersion version)
     ["doctor"] -> runDoctor >>= finish
-    ["validate", f] -> case takeExtension f of
-      ".assemble" -> do
-        r <- loadAssembly stderrEmit [] f
-        case r of
-          Left e -> finish (Left (asmFailure e))
-          Right ar -> case validateHardware ar of
-            Left errs -> finish (Left (designFailures (map ((f ++ ": design: ") ++) (lines errs))))
-            Right () -> putStrLn "Valid assembly"
-      ".coscad" -> do
-        exists <- doesFileExist f
-        unless exists (bad (f ++ ": file not found"))
-        -- warnings go to stderr with file:line:col, as for compile; the
-        -- editor turns them into diagnostics (exit status stays 0)
-        readFileUtf8 f >>= either bad (\(_, shape) -> mapM_ (hPutStrLn stderr . ("Warning: " ++) . formatAnchorWarning f) (anchorWarnings shape) >> putStrLn "Valid part") . parseProgramNamed f
-      _ -> bad "validate needs a .coscad or .assemble file"
-    ("validate" : _) -> bad "validate needs one .coscad or .assemble file"
+    ("validate" : rest) -> case partitionFlags ["--json", "--stdin"] rest of
+      Right (flags, [f]) -> do
+        let json = "--json" `elem` flags
+        unless (takeExtension f `elem` [".coscad", ".assemble"]) (bad "validate needs a .coscad or .assemble file")
+        -- --stdin: the file's text comes from stdin (an unsaved editor
+        -- buffer); relative references still resolve from f's directory
+        source <- if "--stdin" `elem` flags then Just <$> getContents' else return Nothing
+        if json
+          then do
+            (emit, collected) <- collecting
+            outcome <- validateSource emit f source
+            diags <- collected
+            putStrLn (validateJson f outcome diags)
+            either (\(Failure code _) -> exitWith (ExitFailure (if code == 0 then 1 else code))) (const (return ())) outcome
+          else validateSource stderrEmit f source >>= either (finish . Left) putStrLn
+      Right _ -> bad "validate needs one .coscad or .assemble file. Usage: coscad validate [--json] [--stdin] file"
+      Left flag -> bad ("validate: unknown option " ++ flag ++ " (use --json, --stdin)")
     ("stl" : rest) -> withInOut "stl" rest (\f o -> renderPart stderrEmit f o >>= finish)
     ("next" : rest) -> do
       let strict = "--strict" `elem` rest
@@ -90,6 +89,13 @@ finish r = case r of
   Right () -> return ()
   Left (Failure code ls) -> mapM_ (hPutStrLn stderr) ls >> exitWith (if code == 0 then ExitFailure 1 else ExitFailure code)
 
+-- | Split known @--flags@ from the other arguments; an unknown @--flag@
+-- is reported.
+partitionFlags :: [String] -> [String] -> Either String ([String], [String])
+partitionFlags known args = case [a | a <- args, "--" `isPrefixOf` a, a `notElem` known] of
+  bad' : _ -> Left bad'
+  [] -> Right ([a | a <- args, a `elem` known], [a | a <- args, a `notElem` known])
+
 -- | `<file> [-o out]` in either order.
 withInOut :: String -> [String] -> (FilePath -> Maybe FilePath -> IO ()) -> IO ()
 withInOut what rest run = case rest of
@@ -118,7 +124,9 @@ usage h =
     , ""
     , "Usage:"
     , "  coscad <part.coscad> [-o part.scad]     compile one part to OpenSCAD"
-    , "  coscad validate <part.coscad|spec.assemble>  validate source, mating constraints and hardware without writing artifacts"
+    , "  coscad validate [--json] [--stdin] <part.coscad|spec.assemble>"
+    , "                                          validate source, mating constraints and hardware without writing artifacts;"
+    , "                                          --json prints diagnostics as JSON, --stdin reads the file's text from stdin"
     , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"
     , "  coscad <spec.assemble>                  design stage: assembled view, packed plate(s), spec_design.json"
     , "  coscad next [--strict] <spec.assemble>  manufacturing: orient, pack beds, bedN.stl + spec_manifest.json;"

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- With a compiler that has `validate --json --stdin`, compiler diagnostics
+  follow the buffer as you type (debounced) as well as open and save, and
+  are read from JSON instead of parsed from stderr. While they are live the
+  language server publishes no diagnostics of its own, so the compiler is
+  the single source of language rules in the editor; with an older or
+  missing compiler the server's diagnostics remain the fallback.
+
 - Compiler warnings appear as warning diagnostics on save: `Warning:` lines
   from `coscad validate` are parsed like errors (positioned, file-level or
   unpositioned), and a valid file keeps its warnings instead of clearing

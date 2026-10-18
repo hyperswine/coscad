@@ -8,6 +8,15 @@ and this project adheres to the
 
 ## Unreleased
 
+- **`coscad validate --json` and `--stdin`.** `--json` prints one JSON
+  document (`coscad.validate/1`: `valid`, `exit`, and `diagnostics` with
+  severity, file, line, column, message and excerpt) instead of stderr
+  text; the exit status is unchanged. `--stdin` validates the file's text
+  from standard input (an unsaved editor buffer); references still resolve
+  from the file's directory. The structuring lives in `Coscad.Diagnose`,
+  so tools stop re-parsing compiler output. `loadAssemblyText` loads an
+  assembly from supplied text.
+
 - **Library commands return their failures.** No module under `src/`
   exits the process or prints diagnostics any more. Commands
   (`processAssemble`, `processNextWith`, `processPlan`, `processCheck*`,

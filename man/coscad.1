@@ -11,6 +11,8 @@
 .Op Fl o Ar part.scad
 .Nm
 .Cm validate
+.Op Fl -json
+.Op Fl -stdin
 .Ar part.coscad | spec.assemble
 .Nm
 .Cm stl
@@ -44,6 +46,20 @@ checks a .coscad or .assemble file, including recursive part sources and
 rigid mating constraints, without writing output files or rendering meshes.
 It is suitable for editor diagnostics. It does not run interference or
 instruction-access checks.
+With
+.Fl -json
+it prints one JSON document on standard output (schema
+.Ql coscad.validate/1 :
+.Ql valid ,
+.Ql exit ,
+and
+.Ql diagnostics ,
+each with severity, file, line, column, message and source excerpt) and
+nothing on standard error; the exit status is unchanged.
+With
+.Fl -stdin
+the file's text is read from standard input (an unsaved editor buffer);
+part and subassembly references still resolve from the file's directory.
 .Nm
 compiles CoScad part files to OpenSCAD source and, with OpenSCAD and the
 BOSL2 library installed, renders them to STL.

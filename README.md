@@ -81,6 +81,7 @@ the local printer profiles, so it only passes on the maintainer's machine. See
 coscad part.coscad           # -> part.scad
 coscad validate part.coscad # source checks, no output files
 coscad validate model.assemble # source + rigid constraint checks
+coscad validate --json --stdin part.coscad < buffer  # JSON diagnostics for unsaved text
 coscad stl part.coscad       # -> part.scad + part.stl, prints volume + bounds
 coscad frame.assemble        # -> _asm view, packed _plate(N) scads, frame_design.json
 coscad next frame.assemble   # -> frame_bed1.stl ... + frame_manifest.json
@@ -198,6 +199,7 @@ src/Coscad/Report.hs    command failures (exit status + lines) and warning emitt
 src/Coscad/Format.hs    number formatting (showD)
 src/Coscad/OpenScad.hs  finding + running OpenSCAD and BOSL2
 src/Coscad/Part.hs      single-part compile / stl commands
+src/Coscad/Diagnose.hs  `coscad validate`, structured diagnostics, --json output
 src/Coscad/Doctor.hs    `coscad doctor`
 src/Lib.hs              re-export shim for the embedded Haskell DSL
 app/Main.hs             CLI dispatch only
