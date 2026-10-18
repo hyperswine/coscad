@@ -10,22 +10,27 @@ import Coscad.Shape
 import Data.List (intercalate)
 
 -- | Helper function for polygon conversion
+showPoints :: [(Double, Double)] -> String
 showPoints points = "[" ++ intercalate ", " (map showPoint points) ++ "]"
   where
     showPoint (x, y) = "[" ++ showD x ++ ", " ++ showD y ++ "]"
 
 -- | Helper function for polygon conversion
+showPaths :: [[Double]] -> String
 showPaths paths = "[" ++ intercalate ", " (map showPath paths) ++ "]"
   where
     showPath path = "[" ++ intercalate ", " (map showD path) ++ "]"
 
+indent :: String -> String
 indent = unlines . map ("  " ++) . lines
 
 -- | Emit optional BOSL2 chamfer/rounding arguments
+boslMod :: Double -> Double -> String
 boslMod ch ro =
   (if ch /= 0 then ", chamfer = " ++ showD ch else "")
     ++ (if ro /= 0 then ", rounding = " ++ showD ro else "")
 
+gen :: Shape -> String
 gen Empty = "union() { }"
 gen (Hidden _) = gen Empty
 gen (Rectangle x y z) = "cube(" ++ "[" ++ showD x ++ ", " ++ showD y ++ ", " ++ showD z ++ "]" ++ ");"
@@ -270,4 +275,5 @@ writeScad :: Shape -> FilePath -> IO ()
 writeScad shape filename = writeFileUtf8 filename (renderScad shape)
 
 
+fn50 :: String -> String
 fn50 x = x ++ "\n$fn = 50;"
