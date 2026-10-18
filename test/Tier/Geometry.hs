@@ -7,7 +7,6 @@ module Tier.Geometry
   )
 where
 
-import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_, when)
 import Coscad.Assemble (AsmResult (..), loadAssembleFile, processAssemble, resolveAssembly)
 import Coscad.Check (processCheckIn, processCheckWith, splitBodies)
@@ -18,6 +17,7 @@ import Coscad.Next (processNext)
 import Coscad.OpenScad (bosl2Version, openscadFullRender, openscadPngArgs, openscadVersion, runOpenscadRaw)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Part (renderPart)
+import Coscad.Report (Failure (..), silent)
 import MigrationCases (migrationCases)
 import Coscad.Shape (Shape (..))
 import Data.List (isInfixOf, isPrefixOf, tails)
@@ -174,7 +174,7 @@ geometry t update bin = do
   bow <- tempDir "bow3"
   srcs <- listDirectory "examples/assemble/bow3"
   forM_ srcs $ \s -> copyFile ("examples/assemble/bow3" </> s) (bow </> s)
-  rn <- try (processNext (bow </> "bow3.assemble")) :: IO (Either SomeException ())
+  rn <- processNext silent (bow </> "bow3.assemble")
   case rn of
     Left e -> failT t "coscad next bow3" (show e)
     Right () -> do
@@ -192,7 +192,7 @@ geometry t update bin = do
       assertT t "coscad next manifest carries schema coscad.next/1"
         (either (const False) (\v -> (asString =<< lookupKey "schema" v) == Just "coscad.next/1") mf) (take 200 manifest)
       -- the design stage writes its own file and leaves the next manifest alone
-      rd <- try (processAssemble (bow </> "bow3.assemble")) :: IO (Either SomeException ())
+      rd <- processAssemble silent (bow </> "bow3.assemble")
       after <- readFile (bow </> "bow3_manifest.json")
       design <- readJson (bow </> "bow3_design.json")
       assertT t "design stage after next: bow3_manifest.json untouched, bow3_design.json has schema coscad.design/1"
@@ -209,7 +209,7 @@ geometry t update bin = do
   collisions <- tempDir "variant-collisions"
   writeVariantCollisions collisions
   forM_ [("top", [1000, 27000]), ("alike", [125, 729])] $ \(asm, volumes) -> do
-    rv <- try (processNext (collisions </> asm <.> "assemble")) :: IO (Either SomeException ())
+    rv <- processNext silent (collisions </> asm <.> "assemble")
     case rv of
       Left e -> failT t ("coscad next " ++ asm ++ ": distinct variants") (show e)
       Right () -> do
@@ -221,7 +221,7 @@ geometry t update bin = do
             got <- mapM (fmap meshVolume . readStl) meshes
             assertT t ("coscad next " ++ asm ++ ": each variant mesh is its own part, not overwritten")
               (length got == length volumes && and (zipWith (\g w -> abs (g - w) < 1e-6 * w) got volumes)) (show (meshes, got))
-  rc <- try (processCheckWith False (bow </> "bow3.assemble")) :: IO (Either SomeException ())
+  rc <- processCheckWith silent False (bow </> "bow3.assemble")
   assertT t "coscad check bow3: no overlaps" (either (const False) (const True) rc) (either show (const "") rc)
   leftovers <- filter ("chk" `isInfixOf`) <$> listDirectory bow
   assertT t "coscad check leaves no scratch files next to the assembly" (null leftovers) (show leftovers)
@@ -242,7 +242,7 @@ geometry t update bin = do
   forM_ ["base.coscad", "post.coscad", "frame-stand.assemble"] $ \f ->
     copyFile ("examples/assemble/constraints" </> f) (framed </> f)
   checkDir <- tempDir "check-frame-stand"
-  checked <- try (processCheckIn True (Just checkDir) (framed </> "frame-stand.assemble")) :: IO (Either SomeException ())
+  checked <- processCheckIn silent True (Just checkDir) (framed </> "frame-stand.assemble")
   case checked of
     Left e -> failT t "constraint check" (show e)
     Right () -> do
@@ -253,8 +253,8 @@ geometry t update bin = do
             near (a,b,c) (x,y,z) = all (< 1e-6) [abs(a-x),abs(b-y),abs(c-z)]
         assertT t ("constraint check isolates world pose of " ++ n) (length bodies == 1 && near lo wlo && near hi whi) (show (lo,hi))
   writeFile (framed </> "collision.assemble") "base ← base.coscad ×1\nleft_post ← post.coscad ×1\nfixed base\nmate left_post @foot base @left_mount gap=-1\n"
-  collision <- try (processCheckWith False (framed </> "collision.assemble")) :: IO (Either ExitCode ())
-  assertT t "consistent constraints still expose actual interference (exit 2)" (collision == Left (ExitFailure 2)) (show collision)
+  collision <- either (Left . failExit) Right <$> processCheckWith silent False (framed </> "collision.assemble")
+  assertT t "consistent constraints still expose actual interference (exit 2)" (collision == Left 2) (show collision)
   -- Hidden parts must retain their anchors during isolation, including
   -- chained attachments and transformed assemblies. Verify the rendered
   -- isolated child's actual bounds, not the bbox containing hidden parts.
@@ -271,7 +271,7 @@ geometry t update bin = do
     let f = rel </> (name ++ ".assemble")
     writeFile f ("a ← a.coscad ×1\nb ← b.coscad ×1\nasm = " ++ expr ++ "\n")
     relDir <- tempDir ("check-" ++ name)
-    result <- try (processCheckIn True (Just relDir) f) :: IO (Either SomeException ())
+    result <- processCheckIn silent True (Just relDir) f
     case result of
       Left e -> failT t ("relational check " ++ name) (show e)
       Right () -> do
@@ -282,13 +282,13 @@ geometry t update bin = do
           (show (lo, hi))
   let overlapF = rel </> "overlap.assemble"
   writeFile overlapF "a ← a.coscad ×1\nb ← b.coscad ×1\nasm = a |> at top 0 0 -1 b\n"
-  overlap <- try (processCheckWith False overlapF) :: IO (Either ExitCode ())
-  assertT t "relational check still detects real overlap (exit 2)" (overlap == Left (ExitFailure 2)) (show overlap)
+  overlap <- either (Left . failExit) Right <$> processCheckWith silent False overlapF
+  assertT t "relational check still detects real overlap (exit 2)" (overlap == Left 2) (show overlap)
   -- design stage spills across plates instead of failing
   sp <- tempDir "spill"
   copyFile "examples/assemble/spill.assemble" (sp </> "spill.assemble")
   copyFile "examples/assemble/bracket90.coscad" (sp </> "bracket90.coscad")
-  ra <- try (processAssemble (sp </> "spill.assemble")) :: IO (Either SomeException ())
+  ra <- processAssemble silent (sp </> "spill.assemble")
   case ra of
     Left e -> failT t "design stage: multi-plate spill" (show e)
     Right () -> do
@@ -299,7 +299,7 @@ geometry t update bin = do
   -- `coscad stl` end to end
   st <- tempDir "stl"
   writeFile (st </> "p.coscad") "r = 5\nmain = ● r\n"
-  rs <- try (renderPart (st </> "p.coscad") Nothing) :: IO (Either SomeException ())
+  rs <- renderPart silent (st </> "p.coscad") Nothing
   case rs of
     Left e -> failT t "coscad stl renders a part" (show e)
     Right () -> do

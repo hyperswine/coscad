@@ -18,12 +18,11 @@ import Coscad.Json
 import Coscad.Mesh
 import Coscad.OpenScad (renderStlFile)
 import Coscad.Printability
+import Coscad.Report
 import Coscad.Variants
 import Control.Monad (when)
 import Data.List (intercalate)
-import System.Exit (ExitCode (..), exitFailure, exitWith)
 import System.FilePath (dropExtension)
-import System.IO (hPutStrLn, stderr)
 
 -- ============================================================
 -- COSCAD NEXT — manufacturing stage (`coscad next foo.assemble`)
@@ -161,26 +160,25 @@ chooseOrientation maxZ Nothing tris =
           let (sc, m, lbl) = foldl1 (\a@(s1, _, _) b@(s2, _, _) -> if s2 > s1 then b else a) scored
            in Right (Orientation m lbl "auto" sc)
 
-processNext :: FilePath -> IO ()
-processNext = processNextWith False
+processNext :: Emit -> FilePath -> IO (Either Failure ())
+processNext emit = processNextWith emit False
 
 -- | @coscad next [--strict]@. With @strict@, any printability warning
 -- makes the stage exit 2 (the design has a problem) after the beds and
 -- manifest are written, so they can still be inspected.
-processNextWith :: Bool -> FilePath -> IO ()
-processNextWith strict inputFile = do
-  r <- loadAssembly [] inputFile
+processNextWith :: Emit -> Bool -> FilePath -> IO (Either Failure ())
+processNextWith emit strict inputFile = runCommand $ do
+  r <- loadAssembly emit [] inputFile
   case r of
-    Left err -> failAsm err
+    Left err -> abort (asmFailure err)
     Right ar -> do
       let base = dropExtension inputFile
           (pw, pd, marg) = arPlate ar
           bedZ = arPlateMaxZ ar
           printable = [fp | fp <- arFlat ar, fpCount fp > 0]
           asmOnly = [fp | fp <- arFlat ar, fpCount fp <= 0]
-      when (null printable) $ do
-        hPutStrLn stderr ("Error: " ++ inputFile ++ ": nothing to print: every part is ×0 (assembly-only) or no part is declared")
-        exitFailure
+      when (null printable) $
+        abort (inputFailure (inputFile ++ ": nothing to print: every part is ×0 (assembly-only) or no part is declared"))
       -- compile each variant to a mesh once
       variantsE <- mapM
         ( \(k, vname, fp) -> do
@@ -216,17 +214,17 @@ processNextWith strict inputFile = do
         )
         (printVariants printable)
       case sequence variantsE of
-        Left (code, err) -> hPutStrLn stderr ("Error: " ++ err) >> exitWith (ExitFailure code)
+        Left (code, err) -> abort ((if code == 2 then designFailure else inputFailure) err)
         Right variants -> do
           mapM_ (\v ->
-            mapM_ (hPutStrLn stderr . (("Warning: " ++ vName v ++ ": ") ++))
+            mapM_ (emit . Warning . ((vName v ++ ": ") ++))
               (printabilityWarnings (vPrint v))) variants
           let byKey = variantMap vKey variants
               footprint v = let (w, d, _) = vDims v in (w, d)
           items <- orInternal (mapM (\(iid, k, fp) -> (\v -> (iid, k, footprint v, instanceBrim (arPlateBrim ar) fp (vPrint v))) <$> lookupVariant byKey k) (printInstances printable))
           case packBedsBrim (pw, pd, marg) items of
             -- a footprint bigger than the plate: a design problem (exit 2)
-            Left err -> hPutStrLn stderr ("Error: " ++ inputFile ++ ": " ++ err) >> exitWith (ExitFailure 2)
+            Left err -> abort (designFailure (inputFile ++ ": " ++ err))
             Right packed -> do
               beds <- orInternal (placedVariants byKey packed)
               mapM_
@@ -242,11 +240,10 @@ processNextWith strict inputFile = do
               putStrLn ("Wrote " ++ nextManifestPath base)
               let warned = [v | v <- variants, not (null (printabilityWarnings (vPrint v)))]
                   count = sum (map (length . printabilityWarnings . vPrint) warned)
-              when (strict && not (null warned)) $ do
-                hPutStrLn stderr ("Error: " ++ inputFile ++ ": --strict: " ++ show count ++ " printability warning"
+              when (strict && not (null warned)) $
+                abort $ designFailure (inputFile ++ ": --strict: " ++ show count ++ " printability warning"
                   ++ (if count == 1 then "" else "s") ++ " on " ++ intercalate ", " (map vName warned)
                   ++ "; fix or reorient the parts, or slice with scripts/bambu-slice.py --accept-printability after review")
-                exitWith (ExitFailure 2)
 
 -- | Brim reserved around one instance: its own @brim=N@ hint wins
 -- (@brim=0@ opts out); otherwise @plate … brim=N@ applies to parts whose

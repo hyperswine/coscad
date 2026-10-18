@@ -10,6 +10,7 @@ import Control.Monad (forM_)
 import Coscad.Geometry (mApply, vlen, vsub, vadd, rodMat)
 import Coscad.Plan (PlanSummary (..), StepSummary (..), FastenerSummary (..), planSummary, processPlanSummary)
 import Coscad.Site (buildPageHtml, indexHtml)
+import Coscad.Report (silent)
 import Data.List (isInfixOf, isPrefixOf, sort)
 import System.Directory
 import System.FilePath
@@ -22,7 +23,7 @@ generatedPlanMd tag srcDir name = do
   tmp <- tempDir tag
   fs <- listDirectory srcDir
   forM_ [f | f <- fs, takeExtension f `elem` [".coscad", ".assemble"]] $ \f -> copyFile (srcDir </> f) (tmp </> f)
-  _ <- processPlanSummary False (tmp </> name <.> "assemble")
+  _ <- processPlanSummary silent False (tmp </> name <.> "assemble")
   readFile (tmp </> name ++ "_plan.md")
 
 planTier :: T -> IO ()

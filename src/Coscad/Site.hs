@@ -4,16 +4,15 @@
 -- across builds. Plain HTML/CSS/JS, no server, host anywhere.
 module Coscad.Site (processSite, buildPageHtml, indexHtml) where
 
-import Control.Monad (forM, forM_, unless)
+import Control.Monad (forM, forM_, when)
 import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Plan (PlanSummary (..), StepSummary (..), processPlanSummary)
 import Data.Char (isSpace)
 import Data.List (isPrefixOf, sort)
 import System.Directory (copyFile, createDirectoryIfMissing, doesFileExist)
 import Coscad.Json
-import System.Exit (exitFailure)
 import System.FilePath (dropExtension, takeDirectory, takeFileName, (</>))
-import System.IO (hPutStrLn, stderr)
+import Coscad.Report (Emit, Failure, abort, inputFailure, runCommand)
 
 -- | Crude JSON string escaping for values we embed into <script> blocks.
 jstr :: String -> String
@@ -131,11 +130,12 @@ indexHtml builds = unlines
 
 -- | Plan every assembly (with PNG renders), collect the outputs under
 -- DIR/<name>/, and write the index.
-processSite :: FilePath -> [FilePath] -> IO ()
-processSite outDir specs = do
+processSite :: Emit -> FilePath -> [FilePath] -> IO (Either Failure ())
+processSite emit outDir specs = runCommand $ do
+  when (null specs) (abort (inputFailure "no assemblies given"))
   createDirectoryIfMissing True outDir
   builds <- forM specs $ \spec -> do
-    summary <- processPlanSummary True spec
+    summary <- processPlanSummary emit True spec >>= either abort return
     let base = dropExtension spec
         name = takeFileName base
         srcDir = takeDirectory spec
@@ -157,7 +157,6 @@ processSite outDir specs = do
     return (name, name, tags, length (psParts summary), screws, nSteps)
   writeFileUtf8 (outDir </> "index.html") (indexHtml builds)
   putStrLn ("Wrote " ++ outDir </> "index.html" ++ " (" ++ show (length builds) ++ " builds)")
-  unless (not (null builds)) $ hPutStrLn stderr "Error: no assemblies given" >> exitFailure
   where
     trim = reverse . dropWhile isSpace . reverse . dropWhile isSpace
     uniq = foldr (\x acc -> if x `elem` acc then acc else x : acc) []

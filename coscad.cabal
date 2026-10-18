@@ -43,6 +43,7 @@ library
       Coscad.Plan.Render
       Coscad.Plan.Search
       Coscad.Printability
+      Coscad.Report
       Coscad.Shape
       Coscad.Site
       Coscad.Validate

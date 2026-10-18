@@ -7,6 +7,9 @@ module Tier.Silence
 where
 
 import Coscad.Geometry (anchorWarnings, formatAnchorWarning)
+import Coscad.Next (processNext)
+import Coscad.Part (compilePart)
+import Coscad.Report (Diag (..), Failure (..), collecting)
 import Coscad.Parser (parseProgramNamed)
 import Data.List (isInfixOf)
 import System.Directory (findExecutable)
@@ -80,6 +83,21 @@ silenceTier t = do
       (c3, _, e3) <- run "ok.assemble"
       assertT t "count: matching counts and ×0 parts placed freely, no warning"
         (c3 == ExitSuccess && not ("is declared" `isInfixOf` e3)) (show (c3, e3))
+      -- the same commands called as functions: failures are values and
+      -- warnings arrive through the emitter, nothing exits the test process
+      (emitL, readL) <- collecting
+      missing <- compilePart emitL (dir </> "nope.coscad") Nothing
+      assertT t "library: a missing part is a Failure with exit 1, not an exit"
+        (case missing of Left (Failure 1 (l : _)) -> "not found" `isInfixOf` l; _ -> False) (show missing)
+      writeFile (dir </> "tilted.coscad") "main = box 10 10 10 |> roty 45 |> at top 0 0 0 (box 1 1 1)\n"
+      compiled <- compilePart emitL (dir </> "tilted.coscad") (Just (dir </> "tilted.scad"))
+      underRun <- processNext emitL (dir </> "under.assemble")
+      diags <- readL
+      assertT t "library: warnings reach the emitter (anchor and count), results are values"
+        (compiled == Right () && either (const True) (const True) underRun
+          && any (\d -> case d of Warning m -> ":1:35: 'at top'" `isInfixOf` m; _ -> False) diags
+          && any (\d -> case d of Warning m -> "'blk' is declared ×3" `isInfixOf` m; _ -> False) diags)
+        (show (compiled, diags))
       (c4, _, e4) <- run "nested.assemble"
       assertT t "count: a subassembly counts its own placements, no warning"
         (c4 == ExitSuccess && not ("is declared" `isInfixOf` e4)) (show (c4, e4))

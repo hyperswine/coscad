@@ -9,21 +9,20 @@ import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Mesh (meshBounds, meshVolume)
 import Coscad.OpenScad (renderStlFile)
 import Coscad.Parser (parseProgramNamed)
+import Coscad.Report (Emit, Diag (..), Failure, abort, inputFailure, runCommand)
 import Coscad.Shape (Shape)
 import System.Directory (createDirectoryIfMissing, doesFileExist)
-import System.Exit (exitFailure)
 import System.FilePath (replaceExtension, takeDirectory, takeExtension)
-import System.IO (hPutStrLn, stderr)
 import Text.Printf (printf)
 
 scadPathFor :: FilePath -> Maybe FilePath -> FilePath
 scadPathFor input out = maybe (replaceExtension input ".scad") id out
 
 die' :: String -> IO a
-die' msg = hPutStrLn stderr ("Error: " ++ msg) >> exitFailure
+die' = abort . inputFailure
 
-loadPart :: FilePath -> IO Shape
-loadPart input = do
+loadPart :: Emit -> FilePath -> IO Shape
+loadPart emit input = do
   exists <- doesFileExist input
   if not exists then die' ("file not found: " ++ input) else return ()
   if takeExtension input /= ".coscad" then die' ("expected a .coscad file, got " ++ input) else return ()
@@ -31,22 +30,22 @@ loadPart input = do
   case parseProgramNamed input src of
     Left err -> die' err
     Right (_, shape) -> do
-      mapM_ (hPutStrLn stderr . ("Warning: " ++) . formatAnchorWarning input) (anchorWarnings shape)
+      mapM_ (emit . Warning . formatAnchorWarning input) (anchorWarnings shape)
       return shape
 
 -- | .coscad -> .scad
-compilePart :: FilePath -> Maybe FilePath -> IO ()
-compilePart input out = do
-  shape <- loadPart input
+compilePart :: Emit -> FilePath -> Maybe FilePath -> IO (Either Failure ())
+compilePart emit input out = runCommand $ do
+  shape <- loadPart emit input
   let scadF = scadPathFor input out
   createDirectoryIfMissing True (takeDirectory scadF)
   writeFileUtf8 scadF (renderScad shape)
   putStrLn ("Wrote " ++ scadF)
 
 -- | .coscad -> .scad -> .stl, printing triangle count, volume, and bounds.
-renderPart :: FilePath -> Maybe FilePath -> IO ()
-renderPart input out = do
-  shape <- loadPart input
+renderPart :: Emit -> FilePath -> Maybe FilePath -> IO (Either Failure ())
+renderPart emit input out = runCommand $ do
+  shape <- loadPart emit input
   let stlF = maybe (replaceExtension input ".stl") id out
       scadF = replaceExtension stlF ".scad"
   createDirectoryIfMissing True (takeDirectory stlF)

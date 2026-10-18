@@ -16,6 +16,7 @@ where
 
 import Control.Monad (forM_, when)
 import Coscad.Assemble (AsmResult (..), loadAssembleFile, loadAssembly, resolveAssembly)
+import Coscad.Report (silent)
 import Coscad.Variants (FlatPart (..))
 import Coscad.Constraint (AsmError (..), Constraint (..), Tolerance (..), defaultTolerance, errorText)
 import Coscad.Codegen (renderScad)
@@ -413,7 +414,7 @@ constraintLoopTier :: T -> FilePath -> IO ()
 constraintLoopTier t dir = do
   writeLink dir
   let file = dir </> "loop.assemble"
-      load src = writeFile file src >> loadAssembly [] file
+      load src = writeFile file src >> loadAssembly silent [] file
       firstLine = takeWhile (/= '\n')
       at n = file ++ ":" ++ show (n :: Int) ++ ":1:"
       design name src check = do
@@ -459,7 +460,7 @@ constraintLoopTier t dir = do
   -- a conflict inside a subassembly is still a design error when loaded through its parent
   writeFile (dir </> "ring.assemble") (ringAssembly " gap=0.000002")
   writeFile (dir </> "outer.assemble") "r ← ring.assemble ×1\nasm = r\n"
-  ro <- loadAssembly [] (dir </> "outer.assemble")
+  ro <- loadAssembly silent [] (dir </> "outer.assemble")
   assertT t "a loop conflict in a subassembly is a design error of the parent too, located in the subassembly"
     (case ro of Left (DesignError m) -> ((dir </> "ring.assemble") ++ ":17:1:") `isPrefixOf` m; _ -> False) (either show (const "loaded") ro)
   -- numeric bindings and arithmetic in fixed / mate, and the tolerance statement (step 10)

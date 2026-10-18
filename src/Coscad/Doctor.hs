@@ -13,11 +13,11 @@ import Data.Version (showVersion)
 import Paths_coscad (version)
 import System.Directory (doesFileExist, removePathForcibly)
 import System.Environment (lookupEnv)
-import System.Exit (exitFailure)
+import Coscad.Report (Failure (..))
 import System.FilePath ((</>))
 import Text.Printf (printf)
 
-runDoctor :: IO ()
+runDoctor :: IO (Either Failure ())
 runDoctor = do
   putStrLn ("coscad " ++ showVersion version)
   dir <- scratchDir "doctor"
@@ -79,5 +79,5 @@ runDoctor = do
               return ok
   removePathForcibly dir
   if okScad && okBosl && okRt
-    then putStrLn "all good"
-    else exitFailure
+    then putStrLn "all good" >> return (Right ())
+    else return (Left (Failure 1 []))

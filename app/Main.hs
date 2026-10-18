@@ -1,14 +1,16 @@
 -- | CLI entry point. All real logic lives in the Coscad.* library
--- modules; this file only parses arguments and dispatches.
+-- modules; this file parses arguments, dispatches, prints warnings and
+-- failures, and is the only place that exits the process.
 module Main (main) where
 
-import Coscad.Assemble (failAsm, loadAssembly, processAssemble)
+import Coscad.Assemble (asmFailure, loadAssembly, processAssemble)
 import Coscad.Check (processCheckWith)
 import Coscad.Doctor (runDoctor)
 import Coscad.Geometry (anchorWarnings, formatAnchorWarning)
 import Coscad.Next (processNextWith)
 import Coscad.Part (compilePart, renderPart)
 import Coscad.Plan (processPlan, validateHardware)
+import Coscad.Report (Failure (..), designFailures, stderrEmit)
 import Coscad.Site (processSite)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.IO (readFileUtf8)
@@ -42,9 +44,15 @@ runCLI = do
     [] -> usage stderr >> exitFailure
     (a : _) | a `elem` ["--help", "-h", "help"] -> usage stdout >> exitSuccess
     (a : _) | a `elem` ["--version", "-V", "version"] -> putStrLn ("coscad " ++ showVersion version)
-    ["doctor"] -> runDoctor
+    ["doctor"] -> runDoctor >>= finish
     ["validate", f] -> case takeExtension f of
-      ".assemble" -> loadAssembly [] f >>= either failAsm (either (designBad . unlines . map ((f ++ ": design: ") ++) . lines) (const (putStrLn "Valid assembly")) . validateHardware)
+      ".assemble" -> do
+        r <- loadAssembly stderrEmit [] f
+        case r of
+          Left e -> finish (Left (asmFailure e))
+          Right ar -> case validateHardware ar of
+            Left errs -> finish (Left (designFailures (map ((f ++ ": design: ") ++) (lines errs))))
+            Right () -> putStrLn "Valid assembly"
       ".coscad" -> do
         exists <- doesFileExist f
         unless exists (bad (f ++ ": file not found"))
@@ -53,27 +61,34 @@ runCLI = do
         readFileUtf8 f >>= either bad (\(_, shape) -> mapM_ (hPutStrLn stderr . ("Warning: " ++) . formatAnchorWarning f) (anchorWarnings shape) >> putStrLn "Valid part") . parseProgramNamed f
       _ -> bad "validate needs a .coscad or .assemble file"
     ("validate" : _) -> bad "validate needs one .coscad or .assemble file"
-    ("stl" : rest) -> withInOut "stl" rest renderPart
+    ("stl" : rest) -> withInOut "stl" rest (\f o -> renderPart stderrEmit f o >>= finish)
     ("next" : rest) -> do
       let strict = "--strict" `elem` rest
       case filter (/= "--strict") rest of
-        [f] -> needExt ".assemble" f >> processNextWith strict f
+        [f] -> needExt ".assemble" f >> processNextWith stderrEmit strict f >>= finish
         _ -> bad "next needs one .assemble file. Usage: coscad next [--strict] model.assemble"
     ("site" : rest) -> case rest of
-      (dir : specs) | not (null specs) -> mapM_ (needExt ".assemble") specs >> processSite dir specs
+      (dir : specs) | not (null specs) -> mapM_ (needExt ".assemble") specs >> processSite stderrEmit dir specs >>= finish
       _ -> bad "site takes an output directory and one or more .assemble files"
     ("plan" : rest) -> do
       let png = "--png" `elem` rest
       case filter (/= "--png") rest of
-        [f] -> needExt ".assemble" f >> processPlan png f
+        [f] -> needExt ".assemble" f >> processPlan stderrEmit png f >>= finish
         _ -> bad "plan takes one .assemble file (and optionally --png)"
     ("check" : rest) -> do
       let keep = "--keep-temp" `elem` rest
       case filter (/= "--keep-temp") rest of
-        [f] -> needExt ".assemble" f >> processCheckWith keep f
+        [f] -> needExt ".assemble" f >> processCheckWith stderrEmit keep f >>= finish
         _ -> bad "check takes one .assemble file (and optionally --keep-temp)"
-    [f] | takeExtension f == ".assemble" -> processAssemble f
-    rest -> withInOut "compile" rest compilePart
+    [f] | takeExtension f == ".assemble" -> processAssemble stderrEmit f >>= finish
+    rest -> withInOut "compile" rest (\f o -> compilePart stderrEmit f o >>= finish)
+
+-- | A command's outcome: nothing to do on success; on failure print its
+-- lines to stderr and exit with its status (1 could not run, 2 design).
+finish :: Either Failure () -> IO ()
+finish r = case r of
+  Right () -> return ()
+  Left (Failure code ls) -> mapM_ (hPutStrLn stderr) ls >> exitWith (if code == 0 then ExitFailure 1 else ExitFailure code)
 
 -- | `<file> [-o out]` in either order.
 withInOut :: String -> [String] -> (FilePath -> Maybe FilePath -> IO ()) -> IO ()
@@ -94,12 +109,6 @@ needExt ext f
 -- geometry error, OpenSCAD failure).
 bad :: String -> IO ()
 bad msg = hPutStrLn stderr ("Error: " ++ msg) >> exitFailure
-
--- | Exit 2: the input is well formed but the design has a problem
--- (`validate`/`plan` design errors, `check` overlaps), so a pipeline can
--- tell "fix the model" from "fix the setup".
-designBad :: String -> IO ()
-designBad msg = mapM_ (hPutStrLn stderr . ("Error: " ++)) (lines msg) >> exitWith (ExitFailure 2)
 
 usage :: Handle -> IO ()
 usage h =

@@ -16,7 +16,6 @@ module Tier.Manufacturing
   )
 where
 
-import Control.Exception (SomeException, try)
 import Control.Monad (forM, forM_)
 import Coscad.Assemble (AsmResult (..), defaultMaxZ, loadAssembleFile)
 import Coscad.Variants (FlatPart (..), Placement (..), brimHint, lookupVariant, packBeds, packBedsBrim, placedVariants, printInstances, printVariants, turnZ, variantMap, variantNames)
@@ -26,6 +25,7 @@ import Coscad.Json (asArray, asNumber, asString, decode, lookupKey)
 import Coscad.Mesh (Tri, meshBounds, meshVolume)
 import Coscad.Next (FffTerms (..), fffTerms, instanceBrim, processNext)
 import Coscad.Printability
+import Coscad.Report (silent)
 import Coscad.Shape (Shape (..))
 import Data.List (isInfixOf, isPrefixOf, sort)
 import Data.Maybe (fromMaybe)
@@ -268,7 +268,7 @@ printabilityProbes t = do
         , ("diagwall_bot", ["tall, narrow"], Nothing), ("pillar_bot", ["tall, narrow"], Nothing), ("cup_bot", [], Nothing)
         , ("hhole_bot", [], Nothing), ("chamf_bot", [], Nothing), ("dome_bot", [], Nothing), ("hook_bot", ["flat overhang"], Just (70, 90)) ]
   variants <- fmap concat $ forM ["a", "b"] $ \asm -> do
-    r <- try (processNext (dir </> asm <.> "assemble")) :: IO (Either SomeException ())
+    r <- processNext silent (dir </> asm <.> "assemble")
     case r of
       Left e -> failT t ("printability probes: coscad next " ++ asm) (show e) >> return []
       Right () -> do

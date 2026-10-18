@@ -194,6 +194,7 @@ src/Coscad/Site.hs      `coscad site` static build-instruction pages
 src/Coscad/Mesh.hs      ASCII STL in/out, volume, bounds
 src/Coscad/Json.hs      minimal JSON encode/decode for manifests
 src/Coscad/IO.hs        UTF-8 file IO, scratch directories
+src/Coscad/Report.hs    command failures (exit status + lines) and warning emitters
 src/Coscad/Format.hs    number formatting (showD)
 src/Coscad/OpenScad.hs  finding + running OpenSCAD and BOSL2
 src/Coscad/Part.hs      single-part compile / stl commands
