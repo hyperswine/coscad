@@ -44,9 +44,64 @@ Shapes: `Sphere r`, `Cube s`, `Box x y z`, `Cylinder r h`, `Cone r h`,
 `Circle r`, `Triangle r`, `Pentagon r`, `Bezier x y x y ...` (3k+1 points).
 All centered (BOSL2 family). Note `Box` is centered, unlike legacy `▬`.
 
+## Names and keywords
+
+Names are resolved **by position**. Only the primitive shape words are
+reserved; every other keyword is a keyword only in the place it is
+recognised, and is an ordinary name everywhere else.
+
+**Reserved** (cannot be a definition name or an `.assemble` part name):
+
+| Mode | Reserved words |
+|---|---|
+| every mode | `cube box sphere cyl tube torus wedge xcyl ycyl zcyl loft` |
+| `!simple` and legacy (no pragma) | also `Sphere Cube Box Cylinder Cone Tube Torus Wedge Prismoid Circle Triangle Pentagon Bezier Translate Rotate Scale Mirror Extrude Loft Anchor Hull Union Intersect Minkowski Offset` |
+
+These are reserved because they start a shape wherever a shape may
+appear. The parser tries shape words before names, so a binding called
+`cyl` could never be referred to. `!glyph` files may use the capitalised
+words as names (`Box = 2` is a number there). Glyphs (`●`, `▬`, …) are
+symbols and never collide with names.
+
+**Contextual** (usable as names; keywords only in these positions):
+
+| Words | Recognised only |
+|---|---|
+| anchor words `top/up bot/dn/down rt/right lft/left fwd/front bak/back ctr/center`, combined with `+` | where a direction is expected: after `at`, `on`, `cutat`, `anchor` and `⚓`/`Anchor`; in `datum`/`place` points and `frame` normals; after `⌖` and `⋈`; `.assemble` `▽face`; and a `fastener` line's face word |
+| stage words `x y z rotx roty rotz extrude move scale mirror anchor datum frame mate place grid loft at on cutat add cut isect hull mink` | directly after `\|>` |
+| `.assemble` statement words `plate clearance fastener plan tolerance fixed mate` | at the start of an `.assemble` statement. Followed by `=` or `←`, the word is a definition or a part instead (`plate = box 5 15 20`) |
+
+Named points and frames always carry a sigil (`@name`, `@inst.name`), so
+they never compete with anchor words.
+
+So these are all valid and mean what the renamed version would:
+
+```
+top = box 2 2 2
+main = base ⌖ top top               // anchor top, then the shape top
+x = 4
+main = box 1 1 1 |> x x             // stage x, then the number x
+top = 3
+main = base |> at top top 0 0 c     // anchor top, offset x = 3 (legal, but hard to read)
+center ← center3.coscad ×1          // an instance named like the ctr alias
+```
+
+Legal is not the same as clear: prefer names that do not double as
+keywords where they would sit next to one.
+
+**Adding words to the language.** A new anchor, stage or statement word
+does not break anything, because those positions never hold a user's
+name. A new primitive *shape* word (say a lowercase `cone` or `slot`)
+must be reserved, so it is **a breaking change**: any file that binds
+that name stops compiling. Add it to `reservedNames` in
+`src/Coscad/Parser.hs` and note it as breaking in the CHANGELOG, or
+choose a form that cannot collide (a glyph, or a capitalised `!simple`
+word). The regression tests in `test/Tier/Keywords.hs` pin this rule.
+
 ## Known limits / notes
-- Keywords win over identifiers: you can't name a variable exactly `Translate`
-  (but `Translate2`, `myTranslate` are fine — same rule as `xcyl` today).
+- Primitive shape words are reserved: you can't name a variable exactly `cyl`
+  or (outside `!glyph`) `Translate`, but `cyl2` and `myTranslate` are fine.
+  Every other keyword is contextual; see "Names and keywords" above.
 - Errors are reported at `file:line:col` with the offending line quoted;
   a name that is not defined anywhere is an "undefined variable", names
   that depend on each other are a "circular dependency" (only the cycle
