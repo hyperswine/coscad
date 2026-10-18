@@ -169,7 +169,8 @@ A line starting with `|>` continues the previous definition.
 
 ```
 src/Coscad/Shape.hs     AST + bezier evaluation (pure data)
-src/Coscad/Geometry.hs  vectors, bboxes, anchors, attachment resolve
+src/Coscad/Linalg.hs    vectors, 3x3 matrices, rotations, bed orientation
+src/Coscad/Geometry.hs  bboxes, anchors, attachment resolve (re-exports Linalg)
 src/Coscad/Codegen.hs   OpenSCAD emission
 src/Coscad/Dsl.hs       Haskell-embedded glyph DSL
 src/Coscad/Parser.hs    .coscad parser (glyphs, words, pipelines)

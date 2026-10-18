@@ -529,17 +529,11 @@ loadRef _ _ _ = return (Left (InputError "internal error: loadRef on non-part st
 -- rotating about its own bbox center. Nothing = already print-ready.
 orientForBed :: Maybe ((Double, Double, Double), String) -> Shape -> Shape
 orientForBed Nothing s = s
-orientForBed (Just (v, _)) s =
-  let d@(_, _, dz) = vnormed v
-   in if vlen (vsub d (0, 0, -1)) < 1e-9
-        then s
-        else
-          let (ang, ax) =
-                if vlen (vsub d (0, 0, 1)) < 1e-9
-                  then (180, (1, 0, 0))
-                  else (acos (max (-1) (min 1 (-dz))) * 180 / pi, cross d (0, 0, -1))
-              c = bcenter (bbox s)
-           in Translate c (RotAxis ang ax (Translate (vneg c) s))
+orientForBed (Just (v, _)) s = case downRot v of
+  Nothing -> s
+  Just (ang, ax) ->
+    let c = bcenter (bbox s)
+     in Translate c (RotAxis ang ax (Translate (vneg c) s))
 
 type VKey = (FilePath, String)
 
@@ -723,12 +717,22 @@ legacyDesignManifest txt = case decode txt of
   Right v -> isJust (lookupKey "plate" v) && isNothing (lookupKey "beds" v) && isNothing (lookupKey "schema" v)
   Left _ -> False
 
+-- | One design-stage print variant: a part in its declared orientation,
+-- moved so its bounding box starts at the origin.
+data DesignVariant = DesignVariant
+  { dvKey :: VKey
+  , dvPart :: FlatPart
+  , dvShape :: Shape -- ^ oriented and normalised to the origin
+  , dvDims :: (Double, Double, Double) -- ^ bounding-box size (w, d, h)
+  , dvName :: String -- ^ file-safe id from 'variantNames'
+  }
+
 manifestJson ::
   FilePath ->
   String ->
   (Double, Double, Double) ->
   Double ->
-  [(VKey, FlatPart, Shape, (Double, Double, Double), String)] ->
+  [DesignVariant] ->
   [[Placement]] ->
   [FlatPart] ->
   String
@@ -744,7 +748,7 @@ manifestJson src base (pw, pd, m) maxZ variants plates asmOnly =
       ]
   where
     placed = concat plates
-    vj (k@(srcf, dk), fp, _, (w, d, h), vname) =
+    vj (DesignVariant k@(srcf, dk) fp _ (w, d, h) vname) =
       jobj
         [ ("id", JString vname)
         , ("part", JString (fpName fp))
@@ -765,7 +769,7 @@ manifestJson src base (pw, pd, m) maxZ variants plates asmOnly =
             ++ [("brim_mm", jnum3 b) | b > 0]
             ++ [("rot_z", JNumber (fromIntegral r)) | r /= 0]
         )
-    vnameOfK k = head [vn | (k', _, _, _, vn) <- variants, k' == k]
+    vnameOfK k = head [dvName v | v <- variants, dvKey v == k]
     aj fp = jobj [("part", JString (fpName fp)), ("source", JString (fpSource fp))]
 processAssemble :: FilePath -> IO ()
 processAssemble inputFile = do
@@ -792,25 +796,25 @@ processAssemble inputFile = do
                 norm = Translate (vneg lo) oriented
                 dims = vsub hi lo
                 vname = maybe (sanitize (fpName fp)) id (lookup k names)
-             in (k, fp, norm, dims, vname)
+             in DesignVariant {dvKey = k, dvPart = fp, dvShape = norm, dvDims = dims, dvName = vname}
           variants = map mkVariant vkeys
           maxZ = arPlateMaxZ ar
       -- The design stage measures the Shape's bounding box, an
       -- approximation of the mesh `coscad next` checks (and refuses).
-      mapM_ (\(_, fp, _, (_, _, h), vname) ->
+      mapM_ (\(DesignVariant _ fp _ (_, _, h) vname) ->
         when (h > maxZ + 1e-9) $
           hPutStrLn stderr ("Warning: " ++ vname ++ ": about " ++ showD (roundTo3 h) ++ " mm tall " ++ orientNote fp
             ++ ", over the plate's max height of " ++ showD maxZ ++ " mm; `coscad next` will refuse it unless it is turned"
             ++ " (declare another ▽face) or the plate's 4th argument is raised")) variants
       mapM_
-        ( \(_, _, norm, _, vname) -> do
-            let f = base ++ "_part_" ++ vname ++ ".scad"
-            writeScad norm f
+        ( \v -> do
+            let f = base ++ "_part_" ++ dvName v ++ ".scad"
+            writeScad (dvShape v) f
             putStrLn ("Wrote " ++ f)
         )
         variants
-      let footOf k = head [(w, d) | (k', _, _, (w, d, _), _) <- variants, k' == k]
-          normOf k = head [n | (k', _, n, _, _) <- variants, k' == k]
+      let footOf k = head [(w, d) | v <- variants, dvKey v == k, let (w, d, _) = dvDims v]
+          normOf k = head [dvShape v | v <- variants, dvKey v == k]
           instances = [(instId fp i, vkey fp, maybe 0 id (brimHint fp)) | fp <- printable, i <- [1 .. fpCount fp]]
       -- only explicit brim=N hints here: plate brim=N follows the mesh
       -- printability that `coscad next` measures

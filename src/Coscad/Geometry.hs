@@ -1,8 +1,9 @@
 -- | Vector math, bounding boxes, anchors, and the attachment
 -- desugaring pass ('resolve'). Everything the compiler computes
 -- upstream so the emitted OpenSCAD can stay dumb.
-module Coscad.Geometry (module Coscad.Geometry) where
+module Coscad.Geometry (module Coscad.Geometry, module Coscad.Linalg) where
 
+import Coscad.Linalg
 import Coscad.Shape
 import qualified Data.Map.Strict as Map
 
@@ -12,8 +13,6 @@ import qualified Data.Map.Strict as Map
 -- Everything is computed here in the compiler and desugared to
 -- plain translate/rotate, so ANY shape expression (including
 -- unions and differences) has anchors and stays composable.
-
-type V3 = (D, D, D)
 
 type BBox = (V3, V3) -- (min corner, max corner)
 
@@ -56,49 +55,6 @@ datumPoints = Map.fromListWith (++) . map (\(n, p) -> (n, [p])) . go . resolve
       Mirror n x -> moved (mApply (mirrorMat n)) (go x)
       Loft ps -> concat [moved (\(a, b, _) -> (a, b, z)) (go p) | (z, p) <- ps]
       _ -> concatMap go (shapeChildren s)
-
-vadd, vsub, vmul :: V3 -> V3 -> V3
-vadd (a, b, c) (x, y, z) = (a + x, b + y, c + z)
-vsub (a, b, c) (x, y, z) = (a - x, b - y, c - z)
-vmul (a, b, c) (x, y, z) = (a * x, b * y, c * z)
-
-vneg :: V3 -> V3
-vneg (a, b, c) = (-a, -b, -c)
-
-vlen :: V3 -> D
-vlen (a, b, c) = sqrt (a * a + b * b + c * c)
-
-vnormed :: V3 -> V3
-vnormed (a, b, c) =
-  let m = maximum [abs a, abs b, abs c]
-      (x, y, z) = (a / m, b / m, c / m)
-      l = sqrt (x * x + y * y + z * z)
-   in if m == 0 then (0, 0, 1) else (x / l, y / l, z / l)
-
-vclamp :: V3 -> V3
-vclamp (a, b, c) = (cl a, cl b, cl c)
-  where
-    cl = max (-1) . min 1
-
-cross :: V3 -> V3 -> V3
-cross (a1, a2, a3) (b1, b2, b3) = (a2 * b3 - a3 * b2, a3 * b1 - a1 * b3, a1 * b2 - a2 * b1)
-
-type M3 = Matrix3 -- rows
-
-matIdentity :: M3
-matIdentity = ((1, 0, 0), (0, 1, 0), (0, 0, 1))
-
-matTranspose :: M3 -> M3
-matTranspose ((a,b,c),(d,e,f),(g,h,i)) = ((a,d,g),(b,e,h),(c,f,i))
-
-matMul :: M3 -> M3 -> M3
-matMul a b = matTranspose (let (x,y,z) = matTranspose b in (mApply a x, mApply a y, mApply a z))
-
-dot3 :: V3 -> V3 -> D
-dot3 (a,b,c) (x,y,z) = a*x + b*y + c*z
-
-scale3 :: D -> V3 -> V3
-scale3 s = vmul (s,s,s)
 
 -- | A frame's +Z points out of the mating face. +Y is its in-plane up
 -- direction. Columns are local axes in the containing shape's coordinates.
@@ -170,33 +126,6 @@ matingPose (MatingFrame pp pb) (MatingFrame cp cb) roll gap = (r, vsub target (m
     r = pb `matMul` rodMat roll (0,0,1) `matMul` flipFace `matMul` matTranspose cb
     target = vadd pp (scale3 gap (mApply pb (0,0,1)))
 
-mApply :: M3 -> V3 -> V3
-mApply (r1, r2, r3) v = (dot r1 v, dot r2 v, dot r3 v)
-  where
-    dot (a, b, c) (x, y, z) = a * x + b * y + c * z
-
--- | Rodrigues rotation matrix: angle in degrees about an axis
-rodMat :: D -> V3 -> M3
-rodMat aDeg axis =
-  let a = aDeg * pi / 180
-      (x, y, z) = vnormed axis
-      c = cos a
-      s = sin a
-      t = 1 - c
-   in ( (t * x * x + c, t * x * y - s * z, t * x * z + s * y),
-        (t * x * y + s * z, t * y * y + c, t * y * z - s * x),
-        (t * x * z - s * y, t * y * z + s * x, t * z * z + c)
-      )
-
--- | Reflection matrix across the plane with normal n
-mirrorMat :: V3 -> M3
-mirrorMat n =
-  let (x, y, z) = vnormed n
-   in ( (1 - 2 * x * x, -2 * x * y, -2 * x * z),
-        (-2 * x * y, 1 - 2 * y * y, -2 * y * z),
-        (-2 * x * z, -2 * y * z, 1 - 2 * z * z)
-      )
-
 bcorners :: BBox -> [V3]
 bcorners ((x0, y0, z0), (x1, y1, z1)) =
   [(x, y, z) | x <- [x0, x1], y <- [y0, y1], z <- [z0, z1]]
@@ -226,17 +155,6 @@ bhalf (lo, hi) = vmul (0.5, 0.5, 0.5) (vsub hi lo)
 -- | Point on the bounding box for an anchor vector (components in [-1,1])
 anchorPt :: BBox -> V3 -> V3
 anchorPt bb v = vadd (bcenter bb) (vmul (bhalf bb) (vclamp v))
-
--- | Rotation (degrees, axis) taking +Z to the given direction
-rotFromUp :: V3 -> (D, V3)
-rotFromUp v =
-  let d@(_, _, dz) = vnormed v
-   in if vlen (vsub d (0, 0, 1)) < 1e-9
-        then (0, (1, 0, 0))
-        else
-          if vlen (vsub d (0, 0, -1)) < 1e-9
-            then (180, (1, 0, 0))
-            else (acos (max (-1) (min 1 dz)) * 180 / pi, cross (0, 0, 1) d)
 
 xformBBox :: M3 -> BBox -> BBox
 xformBBox m = fromCorners . map (mApply m) . bcorners
