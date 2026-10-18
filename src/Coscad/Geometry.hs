@@ -1,7 +1,30 @@
 -- | Vector math, bounding boxes, anchors, and the attachment
 -- desugaring pass ('resolve'). Everything the compiler computes
 -- upstream so the emitted OpenSCAD can stay dumb.
-module Coscad.Geometry (module Coscad.Geometry, module Coscad.Linalg) where
+module Coscad.Geometry
+  ( BBox
+  , MatingFrame (..)
+  , PointRef (..)
+  , anchorPt
+  , bbox
+  , bcenter
+  , bcorners
+  , bhalf
+  , bmerge
+  , boverlap
+  , datumPoints
+  , frameOf
+  , framePoints
+  , fromCorners
+  , makeFrame
+  , matingPose
+  , pointOf
+  , resolve
+  , rigidFrameBasis
+  , xformBBox
+  , module Coscad.Linalg
+  )
+where
 
 import Coscad.Linalg
 import Coscad.Shape

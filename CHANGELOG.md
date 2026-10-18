@@ -8,6 +8,11 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Internal: export lists and a split planner.** Every module now has an
+  explicit export list. `Coscad.Plan` keeps its API and sits over
+  `Coscad.Plan.Model`, `Coscad.Plan.Search` and `Coscad.Plan.Render`. The
+  embedded-DSL surface (`Lib`) is unchanged. No behaviour change.
+
 - **Internal: zero GHC warnings, `-Werror` in CI.** The library, CLI and
   test suite build without warnings under the package's `-Wall` set. The
   fixes: signatures for the embedded DSL and Codegen helpers, `_ <-` for

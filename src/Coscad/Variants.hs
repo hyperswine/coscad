@@ -21,6 +21,7 @@ module Coscad.Variants
     variantMap,
     lookupVariant,
     placedVariants,
+    orInternal,
 
     -- * Packing
     Placement (..),
@@ -38,6 +39,8 @@ import Coscad.Validate (finite, readFinite)
 import Data.Char (isAlphaNum)
 import Data.List (foldl', intercalate, sortBy)
 import qualified Data.Map as Map
+import System.Exit (ExitCode (..), exitWith)
+import System.IO (hPutStrLn, stderr)
 
 -- | One part of a flattened assembly: where it sits in the assembly
 -- (its trail of subassembly aliases), its print count and orientation,
@@ -252,3 +255,8 @@ packBedsBrim (pw, pd, m) items0 = do
     firstJust xs = case [x | Just x <- xs] of
       x : _ -> Just x
       [] -> Nothing
+
+-- | Unwrap a result that can only fail through an internal inconsistency
+-- (a variant missing for a key): report it and exit 1 instead of crashing.
+orInternal :: Either String a -> IO a
+orInternal = either (\e -> hPutStrLn stderr ("Error: " ++ e) >> exitWith (ExitFailure 1)) return

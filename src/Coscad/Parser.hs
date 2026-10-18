@@ -1,7 +1,33 @@
 -- | Parser for .coscad files: glyph shapes, word shapes, boolean
 -- operators, attachment ops, and |> pipelines with multi-line
 -- continuation. Also the variable-resolution pass.
-module Coscad.Parser (module Coscad.Parser) where
+module Coscad.Parser
+  ( Ctx (..)
+  , Def (..)
+  , Parser
+  , SynMode (..)
+  , VarTable
+  , anchorVec
+  , checkedPragma
+  , double
+  , expressionString
+  , frameRef
+  , identifier
+  , lexeme
+  , num
+  , numericPhase
+  , parseExpression
+  , parseProgram
+  , parseProgramNamed
+  , prettyBundle
+  , reservedNames
+  , resolveVariables
+  , sc
+  , symbol
+  , trim
+  , variableDefinition
+  )
+where
 
 import Control.Monad (foldM, void, when)
 import Coscad.Codegen (loftErrors)
