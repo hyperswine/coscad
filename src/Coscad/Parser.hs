@@ -36,9 +36,9 @@ import Coscad.Geometry (PointRef (..), MatingFrame (..), datumPoints, pointOf, m
 import Coscad.Linalg (vadd, vneg, vsub)
 import Coscad.Shape
 import Coscad.Validate (maxQuantity, maxSides, suggestion, validateShape)
-import Data.Char (isSpace)
+import Data.Char (isAlphaNum, isLetter, isSpace)
 import Data.Either (lefts, rights)
-import Data.List (dropWhileEnd, foldl', intercalate, isPrefixOf)
+import Data.List (dropWhileEnd, foldl', intercalate, isPrefixOf, tails)
 import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
 import Data.Maybe (listToMaybe)
@@ -962,19 +962,48 @@ bezierBody ctx = do
 -- resolve first, in dependency order. A non-finite value is an error at
 -- its definition.
 numericPhase :: SynMode -> [Def] -> VarTable -> Either String (NumTable, [Def])
-numericPhase mode defs table0 = go Map.empty defs
+numericPhase mode defs table0 = go Map.empty Nothing (map withTokens defs)
   where
-    go nums remaining =
-      let step d = case runAt (defPos d) (defPrefix d) (defExpr d) (sc *> numExpr (Ctx mode table0 nums) <* eof) of
-            Right v -> Right (defName d, v)
-            Left _ -> Left d
+    -- `fresh` is what the previous round resolved (Nothing: the first
+    -- round). A definition is parsed again only when its text mentions a
+    -- freshly resolved name; otherwise it would fail exactly as before.
+    go nums fresh remaining =
+      let step (d, toks)
+            | not (retry fresh toks) = Left (d, toks)
+            | otherwise = case runAt (defPos d) (defPrefix d) (defExpr d) (sc *> numExpr (Ctx mode table0 nums) <* eof) of
+                Right v -> Right (defName d, v)
+                Left _ -> Left (d, toks)
           results = map step remaining
           found = rights results
        in if null found
-            then Right (nums, remaining)
-            else case [d | d <- remaining, Just v <- [lookup (defName d) found], isNaN v || isInfinite v] of
+            then Right (nums, map fst remaining)
+            else case [d | (d, _) <- remaining, Just v <- [lookup (defName d) found], isNaN v || isInfinite v] of
               (d : _) -> Left (sourcePosPretty (defPos d) ++ ": in '" ++ defName d ++ "': numeric binding must be finite (check division by zero or overflow)")
-              [] -> go (foldl' (\acc (n, v) -> Map.insert n v acc) nums found) (lefts results)
+              [] -> go (foldl' (\acc (n, v) -> Map.insert n v acc) nums found) (Just (Set.fromList (map fst found))) (lefts results)
+
+-- | A definition with every name its expression could look up.
+withTokens :: Def -> (Def, Set.Set VarName)
+withTokens d = (d, identTokens (defExpr d))
+
+-- | Every identifier the parser could read anywhere in @src@: each
+-- letter-initial suffix of each run of identifier characters (an
+-- over-approximation, which is what scheduling needs).
+identTokens :: String -> Set.Set VarName
+identTokens src = Set.fromList [t | run <- runs src, t@(c : _) <- tails run, isLetter c]
+  where
+    identChar c = isAlphaNum c || c == '_' || c `elem` ("₀₁₂₃₄₅₆₇₈₉" :: String)
+    runs str = case dropWhile (not . identChar) str of
+      [] -> []
+      rest -> let (r, more) = span identChar rest in r : runs more
+
+-- | Whether a pending definition must be parsed again this round. A
+-- parse reads the tables only for identifiers in its own text, and the
+-- tables only grow, so a definition none of whose names changed would
+-- fail again exactly as it did: skipping it gives the same rounds, the
+-- same results and the same errors as retrying everything.
+retry :: Maybe (Set.Set VarName) -> Set.Set VarName -> Bool
+retry Nothing _ = True
+retry (Just fresh) toks = not (Set.disjoint fresh toks)
 
 -- | Resolve definitions by dependency: each round parses every
 -- still-unresolved definition against the table so far; definitions
@@ -989,7 +1018,7 @@ resolveVariables mode defs table0 = do
   checkDuplicates
   checkReserved
   (nums, shapeDefs) <- numericPhase mode defs table0
-  go shapeDefs table0 nums
+  go [(d, toks, Nothing) | (d, toks) <- map withTokens shapeDefs] table0 nums Nothing
   where
     known = Set.fromList (map defName defs ++ Map.keys table0)
 
@@ -1007,14 +1036,22 @@ resolveVariables mode defs table0 = do
           (d : _) -> Left (sourcePosPretty (defPos d) ++ ": '" ++ defName d ++ "' is already the name of a part; pick another name")
           [] -> Right ()
 
-    go [] table _ = Right table
-    go remaining table nums =
-      let results = map (tryResolveVar mode table nums) remaining
+    -- Each round parses the pending definitions against the table so
+    -- far; one whose names did not change keeps its last failure (see
+    -- 'retry'), so a chain of n definitions costs O(n) parses, not O(n²).
+    go [] table _ _ = Right table
+    go remaining table nums fresh =
+      let attempt (d, toks, lastFail) = case lastFail of
+            Just f | not (retry fresh toks) -> Left (d, toks, f)
+            _ -> case tryResolveVar mode table nums d of
+              Right r -> Right r
+              Left (_, f) -> Left (d, toks, f)
+          results = map attempt remaining
           resolved = rights results
           failed = lefts results
        in if null resolved
-            then Left (report failed)
-            else go (map fst failed) (foldl' (\acc (n, sh) -> Map.insert n sh acc) table resolved) nums
+            then Left (report [(d, f) | (d, _, f) <- failed])
+            else go [(d, toks, Just f) | (d, toks, f) <- failed] (foldl' (\acc (n, sh) -> Map.insert n sh acc) table resolved) nums (Just (Set.fromList (map fst resolved)))
 
     report failed
       | not (null syntax) = intercalate "\n" syntax
