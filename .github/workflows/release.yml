@@ -3,6 +3,16 @@ name: release
 on:
   push:
     tags: ["v*"]
+  # Rebuild an existing tag with this workflow (e.g. after a runner image
+  # change) without moving the tag, which would change the Formula sha256.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to build, e.g. v1.3.0.0
+        required: true
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
 
 jobs:
   build:
@@ -14,10 +24,14 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact: coscad-linux-x86_64
-          - os: macos-latest
+          # macos-latest (macos-26) pairs a CLT SDK with an older Xcode
+          # linker: "tapi error ... unknown architecture arm64e.x1-macos".
+          - os: macos-15
             artifact: coscad-macos-arm64
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ env.TAG }}
       - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
         id: hs
         with:
@@ -43,9 +57,9 @@ jobs:
       - name: Tag matches package version
         shell: bash
         run: |
-          want="${GITHUB_REF_NAME#v}"
+          want="${TAG#v}"
           have=$(cabal run -v0 coscad -- --version | awk '{print $2}')
-          test "$want" = "$have" || { echo "tag $GITHUB_REF_NAME but coscad --version says $have"; exit 1; }
+          test "$want" = "$have" || { echo "tag $TAG but coscad --version says $have"; exit 1; }
       - name: Install
         run: cabal install exe:coscad --install-method=copy --overwrite-policy=always --installdir=dist-bin
       - name: Package
@@ -71,6 +85,8 @@ jobs:
         working-directory: vscode
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ env.TAG }}
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22.13.0"
@@ -93,5 +109,6 @@ jobs:
           path: artifacts
       - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
+          tag_name: ${{ env.TAG }}
           files: artifacts/**/*
           generate_release_notes: true
