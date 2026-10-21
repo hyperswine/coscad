@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
-## Unreleased
+## 1.3.0.0 - 2026-10-21
 
 - **`coscad validate --json` and `--stdin`.** `--json` prints one JSON
   document (`coscad.validate/1`: `valid`, `exit`, and `diagnostics` with
