@@ -64,5 +64,5 @@ pipeline.lock.writer
 examples-next/bracket_seam.scad
 # macOS metadata (AppleDouble) files: `._coscad.cabal` breaks cabal
 ._*
-# Kept on purpose as a reference output (docs/EXAMPLES.md).
+# Kept on purpose as a reference output (docs/2025-08-11-EXAMPLES.md).
 !examples-next/greaser-example/greaser_manifest.json

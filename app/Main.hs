@@ -163,5 +163,5 @@ usage h =
     , "  anchors      top bot lft rt fwd bak ctr, combinable: top+rt  lft+fwd   (a ⌖ top b, a ⋈ rt b)"
     , "  modes        first line !glyph or !simple (ASCII words: Box, Translate.x, Hull, * union, - difference)"
     , ""
-    , "Manual: man coscad   Docs: docs/LANGEXTENSION.md, docs/TOPOLOGICAL.md, docs/MANUFACTURING.md"
+    , "Manual: man coscad   Docs: docs/2025-07-14-LANGEXTENSION.md, docs/2026-07-24-TOPOLOGICAL.md, docs/2026-07-24-MANUFACTURING.md"
     ]

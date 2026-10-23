@@ -86,7 +86,7 @@ Datums are named construction points, not discovered surfaces or oriented
 frames. They remain after Boolean cuts. Copies retain their names, so a
 reference duplicated by a union or grid is ambiguous and rejected; use a
 single feature as the datum or define a new named point on the combined
-result. See the [language reference](LANGEXTENSION.md#named-datums-placement-and-grids)
+result. See the [language reference](2025-07-14-LANGEXTENSION.md#named-datums-placement-and-grids)
 for transform, extrusion and loft behaviour.
 
 `|> grid n m pitch_x pitch_y` repeats a feature with its first copy unchanged.
@@ -111,7 +111,7 @@ and connect the interfaces with `mate` statements. The solver creates the
 assembled view, handles edges in either direction, and diagnoses floating
 components and contradictory closed loops. The checker and planner reuse
 those same placements. Existing coordinate assemblies remain supported.
-See the [frame and constraint reference](LANGEXTENSION.md#oriented-mating-frames)
+See the [frame and constraint reference](2025-07-14-LANGEXTENSION.md#oriented-mating-frames)
 and `examples/assemble/constraints/frame-stand.assemble`. This first increment
 supports rigid mates; it does not infer hardware, solve moving joints or
 establish interference-free fit without `coscad check`.
@@ -121,7 +121,7 @@ now uses one fixed rail and 54 mates for its 29 physical parts. Each bracket
 mates through both bores, so the second interface checks its corner rotation
 and contact face. Redundant rail and panel interfaces also check closed
 loops. All 16 bracket poses match an independent coordinate reference;
-the [verification report](reviews/2026-10-12-cube-constraints.md) records mesh,
+the [verification report](2026-10-12-CUBE-CONSTRAINTS.md) records mesh,
 hole, screw-position and instruction checks.
 
 The remaining canonical assemblies now use the same constraint style: the
@@ -129,7 +129,7 @@ ball, three-piece bows, corner pair, tesseract, enclosure and Orbit Tower.
 Packing and collision fixtures use fixed independent roots rather than
 invented connections. A reflected recursive frame retains its reflection
 inside a separate part definition, because a rigid mate cannot mirror a part.
-The [migration report](reviews/2026-10-12-assembly-migrations.md) describes the
+The [migration report](2026-10-12-ASSEMBLY-MIGRATIONS.md) describes the
 retained geometry references, instruction checks and numerical tolerances.
 
 `coscad validate file.assemble` checks part sources and solves the rigid graph

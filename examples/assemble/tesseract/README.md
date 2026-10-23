@@ -2,7 +2,7 @@
 
 The current version has 12 mm split corner hubs, 7 mm bars and integral
 captured joints, with no screws or nuts. See [design, fit and assembly
-instructions](../../../docs/TESSERACT.md).
+instructions](../../../docs/2026-10-13-TESSERACT.md).
 
 `tesseract.assemble` includes the removable build support and works with
 `coscad next`, `coscad plan` and `coscad site`. `finished.assemble` shows the

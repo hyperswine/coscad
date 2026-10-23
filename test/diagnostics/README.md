@@ -27,9 +27,9 @@ a process times out or emits a detected runtime exception. The expanded corpus
 passes all 462 probes with oriented mating frames and assembly constraints.
 The 19 new cases include 16 required rejections that also assert no output
 artifacts were generated. Earlier results are in the
-[follow-up fixes](../../docs/reviews/2026-10-12-diagnostic-fixes.md).
+[follow-up fixes](../../docs/2026-10-12-DIAGNOSTIC-FIXES.md).
 Run it alongside `stack test`; it is not yet wired into CI. The
-[original audit](../../docs/reviews/2026-10-11-diagnostic-audit.md) preserves the
+[original audit](../../docs/2026-10-11-DIAGNOSTIC-AUDIT.md) preserves the
 earlier failures and before/after responses.
 
 Reports include input, fixture files, arguments, expected outcome, exit code,

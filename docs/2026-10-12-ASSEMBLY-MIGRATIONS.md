@@ -1,6 +1,6 @@
 # Assembly frame migration verification
 
-Follow-up: [frame-based hardware and repaired corner](2026-10-12-framed-fasteners.md)
+Follow-up: [frame-based hardware and repaired corner](2026-10-12-FRAMED-FASTENERS.md)
 resolves the corner planner and toy bow hardware limitations recorded here.
 
 The remaining fourteen canonical assembly / packing examples now use `fixed`

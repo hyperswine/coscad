@@ -1,6 +1,6 @@
 # CoScad diagnostic fixes, 12 October 2026
 
-All **15 remaining asserted gaps** from the [original audit](2026-10-11-diagnostic-audit.md)
+All **15 remaining asserted gaps** from the [original audit](2026-10-11-DIAGNOSTIC-AUDIT.md)
 are fixed. Invalid fastener values, duplicate parts, invalid plate settings and
 clearances now fail before they can silently change a plan or stall packing.
 The follow-up also validates geometry boundaries, consumed part metadata,
@@ -70,7 +70,7 @@ snapshots, assembly loading, planning, and the OpenSCAD geometry/checker tier.
 This follow-up adds 72 regression checks beyond the first diagnostic increment.
 Normal examples were rendered; malformed/extreme corpus inputs were not rendered.
 
-The final [443-probe CLI run](2026-10-12-diagnostic-data/after.json) contains
+The final [443-probe CLI run](evidence/2026-10-12-diagnostic-data/after.json) contains
 193 curated cases and 250 deterministic single-character mutations:
 
 | Result | Count |
@@ -89,7 +89,7 @@ an edit can preserve valid syntax. The longest invocation took 0.7044 seconds;
 each had a three-second timeout and a single runtime capability. The raw JSON
 preserves every input, command, response, exit code, duration and output filename.
 
-Reproduce with the commands in the [corpus README](../../test/diagnostics/README.md),
+Reproduce with the commands in the [corpus README](../test/diagnostics/README.md),
 then run `stack test`. `git diff --check` also passes.
 
 ## Deliberate boundaries

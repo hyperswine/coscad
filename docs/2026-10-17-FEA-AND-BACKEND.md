@@ -28,7 +28,7 @@ pipeline friction this project has had:
 - macOS CI lost its test job because Homebrew's OpenSCAD cask is disabled
   by Gatekeeper; Linux needs an `xvfb-run` wrapper.
 - OpenSCAD launched by launchd on the mac mini blocked for half an hour per
-  render waiting for Documents access to BOSL2 (docs/LESSONS.md).
+  render waiting for Documents access to BOSL2 (docs/2026-10-01-LESSONS.md).
 - Warnings are scraped from text output; `check` retries intersections in
   a different operand order because CGAL asserts and silently emits a
   fallback mesh.

@@ -1,7 +1,7 @@
 -- | `coscad plan foo.assemble`: turn an assembly into a numbered build
 -- sequence a person can follow without backtracking.
 --
--- Model (docs/PLAN.md): nodes are part instances, per-rail T-nut
+-- Model (docs/2026-09-25-PLAN.md): nodes are part instances, per-rail T-nut
 -- batches, and fasteners; edges are derived requires-before relations
 -- (host and clamped part before a screw, nuts before the screw and
 -- before the part that covers the slot, slide-in nuts before anything

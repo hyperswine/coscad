@@ -106,7 +106,7 @@ compose inner translates or verify numerically) · `⬈ sx sy sz` scale ·
   `scale sx sy sz`, `mirror nx ny nz`, `extrude h`, `anchor v`
 - `add s`, `cut s`, `isect s`, `hull s`, `mink s`
 - `at v [dx dy dz] s` · `on v [dx dy dz] s` · `cutat v [dx dy dz] s`
-  (see docs/TOPOLOGICAL.md — `at`/`on` mate the child's opposite
+  (see docs/2026-07-24-TOPOLOGICAL.md — `at`/`on` mate the child's opposite
   anchor; `cutat` centers the cutter)
 
 Anchor vocabulary: `top bot lft rt fwd bak ctr` (+ aliases
@@ -301,4 +301,4 @@ for two copies of a post, one rolled 90 degrees.
 
 ## .assemble / coscad next
 
-See docs/MANUFACTURING.md.
+See docs/2026-07-24-MANUFACTURING.md.

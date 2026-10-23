@@ -1,7 +1,7 @@
 # First topological language features, 12 October 2026
 
 Implemented the first authoring features from the
-[migration study](2026-10-12-topological-migration.md). They work in legacy,
+[migration study](2026-10-12-TOPOLOGICAL-MIGRATION.md). They work in legacy,
 `!glyph` and `!simple` modes. The canonical models and compiler defaults
 remain unchanged.
 
@@ -29,9 +29,9 @@ transforms/CSG, so no new OpenSCAD runtime machinery is required. Checker
 isolation retains hidden datum geometry, and placement's construction parent
 does not become an extra assembly instance.
 
-See the [language reference](../LANGEXTENSION.md#named-datums-placement-and-grids),
-[authoring guide](../TOPOLOGICAL.md#named-feature-points-and-separate-construction-geometry)
-and [mounting-plate example](../../examples/topological/datum-plate.coscad).
+See the [language reference](2025-07-14-LANGEXTENSION.md#named-datums-placement-and-grids),
+[authoring guide](2026-07-24-TOPOLOGICAL.md#named-feature-points-and-separate-construction-geometry)
+and [mounting-plate example](../examples/topological/datum-plate.coscad).
 
 ## Validation
 
@@ -43,7 +43,7 @@ and [mounting-plate example](../../examples/topological/datum-plate.coscad).
   `COSCAD_RENDER=0`: **357 passed, 0 failed**.
 - CLI diagnostic probes: **443 inputs**, all expectations met, with no crashes
   or timeouts. Mutation seeds now include named datums, placement and grids.
-- [Recorded geometry and instruction checks](../../experiments/topological/native-results.json):
+- [Recorded geometry and instruction checks](../experiments/topological/native-results.json):
   **11 nominal comparisons**, **8 resize cases**, **28 material/cavity probes**.
   Each nominal solid is closed and has one connected component; its bounds
   agree with its original to 0.00001 mm.
@@ -51,13 +51,13 @@ and [mounting-plate example](../../examples/topological/datum-plate.coscad).
   canonical parts, the original five pilots, and the set using the new rotor:
   **20 parts, 19 fasteners, 19 steps, no design errors**.
 
-The [native rotor](../../experiments/topological/native-orbit-rotor.coscad)
+The [native rotor](../experiments/topological/native-orbit-rotor.coscad)
 captures its axle and satellite bores before adding asymmetric pads. Its
 nominal Boolean symmetric difference is empty. Increasing its span, thickness
 and counterweight together preserves both bores and restores material at the
 former satellite-hole location.
 
-The [native egg box](../../experiments/topological/native-egg-box.coscad)
+The [native egg box](../experiments/topological/native-egg-box.coscad)
 needs only `columns` and `rows` bindings to change its N×M layout. Its direct
 symmetric difference contains numerical slivers and is not accepted as an
 exact comparison. Instead, both solids are contained in the other's
@@ -72,7 +72,7 @@ new rotor have empty symmetric differences.
 ## Remaining work
 
 The next increment adds [oriented mating frames and rigid assembly
-constraints](2026-10-12-mating-frames.md), including explicit roll, per-instance
+constraints](2026-10-12-MATING-FRAMES.md), including explicit roll, per-instance
 frame selection and closed-loop consistency checks. Point datums still have
 no orientation and neither feature automatically tracks surfaces. Canonical
 example migration and an eventual default authoring style still need the fit,

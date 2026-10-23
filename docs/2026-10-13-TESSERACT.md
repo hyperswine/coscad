@@ -100,7 +100,7 @@ cap/base/bar approach paths and downward support removal. Path positions are
 sampled every 0.1 mm; this is not a continuous swept-volume proof or a
 flexible-material simulation.
 
-The [verification report](reviews/2026-10-13-tesseract-interlock.md) records
+The [verification report](2026-10-13-TESSERACT-INTERLOCK.md) records
 748 compiler checks, 4,629 sampled motion positions and the one-bed meshes.
 
 The original A1 coupon lost bed adhesion on subsequent layers; the center

@@ -1,6 +1,6 @@
 # CoScad diagnostic audit, 11 October 2026
 
-Follow-up: the [12 October fixes](2026-10-12-diagnostic-fixes.md) close all 15
+Follow-up: the [12 October fixes](2026-10-12-DIAGNOSTIC-FIXES.md) close all 15
 remaining asserted gaps and add geometry and grammar validation. The results
 below describe the original audit and its first increment.
 
@@ -19,11 +19,11 @@ geometry validation still need work.
 
 ## Evidence and reproduction
 
-- [Corpus and runner notes](../../test/diagnostics/README.md)
-- [Curated inputs](../../test/diagnostics/cases.json)
-- [Runner](../../scripts/probe-diagnostics.py)
-- [Before: every input and actual response](2026-10-11-diagnostic-data/before.json)
-- [After: every input and actual response](2026-10-11-diagnostic-data/after.json)
+- [Corpus and runner notes](../test/diagnostics/README.md)
+- [Curated inputs](../test/diagnostics/cases.json)
+- [Runner](../scripts/probe-diagnostics.py)
+- [Before: every input and actual response](evidence/2026-10-11-diagnostic-data/before.json)
+- [After: every input and actual response](evidence/2026-10-11-diagnostic-data/after.json)
 
 Baseline: executable from `3247fe4`, before this diagnostic increment. The
 existing bow model changes in the working tree are unrelated; every probe uses
@@ -155,4 +155,4 @@ then parameter-aware shape errors and typo hints. Stable diagnostic codes and
 a structured output mode would let the LSP test error kind/range independently
 of prose. Keep precedence, bounding-box attachment semantics and print-versus-
 placement counts as explicit design decisions, as discussed in the
-[earlier frontend review](2026-10-01-frontend-review.md).
+[earlier frontend review](2026-10-01-FRONTEND-REVIEW.md).
