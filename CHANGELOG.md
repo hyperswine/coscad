@@ -46,7 +46,7 @@ and this project adheres to the
     subassembly placements are unaffected.
   - An anchor that does not sit on its geometry warns when the part is
     compiled: `at` or `on` on a face a cut removed entirely, and any
-    anchor on a part turned by a non-right angle (see TOPOLOGICAL.md).
+    anchor on a part turned by a non-right angle (see docs/2026-07-24-TOPOLOGICAL.md).
   - `k = 2 ^ 3` (and `**`) now says `^` is not an arithmetic operator
     instead of "expecting a shape". A boolean operator after a pipeline
     (`a |> move 1 2 3 ⊕ b`) now asks for parentheses instead of
@@ -83,7 +83,7 @@ and this project adheres to the
     print host. In a plain checkout, use `--scope source --scope render`.
 
 - **Docs.**
-  - `docs/SYNTAX.md` said `coscad check` exits 1 on an overlap; it exits 2.
+  - `docs/2026-08-17-SYNTAX.md` said `coscad check` exits 1 on an overlap; it exits 2.
   - Dropped the stale "`.assemble` files always resolve in legacy mode".
   - The README and `--help` exit-status text now lists every exit-2 case
     the man page lists: `next --strict`, and a part that does not fit the
@@ -367,7 +367,7 @@ and this project adheres to the
   bounded rectangular feature grids (`|> grid n m pitch_x pitch_y`), and unary
   pipeline hull (`|> hull`). Datums follow transforms; unknown, duplicate and
   ambiguous references have explicit errors. Existing attachment and binary
-  hull semantics are preserved. See `docs/TOPOLOGICAL.md`.
+  hull semantics are preserved. See `docs/2026-07-24-TOPOLOGICAL.md`.
 
 - CI: temporarily remove the macOS test job because Homebrew's OpenSCAD
   cask is disabled by Gatekeeper. Refresh the bow3 limb geometry goldens

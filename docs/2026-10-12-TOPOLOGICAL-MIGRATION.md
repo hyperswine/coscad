@@ -16,7 +16,7 @@ updated goldens. The topology work below is a separate local experiment.
 
 ## Definition to use for migration
 
-Follow [the existing convention](../TOPOLOGICAL.md): place features relative
+Follow [the existing convention](2026-07-24-TOPOLOGICAL.md): place features relative
 to suitable anchors, with meaningful local dimensions. A hole 20 mm from an
 edge and a socket 5.6 mm deep still need numbers. Intrinsic Bezier control
 points define a curve; they are not necessarily misplaced features.
@@ -39,7 +39,7 @@ to which. Converting all assembly poses is a separate stage.
 
 ## Inventory
 
-The [recorded inventory](../../experiments/topological/results.json) covers
+The [recorded inventory](../experiments/topological/results.json) covers
 73 active `.coscad` files in `examples`, `examples-next`, and `models`;
 archived examples, Haskell examples, raw SCAD, and assembly poses are excluded.
 It counts placement syntax after removing comments, so these are candidate
@@ -62,7 +62,7 @@ translations; they are not production-style migration failures.
 
 ## Nine pilots and evidence
 
-[Sources, runner and reproduction](../../experiments/topological/README.md)
+[Sources, runner and reproduction](../experiments/topological/README.md)
 are separate from the canonical examples.
 
 | Pilot | Relationship made explicit | Nominal symmetric difference |
@@ -148,6 +148,6 @@ poses and sketch coordinates. The current lexical inventory is a starting
 point for that lint, not a compiler-enforced topology mode. No compiler
 default or canonical source has been changed by this investigation.
 
-Follow-up: [the first language features are now implemented](2026-10-12-topological-features.md):
+Follow-up: [the first language features are now implemented](2026-10-12-TOPOLOGICAL-FEATURES.md):
 named construction points, child-only placement, native grids and unary hull.
 That report records their validation and the remaining assembly-frame work.

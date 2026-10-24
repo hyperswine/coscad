@@ -43,9 +43,9 @@ Planner tags and checker-hidden reference solids therefore retain the same
 metadata and poses. Manufacturing continues to orient and pack the original
 part geometry, after validating assembly constraints.
 
-See the [complete syntax and limitations](../LANGEXTENSION.md#oriented-mating-frames),
-[corner example](../../examples/topological/mating-corner.coscad), and
-[three-instance stand](../../examples/assemble/constraints/frame-stand.assemble).
+See the [complete syntax and limitations](2025-07-14-LANGEXTENSION.md#oriented-mating-frames),
+[corner example](../examples/topological/mating-corner.coscad), and
+[three-instance stand](../examples/assemble/constraints/frame-stand.assemble).
 
 ## Validation
 
@@ -80,5 +80,5 @@ sliders, distances, flexible bodies, collision avoidance or automatic surface
 recognition. Geometric mates do not infer hardware or assembly precedence;
 existing fastener declarations still describe those joints. The full cube
 was outside this initial increment. The subsequent
-[cube conversion and verification](2026-10-12-cube-constraints.md) now covers
+[cube conversion and verification](2026-10-12-CUBE-CONSTRAINTS.md) now covers
 that canonical assembly. Changing the default style remains separate work.

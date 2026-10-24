@@ -75,7 +75,7 @@ detect drift in a plain checkout, or
 to run through the checked entry point. A bare `--check` (no `--scope`) is the
 complete check: it also SSHes to the print host (`root@localhost-0`) and hashes
 the local printer profiles, so it only passes on the maintainer's machine. See
-[pins, deliberate upgrades and graceful recovery](docs/PIPELINE-LOCK.md).
+[pins, deliberate upgrades and graceful recovery](docs/2026-10-15-PIPELINE-LOCK.md).
 
 ```sh
 coscad part.coscad           # -> part.scad
@@ -149,7 +149,7 @@ A line starting with `|>` continues the previous definition.
 - **Booleans**: `⊕ ⊖ ∩ ⇓ ⊞ ↯` and pipeline stages `add cut isect hull mink`.
 - **Topological modelling**: bbox anchors (`top bot lft rt fwd bak ctr`,
   combos like `lft+fwd`), relational ops `⌖`/`at`, `⋈`/`on`, `cutat`
-  with offsets, and `⚓`/`anchor` re-origining. See docs/TOPOLOGICAL.md.
+  with offsets, and `⚓`/`anchor` re-origining. See docs/2026-07-24-TOPOLOGICAL.md.
 - **Assemblies**: `.assemble` files declare physically separate parts
   (recursive references, counts, print orientation `▽`, free hints).
   Union = one solid; separate reference = separate object.
@@ -159,7 +159,7 @@ A line starting with `|>` continues the previous definition.
   material — from `fastener` lines and a few part hints. Emits the
   step list, preload sheet, BOM, and per-step renders; `coscad site`
   turns the plans of several assemblies into a static companion site
-  you can read on a phone. See docs/PLAN.md.
+  you can read on a phone. See docs/2026-09-25-PLAN.md.
 - **Manufacturing**: `coscad next` compiles each unique
   (part, orientation) variant once, searches FFF print orientation
   where undeclared within the bed height (`plate W D margin maxZ`,
@@ -168,7 +168,7 @@ A line starting with `|>` continues the previous definition.
   per-bed STLs plus a variants+placements manifest (`foo_manifest.json`,
   schema `coscad.next/1`) for slice-once /
   stamp-many slicing; `coscad check` verifies fits on the real meshes.
-  See docs/MANUFACTURING.md.
+  See docs/2026-07-24-MANUFACTURING.md.
 
 ## Module map
 
@@ -243,13 +243,15 @@ Nothing in the build or the test suite reads them. Renders and diagrams
 
 ## Docs
 
-- docs/LANGEXTENSION.md — full language reference
-- docs/TOPOLOGICAL.md — anchors, pipelines, and the stable-datum rule
-- docs/MANUFACTURING.md — .assemble and coscad next
-- docs/PLAN.md — fasteners, material hints, and coscad plan
-- docs/EXAMPLES.md — index of the examples tree
-- docs/SKILL.md — agent skill file (gotchas + verification workflow)
-- docs/FEA-AND-BACKEND.md — intent: `coscad stress` and a native geometry backend (Manifold, then lighter)
+[docs/README.md](docs/README.md) indexes every page by date. The ones to start with:
+
+- [Language reference](docs/2025-07-14-LANGEXTENSION.md)
+- [Topological modelling](docs/2026-07-24-TOPOLOGICAL.md): anchors, pipelines, and the stable-datum rule
+- [Manufacturing](docs/2026-07-24-MANUFACTURING.md): .assemble and coscad next
+- [Build plans](docs/2026-09-25-PLAN.md): fasteners, material hints, and coscad plan
+- [Examples index](docs/2025-08-11-EXAMPLES.md)
+- [Agent skill file](docs/SKILL.md): gotchas and the verification workflow
+- [Stress analysis and a native backend](docs/2026-10-17-FEA-AND-BACKEND.md): intent for `coscad stress` and a native geometry backend
 
 ## Tests
 
@@ -280,7 +282,7 @@ A second, small suite, `haskell-examples`, only compiles
 Tests generate everything they read. Build output (scenes, manifests,
 plans, step images) is gitignored; only the print records under `models/`
 and the tesseract `verification.json` are committed. See
-[Examples](docs/EXAMPLES.md) for the list.
+[Examples](docs/2025-08-11-EXAMPLES.md) for the list.
 
 ## Verification culture
 

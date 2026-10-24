@@ -205,9 +205,9 @@ unioning it into the composite, or nudge afterward with `χ`/`ψ`/`ζ`.
 `|>` pipelines with word stages (`x`, `rotz`, `extrude`, `add`, `cut`,
 `at`, `on`, `cutat`, ...) coexist with the glyphs; a line starting with
 `|>` continues the previous definition. Full table in
-docs/LANGEXTENSION.md; the topological methodology (anchors, offsets,
+docs/2025-07-14-LANGEXTENSION.md; the topological methodology (anchors, offsets,
 and why features must be anchored to stable corner datums, not
-composite centers) is in docs/TOPOLOGICAL.md — read it before writing
+composite centers) is in docs/2026-07-24-TOPOLOGICAL.md — read it before writing
 anchor-relative models.
 
 Critical semantics: `at`/`on` mate the CHILD'S OPPOSITE anchor to the
@@ -224,7 +224,7 @@ They are points, not oriented mating frames. `|> grid n m pitch_x pitch_y`
 unions a rectangular grid starting at the original, with whole positive
 counts and a 10000 expanded-primitive budget (nested grids included).
 `|> hull` hulls the complete group; binary `|> hull child` still works.
-See `docs/LANGEXTENSION.md` for complete semantics and
+See `docs/2025-07-14-LANGEXTENSION.md` for complete semantics and
 `examples/topological/datum-plate.coscad` for a mounting grid whose saved
 datum is unaffected by an asymmetric ear.
 
@@ -244,14 +244,14 @@ Each physical instance needs its own part alias with ×0 or ×1. Components
 need fixed roots; consistent loops work, conflicting or floating graphs fail.
 The checker and planner use the solved poses. Mates do not add hardware or
 precedence; retain explicit fastener declarations and run `coscad check`.
-See `docs/LANGEXTENSION.md` and `examples/assemble/constraints/`.
+See `docs/2025-07-14-LANGEXTENSION.md` and `examples/assemble/constraints/`.
 
 `.assemble` = separate physical parts (recursive refs, `×N` counts,
 `×0` assembly-only, `▽anchor` print orientation, key=value hints).
 `coscad foo.assemble` = design outputs; `coscad next foo.assemble` =
 per-bed STLs + slice-once/stamp-many manifest, with automatic FFF
 orientation search for undeclared parts. Details and limitations in
-docs/MANUFACTURING.md. Set COSCAD_OPENSCAD to an xvfb wrapper when
+docs/2026-07-24-MANUFACTURING.md. Set COSCAD_OPENSCAD to an xvfb wrapper when
 headless.
 
 - **Anchoring class of traps.** BOSL2 defaults differ per shape:

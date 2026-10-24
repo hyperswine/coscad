@@ -1,11 +1,11 @@
 # Topological migration pilots
 
 Nine original migration pilots plus two using the new
-[datum, placement, grid and hull operations](../../docs/TOPOLOGICAL.md).
+[datum, placement, grid and hull operations](../../docs/2026-07-24-TOPOLOGICAL.md).
 These pilots leave canonical models and compiler defaults unchanged. The
 subsequent canonical cube conversion is described separately below.
 The findings and migration proposal are in the
-[review](../../docs/reviews/2026-10-12-topological-migration.md).
+[review](../../docs/2026-10-12-TOPOLOGICAL-MIGRATION.md).
 
 For these pilots, topological **placement** means:
 
@@ -82,5 +82,5 @@ python3 experiments/topological/verify-cube.py --check-log /tmp/cube-check.log
 
 [cube-results.json](cube-results.json) records that audit. World bounds and
 screw positions are specified independently of the mating declarations.
-The [report](../../docs/reviews/2026-10-12-cube-constraints.md) explains the
+The [report](../../docs/2026-10-12-CUBE-CONSTRAINTS.md) explains the
 panel-hole and planner corrections and the validation boundaries.

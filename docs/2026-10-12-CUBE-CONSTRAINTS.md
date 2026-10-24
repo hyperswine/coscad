@@ -2,7 +2,7 @@
 
 The oriented-frame and assembly-constraint implementation was committed and
 pushed to `origin/main` as `5cf16da`. This follow-up converts the canonical
-[200 mm cube](../../examples/assemble/plan/cube.assemble). The audit ran before
+[200 mm cube](../examples/assemble/plan/cube.assemble). The audit ran before
 this follow-up was committed; it records the base commit, source hashes and
 a dirty-worktree flag so its measurements are tied to the converted source.
 
@@ -17,7 +17,7 @@ local contact faces; their outward normals must oppose the rail interfaces.
 All 16 bracket positions and rotations in the coordinate-built source were
 correct and are preserved. An exact OpenSCAD symmetric difference between
 the converted bracket solids and the retained
-[coordinate pose reference](../../test/fixtures/cube-coordinate.assemble)
+[coordinate pose reference](../test/fixtures/cube-coordinate.assemble)
 is empty, apart from the separate 1 mm³ marker used to check empty results.
 Independent tests also check every bracket centre, bore position and normal,
 material at all 16 corners, and clear passages through all 32 bracket bores.
@@ -73,8 +73,8 @@ faces: 32 bracket screws and six panel screws.
 - `coscad plan examples/assemble/plan/cube.assemble --png`:
   **28 steps, six flips, zero design errors**. Each physical instance is
   placed once and all 38 fasteners are driven. The final render was inspected.
-- [Audit runner](../../experiments/topological/verify-cube.py) and
-  [recorded measurements](../../experiments/topological/cube-results.json)
+- [Audit runner](../experiments/topological/verify-cube.py) and
+  [recorded measurements](../experiments/topological/cube-results.json)
   preserve source hashes, per-part mesh measurements and actual screw positions.
 
 The instructions, plan data and step renders are generated output and are no

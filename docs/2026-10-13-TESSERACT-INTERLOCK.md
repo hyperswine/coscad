@@ -55,5 +55,5 @@ and filament. No print, pull-off measurement, flexible-pin simulation or creep
 measurement was performed. Motion tests sample positions rather than proving
 continuous swept volumes. The planner does not generate support removal;
 that final manual step and the true insertion directions are documented in
-`docs/TESSERACT.md`. Generated legacy peg face labels locate the joints and
+`docs/2026-10-13-TESSERACT.md`. Generated legacy peg face labels locate the joints and
 do not encode the diagonal or sideways insertion paths.

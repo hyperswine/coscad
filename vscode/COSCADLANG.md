@@ -2,8 +2,8 @@
 
 CoScad compiles `.coscad` part descriptions and `.assemble` manufacturing
 assemblies to OpenSCAD, STL, and print-bed artifacts. This is the editor's
-compact reference; the compiler's docs (docs/LANGEXTENSION.md,
-docs/TOPOLOGICAL.md, docs/MANUFACTURING.md) are authoritative.
+compact reference; the compiler's docs (docs/2025-07-14-LANGEXTENSION.md,
+docs/2026-07-24-TOPOLOGICAL.md, docs/2026-07-24-MANUFACTURING.md) are authoritative.
 
 ## Syntax modes
 
