@@ -227,8 +227,12 @@ dark themes, safe-area padding for phones.
 
 Nodes are part instances, one T-nut batch per rail, and fasteners; edges
 are requires-before relations derived from the model (host and clamped
-part before a screw, a rail's nuts before its screws and before any part
-covering the slot, slide-in nuts before anything sealing an end). A state
+part before a screw, a rail's nuts before its screws and before the parts
+clamped to it, slide-in nuts before anything sealing an end). Another part
+covering a drop-in slot or a hex pocket is not an edge: `nutCanEnter`
+rejects the nuts once the entry is covered, and the order works because
+settling loads a host's nuts as soon as it is placed (see "Feature burial"
+under Planned). A state
 is the placed set plus the rest face. Placing a part settles its
 follow-ups (nuts that can now go in, screws whose driver is clear). The
 search is a beam over rest-face phases: on one face it greedily takes
@@ -248,10 +252,125 @@ plan cost was 208 / 183 / 179 / 167 at beam 10 / 30 / 80 / 200, in 3 / 10
 - Screw heads and nuts are not solids: contact is between part boxes.
 - One torque class per material; the printed default (0.6 Nm) is a guess
   to measure on an offcut.
-- Sub-assemblies are not discovered; each recursive `.assemble` is a part.
+- Sub-assemblies are not discovered; each recursive `.assemble` is a part
+  (see "Sub-assemblies" under Planned).
+- Every screw is driven to its final torque in the step it becomes
+  reachable; there is no snug-then-torque pass (see "Operations").
+- The bench has no size and the finished assembly is not checked against
+  a doorway (see "Workspace and delivery").
 - Fixtures, clamps, and third hands are not modelled: a warning asks you
   to steady a rail stood on end.
 - Internal peg seats and capture order need `inset=` and `after=` hints;
   the planner does not discover them from the solid geometry. The
   [Orbit Tower](https://manual.cswine.cloud/builds/orbit-tower/index.html) is a worked
   example: 20 pieces, 19 peg joints, assembled upright without flips.
+
+## Planned
+
+Not implemented yet. These four extensions come from a separate
+prototype planner (`AsmPlan.hs`) that modelled joints, buried features,
+staging areas and a doorway on a desk build. The prototype's geometry was
+a toy; the ideas below are the parts worth carrying over. Proposed syntax
+follows the existing `.assemble` conventions and may change.
+
+### Feature burial as one rule
+
+Today the edges are special cases: clamped part after its nuts, slide-in
+nuts before end caps, and a predicate (not an edge) for drop-in slots and
+hex pockets. Replace them with one rule:
+
+> Node A must come before part P when A needs access to a region that P
+> occupies once placed.
+
+The regions the model already computes are the access regions:
+
+- a drop-in nut's entry box on its slot face (`dropInOk`),
+- a hex pocket's entry box (`hexBlocked`, `fPocketEntry`),
+- a slide-in nut's end caps (`endCaps`),
+- a screw's driver cylinder (`driverBox`): the driver axis is fixed by the
+  host face, so a part that would block it later must come after the screw.
+
+For every access region and every part whose oriented box enters it
+(other than the node's own host and clamped part), add the edge. The
+edges do not depend on the rest face; the bench covering a face stays a
+predicate, because a flip clears it. A cycle among these edges is a design
+error that names the feature, for example "the top slot of bottom_front
+is covered by panel, but panel's screw needs a nut in that slot". This
+turns today's dead ends in the search into errors reported before
+planning, and the extra edges also prune the search.
+
+### Operations
+
+Steps that join nothing: square a frame, check a diagonal, test a
+mechanism before it is enclosed. One line per operation:
+
+```
+op square "Check both diagonals; tap the corners square" over=bottom_front,bottom_back,bottom_left,bottom_right before=panel
+op check "Spin the rotor by hand; it must turn freely" over=rotor#1 uses=rotor#1.top
+```
+
+- `over=` names the parts the operation is about. It runs after every
+  fastener that joins two `over=` parts has been started.
+- `uses=part.face` names faces that must be exposed. They become access
+  regions under the burial rule, so anything that covers them is ordered
+  after the operation.
+- `before=` and `after=` add explicit edges, as `after=` does on parts.
+- The quoted text is printed in the step as written.
+
+Fasteners that join `over=` parts are driven in two passes: snug when
+placed ("finger tight, then a quarter turn"), and to their torque in a
+"Torque" step after the operation. Assemblies with no `op` lines plan
+exactly as now. Operations are nodes in the requires-before graph with no
+geometry of their own; they never block a driver or a nut.
+
+### Sub-assemblies
+
+The planner grows one assembly on one bench. Many builds are faster and
+steadier as separate pieces joined at the end: two side frames, then the
+rails between them.
+
+```
+sub left  = upright_fl, upright_bl, bottom_left, top_left, br_front_low_left, br_back_low_left
+sub right = upright_fr, upright_br, bottom_right, top_right, br_front_low_right, br_back_low_right
+```
+
+- Each `sub` is planned on its own with the fasteners whose clamped part
+  and host are both inside it, and gets its own steps ("Build left: 2a,
+  2b, ...").
+- In the parent plan a finished `sub` is a single rigid part: box is the
+  union of its members' boxes, mass is their sum, and it is placed like
+  any other part.
+- Fasteners that cross a `sub` boundary belong to the parent. Nuts they
+  need inside a member are preloaded while that `sub` is built, since a
+  member's slot may be covered by the time the parent joint is made; the
+  burial rule decides whether that is still possible and reports it if
+  not.
+- A part may be in at most one `sub`; `sub`s do not nest at first.
+  Recursive `.assemble` parts stay as they are.
+
+Discovering sub-assemblies (connected groups that need nothing from the
+rest) can come later, once declared ones work.
+
+### Workspace and delivery
+
+Two `plan` options:
+
+```
+plan bench=900x600 floor=2000x2000
+plan door=690x2040
+```
+
+- `bench=WxD` (and optionally `floor=WxD`) sizes the work areas. After
+  each step the footprint of the partial assembly in its rest orientation
+  must fit an area; the step names the area ("on the bench", "on the
+  floor"). Moving from bench to floor costs a flip's weight. A footprint
+  larger than every area is a design error. Two sub-assemblies on the
+  bench at once must fit side by side.
+- `door=WxH` checks the finished assembly's box against an opening in
+  each axis-aligned orientation. Tilting through diagonally is not
+  considered, so the check is conservative. If the assembly does not
+  pass, the planner finds the smallest set of parts it can leave off
+  (closed under the requires-before relation: nothing that stays depends
+  on them) such that the rest passes, replans with those last, and splits
+  the plan into "Before moving" and "After moving it through the door".
+  If no such set exists, that is a design error.
