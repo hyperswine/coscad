@@ -1,0 +1,43 @@
+{
+  "printer": "A1",
+  "model_id": "N2S",
+  "package": "outrigger/slice/outrigger.gcode.3mf",
+  "package_sha256": "570a5a951c4096238847f755ca1e92a97885170bb8114e79b9a221ba15f8e1b8",
+  "gcode_sha256": "b04e3bf44d09d9125abb10fb0124386fc774aa895b7221f4058363623a40c383",
+  "layers": 137,
+  "model_path_segments": 125229,
+  "support_segments": 0,
+  "path_bounds_relative_to_model_mm": [
+    [
+      -54.763048902365114,
+      -48.778999999999996,
+      0.2
+    ],
+    [
+      54.715,
+      48.780346398754546,
+      21.96
+    ]
+  ],
+  "machine_extruder_offset_mm": [
+    0.0,
+    0.0
+  ],
+  "features": {
+    "Outer wall": 31019,
+    "Inner wall": 48241,
+    "Gap infill": 32197,
+    "Bottom surface": 683,
+    "Internal solid infill": 8688,
+    "Sparse infill": 2016,
+    "Floating vertical shell": 242,
+    "Top surface": 1307,
+    "Overhang wall": 126,
+    "Bridge": 710
+  },
+  "estimated_seconds": 14263.26953125,
+  "estimated_grams": 50.895294189453125,
+  "solid_geometry_grams": 50.96215406708148,
+  "model_id_metadata_filled_without_changing_gcode": true,
+  "passed": true
+}

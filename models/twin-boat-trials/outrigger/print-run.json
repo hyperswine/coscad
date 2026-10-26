@@ -1,0 +1,614 @@
+{
+  "boat": "outrigger",
+  "printer": "a1",
+  "package_sha256": "570a5a951c4096238847f755ca1e92a97885170bb8114e79b9a221ba15f8e1b8",
+  "remote_name": "outrigger-a1-20261025-142608.gcode.3mf",
+  "spool": "ams0",
+  "material": "PLA",
+  "bed_clear_owner_confirmed": true,
+  "authorization_note": "Owner explicitly confirmed both plates clear and new white PLA in physical A1 AMS slot 1, avoiding slot 3",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 30,
+    "total_layer_num": 30,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "ship-anchor_bed1.gcode.3mf",
+    "nozzle_temper": 29.40625,
+    "bed_temper": 29.3125,
+    "print_error": 0
+  },
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-10-25T14:26:31+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 30,
+        "total_layer_num": 30,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 29.40625,
+        "bed_temper": 29.3125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:26:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 237,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 48.375,
+        "bed_temper": 29.3125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:27:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 237,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 90.90625,
+        "bed_temper": 34.59375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:27:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 237,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 125.25,
+        "bed_temper": 58.21875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:27:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 237,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 120.125,
+        "bed_temper": 65.59375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:27:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 237,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 153.78125,
+        "bed_temper": 65.59375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:28:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 237,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 187.625,
+        "bed_temper": 64.9375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:28:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 237,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 213.5,
+        "bed_temper": 64.6875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:28:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 237,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 220.1875,
+        "bed_temper": 64.78125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:28:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 237,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 218.46875,
+        "bed_temper": 64.84375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:29:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 237,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 220.5625,
+        "bed_temper": 64.875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:29:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 220.15625,
+        "bed_temper": 64.90625,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:29:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 221.3125,
+        "bed_temper": 64.90625,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:29:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 220.375,
+        "bed_temper": 64.96875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:30:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 220.40625,
+        "bed_temper": 64.9375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:30:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 219.75,
+        "bed_temper": 64.9375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:30:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 218.25,
+        "bed_temper": 64.96875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:30:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 220.03125,
+        "bed_temper": 65,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:31:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 219.84375,
+        "bed_temper": 65.03125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:31:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 220.15625,
+        "bed_temper": 65.03125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:31:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 216.9375,
+        "bed_temper": 64.90625,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:31:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 236,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 198.9375,
+        "bed_temper": 64.25,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:32:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 235,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 180.3125,
+        "bed_temper": 64.21875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:32:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 167.21875,
+        "bed_temper": 64.84375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:32:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 170.9375,
+        "bed_temper": 64.5,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:32:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 160.09375,
+        "bed_temper": 64.75,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:33:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 146.96875,
+        "bed_temper": 65.0625,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:33:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 139.09375,
+        "bed_temper": 65.125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:33:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 140.21875,
+        "bed_temper": 65.125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:33:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 65.125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:34:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 143.875,
+        "bed_temper": 65.15625,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:34:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 174.46875,
+        "bed_temper": 65.28125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:34:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 213.4375,
+        "bed_temper": 65.3125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:34:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 220.1875,
+        "bed_temper": 65.4375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:35:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 137,
+        "mc_remaining_time": 231,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 219.46875,
+        "bed_temper": 65.3125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-25T14:35:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 1,
+        "total_layer_num": 137,
+        "mc_remaining_time": 230,
+        "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+        "subtask_name": "outrigger-a1-20261025-142608.gcode",
+        "nozzle_temper": 220.46875,
+        "bed_temper": 65.25,
+        "print_error": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-10-25T14:26:08+1100",
+  "remote_content_sha256": "570a5a951c4096238847f755ca1e92a97885170bb8114e79b9a221ba15f8e1b8",
+  "sequence_id": "898791503",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "898791503"
+  },
+  "first_layer_reached": true,
+  "startup_camera": "/Users/jasonqin/Documents/GitHub/coscad/models/twin-boat-trials/20261025-143518-a1-outrigger-start-printer-capture.png"
+}

@@ -1,0 +1,70 @@
+[
+  {
+    "observed_at": "2026-10-25T14:36:28+1100",
+    "printer": "p1s",
+    "boat": "monohull",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 5,
+      "layer_num": 1,
+      "total_layer_num": 175,
+      "mc_remaining_time": 154,
+      "gcode_file": "monohull-p1s-20261025-142607.gcode.3mf",
+      "subtask_name": "monohull-p1s-20261025-142607.gcode",
+      "nozzle_temper": 219.9375,
+      "bed_temper": 55.125,
+      "print_error": 0
+    },
+    "hms": [],
+    "tray_now": "254",
+    "spools": [
+      [
+        "external",
+        "PLA",
+        "FFF144FF",
+        true
+      ]
+    ],
+    "camera": "/Users/jasonqin/Documents/GitHub/coscad/models/twin-boat-trials/20261025-143630-p1s-monohull-first-layer-check-printer-capture.png"
+  },
+  {
+    "observed_at": "2026-10-25T14:36:32+1100",
+    "printer": "a1",
+    "boat": "outrigger",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 3,
+      "layer_num": 1,
+      "total_layer_num": 137,
+      "mc_remaining_time": 229,
+      "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+      "subtask_name": "outrigger-a1-20261025-142608.gcode",
+      "nozzle_temper": 220.03125,
+      "bed_temper": 64.84375,
+      "print_error": 0
+    },
+    "hms": [],
+    "tray_now": "0",
+    "spools": [
+      [
+        "ams0",
+        "PLA",
+        "FFFFFFFF",
+        true
+      ],
+      [
+        "ams2",
+        "PLA",
+        "F4EE2AFF",
+        false
+      ],
+      [
+        "external",
+        "PLA",
+        "FFFFFFFF",
+        false
+      ]
+    ],
+    "camera": "/Users/jasonqin/Documents/GitHub/coscad/models/twin-boat-trials/20261025-143635-a1-outrigger-first-layer-check-printer-capture.png"
+  }
+]

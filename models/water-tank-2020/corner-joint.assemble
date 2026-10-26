@@ -1,0 +1,13 @@
+// Focused geometry check. Schematic threaded hardware excluded.
+plate 250 250 6
+clearance 0
+post_0020 ← parts/rail_1060.coscad ×0
+rail_0307 ← parts/rail_180.coscad ×0
+frame_connector_0313 ← parts/flat_connector.coscad ×0
+rail_1553 ← parts/rail_180.coscad ×0
+frame_connector_1554 ← parts/flat_connector.coscad ×0
+fixed post_0020 500 500 500 0 -90 0
+fixed rail_0307 400 500 400 90 0 0
+fixed frame_connector_0313 490 513 390 -90 90 0
+fixed rail_1553 500 400 400 90 0 -90
+fixed frame_connector_1554 513 490 410 90 0 -90

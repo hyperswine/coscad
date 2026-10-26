@@ -1,0 +1,45 @@
+Build profile: -w ghc-9.8.2 -O1
+In order, the following will be built (use -v for more details):
+ - coscad-1.3.0.0 (lib) (file test/native/bridge_smoke.cpp changed)
+ - coscad-1.3.0.0 (test:haskell-examples) (dependency rebuilt)
+ - coscad-1.3.0.0 (exe:coscad) (dependency rebuilt)
+ - coscad-1.3.0.0 (test:coscad-test) (dependency rebuilt)
+Preprocessing library for coscad-1.3.0.0...
+Building library for coscad-1.3.0.0...
+[24 of 38] Compiling Coscad.Backend   ( src/Coscad/Backend.hs, dist-newstyle/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/build/Coscad/Backend.o, dist-newstyle/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/build/Coscad/Backend.dyn_o ) [Source file changed]
+Preprocessing test suite 'haskell-examples' for coscad-1.3.0.0...
+Building test suite 'haskell-examples' for coscad-1.3.0.0...
+Preprocessing executable 'coscad' for coscad-1.3.0.0...
+Building executable 'coscad' for coscad-1.3.0.0...
+[6 of 6] Linking dist-newstyle/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/t/haskell-examples/build/haskell-examples/haskell-examples [Library changed]
+[3 of 3] Linking dist-newstyle/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/x/coscad/build/coscad/coscad [Library changed]
+ld: warning: -U option is redundant when using -undefined dynamic_lookup
+ld: warning: -U option is redundant when using -undefined dynamic_lookup
+Preprocessing test suite 'coscad-test' for coscad-1.3.0.0...
+Building test suite 'coscad-test' for coscad-1.3.0.0...
+[ 7 of 16] Compiling Tier.Experiments ( test/Tier/Experiments.hs, dist-newstyle/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/t/coscad-test/build/coscad-test/coscad-test-tmp/Tier/Experiments.o ) [Source file changed]
+Running 1 test suites...
+Test suite haskell-examples: RUNNING...
+ExampleBookend.tip': 138 chars of OpenSCAD
+ExampleBookend2.bookendDemo: 1473 chars of OpenSCAD
+ExampleGear.gearDemo: 15635 chars of OpenSCAD
+ExampleZigZag.spring: 1370 chars of OpenSCAD
+haskell examples: all compile and render
+Test suite haskell-examples: PASS
+Test suite logged to:
+/Users/jasonqin/Documents/GitHub/coscad/./dist-newstyle/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/t/haskell-examples/test/coscad-1.3.0.0-haskell-examples.log
+1 of 1 test suites (1 of 1 test cases) passed.
+[17 of 17] Linking dist-newstyle/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/t/coscad-test/build/coscad-test/coscad-test [Objects changed]
+ld: warning: -U option is redundant when using -undefined dynamic_lookup
+Running 1 test suites...
+Test suite coscad-test: RUNNING...
+
+== experimental native meshing and FEA
+
+(geometry tier skipped: COSCAD_RENDER=0)
+
+182 passed, 0 failed
+Test suite coscad-test: PASS
+Test suite logged to:
+/Users/jasonqin/Documents/GitHub/coscad/./dist-newstyle/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/t/coscad-test/test/coscad-1.3.0.0-coscad-test.log
+1 of 1 test suites (1 of 1 test cases) passed.

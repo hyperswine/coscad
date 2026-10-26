@@ -1,0 +1,2 @@
+// Tank study derivative: schematic M3 shank/head; threads omitted
+main = zcyl 1.5 8 ⊕ (ζ 5 (zcyl 2.8 2))

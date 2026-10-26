@@ -1,0 +1,117 @@
+{
+  "support_segments_checked": 57098,
+  "minimum_support_footprint_radius_mm_in_blocker_height": 4.628057619967644,
+  "bearing_gap_crossing_segments": 0,
+  "inspected_lower_rotor_layer_z_mm": 23.4,
+  "near_start_layers": {
+    "22.76": [
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Sparse infill",
+      "Support",
+      "Support interface"
+    ],
+    "22.92": [
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Sparse infill",
+      "Support",
+      "Support interface"
+    ],
+    "23.08": [
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Sparse infill",
+      "Support",
+      "Support interface"
+    ],
+    "23.24": [
+      "Floating vertical shell",
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Sparse infill",
+      "Support"
+    ],
+    "23.4": [
+      "Bridge",
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Overhang wall",
+      "Support"
+    ]
+  },
+  "arc_sampling_mm": 0.05,
+  "near_support_layers": [
+    87.08,
+    87.24,
+    87.4,
+    87.56,
+    87.72,
+    87.88,
+    88.04,
+    88.2,
+    88.36,
+    88.52,
+    88.68,
+    88.84,
+    89.0,
+    89.16,
+    89.32,
+    89.48
+  ],
+  "closest_support": [
+    [
+      88.52,
+      "Support",
+      4.628,
+      5.172
+    ],
+    [
+      88.52,
+      "Support",
+      4.649,
+      5.76
+    ],
+    [
+      88.52,
+      "Support",
+      4.652,
+      5.863
+    ],
+    [
+      88.52,
+      "Support",
+      4.653,
+      5.488
+    ],
+    [
+      88.52,
+      "Support",
+      4.654,
+      6.017
+    ],
+    [
+      88.36,
+      "Support",
+      4.66,
+      6.205
+    ],
+    [
+      88.36,
+      "Support",
+      4.661,
+      5.861
+    ],
+    [
+      88.84,
+      "Support",
+      4.661,
+      5.456
+    ]
+  ]
+}

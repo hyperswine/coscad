@@ -1,0 +1,19 @@
+{
+  "schema": "coscad.native-kernel.v1",
+  "manifold": {
+    "repository": "https://github.com/elalish/manifold.git",
+    "revision": "11235e6b8ebea2dbed8aec4285685aafd3d95667",
+    "tag": "v3.5.2",
+    "layout": ".native/manifold-3.5.2/source"
+  },
+  "configuration": {
+    "CMAKE_BUILD_TYPE": "Release",
+    "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
+    "BUILD_SHARED_LIBS": "OFF",
+    "MANIFOLD_CROSS_SECTION": "OFF",
+    "MANIFOLD_CBIND": "OFF",
+    "MANIFOLD_TEST": "OFF",
+    "MANIFOLD_DOWNLOADS": "OFF",
+    "MANIFOLD_PAR": "OFF"
+  }
+}

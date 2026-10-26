@@ -1,0 +1,1 @@
+PASS: 500 indexed + 500 soup CSG operations, 100 extrusions, empty output, malformed input, null arguments, near-coincident volume guard, deadline cancellation/recovery and ownership

@@ -1,0 +1,2 @@
+// Tank study derivative: schematic M5 shank/head; threads omitted
+main = xcyl 2.5 10 ⊕ (χ 6 (xcyl 4.25 3))

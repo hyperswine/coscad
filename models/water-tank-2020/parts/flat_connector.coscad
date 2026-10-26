@@ -1,0 +1,9 @@
+// Tank study derivative: examples/assemble/plan/flat90.coscad
+// Flat 90-degree bracket, 40 x 40 x 6, with 20 mm wide legs.
+// The missing quadrant is +X,+Y; holes align with 2020 rail centres.
+// Centred cutters extend past both faces to make true through holes.
+main = box 40 40 6
+  |> cut (box 20 20 8 |> move 10 10 0)
+  |> cut (zcyl 2.75 10 |> move 10 -10 0)
+  |> cut (zcyl 2.75 10 |> move -10 10 0)
+

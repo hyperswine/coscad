@@ -1,0 +1,1325 @@
+{
+  "schema": "coscad.native-coverage.v1",
+  "manifold_linked": true,
+  "examples": [
+    {
+      "file": "examples-next/a.coscad",
+      "features": ["Cuboid"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 2560,
+        "bounds_mm": [
+          [-8, -8, -5],
+          [8, 8, 5]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 2560,
+        "bounds_mm": [
+          [-8, -8, -5],
+          [8, 8, 5]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/b.coscad",
+      "features": ["Cuboid"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 2560,
+        "bounds_mm": [
+          [-8, -8, -5],
+          [8, 8, 5]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 2560,
+        "bounds_mm": [
+          [-8, -8, -5],
+          [8, 8, 5]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/bracket_seam.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Mirror", "Rz", "Translate", "Union", "Wedge", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 682,
+        "volume_mm3": 2638.930361367513,
+        "bounds_mm": [
+          [-3.5, -7.5, -10],
+          [13.5, 7.500000000000001, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/c.coscad",
+      "features": ["Cuboid"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 6399.999999999999,
+        "bounds_mm": [
+          [-20, -8, -5],
+          [20, 8, 5]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 6399.999999999999,
+        "bounds_mm": [
+          [-20, -8, -5],
+          [20, 8, 5]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/center.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Tx", "Ty", "Tz", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2236,
+        "volume_mm3": 34133.11349717319,
+        "bounds_mm": [
+          [-55, -9, 0],
+          [55, 21, 14]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/corner_90.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "Union", "XCyl", "YCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 432,
+        "volume_mm3": 1682.4334842339938,
+        "bounds_mm": [
+          [-8.5, -11, -9],
+          [8.5, 2, 9]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/frame.coscad",
+      "features": ["Cuboid", "Diff", "Hull", "Mirror", "Ry", "Sphere", "Tx", "Ty", "Tz", "Union", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 5808,
+        "volume_mm3": 45285.30706883524,
+        "bounds_mm": [
+          [-28.473783849917574, 114.63562709335963, -9.48125392006858],
+          [28.473783849917574, 250.99013364214136, 10.926796971494298]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/greaser-example/greaser.coscad",
+      "features": ["Cuboid", "Diff", "Sphere", "Torus", "Tube", "Tx", "Union", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 5136,
+        "volume_mm3": 35084.49629238599,
+        "bounds_mm": [
+          [-200.5, -7.9842138274261725, -7.500000000000005],
+          [5.593614548891271, 7.9842138274261725, 7.500000000000005]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/l_arch.coscad",
+      "features": ["Cuboid", "Diff", "Extrude", "Frame", "Poly", "Tx", "Ty", "Tz", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1312,
+        "volume_mm3": 36156.61052564071,
+        "bounds_mm": [
+          [29.299999999999997, -8, 0],
+          [247.84017650462962, 59.878544560185176, 14]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/panel_center.coscad",
+      "features": ["Cuboid", "Diff", "Tx", "Ty", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2492,
+        "volume_mm3": 99562.21304087996,
+        "bounds_mm": [
+          [-100, -100, -1.25],
+          [100, 100, 1.25]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/panel_corner.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Tx", "Ty", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2492,
+        "volume_mm3": 109794.89211461227,
+        "bounds_mm": [
+          [-105, -105, -1.25],
+          [105, 105, 1.25]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/panel_edge.coscad",
+      "features": ["Cuboid", "Diff", "Tx", "Ty", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2492,
+        "volume_mm3": 104553.55257774629,
+        "bounds_mm": [
+          [-105, -100, -1.25],
+          [105, 100, 1.25]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/r_arch.coscad",
+      "features": ["Cuboid", "Diff", "Extrude", "Frame", "Mirror", "Poly", "Tx", "Ty", "Tz", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1312,
+        "volume_mm3": 36156.61052564071,
+        "bounds_mm": [
+          [-247.84017650462962, -8, 0],
+          [-29.299999999999997, 59.878544560185176, 14]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/rail_x180.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 344,
+        "volume_mm3": 42066.36197991618,
+        "bounds_mm": [
+          [-90, -10, -10],
+          [90, 10, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/rail_y420.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "YCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 344,
+        "volume_mm3": 98154.84461980492,
+        "bounds_mm": [
+          [-10, -210, -10],
+          [10, 210, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples-next/tnut_m5.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "Union", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 232,
+        "volume_mm3": 216.7824351985124,
+        "bounds_mm": [
+          [-1.15, -5, -4.5],
+          [2.05, 5, 4.5]
+        ]
+      }
+    },
+    {
+      "file": "examples/advanced.coscad",
+      "features": ["Cylinder", "Diff", "Rectangle", "Rx", "Sphere", "Ty", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2110,
+        "volume_mm3": 9637.734162058356,
+        "bounds_mm": [
+          [-8, 0, -7.9842138274261725],
+          [20, 22.984213827426174, 20]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/ball/core.coscad",
+      "features": ["Cuboid", "Cyl", "Diff", "Frame", "Translate", "XCyl", "YCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1092,
+        "volume_mm3": 9140.93115175904,
+        "bounds_mm": [
+          [-14.8, -14.77079558073842, -8],
+          [14.8, 14.77079558073842, 8]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/ball/shell.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Intersection", "Sphere", "Translate", "Tube", "Union", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 3082,
+        "volume_mm3": 6685.238527632748,
+        "bounds_mm": [
+          [-20, -19.960534568565432, 0],
+          [19.74943959802218, 19.960534568565432, 19.960534568565432]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/bow3/center3.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Hull", "Prism", "Translate", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1158,
+        "volume_mm3": 43019.402245738325,
+        "bounds_mm": [
+          [-55, -18, -7],
+          [55, 18, 7]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/bow3/l_arch3.coscad",
+      "features": ["Cuboid", "Diff", "Extrude", "Frame", "Intersection", "Poly", "Rz", "Translate", "Tube", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1488,
+        "volume_mm3": 57896.61242549771,
+        "bounds_mm": [
+          [-26, -1, 0],
+          [216.70500716260085, 68.24965557009548, 14]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/bow3/r_arch3.coscad",
+      "features": ["Cuboid", "Diff", "Extrude", "Frame", "Intersection", "Mirror", "Poly", "Rz", "Translate", "Tube", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1488,
+        "volume_mm3": 57896.61242549771,
+        "bounds_mm": [
+          [-216.70500716260085, -1, 0],
+          [26, 68.24965557009548, 14]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/bracket90.coscad",
+      "features": ["Cuboid", "Cyl", "Diff", "Frame", "Prismoid", "Rz", "Tx", "Tz", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 778,
+        "volume_mm3": 5268.865316170103,
+        "bounds_mm": [
+          [-9, -8.982240555854444, -1.5],
+          [34, 34, 5]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/constraints/base.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 4800,
+        "bounds_mm": [
+          [-20, -15, -2],
+          [20, 15, 2]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 4800,
+        "bounds_mm": [
+          [-20, -15, -2],
+          [20, 15, 2]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/constraints/post.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 1200,
+        "bounds_mm": [
+          [-3, -5, -10],
+          [3, 5, 10]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 1200,
+        "bounds_mm": [
+          [-3, -5, -10],
+          [3, 5, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/inner90.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Prismoid", "Ry", "Rz", "Tx", "Tz", "Union", "Wedge", "XCyl", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 990,
+        "volume_mm3": 10301.76229340715,
+        "bounds_mm": [
+          [-1.5, -10, -1.5],
+          [32, 10, 32]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/plan/corner_inside.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 620,
+        "volume_mm3": 7399.605142538755,
+        "bounds_mm": [
+          [-10, -10, -10],
+          [10, 10, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/plan/flat90.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 428,
+        "volume_mm3": 6915.650226350979,
+        "bounds_mm": [
+          [-20, -20, -3],
+          [20, 20, 3]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/plan/panel190.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1236,
+        "volume_mm3": 107873.47533952667,
+        "bounds_mm": [
+          [-95, -95, -1.5],
+          [95, 95, 1.5]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/plan/rail160.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 64000.00000000001,
+        "bounds_mm": [
+          [-80, -10, -10],
+          [80, 10, 10]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 64000.00000000001,
+        "bounds_mm": [
+          [-80, -10, -10],
+          [80, 10, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/plan/rail200.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 80000,
+        "bounds_mm": [
+          [-100, -10, -10],
+          [100, 10, 10]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 80000,
+        "bounds_mm": [
+          [-100, -10, -10],
+          [100, 10, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/plan/rail2020.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 160000,
+        "bounds_mm": [
+          [-200, -10, -10],
+          [200, 10, 10]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 160000,
+        "bounds_mm": [
+          [-200, -10, -10],
+          [200, 10, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/plan/rail2020_300.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 120000,
+        "bounds_mm": [
+          [-150, -10, -10],
+          [150, 10, 10]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 120000,
+        "bounds_mm": [
+          [-150, -10, -10],
+          [150, 10, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/rail120.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 48000,
+        "bounds_mm": [
+          [-10, -10, -60],
+          [10, 10, 60]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 48000,
+        "bounds_mm": [
+          [-10, -10, -60],
+          [10, 10, 60]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/rail200.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 80000,
+        "bounds_mm": [
+          [-100, -10, -10],
+          [100, 10, 10]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 80000,
+        "bounds_mm": [
+          [-100, -10, -10],
+          [100, 10, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/bar.coscad",
+      "features": ["Cuboid", "Frame", "Rz", "Translate", "Union", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 848,
+        "volume_mm3": 3790.97005736923,
+        "bounds_mm": [
+          [-40.8, -3.5, -3.5],
+          [40.8, 3.5, 3.5]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/bolted/bar.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1228,
+        "volume_mm3": 2480.8708904798164,
+        "bounds_mm": [
+          [-36.75, -3, -3],
+          [36.75, 3, 3]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/bolted/corner.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Prism", "Rx", "Ry", "Rz", "Translate", "XCyl", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2132,
+        "volume_mm3": 5286.706153542085,
+        "bounds_mm": [
+          [0, 0, 0],
+          [19, 19, 19]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/bolted/inner.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Ry", "Rz", "Translate", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1996,
+        "volume_mm3": 24263.66318937062,
+        "bounds_mm": [
+          [-15, -15, -15],
+          [15, 15, 15]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/bolted/strut.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 148,
+        "volume_mm3": 772.9302108623885,
+        "bounds_mm": [
+          [-23, -2.495066821070679, -1.5],
+          [23, 2.495066821070679, 2.5000000000000013]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/cap.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Hull", "Intersection", "Ry", "Rz", "Translate", "Union", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 850,
+        "volume_mm3": 1017.7421285386505,
+        "bounds_mm": [
+          [0, 0, 0],
+          [12, 12, 12]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/corner.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Hull", "Intersection", "Ry", "Rz", "Translate", "Union", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1090,
+        "volume_mm3": 331.7513243187183,
+        "bounds_mm": [
+          [0, 0, 0],
+          [12, 12, 12]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/inner.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Ry", "Rz", "Translate", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1996,
+        "volume_mm3": 24263.66318937062,
+        "bounds_mm": [
+          [-15, -15, -15],
+          [15, 15, 15]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/jig.coscad",
+      "features": ["Cuboid", "Translate", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 76,
+        "volume_mm3": 2540,
+        "bounds_mm": [
+          [-13, -13, 0],
+          [13, 13, 35]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/strut.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 148,
+        "volume_mm3": 913.0182426876526,
+        "bounds_mm": [
+          [-27.16858428704209, -2.495066821070679, -1.5],
+          [27.16858428704209, 2.495066821070679, 2.5000000000000018]
+        ]
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/test-bar.coscad",
+      "features": ["Cuboid", "Frame", "Translate", "Union", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 446,
+        "volume_mm3": 822.4556953512704,
+        "bounds_mm": [
+          [-10.8, -3.5, -3.5],
+          [8, 3.5, 3.5]
+        ]
+      }
+    },
+    {
+      "file": "examples/attach_demo.coscad",
+      "features": ["Cuboid", "Cyl", "RotAxis", "Sphere", "Translate", "Tx", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 11976,
+        "volume_mm3": 30993.847350527813,
+        "bounds_mm": [
+          [-58, -30, -10],
+          [87.42462120245875, 30, 46.99013364214136]
+        ]
+      }
+    },
+    {
+      "file": "examples/bow.coscad",
+      "features": ["Cuboid", "Extrude", "Mirror", "Poly", "Ty", "Tz", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2802,
+        "volume_mm3": 105539.11883055596,
+        "bounds_mm": [
+          [-246.22699652777777, -8, 0],
+          [246.22699652777777, 59.878544560185176, 14]
+        ]
+      }
+    },
+    {
+      "file": "examples/bracket.coscad",
+      "features": ["Cuboid", "Diff", "Mirror", "Rz", "Tx", "Tz", "Union", "Wedge", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 682,
+        "volume_mm3": 2638.9303613675147,
+        "bounds_mm": [
+          [-1, -7.5, 0],
+          [16, 7.500000000000001, 20]
+        ]
+      }
+    },
+    {
+      "file": "examples/complex.coscad",
+      "features": ["Cylinder", "Diff", "Sphere"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2700,
+        "volume_mm3": 13261.092151831368,
+        "bounds_mm": [
+          [-15, -14.970400926424073, -14.970400926424073],
+          [15, 14.970400926424073, 14.970400926424073]
+        ]
+      }
+    },
+    {
+      "file": "examples/cone.coscad",
+      "features": ["Cone"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 100,
+        "volume_mm3": 1002.6658685144342,
+        "bounds_mm": [
+          [-8, -7.9842138274261725, 0],
+          [8, 7.9842138274261725, 15]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 100,
+        "volume_mm3": 1002.6658685144342,
+        "bounds_mm": [
+          [-8, -7.9842138274261725, 0],
+          [8, 7.9842138274261725, 15]
+        ]
+      }
+    },
+    {
+      "file": "examples/cylinder.coscad",
+      "features": ["Cylinder"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 200,
+        "volume_mm3": 783.3327097769015,
+        "bounds_mm": [
+          [-5, -4.990133642141358, 0],
+          [5, 4.990133642141358, 10]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 200,
+        "volume_mm3": 783.3327097769015,
+        "bounds_mm": [
+          [-5, -4.990133642141358, 0],
+          [5, 4.990133642141358, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/demo.coscad",
+      "features": ["Cone", "Diff", "Sphere"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1400,
+        "volume_mm3": 1828.8052841900992,
+        "bounds_mm": [
+          [-10, -9.980267284282716, 0],
+          [10, 9.980267284282716, 20]
+        ]
+      }
+    },
+    {
+      "file": "examples/extrusion.coscad",
+      "features": ["Extrude", "Shape2D", "Tx", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 420,
+        "volume_mm3": 2776.5417752828616,
+        "bounds_mm": [
+          [-24.000000000000004, -6.928203230275507, 0],
+          [24, 6.92820323027551, 15]
+        ]
+      }
+    },
+    {
+      "file": "examples/gear_test.coscad",
+      "features": ["Diff", "Extrude", "Rz", "Shape2D", "Tx", "Ty", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 868,
+        "volume_mm3": 508.8446066694111,
+        "bounds_mm": [
+          [-12, -12, 0],
+          [12, 12, 2]
+        ]
+      }
+    },
+    {
+      "file": "examples/glider.coscad",
+      "features": ["Cuboid", "Diff", "Hull", "Mirror", "Scale", "Sphere", "Tx", "Ty", "Tz", "Union", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 4246,
+        "volume_mm3": 10045.484856706717,
+        "bounds_mm": [
+          [-60.227000000000004, -68.64040514788319, -4.724658532379438],
+          [60.227000000000004, 67.58840514788318, 20.645500000000002]
+        ]
+      }
+    },
+    {
+      "file": "examples/grease_claw.coscad",
+      "features": ["Cuboid", "Diff", "Hull", "Tx", "Tz", "Union", "XCyl", "YCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 1270,
+        "volume_mm3": 35404.67352192514,
+        "bounds_mm": [
+          [0, -11, -7.4],
+          [226.8, 11, 7.4]
+        ]
+      }
+    },
+    {
+      "file": "examples/loft.coscad",
+      "features": ["Diff", "Loft", "Rz", "Shape2D", "Tx", "Tz", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Loft; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/math_zigzag_spring.coscad",
+      "features": ["Diff", "Extrude", "Rectangle", "Shape2D", "Tx", "Ty"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 820,
+        "volume_mm3": 187.44189609413755,
+        "bounds_mm": [
+          [0, 0, 0],
+          [20, 5, 2]
+        ]
+      }
+    },
+    {
+      "file": "examples/offset_demo.coscad",
+      "features": ["Extrude", "Offset", "Shape2D", "Tx", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported extrusion profile Offset"
+      }
+    },
+    {
+      "file": "examples/panel.coscad",
+      "features": ["Cuboid", "Diff", "Tx", "Ty", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2696,
+        "volume_mm3": 99356.56862124572,
+        "bounds_mm": [
+          [-100, -100, -1.25],
+          [100, 100, 1.25]
+        ]
+      }
+    },
+    {
+      "file": "examples/simple_transform.coscad",
+      "features": ["Rectangle", "Tx"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 1000,
+        "bounds_mm": [
+          [5, 0, 0],
+          [15, 10, 10]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 12,
+        "volume_mm3": 1000,
+        "bounds_mm": [
+          [5, 0, 0],
+          [15, 10, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/sphere.coscad",
+      "features": ["Sphere"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 2500,
+        "volume_mm3": 14044.424861608162,
+        "bounds_mm": [
+          [-15, -14.970400926424073, -14.970400926424073],
+          [15, 14.970400926424073, 14.970400926424073]
+        ]
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2500,
+        "volume_mm3": 14044.424861608162,
+        "bounds_mm": [
+          [-15, -14.970400926424073, -14.970400926424073],
+          [15, 14.970400926424073, 14.970400926424073]
+        ]
+      }
+    },
+    {
+      "file": "examples/topological/datum-plate.coscad",
+      "features": ["Cuboid", "Datum", "Diff", "Translate", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 644,
+        "volume_mm3": 6569.600119722842,
+        "bounds_mm": [
+          [-30, -16, 0],
+          [30, 16, 4]
+        ]
+      }
+    },
+    {
+      "file": "examples/topological/mating-corner.coscad",
+      "features": ["Cuboid", "Frame", "Transform3", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 44,
+        "volume_mm3": 1695.9999999999998,
+        "bounds_mm": [
+          [-10, -10, -2],
+          [16, 10, 8]
+        ]
+      }
+    },
+    {
+      "file": "examples/topological/pipeline_basics.coscad",
+      "features": ["Extrude", "Shape2D", "Tx", "Ty"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Extrude; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 8,
+        "volume_mm3": 831.3843876330534,
+        "bounds_mm": [
+          [96, 93.0717967697245, 0],
+          [108, 106.92820323027551, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/topological/tbracket.coscad",
+      "features": ["Cuboid", "Diff", "Mirror", "Rz", "Translate", "Union", "Wedge", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 682,
+        "volume_mm3": 2638.930361367513,
+        "bounds_mm": [
+          [-3.5, -7.5, -10],
+          [13.5, 7.500000000000001, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/topological/topo_tour.coscad",
+      "features": ["Cuboid", "Cyl", "Diff", "RotAxis", "Translate", "Union", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2894,
+        "volume_mm3": 16740.863054286347,
+        "bounds_mm": [
+          [-28, -20, -4],
+          [28, 20, 29]
+        ]
+      }
+    },
+    {
+      "file": "examples/transformations.coscad",
+      "features": ["Cylinder", "Rectangle", "Rx", "Ry", "Rz", "Scale", "Sphere", "Tx", "Ty", "Tz", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 4352,
+        "volume_mm3": 4063.1094279318363,
+        "bounds_mm": [
+          [-5, -7.071067811865475, -4.9956141504942915],
+          [25, 15, 14.142135623730951]
+        ]
+      }
+    },
+    {
+      "file": "examples/union.coscad",
+      "features": ["Rectangle", "Sphere", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 2252,
+        "volume_mm3": 1455.1433982928872,
+        "bounds_mm": [
+          [-5, -4.990133642141358, -4.990133642141358],
+          [10, 10, 10]
+        ]
+      }
+    },
+    {
+      "file": "examples/waterbottle.coscad",
+      "features": ["Diff", "Extrude", "Shape2D", "Tz"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 796,
+        "volume_mm3": 38452.914159751475,
+        "bounds_mm": [
+          [-25, -25, 0],
+          [25, 25, 80]
+        ]
+      }
+    },
+    {
+      "file": "examples/waterbottle_advanced.coscad",
+      "features": ["Diff", "Extrude", "Offset", "Shape2D", "Tz", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported extrusion profile Offset"
+      }
+    },
+    {
+      "file": "examples/zigzag_spring_fixed.coscad",
+      "features": ["Diff", "Extrude", "Rectangle", "Shape2D", "Tx", "Ty", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 888,
+        "volume_mm3": 91.44189609413736,
+        "bounds_mm": [
+          [0, 0, 0],
+          [20, 5, 2]
+        ]
+      }
+    },
+    {
+      "file": "examples/zoo.coscad",
+      "features": ["Cone", "Cuboid", "Cyl", "Mirror", "Prismoid", "Torus", "Tube", "Tx", "Union", "Wedge", "XCyl", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      },
+      "native": {
+        "supported": true,
+        "triangles": 11040,
+        "volume_mm3": 53955.148090230454,
+        "bounds_mm": [
+          [-10, -15.968427654852345, -14],
+          [343, 15.968427654852345, 12.5]
+        ]
+      }
+    }
+  ]
+}
+

@@ -1,0 +1,266 @@
+{
+  "p1s-pla": {
+    "printer": "P1S",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL P1S 0.4 nozzle",
+    "nozzle_temperature": "220",
+    "bed_temperature": "55",
+    "model_id": "C12",
+    "package": "p1s-pla/slice/beach-outrigger.gcode.3mf",
+    "package_sha256": "dc57267aa0073eed263444164d5684813597bbead060ffed78056558e9a792be",
+    "gcode_sha256": "c34a90439a3c2d871e8377f3d1f1aea445b5249529aa57f5ef39d22aa3069df3",
+    "layers": 288,
+    "model_path_segments": 587976,
+    "support_segments": 0,
+    "longest_bridge_segment_mm": 20.98600343085838,
+    "path_bounds_relative_to_model_mm": [
+      [
+        -115.25754954907336,
+        -102.66499999999999,
+        0.2
+      ],
+      [
+        115.21100000000001,
+        102.66752187778275,
+        57.6
+      ]
+    ],
+    "features": {
+      "Outer wall": 98279,
+      "Inner wall": 272565,
+      "Bottom surface": 1659,
+      "Internal solid infill": 53606,
+      "Gap infill": 30796,
+      "Sparse infill": 79455,
+      "Top surface": 2962,
+      "Overhang wall": 24,
+      "Floating vertical shell": 45343,
+      "Bridge": 3287
+    },
+    "estimated_seconds": 77159.59375,
+    "estimated_hours": 21.43322048611111,
+    "estimated_grams": 424.2154235839844,
+    "solid_geometry_grams": 425.9820403540061,
+    "passed": true
+  },
+  "p1s-petg": {
+    "printer": "P1S",
+    "material": "PETG",
+    "filament": "Bambu PETG HF @BBL P1S 0.4 nozzle",
+    "nozzle_temperature": "245",
+    "bed_temperature": "70",
+    "model_id": "C12",
+    "package": "p1s-petg/slice/beach-outrigger.gcode.3mf",
+    "package_sha256": "ea989f2d3133e0494c96033f009dfbd1d8d205a71b1eb518dfec0e66e0c65a8f",
+    "gcode_sha256": "a5b6b4c210be35ddbdccad24032d06ac64d95b7a89b896bf8083e5bb28177046",
+    "layers": 288,
+    "model_path_segments": 587976,
+    "support_segments": 0,
+    "longest_bridge_segment_mm": 20.98600343085838,
+    "path_bounds_relative_to_model_mm": [
+      [
+        -115.25754954907336,
+        -102.66499999999999,
+        0.2
+      ],
+      [
+        115.21100000000001,
+        102.66752187778275,
+        57.6
+      ]
+    ],
+    "features": {
+      "Outer wall": 98279,
+      "Inner wall": 272565,
+      "Bottom surface": 1659,
+      "Internal solid infill": 53606,
+      "Gap infill": 30796,
+      "Sparse infill": 79455,
+      "Top surface": 2962,
+      "Overhang wall": 24,
+      "Floating vertical shell": 45343,
+      "Bridge": 3287
+    },
+    "estimated_seconds": 77507.859375,
+    "estimated_hours": 21.5299609375,
+    "estimated_grams": 417.7596740722656,
+    "solid_geometry_grams": 436.28805745934494,
+    "passed": true
+  },
+  "a1-pla": {
+    "printer": "A1",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL A1",
+    "nozzle_temperature": "220",
+    "bed_temperature": "65",
+    "model_id": "N2S",
+    "package": "a1-pla/slice/beach-outrigger.gcode.3mf",
+    "package_sha256": "5d0404dc5b96147f1b4ee4003eb820486c3650e06fd9a2c8d01e2d157391e480",
+    "gcode_sha256": "fc970d4cfa3810a64ee75cfb2ff2716c73c78c0ae700c73688584f3a6db8c1c2",
+    "layers": 288,
+    "model_path_segments": 588055,
+    "support_segments": 0,
+    "longest_bridge_segment_mm": 20.98600343085838,
+    "path_bounds_relative_to_model_mm": [
+      [
+        -115.25754954907335,
+        -102.66499999999999,
+        0.2
+      ],
+      [
+        115.21100000000001,
+        102.66752187778275,
+        57.6
+      ]
+    ],
+    "features": {
+      "Outer wall": 98302,
+      "Inner wall": 272594,
+      "Bottom surface": 1667,
+      "Internal solid infill": 53606,
+      "Gap infill": 30815,
+      "Sparse infill": 79455,
+      "Top surface": 2962,
+      "Overhang wall": 24,
+      "Floating vertical shell": 45343,
+      "Bridge": 3287
+    },
+    "estimated_seconds": 78114.34375,
+    "estimated_hours": 21.698428819444445,
+    "estimated_grams": 424.2075500488281,
+    "solid_geometry_grams": 425.9820403540061,
+    "passed": true
+  },
+  "a1-petg": {
+    "printer": "A1",
+    "material": "PETG",
+    "filament": "Bambu PETG HF @BBL A1",
+    "nozzle_temperature": "240",
+    "bed_temperature": "70",
+    "model_id": "N2S",
+    "package": "a1-petg/slice/beach-outrigger.gcode.3mf",
+    "package_sha256": "c124ad1371c83df6935ed65570b062516686d39f2ff54faf9447e72e501dbe1f",
+    "gcode_sha256": "a322ed0451ef846586e852b4759778a6e12c33250fa4a1d933071c0ff0726a76",
+    "layers": 288,
+    "model_path_segments": 588041,
+    "support_segments": 0,
+    "longest_bridge_segment_mm": 20.98600343085838,
+    "path_bounds_relative_to_model_mm": [
+      [
+        -115.25754954907335,
+        -102.66499999999999,
+        0.2
+      ],
+      [
+        115.21100000000001,
+        102.66752187778275,
+        57.6
+      ]
+    ],
+    "features": {
+      "Outer wall": 98302,
+      "Inner wall": 272594,
+      "Bottom surface": 1667,
+      "Internal solid infill": 53606,
+      "Gap infill": 30815,
+      "Sparse infill": 79455,
+      "Top surface": 2962,
+      "Overhang wall": 24,
+      "Floating vertical shell": 45329,
+      "Bridge": 3287
+    },
+    "estimated_seconds": 78469.6015625,
+    "estimated_hours": 21.79711154513889,
+    "estimated_grams": 413.35638427734375,
+    "solid_geometry_grams": 436.28805745934494,
+    "passed": true
+  },
+  "x1c-pla": {
+    "printer": "X1C",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL X1C",
+    "nozzle_temperature": "220",
+    "bed_temperature": "55",
+    "model_id": "BL-P001",
+    "package": "x1c-pla/slice/beach-outrigger.gcode.3mf",
+    "package_sha256": "025ed5b869c6380d9b9566a612c28a35dbe5fb62f74cd885a142f5b5ae7117f1",
+    "gcode_sha256": "172e52ac0a15b92fcc369da1f96d1b3956165b04e74de73c0de3a2c337a2c625",
+    "layers": 288,
+    "model_path_segments": 587976,
+    "support_segments": 0,
+    "longest_bridge_segment_mm": 20.98600343085838,
+    "path_bounds_relative_to_model_mm": [
+      [
+        -115.25754954907336,
+        -102.66499999999999,
+        0.2
+      ],
+      [
+        115.21100000000001,
+        102.66752187778275,
+        57.6
+      ]
+    ],
+    "features": {
+      "Outer wall": 98279,
+      "Inner wall": 272565,
+      "Bottom surface": 1659,
+      "Internal solid infill": 53606,
+      "Gap infill": 30796,
+      "Sparse infill": 79455,
+      "Top surface": 2962,
+      "Overhang wall": 24,
+      "Floating vertical shell": 45343,
+      "Bridge": 3287
+    },
+    "estimated_seconds": 77324.921875,
+    "estimated_hours": 21.47914496527778,
+    "estimated_grams": 424.4527587890625,
+    "solid_geometry_grams": 425.9820403540061,
+    "passed": true
+  },
+  "x1c-petg": {
+    "printer": "X1C",
+    "material": "PETG",
+    "filament": "Bambu PETG HF @BBL X1C",
+    "nozzle_temperature": "245",
+    "bed_temperature": "70",
+    "model_id": "BL-P001",
+    "package": "x1c-petg/slice/beach-outrigger.gcode.3mf",
+    "package_sha256": "58e87cb5c134c262789852f37b00aecdf17e3c929d3423bb8fed9d702bb28135",
+    "gcode_sha256": "67b2d67dbd92e8afdc499c533666afff932b7ecc168b528610bc922a637fe6fd",
+    "layers": 288,
+    "model_path_segments": 587962,
+    "support_segments": 0,
+    "longest_bridge_segment_mm": 20.98600343085838,
+    "path_bounds_relative_to_model_mm": [
+      [
+        -115.25754954907336,
+        -102.66499999999999,
+        0.2
+      ],
+      [
+        115.21100000000001,
+        102.66752187778275,
+        57.6
+      ]
+    ],
+    "features": {
+      "Outer wall": 98279,
+      "Inner wall": 272565,
+      "Bottom surface": 1659,
+      "Internal solid infill": 53606,
+      "Gap infill": 30796,
+      "Sparse infill": 79455,
+      "Top surface": 2962,
+      "Overhang wall": 24,
+      "Floating vertical shell": 45329,
+      "Bridge": 3287
+    },
+    "estimated_seconds": 77673.421875,
+    "estimated_hours": 21.575950520833334,
+    "estimated_grams": 418.0028381347656,
+    "solid_geometry_grams": 436.28805745934494,
+    "passed": true
+  }
+}

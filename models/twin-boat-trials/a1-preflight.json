@@ -1,0 +1,151 @@
+{
+  "printer": "a1",
+  "status": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 30,
+    "total_layer_num": 30,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "ship-anchor_bed1.gcode.3mf",
+    "nozzle_temper": 29.1875,
+    "bed_temper": 29.03125,
+    "print_error": 0
+  },
+  "hms": [],
+  "spools": [
+    [
+      "ams0",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ],
+    [
+      "ams2",
+      "PLA",
+      "F4EE2AFF",
+      false
+    ],
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ]
+  ],
+  "ams": {
+    "ams": [
+      {
+        "chip_id": "7c2934333937060137363536fffffff",
+        "check": 0,
+        "id": "0",
+        "humidity": "5",
+        "humidity_raw": "0",
+        "temp": "0.0",
+        "dry_time": 0,
+        "info": "1002",
+        "tray": [
+          {
+            "id": "0",
+            "state": 3,
+            "remain": 100,
+            "k": 0.01999999955296,
+            "n": 1,
+            "cali_idx": -1,
+            "total_len": 330000,
+            "tag_uid": "0000000000000000",
+            "tray_id_name": "",
+            "tray_info_idx": "GFSNL04",
+            "tray_type": "PLA",
+            "tray_sub_brands": "",
+            "tray_color": "FFFFFFFF",
+            "tray_weight": "0",
+            "tray_diameter": "0.00",
+            "tray_temp": "0",
+            "tray_time": "0",
+            "bed_temp_type": "0",
+            "bed_temp": "0",
+            "nozzle_temp_max": "240",
+            "nozzle_temp_min": "190",
+            "xcam_info": "000000000000000000000000",
+            "tray_uuid": "00000000000000000000000000000000",
+            "ctype": 0,
+            "cols": [
+              "FFFFFFFF"
+            ]
+          },
+          {
+            "id": "1"
+          },
+          {
+            "id": "2",
+            "state": 3,
+            "remain": 100,
+            "k": 0.01999999955296,
+            "n": 1,
+            "cali_idx": -1,
+            "total_len": 330000,
+            "tag_uid": "0000000000000000",
+            "tray_id_name": "",
+            "tray_info_idx": "GFSNL03",
+            "tray_type": "PLA",
+            "tray_sub_brands": "",
+            "tray_color": "F4EE2AFF",
+            "tray_weight": "0",
+            "tray_diameter": "0.00",
+            "tray_temp": "0",
+            "tray_time": "0",
+            "bed_temp_type": "0",
+            "bed_temp": "0",
+            "nozzle_temp_max": "240",
+            "nozzle_temp_min": "190",
+            "xcam_info": "000000000000000000000000",
+            "tray_uuid": "00000000000000000000000000000000",
+            "ctype": 0,
+            "cols": [
+              "F4EE2AFF"
+            ]
+          },
+          {
+            "id": "3"
+          }
+        ]
+      }
+    ],
+    "ams_exist_bits": "1",
+    "tray_exist_bits": "5",
+    "tray_is_bbl_bits": "5",
+    "tray_tar": "255",
+    "tray_now": "255",
+    "tray_pre": "255",
+    "tray_read_done_bits": "5",
+    "tray_reading_bits": "0",
+    "version": 42,
+    "insert_flag": true,
+    "power_on_flag": false
+  },
+  "vt_tray": {
+    "id": "254",
+    "tag_uid": "0000000000000000",
+    "tray_id_name": "",
+    "tray_info_idx": "GFSNL04",
+    "tray_type": "PLA",
+    "tray_sub_brands": "",
+    "tray_color": "FFFFFFFF",
+    "tray_weight": "0",
+    "tray_diameter": "0.00",
+    "tray_temp": "0",
+    "tray_time": "0",
+    "bed_temp_type": "0",
+    "bed_temp": "0",
+    "nozzle_temp_max": "240",
+    "nozzle_temp_min": "190",
+    "xcam_info": "000000000000000000000000",
+    "tray_uuid": "00000000000000000000000000000000",
+    "remain": 0,
+    "k": 0.019999999552965164,
+    "n": 1,
+    "cali_idx": -1
+  },
+  "nozzle_diameter": "0.4"
+}

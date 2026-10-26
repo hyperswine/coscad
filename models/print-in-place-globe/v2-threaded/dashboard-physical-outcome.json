@@ -1,0 +1,14 @@
+{
+  "recorded_at": 1792897996.156069,
+  "dashboard_attempt": {
+    "created": 1792897995,
+    "file": "print-in-place-globe/v2-threaded/slice/globe-v2-p1s.gcode.3mf",
+    "id": "6",
+    "note": "Owner report 2026-10-25: full globe printed in one bed as two main parts; increased structural walls and bed-only tree supports worked quite well. Male thread on the stand and female interface in the globe/gimbal foot fit well. Globe-to-gimbal moving tolerances also worked quite well. Physical result reported by owner; no measured durability claim.",
+    "outcome": "Passed",
+    "printer": "p1s",
+    "profile": "P1S PLA; 2 main parts/one bed; structural 6 walls, rotor 3; bed-only automatic trees; coarse screw-on base"
+  },
+  "maintenance_revision": 6,
+  "source": "Owner physical observation"
+}

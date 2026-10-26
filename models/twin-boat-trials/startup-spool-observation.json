@@ -1,0 +1,70 @@
+[
+  {
+    "printer": "p1s",
+    "boat": "monohull",
+    "observed_at": "2026-10-25T14:28:12+1100",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 0,
+      "layer_num": 0,
+      "total_layer_num": 175,
+      "mc_remaining_time": 162,
+      "gcode_file": "monohull-p1s-20261025-142607.gcode.3mf",
+      "subtask_name": "monohull-p1s-20261025-142607.gcode",
+      "nozzle_temper": 245.65625,
+      "bed_temper": 54.75,
+      "print_error": 0
+    },
+    "hms": [],
+    "tray_now": "254",
+    "tray_target": "254",
+    "spools": [
+      [
+        "external",
+        "PLA",
+        "FFF144FF",
+        true
+      ]
+    ]
+  },
+  {
+    "printer": "a1",
+    "boat": "outrigger",
+    "observed_at": "2026-10-25T14:28:14+1100",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 0,
+      "layer_num": 0,
+      "total_layer_num": 137,
+      "mc_remaining_time": 237,
+      "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+      "subtask_name": "outrigger-a1-20261025-142608.gcode",
+      "nozzle_temper": 213.5,
+      "bed_temper": 64.6875,
+      "print_error": 0
+    },
+    "hms": [],
+    "tray_now": "255",
+    "tray_target": "0",
+    "spools": [
+      [
+        "ams0",
+        "PLA",
+        "FFFFFFFF",
+        false
+      ],
+      [
+        "ams2",
+        "PLA",
+        "F4EE2AFF",
+        false
+      ],
+      [
+        "external",
+        "PLA",
+        "FFFFFFFF",
+        false
+      ]
+    ]
+  }
+]

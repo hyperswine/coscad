@@ -1,0 +1,603 @@
+{
+  "time": "2026-10-23T17:55:58+1100",
+  "printer": "P1S",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 587,
+    "total_layer_num": 587,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "globe-p1s-20261020.gcode",
+    "nozzle_temper": 27.75,
+    "bed_temper": 24.6875,
+    "print_error": 0
+  },
+  "hms_before": [],
+  "bed_clear_confirmed_by_owner": true,
+  "spool": "external",
+  "material": "PLA",
+  "sha256": "9a9f41f93a809175476fe5aef9a9af29d9e7fe298b1683ca1463b75b71b4a9ae",
+  "remote_name": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "time": "2026-10-23T17:56:12+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 587,
+        "total_layer_num": 587,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 27.75,
+        "bed_temper": 24.6875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T17:56:27+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 61,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 45.8125,
+        "bed_temper": 24.65625,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T17:56:42+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 61,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 79.71875,
+        "bed_temper": 26.40625,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T17:56:57+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 61,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 75.28125,
+        "bed_temper": 43.9375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T17:57:12+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 61,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 97.25,
+        "bed_temper": 54.3125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T17:57:27+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 61,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 177.9375,
+        "bed_temper": 54.34375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T17:57:42+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 61,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 230.125,
+        "bed_temper": 54.6875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T17:57:57+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 60,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 247.3125,
+        "bed_temper": 54.75,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T17:58:12+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 56,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 231.34375,
+        "bed_temper": 54.78125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T17:58:27+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 56,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 206.28125,
+        "bed_temper": 54.8125,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1788926842
+        }
+      ]
+    },
+    {
+      "time": "2026-10-23T17:58:42+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 56,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 200.5,
+        "bed_temper": 54.84375,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1788926842
+        }
+      ]
+    },
+    {
+      "time": "2026-10-23T17:58:57+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 56,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 200.03125,
+        "bed_temper": 54.90625,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1788926842
+        }
+      ]
+    },
+    {
+      "time": "2026-10-23T17:59:12+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 56,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 200.03125,
+        "bed_temper": 54.9375,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1788926842
+        }
+      ]
+    },
+    {
+      "time": "2026-10-23T17:59:27+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 56,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 200.03125,
+        "bed_temper": 54.8125,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1788926842
+        }
+      ]
+    },
+    {
+      "time": "2026-10-23T17:59:42+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 197.25,
+        "bed_temper": 54.8125,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1788926842
+        }
+      ]
+    },
+    {
+      "time": "2026-10-23T17:59:57+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 183.8125,
+        "bed_temper": 54.84375,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1788926842
+        }
+      ]
+    },
+    {
+      "time": "2026-10-23T18:00:12+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 162.5625,
+        "bed_temper": 54.84375,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1788926842
+        }
+      ]
+    },
+    {
+      "time": "2026-10-23T18:00:27+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 145.4375,
+        "bed_temper": 54.875,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1788926842
+        }
+      ]
+    },
+    {
+      "time": "2026-10-23T18:00:42+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 140.71875,
+        "bed_temper": 54.875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:00:57+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 140.15625,
+        "bed_temper": 54.90625,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:01:12+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 54.9375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:01:27+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 140.03125,
+        "bed_temper": 54.9375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:01:42+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 139.84375,
+        "bed_temper": 54.96875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:01:57+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.96875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:02:12+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 139.90625,
+        "bed_temper": 54.9375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:02:27+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 139.90625,
+        "bed_temper": 54.96875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:02:42+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 139.96875,
+        "bed_temper": 54.96875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:02:57+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 143.34375,
+        "bed_temper": 55,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:03:12+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 204,
+        "bed_temper": 55,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:03:27+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 218.59375,
+        "bed_temper": 55,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:03:42+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 87,
+        "mc_remaining_time": 55,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 220.21875,
+        "bed_temper": 55,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "time": "2026-10-23T18:03:57+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 11,
+        "layer_num": 1,
+        "total_layer_num": 87,
+        "mc_remaining_time": 54,
+        "gcode_file": "thread-coupon-p1s-20261023-175558.gcode.3mf",
+        "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+        "nozzle_temper": 220.28125,
+        "bed_temper": 55,
+        "print_error": 0
+      },
+      "hms": []
+    }
+  ],
+  "acknowledged": true,
+  "first_layer_reached": true,
+  "startup_camera": "/Users/jasonqin/Documents/GitHub/coscad/models/print-in-place-globe/v2-threaded/20261023-180359-p1s-thread-start-printer-capture.png"
+}

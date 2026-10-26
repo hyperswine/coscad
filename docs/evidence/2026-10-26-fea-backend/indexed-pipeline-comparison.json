@@ -1,0 +1,1567 @@
+{
+  "schema": "coscad.native-pipeline-comparison.v1",
+  "passed": true,
+  "executable_sha256": "91939279124770109827e03319ae9b568731eb21840adb58c4e827eafca3aac9",
+  "sources_sha256": {
+    "examples/advanced.coscad": "b1f69f8fbf012162423a8e97edf4f9a60a63122ba8c33659bf837b871f6b4d5d",
+    "examples/archive/simple_test.coscad": "dc1bbeabfa1df234afd8dd898e89582d9274bb6cfc955156fb7f945116df3531",
+    "examples/archive/test.coscad": "81d123407560c718e0579b7e2f3484f891ad5460b4bc6af3b5dcd06b97ae49ae",
+    "examples/archive/zigzag_spring.coscad": "194f01b12b83cb77db786a4a5b7ab7a2a257b60f724bc999ac5c8897e48f92a7",
+    "examples/assemble/autotest.assemble": "54aebfce9f89e6c1f876dbba5f90a6271c8bd60d97b0a72298998384e692c326",
+    "examples/assemble/ball/ball.assemble": "68084416ec612e270b17cc3f84bb4942ecdb9a06ee29954ddfb62fd352203393",
+    "examples/assemble/ball/core.coscad": "ff0f272d490f18a8d52d705b1ce65eac39d0e7a7bd2c84cfaf8ea52c089b8602",
+    "examples/assemble/ball/shell.coscad": "6959b6cd2365cedc17381c9ac3d1789094a0ac32cddf57bf34f30588dc968093",
+    "examples/assemble/bow3/bow3.assemble": "ddcb96a5e7885db92e26d208b52ca3c29906b978014523320a68732997a37dfc",
+    "examples/assemble/bow3/center3.coscad": "e44fc7fb78defefec6542cc591cd060013fd6df1b91cb89ab9b984361c429ff8",
+    "examples/assemble/bow3/l_arch3.coscad": "c4751df64f3babdd9997a112c397c539ca6b271c051378b1561898df2e4a7d2e",
+    "examples/assemble/bow3/r_arch3.coscad": "a1646414e0d84ba7ba2108001d834ed0404e9becb49fe97c76c49a799e61340c",
+    "examples/assemble/bracket90.coscad": "f9b5ade3bb0ec30ae27a4b6c7f3d651f81e0633f9e86a3899ef9bdcd61178630",
+    "examples/assemble/constraints/base.coscad": "cd2f1c133b1d11d5c2f92e9d8146b8a78faebbc1c4e71e71981d88949cf714cb",
+    "examples/assemble/constraints/frame-stand.assemble": "9ae8db629e588d82a8566b13b9b051a9ea1b435d277908c8ed2a513f0a626991",
+    "examples/assemble/constraints/post.coscad": "d40c6bdbba10a56bd08ad913140bf625a353072266905e603ef1dbd68d6d06fa",
+    "examples/assemble/corner-mirrored.assemble": "99c245f19e7dad8a4183c8d7d4a10765ccf541900947976f8135226b76a5434d",
+    "examples/assemble/corner.assemble": "efcce9e03f7a4bcceb57a6bc356dc3a1456cf0b4895435bac3db70d35af6c47e",
+    "examples/assemble/frame.assemble": "84a8af26b6d3fad60f9cd02d4a531b71377254c5a62799b4f05c69079e4a68c7",
+    "examples/assemble/inner90.coscad": "d46edaaec0859fa7c28de2c75b0186962cd15f46ffc76523acb7571dbcc81d4d",
+    "examples/assemble/plan/corner_inside.coscad": "4658623c7295e85567523852c6f3537c52da67fc080695483435bcf42c059621",
+    "examples/assemble/plan/corner_pair.assemble": "40ae590241b2e88565df7ed13363266eb2f12fcc3661ec2368947e2982d3b7f2",
+    "examples/assemble/plan/cube.assemble": "f94cf3b23fd079090f49ce4503e5486e851171748be698e4c552ccedacc8e4eb",
+    "examples/assemble/plan/flat90.coscad": "e922de914472373227240e2c0c5fba04211997ddafd50f94a2346acfd2bfd832",
+    "examples/assemble/plan/panel190.coscad": "b3bbacb7c6104967cf37635613268db4db4e91a4fa5ad0ed284d5ae1cf3588fa",
+    "examples/assemble/plan/rail160.coscad": "014623c0b73acdf2ea7fa4523841ce59aabaf1785065ad2452668c24d4af683e",
+    "examples/assemble/plan/rail200.coscad": "87e3c3347f85f28f74acbf0a36cbb31ca65087abb549354b6972e84215084674",
+    "examples/assemble/plan/rail2020.coscad": "673d87b83d787d40b3c9dbf3b4d21ecf56e3984226db7015739de53bf898da49",
+    "examples/assemble/plan/rail2020_300.coscad": "a8eee8504b1eecc14d4476d0b768fafbd96f98bceb3d760080437b8f90d21d01",
+    "examples/assemble/rail120.coscad": "f71547d01f7ab95fa30ab8bc135bbfd43ff03f2a57544948c2ce6170746e0277",
+    "examples/assemble/rail200.coscad": "e28c5e9e2f0c403c8799d6736ef414007c97f67fdad0fc4f75703e63d35f007d",
+    "examples/assemble/spill.assemble": "ab79feeaf5949917364f4998a0f023a1764c475ce7df80800d90439916cfdf4e",
+    "examples/assemble/tesseract/adhesion-retry/fit-test.assemble": "b44ebc9dee293755a22c671e01746cf037565fe3b5cbd371abe6f7fab062692f",
+    "examples/assemble/tesseract/bar.coscad": "eb52c0ab6ee231d5341ed382ef8fc331c9b7d7892f7bc674b026959523263907",
+    "examples/assemble/tesseract/bolted/bar.coscad": "f6b90ad6be3e9837dc4272008447a95ee848a45a32cb2ac5c63e0cc86ee36606",
+    "examples/assemble/tesseract/bolted/corner.coscad": "e7802cd2199037624f83d4e3ba92f2234057ceeb853d1917745ba31d015e3eb5",
+    "examples/assemble/tesseract/bolted/inner.coscad": "222f4f5aa1dd7ce48274216bb6578b8219c898a1af82d0437048d49a61ef8311",
+    "examples/assemble/tesseract/bolted/strut.coscad": "1275ed2ce3671db115cf68844dd8d948f7ad8c119f0ce8c2ce19bbca797c7258",
+    "examples/assemble/tesseract/bolted/tesseract.assemble": "d8dc5172d13a6dae0b2eb1e54dc37c30c180439388a2ad4f491374b82cf85d92",
+    "examples/assemble/tesseract/cap.coscad": "ff07d3e25d0e6cefcf8248462f9de72de9ee0c3f4e84c55efa47f5b0ecbd5c24",
+    "examples/assemble/tesseract/corner.coscad": "64cf0e1405b3833259e0273f740526c90e4af35bd3132439655709b9c45015d0",
+    "examples/assemble/tesseract/finished.assemble": "caa0f97d6abe31999c10ef73910351c54f274317b4189ab39a439f938ef6e2a5",
+    "examples/assemble/tesseract/fit-test.assemble": "44dced7e646d05c6754c2d7655b2b9f23dbbe7a137e3dffced83ee851ac7bc92",
+    "examples/assemble/tesseract/inner.coscad": "222f4f5aa1dd7ce48274216bb6578b8219c898a1af82d0437048d49a61ef8311",
+    "examples/assemble/tesseract/jig.coscad": "fcc7a80992018cd3eabc1728d92d7d08ae55974d261e865844b2204c72f19930",
+    "examples/assemble/tesseract/strut.coscad": "271984ccdbc88b0153fb4126772e51e384e77be5e64d651f4099f6196a8f76d8",
+    "examples/assemble/tesseract/tesseract.assemble": "49ee136b48727b709d8155a5c482dce5db74237725568ab28bda7fdfa307c978",
+    "examples/assemble/tesseract/test-bar.coscad": "90eb410c1e7fdb6790a87e9c33f013300e1aa9f9c73f34d7fc4c38289a142c50",
+    "examples/attach_demo.coscad": "1afe46a893ef9b545dc125c97dd0d68a57b7aae6a3ebadf4e52651bfb5d9f157",
+    "examples/bow.assemble": "2f38b74ec9bf5ee82dace910b8b5f0f3e2f7cb1bea1a6e6c530c3abe83cda851",
+    "examples/bow.coscad": "468646ccd28a59ade029812c6c8be48da6457c6e7ad846855041388fc9685432",
+    "examples/bracket.coscad": "94ba9daaa90bc2bc2ca1874bde1194de3c17c8b55515ef184b1c0e4571ef47b3",
+    "examples/complex.coscad": "0daa27bc9ecb67204fff57facf23c33d06355f617dc2784555b12d1f8e9d6e41",
+    "examples/cone.coscad": "0dcc69759d4939eb3a79362103b6fa235425125d3f5afb0ca552fcaa7f715b63",
+    "examples/cylinder.coscad": "177680430d8992a535060c3c4540a6a983d4f1be570b61620ffc083d783e9752",
+    "examples/demo.coscad": "e78417adfef532fa0ef0a98436264080de9ba3e3db17f53638b6185ab9a7ad96",
+    "examples/extrusion.coscad": "67ec7be37c7daedfbb0eb58ed0e3706d526d7ee8117ec0e1bb186e3b028b7752",
+    "examples/gear_test.coscad": "f8c7ceaf3fc7204483a0cd5cad0ac87b97966b15bbaccab44c115d5e0f53fe3b",
+    "examples/glider.coscad": "af7c49684570e4c8df656076e9296373f65e007e1fe68521a9b6526f109fe826",
+    "examples/grease_claw.coscad": "857baf892c3e8c51fa242f41329e1e0b9e42b9e018d34035dec29bb74cd88d88",
+    "examples/loft.coscad": "23770b8b258447722779cc3a671cf9c0bba5622026783c81497d7c263be8c78e",
+    "examples/math_zigzag_spring.coscad": "28e8f02eaf7891cc987d62ff521abd71abe4899b2b112a71039f703e853abb6f",
+    "examples/offset_demo.coscad": "c8e6c4379285d85e46cd438b799e0a377485d8c79c765a185c31dfcfb3863076",
+    "examples/panel.coscad": "ee5ad28b3cbb8ab5336388efb5464f3b72040d0a71508d08e62e2114eb719629",
+    "examples/simple_transform.coscad": "3978b2bf1abcb36f1832b06e64f0b7d57089b819d0561ccf42b96c4fd2e83c14",
+    "examples/sphere.coscad": "60fc31771777c958e57a6ef77ffe5143b174fcbec46fae6c43e714b6cc19044f",
+    "examples/topological/datum-plate.coscad": "06f14e954150bc79962a77b5d2341d583730a35edb35124f50c5c963c23bbae1",
+    "examples/topological/mating-corner.coscad": "383c5f92b1fd08e0818d8b816c49dbba296c221fe5b4c162c1a783d49f61f32c",
+    "examples/topological/pipeline_basics.coscad": "2ebd2c0b90122e962427eb120c346897145851c610c367dd3cb848850644b3a5",
+    "examples/topological/tbracket.coscad": "e17abd29f82ba39e840cb85056d00e6a5c113df283941a3e9ff238f610487012",
+    "examples/topological/topo_tour.coscad": "4df6c500dbe0c52eb5be100a176e6ce0de02c4272f3bf1e90ada395d44c889c8",
+    "examples/transformations.coscad": "82f0e5298ae154740deba636b6d3abeed4a932313cb28cad3c155c3762dbefc5",
+    "examples/union.coscad": "4e18d7e9713e8a6253023dba28a65038f1af9bcb20be8a35099ecb11ad89dbfc",
+    "examples/waterbottle.coscad": "aab6e9c2464a8fe28c9518fb6d117ebc1b24748d10bde40828c61335033d35d2",
+    "examples/waterbottle_advanced.coscad": "1e56ec5c2aa2499caea49d25e0f2872d385d5cf58e6ab3784719049ffc49cd7f",
+    "examples/zigzag_spring_fixed.coscad": "53dc25bd8b935669a569deb9907793ef03fa898fdb1f362568b3a8c802e3ca26",
+    "examples/zoo.coscad": "116b8631f34696d894a40cf3619b9a9231897446a5e319d39332ad75be7dc070"
+  },
+  "criteria": "Check verdicts and exits; next variant/placement identities, orientation, warning codes, mesh volume 0.1%, bounds 0.01mm.",
+  "cases": [
+    {
+      "source": "examples/assemble/constraints/frame-stand.assemble",
+      "command": "check",
+      "passed": true,
+      "native": {
+        "exit_code": 0,
+        "seconds": 0.05635654181241989,
+        "stdout": "check: 3 parts, clearance = 0.0mm\n       geometry backend: native-experimental\n       3 placed instances: base, left_post, right_post\ncontact  base x left_post\ncontact  base x right_post\ncheck: 0 overlaps, 0 clearance warnings\n",
+        "stderr": "",
+        "verdicts": [
+          [
+            "contact",
+            "base",
+            "left_post"
+          ],
+          [
+            "contact",
+            "base",
+            "right_post"
+          ]
+        ]
+      },
+      "openscad": {
+        "exit_code": 0,
+        "seconds": 0.9019376251380891,
+        "stdout": "check: 3 parts, clearance = 0.0mm\n       geometry backend: openscad\n       3 placed instances: base, left_post, right_post\ncontact  base x left_post\ncontact  base x right_post\ncheck: 0 overlaps, 0 clearance warnings\n",
+        "stderr": "",
+        "verdicts": [
+          [
+            "contact",
+            "base",
+            "left_post"
+          ],
+          [
+            "contact",
+            "base",
+            "right_post"
+          ]
+        ]
+      }
+    },
+    {
+      "source": "examples/assemble/constraints/frame-stand.assemble",
+      "command": "next",
+      "passed": true,
+      "native": {
+        "exit_code": 0,
+        "seconds": 0.02041333308443427,
+        "stdout": "Wrote examples/assemble/constraints/frame-stand_bed1.stl (3 parts)\nWrote examples/assemble/constraints/frame-stand_manifest.json\n",
+        "stderr": "",
+        "geometry_backend": "native-experimental",
+        "variants": {
+          "base_asis": {
+            "part": "base",
+            "down": "bot",
+            "footprint": [
+              40,
+              30,
+              4
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 4800.0,
+              "bounds_mm": [
+                [
+                  -20.0,
+                  -15.0,
+                  -2.0
+                ],
+                [
+                  20.0,
+                  15.0,
+                  2.0
+                ]
+              ]
+            }
+          },
+          "left_post_asis": {
+            "part": "left_post",
+            "down": "rt",
+            "footprint": [
+              20,
+              10,
+              6
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 1200.0,
+              "bounds_mm": [
+                [
+                  -3.0,
+                  -5.0,
+                  -10.0
+                ],
+                [
+                  3.0,
+                  5.0,
+                  10.0
+                ]
+              ]
+            }
+          }
+        },
+        "placements": [
+          [
+            {
+              "instance": "base_1",
+              "variant": "base_asis",
+              "x": 6,
+              "y": 6,
+              "w": 40,
+              "d": 30,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "left_post_1",
+              "variant": "left_post_asis",
+              "x": 52,
+              "y": 6,
+              "w": 20,
+              "d": 10,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "right_post_1",
+              "variant": "left_post_asis",
+              "x": 78,
+              "y": 6,
+              "w": 20,
+              "d": 10,
+              "brim_mm": 0,
+              "rot_z": 0
+            }
+          ]
+        ],
+        "beds": [
+          {
+            "volume_mm3": 7200.0,
+            "bounds_mm": [
+              [
+                6.0,
+                6.0,
+                0.0
+              ],
+              [
+                98.0,
+                36.0,
+                6.000000000000001
+              ]
+            ]
+          }
+        ]
+      },
+      "openscad": {
+        "exit_code": 0,
+        "seconds": 0.44591858400963247,
+        "stdout": "Wrote examples/assemble/constraints/frame-stand_bed1.stl (3 parts)\nWrote examples/assemble/constraints/frame-stand_manifest.json\n",
+        "stderr": "",
+        "geometry_backend": "openscad",
+        "variants": {
+          "base_asis": {
+            "part": "base",
+            "down": "bot",
+            "footprint": [
+              40,
+              30,
+              4
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 4800.0,
+              "bounds_mm": [
+                [
+                  -20.0,
+                  -15.0,
+                  -2.0
+                ],
+                [
+                  20.0,
+                  15.0,
+                  2.0
+                ]
+              ]
+            }
+          },
+          "left_post_asis": {
+            "part": "left_post",
+            "down": "rt",
+            "footprint": [
+              20,
+              10,
+              6
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 1200.0,
+              "bounds_mm": [
+                [
+                  -3.0,
+                  -5.0,
+                  -10.0
+                ],
+                [
+                  3.0,
+                  5.0,
+                  10.0
+                ]
+              ]
+            }
+          }
+        },
+        "placements": [
+          [
+            {
+              "instance": "base_1",
+              "variant": "base_asis",
+              "x": 6,
+              "y": 6,
+              "w": 40,
+              "d": 30,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "left_post_1",
+              "variant": "left_post_asis",
+              "x": 52,
+              "y": 6,
+              "w": 20,
+              "d": 10,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "right_post_1",
+              "variant": "left_post_asis",
+              "x": 78,
+              "y": 6,
+              "w": 20,
+              "d": 10,
+              "brim_mm": 0,
+              "rot_z": 0
+            }
+          ]
+        ],
+        "beds": [
+          {
+            "volume_mm3": 7200.0,
+            "bounds_mm": [
+              [
+                6.0,
+                6.0,
+                0.0
+              ],
+              [
+                98.0,
+                36.0,
+                6.000000000000001
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "examples/assemble/bow3/bow3.assemble",
+      "command": "check",
+      "passed": true,
+      "native": {
+        "exit_code": 0,
+        "seconds": 0.48578716698102653,
+        "stdout": "check: 3 parts, clearance = 0.0mm\n       geometry backend: native-experimental\n       3 placed instances: center, larch, rarch\ncontact  center x larch\ncontact  center x rarch\ncheck: 0 overlaps, 0 clearance warnings\n",
+        "stderr": "",
+        "verdicts": [
+          [
+            "contact",
+            "center",
+            "larch"
+          ],
+          [
+            "contact",
+            "center",
+            "rarch"
+          ]
+        ]
+      },
+      "openscad": {
+        "exit_code": 0,
+        "seconds": 6.193765459116548,
+        "stdout": "check: 3 parts, clearance = 0.0mm\n       geometry backend: openscad\n       3 placed instances: center, larch, rarch\ncontact  center x larch\ncontact  center x rarch\ncheck: 0 overlaps, 0 clearance warnings\n",
+        "stderr": "",
+        "verdicts": [
+          [
+            "contact",
+            "center",
+            "larch"
+          ],
+          [
+            "contact",
+            "center",
+            "rarch"
+          ]
+        ]
+      }
+    },
+    {
+      "source": "examples/assemble/bow3/bow3.assemble",
+      "command": "next",
+      "passed": true,
+      "native": {
+        "exit_code": 0,
+        "seconds": 0.42462166608311236,
+        "stdout": "Wrote examples/assemble/bow3/bow3_bed1.stl (3 parts)\nWrote examples/assemble/bow3/bow3_manifest.json\n",
+        "stderr": "",
+        "geometry_backend": "native-experimental",
+        "variants": {
+          "center_asis": {
+            "part": "center",
+            "down": "bot",
+            "footprint": [
+              110,
+              36,
+              14
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 43019.402245738325,
+              "bounds_mm": [
+                [
+                  -55.0,
+                  -18.0,
+                  -7.0
+                ],
+                [
+                  55.0,
+                  18.0,
+                  7.0
+                ]
+              ]
+            }
+          },
+          "larch_asis": {
+            "part": "larch",
+            "down": "top",
+            "footprint": [
+              242.705,
+              69.25,
+              14
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 57896.61242549771,
+              "bounds_mm": [
+                [
+                  -26.0,
+                  -1.0,
+                  0.0
+                ],
+                [
+                  216.70500716260085,
+                  68.24965557009548,
+                  14.0
+                ]
+              ]
+            }
+          },
+          "rarch_asis": {
+            "part": "rarch",
+            "down": "top",
+            "footprint": [
+              242.705,
+              69.25,
+              14
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 57896.61242549771,
+              "bounds_mm": [
+                [
+                  -216.70500716260085,
+                  -1.0,
+                  0.0
+                ],
+                [
+                  26.0,
+                  68.24965557009548,
+                  14.0
+                ]
+              ]
+            }
+          }
+        },
+        "placements": [
+          [
+            {
+              "instance": "larch_1",
+              "variant": "larch_asis",
+              "x": 4,
+              "y": 4,
+              "w": 242.705,
+              "d": 69.25,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "rarch_1",
+              "variant": "rarch_asis",
+              "x": 4,
+              "y": 77.25,
+              "w": 242.705,
+              "d": 69.25,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "center_1",
+              "variant": "center_asis",
+              "x": 4,
+              "y": 150.499,
+              "w": 110,
+              "d": 36,
+              "brim_mm": 0,
+              "rot_z": 0
+            }
+          ]
+        ],
+        "beds": [
+          {
+            "volume_mm3": 158812.62709673322,
+            "bounds_mm": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                246.70500716260085,
+                186.49931114019097,
+                14.000000000000009
+              ]
+            ]
+          }
+        ]
+      },
+      "openscad": {
+        "exit_code": 0,
+        "seconds": 5.117814791854471,
+        "stdout": "Wrote examples/assemble/bow3/bow3_bed1.stl (3 parts)\nWrote examples/assemble/bow3/bow3_manifest.json\n",
+        "stderr": "",
+        "geometry_backend": "openscad",
+        "variants": {
+          "center_asis": {
+            "part": "center",
+            "down": "bot",
+            "footprint": [
+              110,
+              36,
+              14
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 43019.40203868845,
+              "bounds_mm": [
+                [
+                  -55.0,
+                  -18.0,
+                  -7.0
+                ],
+                [
+                  55.0,
+                  18.0,
+                  7.0
+                ]
+              ]
+            }
+          },
+          "larch_asis": {
+            "part": "larch",
+            "down": "top",
+            "footprint": [
+              242.705,
+              69.25,
+              14
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 57896.61158594663,
+              "bounds_mm": [
+                [
+                  -26.0,
+                  -1.0,
+                  0.0
+                ],
+                [
+                  216.7050018310547,
+                  68.2496566772461,
+                  14.0
+                ]
+              ]
+            }
+          },
+          "rarch_asis": {
+            "part": "rarch",
+            "down": "top",
+            "footprint": [
+              242.705,
+              69.25,
+              14
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 57896.611585946775,
+              "bounds_mm": [
+                [
+                  -216.7050018310547,
+                  -1.0,
+                  0.0
+                ],
+                [
+                  26.0,
+                  68.2496566772461,
+                  14.0
+                ]
+              ]
+            }
+          }
+        },
+        "placements": [
+          [
+            {
+              "instance": "larch_1",
+              "variant": "larch_asis",
+              "x": 4,
+              "y": 4,
+              "w": 242.705,
+              "d": 69.25,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "rarch_1",
+              "variant": "rarch_asis",
+              "x": 4,
+              "y": 77.25,
+              "w": 242.705,
+              "d": 69.25,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "center_1",
+              "variant": "center_asis",
+              "x": 4,
+              "y": 150.499,
+              "w": 110,
+              "d": 36,
+              "brim_mm": 0,
+              "rot_z": 0
+            }
+          ]
+        ],
+        "beds": [
+          {
+            "volume_mm3": 158812.62521058106,
+            "bounds_mm": [
+              [
+                4.0,
+                4.0,
+                0.0
+              ],
+              [
+                246.7050018310547,
+                186.4993133544922,
+                14.000000000000009
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "examples/assemble/corner.assemble",
+      "command": "check",
+      "passed": true,
+      "native": {
+        "exit_code": 2,
+        "seconds": 0.31907095783390105,
+        "stdout": "check: 5 parts, clearance = 0.0mm\n       geometry backend: native-experimental\n       5 placed instances: railH, railV, inner, bracket1, bracket2\ncontact  railH x railV\nOVERLAP  railH x inner  volume 42.362 mm^3\nOVERLAP  railH x bracket1  volume 42.362 mm^3\nOVERLAP  railH x bracket2  volume 42.362 mm^3\nOVERLAP  railV x inner  volume 42.362 mm^3\nOVERLAP  railV x bracket1  volume 42.362 mm^3\nOVERLAP  railV x bracket2  volume 42.362 mm^3\nok       inner x bracket1  gap 2.236 mm\nok       inner x bracket2  gap 2.236 mm\ncheck: 6 overlaps, 0 clearance warnings\n",
+        "stderr": "",
+        "verdicts": [
+          [
+            "OVERLAP",
+            "railH",
+            "bracket1"
+          ],
+          [
+            "OVERLAP",
+            "railH",
+            "bracket2"
+          ],
+          [
+            "OVERLAP",
+            "railH",
+            "inner"
+          ],
+          [
+            "OVERLAP",
+            "railV",
+            "bracket1"
+          ],
+          [
+            "OVERLAP",
+            "railV",
+            "bracket2"
+          ],
+          [
+            "OVERLAP",
+            "railV",
+            "inner"
+          ],
+          [
+            "contact",
+            "railH",
+            "railV"
+          ]
+        ]
+      },
+      "openscad": {
+        "exit_code": 2,
+        "seconds": 6.637516125105321,
+        "stdout": "check: 5 parts, clearance = 0.0mm\n       geometry backend: openscad\n       5 placed instances: railH, railV, inner, bracket1, bracket2\ncontact  railH x railV\nOVERLAP  railH x inner  volume 42.362 mm^3\nOVERLAP  railH x bracket1  volume 42.362 mm^3\nOVERLAP  railH x bracket2  volume 42.362 mm^3\nOVERLAP  railV x inner  volume 42.362 mm^3\nOVERLAP  railV x bracket1  volume 42.362 mm^3\nOVERLAP  railV x bracket2  volume 42.362 mm^3\nok       inner x bracket1  gap 2.236 mm\nok       inner x bracket2  gap 2.236 mm\ncheck: 6 overlaps, 0 clearance warnings\n",
+        "stderr": "",
+        "verdicts": [
+          [
+            "OVERLAP",
+            "railH",
+            "bracket1"
+          ],
+          [
+            "OVERLAP",
+            "railH",
+            "bracket2"
+          ],
+          [
+            "OVERLAP",
+            "railH",
+            "inner"
+          ],
+          [
+            "OVERLAP",
+            "railV",
+            "bracket1"
+          ],
+          [
+            "OVERLAP",
+            "railV",
+            "bracket2"
+          ],
+          [
+            "OVERLAP",
+            "railV",
+            "inner"
+          ],
+          [
+            "contact",
+            "railH",
+            "railV"
+          ]
+        ]
+      }
+    },
+    {
+      "source": "examples/assemble/corner.assemble",
+      "command": "next",
+      "passed": true,
+      "native": {
+        "exit_code": 0,
+        "seconds": 0.21407604194246233,
+        "stdout": "Wrote examples/assemble/corner_bed1.stl (3 parts)\nWrote examples/assemble/corner_manifest.json\n",
+        "stderr": "",
+        "geometry_backend": "native-experimental",
+        "variants": {
+          "inner_bak": {
+            "part": "inner",
+            "down": "bak",
+            "footprint": [
+              33.5,
+              33.5,
+              20
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 10301.76229340715,
+              "bounds_mm": [
+                [
+                  -1.5,
+                  -10.0,
+                  -1.5
+                ],
+                [
+                  32.0,
+                  10.0,
+                  32.0
+                ]
+              ]
+            }
+          },
+          "bracket1_top": {
+            "part": "bracket1",
+            "down": "top",
+            "footprint": [
+              43,
+              42.982,
+              6.5
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 5268.865316170103,
+              "bounds_mm": [
+                [
+                  -9.0,
+                  -8.982240555854444,
+                  -1.5
+                ],
+                [
+                  34.0,
+                  34.0,
+                  5.0
+                ]
+              ]
+            }
+          }
+        },
+        "placements": [
+          [
+            {
+              "instance": "bracket1_1",
+              "variant": "bracket1_top",
+              "x": 6,
+              "y": 6,
+              "w": 43,
+              "d": 42.982,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "bracket2_1",
+              "variant": "bracket1_top",
+              "x": 55,
+              "y": 6,
+              "w": 43,
+              "d": 42.982,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "inner_1",
+              "variant": "inner_bak",
+              "x": 104,
+              "y": 6,
+              "w": 33.5,
+              "d": 33.5,
+              "brim_mm": 0,
+              "rot_z": 0
+            }
+          ]
+        ],
+        "beds": [
+          {
+            "volume_mm3": 20839.492925747334,
+            "bounds_mm": [
+              [
+                6.0,
+                6.0,
+                0.0
+              ],
+              [
+                137.5,
+                48.982240555854446,
+                20.0
+              ]
+            ]
+          }
+        ]
+      },
+      "openscad": {
+        "exit_code": 0,
+        "seconds": 1.9784748328384012,
+        "stdout": "Wrote examples/assemble/corner_bed1.stl (3 parts)\nWrote examples/assemble/corner_manifest.json\n",
+        "stderr": "",
+        "geometry_backend": "openscad",
+        "variants": {
+          "inner_bak": {
+            "part": "inner",
+            "down": "bak",
+            "footprint": [
+              33.5,
+              33.5,
+              20
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 10301.762457327022,
+              "bounds_mm": [
+                [
+                  -1.5,
+                  -10.0,
+                  -1.5
+                ],
+                [
+                  32.0,
+                  10.0,
+                  32.0
+                ]
+              ]
+            }
+          },
+          "bracket1_top": {
+            "part": "bracket1",
+            "down": "top",
+            "footprint": [
+              43,
+              42.982,
+              6.5
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 5268.8653109670695,
+              "bounds_mm": [
+                [
+                  -9.0,
+                  -8.982239723205566,
+                  -1.5
+                ],
+                [
+                  34.0,
+                  34.0,
+                  5.0
+                ]
+              ]
+            }
+          }
+        },
+        "placements": [
+          [
+            {
+              "instance": "bracket1_1",
+              "variant": "bracket1_top",
+              "x": 6,
+              "y": 6,
+              "w": 43,
+              "d": 42.982,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "bracket2_1",
+              "variant": "bracket1_top",
+              "x": 55,
+              "y": 6,
+              "w": 43,
+              "d": 42.982,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "inner_1",
+              "variant": "inner_bak",
+              "x": 104,
+              "y": 6,
+              "w": 33.5,
+              "d": 33.5,
+              "brim_mm": 0,
+              "rot_z": 0
+            }
+          ]
+        ],
+        "beds": [
+          {
+            "volume_mm3": 20839.493079261145,
+            "bounds_mm": [
+              [
+                6.0,
+                6.0,
+                0.0
+              ],
+              [
+                137.5,
+                48.982239723205566,
+                20.0
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "examples/assemble/ball/ball.assemble",
+      "command": "check",
+      "passed": true,
+      "native": {
+        "exit_code": 0,
+        "seconds": 1.2651049171108752,
+        "stdout": "check: 3 parts, clearance = 0.0mm\n       geometry backend: native-experimental\n       3 placed instances: shell1, core, shell2\nok       shell1 x core  gap 0.2 mm\ncontact  shell1 x shell2\nok       core x shell2  gap 0.17 mm\ncheck: 0 overlaps, 0 clearance warnings\n",
+        "stderr": "",
+        "verdicts": [
+          [
+            "contact",
+            "shell1",
+            "shell2"
+          ]
+        ]
+      },
+      "openscad": {
+        "exit_code": 0,
+        "seconds": 19.14931229199283,
+        "stdout": "check: 3 parts, clearance = 0.0mm\n       geometry backend: openscad\n       3 placed instances: shell1, core, shell2\nok       shell1 x core  gap 0.2 mm\ncontact  shell1 x shell2\nok       core x shell2  gap 0.17 mm\ncheck: 0 overlaps, 0 clearance warnings\n",
+        "stderr": "",
+        "verdicts": [
+          [
+            "contact",
+            "shell1",
+            "shell2"
+          ]
+        ]
+      }
+    },
+    {
+      "source": "examples/assemble/ball/ball.assemble",
+      "command": "next",
+      "passed": true,
+      "native": {
+        "exit_code": 0,
+        "seconds": 0.6871890840120614,
+        "stdout": "Wrote examples/assemble/ball/ball_bed1.stl (3 parts)\nWrote examples/assemble/ball/ball_manifest.json\n",
+        "stderr": "",
+        "geometry_backend": "native-experimental",
+        "variants": {
+          "shell1_bot": {
+            "part": "shell1",
+            "down": "bot",
+            "footprint": [
+              39.749,
+              39.921,
+              19.961
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 6685.238527632748,
+              "bounds_mm": [
+                [
+                  -20.0,
+                  -19.960534568565432,
+                  0.0
+                ],
+                [
+                  19.74943959802218,
+                  19.960534568565432,
+                  19.960534568565432
+                ]
+              ]
+            }
+          },
+          "core_asis": {
+            "part": "core",
+            "down": "bot",
+            "footprint": [
+              29.6,
+              29.542,
+              16
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 9140.93115175904,
+              "bounds_mm": [
+                [
+                  -14.8,
+                  -14.77079558073842,
+                  -8.0
+                ],
+                [
+                  14.8,
+                  14.77079558073842,
+                  8.0
+                ]
+              ]
+            }
+          }
+        },
+        "placements": [
+          [
+            {
+              "instance": "shell1_1",
+              "variant": "shell1_bot",
+              "x": 6,
+              "y": 6,
+              "w": 39.749,
+              "d": 39.921,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "shell2_1",
+              "variant": "shell1_bot",
+              "x": 51.749,
+              "y": 6,
+              "w": 39.749,
+              "d": 39.921,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "core_1",
+              "variant": "core_asis",
+              "x": 97.499,
+              "y": 6,
+              "w": 29.6,
+              "d": 29.542,
+              "brim_mm": 0,
+              "rot_z": 0
+            }
+          ]
+        ],
+        "beds": [
+          {
+            "volume_mm3": 22511.408207024546,
+            "bounds_mm": [
+              [
+                6.0,
+                6.0,
+                0.0
+              ],
+              [
+                127.09887919604435,
+                45.921069137130864,
+                19.960534568565432
+              ]
+            ]
+          }
+        ]
+      },
+      "openscad": {
+        "exit_code": 0,
+        "seconds": 7.200449291849509,
+        "stdout": "Wrote examples/assemble/ball/ball_bed1.stl (3 parts)\nWrote examples/assemble/ball/ball_manifest.json\n",
+        "stderr": "",
+        "geometry_backend": "openscad",
+        "variants": {
+          "shell1_bot": {
+            "part": "shell1",
+            "down": "bot",
+            "footprint": [
+              39.749,
+              39.921,
+              19.961
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 6685.238287031101,
+              "bounds_mm": [
+                [
+                  -20.0,
+                  -19.960533142089844,
+                  0.0
+                ],
+                [
+                  19.749439239501953,
+                  19.960533142089844,
+                  19.960533142089844
+                ]
+              ]
+            }
+          },
+          "core_asis": {
+            "part": "core",
+            "down": "bot",
+            "footprint": [
+              29.6,
+              29.542,
+              16
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 9140.930553079424,
+              "bounds_mm": [
+                [
+                  -14.799999237060547,
+                  -14.770794868469238,
+                  -8.0
+                ],
+                [
+                  14.799999237060547,
+                  14.770794868469238,
+                  8.0
+                ]
+              ]
+            }
+          }
+        },
+        "placements": [
+          [
+            {
+              "instance": "shell1_1",
+              "variant": "shell1_bot",
+              "x": 6,
+              "y": 6,
+              "w": 39.749,
+              "d": 39.921,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "shell2_1",
+              "variant": "shell1_bot",
+              "x": 51.749,
+              "y": 6,
+              "w": 39.749,
+              "d": 39.921,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "core_1",
+              "variant": "core_asis",
+              "x": 97.499,
+              "y": 6,
+              "w": 29.6,
+              "d": 29.542,
+              "brim_mm": 0,
+              "rot_z": 0
+            }
+          ]
+        ],
+        "beds": [
+          {
+            "volume_mm3": 22511.407127141556,
+            "bounds_mm": [
+              [
+                6.0,
+                6.0,
+                0.0
+              ],
+              [
+                127.098876953125,
+                45.92106628417969,
+                19.960533142089844
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "examples/assemble/tesseract/fit-test.assemble",
+      "command": "check",
+      "passed": true,
+      "native": {
+        "exit_code": 2,
+        "seconds": 0.25319937500171363,
+        "stdout": "check: 3 parts, clearance = 0.0mm\n       geometry backend: native-experimental\n       3 placed instances: corner, cap, bar\nOVERLAP  corner x cap  volume 0.469 mm^3\nOVERLAP  corner x bar  volume 1.215 mm^3\nOVERLAP  cap x bar  volume 0.604 mm^3\ncheck: 3 overlaps, 0 clearance warnings\n",
+        "stderr": "",
+        "verdicts": [
+          [
+            "OVERLAP",
+            "cap",
+            "bar"
+          ],
+          [
+            "OVERLAP",
+            "corner",
+            "bar"
+          ],
+          [
+            "OVERLAP",
+            "corner",
+            "cap"
+          ]
+        ]
+      },
+      "openscad": {
+        "exit_code": 2,
+        "seconds": 8.045934457797557,
+        "stdout": "check: 3 parts, clearance = 0.0mm\n       geometry backend: openscad\n       3 placed instances: corner, cap, bar\nOVERLAP  corner x cap  volume 0.469 mm^3\nOVERLAP  corner x bar  volume 1.215 mm^3\nOVERLAP  cap x bar  volume 0.604 mm^3\ncheck: 3 overlaps, 0 clearance warnings\n",
+        "stderr": "",
+        "verdicts": [
+          [
+            "OVERLAP",
+            "cap",
+            "bar"
+          ],
+          [
+            "OVERLAP",
+            "corner",
+            "bar"
+          ],
+          [
+            "OVERLAP",
+            "corner",
+            "cap"
+          ]
+        ]
+      }
+    },
+    {
+      "source": "examples/assemble/tesseract/fit-test.assemble",
+      "command": "next",
+      "passed": true,
+      "native": {
+        "exit_code": 0,
+        "seconds": 0.2998829169664532,
+        "stdout": "Wrote examples/assemble/tesseract/fit-test_bed1.stl (3 parts)\nWrote examples/assemble/tesseract/fit-test_manifest.json\n",
+        "stderr": "",
+        "geometry_backend": "native-experimental",
+        "variants": {
+          "corner_lft_fwd_bot": {
+            "part": "corner",
+            "down": "lft+fwd+bot",
+            "footprint": [
+              16.52,
+              16.52,
+              6.334
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 331.7513243187183,
+              "bounds_mm": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  12.0,
+                  12.0,
+                  12.0
+                ]
+              ]
+            }
+          },
+          "cap_lft_fwd_bot": {
+            "part": "cap",
+            "down": "lft+fwd+bot",
+            "footprint": [
+              17.832,
+              17.832,
+              9.628
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 1017.7421285386505,
+              "bounds_mm": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  12.0,
+                  12.0,
+                  12.0
+                ]
+              ]
+            }
+          },
+          "bar_rt": {
+            "part": "bar",
+            "down": "rt",
+            "footprint": [
+              7,
+              7,
+              18.8
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 822.4556953512704,
+              "bounds_mm": [
+                [
+                  -10.8,
+                  -3.5,
+                  -3.5
+                ],
+                [
+                  8.0,
+                  3.5,
+                  3.5
+                ]
+              ]
+            }
+          }
+        },
+        "placements": [
+          [
+            {
+              "instance": "cap_1",
+              "variant": "cap_lft_fwd_bot",
+              "x": 6,
+              "y": 6,
+              "w": 17.832,
+              "d": 17.832,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "corner_1",
+              "variant": "corner_lft_fwd_bot",
+              "x": 29.832,
+              "y": 6,
+              "w": 16.52,
+              "d": 16.52,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "bar_1",
+              "variant": "bar_rt",
+              "x": 52.353,
+              "y": 6,
+              "w": 7,
+              "d": 7,
+              "brim_mm": 0,
+              "rot_z": 0
+            }
+          ]
+        ],
+        "beds": [
+          {
+            "volume_mm3": 2171.949148208626,
+            "bounds_mm": [
+              [
+                6.0,
+                6.0,
+                0.0
+              ],
+              [
+                59.35282459653298,
+                23.832348418708243,
+                18.8
+              ]
+            ]
+          }
+        ]
+      },
+      "openscad": {
+        "exit_code": 0,
+        "seconds": 5.452887791907415,
+        "stdout": "Wrote examples/assemble/tesseract/fit-test_bed1.stl (3 parts)\nWrote examples/assemble/tesseract/fit-test_manifest.json\n",
+        "stderr": "",
+        "geometry_backend": "openscad",
+        "variants": {
+          "corner_lft_fwd_bot": {
+            "part": "corner",
+            "down": "lft+fwd+bot",
+            "footprint": [
+              16.52,
+              16.52,
+              6.334
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 331.75129982722376,
+              "bounds_mm": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  12.0,
+                  12.0,
+                  12.0
+                ]
+              ]
+            }
+          },
+          "cap_lft_fwd_bot": {
+            "part": "cap",
+            "down": "lft+fwd+bot",
+            "footprint": [
+              17.832,
+              17.832,
+              9.628
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 1017.7420972928762,
+              "bounds_mm": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  12.0,
+                  12.0,
+                  12.0
+                ]
+              ]
+            }
+          },
+          "bar_rt": {
+            "part": "bar",
+            "down": "rt",
+            "footprint": [
+              7,
+              7,
+              18.8
+            ],
+            "warnings": [],
+            "mesh": {
+              "volume_mm3": 822.4556332421173,
+              "bounds_mm": [
+                [
+                  -10.799999237060547,
+                  -3.5,
+                  -3.5
+                ],
+                [
+                  8.0,
+                  3.5,
+                  3.5
+                ]
+              ]
+            }
+          }
+        },
+        "placements": [
+          [
+            {
+              "instance": "cap_1",
+              "variant": "cap_lft_fwd_bot",
+              "x": 6,
+              "y": 6,
+              "w": 17.832,
+              "d": 17.832,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "corner_1",
+              "variant": "corner_lft_fwd_bot",
+              "x": 29.832,
+              "y": 6,
+              "w": 16.52,
+              "d": 16.52,
+              "brim_mm": 0,
+              "rot_z": 0
+            },
+            {
+              "instance": "bar_1",
+              "variant": "bar_rt",
+              "x": 52.353,
+              "y": 6,
+              "w": 7,
+              "d": 7,
+              "brim_mm": 0,
+              "rot_z": 0
+            }
+          ]
+        ],
+        "beds": [
+          {
+            "volume_mm3": 2171.9490303622138,
+            "bounds_mm": [
+              [
+                6.0,
+                6.0,
+                0.0
+              ],
+              [
+                59.35282426119525,
+                23.832348510122518,
+                18.799999237060547
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

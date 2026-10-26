@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-26",
+  "baseline_git_revision": "421ef45dacec4b99bc7eda3b9bd1613ba5c817a6",
+  "full_suite": {
+    "passed": 1185,
+    "failed": 0,
+    "scope": "Tracked fixtures plus experiment sources in /private/tmp/coscad-fea-backend-regression-20261026. Before the final two native transform guards.",
+    "geometry_seconds": 177.5
+  },
+  "final_focused_suite": {
+    "passed": 76,
+    "failed": 0,
+    "count_source": "Observed direct Cabal test stdout; the Cabal log only retains the suite PASS summary.",
+    "native_openscad_comparisons": 13,
+    "scope": "Final FEA, native topology, CLI/refusal, transform edge cases and OpenSCAD comparisons."
+  },
+  "source_sha256": {
+    "src/Coscad/Backend.hs": "0ef545a84ecf6092b89e07d88ff7b3466099e3663c6815a5457e2d03e3b654e2",
+    "src/Coscad/Stress/Experiment.hs": "0ebbd7428dfdc410af5bc53e43c5df55ce6af76216aa23974f60610a55821c46",
+    "src/Coscad/Part.hs": "9d709c683cee47a89d39d45420a06f77c3072732600986c9f3babf609dd43ba2",
+    "app/Main.hs": "699ac51436d0b37ce4c5fb2e98a115b1166b284b5399ea1f61d50944197ecc33",
+    "experiments/Main.hs": "e5569cee478f9ba2c52407506813e2f5f78ebbc7a3486d3281af379ce831c635",
+    "test/Tier/Experiments.hs": "a618681df855514ef62d92b7780eb4d7bce4e4a196fff8e348eced943d590fb2",
+    "test/Spec.hs": "f159344931f48f00d745738a9fd32cd9809b06c7616dfc4bf6abc92f14cba271",
+    "coscad.cabal": "648fd25034d85754b340c1924da67f5d46a0ef84bc007758f5c079ebb190c3f3"
+  },
+  "hosted_ci_run": false,
+  "physical_prints_dispatched": false
+}

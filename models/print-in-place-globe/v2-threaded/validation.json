@@ -1,0 +1,113 @@
+{
+  "gimbal": {
+    "components": 1,
+    "watertight": true,
+    "triangles": 5664,
+    "volume_mm3": 28909.731308145725,
+    "bounds_mm": [
+      [
+        -41.5,
+        -18.0,
+        0.0
+      ],
+      [
+        41.5,
+        18.0,
+        105.5
+      ]
+    ]
+  },
+  "rotor": {
+    "components": 1,
+    "watertight": true,
+    "triangles": 12596,
+    "volume_mm3": 138054.04221217983,
+    "bounds_mm": [
+      [
+        -32.44892084106263,
+        -32.72826959486148,
+        33.2
+      ],
+      [
+        32.47080494483616,
+        31.982866799243702,
+        96.2312102034519
+      ]
+    ]
+  },
+  "base": {
+    "components": 1,
+    "watertight": true,
+    "triangles": 3142,
+    "volume_mm3": 47133.13820008949,
+    "bounds_mm": [
+      [
+        -45.0,
+        -45.0,
+        0.0
+      ],
+      [
+        45.0,
+        45.0,
+        19.0
+      ]
+    ]
+  },
+  "coupon-female": {
+    "components": 1,
+    "watertight": true,
+    "triangles": 2722,
+    "volume_mm3": 7193.2499824730685,
+    "bounds_mm": [
+      [
+        -18.0,
+        -18.0,
+        0.0
+      ],
+      [
+        18.0,
+        18.0,
+        12.0
+      ]
+    ]
+  },
+  "coupon-male": {
+    "components": 1,
+    "watertight": true,
+    "triangles": 2882,
+    "volume_mm3": 6324.724910683268,
+    "bounds_mm": [
+      [
+        -18.0,
+        -18.0,
+        0.0
+      ],
+      [
+        18.0,
+        18.0,
+        14.0
+      ]
+    ]
+  },
+  "rotation": {
+    "positions_checked": 72,
+    "axial_offsets_mm": [
+      -0.6,
+      0,
+      0.6
+    ],
+    "maximum_intersection_mm3": 0.0
+  },
+  "thread_fit": {
+    "positions_checked": 49,
+    "travel_mm": 12,
+    "maximum_intersection_mm3": 0.0,
+    "wrong_phase_intersection_mm3": 224.8261679479721,
+    "lateral_offset_1_5mm_intersection_mm3": 149.06313855158473,
+    "physical_fit": "Requires a printed test; geometric clearance only"
+  },
+  "successful_rotor_preserved": {
+    "translation_mm": 10,
+    "absolute_symmetric_difference_mm3": 0.0024047408951446414
+  }
+}

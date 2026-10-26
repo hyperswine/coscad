@@ -1,0 +1,62 @@
+{
+  "gimbal": {
+    "maximum_bidirectional_vertex_deviation_mm": 3.976033929566362e-06,
+    "world_bounds_mm": [
+      [
+        36.5,
+        110.0,
+        0.0
+      ],
+      [
+        119.5,
+        146.0,
+        105.5
+      ]
+    ]
+  },
+  "rotor": {
+    "maximum_bidirectional_vertex_deviation_mm": 5.981484608095787e-06,
+    "world_bounds_mm": [
+      [
+        45.551080659099995,
+        95.27172950100001,
+        33.1999989
+      ],
+      [
+        110.47080425909999,
+        159.982865301,
+        96.23120689999999
+      ]
+    ]
+  },
+  "support-blocker": {
+    "maximum_bidirectional_vertex_deviation_mm": 3.6243262647310045e-07,
+    "world_bounds_mm": [
+      [
+        64.6999998,
+        114.6999998,
+        0.0
+      ],
+      [
+        91.3000002,
+        141.3000002,
+        99.5
+      ]
+    ]
+  },
+  "base": {
+    "maximum_bidirectional_vertex_deviation_mm": 1.8620647190891682e-06,
+    "world_bounds_mm": [
+      [
+        133.0,
+        83.0,
+        0.0
+      ],
+      [
+        223.0,
+        173.0,
+        19.0
+      ]
+    ]
+  }
+}

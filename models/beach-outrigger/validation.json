@@ -1,0 +1,635 @@
+{
+  "assumptions": [
+    "Homogeneous solid plastic (sliced at 100% infill): PLA 1.24, PETG 1.27 g/cm3.",
+    "All three chambers stay airtight; fresh water 1.000, sea water 1.025 g/cm3.",
+    "Static heel about the long axis and static pitch; no waves, surf, dynamic capsize, leakage or fatigue.",
+    "Payload is a point mass on the center ridge (worst case for stability) unless noted."
+  ],
+  "plastic_cm3": 343.5339035112952,
+  "envelope_cm3": 1125.552832663049,
+  "bounds_mm": [
+    [
+      -115.5,
+      -102.90000000149011,
+      0.0
+    ],
+    [
+      115.5,
+      102.90000000149011,
+      57.5454
+    ]
+  ],
+  "gravity_center_mm": [
+    -5.85154004485404,
+    0.00012938318801173607,
+    27.82108833535764
+  ],
+  "wall_thickness": {
+    "port pontoon": {
+      "min_mm": 2.290263920514322,
+      "air_cm3": 193.24595125718812
+    },
+    "center hull": {
+      "min_mm": 2.27073433577459,
+      "air_cm3": 395.52702663737745
+    },
+    "starboard pontoon": {
+      "min_mm": 2.290263920514322,
+      "air_cm3": 193.24595125718812
+    }
+  },
+  "cases": {
+    "PLA-fresh": {
+      "mass_g": 425.982040354006,
+      "draft_mm": 20.335067590344416,
+      "pontoon_freeboard_to_ridge_mm": 27.627426028204994,
+      "beam_underside_clearance_mm": 4.664932409655584,
+      "static_trim_deg_bow_up": -0.6186027824878693,
+      "max_righting_arm_mm": 49.285367288493475,
+      "heel_of_max_righting_arm_deg": 20,
+      "first_sampled_heel_with_no_righting_deg": 90,
+      "righting_arm_inverted_180_mm": -0.00012938181711461206,
+      "payload_g_until_beams_touch_water_on_center_ridge": 139.92583751678467,
+      "payload_g_until_beams_touch_water_at_waterline_height": 139.92583751678467,
+      "payload_g_until_hulls_fully_submerged": 699.570792309043,
+      "righting_curve": [
+        {
+          "heel_deg": 0,
+          "waterline_mm": 20.335067590344416,
+          "righting_arm_mm": 0.00012938318800736348,
+          "beam_underside_clearance_mm": 4.664932409655584
+        },
+        {
+          "heel_deg": 5,
+          "waterline_mm": 19.962867077532145,
+          "righting_arm_mm": 21.826153264319778,
+          "beam_underside_clearance_mm": 4.942000374761495
+        },
+        {
+          "heel_deg": 10,
+          "waterline_mm": 19.079661245606243,
+          "righting_arm_mm": 38.40285687109783,
+          "beam_underside_clearance_mm": 5.540532579698958
+        },
+        {
+          "heel_deg": 15,
+          "waterline_mm": 17.277507299017756,
+          "righting_arm_mm": 47.09953622224448,
+          "beam_underside_clearance_mm": 6.87063835820895
+        },
+        {
+          "heel_deg": 20,
+          "waterline_mm": 14.57843691777596,
+          "righting_arm_mm": 49.285367288493475,
+          "beam_underside_clearance_mm": 8.913878601871751
+        },
+        {
+          "heel_deg": 25,
+          "waterline_mm": 12.598224201782294,
+          "righting_arm_mm": 49.138830029025065,
+          "beam_underside_clearance_mm": 10.059470474133953
+        },
+        {
+          "heel_deg": 30,
+          "waterline_mm": 11.205233935154972,
+          "righting_arm_mm": 47.089628035281045,
+          "beam_underside_clearance_mm": 10.445401159455997
+        },
+        {
+          "heel_deg": 35,
+          "waterline_mm": 9.774895163944615,
+          "righting_arm_mm": 44.51576939777305,
+          "beam_underside_clearance_mm": 10.703905943280178
+        },
+        {
+          "heel_deg": 40,
+          "waterline_mm": 8.217712340152241,
+          "righting_arm_mm": 41.42223911917374,
+          "beam_underside_clearance_mm": 10.93339873782221
+        },
+        {
+          "heel_deg": 45,
+          "waterline_mm": 6.554505657472445,
+          "righting_arm_mm": 37.88367010666989,
+          "beam_underside_clearance_mm": 11.123163872191244
+        },
+        {
+          "heel_deg": 50,
+          "waterline_mm": 4.787433178491909,
+          "righting_arm_mm": 33.97743393632966,
+          "beam_underside_clearance_mm": 11.282257063671576
+        },
+        {
+          "heel_deg": 55,
+          "waterline_mm": 2.8923896716324293,
+          "righting_arm_mm": 29.781331237436103,
+          "beam_underside_clearance_mm": 11.447021237143723
+        },
+        {
+          "heel_deg": 60,
+          "waterline_mm": 0.8866996150285358,
+          "righting_arm_mm": 25.339736777129335,
+          "beam_underside_clearance_mm": 11.613300384971467
+        },
+        {
+          "heel_deg": 65,
+          "waterline_mm": -1.2130234054358593,
+          "righting_arm_mm": 20.69565858964664,
+          "beam_underside_clearance_mm": 11.778479948953345
+        },
+        {
+          "heel_deg": 70,
+          "waterline_mm": -3.3911616959834827,
+          "righting_arm_mm": 15.89295192920845,
+          "beam_underside_clearance_mm": 11.941665279125203
+        },
+        {
+          "heel_deg": 75,
+          "waterline_mm": -5.632864896164074,
+          "righting_arm_mm": 10.977090727331042,
+          "beam_underside_clearance_mm": 12.103341023727094
+        },
+        {
+          "heel_deg": 80,
+          "waterline_mm": -7.925294738658912,
+          "righting_arm_mm": 5.995346525493684,
+          "beam_underside_clearance_mm": 12.266499180332172
+        },
+        {
+          "heel_deg": 85,
+          "waterline_mm": -10.258314823417686,
+          "righting_arm_mm": 0.9975847103198134,
+          "beam_underside_clearance_mm": 12.43720839210914
+        },
+        {
+          "heel_deg": 90,
+          "waterline_mm": -12.625510032192167,
+          "righting_arm_mm": -3.962389058970185,
+          "beam_underside_clearance_mm": 12.62551003219217
+        },
+        {
+          "heel_deg": 120,
+          "waterline_mm": -26.222278112121906,
+          "righting_arm_mm": -31.031311297116815,
+          "beam_underside_clearance_mm": 13.72227811212191
+        },
+        {
+          "heel_deg": 150,
+          "waterline_mm": -35.92576231534808,
+          "righting_arm_mm": -49.81873766211028,
+          "beam_underside_clearance_mm": 14.275127220737112
+        },
+        {
+          "heel_deg": 180,
+          "waterline_mm": -29.364728287196428,
+          "righting_arm_mm": -0.00012938181711461206,
+          "beam_underside_clearance_mm": 4.364728287196428
+        }
+      ]
+    },
+    "PLA-sea": {
+      "mass_g": 425.982040354006,
+      "draft_mm": 19.974947583989707,
+      "pontoon_freeboard_to_ridge_mm": 27.987546034559703,
+      "beam_underside_clearance_mm": 5.025052416010293,
+      "static_trim_deg_bow_up": -0.6045006215572357,
+      "max_righting_arm_mm": 50.271912975993864,
+      "heel_of_max_righting_arm_deg": 25,
+      "first_sampled_heel_with_no_righting_deg": 90,
+      "righting_arm_inverted_180_mm": -0.00012938180722514607,
+      "payload_g_until_beams_touch_water_on_center_ridge": 154.0735960006714,
+      "payload_g_until_beams_touch_water_at_waterline_height": 154.0735960006714,
+      "payload_g_until_hulls_fully_submerged": 727.7096131256191,
+      "righting_curve": [
+        {
+          "heel_deg": 0,
+          "waterline_mm": 19.974947583989707,
+          "righting_arm_mm": 0.00012936796017524885,
+          "beam_underside_clearance_mm": 5.025052416010293
+        },
+        {
+          "heel_deg": 5,
+          "waterline_mm": 19.582707951401964,
+          "righting_arm_mm": 22.233294751822307,
+          "beam_underside_clearance_mm": 5.322159500891676
+        },
+        {
+          "heel_deg": 10,
+          "waterline_mm": 18.630165607450344,
+          "righting_arm_mm": 39.154511226125045,
+          "beam_underside_clearance_mm": 5.9900282178548565
+        },
+        {
+          "heel_deg": 15,
+          "waterline_mm": 16.657184543852054,
+          "righting_arm_mm": 47.641278519026855,
+          "beam_underside_clearance_mm": 7.490961113374652
+        },
+        {
+          "heel_deg": 20,
+          "waterline_mm": 13.87959362002126,
+          "righting_arm_mm": 50.0146187715879,
+          "beam_underside_clearance_mm": 9.61272189962645
+        },
+        {
+          "heel_deg": 25,
+          "waterline_mm": 11.712358615244117,
+          "righting_arm_mm": 50.271912975993864,
+          "beam_underside_clearance_mm": 10.94533606067213
+        },
+        {
+          "heel_deg": 30,
+          "waterline_mm": 10.308567832806677,
+          "righting_arm_mm": 48.21040498490415,
+          "beam_underside_clearance_mm": 11.342067261804292
+        },
+        {
+          "heel_deg": 35,
+          "waterline_mm": 8.811148027709196,
+          "righting_arm_mm": 45.589634371553245,
+          "beam_underside_clearance_mm": 11.667653079515597
+        },
+        {
+          "heel_deg": 40,
+          "waterline_mm": 7.182218602562971,
+          "righting_arm_mm": 42.43203625538412,
+          "beam_underside_clearance_mm": 11.968892475411481
+        },
+        {
+          "heel_deg": 45,
+          "waterline_mm": 5.4486146251681244,
+          "righting_arm_mm": 38.82353352061995,
+          "beam_underside_clearance_mm": 12.229054904495564
+        },
+        {
+          "heel_deg": 50,
+          "waterline_mm": 3.6346147003326643,
+          "righting_arm_mm": 34.83015201625814,
+          "beam_underside_clearance_mm": 12.435075541830821
+        },
+        {
+          "heel_deg": 55,
+          "waterline_mm": 1.7143334342458918,
+          "righting_arm_mm": 30.53309351782924,
+          "beam_underside_clearance_mm": 12.62507747453026
+        },
+        {
+          "heel_deg": 60,
+          "waterline_mm": -0.3075323190060748,
+          "righting_arm_mm": 25.985135328798403,
+          "beam_underside_clearance_mm": 12.807532319006079
+        },
+        {
+          "heel_deg": 65,
+          "waterline_mm": -2.413936504762556,
+          "righting_arm_mm": 21.229694772023926,
+          "beam_underside_clearance_mm": 12.979393048280041
+        },
+        {
+          "heel_deg": 70,
+          "waterline_mm": -4.58832869439844,
+          "righting_arm_mm": 16.311386467896256,
+          "beam_underside_clearance_mm": 13.13883227754016
+        },
+        {
+          "heel_deg": 75,
+          "waterline_mm": -6.815691744509614,
+          "righting_arm_mm": 11.27612665346457,
+          "beam_underside_clearance_mm": 13.286167872072632
+        },
+        {
+          "heel_deg": 80,
+          "waterline_mm": -9.083166013601108,
+          "righting_arm_mm": 6.171553231491277,
+          "beam_underside_clearance_mm": 13.424370455274367
+        },
+        {
+          "heel_deg": 85,
+          "waterline_mm": -11.380607566486733,
+          "righting_arm_mm": 1.047780645937081,
+          "beam_underside_clearance_mm": 13.559501135178186
+        },
+        {
+          "heel_deg": 90,
+          "waterline_mm": -13.701647624292454,
+          "righting_arm_mm": -4.041378728802783,
+          "beam_underside_clearance_mm": 13.701647624292455
+        },
+        {
+          "heel_deg": 120,
+          "waterline_mm": -27.209346666831642,
+          "righting_arm_mm": -31.797643768094463,
+          "beam_underside_clearance_mm": 14.709346666831646
+        },
+        {
+          "heel_deg": 150,
+          "waterline_mm": -36.905466597116444,
+          "righting_arm_mm": -50.939375180492405,
+          "beam_underside_clearance_mm": 15.254831502505475
+        },
+        {
+          "heel_deg": 180,
+          "waterline_mm": -29.71423665341427,
+          "righting_arm_mm": -0.00012938180722514607,
+          "beam_underside_clearance_mm": 4.714236653414272
+        }
+      ]
+    },
+    "PETG-fresh": {
+      "mass_g": 436.2880574593449,
+      "draft_mm": 20.69029972421536,
+      "pontoon_freeboard_to_ridge_mm": 27.27219389433405,
+      "beam_underside_clearance_mm": 4.309700275784639,
+      "static_trim_deg_bow_up": -0.6323929131031036,
+      "max_righting_arm_mm": 48.5708741432076,
+      "heel_of_max_righting_arm_deg": 20,
+      "first_sampled_heel_with_no_righting_deg": 90,
+      "righting_arm_inverted_180_mm": -0.0001293818302350584,
+      "payload_g_until_beams_touch_water_on_center_ridge": 129.6198070049286,
+      "payload_g_until_beams_touch_water_at_waterline_height": 129.6198070049286,
+      "payload_g_until_hulls_fully_submerged": 689.2647752037042,
+      "righting_curve": [
+        {
+          "heel_deg": 0,
+          "waterline_mm": 20.69029972421536,
+          "righting_arm_mm": 0.00012938318801600536,
+          "beam_underside_clearance_mm": 4.309700275784639
+        },
+        {
+          "heel_deg": 5,
+          "waterline_mm": 20.33816149802265,
+          "righting_arm_mm": 21.4287684353936,
+          "beam_underside_clearance_mm": 4.56670595427099
+        },
+        {
+          "heel_deg": 10,
+          "waterline_mm": 19.523256927831905,
+          "righting_arm_mm": 37.670318794294,
+          "beam_underside_clearance_mm": 5.096936897473295
+        },
+        {
+          "heel_deg": 15,
+          "waterline_mm": 17.89479890433853,
+          "righting_arm_mm": 46.56937174332246,
+          "beam_underside_clearance_mm": 6.253346752888177
+        },
+        {
+          "heel_deg": 20,
+          "waterline_mm": 15.275051769284577,
+          "righting_arm_mm": 48.5708741432076,
+          "beam_underside_clearance_mm": 8.217263750363134
+        },
+        {
+          "heel_deg": 25,
+          "waterline_mm": 13.465013960031285,
+          "righting_arm_mm": 48.06839046400858,
+          "beam_underside_clearance_mm": 9.192680715884961
+        },
+        {
+          "heel_deg": 30,
+          "waterline_mm": 12.09503457706175,
+          "righting_arm_mm": 46.022424189528486,
+          "beam_underside_clearance_mm": 9.55560051754922
+        },
+        {
+          "heel_deg": 35,
+          "waterline_mm": 10.715265158956877,
+          "righting_arm_mm": 43.482496081910455,
+          "beam_underside_clearance_mm": 9.763535948267917
+        },
+        {
+          "heel_deg": 40,
+          "waterline_mm": 9.229603476701639,
+          "righting_arm_mm": 40.44867785289014,
+          "beam_underside_clearance_mm": 9.921507601272813
+        },
+        {
+          "heel_deg": 45,
+          "waterline_mm": 7.632689040118789,
+          "righting_arm_mm": 36.978618495746524,
+          "beam_underside_clearance_mm": 10.0449804895449
+        },
+        {
+          "heel_deg": 50,
+          "waterline_mm": 5.89932798661054,
+          "righting_arm_mm": 33.16391453942218,
+          "beam_underside_clearance_mm": 10.170362255552945
+        },
+        {
+          "heel_deg": 55,
+          "waterline_mm": 4.027793196041548,
+          "righting_arm_mm": 29.065625486572603,
+          "beam_underside_clearance_mm": 10.311617712734604
+        },
+        {
+          "heel_deg": 60,
+          "waterline_mm": 2.036748559564864,
+          "righting_arm_mm": 24.726951145236367,
+          "beam_underside_clearance_mm": 10.46325144043514
+        },
+        {
+          "heel_deg": 65,
+          "waterline_mm": -0.05715869001547727,
+          "righting_arm_mm": 20.19069226672699,
+          "beam_underside_clearance_mm": 10.622615233532963
+        },
+        {
+          "heel_deg": 70,
+          "waterline_mm": -2.239146440304455,
+          "righting_arm_mm": 15.500009135169876,
+          "beam_underside_clearance_mm": 10.789650023446175
+        },
+        {
+          "heel_deg": 75,
+          "waterline_mm": -4.494859036608812,
+          "righting_arm_mm": 10.699782085627337,
+          "beam_underside_clearance_mm": 10.96533516417183
+        },
+        {
+          "heel_deg": 80,
+          "waterline_mm": -6.811514403104835,
+          "righting_arm_mm": 5.8369169745178375,
+          "beam_underside_clearance_mm": 11.152718844778095
+        },
+        {
+          "heel_deg": 85,
+          "waterline_mm": -9.178976169476131,
+          "righting_arm_mm": 0.9610360400996925,
+          "beam_underside_clearance_mm": 11.357869738167585
+        },
+        {
+          "heel_deg": 90,
+          "waterline_mm": -11.590796677842945,
+          "righting_arm_mm": -3.8740671951190393,
+          "beam_underside_clearance_mm": 11.590796677842947
+        },
+        {
+          "heel_deg": 120,
+          "waterline_mm": -25.263817865645592,
+          "righting_arm_mm": -30.306130661774073,
+          "beam_underside_clearance_mm": 12.763817865645596
+        },
+        {
+          "heel_deg": 150,
+          "waterline_mm": -34.92972766284321,
+          "righting_arm_mm": -48.69919980512975,
+          "beam_underside_clearance_mm": 13.279092568232244
+        },
+        {
+          "heel_deg": 180,
+          "waterline_mm": -29.020254264033483,
+          "righting_arm_mm": -0.0001293818302350584,
+          "beam_underside_clearance_mm": 4.020254264033483
+        }
+      ]
+    },
+    "PETG-sea": {
+      "mass_g": 436.2880574593449,
+      "draft_mm": 20.323482320179878,
+      "pontoon_freeboard_to_ridge_mm": 27.63901129836953,
+      "beam_underside_clearance_mm": 4.6765176798201225,
+      "static_trim_deg_bow_up": -0.618150383234024,
+      "max_righting_arm_mm": 49.30874419846451,
+      "heel_of_max_righting_arm_deg": 20,
+      "first_sampled_heel_with_no_righting_deg": 90,
+      "righting_arm_inverted_180_mm": -0.0001293818135147005,
+      "payload_g_until_beams_touch_water_on_center_ridge": 143.7675654888153,
+      "payload_g_until_beams_touch_water_at_waterline_height": 143.7675654888153,
+      "payload_g_until_hulls_fully_submerged": 717.4035960202802,
+      "righting_curve": [
+        {
+          "heel_deg": 0,
+          "waterline_mm": 20.323482320179878,
+          "righting_arm_mm": 0.00012938318801173607,
+          "beam_underside_clearance_mm": 4.6765176798201225
+        },
+        {
+          "heel_deg": 5,
+          "waterline_mm": 19.95062870510325,
+          "righting_arm_mm": 21.83919584865527,
+          "beam_underside_clearance_mm": 4.9542387471903915
+        },
+        {
+          "heel_deg": 10,
+          "waterline_mm": 19.065201096019994,
+          "righting_arm_mm": 38.42688835211026,
+          "beam_underside_clearance_mm": 5.554992729285207
+        },
+        {
+          "heel_deg": 15,
+          "waterline_mm": 17.257465947906013,
+          "righting_arm_mm": 47.11689452277845,
+          "beam_underside_clearance_mm": 6.890679709320693
+        },
+        {
+          "heel_deg": 20,
+          "waterline_mm": 14.555840050881699,
+          "righting_arm_mm": 49.30874419846451,
+          "beam_underside_clearance_mm": 8.936475468766012
+        },
+        {
+          "heel_deg": 25,
+          "waterline_mm": 12.569873273504253,
+          "righting_arm_mm": 49.17449542017644,
+          "beam_underside_clearance_mm": 10.087821402411993
+        },
+        {
+          "heel_deg": 30,
+          "waterline_mm": 11.176311165032363,
+          "righting_arm_mm": 47.12506342484665,
+          "beam_underside_clearance_mm": 10.474323929578606
+        },
+        {
+          "heel_deg": 35,
+          "waterline_mm": 9.744067027928155,
+          "righting_arm_mm": 44.54989727949624,
+          "beam_underside_clearance_mm": 10.734734079296638
+        },
+        {
+          "heel_deg": 40,
+          "waterline_mm": 8.184559323733913,
+          "righting_arm_mm": 41.45436208084648,
+          "beam_underside_clearance_mm": 10.96655175424054
+        },
+        {
+          "heel_deg": 45,
+          "waterline_mm": 6.519115208998654,
+          "righting_arm_mm": 37.91356639810864,
+          "beam_underside_clearance_mm": 11.158554320665035
+        },
+        {
+          "heel_deg": 50,
+          "waterline_mm": 4.750764380461372,
+          "righting_arm_mm": 34.00441990904061,
+          "beam_underside_clearance_mm": 11.318925861702112
+        },
+        {
+          "heel_deg": 55,
+          "waterline_mm": 2.8549317737390076,
+          "righting_arm_mm": 29.805098119613813,
+          "beam_underside_clearance_mm": 11.484479135037144
+        },
+        {
+          "heel_deg": 60,
+          "waterline_mm": 0.8487431000951973,
+          "righting_arm_mm": 25.360114285279668,
+          "beam_underside_clearance_mm": 11.651256899904807
+        },
+        {
+          "heel_deg": 65,
+          "waterline_mm": -1.2511848116460254,
+          "righting_arm_mm": 20.712485057918755,
+          "beam_underside_clearance_mm": 11.816641355163512
+        },
+        {
+          "heel_deg": 70,
+          "waterline_mm": -3.4291998732490176,
+          "righting_arm_mm": 15.906091681133972,
+          "beam_underside_clearance_mm": 11.979703456390737
+        },
+        {
+          "heel_deg": 75,
+          "waterline_mm": -5.670444381339989,
+          "righting_arm_mm": 10.986423661195868,
+          "beam_underside_clearance_mm": 12.140920508903008
+        },
+        {
+          "heel_deg": 80,
+          "waterline_mm": -7.962077928326756,
+          "righting_arm_mm": 6.000764752320531,
+          "beam_underside_clearance_mm": 12.303282370000016
+        },
+        {
+          "heel_deg": 85,
+          "waterline_mm": -10.293964561698273,
+          "righting_arm_mm": 0.9989879422569281,
+          "beam_underside_clearance_mm": 12.472858130389726
+        },
+        {
+          "heel_deg": 90,
+          "waterline_mm": -12.659689479783966,
+          "righting_arm_mm": -3.9651004631429423,
+          "beam_underside_clearance_mm": 12.659689479783967
+        },
+        {
+          "heel_deg": 120,
+          "waterline_mm": -26.253780557729087,
+          "righting_arm_mm": -31.055466817287254,
+          "beam_underside_clearance_mm": 13.75378055772909
+        },
+        {
+          "heel_deg": 150,
+          "waterline_mm": -35.95802830442809,
+          "righting_arm_mm": -49.855505703296366,
+          "beam_underside_clearance_mm": 14.307393209817121
+        },
+        {
+          "heel_deg": 180,
+          "waterline_mm": -29.375958394362492,
+          "righting_arm_mm": -0.0001293818135147005,
+          "beam_underside_clearance_mm": 4.375958394362492
+        }
+      ]
+    }
+  }
+}

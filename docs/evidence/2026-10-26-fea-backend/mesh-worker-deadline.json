@@ -1,0 +1,7 @@
+{
+  "exit_code": 1,
+  "seconds": 1.1819055420346558,
+  "stderr": "Error: volume meshing deadline exceeded; no result accepted",
+  "prior_output_preserved": true,
+  "passed": true
+}

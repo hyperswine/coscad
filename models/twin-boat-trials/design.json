@@ -1,0 +1,102 @@
+{
+  "units": "mm",
+  "conventional": {
+    "printer": "P1S",
+    "outer_stations": [
+      [
+        0,
+        92,
+        18
+      ],
+      [
+        3,
+        96,
+        22
+      ],
+      [
+        15,
+        108,
+        46
+      ],
+      [
+        28,
+        116,
+        54
+      ]
+    ],
+    "inner_stations": [
+      [
+        6,
+        87,
+        16
+      ],
+      [
+        16,
+        101,
+        39
+      ],
+      [
+        28.3,
+        110,
+        48
+      ]
+    ],
+    "aim": "Open hull with thick low keel and flared sides, restoring buoyancy at moderate heel, not guaranteed recovery from full capsize"
+  },
+  "outrigger": {
+    "printer": "A1",
+    "center_stations": [
+      [
+        0,
+        80,
+        20
+      ],
+      [
+        10,
+        94,
+        34
+      ],
+      [
+        20,
+        100,
+        38
+      ]
+    ],
+    "pontoon_stations": [
+      [
+        0,
+        90,
+        8
+      ],
+      [
+        8,
+        103,
+        20
+      ],
+      [
+        12,
+        110,
+        22
+      ],
+      [
+        22,
+        92,
+        2
+      ]
+    ],
+    "pontoon_centerlines_y": [
+      -38,
+      38
+    ],
+    "aim": "Low, wide central hull with two side outriggers and arched support-free connecting arms"
+  },
+  "process_intent": {
+    "material": "PLA",
+    "nozzle_mm": 0.4,
+    "layer_mm": 0.16,
+    "wall_loops": 6,
+    "infill": "100%",
+    "supports": false,
+    "reason": "Solid low-keel geometry and multiple continuous wall paths; open hulls avoid internal supports. Water tightness still requires a physical leak test."
+  }
+}

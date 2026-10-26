@@ -1,0 +1,20 @@
+Wrote /Users/jasonqin/Documents/GitHub/coscad/models/beach-outrigger/beach-outrigger.scad
+Wrote /Users/jasonqin/Documents/GitHub/coscad/models/beach-outrigger/beach-outrigger-envelope.scad
+{
+ "footprint_mm": [
+  231.0,
+  205.8
+ ],
+ "height_mm": 57.52538478522335,
+ "beams": {
+  "z": 25.0,
+  "top": 40.0,
+  "x_positions": [
+   -60,
+   15
+  ],
+  "span_between_hulls_mm": 23.883333333333333,
+  "gable_deg_from_horizontal": 47.50222937985329,
+  "bridge_span_mm": 0
+ }
+}

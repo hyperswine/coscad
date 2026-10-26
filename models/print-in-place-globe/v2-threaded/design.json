@@ -1,0 +1,42 @@
+{
+  "revision": 2,
+  "sphere_diameter_mm": 64,
+  "relief_mm": 0.8,
+  "base_diameter_mm": 90,
+  "assembled_height_mm": 112.5,
+  "gimbal_ring_radial_thickness_mm": 5.5,
+  "gimbal_ring_depth_mm": 10,
+  "foot_diameter_mm": 36,
+  "thread": {
+    "hand": "right",
+    "major_diameter_mm": 24,
+    "nominal_core_diameter_mm": 20,
+    "pitch_mm": 6.0,
+    "engagement_mm": 12,
+    "female_radial_enlargement_mm": 0.4,
+    "female_axial_flank_enlargement_mm": 0.25,
+    "segments_per_turn": 48.0,
+    "male_lead_in_mm": 3
+  },
+  "globe_center_z_print_mm": 64,
+  "assembly_seat_z_mm": 7,
+  "bearing_blocker_z_mm": [
+    30.5,
+    99.5
+  ],
+  "bearing_blocker_radius_mm": 5.5,
+  "rotor_translation_from_original_mm": 10,
+  "support": "automatic tree; build plate only; socket and bearing blocked",
+  "layout_centers_mm": {
+    "gimbal": [
+      78,
+      128
+    ],
+    "base": [
+      178,
+      128
+    ]
+  },
+  "original_source_sha256": "08bcd50f56746185e172da0d234e8e198c321279031fa011c7473d5dcdd58a4c",
+  "physical_fit": "Owner reports thread-fit coupon worked on P1S, 2026-10-24; full assembly not yet physically validated"
+}

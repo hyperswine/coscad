@@ -1,0 +1,76 @@
+[
+  {
+    "printer": "p1s",
+    "at": "2026-10-25T14:30:32+1100",
+    "state": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 3,
+      "layer_num": 0,
+      "total_layer_num": 175,
+      "mc_remaining_time": 157,
+      "gcode_file": "monohull-p1s-20261025-142607.gcode.3mf",
+      "subtask_name": "monohull-p1s-20261025-142607.gcode",
+      "nozzle_temper": 174.625,
+      "bed_temper": 54.875,
+      "print_error": 0
+    },
+    "stage_fields": {
+      "stg_cur": 14,
+      "stg": [
+        54,
+        14,
+        1
+      ],
+      "mc_print_stage": "2",
+      "gcode_file_prepare_percent": "0",
+      "ams_status": 768,
+      "ams_rfid_status": 3
+    },
+    "tray_now": "254",
+    "hms": [
+      {
+        "attr": 50344192,
+        "code": 65537,
+        "action": 0,
+        "timestamp": 1789087069
+      }
+    ],
+    "camera": "/Users/jasonqin/Documents/GitHub/coscad/models/twin-boat-trials/20261025-143034-p1s-boat-startup-printer-capture.png"
+  },
+  {
+    "printer": "a1",
+    "at": "2026-10-25T14:30:36+1100",
+    "state": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 0,
+      "layer_num": 0,
+      "total_layer_num": 137,
+      "mc_remaining_time": 236,
+      "gcode_file": "outrigger-a1-20261025-142608.gcode.3mf",
+      "subtask_name": "outrigger-a1-20261025-142608.gcode",
+      "nozzle_temper": 218.71875,
+      "bed_temper": 64.9375,
+      "print_error": 0
+    },
+    "stage_fields": {
+      "stg_cur": 8,
+      "stg": [
+        2,
+        13,
+        24,
+        4,
+        8,
+        3,
+        14,
+        1
+      ],
+      "mc_print_stage": "2",
+      "gcode_file_prepare_percent": "0",
+      "ams_status": 768,
+      "ams_rfid_status": 2
+    },
+    "tray_now": "0",
+    "hms": [],
+    "camera": "/Users/jasonqin/Documents/GitHub/coscad/models/twin-boat-trials/20261025-143039-a1-boat-startup-printer-capture.png"
+  }
+]

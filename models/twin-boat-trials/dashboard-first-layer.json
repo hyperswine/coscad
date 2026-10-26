@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-25T14:36:56+1100",
+  "printers": {
+    "a1": {
+      "connection": "ONLINE",
+      "state": "RUNNING",
+      "job": "outrigger-a1-20261025-142608.gcode",
+      "layers": "Layer 1 / 137",
+      "remaining": "229 min remaining",
+      "last_report_iso": "2026-10-25T03:36:54Z",
+      "filament_source": "AMS 1 / slot 1",
+      "error": "None reported",
+      "alerts": []
+    },
+    "p1s": {
+      "connection": "ONLINE",
+      "state": "RUNNING",
+      "job": "monohull-p1s-20261025-142607.gcode",
+      "layers": "Layer 1 / 175",
+      "remaining": "154 min remaining",
+      "last_report_iso": "2026-10-25T03:36:54Z",
+      "filament_source": "External spool",
+      "error": "None reported",
+      "alerts": []
+    }
+  }
+}

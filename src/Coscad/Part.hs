@@ -1,13 +1,13 @@
 -- | Single-part commands: `coscad part.coscad` (to .scad) and
 -- `coscad stl part.coscad` (to .stl, with the numbers a human would
 -- otherwise check by hand).
-module Coscad.Part (compilePart, renderPart, scadPathFor) where
+module Coscad.Part (compilePart, renderPart, renderPartWith, scadPathFor) where
 
+import Coscad.Backend (Backend (..), renderShape)
 import Coscad.Codegen (renderScad)
 import Coscad.Geometry (anchorWarnings, formatAnchorWarning)
 import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Mesh (meshBounds, meshVolume)
-import Coscad.OpenScad (renderStlFile)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Report (Emit, Diag (..), Failure, abort, inputFailure, runCommand)
 import Coscad.Shape (Shape)
@@ -44,13 +44,15 @@ compilePart emit input out = runCommand $ do
 
 -- | .coscad -> .scad -> .stl, printing triangle count, volume, and bounds.
 renderPart :: Emit -> FilePath -> Maybe FilePath -> IO (Either Failure ())
-renderPart emit input out = runCommand $ do
+renderPart = renderPartWith OpenScadBackend
+
+renderPartWith :: Backend -> Emit -> FilePath -> Maybe FilePath -> IO (Either Failure ())
+renderPartWith backend emit input out = runCommand $ do
   shape <- loadPart emit input
   let stlF = maybe (replaceExtension input ".stl") id out
       scadF = replaceExtension stlF ".scad"
   createDirectoryIfMissing True (takeDirectory stlF)
-  writeFileUtf8 scadF (renderScad shape)
-  r <- renderStlFile scadF stlF
+  r <- renderShape backend scadF stlF shape
   case r of
     Left err -> die' err
     Right tris -> do

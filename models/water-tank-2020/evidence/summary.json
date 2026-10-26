@@ -1,0 +1,2501 @@
+{
+  "schema": "coscad.tank-hydrostatic-study.v1",
+  "versions": {
+    "scikit_fem": "12.0.2",
+    "scipy": "1.18.1",
+    "numpy": "2.3.5"
+  },
+  "section": {
+    "area_mm2": 233.70201099953547,
+    "Iy_mm4": 8430.498976215315,
+    "Iz_mm4": 8430.498976215315,
+    "source_stl_sha256": "61ab1f495afdd8116f66d4941eb5e336dbd69fde7e9eca369d979fecd7604136",
+    "method": "Signed tetrahedral volume/second moments of native STL divided by 180 mm; not a solid 20x20 bar",
+    "J_assumption": "0.1*(Iy+Iz); sensitivity at 0.05 and 0.5; no actual torsion constant supplied"
+  },
+  "checks": {
+    "passed": true,
+    "plate_navier": [
+      {
+        "mesh": 12,
+        "w_mm": 3.80524986335017,
+        "navier_w_mm": 3.719702043754437,
+        "relative_error": 0.02299856778565701
+      },
+      {
+        "mesh": 24,
+        "w_mm": 3.749049620824448,
+        "navier_w_mm": 3.719702043754437,
+        "relative_error": 0.007889765557778317
+      },
+      {
+        "mesh": 48,
+        "w_mm": 3.7274204075983164,
+        "navier_w_mm": 3.719702043754437,
+        "relative_error": 0.0020749951886169793
+      }
+    ],
+    "beam_cantilever_relative_error": 6.661338147750939e-16,
+    "point_load_force_and_moment_passed": true
+  },
+  "assumptions": {
+    "water_density_kg_m3": 1000,
+    "g_m_s2": 9.80665,
+    "PLA_E_mpa": 2300.0,
+    "PLA_poisson": 0.35,
+    "PLA_thickness_mm": 2.0,
+    "water_inside_mm": [
+      976,
+      976,
+      1000
+    ]
+  },
+  "cases": [
+    {
+      "water_height_mm": 250,
+      "water_litres": 238.144,
+      "water_weight_n": 2335.3948576,
+      "base_pressure_kpa": 2.4516625,
+      "one_wall_force_n": 299.102825,
+      "frame_refinement": [
+        {
+          "subdivisions": 1,
+          "w_mm": 0.04624138181575839,
+          "normal_stress_mpa": 4.278946996645641
+        },
+        {
+          "subdivisions": 2,
+          "w_mm": 0.05003735447248203,
+          "normal_stress_mpa": 4.2789469966455975
+        },
+        {
+          "subdivisions": 4,
+          "w_mm": 0.05003735447247994,
+          "normal_stress_mpa": 4.278946996645586
+        }
+      ],
+      "frame_torsion_sensitivity": [
+        {
+          "factor": 0.05,
+          "w_mm": 0.0504645371529398,
+          "normal_stress_mpa": 4.289673586497076
+        },
+        {
+          "factor": 0.5,
+          "w_mm": 0.0472219283120678,
+          "normal_stress_mpa": 4.202364615482934
+        }
+      ],
+      "max_bracket_normal_load_n": 19.524049157105825,
+      "min_signed_support_force_n": -0.0016211614327750516,
+      "worst_panels": [
+        {
+          "panel": "panel_0351",
+          "face": "back",
+          "bounds_mm": [
+            -88,
+            100,
+            -88,
+            100
+          ],
+          "refinement": [
+            {
+              "max_abs_displacement_mm": 2.6584094823712716,
+              "max_surface_bending_von_mises_mpa": 11.278963123151065,
+              "stress_p95_mpa": 2.6561637799342313,
+              "load_n": 54.070573065600044,
+              "residual_relative": 5.954763641817769e-11,
+              "force_balance_n": 2.283329081365082e-10,
+              "moment_balance_n_mm": 3.9612945571135944e-08,
+              "supports": [
+                {
+                  "force_n": 12.212377860011598,
+                  "first_moment_n_mm": [
+                    -830.335001698151,
+                    -95.22460079937527
+                  ]
+                },
+                {
+                  "force_n": 16.562755409297107,
+                  "first_moment_n_mm": [
+                    1250.081177519918,
+                    -226.94705759604975
+                  ]
+                },
+                {
+                  "force_n": 15.497681472115177,
+                  "first_moment_n_mm": [
+                    -63.61292142709601,
+                    -1068.09519497255
+                  ]
+                },
+                {
+                  "force_n": 9.79775832451688,
+                  "first_moment_n_mm": [
+                    -31.70981602980772,
+                    693.8193865897758
+                  ]
+                }
+              ],
+              "elements": 2312,
+              "w_over_thickness": 1.3292047411856358,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 24,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 2.4559444340964687,
+              "max_surface_bending_von_mises_mpa": 12.300387877497483,
+              "stress_p95_mpa": 2.39665536558152,
+              "load_n": 54.070573065600186,
+              "residual_relative": 1.3802004963269582e-10,
+              "force_balance_n": 1.3886136684959638e-10,
+              "moment_balance_n_mm": 1.7646911756890302e-08,
+              "supports": [
+                {
+                  "force_n": 12.20077755149891,
+                  "first_moment_n_mm": [
+                    -822.3110223007063,
+                    -99.55902870191366
+                  ]
+                },
+                {
+                  "force_n": 16.5064691464449,
+                  "first_moment_n_mm": [
+                    1241.9521243793406,
+                    -230.14459289695313
+                  ]
+                },
+                {
+                  "force_n": 15.53367422517515,
+                  "first_moment_n_mm": [
+                    -65.97983345734119,
+                    -1061.590823993357
+                  ]
+                },
+                {
+                  "force_n": 9.829652142650428,
+                  "first_moment_n_mm": [
+                    -29.237830240389094,
+                    694.8469788290331
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 1.2279722170482343,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 2.4117903835644996,
+              "max_surface_bending_von_mises_mpa": 20.260867249677702,
+              "stress_p95_mpa": 2.3522378004114137,
+              "load_n": 54.07057306560002,
+              "residual_relative": 2.955999433947626e-10,
+              "force_balance_n": 1.0884093626373215e-10,
+              "moment_balance_n_mm": 1.566787584175593e-08,
+              "supports": [
+                {
+                  "force_n": 12.206383094987725,
+                  "first_moment_n_mm": [
+                    -820.5377041386678,
+                    -100.34766270142765
+                  ]
+                },
+                {
+                  "force_n": 16.47242036187601,
+                  "first_moment_n_mm": [
+                    1238.7339744308097,
+                    -231.23301479846415
+                  ]
+                },
+                {
+                  "force_n": 15.55492033351763,
+                  "first_moment_n_mm": [
+                    -66.11111522890957,
+                    -1060.3433475432707
+                  ]
+                },
+                {
+                  "force_n": 9.836849275287893,
+                  "first_moment_n_mm": [
+                    -27.661716684009104,
+                    695.4765582860013
+                  ]
+                }
+              ],
+              "elements": 13448,
+              "w_over_thickness": 1.2058951917822498,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 72,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          ],
+          "last_relative_change": 0.017978440358408676,
+          "ideal_edge_comparison": {
+            "tabs": {
+              "max_abs_displacement_mm": 3.3532006777081684,
+              "max_surface_bending_von_mises_mpa": 15.764280054416751,
+              "stress_p95_mpa": 3.0252584433628753,
+              "load_n": 54.070573065600186,
+              "residual_relative": 1.3431750470086885e-10,
+              "force_balance_n": 2.6780355710798176e-11,
+              "moment_balance_n_mm": 1.8005772729197085e-08,
+              "supports": [
+                {
+                  "force_n": 12.295816378754104,
+                  "first_moment_n_mm": [
+                    -845.4958645949646,
+                    -71.63117211801958
+                  ]
+                },
+                {
+                  "force_n": 15.466577981657586,
+                  "first_moment_n_mm": [
+                    1144.457564264139,
+                    -106.50386673723608
+                  ]
+                },
+                {
+                  "force_n": 16.89900487128915,
+                  "first_moment_n_mm": [
+                    15.107481486395779,
+                    -1183.7833496342962
+                  ]
+                },
+                {
+                  "force_n": 9.409173834003129,
+                  "first_moment_n_mm": [
+                    10.354257221766048,
+                    665.4709217308922
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 1.6766003388540842,
+              "linear_geometry_credible": false,
+              "support_mode": "tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "simply_supported": {
+              "max_abs_displacement_mm": 4.4705518340721495,
+              "max_surface_bending_von_mises_mpa": 4.790879135429346,
+              "stress_p95_mpa": 4.030966833804665,
+              "load_n": 54.070573065600186,
+              "residual_relative": 1.0691744227802007e-10,
+              "force_balance_n": 2.857802883227123e-11,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": -1.977291160665251e-11,
+                  "first_moment_n_mm": [
+                    1.6150049454601373e-09,
+                    -4.1880878828596266e-11
+                  ]
+                },
+                {
+                  "force_n": 2.126250824713294e-11,
+                  "first_moment_n_mm": [
+                    1.7556523791914945e-09,
+                    3.044641810081866e-11
+                  ]
+                },
+                {
+                  "force_n": -1.1847224590244565e-12,
+                  "first_moment_n_mm": [
+                    2.7104564252699774e-11,
+                    1.015212383200891e-10
+                  ]
+                },
+                {
+                  "force_n": -7.511549975774967e-12,
+                  "first_moment_n_mm": [
+                    1.0737675650487733e-11,
+                    -6.333615037962922e-10
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 2.2352759170360748,
+              "linear_geometry_credible": false,
+              "support_mode": "simply_supported",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "clamped": {
+              "max_abs_displacement_mm": 1.4048252299008452,
+              "max_surface_bending_von_mises_mpa": 4.555002165396601,
+              "stress_p95_mpa": 2.5148288650812347,
+              "load_n": 54.070573065600186,
+              "residual_relative": 2.3241993668273322e-11,
+              "force_balance_n": 6.444622613344109e-12,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": 1.568092010406641e-12,
+                  "first_moment_n_mm": [
+                    -1.2321895471547617e-10,
+                    4.070869509568309e-12
+                  ]
+                },
+                {
+                  "force_n": 3.223473571400959e-12,
+                  "first_moment_n_mm": [
+                    2.613135949668937e-10,
+                    7.439030583185978e-13
+                  ]
+                },
+                {
+                  "force_n": -2.4556572053580084e-13,
+                  "first_moment_n_mm": [
+                    -3.6983492078684645e-12,
+                    2.2483583426774573e-11
+                  ]
+                },
+                {
+                  "force_n": -1.88281985488703e-12,
+                  "first_moment_n_mm": [
+                    1.450893730930966e-12,
+                    -1.4951196371808165e-10
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 0.7024126149504226,
+              "linear_geometry_credible": false,
+              "support_mode": "clamped",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          }
+        },
+        {
+          "panel": "panel_3449",
+          "face": "floor",
+          "bounds_mm": [
+            -100,
+            88,
+            -100,
+            88
+          ],
+          "refinement": [
+            {
+              "max_abs_displacement_mm": 2.729011420121407,
+              "max_surface_bending_von_mises_mpa": 13.3947118667686,
+              "stress_p95_mpa": 3.4278997591218294,
+              "load_n": 86.65155940000024,
+              "residual_relative": 3.245962305684512e-11,
+              "force_balance_n": 1.8546586488810135e-10,
+              "moment_balance_n_mm": 1.6436910143893482e-08,
+              "supports": [
+                {
+                  "force_n": 25.230717271512738,
+                  "first_moment_n_mm": [
+                    -1897.932981835648,
+                    71.59031053176025
+                  ]
+                },
+                {
+                  "force_n": 18.172332335901938,
+                  "first_moment_n_mm": [
+                    1226.9457345024177,
+                    65.57899708992426
+                  ]
+                },
+                {
+                  "force_n": 25.076177456821195,
+                  "first_moment_n_mm": [
+                    85.49889385431553,
+                    -1884.0243985133825
+                  ]
+                },
+                {
+                  "force_n": 18.172332335916103,
+                  "first_moment_n_mm": [
+                    65.57899709027434,
+                    1226.9457345035757
+                  ]
+                }
+              ],
+              "elements": 2312,
+              "w_over_thickness": 1.3645057100607034,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 24,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 2.529836239402628,
+              "max_surface_bending_von_mises_mpa": 14.649632657874836,
+              "stress_p95_mpa": 3.09508658284489,
+              "load_n": 86.65155940000014,
+              "residual_relative": 5.915153975199883e-11,
+              "force_balance_n": 1.7200818547280505e-10,
+              "moment_balance_n_mm": 2.453625989987195e-08,
+              "supports": [
+                {
+                  "force_n": 25.126407777488478,
+                  "first_moment_n_mm": [
+                    -1884.0285294942553,
+                    77.82149141289412
+                  ]
+                },
+                {
+                  "force_n": 18.20468230015051,
+                  "first_moment_n_mm": [
+                    1217.229648657824,
+                    68.11216508588402
+                  ]
+                },
+                {
+                  "force_n": 25.115787022432407,
+                  "first_moment_n_mm": [
+                    78.77735936892617,
+                    -1883.0726615392257
+                  ]
+                },
+                {
+                  "force_n": 18.204682300140647,
+                  "first_moment_n_mm": [
+                    68.11216508562035,
+                    1217.229648656994
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 1.264918119701314,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 2.4878614199715456,
+              "max_surface_bending_von_mises_mpa": 24.105638084640777,
+              "stress_p95_mpa": 2.9776163212517757,
+              "load_n": 86.65155940000014,
+              "residual_relative": 1.981502170029237e-10,
+              "force_balance_n": 1.120525894293678e-10,
+              "moment_balance_n_mm": 4.253448887304972e-09,
+              "supports": [
+                {
+                  "force_n": 25.069716858067714,
+                  "first_moment_n_mm": [
+                    -1878.6532839091283,
+                    80.18715274140024
+                  ]
+                },
+                {
+                  "force_n": 18.22888565429563,
+                  "first_moment_n_mm": [
+                    1215.2564851875866,
+                    68.19218335626907
+                  ]
+                },
+                {
+                  "force_n": 25.124071233359224,
+                  "first_moment_n_mm": [
+                    75.29525896726797,
+                    -1883.545177684588
+                  ]
+                },
+                {
+                  "force_n": 18.228885654305046,
+                  "first_moment_n_mm": [
+                    68.19218335813113,
+                    1215.256485188708
+                  ]
+                }
+              ],
+              "elements": 13448,
+              "w_over_thickness": 1.2439307099857728,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 72,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          ],
+          "last_relative_change": 0.016591911672904858,
+          "ideal_edge_comparison": {
+            "tabs": {
+              "max_abs_displacement_mm": 4.953697654949206,
+              "max_surface_bending_von_mises_mpa": 18.109192779729888,
+              "stress_p95_mpa": 4.771414295455246,
+              "load_n": 86.65155940000014,
+              "residual_relative": 1.4522465386251343e-10,
+              "force_balance_n": 1.3790213415632024e-10,
+              "moment_balance_n_mm": 2.921055751569618e-08,
+              "supports": [
+                {
+                  "force_n": 24.168620550712546,
+                  "first_moment_n_mm": [
+                    -1796.8263099875085,
+                    -28.584669220458636
+                  ]
+                },
+                {
+                  "force_n": 19.157159149470655,
+                  "first_moment_n_mm": [
+                    1322.3680665284382,
+                    -16.866443699643895
+                  ]
+                },
+                {
+                  "force_n": 24.168620550781647,
+                  "first_moment_n_mm": [
+                    -28.584669215854078,
+                    -1796.8263099935855
+                  ]
+                },
+                {
+                  "force_n": 19.15715914941757,
+                  "first_moment_n_mm": [
+                    -16.866443697850272,
+                    1322.3680665242687
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 2.476848827474603,
+              "linear_geometry_credible": false,
+              "support_mode": "tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "simply_supported": {
+              "max_abs_displacement_mm": 7.13435425625443,
+              "max_surface_bending_von_mises_mpa": 6.825872849012257,
+              "stress_p95_mpa": 6.295134581632957,
+              "load_n": 86.65155940000014,
+              "residual_relative": 1.1663285525191446e-10,
+              "force_balance_n": 2.5508484213787597e-11,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": 2.272574142758721e-11,
+                  "first_moment_n_mm": [
+                    -1.865425536551726e-09,
+                    -2.64891697995615e-11
+                  ]
+                },
+                {
+                  "force_n": 7.840570206973929e-12,
+                  "first_moment_n_mm": [
+                    5.86868108651947e-10,
+                    -2.977768205768042e-11
+                  ]
+                },
+                {
+                  "force_n": -2.244676666762757e-12,
+                  "first_moment_n_mm": [
+                    2.8801042612692073e-10,
+                    2.3057904356033209e-10
+                  ]
+                },
+                {
+                  "force_n": -4.533409758700202e-11,
+                  "first_moment_n_mm": [
+                    -4.15304105196366e-10,
+                    -3.594571294988834e-09
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 3.567177128127215,
+              "linear_geometry_credible": false,
+              "support_mode": "simply_supported",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "clamped": {
+              "max_abs_displacement_mm": 2.2373287418083745,
+              "max_surface_bending_von_mises_mpa": 6.1514474631371465,
+              "stress_p95_mpa": 3.9560298412312784,
+              "load_n": 86.65155940000014,
+              "residual_relative": 2.3677031843799645e-11,
+              "force_balance_n": 1.0231815394945443e-12,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": -7.838729665365918e-13,
+                  "first_moment_n_mm": [
+                    6.418498935462325e-11,
+                    -1.868964762925287e-12
+                  ]
+                },
+                {
+                  "force_n": 5.588047385929329e-13,
+                  "first_moment_n_mm": [
+                    4.162504426788586e-11,
+                    2.3934587095798246e-11
+                  ]
+                },
+                {
+                  "force_n": 7.212019176305873e-12,
+                  "first_moment_n_mm": [
+                    -2.211552743590317e-11,
+                    -5.644772485084768e-10
+                  ]
+                },
+                {
+                  "force_n": -1.4967749262240204e-12,
+                  "first_moment_n_mm": [
+                    2.122322283165047e-12,
+                    -1.21940975546296e-10
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 1.1186643709041872,
+              "linear_geometry_credible": false,
+              "support_mode": "clamped",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "water_height_mm": 500,
+      "water_litres": 476.288,
+      "water_weight_n": 4670.7897152,
+      "base_pressure_kpa": 4.903325,
+      "one_wall_force_n": 1196.4113,
+      "frame_refinement": [
+        {
+          "subdivisions": 1,
+          "w_mm": 0.4926676438222586,
+          "normal_stress_mpa": 23.006774680121914
+        },
+        {
+          "subdivisions": 2,
+          "w_mm": 0.5313782514521156,
+          "normal_stress_mpa": 23.00677468012151
+        },
+        {
+          "subdivisions": 4,
+          "w_mm": 0.5313782514522623,
+          "normal_stress_mpa": 23.006774680121573
+        }
+      ],
+      "frame_torsion_sensitivity": [
+        {
+          "factor": 0.05,
+          "w_mm": 0.5371979649340528,
+          "normal_stress_mpa": 23.095786924357057
+        },
+        {
+          "factor": 0.5,
+          "w_mm": 0.4924648042801834,
+          "normal_stress_mpa": 22.37948338733999
+        }
+      ],
+      "max_bracket_normal_load_n": 39.04809831421165,
+      "min_signed_support_force_n": 0.0,
+      "worst_panels": [
+        {
+          "panel": "panel_0351",
+          "face": "back",
+          "bounds_mm": [
+            -88,
+            100,
+            -88,
+            100
+          ],
+          "refinement": [
+            {
+              "max_abs_displacement_mm": 5.38742090270233,
+              "max_surface_bending_von_mises_mpa": 24.66568439402587,
+              "stress_p95_mpa": 6.009749792309156,
+              "load_n": 140.7221324656001,
+              "residual_relative": 5.418790366376957e-11,
+              "force_balance_n": 3.412878868402913e-10,
+              "moment_balance_n_mm": 8.061035432850323e-08,
+              "supports": [
+                {
+                  "force_n": 30.384710196059324,
+                  "first_moment_n_mm": [
+                    -2057.2807362125322,
+                    -160.80359789528654
+                  ]
+                },
+                {
+                  "force_n": 41.79347268078048,
+                  "first_moment_n_mm": [
+                    3148.0141593540243,
+                    -298.5373681274483
+                  ]
+                },
+                {
+                  "force_n": 33.67001380814234,
+                  "first_moment_n_mm": [
+                    -129.19191852272175,
+                    -2295.0409294852784
+                  ]
+                },
+                {
+                  "force_n": 34.87393578131002,
+                  "first_moment_n_mm": [
+                    -117.20870988376198,
+                    2577.8437851017184
+                  ]
+                }
+              ],
+              "elements": 2312,
+              "w_over_thickness": 2.693710451351165,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 24,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 4.985780673432859,
+              "max_surface_bending_von_mises_mpa": 26.92660988240005,
+              "stress_p95_mpa": 5.429533393087178,
+              "load_n": 140.7221324656005,
+              "residual_relative": 1.78155655494846e-10,
+              "force_balance_n": 2.2180302039487287e-10,
+              "moment_balance_n_mm": 3.600185592840671e-08,
+              "supports": [
+                {
+                  "force_n": 30.40545985162653,
+                  "first_moment_n_mm": [
+                    -2039.5406709563888,
+                    -167.67119378632935
+                  ]
+                },
+                {
+                  "force_n": 41.632876923946,
+                  "first_moment_n_mm": [
+                    3125.980653874429,
+                    -307.9660843103359
+                  ]
+                },
+                {
+                  "force_n": 33.73835652528991,
+                  "first_moment_n_mm": [
+                    -134.09199854114075,
+                    -2278.820472647969
+                  ]
+                },
+                {
+                  "force_n": 34.94543916508561,
+                  "first_moment_n_mm": [
+                    -108.01518960876467,
+                    2577.919640368253
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 2.4928903367164295,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 4.899651803561722,
+              "max_surface_bending_von_mises_mpa": 44.34304982377927,
+              "stress_p95_mpa": 5.2227833605682585,
+              "load_n": 140.72213246560008,
+              "residual_relative": 2.699698468748593e-10,
+              "force_balance_n": 4.119726781937061e-10,
+              "moment_balance_n_mm": 3.388931630406917e-08,
+              "supports": [
+                {
+                  "force_n": 30.435268749365633,
+                  "first_moment_n_mm": [
+                    -2035.7941893323884,
+                    -168.5398460599697
+                  ]
+                },
+                {
+                  "force_n": 41.542137219889995,
+                  "first_moment_n_mm": [
+                    3117.3872583348725,
+                    -311.4201675376654
+                  ]
+                },
+                {
+                  "force_n": 33.783805987857505,
+                  "first_moment_n_mm": [
+                    -134.30329858735695,
+                    -2275.599832734037
+                  ]
+                },
+                {
+                  "force_n": 34.96092050861414,
+                  "first_moment_n_mm": [
+                    -102.95697565294282,
+                    2579.021735968033
+                  ]
+                }
+              ],
+              "elements": 13448,
+              "w_over_thickness": 2.449825901780861,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 72,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          ],
+          "last_relative_change": 0.01727490146730326,
+          "ideal_edge_comparison": {
+            "tabs": {
+              "max_abs_displacement_mm": 6.930725149452286,
+              "max_surface_bending_von_mises_mpa": 33.866761406542004,
+              "stress_p95_mpa": 7.554599704672869,
+              "load_n": 140.7221324656005,
+              "residual_relative": 1.3961168869794798e-10,
+              "force_balance_n": 3.4071945265168324e-10,
+              "moment_balance_n_mm": 3.50681911759115e-08,
+              "supports": [
+                {
+                  "force_n": 31.452975528115996,
+                  "first_moment_n_mm": [
+                    -2167.8639311141887,
+                    -54.76472841894698
+                  ]
+                },
+                {
+                  "force_n": 39.635198532345555,
+                  "first_moment_n_mm": [
+                    2941.2838742489566,
+                    -77.91919751429162
+                  ]
+                },
+                {
+                  "force_n": 36.05616402062553,
+                  "first_moment_n_mm": [
+                    31.973925184860637,
+                    -2506.1514161514247
+                  ]
+                },
+                {
+                  "force_n": 33.5777943847212,
+                  "first_moment_n_mm": [
+                    38.938926442396046,
+                    2462.2972317184767
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 3.465362574726143,
+              "linear_geometry_credible": false,
+              "support_mode": "tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "simply_supported": {
+              "max_abs_displacement_mm": 11.593204080116129,
+              "max_surface_bending_von_mises_mpa": 11.61675029295575,
+              "stress_p95_mpa": 10.252608002531945,
+              "load_n": 140.7221324656005,
+              "residual_relative": 1.1520536487501866e-10,
+              "force_balance_n": 1.1368683772161603e-13,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": -3.967464377863106e-11,
+                  "first_moment_n_mm": [
+                    3.2861608599226986e-09,
+                    2.2848410085319264e-11
+                  ]
+                },
+                {
+                  "force_n": 5.7105382922362224e-11,
+                  "first_moment_n_mm": [
+                    4.8178198008061216e-09,
+                    8.300701127622275e-11
+                  ]
+                },
+                {
+                  "force_n": -1.2746418504017143e-11,
+                  "first_moment_n_mm": [
+                    5.824592255292417e-11,
+                    1.0183849036049142e-09
+                  ]
+                },
+                {
+                  "force_n": -2.1524835733255365e-11,
+                  "first_moment_n_mm": [
+                    1.5916318610359376e-10,
+                    -1.7339277841953464e-09
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 5.7966020400580645,
+              "linear_geometry_credible": false,
+              "support_mode": "simply_supported",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "clamped": {
+              "max_abs_displacement_mm": 3.636675784074498,
+              "max_surface_bending_von_mises_mpa": 10.706426271104437,
+              "stress_p95_mpa": 6.563255472018111,
+              "load_n": 140.7221324656005,
+              "residual_relative": 2.4567353448184362e-11,
+              "force_balance_n": 1.0516032489249483e-11,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": 5.431146851697655e-12,
+                  "first_moment_n_mm": [
+                    -4.2797430038539864e-10,
+                    8.642441508822494e-13
+                  ]
+                },
+                {
+                  "force_n": 9.895665883941085e-12,
+                  "first_moment_n_mm": [
+                    7.976323904034558e-10,
+                    -1.6387339981871817e-12
+                  ]
+                },
+                {
+                  "force_n": -6.133531182950236e-13,
+                  "first_moment_n_mm": [
+                    -1.0099681218589184e-11,
+                    5.2814194279513067e-11
+                  ]
+                },
+                {
+                  "force_n": -4.431573163987679e-12,
+                  "first_moment_n_mm": [
+                    3.312900879458275e-12,
+                    -3.518135471890447e-10
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 1.818337892037249,
+              "linear_geometry_credible": false,
+              "support_mode": "clamped",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          }
+        },
+        {
+          "panel": "panel_3449",
+          "face": "floor",
+          "bounds_mm": [
+            -100,
+            88,
+            -100,
+            88
+          ],
+          "refinement": [
+            {
+              "max_abs_displacement_mm": 5.458022840242814,
+              "max_surface_bending_von_mises_mpa": 26.7894237335372,
+              "stress_p95_mpa": 6.855799518243659,
+              "load_n": 173.30311880000048,
+              "residual_relative": 3.245962305684512e-11,
+              "force_balance_n": 3.709317297762027e-10,
+              "moment_balance_n_mm": 3.2873820287786964e-08,
+              "supports": [
+                {
+                  "force_n": 50.461434543025476,
+                  "first_moment_n_mm": [
+                    -3795.865963671296,
+                    143.1806210635205
+                  ]
+                },
+                {
+                  "force_n": 36.344664671803876,
+                  "first_moment_n_mm": [
+                    2453.8914690048355,
+                    131.15799417984852
+                  ]
+                },
+                {
+                  "force_n": 50.15235491364239,
+                  "first_moment_n_mm": [
+                    170.99778770863105,
+                    -3768.048797026765
+                  ]
+                },
+                {
+                  "force_n": 36.344664671832206,
+                  "first_moment_n_mm": [
+                    131.15799418054868,
+                    2453.8914690071515
+                  ]
+                }
+              ],
+              "elements": 2312,
+              "w_over_thickness": 2.729011420121407,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 24,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 5.059672478805256,
+              "max_surface_bending_von_mises_mpa": 29.299265315749672,
+              "stress_p95_mpa": 6.19017316568978,
+              "load_n": 173.30311880000028,
+              "residual_relative": 5.915153975199883e-11,
+              "force_balance_n": 3.440163709456101e-10,
+              "moment_balance_n_mm": 4.90725197997439e-08,
+              "supports": [
+                {
+                  "force_n": 50.252815554976955,
+                  "first_moment_n_mm": [
+                    -3768.0570589885106,
+                    155.64298282578824
+                  ]
+                },
+                {
+                  "force_n": 36.40936460030102,
+                  "first_moment_n_mm": [
+                    2434.459297315648,
+                    136.22433017176803
+                  ]
+                },
+                {
+                  "force_n": 50.231574044864814,
+                  "first_moment_n_mm": [
+                    157.55471873785234,
+                    -3766.1453230784514
+                  ]
+                },
+                {
+                  "force_n": 36.40936460028129,
+                  "first_moment_n_mm": [
+                    136.2243301712407,
+                    2434.459297313988
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 2.529836239402628,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 4.975722839943091,
+              "max_surface_bending_von_mises_mpa": 48.211276169281554,
+              "stress_p95_mpa": 5.955232642503551,
+              "load_n": 173.30311880000028,
+              "residual_relative": 1.981502170029237e-10,
+              "force_balance_n": 2.241051788587356e-10,
+              "moment_balance_n_mm": 8.506897774609944e-09,
+              "supports": [
+                {
+                  "force_n": 50.13943371613543,
+                  "first_moment_n_mm": [
+                    -3757.3065678182566,
+                    160.37430548280048
+                  ]
+                },
+                {
+                  "force_n": 36.45777130859126,
+                  "first_moment_n_mm": [
+                    2430.512970375173,
+                    136.38436671253814
+                  ]
+                },
+                {
+                  "force_n": 50.24814246671845,
+                  "first_moment_n_mm": [
+                    150.59051793453594,
+                    -3767.090355369176
+                  ]
+                },
+                {
+                  "force_n": 36.45777130861009,
+                  "first_moment_n_mm": [
+                    136.38436671626226,
+                    2430.512970377416
+                  ]
+                }
+              ],
+              "elements": 13448,
+              "w_over_thickness": 2.4878614199715456,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 72,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          ],
+          "last_relative_change": 0.016591911672904858,
+          "ideal_edge_comparison": {
+            "tabs": {
+              "max_abs_displacement_mm": 9.907395309898412,
+              "max_surface_bending_von_mises_mpa": 36.218385559459776,
+              "stress_p95_mpa": 9.542828590910492,
+              "load_n": 173.30311880000028,
+              "residual_relative": 1.4522465386251343e-10,
+              "force_balance_n": 2.758042683126405e-10,
+              "moment_balance_n_mm": 5.842111503139236e-08,
+              "supports": [
+                {
+                  "force_n": 48.33724110142509,
+                  "first_moment_n_mm": [
+                    -3593.652619975017,
+                    -57.16933844091727
+                  ]
+                },
+                {
+                  "force_n": 38.31431829894131,
+                  "first_moment_n_mm": [
+                    2644.7361330568765,
+                    -33.73288739928779
+                  ]
+                },
+                {
+                  "force_n": 48.33724110156329,
+                  "first_moment_n_mm": [
+                    -57.169338431708155,
+                    -3593.652619987171
+                  ]
+                },
+                {
+                  "force_n": 38.31431829883514,
+                  "first_moment_n_mm": [
+                    -33.732887395700544,
+                    2644.7361330485373
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 4.953697654949206,
+              "linear_geometry_credible": false,
+              "support_mode": "tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "simply_supported": {
+              "max_abs_displacement_mm": 14.26870851250886,
+              "max_surface_bending_von_mises_mpa": 13.651745698024515,
+              "stress_p95_mpa": 12.590269163265914,
+              "load_n": 173.30311880000028,
+              "residual_relative": 1.1663285525191446e-10,
+              "force_balance_n": 5.1016968427575193e-11,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": 4.545148285517442e-11,
+                  "first_moment_n_mm": [
+                    -3.730851073103452e-09,
+                    -5.2978339599123e-11
+                  ]
+                },
+                {
+                  "force_n": 1.5681140413947858e-11,
+                  "first_moment_n_mm": [
+                    1.173736217303894e-09,
+                    -5.955536411536084e-11
+                  ]
+                },
+                {
+                  "force_n": -4.489353333525514e-12,
+                  "first_moment_n_mm": [
+                    5.760208522538415e-10,
+                    4.6115808712066417e-10
+                  ]
+                },
+                {
+                  "force_n": -9.066819517400404e-11,
+                  "first_moment_n_mm": [
+                    -8.30608210392732e-10,
+                    -7.189142589977668e-09
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 7.13435425625443,
+              "linear_geometry_credible": false,
+              "support_mode": "simply_supported",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "clamped": {
+              "max_abs_displacement_mm": 4.474657483616749,
+              "max_surface_bending_von_mises_mpa": 12.302894926274293,
+              "stress_p95_mpa": 7.912059682462557,
+              "load_n": 173.30311880000028,
+              "residual_relative": 2.3677031843799645e-11,
+              "force_balance_n": 2.0463630789890885e-12,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": -1.5677459330731836e-12,
+                  "first_moment_n_mm": [
+                    1.283699787092465e-10,
+                    -3.737929525850574e-12
+                  ]
+                },
+                {
+                  "force_n": 1.1176094771858658e-12,
+                  "first_moment_n_mm": [
+                    8.325008853577172e-11,
+                    4.786917419159649e-11
+                  ]
+                },
+                {
+                  "force_n": 1.4424038352611745e-11,
+                  "first_moment_n_mm": [
+                    -4.423105487180634e-11,
+                    -1.1289544970169536e-09
+                  ]
+                },
+                {
+                  "force_n": -2.993549852448041e-12,
+                  "first_moment_n_mm": [
+                    4.244644566330094e-12,
+                    -2.43881951092592e-10
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 2.2373287418083745,
+              "linear_geometry_credible": false,
+              "support_mode": "clamped",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "water_height_mm": 750,
+      "water_litres": 714.432,
+      "water_weight_n": 7006.1845728,
+      "base_pressure_kpa": 7.3549875,
+      "one_wall_force_n": 2691.925425,
+      "frame_refinement": [
+        {
+          "subdivisions": 1,
+          "w_mm": 1.5332677112776159,
+          "normal_stress_mpa": 51.429314584957275
+        },
+        {
+          "subdivisions": 2,
+          "w_mm": 1.6550551493659735,
+          "normal_stress_mpa": 51.429314584959144
+        },
+        {
+          "subdivisions": 4,
+          "w_mm": 1.6550551493657522,
+          "normal_stress_mpa": 51.429314584953424
+        }
+      ],
+      "frame_torsion_sensitivity": [
+        {
+          "factor": 0.05,
+          "w_mm": 1.673727154371561,
+          "normal_stress_mpa": 51.64345820398712
+        },
+        {
+          "factor": 0.5,
+          "w_mm": 1.531296565037337,
+          "normal_stress_mpa": 49.94418921975819
+        }
+      ],
+      "max_bracket_normal_load_n": 58.57214747131768,
+      "min_signed_support_force_n": 0.0,
+      "worst_panels": [
+        {
+          "panel": "panel_0351",
+          "face": "back",
+          "bounds_mm": [
+            -88,
+            100,
+            -88,
+            100
+          ],
+          "refinement": [
+            {
+              "max_abs_displacement_mm": 8.116432323033504,
+              "max_surface_bending_von_mises_mpa": 38.05802906246107,
+              "stress_p95_mpa": 9.442211436603728,
+              "load_n": 227.3736918656002,
+              "residual_relative": 8.940374602149182e-11,
+              "force_balance_n": 8.638778581371298e-10,
+              "moment_balance_n_mm": 1.2165591809242104e-07,
+              "supports": [
+                {
+                  "force_n": 48.55704253210733,
+                  "first_moment_n_mm": [
+                    -3284.226470726937,
+                    -226.38259499119775
+                  ]
+                },
+                {
+                  "force_n": 67.02418995226395,
+                  "first_moment_n_mm": [
+                    5045.947141188142,
+                    -370.12767865885127
+                  ]
+                },
+                {
+                  "force_n": 51.84234614416989,
+                  "first_moment_n_mm": [
+                    -194.77091561835186,
+                    -3521.986663998035
+                  ]
+                },
+                {
+                  "force_n": 59.950113238102865,
+                  "first_moment_n_mm": [
+                    -202.70760373771031,
+                    4461.868183613634
+                  ]
+                }
+              ],
+              "elements": 2312,
+              "w_over_thickness": 4.058216161516752,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 24,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 7.5156169127686105,
+              "max_surface_bending_von_mises_mpa": 41.56932248181653,
+              "stress_p95_mpa": 8.494138579239294,
+              "load_n": 227.3736918656008,
+              "residual_relative": 8.626859946073545e-11,
+              "force_balance_n": 6.868106083857128e-10,
+              "moment_balance_n_mm": 5.432300562931283e-08,
+              "supports": [
+                {
+                  "force_n": 48.61014215175356,
+                  "first_moment_n_mm": [
+                    -3256.7703196120333,
+                    -235.7833588707364
+                  ]
+                },
+                {
+                  "force_n": 66.759284701447,
+                  "first_moment_n_mm": [
+                    5010.009183369507,
+                    -385.787575723704
+                  ]
+                },
+                {
+                  "force_n": 51.94303882540404,
+                  "first_moment_n_mm": [
+                    -202.2041636249137,
+                    -3496.0501213025304
+                  ]
+                },
+                {
+                  "force_n": 60.06122618752028,
+                  "first_moment_n_mm": [
+                    -186.79254897716504,
+                    4460.992301907423
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 3.7578084563843053,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 7.3875132235590355,
+              "max_surface_bending_von_mises_mpa": 68.44174872534532,
+              "stress_p95_mpa": 8.113806904826422,
+              "load_n": 227.3736918656001,
+              "residual_relative": 2.7963331847063404e-10,
+              "force_balance_n": 4.226876626489684e-10,
+              "moment_balance_n_mm": 5.221164384061073e-08,
+              "supports": [
+                {
+                  "force_n": 48.66415440374372,
+                  "first_moment_n_mm": [
+                    -3251.0506745261073,
+                    -236.73202941850008
+                  ]
+                },
+                {
+                  "force_n": 66.61185407790339,
+                  "first_moment_n_mm": [
+                    4996.040542238896,
+                    -391.60732027693064
+                  ]
+                },
+                {
+                  "force_n": 52.01269164219769,
+                  "first_moment_n_mm": [
+                    -202.49548194580953,
+                    -3490.8563179248245
+                  ]
+                },
+                {
+                  "force_n": 60.084991741940826,
+                  "first_moment_n_mm": [
+                    -178.25223462191983,
+                    4462.566913650098
+                  ]
+                }
+              ],
+              "elements": 13448,
+              "w_over_thickness": 3.6937566117795178,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 72,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          ],
+          "last_relative_change": 0.017044999857820597,
+          "ideal_edge_comparison": {
+            "tabs": {
+              "max_abs_displacement_mm": 11.517669081320005,
+              "max_surface_bending_von_mises_mpa": 51.97391900704124,
+              "stress_p95_mpa": 12.417319309985373,
+              "load_n": 227.3736918656008,
+              "residual_relative": 1.6940703310155519e-10,
+              "force_balance_n": 4.4019543565809727e-10,
+              "moment_balance_n_mm": 5.211007992183774e-08,
+              "supports": [
+                {
+                  "force_n": 50.610134677477284,
+                  "first_moment_n_mm": [
+                    -3490.2319976333647,
+                    -37.89828471986981
+                  ]
+                },
+                {
+                  "force_n": 63.8038190830325,
+                  "first_moment_n_mm": [
+                    4738.1101842337,
+                    -49.33452829133908
+                  ]
+                },
+                {
+                  "force_n": 55.213323169960574,
+                  "first_moment_n_mm": [
+                    48.840368883328445,
+                    -3828.519482668449
+                  ]
+                },
+                {
+                  "force_n": 57.74641493543912,
+                  "first_moment_n_mm": [
+                    67.52359566302408,
+                    4259.123541706044
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 5.758834540660002,
+              "linear_geometry_credible": false,
+              "support_mode": "tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "simply_supported": {
+              "max_abs_displacement_mm": 18.724619075068077,
+              "max_surface_bending_von_mises_mpa": 18.442622702532976,
+              "stress_p95_mpa": 16.52210499604629,
+              "load_n": 227.3736918656008,
+              "residual_relative": 1.1572187033759696e-10,
+              "force_balance_n": 6.0822458181064576e-12,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": -5.625602414460751e-11,
+                  "first_moment_n_mm": [
+                    4.6533293023265814e-09,
+                    -1.5425499882074906e-10
+                  ]
+                },
+                {
+                  "force_n": 6.36076608051539e-11,
+                  "first_moment_n_mm": [
+                    5.352434678924047e-09,
+                    1.1117675241089503e-10
+                  ]
+                },
+                {
+                  "force_n": -1.6916426592850087e-11,
+                  "first_moment_n_mm": [
+                    1.7923895874470367e-10,
+                    1.3301425406723947e-09
+                  ]
+                },
+                {
+                  "force_n": -3.273781939983067e-11,
+                  "first_moment_n_mm": [
+                    1.1550045353125803e-10,
+                    -2.7092732045088336e-09
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 9.362309537534038,
+              "linear_geometry_credible": false,
+              "support_mode": "simply_supported",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "clamped": {
+              "max_abs_displacement_mm": 5.8726134029638,
+              "max_surface_bending_von_mises_mpa": 16.8578674230781,
+              "stress_p95_mpa": 10.55388562541807,
+              "load_n": 227.3736918656008,
+              "residual_relative": 2.4904755308365602e-11,
+              "force_balance_n": 1.290345608140342e-11,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": 5.664701346885792e-12,
+                  "first_moment_n_mm": [
+                    -4.506902253020362e-10,
+                    -2.121018060167177e-12
+                  ]
+                },
+                {
+                  "force_n": 1.9940750439761956e-11,
+                  "first_moment_n_mm": [
+                    1.5921499506535094e-09,
+                    1.5801716994938174e-11
+                  ]
+                },
+                {
+                  "force_n": -1.3995228587138087e-12,
+                  "first_moment_n_mm": [
+                    -9.749004265821794e-12,
+                    1.1790005603750433e-10
+                  ]
+                },
+                {
+                  "force_n": -1.0511293224713114e-11,
+                  "first_moment_n_mm": [
+                    5.297691105094449e-12,
+                    -8.20150011850862e-10
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 2.9363067014819,
+              "linear_geometry_credible": false,
+              "support_mode": "clamped",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          }
+        },
+        {
+          "panel": "panel_3449",
+          "face": "floor",
+          "bounds_mm": [
+            -100,
+            88,
+            -100,
+            88
+          ],
+          "refinement": [
+            {
+              "max_abs_displacement_mm": 8.187034260364292,
+              "max_surface_bending_von_mises_mpa": 40.184135600305716,
+              "stress_p95_mpa": 10.283699277365494,
+              "load_n": 259.9546782000007,
+              "residual_relative": 3.542668943007561e-11,
+              "force_balance_n": 6.587583811779041e-10,
+              "moment_balance_n_mm": 4.921381499038557e-08,
+              "supports": [
+                {
+                  "force_n": 75.69215181453914,
+                  "first_moment_n_mm": [
+                    -5693.798945507025,
+                    214.77093159522798
+                  ]
+                },
+                {
+                  "force_n": 54.516997007706166,
+                  "first_moment_n_mm": [
+                    3680.837203507281,
+                    196.73699126977286
+                  ]
+                },
+                {
+                  "force_n": 75.22853237046338,
+                  "first_moment_n_mm": [
+                    256.4966815629166,
+                    -5652.073195540131
+                  ]
+                },
+                {
+                  "force_n": 54.516997007748046,
+                  "first_moment_n_mm": [
+                    196.73699127082352,
+                    3680.8372035107072
+                  ]
+                }
+              ],
+              "elements": 2312,
+              "w_over_thickness": 4.093517130182146,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 24,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 7.589508718207777,
+              "max_surface_bending_von_mises_mpa": 43.94889797362433,
+              "stress_p95_mpa": 9.285259748534697,
+              "load_n": 259.95467820000044,
+              "residual_relative": 6.293717407381463e-11,
+              "force_balance_n": 7.639755494892597e-10,
+              "moment_balance_n_mm": 7.338304521371113e-08,
+              "supports": [
+                {
+                  "force_n": 75.37922333246729,
+                  "first_moment_n_mm": [
+                    -5652.085588482917,
+                    233.464474238574
+                  ]
+                },
+                {
+                  "force_n": 54.61404690045141,
+                  "first_moment_n_mm": [
+                    3651.688945973459,
+                    204.3364952576431
+                  ]
+                },
+                {
+                  "force_n": 75.34736106729748,
+                  "first_moment_n_mm": [
+                    236.33207810675734,
+                    -5649.217984617688
+                  ]
+                },
+                {
+                  "force_n": 54.61404690042202,
+                  "first_moment_n_mm": [
+                    204.3364952568524,
+                    3651.6889459709882
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 3.7947543591038886,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 7.463584259914827,
+              "max_surface_bending_von_mises_mpa": 72.31691425392326,
+              "stress_p95_mpa": 8.932848963755164,
+              "load_n": 259.9546782000004,
+              "residual_relative": 2.0462016133171547e-10,
+              "force_balance_n": 1.1999645721516572e-10,
+              "moment_balance_n_mm": 1.2959440009244054e-08,
+              "supports": [
+                {
+                  "force_n": 75.20915057420166,
+                  "first_moment_n_mm": [
+                    -5635.959851727247,
+                    240.56145822412753
+                  ]
+                },
+                {
+                  "force_n": 54.68665696288629,
+                  "first_moment_n_mm": [
+                    3645.7694555627304,
+                    204.5765500688107
+                  ]
+                },
+                {
+                  "force_n": 75.37221370007666,
+                  "first_moment_n_mm": [
+                    225.88577690187677,
+                    -5650.635533053685
+                  ]
+                },
+                {
+                  "force_n": 54.68665696291555,
+                  "first_moment_n_mm": [
+                    204.57655007440988,
+                    3645.7694555661596
+                  ]
+                }
+              ],
+              "elements": 13448,
+              "w_over_thickness": 3.7317921299574137,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 72,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          ],
+          "last_relative_change": 0.016591911672866,
+          "ideal_edge_comparison": {
+            "tabs": {
+              "max_abs_displacement_mm": 14.861092964847609,
+              "max_surface_bending_von_mises_mpa": 54.32757833918973,
+              "stress_p95_mpa": 14.314242886365749,
+              "load_n": 259.95467820000044,
+              "residual_relative": 1.512281923742344e-10,
+              "force_balance_n": 2.3794655135134235e-10,
+              "moment_balance_n_mm": 8.77391611440818e-08,
+              "supports": [
+                {
+                  "force_n": 72.50586165213754,
+                  "first_moment_n_mm": [
+                    -5390.478929962523,
+                    -85.75400766137258
+                  ]
+                },
+                {
+                  "force_n": 57.47147744841308,
+                  "first_moment_n_mm": [
+                    3967.10419958541,
+                    -50.59933109891488
+                  ]
+                },
+                {
+                  "force_n": 72.50586165234557,
+                  "first_moment_n_mm": [
+                    -85.75400764754205,
+                    -5390.478929980811
+                  ]
+                },
+                {
+                  "force_n": 57.47147744825299,
+                  "first_moment_n_mm": [
+                    -50.59933109354999,
+                    3967.104199572832
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 7.4305464824238046,
+              "linear_geometry_credible": false,
+              "support_mode": "tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "simply_supported": {
+              "max_abs_displacement_mm": 21.403062768763355,
+              "max_surface_bending_von_mises_mpa": 20.47761854703697,
+              "stress_p95_mpa": 18.88540374490047,
+              "load_n": 259.95467820000044,
+              "residual_relative": 1.1792626785618404e-10,
+              "force_balance_n": 1.049897946359124e-10,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": 8.343459603765702e-11,
+                  "first_moment_n_mm": [
+                    -6.657195366146554e-09,
+                    1.8785867652884474e-10
+                  ]
+                },
+                {
+                  "force_n": 7.577953889392752e-11,
+                  "first_moment_n_mm": [
+                    5.95226782792836e-09,
+                    -2.2339354907331583e-11
+                  ]
+                },
+                {
+                  "force_n": -4.095261629810665e-11,
+                  "first_moment_n_mm": [
+                    4.918392614467669e-10,
+                    3.3161984307286936e-09
+                  ]
+                },
+                {
+                  "force_n": -1.1221719040110933e-10,
+                  "first_moment_n_mm": [
+                    -1.2218896698814627e-09,
+                    -8.992891085161005e-09
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 10.701531384381678,
+              "linear_geometry_credible": false,
+              "support_mode": "simply_supported",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "clamped": {
+              "max_abs_displacement_mm": 6.711986225425114,
+              "max_surface_bending_von_mises_mpa": 18.454342389411426,
+              "stress_p95_mpa": 11.868089523693865,
+              "load_n": 259.95467820000044,
+              "residual_relative": 2.2845487522673318e-11,
+              "force_balance_n": 3.774403012357652e-11,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": 4.068342884799847e-12,
+                  "first_moment_n_mm": [
+                    -2.986166126294518e-10,
+                    2.6587297182473254e-12
+                  ]
+                },
+                {
+                  "force_n": -1.5889373150557162e-13,
+                  "first_moment_n_mm": [
+                    -1.3056008820303207e-11,
+                    7.174223599437768e-11
+                  ]
+                },
+                {
+                  "force_n": 1.683250067108233e-11,
+                  "first_moment_n_mm": [
+                    -5.5411931408784577e-11,
+                    -1.3283633631728734e-09
+                  ]
+                },
+                {
+                  "force_n": -5.544214393138347e-12,
+                  "first_moment_n_mm": [
+                    5.442099317370854e-12,
+                    -4.427150168453779e-10
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 3.355993112712557,
+              "linear_geometry_credible": false,
+              "support_mode": "clamped",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "water_height_mm": 1000,
+      "water_litres": 952.576,
+      "water_weight_n": 9341.5794304,
+      "base_pressure_kpa": 9.80665,
+      "one_wall_force_n": 4785.6452,
+      "frame_refinement": [
+        {
+          "subdivisions": 1,
+          "w_mm": 3.030049584449524,
+          "normal_stress_mpa": 82.43639229750164
+        },
+        {
+          "subdivisions": 2,
+          "w_mm": 3.282270041995389,
+          "normal_stress_mpa": 82.43639229751382
+        },
+        {
+          "subdivisions": 4,
+          "w_mm": 3.282270042003206,
+          "normal_stress_mpa": 82.43639229759772
+        }
+      ],
+      "frame_torsion_sensitivity": [
+        {
+          "factor": 0.05,
+          "w_mm": 3.316957234576054,
+          "normal_stress_mpa": 82.72696590877032
+        },
+        {
+          "factor": 0.5,
+          "w_mm": 3.057975446499674,
+          "normal_stress_mpa": 80.4478789295004
+        }
+      ],
+      "max_bracket_normal_load_n": 78.0961966284233,
+      "min_signed_support_force_n": 5.2812658124067084,
+      "worst_panels": [
+        {
+          "panel": "panel_0351",
+          "face": "back",
+          "bounds_mm": [
+            -88,
+            100,
+            -88,
+            100
+          ],
+          "refinement": [
+            {
+              "max_abs_displacement_mm": 10.845443743364566,
+              "max_surface_bending_von_mises_mpa": 51.451606171369434,
+              "stress_p95_mpa": 13.053991376875942,
+              "load_n": 314.0252512656003,
+              "residual_relative": 4.198068404480652e-11,
+              "force_balance_n": 8.751612767810002e-10,
+              "moment_balance_n_mm": 1.6263784446443525e-07,
+              "supports": [
+                {
+                  "force_n": 66.72937486815502,
+                  "first_moment_n_mm": [
+                    -4511.172205241317,
+                    -291.9615920871063
+                  ]
+                },
+                {
+                  "force_n": 92.25490722374732,
+                  "first_moment_n_mm": [
+                    6943.880123022251,
+                    -441.7179891902302
+                  ]
+                },
+                {
+                  "force_n": 70.01467848019743,
+                  "first_moment_n_mm": [
+                    -260.34991271398206,
+                    -4748.932398510793
+                  ]
+                },
+                {
+                  "force_n": 85.02629069489643,
+                  "first_moment_n_mm": [
+                    -288.20649759166986,
+                    6345.892582125613
+                  ]
+                }
+              ],
+              "elements": 2312,
+              "w_over_thickness": 5.422721871682283,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 24,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 10.045453152105416,
+              "max_surface_bending_von_mises_mpa": 56.21564103923434,
+              "stress_p95_mpa": 11.63036393967805,
+              "load_n": 314.0252512656011,
+              "residual_relative": 1.1816988512428187e-10,
+              "force_balance_n": 6.775735528208315e-10,
+              "moment_balance_n_mm": 7.273876142190495e-08,
+              "supports": [
+                {
+                  "force_n": 66.81482445188146,
+                  "first_moment_n_mm": [
+                    -4473.999968267725,
+                    -303.8955239551515
+                  ]
+                },
+                {
+                  "force_n": 91.88569247894782,
+                  "first_moment_n_mm": [
+                    6894.037712864581,
+                    -463.6090671370802
+                  ]
+                },
+                {
+                  "force_n": 70.14772112551898,
+                  "first_moment_n_mm": [
+                    -270.31632870873483,
+                    -4713.279769957159
+                  ]
+                },
+                {
+                  "force_n": 85.17701320995539,
+                  "first_moment_n_mm": [
+                    -265.5699083455683,
+                    6344.064963446646
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 5.022726576052708,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 9.875374643556112,
+              "max_surface_bending_von_mises_mpa": 92.54406217816673,
+              "stress_p95_mpa": 11.052888577390743,
+              "load_n": 314.02525126560016,
+              "residual_relative": 2.42539926810837e-10,
+              "force_balance_n": 7.06734226696426e-10,
+              "moment_balance_n_mm": 7.039377333186233e-08,
+              "supports": [
+                {
+                  "force_n": 66.89304005812224,
+                  "first_moment_n_mm": [
+                    -4466.30715971988,
+                    -304.9242127770417
+                  ]
+                },
+                {
+                  "force_n": 91.68157093591827,
+                  "first_moment_n_mm": [
+                    6874.693826143053,
+                    -471.7944730160821
+                  ]
+                },
+                {
+                  "force_n": 70.24157729653753,
+                  "first_moment_n_mm": [
+                    -270.6876653042514,
+                    -4706.112803115577
+                  ]
+                },
+                {
+                  "force_n": 85.209062975267,
+                  "first_moment_n_mm": [
+                    -253.54749359087654,
+                    6346.11209133213
+                  ]
+                }
+              ],
+              "elements": 13448,
+              "w_over_thickness": 4.937687321778056,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 72,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          ],
+          "last_relative_change": 0.016930894602167124,
+          "ideal_edge_comparison": {
+            "tabs": {
+              "max_abs_displacement_mm": 16.47136673629217,
+              "max_surface_bending_von_mises_mpa": 70.08212833513781,
+              "stress_p95_mpa": 17.23354178464268,
+              "load_n": 314.0252512656011,
+              "residual_relative": 1.6381405070380494e-10,
+              "force_balance_n": 8.142819751810748e-10,
+              "moment_balance_n_mm": 6.92698546665412e-08,
+              "supports": [
+                {
+                  "force_n": 69.76729382683922,
+                  "first_moment_n_mm": [
+                    -4812.600064152595,
+                    -21.03184102080437
+                  ]
+                },
+                {
+                  "force_n": 87.97243963371969,
+                  "first_moment_n_mm": [
+                    6534.936494218458,
+                    -20.749859068414764
+                  ]
+                },
+                {
+                  "force_n": 74.37048231929732,
+                  "first_moment_n_mm": [
+                    65.70681258179624,
+                    -5150.887549185593
+                  ]
+                },
+                {
+                  "force_n": 81.91503548615673,
+                  "first_moment_n_mm": [
+                    96.10826488363993,
+                    6055.94985169361
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 8.235683368146084,
+              "linear_geometry_credible": false,
+              "support_mode": "tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "simply_supported": {
+              "max_abs_displacement_mm": 25.85749134201316,
+              "max_surface_bending_von_mises_mpa": 25.26849534949863,
+              "stress_p95_mpa": 22.80843497040751,
+              "load_n": 314.0252512656011,
+              "residual_relative": 1.1621791976488045e-10,
+              "force_balance_n": 6.002665031701326e-11,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": -7.674946789215653e-11,
+                  "first_moment_n_mm": [
+                    6.362583948713639e-09,
+                    -2.1404692081228982e-10
+                  ]
+                },
+                {
+                  "force_n": 1.274310795773559e-10,
+                  "first_moment_n_mm": [
+                    1.0595582608637625e-08,
+                    1.351329823510265e-10
+                  ]
+                },
+                {
+                  "force_n": -6.056171536483745e-11,
+                  "first_moment_n_mm": [
+                    2.2098940733062906e-11,
+                    4.825537725770752e-09
+                  ]
+                },
+                {
+                  "force_n": -3.505734244568792e-11,
+                  "first_moment_n_mm": [
+                    -3.999086536264028e-11,
+                    -2.8351816525293585e-09
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 12.92874567100658,
+              "linear_geometry_credible": false,
+              "support_mode": "simply_supported",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "clamped": {
+              "max_abs_displacement_mm": 8.109259187191043,
+              "max_surface_bending_von_mises_mpa": 23.00931194958271,
+              "stress_p95_mpa": 14.524166500642005,
+              "load_n": 314.0252512656011,
+              "residual_relative": 2.6152301592542904e-11,
+              "force_balance_n": 1.9895196601282805e-11,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": 8.681257102072237e-12,
+                  "first_moment_n_mm": [
+                    -6.858545623795057e-10,
+                    9.36726969158511e-12
+                  ]
+                },
+                {
+                  "force_n": 1.884979672350795e-11,
+                  "first_moment_n_mm": [
+                    1.503628526666171e-09,
+                    1.225016037646031e-11
+                  ]
+                },
+                {
+                  "force_n": -1.889169376489974e-12,
+                  "first_moment_n_mm": [
+                    -2.7471274676293293e-11,
+                    1.554256798496201e-10
+                  ]
+                },
+                {
+                  "force_n": -1.1604155136790695e-11,
+                  "first_moment_n_mm": [
+                    -1.2721529269942088e-11,
+                    -9.1386245561628e-10
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 4.054629593595521,
+              "linear_geometry_credible": false,
+              "support_mode": "clamped",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          }
+        },
+        {
+          "panel": "panel_3449",
+          "face": "floor",
+          "bounds_mm": [
+            -100,
+            88,
+            -100,
+            88
+          ],
+          "refinement": [
+            {
+              "max_abs_displacement_mm": 10.916045680485627,
+              "max_surface_bending_von_mises_mpa": 53.5788474670744,
+              "stress_p95_mpa": 13.711599036487318,
+              "load_n": 346.60623760000095,
+              "residual_relative": 3.245962305684512e-11,
+              "force_balance_n": 7.418634595524054e-10,
+              "moment_balance_n_mm": 6.574764057557393e-08,
+              "supports": [
+                {
+                  "force_n": 100.92286908605095,
+                  "first_moment_n_mm": [
+                    -7591.731927342592,
+                    286.361242127041
+                  ]
+                },
+                {
+                  "force_n": 72.68932934360775,
+                  "first_moment_n_mm": [
+                    4907.782938009671,
+                    262.31598835969703
+                  ]
+                },
+                {
+                  "force_n": 100.30470982728478,
+                  "first_moment_n_mm": [
+                    341.9955754172621,
+                    -7536.09759405353
+                  ]
+                },
+                {
+                  "force_n": 72.68932934366441,
+                  "first_moment_n_mm": [
+                    262.31598836109737,
+                    4907.782938014303
+                  ]
+                }
+              ],
+              "elements": 2312,
+              "w_over_thickness": 5.458022840242814,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 24,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 10.119344957610512,
+              "max_surface_bending_von_mises_mpa": 58.598530631499344,
+              "stress_p95_mpa": 12.38034633137956,
+              "load_n": 346.60623760000055,
+              "residual_relative": 5.915153975199883e-11,
+              "force_balance_n": 6.880327418912202e-10,
+              "moment_balance_n_mm": 9.81450395994878e-08,
+              "supports": [
+                {
+                  "force_n": 100.50563110995391,
+                  "first_moment_n_mm": [
+                    -7536.114117977021,
+                    311.2859656515765
+                  ]
+                },
+                {
+                  "force_n": 72.81872920060204,
+                  "first_moment_n_mm": [
+                    4868.918594631296,
+                    272.44866034353606
+                  ]
+                },
+                {
+                  "force_n": 100.46314808972963,
+                  "first_moment_n_mm": [
+                    315.1094374757047,
+                    -7532.290646156903
+                  ]
+                },
+                {
+                  "force_n": 72.81872920056259,
+                  "first_moment_n_mm": [
+                    272.4486603424814,
+                    4868.918594627976
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 5.059672478805256,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            {
+              "max_abs_displacement_mm": 9.951445679886183,
+              "max_surface_bending_von_mises_mpa": 96.42255233856311,
+              "stress_p95_mpa": 11.910465285007103,
+              "load_n": 346.60623760000055,
+              "residual_relative": 1.981502170029237e-10,
+              "force_balance_n": 4.482103577174712e-10,
+              "moment_balance_n_mm": 1.701379554921989e-08,
+              "supports": [
+                {
+                  "force_n": 100.27886743227086,
+                  "first_moment_n_mm": [
+                    -7514.613135636513,
+                    320.74861096560096
+                  ]
+                },
+                {
+                  "force_n": 72.91554261718252,
+                  "first_moment_n_mm": [
+                    4861.025940750346,
+                    272.7687334250763
+                  ]
+                },
+                {
+                  "force_n": 100.4962849334369,
+                  "first_moment_n_mm": [
+                    301.1810358690719,
+                    -7534.180710738352
+                  ]
+                },
+                {
+                  "force_n": 72.91554261722018,
+                  "first_moment_n_mm": [
+                    272.7687334325245,
+                    4861.025940754832
+                  ]
+                }
+              ],
+              "elements": 13448,
+              "w_over_thickness": 4.975722839943091,
+              "linear_geometry_credible": false,
+              "support_mode": "rail_and_tabs",
+              "cells_per_side": 72,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          ],
+          "last_relative_change": 0.016591911672904858,
+          "ideal_edge_comparison": {
+            "tabs": {
+              "max_abs_displacement_mm": 19.814790619796824,
+              "max_surface_bending_von_mises_mpa": 72.43677111891955,
+              "stress_p95_mpa": 19.085657181820984,
+              "load_n": 346.60623760000055,
+              "residual_relative": 1.4522465386251343e-10,
+              "force_balance_n": 5.51608536625281e-10,
+              "moment_balance_n_mm": 1.1684223006278472e-07,
+              "supports": [
+                {
+                  "force_n": 96.67448220285019,
+                  "first_moment_n_mm": [
+                    -7187.305239950034,
+                    -114.33867688183454
+                  ]
+                },
+                {
+                  "force_n": 76.62863659788262,
+                  "first_moment_n_mm": [
+                    5289.472266113753,
+                    -67.46577479857558
+                  ]
+                },
+                {
+                  "force_n": 96.67448220312659,
+                  "first_moment_n_mm": [
+                    -114.33867686341631,
+                    -7187.305239974342
+                  ]
+                },
+                {
+                  "force_n": 76.62863659767028,
+                  "first_moment_n_mm": [
+                    -67.46577479140109,
+                    5289.472266097075
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 9.907395309898412,
+              "linear_geometry_credible": false,
+              "support_mode": "tabs",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "simply_supported": {
+              "max_abs_displacement_mm": 28.53741702501772,
+              "max_surface_bending_von_mises_mpa": 27.30349139604903,
+              "stress_p95_mpa": 25.180538326531828,
+              "load_n": 346.60623760000055,
+              "residual_relative": 1.1663285525191446e-10,
+              "force_balance_n": 1.0203393685515039e-10,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": 9.090296571034884e-11,
+                  "first_moment_n_mm": [
+                    -7.461702146206903e-09,
+                    -1.05956679198246e-10
+                  ]
+                },
+                {
+                  "force_n": 3.1362280827895717e-11,
+                  "first_moment_n_mm": [
+                    2.347472434607788e-09,
+                    -1.1911072823072168e-10
+                  ]
+                },
+                {
+                  "force_n": -8.978706667051028e-12,
+                  "first_moment_n_mm": [
+                    1.152041704507683e-09,
+                    9.223161742413283e-10
+                  ]
+                },
+                {
+                  "force_n": -1.8133639034800808e-10,
+                  "first_moment_n_mm": [
+                    -1.661216420785464e-09,
+                    -1.4378285179955336e-08
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 14.26870851250886,
+              "linear_geometry_credible": false,
+              "support_mode": "simply_supported",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            },
+            "clamped": {
+              "max_abs_displacement_mm": 8.949314967233498,
+              "max_surface_bending_von_mises_mpa": 24.605789852548586,
+              "stress_p95_mpa": 15.824119364925114,
+              "load_n": 346.60623760000055,
+              "residual_relative": 2.3677031843799645e-11,
+              "force_balance_n": 4.092726157978177e-12,
+              "moment_balance_n_mm": null,
+              "supports": [
+                {
+                  "force_n": -3.135491866146367e-12,
+                  "first_moment_n_mm": [
+                    2.56739957418493e-10,
+                    -7.475859051701147e-12
+                  ]
+                },
+                {
+                  "force_n": 2.2352189543717316e-12,
+                  "first_moment_n_mm": [
+                    1.6650017707154343e-10,
+                    9.573834838319298e-11
+                  ]
+                },
+                {
+                  "force_n": 2.884807670522349e-11,
+                  "first_moment_n_mm": [
+                    -8.846210974361268e-11,
+                    -2.257908994033907e-09
+                  ]
+                },
+                {
+                  "force_n": -5.987099704896082e-12,
+                  "first_moment_n_mm": [
+                    8.489289132660187e-12,
+                    -4.87763902185184e-10
+                  ]
+                }
+              ],
+              "elements": 6728,
+              "w_over_thickness": 4.474657483616749,
+              "linear_geometry_credible": false,
+              "support_mode": "clamped",
+              "cells_per_side": 48,
+              "scope": "Linear Kirchhoff plate, no holes/rounding, finite tabs and optional rail bearing lines, or ideal continuous edges. Support peaks not qualified."
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "analyse.py": "d6f90ffbb5501d533037b724dada4e446681a556ad05426782270d301e71de5a",
+    "build_model.py": "42af75f61540a365c26ff952039a12272e4a5f0c63a9e89b051daa47cdc25f53",
+    "model.json": "5b8efaa3aac26718301667483dcaaf8547cffb33c4efae1b4ee978e1f181468e"
+  },
+  "scope": "Component linear FEA. No coupled nonlinear tank, watertight seal, joint contact, creep or structural safety qualification. Displacements with w/t>0.5 are linear diagnostics only."
+}

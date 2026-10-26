@@ -10,34 +10,43 @@
 --   3. Pair up bodies across (and within) parts; prune by clearance-
 --      expanded AABB overlap.
 --   4. For surviving pairs, both bodies are emitted as OpenSCAD
---      polyhedron() literals and intersected — OpenSCAD is the exact
---      boolean engine. Nonzero volume = OVERLAP (reported with volume).
+--      polyhedron() literals and intersected by OpenSCAD, or intersected
+--      directly as indexed native meshes. Nonzero volume = OVERLAP.
 --   5. Non-overlapping close pairs are classified by vertex-to-triangle
---      distance (grid-accelerated): CONTACT (< 0.02mm) is informational
+--      and edge-to-edge distance (BVH-accelerated): CONTACT (< 0.02mm) is informational
 --      (mating faces), a gap below the declared `clearance` is a WARNING.
 --
 -- Exit code 2 if any OVERLAP is found (1 means the check could not run).
 module Coscad.Check
   ( processCheck
   , processCheckIn
+  , processCheckInBackend
+  , processCheckWithBackend
   , processCheckWith
   , splitBodies
+  , splitSolidBodies
+  , splitIndexedSolids
   )
 where
 
 import Coscad.Assemble
+import Coscad.Backend (Backend (..), backendName, nativeIndexedCSGMesh)
+import Coscad.Mesh.Distance (meshDistance)
+import Coscad.Mesh.Indexed
+import Coscad.Manifold (MeshOp (MeshIntersection), indexedOperation)
 import Coscad.Codegen
 import Coscad.IO (readFileLatin1, scratchDir)
-import Coscad.Linalg (V3, dot3, scale3, vadd, vlen, vsub)
-import Coscad.Mesh (Tri, meshVolume, parseStlAscii)
+import Coscad.Linalg (V3, cross, dot3, vlen, vsub)
+import Coscad.Mesh (Tri, meshVolume, parseStlAscii, stlAscii)
 import Coscad.OpenScad (openscadStlArgs, renderStlFile, runOpenscadRaw)
 import Coscad.Shape
 import Coscad.Report
 import System.Exit (ExitCode (..))
 import Control.Monad (forM, forM_, unless, when)
 import Data.IORef
-import Data.List (foldl', intercalate)
+import Data.List (foldl', intercalate, minimumBy)
 import qualified Data.Map as Map
+import Data.Ord (comparing)
 import System.Directory (createDirectoryIfMissing, removePathForcibly)
 import System.FilePath ((</>))
 
@@ -72,6 +81,43 @@ splitBodies tris = Map.elems grouped
         Map.empty
         tris
 
+-- | Group inward-oriented cavity shells with the smallest containing outward
+-- shell. Splitting only by shared vertices would mistake an enclosed void for
+-- another solid, causing false intersections against a part inside that void.
+-- The input must be a closed, consistently oriented result from the backend.
+splitSolidBodies :: [Tri] -> Either String [[Tri]]
+splitSolidBodies tris = map concat <$> groupSolidShells [(s,s) | s<-splitBodies tris]
+
+splitIndexedSolids :: IndexedMesh -> Either String [IndexedMesh]
+splitIndexedSolids mesh = do
+  groups<-groupSolidShells [(s,indexedTriangles s) | s<-indexedComponents mesh]
+  mapM concatenateIndexed groups
+
+-- Shell ownership uses geometry; payloads retain their original connectivity.
+groupSolidShells :: [(a,[Tri])] -> Either String [[a]]
+groupSolidShells shells = do
+  let signed []=0
+      signed ts@((origin,_,_):_) = sum [dot3 (vsub a origin) (cross (vsub b origin) (vsub c origin))/6 | (a,b,c)<-ts]
+      outward=[(i,(payload,s)) | (i,(payload,s))<-zip [0::Int ..] shells,signed s>0]
+      inward=[(payload,s) | (payload,s)<-shells,signed s<0]
+      inside p surface = abs (sum (map angle surface))>2*pi
+        where angle (a,b,c) =
+                let u=vsub a p; v=vsub b p; w=vsub c p
+                in 2*atan2 (dot3 u (cross v w))
+                     (vlen u*vlen v*vlen w+dot3 u v*vlen w+dot3 v w*vlen u+dot3 w u*vlen v)
+      owner (payload,(point,_,_):_) = case [(i,s) | (i,(_,s))<-outward,inside point s] of
+        [] -> Left "assembly mesh contains an inward shell without a containing solid"
+        bs -> Right (fst (minimumBy (comparing (meshVolume . snd)) bs),[payload])
+      owner (_,[]) = Left "assembly mesh contains an empty shell"
+  unless (all ((/=0) . signed . snd) shells) (Left "assembly mesh contains a zero-volume shell")
+  cavities<-mapM owner inward
+  return (Map.elems (Map.fromListWith (++) ([(i,[payload]) | (i,(payload,_))<-outward]++cavities)))
+
+data CheckBody = NativeBody IndexedMesh | ScadBody [Tri]
+bodyTriangles :: CheckBody -> [Tri]
+bodyTriangles (NativeBody mesh)=indexedTriangles mesh
+bodyTriangles (ScadBody tris)=tris
+
 triBounds :: [Tri] -> (V3, V3)
 triBounds ts =
   let vs = concat [[a, b, c] | (a, b, c) <- ts]
@@ -87,82 +133,6 @@ aabbGap ((ax0, ay0, az0), (ax1, ay1, az1)) ((bx0, by0, bz0), (bx1, by1, bz1)) =
       gy = g ay0 ay1 by0 by1
       gz = g az0 az1 bz0 bz1
    in sqrt (gx * gx + gy * gy + gz * gz)
-
--- ------------------------------------------------------------------
--- point-triangle distance (Ericson, Real-Time Collision Detection)
-pointTriDist :: V3 -> Tri -> Double
-pointTriDist p (a, b, c) =
-  let ab = vsub b a
-      ac = vsub c a
-      ap = vsub p a
-      d1 = dot3 ab ap
-      d2 = dot3 ac ap
-   in if d1 <= 0 && d2 <= 0
-        then vlen (vsub p a)
-        else
-          let bp = vsub p b
-              d3 = dot3 ab bp
-              d4 = dot3 ac bp
-           in if d3 >= 0 && d4 <= d3
-                then vlen (vsub p b)
-                else
-                  let vc = d1 * d4 - d3 * d2
-                   in if vc <= 0 && d1 >= 0 && d3 <= 0
-                        then vlen (vsub p (vadd a (scale3 (d1 / (d1 - d3)) ab)))
-                        else
-                          let cp = vsub p c
-                              d5 = dot3 ab cp
-                              d6 = dot3 ac cp
-                           in if d6 >= 0 && d5 <= d6
-                                then vlen (vsub p c)
-                                else
-                                  let vb = d5 * d2 - d1 * d6
-                                   in if vb <= 0 && d2 >= 0 && d6 <= 0
-                                        then vlen (vsub p (vadd a (scale3 (d2 / (d2 - d6)) ac)))
-                                        else
-                                          let va = d3 * d6 - d5 * d4
-                                           in if va <= 0 && (d4 - d3) >= 0 && (d5 - d6) >= 0
-                                                then
-                                                  let w = (d4 - d3) / ((d4 - d3) + (d5 - d6))
-                                                   in vlen (vsub p (vadd b (scale3 w (vsub c b))))
-                                                else
-                                                  let denom = 1 / (va + vb + vc)
-                                                      v = vb * denom
-                                                      w = vc * denom
-                                                   in vlen (vsub p (vadd a (vadd (scale3 v ab) (scale3 w ac))))
-
--- | Minimum vertex<->triangle distance between two bodies, early-exit
--- once below `stop`. Grid-accelerated on the larger triangle set.
--- (Vertex sampling: exact for meshes whose closest features involve a
--- vertex; parallel offset faces are caught since their vertices project
--- onto the opposing face.)
-meshDist :: Double -> [Tri] -> [Tri] -> Double
-meshDist stop ta tb = min (side ta tb) (side tb ta)
-  where
-    cell = max (stop * 2) 8
-    key (x, y, z) = (floor (x / cell) :: Int, floor (y / cell) :: Int, floor (z / cell) :: Int)
-    gridOf ts =
-      foldl'
-        ( \m t ->
-            let ((x0, y0, z0), (x1, y1, z1)) = triBounds [t]
-                (i0, j0, k0) = key (x0, y0, z0)
-                (i1, j1, k1) = key (x1, y1, z1)
-             in foldl' (\m' k -> Map.insertWith (++) k [t] m') m [(i, j, kk) | i <- [i0 .. i1], j <- [j0 .. j1], kk <- [k0 .. k1]]
-        )
-        Map.empty
-        ts
-    side va vb =
-      let grid = gridOf vb
-          verts = concat [[a, b, c] | (a, b, c) <- va]
-          go best [] = best
-          go best (p : ps)
-            | best < contactEps = best
-            | otherwise =
-                let (i, j, k) = key p
-                    near = concat [Map.findWithDefault [] (i + di, j + dj, k + dk) grid | di <- [-1 .. 1], dj <- [-1 .. 1], dk <- [-1 .. 1]]
-                    d = foldl' (\acc t -> min acc (pointTriDist p t)) best near
-                 in go d ps
-       in go (1 / 0) verts
 
 -- ------------------------------------------------------------------
 -- emit a body as an OpenSCAD polyhedron (STL winding is CCW-outward;
@@ -209,12 +179,18 @@ processCheck emit = processCheckWith emit False
 -- (never shared with another running check) and are deleted afterwards
 -- unless `keepTemp` (--keep-temp), which names the folder.
 processCheckWith :: Emit -> Bool -> FilePath -> IO (Either Failure ())
-processCheckWith emit keepTemp = processCheckIn emit keepTemp Nothing
+processCheckWith = processCheckWithBackend OpenScadBackend
+
+processCheckWithBackend :: Backend -> Emit -> Bool -> FilePath -> IO (Either Failure ())
+processCheckWithBackend backend emit keepTemp = processCheckInBackend backend emit keepTemp Nothing
 
 -- | As 'processCheckWith', with an explicit scratch directory (tests).
 -- Overlaps are listed on stdout and fail with exit 2 and no further text.
 processCheckIn :: Emit -> Bool -> Maybe FilePath -> FilePath -> IO (Either Failure ())
-processCheckIn emit keepTemp scratch path = runCommand $ do
+processCheckIn = processCheckInBackend OpenScadBackend
+
+processCheckInBackend :: Backend -> Emit -> Bool -> Maybe FilePath -> FilePath -> IO (Either Failure ())
+processCheckInBackend backend emit keepTemp scratch path = runCommand $ do
   dir <- maybe (scratchDir "check") return scratch
   createDirectoryIfMissing True dir
   res <- loadAssembly emit [] path
@@ -226,6 +202,7 @@ processCheckIn emit keepTemp scratch path = runCommand $ do
         let clr = arClearance ar
             names = map fst (arParts ar)
         putStrLn ("check: " ++ show (length names) ++ " parts, clearance = " ++ show clr ++ "mm")
+        putStrLn ("       geometry backend: " ++ backendName backend)
         -- 1. isolate each part inside the asm expression
         bodiesPer <- forM (arParts ar) $ \(pn, _) -> do
           let table0 = Map.fromList [(n, if n == pn then s else Hidden s) | (n, s) <- arParts ar]
@@ -237,13 +214,20 @@ processCheckIn emit keepTemp scratch path = runCommand $ do
                 let scadF = dir </> ("chk_" ++ pn ++ ".scad")
                     stlF = dir </> ("chk_" ++ pn ++ ".stl")
                 writeScad asmS scadF
-                appendFile scadF ("\n" ++ marker ++ "\n")
-                r <- renderStlFile scadF stlF
+                r <- case backend of
+                  NativeExperimental -> do
+                    result <- nativeIndexedCSGMesh asmS
+                    case result of
+                      Right mesh -> writeFile stlF (stlAscii "isolated_part" (indexedTriangles mesh))
+                      Left _ -> return ()
+                    return (map NativeBody <$> (result >>= splitIndexedSolids))
+                  OpenScadBackend -> do
+                    appendFile scadF ("\n" ++ marker ++ "\n")
+                    result <- renderStlFile scadF stlF
+                    return (map ScadBody . filter farFromMarker <$> (result >>= splitSolidBodies))
                 case r of
-                  Left err -> abort (Failure 1 ["Error rendering " ++ pn ++ ": " ++ err])
-                  Right tris -> do
-                    let real = [b | b <- splitBodies tris, farFromMarker b]
-                    return (pn, real)
+                  Left err -> abort (Failure 1 ["Error rendering/splitting " ++ pn ++ ": " ++ err])
+                  Right bodies -> return (pn,bodies)
         let insts =
               [ (pn ++ (if length bs > 1 then "#" ++ show i else ""), b)
               | (pn, bs) <- bodiesPer
@@ -254,35 +238,47 @@ processCheckIn emit keepTemp scratch path = runCommand $ do
         overlapsR <- newIORef (0 :: Int)
         warnsR <- newIORef (0 :: Int)
         let pairs = [(x, y) | (x : rest) <- tails' insts, y <- rest]
-        forM_ (zip [(0 :: Int) ..] pairs) $ \(i, ((na, ba), (nb, bb))) -> do
-          let gap0 = aabbGap (triBounds ba) (triBounds bb)
+        forM_ (zip [(0 :: Int) ..] pairs) $ \(i, ((na, bodyA), (nb, bodyB))) -> do
+          let ba=bodyTriangles bodyA; bb=bodyTriangles bodyB
+              gap0 = aabbGap (triBounds ba) (triBounds bb)
           if gap0 > max clr contactEps
             then return ()
             else do
-              -- exact overlap via OpenSCAD boolean
+              -- overlap through the selected backend
               let scadF = dir </> ("chk_pair" ++ show i ++ ".scad")
                   stlF = dir </> ("chk_pair" ++ show i ++ ".stl")
               let writePair x y = writeFile scadF ("intersection() {\n union() { " ++ polyScad x ++ marker ++ " }\n union() { " ++ polyScad y ++ marker ++ " }\n}\n")
                   measure = do
                     tris <- either (const []) id . parseStlAscii <$> readFileLatin1 stlF
                     return (sum (map meshVolume (filter farFromMarkerNot (splitBodies tris))))
-              writePair ba bb
-              r1 <- runOpenscadChecked scadF stlF
-              volM <- case r1 of
-                Right False -> Just <$> measure
-                _ -> do
-                  writePair bb ba -- CGAL assertions are often operand-order dependent
-                  r2 <- runOpenscadChecked scadF stlF
-                  case r2 of
+              volM <- case backend of
+                NativeExperimental -> do
+                  result <- case (bodyA,bodyB) of
+                    (NativeBody a,NativeBody b) -> indexedOperation MeshIntersection a b
+                    _ -> return (Left "internal backend/body mismatch")
+                  case result of
+                    Left err -> abort (Failure 1 ["Error intersecting " ++ na ++ " and " ++ nb ++ ": " ++ err])
+                    Right mesh -> return (Just (meshVolume (indexedTriangles mesh)))
+                OpenScadBackend -> do
+                  writePair ba bb
+                  r1 <- runOpenscadChecked scadF stlF
+                  case r1 of
                     Right False -> Just <$> measure
-                    _ -> return Nothing -- boolean unstable near coplanar faces
+                    _ -> do
+                      writePair bb ba -- CGAL assertions are often operand-order dependent
+                      r2 <- runOpenscadChecked scadF stlF
+                      case r2 of
+                        Right False -> Just <$> measure
+                        _ -> return Nothing -- boolean unstable near coplanar faces
               let note = case volM of Nothing -> "  (boolean unstable; distance verdict)"; Just _ -> ""
               case volM of
                 Just vol | vol > volEps -> do
                   modifyIORef' overlapsR (+ 1)
                   putStrLn ("OVERLAP  " ++ na ++ " x " ++ nb ++ "  volume " ++ show (rnd vol) ++ " mm^3")
                 _ -> do
-                  let d = meshDist (max clr contactEps) ba bb
+                  d <- case meshDistance ba bb of
+                    Just distance -> return distance
+                    Nothing -> abort (Failure 1 ["Cannot resolve surface distance between " ++ na ++ " and " ++ nb])
                   if d < contactEps
                     then putStrLn ("contact  " ++ na ++ " x " ++ nb ++ note)
                     else

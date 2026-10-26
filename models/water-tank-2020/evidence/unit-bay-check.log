@@ -1,0 +1,20 @@
+check: 9 parts, clearance = 0.0mm
+       geometry backend: native-experimental
+       9 placed instances: post_0010, post_0012, rail_0175, rail_0186, panel_0555, panel_bracket_0556, panel_bracket_0560, panel_bracket_0564, panel_bracket_0568
+contact  post_0010 x rail_0175
+contact  post_0010 x rail_0186
+contact  post_0010 x panel_0555
+contact  post_0010 x panel_bracket_0556
+contact  post_0012 x rail_0175
+contact  post_0012 x rail_0186
+contact  post_0012 x panel_0555
+contact  post_0012 x panel_bracket_0560
+contact  rail_0175 x panel_0555
+contact  rail_0175 x panel_bracket_0564
+contact  rail_0186 x panel_0555
+contact  rail_0186 x panel_bracket_0568
+contact  panel_0555 x panel_bracket_0556
+contact  panel_0555 x panel_bracket_0560
+contact  panel_0555 x panel_bracket_0564
+contact  panel_0555 x panel_bracket_0568
+check: 0 overlaps, 0 clearance warnings

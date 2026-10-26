@@ -25,13 +25,14 @@ import Control.Monad (unless)
 import Coscad.OpenScad (findOpenscad)
 import Data.IORef
 import GHC.IO.Encoding (setLocaleEncoding)
-import System.Environment (lookupEnv)
+import System.Environment (getArgs, lookupEnv)
 import System.Exit (exitFailure)
 import System.IO
 import Text.Printf (printf)
 import Harness
 import Tier.Diagnostics
 import Tier.Examples
+import Tier.Experiments
 import Tier.Geometry
 import Tier.Assembly
 import Tier.Plan
@@ -49,6 +50,29 @@ main = do
   hSetBuffering stdout LineBuffering
   t <- T <$> newIORef 0 <*> newIORef []
   update <- (== Just "1") <$> lookupEnv "COSCAD_UPDATE_GOLDEN"
+  args <- getArgs
+  unless (null args || args == ["--experiments-only"]) $ do
+    hPutStrLn stderr "usage: coscad-test [--experiments-only]"
+    exitFailure
+  let focused = args == ["--experiments-only"]
+  unless focused (coreTiers t update)
+  experimentsTier t
+  render <- lookupEnv "COSCAD_RENDER"
+  bin <- findOpenscad
+  case (render, bin) of
+    (Just "0", _) -> putStrLn "\n(geometry tier skipped: COSCAD_RENDER=0)"
+    (_, Nothing) -> putStrLn "\n(geometry tier skipped: OpenSCAD not found; set COSCAD_OPENSCAD)"
+    (_, Just b) -> unless focused (geometry t update b) >> backendOracleTier t
+  n <- readIORef (tPassed t)
+  fails <- readIORef (tFailed t)
+  putStrLn ""
+  printf "%d passed, %d failed\n" n (length fails)
+  unless (null fails) $ do
+    mapM_ (putStrLn . ("  - " ++)) fails
+    exitFailure
+
+coreTiers :: T -> Bool -> IO ()
+coreTiers t update = do
   diagnostics t
   remainingDiagnostics t
   resolutionTier t
@@ -70,16 +94,3 @@ main = do
   silenceTier t
   validateTier t
   exportListTier t
-  render <- lookupEnv "COSCAD_RENDER"
-  bin <- findOpenscad
-  case (render, bin) of
-    (Just "0", _) -> putStrLn "\n(geometry tier skipped: COSCAD_RENDER=0)"
-    (_, Nothing) -> putStrLn "\n(geometry tier skipped: OpenSCAD not found; set COSCAD_OPENSCAD)"
-    (_, Just b) -> geometry t update b
-  n <- readIORef (tPassed t)
-  fails <- readIORef (tFailed t)
-  putStrLn ""
-  printf "%d passed, %d failed\n" n (length fails)
-  unless (null fails) $ do
-    mapM_ (putStrLn . ("  - " ++)) fails
-    exitFailure

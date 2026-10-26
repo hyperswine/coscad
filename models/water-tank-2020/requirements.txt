@@ -1,0 +1,2 @@
+-r ../../experiments/requirements-fea.txt
+matplotlib==3.11.2

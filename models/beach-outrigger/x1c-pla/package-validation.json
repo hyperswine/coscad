@@ -1,0 +1,44 @@
+{
+  "printer": "X1C",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL X1C",
+  "nozzle_temperature": "220",
+  "bed_temperature": "55",
+  "model_id": "BL-P001",
+  "package": "x1c-pla/slice/beach-outrigger.gcode.3mf",
+  "package_sha256": "025ed5b869c6380d9b9566a612c28a35dbe5fb62f74cd885a142f5b5ae7117f1",
+  "gcode_sha256": "172e52ac0a15b92fcc369da1f96d1b3956165b04e74de73c0de3a2c337a2c625",
+  "layers": 288,
+  "model_path_segments": 587976,
+  "support_segments": 0,
+  "longest_bridge_segment_mm": 20.98600343085838,
+  "path_bounds_relative_to_model_mm": [
+    [
+      -115.25754954907336,
+      -102.66499999999999,
+      0.2
+    ],
+    [
+      115.21100000000001,
+      102.66752187778275,
+      57.6
+    ]
+  ],
+  "features": {
+    "Outer wall": 98279,
+    "Inner wall": 272565,
+    "Bottom surface": 1659,
+    "Internal solid infill": 53606,
+    "Gap infill": 30796,
+    "Sparse infill": 79455,
+    "Top surface": 2962,
+    "Overhang wall": 24,
+    "Floating vertical shell": 45343,
+    "Bridge": 3287
+  },
+  "estimated_seconds": 77324.921875,
+  "estimated_hours": 21.47914496527778,
+  "estimated_grams": 424.4527587890625,
+  "solid_geometry_grams": 425.9820403540061,
+  "passed": true
+}

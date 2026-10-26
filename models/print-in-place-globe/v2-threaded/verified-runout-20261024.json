@@ -1,0 +1,21 @@
+{
+  "observed_at": "2026-10-24T20:01:46+11:00",
+  "kind": "verified_filament_runout",
+  "print_error": 50364420,
+  "code": "03008004",
+  "layer": 29,
+  "total_layers": 659,
+  "vendor_catalogs": [
+    "hms_en.json",
+    "hms_en_00M.json"
+  ],
+  "vendor_meaning": "Filament ran out. Please load new filament.",
+  "dashboard_caught_pause": true,
+  "dashboard_caught_exact_code": true,
+  "dashboard_label": "Printer reports an error",
+  "friendly_runout_label_missing": true,
+  "monitor_catalog_runout_seen_false_negative": true,
+  "printer_control_commands_sent": false,
+  "action_required": "Owner must load more PLA and resume; leave the print on the bed",
+  "monitor_remains_active": true
+}

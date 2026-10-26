@@ -1,0 +1,70 @@
+{
+  "support_roots": {
+    "raster_mm": 0.5,
+    "lateral_allowance_mm": 1,
+    "previous_layers_considered": 3,
+    "support_layers": 606,
+    "support_components_checked": 3320,
+    "bed_components": 6,
+    "components_without_prior_support": [],
+    "limitation": "Sampled continuity, not exact extrusion topology or physical support strength"
+  },
+  "effective_support_on_build_plate_only": "1",
+  "effective_wall_loops": "6",
+  "socket_support_intrusions": [],
+  "male_thread_support_intrusions": [],
+  "machine_extruder_offset_mm": [
+    0.0,
+    2.0
+  ],
+  "toolpath_center_mm": [
+    78.0,
+    126.0
+  ],
+  "support_segments_checked": 36736,
+  "minimum_support_footprint_radius_mm_in_blocker_height": 6.088068354662404,
+  "bearing_gap_crossing_segments": 0,
+  "inspected_lower_rotor_layer_z_mm": 33.32,
+  "near_start_layers": {
+    "32.84": [
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Support",
+      "Support interface"
+    ],
+    "33.0": [
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Support"
+    ],
+    "33.16": [
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Support"
+    ],
+    "33.32": [
+      "Bridge",
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Overhang wall",
+      "Support"
+    ],
+    "33.48": [
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Overhang wall",
+      "Support"
+    ]
+  },
+  "arc_sampling_mm": 0.05,
+  "near_support_layers": [],
+  "closest_support": [],
+  "bearing_region_support": [],
+  "passed": true,
+  "gcode_sha256": "8751860ea7d8f52967af942ce260b48e05fe2ea3d35c91e2c66ce40c70510c46"
+}

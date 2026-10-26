@@ -1,0 +1,6 @@
+[2026-10-25 14:19:02.254565] [0x00000001e8c63f80] [trace]   Initializing StaticPrintConfigs
+[2026-10-25 14:19:02.312105] [0x00000001e8c63f80] [warning] cli mode, Current BambuStudio Version 02.08.02.61
+[2026-10-25 14:19:02.323116] [0x00000001e8c63f80] [warning] no filament colors found in projects
+[2026-10-25 14:19:02.323745] [0x00000001e8c63f80] [warning] 4191: disable_wipe_tower_after_mapping: disable prime tower for only one filament!
+[2026-10-25 14:19:02.325892] [0x00000001e8c63f80] [warning] load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types
+[2026-10-25 14:19:02.575330] [0x00000001e8c63f80] [warning] tree support default to organic support

@@ -1,0 +1,24 @@
+{
+  "boat": "outrigger",
+  "printer": "A1",
+  "reported_by": "owner",
+  "reported_on": "2026-10-25",
+  "print_outcome": "printed well",
+  "float_test": {
+    "where": "sink, fresh water",
+    "floated": true,
+    "stable": true,
+    "waterline": "around the horizontal line mark on the hull",
+    "predicted_draft_mm": 10.4,
+    "predicted_draft_fraction_of_height": 0.47,
+    "center_hull_filled_with_water": "still floated",
+    "predicted_pontoons_only_buoyancy_g": 58.4,
+    "predicted_mass_g": 51.0,
+    "upside_down": "also floated (worked)"
+  },
+  "photos": "three owner photos exist in the Photos library (2026-10-25 21:16) but could not be read from the shell; export them into this folder to keep them with the record",
+  "notes": [
+    "Floating with the center hull flooded matches the prediction that the two sealed pontoons alone displace 58 g against a 51 g boat.",
+    "First observations only; leak over time, payload and heel limit not yet reported."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "coscad_git_commit": "a91eb4c29788a77cd0d21bc80725926539b3d1bf",
+  "coscad_binary_sha256": "37db0c055e79613e7ee15b644652a86fb924a9865e460890bbfc0e2103952eba",
+  "openscad": "2025.05.16 (Manifold)",
+  "bambu_studio": "02.08.02.61",
+  "physical_print_started": false,
+  "input_hashes": {
+    "generate.py": "e7f13831c1559339ca81eab0a837e9c5e3a4a7326d686407c7d3ebc711df0308",
+    "assembly.coscad": "6f84fd3bb14ef8312c816cff615e3db4dbf280553af8aa3db8dac8a4b04e8dfb",
+    "presets/machine.json": "a01956ccc0d6a60631442c68da2149de290a7a4c4164277e3ba0a735c27a31ca",
+    "presets/process.json": "309b0ae1d1266808fa6a2c1f8dbbddf287208786496ab54685f7ddc09097906a",
+    "presets/filament.json": "b03d79a940748fe75b217dd6191bdb5f6550f52273bf32a2a896d158792702c7",
+    "globe-project.3mf": "449401db48a5f86ace5b89174c117d95e89437420ad92dedd7687d70769c9c8c"
+  }
+}

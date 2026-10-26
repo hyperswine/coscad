@@ -1,0 +1,24 @@
+{
+  "reported_on": "2026-10-25",
+  "source": "Owner physical observation",
+  "outcome": "Passed",
+  "print": "globe-v2-p1s-20261024-182744.gcode.3mf",
+  "observations": [
+    "The full globe printed on one bed as two main printable parts.",
+    "Increased structural walls worked well.",
+    "Automatic tree supports originating on the bed only worked well.",
+    "Male thread on the stand and female interface in the globe/gimbal foot fit well.",
+    "Globe-to-gimbal moving tolerances seemed to work quite well."
+  ],
+  "profile": {
+    "printer": "P1S",
+    "structural_wall_loops": 6,
+    "rotor_wall_loops": 3,
+    "support": "tree(auto), build plate only",
+    "thread_major_diameter_mm": 24,
+    "thread_pitch_mm": 6,
+    "female_radial_enlargement_mm": 0.4,
+    "female_axial_flank_enlargement_mm": 0.25
+  },
+  "limits": "Owner-reported successful print and fit; no measured durability or waterproofing claim."
+}

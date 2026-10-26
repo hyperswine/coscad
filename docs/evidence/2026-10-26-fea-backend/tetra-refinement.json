@@ -1,0 +1,54 @@
+{
+  "schema": "coscad.tetra-refinement.v1",
+  "passed": true,
+  "bending": [
+    {
+      "fixture": "flat90",
+      "receipts": [
+        "tetra2-flat90-4.json",
+        "tetra2-flat90-3.json",
+        "tetra2-flat90-2.json"
+      ],
+      "target_size_mm": [
+        4.0,
+        3.0,
+        2.0
+      ],
+      "displacement_z_mm": [
+        -0.044555806837758484,
+        -0.04486103061259491,
+        -0.04519179218010776
+      ],
+      "last_relative_change": 0.0073190628553659876,
+      "displacement_refinement_passed": true,
+      "independent_comparisons_passed": true
+    },
+    {
+      "fixture": "tesseract-strut",
+      "receipts": [
+        "tetra2-strut-bend-3.json",
+        "tetra2-strut-bend-2.json"
+      ],
+      "target_size_mm": [
+        3.0,
+        2.0
+      ],
+      "displacement_z_mm": [
+        -0.08687244436389427,
+        -0.0869910133468226
+      ],
+      "last_relative_change": 0.0013630026639144255,
+      "displacement_refinement_passed": true,
+      "independent_comparisons_passed": true
+    }
+  ],
+  "axial": {
+    "receipt": "tetra2-strut-axial-3.json",
+    "area_from_source_volume_mm2": 16.8028306709215,
+    "analytic_displacement_mm": 0.0013688169839027862,
+    "observed_displacement_mm": 0.0013688169825521977,
+    "relative_error": 9.866830685822947e-10,
+    "passed": true
+  },
+  "scope": "Displacement gate on synthetic end-clamped isotropic solid parts. No peak-stress, joint/contact or printed-strength qualification."
+}

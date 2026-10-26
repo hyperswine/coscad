@@ -1,0 +1,55 @@
+check: 26 parts, clearance = 0.0mm
+       geometry backend: native-experimental
+       26 placed instances: post_0014, post_0019, post_0020, rail_0285, panel_0691, panel_bracket_0692, panel_bracket_0696, panel_bracket_0700, panel_bracket_0704, rail_1531, panel_1861, panel_bracket_1862, panel_bracket_1866, panel_bracket_1870, panel_bracket_1874, panel_3449, panel_bracket_3450, panel_bracket_3454, panel_bracket_3458, panel_bracket_3462, rail_3469, rail_3489, floor_connector_3675, floor_connector_3680, floor_connector_3685, floor_connector_3725
+contact  post_0014 x rail_0285
+contact  post_0014 x panel_0691
+contact  post_0014 x panel_bracket_0692
+contact  post_0014 x rail_3469
+contact  post_0014 x floor_connector_3725
+contact  post_0019 x rail_1531
+contact  post_0019 x panel_1861
+contact  post_0019 x panel_bracket_1866
+contact  post_0019 x rail_3489
+contact  post_0019 x floor_connector_3685
+contact  post_0020 x rail_0285
+contact  post_0020 x panel_bracket_0696
+contact  post_0020 x rail_1531
+contact  post_0020 x panel_bracket_1862
+contact  rail_0285 x panel_bracket_0700
+contact  rail_0285 x rail_1531
+contact  rail_0285 x panel_bracket_3462
+contact  rail_0285 x rail_3469
+contact  rail_0285 x floor_connector_3725
+contact  panel_0691 x panel_bracket_0692
+contact  panel_0691 x panel_bracket_0696
+contact  panel_0691 x panel_bracket_0700
+contact  panel_0691 x panel_bracket_0704
+ok       panel_0691 x panel_1861  gap 0.666 mm
+ok       panel_0691 x panel_3449  gap 0.666 mm
+contact  panel_bracket_0696 x panel_bracket_1862
+contact  panel_bracket_0700 x panel_bracket_3462
+contact  rail_1531 x panel_bracket_1870
+contact  rail_1531 x panel_bracket_3454
+contact  rail_1531 x rail_3489
+contact  rail_1531 x floor_connector_3685
+contact  panel_1861 x panel_bracket_1862
+contact  panel_1861 x panel_bracket_1866
+contact  panel_1861 x panel_bracket_1870
+contact  panel_1861 x panel_bracket_1874
+ok       panel_1861 x panel_3449  gap 0.666 mm
+contact  panel_bracket_1870 x panel_bracket_3454
+contact  panel_3449 x panel_bracket_3450
+contact  panel_3449 x panel_bracket_3454
+contact  panel_3449 x panel_bracket_3458
+contact  panel_3449 x panel_bracket_3462
+contact  panel_3449 x rail_3469
+contact  panel_3449 x rail_3489
+contact  panel_bracket_3450 x rail_3469
+contact  panel_bracket_3458 x rail_3489
+contact  rail_3469 x rail_3489
+contact  rail_3469 x floor_connector_3675
+contact  rail_3469 x floor_connector_3680
+contact  rail_3469 x floor_connector_3725
+contact  rail_3489 x floor_connector_3680
+contact  rail_3489 x floor_connector_3685
+check: 0 overlaps, 0 clearance warnings

@@ -4,6 +4,10 @@ Status: **intent**, written 2026-10-17. Nothing here is implemented. This
 note records what we mean to build, why, what is deliberately out of scope,
 and the order of work, so later changes can be checked against it.
 
+Implementation follow-up: [2026-10-26 experiments](2026-10-26-FEA-BACKEND-EXPERIMENTS.md)
+adds bounded beam/CAD FEA and opt-in pinned native CSG for a measured subset. The
+general `coscad stress` command and full backend replacement below remain planned.
+
 Two projects share most of their foundations:
 
 1. **`coscad stress`**: fast, simple stress, deflection and joint checks for

@@ -1,0 +1,261 @@
+{
+  "schema": "coscad.fea-experiment-run.v1",
+  "date": "2026-10-26",
+  "host": "Darwin arm64",
+  "baseline_git_revision": "421ef45dacec4b99bc7eda3b9bd1613ba5c817a6",
+  "executable_sha256": "c970fba49f4dbf1d5cab1acfcf18ddf81b5ad006213e683df41bda15b2bc25fd",
+  "source_sha256": {
+    "src/Coscad/Stress/Experiment.hs": "0ebbd7428dfdc410af5bc53e43c5df55ce6af76216aa23974f60610a55821c46",
+    "experiments/Main.hs": "e5569cee478f9ba2c52407506813e2f5f78ebbc7a3486d3281af379ce831c635"
+  },
+  "cases": [
+    {
+      "arguments": [
+        "beam",
+        "axial",
+        "4",
+        "2",
+        "2"
+      ],
+      "elapsed_seconds": 0.3677,
+      "result": {
+        "schema": "coscad.fea-experiment.v1",
+        "experimental": true,
+        "case": "axial",
+        "size_mm": [
+          20,
+          4,
+          4
+        ],
+        "cells": [
+          4,
+          2,
+          2
+        ],
+        "young_mpa": 2000,
+        "poisson": 0,
+        "total_tip_force_n": [
+          1,
+          0,
+          0
+        ],
+        "tip_displacement_mm": [
+          0.0006250000000000016,
+          -1.6222851536305132e-19,
+          -5.770974854812107e-20
+        ],
+        "support_reaction_n": [
+          -1.0000000000000042,
+          4.336808689942018e-17,
+          1.3877787807814457e-17
+        ],
+        "support_moment_n_mm": [
+          -8.326672684688674e-17,
+          -2.000000000000009,
+          2.000000000000009
+        ],
+        "strain_energy_n_mm": 0.0003125000000000008,
+        "max_cell_centre_von_mises_mpa": 0.0625000000000006,
+        "analytic_displacement_mm": 0.000625,
+        "analytic_relative_error": 2.6645352591003757e-15,
+        "free_residual_relative": 1.2483301402567136e-13,
+        "iterations": 4,
+        "elements": 16,
+        "degrees_of_freedom": 135,
+        "limitations": [
+          "Homogeneous isotropic full-integration Hex8 baseline, not qualified for printed parts.",
+          "Clamped x=0 face; uniform end traction. No arbitrary CAD, contact, infill or layer anisotropy.",
+          "Bending and volumetric locking require refinement; centre stresses omit boundary peaks.",
+          "Euler-Bernoulli bending reference omits transverse shear and local clamp effects.",
+          "No material strength or safety-factor conclusion is made."
+        ]
+      }
+    },
+    {
+      "arguments": [
+        "beam",
+        "bend",
+        "10",
+        "2",
+        "2"
+      ],
+      "elapsed_seconds": 0.0171,
+      "result": {
+        "schema": "coscad.fea-experiment.v1",
+        "experimental": true,
+        "case": "bend",
+        "size_mm": [
+          20,
+          4,
+          4
+        ],
+        "cells": [
+          10,
+          2,
+          2
+        ],
+        "young_mpa": 2000,
+        "poisson": 0.3,
+        "total_tip_force_n": [
+          0,
+          0,
+          -1
+        ],
+        "tip_displacement_mm": [
+          -1.914375775957655e-15,
+          6.939145896209037e-16,
+          -0.055180625780399235
+        ],
+        "support_reaction_n": [
+          3.359978961725574e-11,
+          1.8779977573046835e-12,
+          1.000000000374895
+        ],
+        "support_moment_n_mm": [
+          2.000000000745992,
+          -20.000000000027434,
+          -5.5560001044341334e-11
+        ],
+        "strain_energy_n_mm": 0.027590312890198202,
+        "max_cell_centre_von_mises_mpa": 0.7279567304559397,
+        "analytic_displacement_mm": 0.0625,
+        "analytic_relative_error": 0.11710998751361223,
+        "free_residual_relative": 8.291224824690119e-09,
+        "iterations": 44,
+        "elements": 40,
+        "degrees_of_freedom": 297,
+        "limitations": [
+          "Homogeneous isotropic full-integration Hex8 baseline, not qualified for printed parts.",
+          "Clamped x=0 face; uniform end traction. No arbitrary CAD, contact, infill or layer anisotropy.",
+          "Bending and volumetric locking require refinement; centre stresses omit boundary peaks.",
+          "Euler-Bernoulli bending reference omits transverse shear and local clamp effects.",
+          "No material strength or safety-factor conclusion is made."
+        ]
+      }
+    },
+    {
+      "arguments": [
+        "beam",
+        "bend",
+        "20",
+        "4",
+        "4"
+      ],
+      "elapsed_seconds": 0.1088,
+      "result": {
+        "schema": "coscad.fea-experiment.v1",
+        "experimental": true,
+        "case": "bend",
+        "size_mm": [
+          20,
+          4,
+          4
+        ],
+        "cells": [
+          20,
+          4,
+          4
+        ],
+        "young_mpa": 2000,
+        "poisson": 0.3,
+        "total_tip_force_n": [
+          0,
+          0,
+          -1
+        ],
+        "tip_displacement_mm": [
+          5.026090221099677e-16,
+          3.379195882591244e-15,
+          -0.061052631446745706
+        ],
+        "support_reaction_n": [
+          -1.1091128016005314e-13,
+          1.1099454688690003e-12,
+          1.0000000000991043
+        ],
+        "support_moment_n_mm": [
+          2.000000000195673,
+          -20.000000000119805,
+          3.3080205241731164e-12
+        ],
+        "strain_energy_n_mm": 0.030526315723373967,
+        "max_cell_centre_von_mises_mpa": 1.250402076131893,
+        "analytic_displacement_mm": 0.0625,
+        "analytic_relative_error": 0.023157896852068705,
+        "free_residual_relative": 9.878608609169328e-09,
+        "iterations": 94,
+        "elements": 320,
+        "degrees_of_freedom": 1575,
+        "limitations": [
+          "Homogeneous isotropic full-integration Hex8 baseline, not qualified for printed parts.",
+          "Clamped x=0 face; uniform end traction. No arbitrary CAD, contact, infill or layer anisotropy.",
+          "Bending and volumetric locking require refinement; centre stresses omit boundary peaks.",
+          "Euler-Bernoulli bending reference omits transverse shear and local clamp effects.",
+          "No material strength or safety-factor conclusion is made."
+        ]
+      }
+    },
+    {
+      "arguments": [
+        "beam",
+        "bend",
+        "30",
+        "6",
+        "6"
+      ],
+      "elapsed_seconds": 0.4688,
+      "result": {
+        "schema": "coscad.fea-experiment.v1",
+        "experimental": true,
+        "case": "bend",
+        "size_mm": [
+          20,
+          4,
+          4
+        ],
+        "cells": [
+          30,
+          6,
+          6
+        ],
+        "young_mpa": 2000,
+        "poisson": 0.3,
+        "total_tip_force_n": [
+          0,
+          0,
+          -1
+        ],
+        "tip_displacement_mm": [
+          3.7062773640059166e-15,
+          -5.037519481502441e-15,
+          -0.062370424509152804
+        ],
+        "support_reaction_n": [
+          1.202038468761657e-12,
+          -9.435646708411127e-13,
+          0.9999999998818394
+        ],
+        "support_moment_n_mm": [
+          1.999999999765778,
+          -19.99999999941315,
+          -4.220179761205145e-12
+        ],
+        "strain_energy_n_mm": 0.03118521225457259,
+        "max_cell_centre_von_mises_mpa": 1.4266652570370346,
+        "analytic_displacement_mm": 0.0625,
+        "analytic_relative_error": 0.002073207853555137,
+        "free_residual_relative": 8.504681541215219e-09,
+        "iterations": 142,
+        "elements": 1080,
+        "degrees_of_freedom": 4557,
+        "limitations": [
+          "Homogeneous isotropic full-integration Hex8 baseline, not qualified for printed parts.",
+          "Clamped x=0 face; uniform end traction. No arbitrary CAD, contact, infill or layer anisotropy.",
+          "Bending and volumetric locking require refinement; centre stresses omit boundary peaks.",
+          "Euler-Bernoulli bending reference omits transverse shear and local clamp effects.",
+          "No material strength or safety-factor conclusion is made."
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "job": "x1c-pla",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "025ed5b869c6380d9b9566a612c28a35dbe5fb62f74cd885a142f5b5ae7117f1",
+  "remote_name": "beach-outrigger-x1c-pla-20261025-171847.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "authorization_note": "Owner asked on 2026-10-25: \"try to slice and print on it\" (X1C in developer mode); camera frame x1c/20261025-171254 shows the visible front of the plate clear; external PLA spool is the only filament loaded",
+  "before": {
+    "gcode_state": "IDLE",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 0,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "",
+    "nozzle_temper": 33.0,
+    "bed_temper": 29.0,
+    "print_error": 0
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "BECF00FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "preflight",
+  "dispatch_attempted": false,
+  "events": [],
+  "created_at": "2026-10-25T17:18:47+1100"
+}

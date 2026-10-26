@@ -1,0 +1,132 @@
+{
+  "schema": "coscad.fea-reference.v1",
+  "versions": {
+    "scikit_fem": "12.0.2",
+    "numpy": "2.3.5",
+    "scipy": "1.18.1"
+  },
+  "scope": "Independent assembly and direct solve of the same fully integrated Hex8 discretization. Not physical validation.",
+  "passed": true,
+  "cases": [
+    {
+      "case": "axial",
+      "cells": [
+        4,
+        2,
+        2
+      ],
+      "reference": {
+        "tip_in_load_direction_mm": 0.0006249999999999988,
+        "reaction_n": [
+          -0.9999999999999973,
+          -1.187338863881614e-16,
+          1.7941862994772193e-16
+        ],
+        "moment_n_mm": [
+          1.0888153233064405e-15,
+          -1.9999999999999958,
+          1.999999999999995
+        ],
+        "energy_n_mm": 0.0003124999999999994,
+        "degrees_of_freedom": 135
+      },
+      "errors": {
+        "displacement_relative": 4.440892098500626e-15,
+        "energy_relative": 4.440892098500626e-15,
+        "reaction_absolute_n": 6.88728095404835e-15,
+        "moment_absolute_n_mm": 1.9201227443208552e-14
+      },
+      "passed": true
+    },
+    {
+      "case": "bend",
+      "cells": [
+        10,
+        2,
+        2
+      ],
+      "reference": {
+        "tip_in_load_direction_mm": 0.05518062578040685,
+        "reaction_n": [
+          4.196643033083092e-14,
+          1.142419492339286e-13,
+          0.9999999999998997
+        ],
+        "moment_n_mm": [
+          1.9999999999998215,
+          -19.999999999998728,
+          1.56052948341312e-12
+        ],
+        "energy_n_mm": 0.027590312890202265,
+        "degrees_of_freedom": 297
+      },
+      "errors": {
+        "displacement_relative": 1.3800072196090696e-13,
+        "energy_relative": 1.4721557306529576e-13,
+        "reaction_absolute_n": 3.7649791653549125e-10,
+        "moment_absolute_n_mm": 7.489041795243707e-10
+      },
+      "passed": true
+    },
+    {
+      "case": "bend",
+      "cells": [
+        20,
+        4,
+        4
+      ],
+      "reference": {
+        "tip_in_load_direction_mm": 0.061052631446830985,
+        "reaction_n": [
+          -4.8183679268731794e-14,
+          4.932165786897258e-14,
+          1.0000000000003522
+        ],
+        "moment_n_mm": [
+          2.00000000000099,
+          -20.000000000006036,
+          3.561595462997502e-13
+        ],
+        "energy_n_mm": 0.03052631572344331,
+        "degrees_of_freedom": 1575
+      },
+      "errors": {
+        "displacement_relative": 1.3967715872809094e-12,
+        "energy_relative": 2.2716273306855328e-12,
+        "reaction_absolute_n": 9.875783304118397e-11,
+        "moment_absolute_n_mm": 2.2550707799016995e-10
+      },
+      "passed": true
+    },
+    {
+      "case": "bend",
+      "cells": [
+        30,
+        6,
+        6
+      ],
+      "reference": {
+        "tip_in_load_direction_mm": 0.062370424509535116,
+        "reaction_n": [
+          -1.1204925876029392e-13,
+          -3.446132268436486e-13,
+          0.9999999999983419
+        ],
+        "moment_n_mm": [
+          1.9999999999971616,
+          -19.99999999997589,
+          -6.346145831059857e-12
+        ],
+        "energy_n_mm": 0.031185212254728242,
+        "degrees_of_freedom": 4557
+      },
+      "errors": {
+        "displacement_relative": 6.129652341257952e-12,
+        "energy_relative": 4.991229651807316e-12,
+        "reaction_absolute_n": 1.1651142474203094e-10,
+        "moment_absolute_n_mm": 6.084589330641225e-10
+      },
+      "passed": true
+    }
+  ]
+}

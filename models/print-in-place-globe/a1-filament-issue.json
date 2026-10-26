@@ -1,0 +1,10 @@
+{
+  "category": "Feeding / extrusion",
+  "created": 1792470330,
+  "file": "print-in-place-globe/globe.coscad",
+  "id": "1",
+  "note": "Owner reports repeated filament tangling on the current A1 roll during the globe attempt. May be specific to this spool; cause unconfirmed. Avoid reusing this roll until its winding and feed path are checked. Retry globe on P1S using its separate external PLA spool.",
+  "printer": "a1",
+  "profile": "A1; current filament roll; spool-specific cause unconfirmed",
+  "resolved": false
+}

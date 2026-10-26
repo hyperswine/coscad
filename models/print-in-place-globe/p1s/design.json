@@ -1,0 +1,18 @@
+{
+  "sphere_diameter_mm": 64,
+  "relief_mm": 0.8,
+  "base_diameter_mm": 86,
+  "height_mm": 94,
+  "axle_diameter_mm": 5,
+  "bore_diameter_mm": 6.2,
+  "radial_clearance_mm": 0.6,
+  "lower_collar_top_z": 24.4,
+  "bottom_flat_z": 23.2,
+  "flared_bore_bottom_radius_mm": 6.5,
+  "flared_bore_top_z": 26.6,
+  "lower_bearing_axial_clearance_mm": 0.8,
+  "sphere_center_z": 54,
+  "support_blocker_radius_mm": 5.5,
+  "tree_supports": "on base and bed; bearing gap excluded",
+  "land_source": "hand-drawn simplified longitude/latitude polygons; illustrative, not a geographic dataset"
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "coscad.tank-bracket-unit-fea.v1",
+  "mesh_sha256": "9cde62384791ccb005dade87954c0cf56bd8b06f09f3126c47d6653e6becadad",
+  "source_sha256": "7b79aa35e58b7d5a84c94d0c75ed9ecf3245a7c70168928a0d12355b2ab677aa",
+  "provenance": {
+    "gmsh_version": "4.15.2",
+    "source_stl_sha256": "a978c6c80e143631a66e82949ab08396d4dc373e8c06a122009ff1082e4c7da4",
+    "target_size_mm": 1.5,
+    "surface_classification_angle_degrees": 1,
+    "source_volume_mm3": 2638.9303613675143,
+    "tetra_volume_mm3": 2638.9303613675143,
+    "relative_volume_error": 0.0,
+    "bidirectional_sampled_surface_error_mm": 8.403988907178632e-11,
+    "surface_check": "vertices and face centres; finite sampling, not exact Hausdorff proof",
+    "topology": {
+      "euler_characteristic": -2,
+      "surface_components": 1
+    },
+    "reoriented_tetrahedra": 0
+  },
+  "elements": 8657,
+  "dofs": 51462,
+  "material": {
+    "name": "PETG illustrative isotropic",
+    "young_mpa": 2000,
+    "poisson": 0.3
+  },
+  "total_force_n": [
+    0,
+    0,
+    -1
+  ],
+  "load_area_mm2": 233.85867155534908,
+  "load_average_displacement_mm": 0.00010897912239187513,
+  "max_vertex_displacement_mm": 0.0002641314181897002,
+  "max_cell_centre_vm_mpa": 0.03086788825144557,
+  "p95_cell_centre_vm_mpa": 0.018213993007334325,
+  "residual_relative": 2.348784541428714e-12,
+  "reaction_n": [
+    3.574918139293004e-14,
+    8.869641132669415e-15,
+    0.9999999999997652
+  ],
+  "force_balance_n": 2.37573784533703e-13,
+  "moment_balance_n_mm": 1.922192641824467e-12,
+  "scope": "Actual native seam-bracket mesh; 1 N uniform top-face pressure, fully clamped back plate excluding protruding key. Optimistic support fixture; no bolt preload, rail contact, slipping, thread/pull-out or PETG layer anisotropy. Stress peaks depend on mesh."
+}

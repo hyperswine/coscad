@@ -1,0 +1,6 @@
+{
+  "package_sha256": "7da4012d224d7df9363b2c2a32f55a83a0ffec25b31777ab47fdeeb919ef6497",
+  "gcode_sha256": "502b9fc84b174947d3d41446d83786b418f589cb9cc8e82f73618b0d1576f711",
+  "printer_model_id": "C12",
+  "metadata_correction": "Filled missing printer_model_id from installed P1S vendor profile; G-code bytes unchanged."
+}

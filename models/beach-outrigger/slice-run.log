@@ -1,0 +1,12 @@
+Prepared p1s-pla P1S Bambu PLA Basic @BBL P1S 0.4 nozzle
+Prepared p1s-petg P1S Bambu PETG HF @BBL P1S 0.4 nozzle
+Prepared a1-pla A1 Bambu PLA Basic @BBL A1
+Prepared a1-petg A1 Bambu PETG HF @BBL A1
+Sliced p1s-pla
+Sliced p1s-petg
+Sliced a1-pla
+Sliced a1-petg
+p1s-pla 21.4 h, 424 g (solid 426 g), 288 layers, bridge <= 21.0 mm
+p1s-petg 21.5 h, 418 g (solid 436 g), 288 layers, bridge <= 21.0 mm
+a1-pla 21.7 h, 424 g (solid 426 g), 288 layers, bridge <= 21.0 mm
+a1-petg 21.8 h, 413 g (solid 436 g), 288 layers, bridge <= 21.0 mm

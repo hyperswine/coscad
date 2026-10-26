@@ -1,0 +1,15 @@
+{
+  "recorded_at": "2026-10-24T20:28:06+11:00",
+  "dashboard_issue": {
+    "category": "Other",
+    "created": 1792834085,
+    "file": "print-in-place-globe/v2-threaded",
+    "id": "2",
+    "note": "Owner inspected the P1S part-cooling fan on 2026-10-24: no obvious obstruction or visible fan damage. The connector looked worn and unplugged more easily than expected. A loose/intermittent electrical connection is suspected, not confirmed. Recurring HMS 0300310000010001 has been reported during printing and is visible in the dashboard. No successful repair or resolved fault has been established.",
+    "printer": "p1s",
+    "profile": "P1S; part-cooling fan/front-housing connector; suspected intermittent contact",
+    "resolved": false
+  },
+  "maintenance_revision": 2,
+  "diagnosis_confirmed": false
+}

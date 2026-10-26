@@ -1,0 +1,9 @@
+{
+  "package_sha256": "9a9f41f93a809175476fe5aef9a9af29d9e7fe298b1683ca1463b75b71b4a9ae",
+  "gcode_sha256": "7597b6bc2c58bc6026bfbb103069ca15b43d5bcc27642b1a28ddf4b3f5e71e18",
+  "printer_model_id": "C12",
+  "supports": false,
+  "estimated_seconds": 3690.04736328125,
+  "filament_g": 14.448974609375,
+  "physical_fit": "Not yet printed"
+}

@@ -1,0 +1,21 @@
+// Focused geometry check. Schematic threaded hardware excluded.
+plate 250 250 6
+clearance 0
+post_0010 ← parts/rail_1060.coscad ×0
+post_0012 ← parts/rail_1060.coscad ×0
+rail_0175 ← parts/rail_180.coscad ×0
+rail_0186 ← parts/rail_180.coscad ×0
+panel_0555 ← parts/panel_m100_100_m100_100.coscad ×0
+panel_bracket_0556 ← parts/seam_bracket.coscad ×0
+panel_bracket_0560 ← parts/seam_bracket.coscad ×0
+panel_bracket_0564 ← parts/seam_bracket.coscad ×0
+panel_bracket_0568 ← parts/seam_bracket.coscad ×0
+fixed post_0010 -100 500 500 0 -90 0
+fixed post_0012 100 500 500 0 -90 0
+fixed rail_0175 0 500 400 90 0 0
+fixed rail_0186 0 500 600 90 0 0
+fixed panel_0555 0 489 500 90 0 0
+fixed panel_bracket_0556 -87.5 500 500 90 0 0
+fixed panel_bracket_0560 87.5 500 500 -90 0 180
+fixed panel_bracket_0564 0 500 412.5 90 -90 0
+fixed panel_bracket_0568 0 500 587.5 90 90 0

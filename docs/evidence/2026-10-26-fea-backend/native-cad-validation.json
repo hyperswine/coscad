@@ -1,0 +1,24 @@
+{
+  "schema": "coscad.validation-receipt.v1",
+  "date": "2026-10-26",
+  "scope": "Local macOS arm64, 35-example native checkpoint before sphere/chamfer expansion. Tracked fixtures and task changes; unrelated untracked designs excluded.",
+  "full_suite": {
+    "passed": 1310,
+    "failed": 0,
+    "geometry_seconds": 177.0
+  },
+  "source_sha256": {
+    "src/Coscad/Backend.hs": "6c3566568c0cf8dbb7af8edb881c4dd96220babc75b9ed4ca8161dacd12a5865",
+    "src/Coscad/Manifold.hs": "340147f09d8053257cca59f4158c20139d178872fe4549b5ffa43caaf1ed3ff4",
+    "src/Coscad/Stress/Experiment.hs": "6e626492f29e4cde454347bc8c6d00f9706c25c21f44eb22df133347248b054f",
+    "src/Coscad/Stress/Cad.hs": "d52ebd67f737281f809c9ef3d46523ee0c2ad8245090ba65a8f4dbb9dbdec612",
+    "cbits/coscad_manifold.cpp": "50aeb7aff13b52bcc25eedf3fc7848529d57fc07fff511432767dbad4ceafadd",
+    "test/Tier/Experiments.hs": "43c1a5655916b848dc76843f2edd330857d6577aeb538816eb3e0e666516e2c1",
+    "test/golden/native-supported.txt": "62b8656794f43c47a6a792dd53f8e847867af635dfeff217ea87ed2283844f89"
+  },
+  "independent_fea": "independent-fea.json",
+  "independent_cad_fea": "independent-cad-fea.json",
+  "native_bridge_sanitizers": "bridge-sanitizers.log",
+  "hosted_ci": false,
+  "physical_validation": false
+}

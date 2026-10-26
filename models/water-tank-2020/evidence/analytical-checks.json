@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "plate_navier": [
+    {
+      "mesh": 12,
+      "w_mm": 3.80524986335017,
+      "navier_w_mm": 3.719702043754437,
+      "relative_error": 0.02299856778565701
+    },
+    {
+      "mesh": 24,
+      "w_mm": 3.749049620824448,
+      "navier_w_mm": 3.719702043754437,
+      "relative_error": 0.007889765557778317
+    },
+    {
+      "mesh": 48,
+      "w_mm": 3.7274204075983164,
+      "navier_w_mm": 3.719702043754437,
+      "relative_error": 0.0020749951886169793
+    }
+  ],
+  "beam_cantilever_relative_error": 6.661338147750939e-16,
+  "point_load_force_and_moment_passed": true
+}

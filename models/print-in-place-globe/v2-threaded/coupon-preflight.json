@@ -1,0 +1,25 @@
+{
+  "status": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 587,
+    "total_layer_num": 587,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "globe-p1s-20261020.gcode",
+    "nozzle_temper": 27.75,
+    "bed_temper": 24.6875,
+    "print_error": 0
+  },
+  "spools": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "nozzle_diameter": "0.4",
+  "hms": [],
+  "tray_now": "254"
+}

@@ -1,0 +1,22 @@
+{
+  "boat": "monohull",
+  "printer": "P1S",
+  "reported_by": "owner",
+  "reported_on": "2026-10-25",
+  "print_outcome": "came out decently",
+  "float_test": {
+    "where": "bathroom sink, fresh water",
+    "floated": true,
+    "stable": true,
+    "collapsed": false,
+    "listed": false,
+    "waterline": "appeared a bit lower than halfway up the hull; viewing angle made it hard to tell exactly",
+    "predicted_draft_mm": 15.3,
+    "predicted_draft_fraction_of_height": 0.55
+  },
+  "photo": "20261025-monohull-sink-float-owner-photo.jpg",
+  "notes": [
+    "The photo shows a white hull floating level with the rim well clear of the water; the plan called this spool yellow external PLA.",
+    "Leak check, payload and heel tests not yet reported."
+  ]
+}

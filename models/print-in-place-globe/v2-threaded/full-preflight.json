@@ -1,0 +1,25 @@
+{
+  "status": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 87,
+    "total_layer_num": 87,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+    "nozzle_temper": 30.03125,
+    "bed_temper": 27.1875,
+    "print_error": 0
+  },
+  "spools": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "nozzle_diameter": "0.4",
+  "hms": [],
+  "tray_now": "254"
+}

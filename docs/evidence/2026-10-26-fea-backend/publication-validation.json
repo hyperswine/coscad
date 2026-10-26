@@ -1,0 +1,28 @@
+{
+  "schema": "coscad.publication-validation.v1",
+  "date": "2026-10-26",
+  "base_commit": "19305939f468e5b87a0d1065631f08039fddfe9d",
+  "full_native_and_openscad_checks_passed": 1475,
+  "kernel_disabled_focused_checks_passed": 182,
+  "haskell_examples_passed": true,
+  "pipeline_pin_tests_passed": 10,
+  "slicer_tests_passed": 31,
+  "tank_study_tests_passed": 5,
+  "mocked_dispatch_scenarios_passed": 3,
+  "new_example": "examples/aerofold_phone_stand.coscad",
+  "new_example_meshes_closed_and_oriented": true,
+  "new_example_volume_mm3": {
+    "openscad": 76996.24425208107,
+    "native": 76996.24499194033
+  },
+  "source_sha256": {
+    "examples/aerofold_phone_stand.coscad": "be3f55442a4b20c27243976bcfa2c8d6fd7bdc9dd81c7c4e59926c164c50b7b3",
+    "test/golden/geometry.txt": "c48d38eaf47ed376cd8ec56d1b85de6d53cb9dc1e830166ea51d5b9e4b10026d",
+    "test/golden/scad/examples/aerofold_phone_stand.scad": "75eb46f54dbd330add823f1d79df07440eaaa76ce34f8cc135053eb25258675f"
+  },
+  "logs_sha256": {
+    "publication-full-regression.log": "de11c5f5157132563e0410398542977699b026ef79d69c8aaca27af1848bde3a",
+    "publication-default-focused.log": "8b4e5f0cddc2358566658fb77b1c76393f187586c052cbeda32281609ed4379f"
+  },
+  "scope": "Local macOS validation. Original FEA/corpus receipts retain their historical source hashes. Raw evidence whitespace preserved. No printer action or deployment."
+}

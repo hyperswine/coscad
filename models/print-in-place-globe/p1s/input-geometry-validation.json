@@ -1,0 +1,10 @@
+{
+  "3D/3dmodel.model": {
+    "sha256": "c4a0aa2fcc1330d47f220ed43b48f9c3a0adb14aa98b4a90e78a6db450a8c88a",
+    "identical_to_a1_project": true
+  },
+  "Metadata/model_settings.config": {
+    "sha256": "552712cfc6c6a1664dc9e10d3890de9c6f759360d9b501ca2e766d1853b127ba",
+    "identical_to_a1_project": true
+  }
+}

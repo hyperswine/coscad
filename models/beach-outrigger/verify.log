@@ -1,0 +1,45 @@
+{
+ "assumptions": [
+  "Homogeneous solid plastic (sliced at 100% infill): PLA 1.24, PETG 1.27 g/cm3.",
+  "All three chambers stay airtight; fresh water 1.000, sea water 1.025 g/cm3.",
+  "Static heel about the long axis and static pitch; no waves, surf, dynamic capsize, leakage or fatigue.",
+  "Payload is a point mass on the center ridge (worst case for stability) unless noted."
+ ],
+ "plastic_cm3": 343.5339035112952,
+ "envelope_cm3": 1125.552832663049,
+ "bounds_mm": [
+  [
+   -115.5,
+   -102.90000000149011,
+   0.0
+  ],
+  [
+   115.5,
+   102.90000000149011,
+   57.5454
+  ]
+ ],
+ "gravity_center_mm": [
+  -5.85154004485404,
+  0.00012938318801173607,
+  27.82108833535764
+ ],
+ "wall_thickness": {
+  "port pontoon": {
+   "min_mm": 2.290263920514322,
+   "air_cm3": 193.24595125718812
+  },
+  "center hull": {
+   "min_mm": 2.27073433577459,
+   "air_cm3": 395.52702663737745
+  },
+  "starboard pontoon": {
+   "min_mm": 2.290263920514322,
+   "air_cm3": 193.24595125718812
+  }
+ }
+}
+PLA-fresh {"mass_g": 425.98, "draft_mm": 20.34, "pontoon_freeboard_to_ridge_mm": 27.63, "beam_underside_clearance_mm": 4.66, "static_trim_deg_bow_up": -0.62, "max_righting_arm_mm": 49.29, "heel_of_max_righting_arm_deg": 20, "first_sampled_heel_with_no_righting_deg": 90, "righting_arm_inverted_180_mm": -0.0, "payload_g_until_beams_touch_water_on_center_ridge": 139.93, "payload_g_until_beams_touch_water_at_waterline_height": 139.93, "payload_g_until_hulls_fully_submerged": 699.57}
+PLA-sea {"mass_g": 425.98, "draft_mm": 19.97, "pontoon_freeboard_to_ridge_mm": 27.99, "beam_underside_clearance_mm": 5.03, "static_trim_deg_bow_up": -0.6, "max_righting_arm_mm": 50.27, "heel_of_max_righting_arm_deg": 25, "first_sampled_heel_with_no_righting_deg": 90, "righting_arm_inverted_180_mm": -0.0, "payload_g_until_beams_touch_water_on_center_ridge": 154.07, "payload_g_until_beams_touch_water_at_waterline_height": 154.07, "payload_g_until_hulls_fully_submerged": 727.71}
+PETG-fresh {"mass_g": 436.29, "draft_mm": 20.69, "pontoon_freeboard_to_ridge_mm": 27.27, "beam_underside_clearance_mm": 4.31, "static_trim_deg_bow_up": -0.63, "max_righting_arm_mm": 48.57, "heel_of_max_righting_arm_deg": 20, "first_sampled_heel_with_no_righting_deg": 90, "righting_arm_inverted_180_mm": -0.0, "payload_g_until_beams_touch_water_on_center_ridge": 129.62, "payload_g_until_beams_touch_water_at_waterline_height": 129.62, "payload_g_until_hulls_fully_submerged": 689.26}
+PETG-sea {"mass_g": 436.29, "draft_mm": 20.32, "pontoon_freeboard_to_ridge_mm": 27.64, "beam_underside_clearance_mm": 4.68, "static_trim_deg_bow_up": -0.62, "max_righting_arm_mm": 49.31, "heel_of_max_righting_arm_deg": 20, "first_sampled_heel_with_no_righting_deg": 90, "righting_arm_inverted_180_mm": -0.0, "payload_g_until_beams_touch_water_on_center_ridge": 143.77, "payload_g_until_beams_touch_water_at_waterline_height": 143.77, "payload_g_until_hulls_fully_submerged": 717.4}

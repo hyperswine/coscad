@@ -7,16 +7,17 @@ module Coscad.Next
   , instanceBrim
   , processNext
   , processNextWith
+  , processNextWithBackend
   )
 where
 
 import Coscad.Assemble
 import Coscad.Codegen
+import Coscad.Backend (Backend (..), backendName, renderShape)
 import Coscad.Geometry
 import Coscad.IO (writeFileUtf8)
 import Coscad.Json
 import Coscad.Mesh
-import Coscad.OpenScad (renderStlFile)
 import Coscad.Printability
 import Coscad.Report
 import Coscad.Variants
@@ -157,7 +158,10 @@ chooseOrientation maxZ Nothing tris =
    in case scored of
         [] -> Left (tooTall maxZ "it" (minimum (map snd (faceHeights tris))) tris)
         _ ->
-          let (sc, m, lbl) = foldl1 (\a@(s1, _, _) b@(s2, _, _) -> if s2 > s1 then b else a) scored
+          -- Equivalent scores must retain the candidate order, rather than
+          -- letting float rounding or a different triangulation flip the bed
+          -- face. The tolerance is in dimensionless score units.
+          let (sc, m, lbl) = foldl1 (\a@(s1, _, _) b@(s2, _, _) -> if s2 > s1 + 1e-6 then b else a) scored
            in Right (Orientation m lbl "auto" sc)
 
 processNext :: Emit -> FilePath -> IO (Either Failure ())
@@ -167,7 +171,10 @@ processNext emit = processNextWith emit False
 -- makes the stage exit 2 (the design has a problem) after the beds and
 -- manifest are written, so they can still be inspected.
 processNextWith :: Emit -> Bool -> FilePath -> IO (Either Failure ())
-processNextWith emit strict inputFile = runCommand $ do
+processNextWith = processNextWithBackend OpenScadBackend
+
+processNextWithBackend :: Backend -> Emit -> Bool -> FilePath -> IO (Either Failure ())
+processNextWithBackend backend emit strict inputFile = runCommand $ do
   r <- loadAssembly emit [] inputFile
   case r of
     Left err -> abort (asmFailure err)
@@ -184,8 +191,7 @@ processNextWith emit strict inputFile = runCommand $ do
         ( \(k, vname, fp) -> do
             let scadF = base ++ "_next_" ++ vname ++ ".scad"
                 stlF = base ++ "_next_" ++ vname ++ ".stl"
-            writeScad (resolve (fpShape fp)) scadF
-            ro <- renderStlFile scadF stlF
+            ro <- renderShape backend scadF stlF (resolve (fpShape fp))
             case ro of
               Left err -> return (Left (1 :: Int, err))
               Right mesh -> do
@@ -236,7 +242,7 @@ processNextWith emit strict inputFile = runCommand $ do
                     putStrLn ("Wrote " ++ f ++ " (" ++ show (length placed) ++ " parts)")
                 )
                 (zip [(1 :: Int) ..] beds)
-              writeFileUtf8 (nextManifestPath base) (nextManifest inputFile base (pw, pd, marg) (arPlateBrim ar) bedZ variants beds asmOnly)
+              writeFileUtf8 (nextManifestPath base) (nextManifest backend inputFile base (pw, pd, marg) (arPlateBrim ar) bedZ variants beds asmOnly)
               putStrLn ("Wrote " ++ nextManifestPath base)
               let warned = [v | v <- variants, not (null (printabilityWarnings (vPrint v)))]
                   count = sum (map (length . printabilityWarnings . vPrint) warned)
@@ -256,6 +262,7 @@ instanceBrim plateBrim fp p = case brimHint fp of
     _ -> 0
 
 nextManifest ::
+  Backend ->
   FilePath ->
   String ->
   (Double, Double, Double) ->
@@ -265,10 +272,11 @@ nextManifest ::
   [[(Placement, Variant)]] ->
   [FlatPart] ->
   String
-nextManifest src base (pw, pd, m) plateBrim bedZ variants beds asmOnly =
+nextManifest backend src base (pw, pd, m) plateBrim bedZ variants beds asmOnly =
   encodePretty $
     jobj
       [ ("schema", JString nextSchema)
+      , ("geometry_backend", JString (backendName backend))
       , ("source", JString src)
       , ("bed", jobj ([("w", jnum3 pw), ("d", jnum3 pd), ("margin", jnum3 m), ("max_z", jnum3 bedZ)]
                        ++ [("brim_mm", jnum3 b) | Just b <- [plateBrim]]))

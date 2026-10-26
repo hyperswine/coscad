@@ -18,6 +18,7 @@
 .Cm stl
 .Ar part.coscad
 .Op Fl o Ar part.stl
+.Op Fl -backend=openscad|native-experimental
 .Nm
 .Ar spec.assemble
 .Nm
@@ -94,6 +95,22 @@ count, volume, and bounding box.
 The intermediate
 .Pa .scad
 is kept beside the STL.
+The optional
+.Fl -backend=native-experimental
+selects an experimental native mesher for boxes, polygonal cylinders,
+spheres, cones, frusta, regular prisms, tubes, wedges, prismoids, chamfered
+cylinders, rounded cuboids/cylinders, ordinary tori and transforms.
+Builds with the optional Cabal manifold flag additionally support booleans,
+hulls, Minkowski sums, chamfered cuboids and simple-profile extrusions
+through the pinned native kernel.
+Unsupported operations are errors; there is no automatic fallback. The default is
+.Fl -backend=openscad .
+This flag also applies to
+.Cm check
+and
+.Cm next ;
+step images retain the OpenSCAD renderer.
+Manufacturing manifests record the selected geometry backend.
 .It Nm Ar spec.assemble
 Design stage.
 Emits the assembled view

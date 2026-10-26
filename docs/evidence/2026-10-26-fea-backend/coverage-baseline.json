@@ -1,0 +1,598 @@
+{
+  "schema": "coscad.native-coverage.v1",
+  "examples": [
+    {
+      "file": "examples-next/a.coscad",
+      "features": ["Cuboid"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples-next/b.coscad",
+      "features": ["Cuboid"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples-next/bracket_seam.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Mirror", "Rz", "Translate", "Union", "Wedge", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/c.coscad",
+      "features": ["Cuboid"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples-next/center.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Tx", "Ty", "Tz", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/corner_90.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "Union", "XCyl", "YCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/frame.coscad",
+      "features": ["Cuboid", "Diff", "Hull", "Mirror", "Ry", "Sphere", "Tx", "Ty", "Tz", "Union", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/greaser-example/greaser.coscad",
+      "features": ["Cuboid", "Diff", "Sphere", "Torus", "Tube", "Tx", "Union", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/l_arch.coscad",
+      "features": ["Cuboid", "Diff", "Extrude", "Frame", "Poly", "Tx", "Ty", "Tz", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/panel_center.coscad",
+      "features": ["Cuboid", "Diff", "Tx", "Ty", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/panel_corner.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Tx", "Ty", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/panel_edge.coscad",
+      "features": ["Cuboid", "Diff", "Tx", "Ty", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/r_arch.coscad",
+      "features": ["Cuboid", "Diff", "Extrude", "Frame", "Mirror", "Poly", "Tx", "Ty", "Tz", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/rail_x180.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/rail_y420.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "YCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples-next/tnut_m5.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "Union", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/advanced.coscad",
+      "features": ["Cylinder", "Diff", "Rectangle", "Rx", "Sphere", "Ty", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/ball/core.coscad",
+      "features": ["Cuboid", "Cyl", "Diff", "Frame", "Translate", "XCyl", "YCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/ball/shell.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Intersection", "Sphere", "Translate", "Tube", "Union", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/bow3/center3.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Hull", "Prism", "Translate", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/bow3/l_arch3.coscad",
+      "features": ["Cuboid", "Diff", "Extrude", "Frame", "Intersection", "Poly", "Rz", "Translate", "Tube", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/bow3/r_arch3.coscad",
+      "features": ["Cuboid", "Diff", "Extrude", "Frame", "Intersection", "Mirror", "Poly", "Rz", "Translate", "Tube", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/bracket90.coscad",
+      "features": ["Cuboid", "Cyl", "Diff", "Frame", "Prismoid", "Rz", "Tx", "Tz", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/constraints/base.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples/assemble/constraints/post.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples/assemble/inner90.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Prismoid", "Ry", "Rz", "Tx", "Tz", "Union", "Wedge", "XCyl", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/plan/corner_inside.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/plan/flat90.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/plan/panel190.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/plan/rail160.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples/assemble/plan/rail200.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples/assemble/plan/rail2020.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples/assemble/plan/rail2020_300.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples/assemble/rail120.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples/assemble/rail200.coscad",
+      "features": ["Cuboid", "Frame"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/bar.coscad",
+      "features": ["Cuboid", "Frame", "Rz", "Translate", "Union", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/bolted/bar.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/bolted/corner.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Prism", "Rx", "Ry", "Rz", "Translate", "XCyl", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/bolted/inner.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Ry", "Rz", "Translate", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/bolted/strut.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/cap.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Hull", "Intersection", "Ry", "Rz", "Translate", "Union", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/corner.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Hull", "Intersection", "Ry", "Rz", "Translate", "Union", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/inner.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Ry", "Rz", "Translate", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/jig.coscad",
+      "features": ["Cuboid", "Translate", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/strut.coscad",
+      "features": ["Cuboid", "Diff", "Frame", "Translate", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/assemble/tesseract/test-bar.coscad",
+      "features": ["Cuboid", "Frame", "Translate", "Union", "XCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/attach_demo.coscad",
+      "features": ["Cuboid", "Cyl", "RotAxis", "Sphere", "Translate", "Tx", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/bow.coscad",
+      "features": ["Cuboid", "Extrude", "Mirror", "Poly", "Ty", "Tz", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/bracket.coscad",
+      "features": ["Cuboid", "Diff", "Mirror", "Rz", "Tx", "Tz", "Union", "Wedge", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/complex.coscad",
+      "features": ["Cylinder", "Diff", "Sphere"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/cone.coscad",
+      "features": ["Cone"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 100
+      }
+    },
+    {
+      "file": "examples/cylinder.coscad",
+      "features": ["Cylinder"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 200
+      }
+    },
+    {
+      "file": "examples/demo.coscad",
+      "features": ["Cone", "Diff", "Sphere"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/extrusion.coscad",
+      "features": ["Extrude", "Shape2D", "Tx", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/gear_test.coscad",
+      "features": ["Diff", "Extrude", "Rz", "Shape2D", "Tx", "Ty", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/glider.coscad",
+      "features": ["Cuboid", "Diff", "Hull", "Mirror", "Scale", "Sphere", "Tx", "Ty", "Tz", "Union", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/grease_claw.coscad",
+      "features": ["Cuboid", "Diff", "Hull", "Tx", "Tz", "Union", "XCyl", "YCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/loft.coscad",
+      "features": ["Diff", "Loft", "Rz", "Shape2D", "Tx", "Tz", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/math_zigzag_spring.coscad",
+      "features": ["Diff", "Extrude", "Rectangle", "Shape2D", "Tx", "Ty"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/offset_demo.coscad",
+      "features": ["Extrude", "Offset", "Shape2D", "Tx", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/panel.coscad",
+      "features": ["Cuboid", "Diff", "Tx", "Ty", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/simple_transform.coscad",
+      "features": ["Rectangle", "Tx"],
+      "primitive_native": {
+        "supported": true,
+        "triangles": 12
+      }
+    },
+    {
+      "file": "examples/sphere.coscad",
+      "features": ["Sphere"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Sphere; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/topological/datum-plate.coscad",
+      "features": ["Cuboid", "Datum", "Diff", "Translate", "Union", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/topological/mating-corner.coscad",
+      "features": ["Cuboid", "Frame", "Transform3", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/topological/pipeline_basics.coscad",
+      "features": ["Extrude", "Shape2D", "Tx", "Ty"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Extrude; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/topological/tbracket.coscad",
+      "features": ["Cuboid", "Diff", "Mirror", "Rz", "Translate", "Union", "Wedge", "XCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/topological/topo_tour.coscad",
+      "features": ["Cuboid", "Cyl", "Diff", "RotAxis", "Translate", "Union", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/transformations.coscad",
+      "features": ["Cylinder", "Rectangle", "Rx", "Ry", "Rz", "Scale", "Sphere", "Tx", "Ty", "Tz", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/union.coscad",
+      "features": ["Rectangle", "Sphere", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/waterbottle.coscad",
+      "features": ["Diff", "Extrude", "Shape2D", "Tz"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/waterbottle_advanced.coscad",
+      "features": ["Diff", "Extrude", "Offset", "Shape2D", "Tz", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Diff; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/zigzag_spring_fixed.coscad",
+      "features": ["Diff", "Extrude", "Rectangle", "Shape2D", "Tx", "Ty", "Union"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    },
+    {
+      "file": "examples/zoo.coscad",
+      "features": ["Cone", "Cuboid", "Cyl", "Mirror", "Prismoid", "Torus", "Tube", "Tx", "Union", "Wedge", "XCyl", "YCyl", "ZCyl"],
+      "primitive_native": {
+        "supported": false,
+        "reason": "native-experimental: unsupported Union; select --backend=openscad explicitly"
+      }
+    }
+  ]
+}
+

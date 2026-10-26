@@ -1,0 +1,107 @@
+{
+  "schema": "coscad.tetra-fea-reference.v1",
+  "passed": true,
+  "versions": {
+    "scikit_fem": "12.0.2",
+    "numpy": "2.3.5",
+    "scipy": "1.18.1"
+  },
+  "element_order": 2,
+  "mesh_sha256": "f5148c9593a8af04fb12287bd9d62863d4ae613b918093d8158535d1f2feea98",
+  "conditions": {
+    "schema": "coscad.fea-tet-loads.v1",
+    "young_mpa": 2000,
+    "poisson": 0.3,
+    "force_n": [
+      0,
+      0,
+      -1
+    ],
+    "support": {
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "bounds_mm": [
+        [
+          20,
+          -20,
+          -3
+        ],
+        [
+          20,
+          0,
+          3
+        ]
+      ]
+    },
+    "load": {
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "bounds_mm": [
+        [
+          -20,
+          20,
+          -3
+        ],
+        [
+          0,
+          20,
+          3
+        ]
+      ]
+    }
+  },
+  "provenance": {
+    "gmsh_version": "4.15.2",
+    "source_stl_sha256": "3c4b6a7a885e605310577cba91e1f7b163c951e5a325fa908867a7c27f3fc724",
+    "target_size_mm": 3.0,
+    "surface_classification_angle_degrees": 1,
+    "source_volume_mm3": 6915.650226350986,
+    "tetra_volume_mm3": 6915.650226350986,
+    "relative_volume_error": 0.0,
+    "bidirectional_sampled_surface_error_mm": 9.151571577507079e-09,
+    "surface_check": "vertices and face centres; finite sampling, not exact Hausdorff proof",
+    "topology": {
+      "euler_characteristic": -2,
+      "surface_components": 1
+    },
+    "reoriented_tetrahedra": 0
+  },
+  "load_area_mm2": 120.0,
+  "errors": {
+    "all_displacements_relative_l2": 1.0576235956758199e-11,
+    "all_cell_stresses_relative_l2": 6.164878742945746e-10,
+    "energy_relative": 1.8750778707499194e-11,
+    "reaction_absolute_n": 4.4002039178454635e-10,
+    "moment_absolute_n_mm": 7.05333180710848e-09
+  },
+  "result": {
+    "load_average_displacement_mm": [
+      6.264951294478178e-06,
+      2.3650015376290585e-07,
+      -0.04486103061259491
+    ],
+    "support_reaction_n": [
+      2.8011681862949445e-10,
+      -1.696984913701627e-11,
+      1.0000000003294092
+    ],
+    "support_moment_n_mm": [
+      19.999999996604846,
+      9.999999993810336,
+      -1.6438270189489401e-09
+    ],
+    "strain_energy_n_mm": 0.02243051530635273,
+    "max_cell_centre_von_mises_mpa": 0.5477291783541316,
+    "free_residual_relative": 9.914061385447597e-09,
+    "iterations": 2293,
+    "elements": 3469,
+    "degrees_of_freedom": 23592
+  },
+  "scope": "Independent tetrahedral assembly, traction integration and direct solve on the same mesh; no physical strength claim."
+}

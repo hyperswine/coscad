@@ -14,6 +14,28 @@ build-type:     Simple
 extra-source-files:
     README.md
     CHANGELOG.md
+    experiments/beam.coscad
+    experiments/cad/*.coscad
+    experiments/cad/*.json
+    native-kernel.lock.json
+    third-party/manifold/LICENSE
+    third-party/manifold/README.md
+    third-party/bosl2/LICENSE
+    third-party/bosl2/README.md
+    scripts/build-manifold.py
+    scripts/compare-fea-reference.py
+    scripts/compare-cad-fea-reference.py
+    scripts/compare-native-pipeline.py
+    scripts/compare-tetra-fea-reference.py
+    scripts/mesh-fea-tetra.py
+    experiments/requirements-fea.txt
+    test/native/bridge_smoke.cpp
+    test/golden/native-supported.txt
+
+flag manifold
+  description: Link the pinned native Manifold geometry kernel
+  default: False
+  manual: True
 
 source-repository head
   type: git
@@ -22,6 +44,7 @@ source-repository head
 library
   exposed-modules:
       Coscad.Assemble
+      Coscad.Backend
       Coscad.Check
       Coscad.Codegen
       Coscad.Constraint
@@ -34,7 +57,10 @@ library
       Coscad.IO
       Coscad.Json
       Coscad.Linalg
+      Coscad.Manifold
       Coscad.Mesh
+      Coscad.Mesh.Distance
+      Coscad.Mesh.Indexed
       Coscad.Next
       Coscad.OpenScad
       Coscad.Parser
@@ -47,10 +73,14 @@ library
       Coscad.Report
       Coscad.Shape
       Coscad.Site
+      Coscad.Stress.Cad
+      Coscad.Stress.Experiment
+      Coscad.Stress.Tetra
       Coscad.Validate
       Coscad.Variants
       Lib
   other-modules:
+      Coscad.Stress.Linear
       Paths_coscad
   autogen-modules:
       Paths_coscad
@@ -59,12 +89,22 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , array >=0.5 && <0.6
     , containers
     , directory
     , filepath
     , megaparsec
     , process
   default-language: Haskell2010
+  if flag(manifold)
+    cpp-options: -DCOSCAD_MANIFOLD
+    cxx-sources: cbits/coscad_manifold.cpp
+    cxx-options: -std=c++17
+    pkgconfig-depends: manifold ==3.5.2
+    if os(darwin)
+      extra-libraries: c++
+    else
+      extra-libraries: stdc++
 
 executable coscad
   main-is: Main.hs
@@ -97,6 +137,7 @@ test-suite coscad-test
       Tier.Cli
       Tier.Diagnostics
       Tier.Examples
+      Tier.Experiments
       Tier.Geometry
       Tier.Linalg
       Tier.Manufacturing
@@ -114,6 +155,7 @@ test-suite coscad-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , array >=0.5 && <0.6
     , containers
     , coscad
     , directory
@@ -121,6 +163,15 @@ test-suite coscad-test
     , megaparsec
     , process
     , time
+  default-language: Haskell2010
+
+executable coscad-experiments
+  main-is: Main.hs
+  hs-source-dirs: experiments
+  ghc-options: -Wall -Wcompat
+  build-depends:
+      base >=4.7 && <5
+    , coscad
   default-language: Haskell2010
 
 -- examples/haskell/ are ghci samples, not library code; this suite only

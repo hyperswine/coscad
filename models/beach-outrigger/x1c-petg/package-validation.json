@@ -1,0 +1,44 @@
+{
+  "printer": "X1C",
+  "material": "PETG",
+  "filament": "Bambu PETG HF @BBL X1C",
+  "nozzle_temperature": "245",
+  "bed_temperature": "70",
+  "model_id": "BL-P001",
+  "package": "x1c-petg/slice/beach-outrigger.gcode.3mf",
+  "package_sha256": "58e87cb5c134c262789852f37b00aecdf17e3c929d3423bb8fed9d702bb28135",
+  "gcode_sha256": "67b2d67dbd92e8afdc499c533666afff932b7ecc168b528610bc922a637fe6fd",
+  "layers": 288,
+  "model_path_segments": 587962,
+  "support_segments": 0,
+  "longest_bridge_segment_mm": 20.98600343085838,
+  "path_bounds_relative_to_model_mm": [
+    [
+      -115.25754954907336,
+      -102.66499999999999,
+      0.2
+    ],
+    [
+      115.21100000000001,
+      102.66752187778275,
+      57.6
+    ]
+  ],
+  "features": {
+    "Outer wall": 98279,
+    "Inner wall": 272565,
+    "Bottom surface": 1659,
+    "Internal solid infill": 53606,
+    "Gap infill": 30796,
+    "Sparse infill": 79455,
+    "Top surface": 2962,
+    "Overhang wall": 24,
+    "Floating vertical shell": 45329,
+    "Bridge": 3287
+  },
+  "estimated_seconds": 77673.421875,
+  "estimated_hours": 21.575950520833334,
+  "estimated_grams": 418.0028381347656,
+  "solid_geometry_grams": 436.28805745934494,
+  "passed": true
+}

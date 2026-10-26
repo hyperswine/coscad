@@ -1,0 +1,27 @@
+{
+  "time": "2026-10-24T18:25:08+1100",
+  "printer": "P1S",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 87,
+    "total_layer_num": 87,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "thread-coupon-p1s-20261023-175558.gcode",
+    "nozzle_temper": 30.03125,
+    "bed_temper": 27.1875,
+    "print_error": 0
+  },
+  "hms_before": [],
+  "bed_clear_confirmed_by_owner": true,
+  "spool": "external",
+  "material": "PLA",
+  "filament_may_run_out_owner_report": true,
+  "sha256": "a2ffd111c27614058d7584bb9cca45406da9937d0ab12eb111335535b71552b4",
+  "remote_name": "globe-v2-p1s-20261024-182508.gcode.3mf",
+  "dispatch_attempted": true,
+  "events": [],
+  "upload_interrupted_before_mqtt": true,
+  "evidence": "Unbuffered uploader produced no upload-complete or publish output; process terminated; fresh printer query still FINISH on prior coupon job"
+}

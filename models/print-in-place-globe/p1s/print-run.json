@@ -1,0 +1,278 @@
+{
+  "time": "2026-10-20T15:27:35+1100",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 125,
+    "total_layer_num": 126,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "Squishy Loopz - Spiral Donut.3mf",
+    "nozzle_temper": 26.5625,
+    "bed_temper": 23.6875,
+    "print_error": 0
+  },
+  "spool": "external",
+  "material": "PLA",
+  "sha256": "7da4012d224d7df9363b2c2a32f55a83a0ffec25b31777ab47fdeeb919ef6497",
+  "remote_name": "globe-p1s-20261020.gcode.3mf",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "time": "15:28:31",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 125,
+        "total_layer_num": 126,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 26.5625,
+        "bed_temper": 23.6875,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:28:36",
+      "status": {
+        "gcode_state": "IDLE",
+        "mc_percent": 100,
+        "layer_num": 125,
+        "total_layer_num": 126,
+        "mc_remaining_time": 0,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 26.5625,
+        "bed_temper": 23.6875,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:28:46",
+      "status": {
+        "gcode_state": "PREPARE",
+        "mc_percent": 100,
+        "layer_num": 125,
+        "total_layer_num": 587,
+        "mc_remaining_time": 0,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 26.5625,
+        "bed_temper": 23.6875,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:29:01",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 373,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 80.03125,
+        "bed_temper": 23.6875,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:29:31",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 373,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 75.03125,
+        "bed_temper": 43.5625,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:30:01",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 373,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 163.40625,
+        "bed_temper": 54.28125,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:30:31",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 373,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 247.96875,
+        "bed_temper": 54.71875,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:31:01",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 368,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 206.125,
+        "bed_temper": 54.8125,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:31:31",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 368,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 200.0625,
+        "bed_temper": 54.90625,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:32:01",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 368,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 186.40625,
+        "bed_temper": 54.78125,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:32:31",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 368,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 150.46875,
+        "bed_temper": 54.8125,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:33:01",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 368,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 140.15625,
+        "bed_temper": 54.90625,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:33:31",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 368,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 184.34375,
+        "bed_temper": 54.9375,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:34:01",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 587,
+        "mc_remaining_time": 368,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 219.8125,
+        "bed_temper": 54.9375,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:34:06",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 1,
+        "total_layer_num": 587,
+        "mc_remaining_time": 367,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 219.9375,
+        "bed_temper": 54.9375,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:34:31",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 1,
+        "total_layer_num": 587,
+        "mc_remaining_time": 366,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 220.34375,
+        "bed_temper": 55.15625,
+        "print_error": 0
+      }
+    },
+    {
+      "time": "15:35:01",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 1,
+        "total_layer_num": 587,
+        "mc_remaining_time": 366,
+        "gcode_file": "globe-p1s-20261020.gcode.3mf",
+        "subtask_name": "globe-p1s-20261020.gcode",
+        "nozzle_temper": 220.125,
+        "bed_temper": 55.15625,
+        "print_error": 0
+      }
+    }
+  ],
+  "acknowledged": true
+}

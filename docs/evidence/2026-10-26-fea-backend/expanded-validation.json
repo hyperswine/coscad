@@ -1,0 +1,57 @@
+{
+  "schema": "coscad.expanded-validation.v1",
+  "date": "2026-10-26",
+  "platform": "macOS arm64; GHC 9.8.2; Cabal; Apple Clang",
+  "native_coverage": {
+    "supported": 60,
+    "total": 74,
+    "baseline": "test/golden/geometry.txt",
+    "full_equivalence_claim": false
+  },
+  "focused_native": {
+    "passed": 247,
+    "failed": 0,
+    "oracle_symmetric_difference": true
+  },
+  "focused_no_kernel": {
+    "passed": 119,
+    "failed": 0
+  },
+  "builds": [
+    "cabal build all --offline -f-manifold",
+    "PKG_CONFIG_PATH=<pinned-install>/lib/pkgconfig cabal build all --offline -fmanifold --builddir=dist-native"
+  ],
+  "haskell_examples": "passed",
+  "independent_fea": "passed; independent-fea.json",
+  "independent_cad_fea": "passed; independent-cad-fea.json",
+  "sanitizers": {
+    "address": true,
+    "undefined_behavior": true,
+    "scope": "owned shim and test only; kernel archive not instrumented",
+    "csg_operations": 500,
+    "extrusions": 100
+  },
+  "full_suite": "1310 passed at earlier 35-example checkpoint; see native-cad-validation.json for precise tested hashes",
+  "cli_negative_checks": [
+    "integer overflow refused",
+    "missing input file reported as error"
+  ],
+  "hosted_ci": false,
+  "physical_validation": false,
+  "default_backend": "OpenSCAD",
+  "source_sha256": {
+    "coscad.cabal": "3dbf7e27f3ca5a5cb9385d33d220119b6f17833e585f5d939b24adb65f2c3c77",
+    "native-kernel.lock.json": "d90af4329f66639b619a9a81341d32b1a1fa7e83df076c0753b06a83a4d93861",
+    "src/Coscad/Backend.hs": "2f71206f280fd4e752c16b05c1846a6b47e95c19b422864c273f4c20308b77d8",
+    "src/Coscad/Manifold.hs": "7abf9881c6bb077f22f23321111b06ede4a9ad089090ebd18713b6578e3835f7",
+    "src/Coscad/Stress/Experiment.hs": "6e626492f29e4cde454347bc8c6d00f9706c25c21f44eb22df133347248b054f",
+    "src/Coscad/Stress/Cad.hs": "d52ebd67f737281f809c9ef3d46523ee0c2ad8245090ba65a8f4dbb9dbdec612",
+    "cbits/coscad_manifold.cpp": "4ddda9fcc66a79d2a997c73ceffa4a2b5045dfd82286836985a50795beb8c204",
+    "experiments/Main.hs": "1e61953d5d3cc818fc499a85a753ba387247580d5259015af5a2cb4e2e30a907",
+    "test/Tier/Experiments.hs": "56d1db21183ac59cd5ae32ee121dfb648431c23702e0c01968f9b2dc7c89ce15",
+    "test/golden/native-supported.txt": "2354d3c29a71f3681787ad7c5498348ea5dbcd458964c9b567b462b327311071",
+    "test/native/bridge_smoke.cpp": "8855b3493c721f4093a8a212bbbc4caf133454d92fe7b75c46b2452f2c34d8ff",
+    "scripts/compare-fea-reference.py": "c2afa218fd134f55e0b0f5acf92f78cec4a16ac6d36da25ebc81a95dd761978d",
+    "scripts/compare-cad-fea-reference.py": "167088ff25313773035e88ac46269976a7a63cad69e6c4b3909cc920dbdc2e24"
+  }
+}

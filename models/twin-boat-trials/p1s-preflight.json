@@ -1,0 +1,62 @@
+{
+  "printer": "p1s",
+  "status": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 659,
+    "total_layer_num": 659,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "globe-v2-p1s-20261024-182744.gcode",
+    "nozzle_temper": 31.78125,
+    "bed_temper": 28.78125,
+    "print_error": 0
+  },
+  "hms": [],
+  "spools": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "ams": {
+    "ams": [],
+    "ams_exist_bits": "0",
+    "tray_exist_bits": "0",
+    "tray_is_bbl_bits": "0",
+    "tray_tar": "255",
+    "tray_now": "254",
+    "tray_pre": "254",
+    "tray_read_done_bits": "0",
+    "tray_reading_bits": "0",
+    "version": 4,
+    "insert_flag": true,
+    "power_on_flag": false
+  },
+  "vt_tray": {
+    "id": "254",
+    "tag_uid": "0000000000000000",
+    "tray_id_name": "",
+    "tray_info_idx": "GFSNL03",
+    "tray_type": "PLA",
+    "tray_sub_brands": "",
+    "tray_color": "FFF144FF",
+    "tray_weight": "0",
+    "tray_diameter": "0.00",
+    "tray_temp": "0",
+    "tray_time": "0",
+    "bed_temp_type": "0",
+    "bed_temp": "0",
+    "nozzle_temp_max": "240",
+    "nozzle_temp_min": "190",
+    "xcam_info": "000000000000000000000000",
+    "tray_uuid": "00000000000000000000000000000000",
+    "remain": 0,
+    "k": 0.019999999552965164,
+    "n": 1,
+    "cali_idx": -1
+  },
+  "nozzle_diameter": "0.4"
+}

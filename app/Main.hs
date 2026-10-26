@@ -4,10 +4,11 @@
 module Main (main) where
 
 import Coscad.Assemble (processAssemble)
-import Coscad.Check (processCheckWith)
+import Coscad.Backend (Backend (..), parseBackend)
+import Coscad.Check (processCheckWithBackend)
 import Coscad.Doctor (runDoctor)
-import Coscad.Next (processNextWith)
-import Coscad.Part (compilePart, renderPart)
+import Coscad.Next (processNextWithBackend)
+import Coscad.Part (compilePart, renderPartWith)
 import Coscad.Plan (processPlan)
 import Coscad.Diagnose (validateJson, validateSource)
 import Coscad.Report (Failure (..), collecting, stderrEmit)
@@ -60,11 +61,15 @@ runCLI = do
           else validateSource stderrEmit f source >>= either (finish . Left) putStrLn
       Right _ -> bad "validate needs one .coscad or .assemble file. Usage: coscad validate [--json] [--stdin] file"
       Left flag -> bad ("validate: unknown option " ++ flag ++ " (use --json, --stdin)")
-    ("stl" : rest) -> withInOut "stl" rest (\f o -> renderPart stderrEmit f o >>= finish)
+    ("stl" : rest) -> do
+      (backend,remaining) <- backendArgs "stl" rest
+      withInOut "stl" remaining
+        (\f o -> renderPartWith backend stderrEmit f o >>= finish)
     ("next" : rest) -> do
-      let strict = "--strict" `elem` rest
-      case filter (/= "--strict") rest of
-        [f] -> needExt ".assemble" f >> processNextWith stderrEmit strict f >>= finish
+      (backend,remaining) <- backendArgs "next" rest
+      let strict = "--strict" `elem` remaining
+      case filter (/= "--strict") remaining of
+        [f] -> needExt ".assemble" f >> processNextWithBackend backend stderrEmit strict f >>= finish
         _ -> bad "next needs one .assemble file. Usage: coscad next [--strict] model.assemble"
     ("site" : rest) -> case rest of
       (dir : specs) | not (null specs) -> mapM_ (needExt ".assemble") specs >> processSite stderrEmit dir specs >>= finish
@@ -75,12 +80,24 @@ runCLI = do
         [f] -> needExt ".assemble" f >> processPlan stderrEmit png f >>= finish
         _ -> bad "plan takes one .assemble file (and optionally --png)"
     ("check" : rest) -> do
-      let keep = "--keep-temp" `elem` rest
-      case filter (/= "--keep-temp") rest of
-        [f] -> needExt ".assemble" f >> processCheckWith stderrEmit keep f >>= finish
+      (backend,remaining) <- backendArgs "check" rest
+      let keep = "--keep-temp" `elem` remaining
+      case filter (/= "--keep-temp") remaining of
+        [f] -> needExt ".assemble" f >> processCheckWithBackend backend stderrEmit keep f >>= finish
         _ -> bad "check takes one .assemble file (and optionally --keep-temp)"
     [f] | takeExtension f == ".assemble" -> processAssemble stderrEmit f >>= finish
     rest -> withInOut "compile" rest (\f o -> compilePart stderrEmit f o >>= finish)
+
+-- | Backend flags are command-local; no silent global selection or fallback.
+backendArgs :: String -> [String] -> IO (Backend,[String])
+backendArgs command args = do
+  let prefix="--backend="
+      choices=[drop (length prefix) a | a<-args, prefix `isPrefixOf` a]
+  backend <- case choices of
+    [] -> return OpenScadBackend
+    [name] -> either (\err -> bad err >> return OpenScadBackend) return (parseBackend name)
+    _ -> bad (command ++ ": specify --backend only once") >> return OpenScadBackend
+  return (backend,filter (not . isPrefixOf prefix) args)
 
 -- | A command's outcome: nothing to do on success; on failure print its
 -- lines to stderr and exit with its status (1 could not run, 2 design).
@@ -128,6 +145,7 @@ usage h =
     , "                                          validate source, mating constraints and hardware without writing artifacts;"
     , "                                          --json prints diagnostics as JSON, --stdin reads the file's text from stdin"
     , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"
+    , "    [--backend=openscad|native-experimental]  opt-in native geometry experiment; default openscad"
     , "  coscad <spec.assemble>                  design stage: assembled view, packed plate(s), spec_design.json"
     , "  coscad next [--strict] <spec.assemble>  manufacturing: orient, pack beds, bedN.stl + spec_manifest.json;"
     , "                                          --strict exits 2 when any part has a printability warning"
@@ -135,6 +153,7 @@ usage h =
     , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
     , "  coscad check <spec.assemble> [--keep-temp]"
     , "                                          interference / clearance check on real meshes"
+    , "    --backend=openscad|native-experimental also applies to next and check"
     , "  coscad doctor                           verify OpenSCAD + BOSL2 + an end-to-end render"
     , "  coscad --version | --help"
     , ""

@@ -198,11 +198,20 @@ src/Coscad/IO.hs        UTF-8 file IO, scratch directories
 src/Coscad/Report.hs    command failures (exit status + lines) and warning emitters
 src/Coscad/Format.hs    number formatting (showD)
 src/Coscad/OpenScad.hs  finding + running OpenSCAD and BOSL2
+src/Coscad/Mesh/Distance.hs triangle/edge surface distance with bounding-volume pruning
+src/Coscad/Mesh/Indexed.hs  validated indexed mesh contract; connectivity independent of position
+src/Coscad/Backend.hs   STL/check/next backend boundary and opt-in native meshing and CSG
+src/Coscad/Manifold.hs  optional pinned C++ geometry kernel bridge
+src/Coscad/Stress/Experiment.hs  bounded isotropic Hex8 solver and beam validation
+src/Coscad/Stress/Cad.hs  exact rectilinear CAD grid, supports and surface loads
+src/Coscad/Stress/Tetra.hs  experimental conforming Tet4/Tet10 solver for curved parts
+src/Coscad/Stress/Linear.hs  shared sparse solver and residual checks
 src/Coscad/Part.hs      single-part compile / stl commands
 src/Coscad/Diagnose.hs  `coscad validate`, structured diagnostics, --json output
 src/Coscad/Doctor.hs    `coscad doctor`
 src/Lib.hs              re-export shim for the embedded Haskell DSL
 app/Main.hs             CLI dispatch only
+experiments/Main.hs     coscad-experiments numerical trial CLI (JSON results)
 examples/haskell/       embedded-DSL samples (compile-checked by the haskell-examples suite)
 ```
 
@@ -252,6 +261,8 @@ Nothing in the build or the test suite reads them. Renders and diagrams
 - [Examples index](docs/2025-08-11-EXAMPLES.md)
 - [Agent skill file](docs/SKILL.md): gotchas and the verification workflow
 - [Stress analysis and a native backend](docs/2026-10-17-FEA-AND-BACKEND.md): intent for `coscad stress` and a native geometry backend
+- [FEA/backend experiments](docs/2026-10-26-FEA-BACKEND-EXPERIMENTS.md): runnable CAD/beam FEA and pinned native CSG, validation results and promotion gates
+- [Try FEA and native geometry](docs/2026-10-26-FEA-NATIVE-QUICKSTART.md): build, mesh and analyze the existing bracket and strut examples
 
 ## Tests
 

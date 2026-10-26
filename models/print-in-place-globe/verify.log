@@ -1,0 +1,98 @@
+{
+  "stand": {
+    "watertight": true,
+    "components": 1,
+    "triangles": 3266,
+    "volume_mm3": 49367.12036338986,
+    "bounds_mm": [
+      [
+        -43.0,
+        -43.0,
+        0.0
+      ],
+      [
+        43.0,
+        43.0,
+        94.0
+      ]
+    ]
+  },
+  "rotor": {
+    "watertight": true,
+    "components": 1,
+    "triangles": 12596,
+    "volume_mm3": 138054.04206842452,
+    "bounds_mm": [
+      [
+        -32.44892120361328,
+        -32.728271484375,
+        23.200000762939453
+      ],
+      [
+        32.47080612182617,
+        31.982866287231445,
+        86.23120880126953
+      ]
+    ]
+  },
+  "assembled": {
+    "watertight": true,
+    "components": 2,
+    "triangles": 15862,
+    "volume_mm3": 187421.16243181436,
+    "bounds_mm": [
+      [
+        -43.0,
+        -43.0,
+        0.0
+      ],
+      [
+        43.0,
+        43.0,
+        94.0
+      ]
+    ]
+  },
+  "rotation_check": {
+    "angles_degrees": [
+      0,
+      15,
+      30,
+      45,
+      60,
+      75,
+      90,
+      105,
+      120,
+      135,
+      150,
+      165,
+      180,
+      195,
+      210,
+      225,
+      240,
+      255,
+      270,
+      285,
+      300,
+      315,
+      330,
+      345
+    ],
+    "axial_offsets_mm": [
+      0,
+      -0.6,
+      0.6
+    ],
+    "maximum_intersection_mm3": 0.0
+  },
+  "clearance": {
+    "nominal_radial_mm": 0.6,
+    "conservative_faceted_radial_mm": 0.5983402211767337,
+    "nominal_conical_bearing_axial_gap_mm": 0.8,
+    "lowest_rotor_z_mm": 23.200000762939453,
+    "ring_vs_land_minimum_radial_mm": 3.200000000000003,
+    "bearing_support_blocker_radius_mm": 5.5
+  }
+}

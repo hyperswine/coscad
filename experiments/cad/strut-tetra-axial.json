@@ -1,0 +1,48 @@
+{
+  "schema": "coscad.fea-tet-loads.v1",
+  "young_mpa": 2000,
+  "poisson": 0,
+  "force_n": [
+    1,
+    0,
+    0
+  ],
+  "support": {
+    "normal": [
+      -1,
+      0,
+      0
+    ],
+    "bounds_mm": [
+      [
+        -23,
+        -3,
+        -3
+      ],
+      [
+        -23,
+        3,
+        3
+      ]
+    ]
+  },
+  "load": {
+    "normal": [
+      1,
+      0,
+      0
+    ],
+    "bounds_mm": [
+      [
+        23,
+        -3,
+        -3
+      ],
+      [
+        23,
+        3,
+        3
+      ]
+    ]
+  }
+}

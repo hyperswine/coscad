@@ -1,0 +1,44 @@
+{
+  "printer": "P1S",
+  "material": "PETG",
+  "filament": "Bambu PETG HF @BBL P1S 0.4 nozzle",
+  "nozzle_temperature": "245",
+  "bed_temperature": "70",
+  "model_id": "C12",
+  "package": "p1s-petg/slice/beach-outrigger.gcode.3mf",
+  "package_sha256": "ea989f2d3133e0494c96033f009dfbd1d8d205a71b1eb518dfec0e66e0c65a8f",
+  "gcode_sha256": "a5b6b4c210be35ddbdccad24032d06ac64d95b7a89b896bf8083e5bb28177046",
+  "layers": 288,
+  "model_path_segments": 587976,
+  "support_segments": 0,
+  "longest_bridge_segment_mm": 20.98600343085838,
+  "path_bounds_relative_to_model_mm": [
+    [
+      -115.25754954907336,
+      -102.66499999999999,
+      0.2
+    ],
+    [
+      115.21100000000001,
+      102.66752187778275,
+      57.6
+    ]
+  ],
+  "features": {
+    "Outer wall": 98279,
+    "Inner wall": 272565,
+    "Bottom surface": 1659,
+    "Internal solid infill": 53606,
+    "Gap infill": 30796,
+    "Sparse infill": 79455,
+    "Top surface": 2962,
+    "Overhang wall": 24,
+    "Floating vertical shell": 45343,
+    "Bridge": 3287
+  },
+  "estimated_seconds": 77507.859375,
+  "estimated_hours": 21.5299609375,
+  "estimated_grams": 417.7596740722656,
+  "solid_geometry_grams": 436.28805745934494,
+  "passed": true
+}

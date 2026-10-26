@@ -1,0 +1,37 @@
+{
+  "counts": {
+    "post": 20,
+    "rail": 144,
+    "frame_connector": 240,
+    "m5_preview": 1076,
+    "tnut": 1076,
+    "panel": 125,
+    "panel_bracket": 500,
+    "m3_preview": 500,
+    "floor_connector": 48
+  },
+  "part_counts": {
+    "rail_1060": 20,
+    "rail_180": 140,
+    "flat_connector": 240,
+    "m5_screw_preview": 1076,
+    "tnut": 1076,
+    "panel_m88_100_m88_100": 5,
+    "seam_bracket": 500,
+    "m3_screw_preview": 500,
+    "panel_m88_100_m100_100": 15,
+    "panel_m88_100_m100_112": 4,
+    "panel_m100_100_m88_100": 15,
+    "panel_m100_100_m100_100": 45,
+    "panel_m100_100_m100_112": 12,
+    "panel_m100_88_m88_100": 5,
+    "panel_m100_88_m100_100": 15,
+    "panel_m100_88_m100_112": 4,
+    "panel_m88_100_m100_88": 1,
+    "panel_m100_100_m100_88": 3,
+    "panel_m100_88_m100_88": 1,
+    "rail_980": 4,
+    "inside_corner": 48
+  },
+  "note": "Panel, wall-frame and floor-grid hardware is included schematically. Seal details, purchased hardware fit/preload and base anchorage remain unqualified; no released cutting/build BOM."
+}

@@ -1,0 +1,31 @@
+Build profile: -w ghc-9.8.2 -O1
+In order, the following will be built (use -v for more details):
+ - coscad-1.3.0.0 (lib) (file src/Coscad/Backend.hs changed)
+ - coscad-1.3.0.0 (exe:coscad) (dependency rebuilt)
+ - coscad-1.3.0.0 (test:coscad-test) (dependency rebuilt)
+Preprocessing library for coscad-1.3.0.0...
+Building library for coscad-1.3.0.0...
+[24 of 38] Compiling Coscad.Backend   ( src/Coscad/Backend.hs, dist-native/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/build/Coscad/Backend.o, dist-native/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/build/Coscad/Backend.dyn_o ) [Source file changed]
+Preprocessing executable 'coscad' for coscad-1.3.0.0...
+Building executable 'coscad' for coscad-1.3.0.0...
+[3 of 3] Linking dist-native/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/x/coscad/build/coscad/coscad [Library changed]
+ld: warning: -U option is redundant when using -undefined dynamic_lookup
+Preprocessing test suite 'coscad-test' for coscad-1.3.0.0...
+Building test suite 'coscad-test' for coscad-1.3.0.0...
+[ 7 of 16] Compiling Tier.Experiments ( test/Tier/Experiments.hs, dist-native/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/t/coscad-test/build/coscad-test/coscad-test-tmp/Tier/Experiments.o ) [Source file changed]
+[17 of 17] Linking dist-native/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/t/coscad-test/build/coscad-test/coscad-test [Objects changed]
+ld: warning: -U option is redundant when using -undefined dynamic_lookup
+Running 1 test suites...
+Test suite coscad-test: RUNNING...
+
+== experimental native meshing and FEA
+
+== accepted native example corpus
+
+== native backend compared with OpenSCAD
+
+362 passed, 0 failed
+Test suite coscad-test: PASS
+Test suite logged to:
+/Users/jasonqin/Documents/GitHub/coscad/./dist-native/build/aarch64-osx/ghc-9.8.2/coscad-1.3.0.0/t/coscad-test/test/coscad-1.3.0.0-coscad-test.log
+1 of 1 test suites (1 of 1 test cases) passed.

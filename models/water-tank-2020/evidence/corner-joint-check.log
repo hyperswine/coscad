@@ -1,0 +1,12 @@
+check: 5 parts, clearance = 0.0mm
+       geometry backend: native-experimental
+       5 placed instances: post_0020, rail_0307, frame_connector_0313, rail_1553, frame_connector_1554
+contact  post_0020 x rail_0307
+contact  post_0020 x frame_connector_0313
+contact  post_0020 x rail_1553
+contact  post_0020 x frame_connector_1554
+contact  rail_0307 x frame_connector_0313
+contact  rail_0307 x rail_1553
+contact  frame_connector_0313 x frame_connector_1554
+contact  rail_1553 x frame_connector_1554
+check: 0 overlaps, 0 clearance warnings

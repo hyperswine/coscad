@@ -1,0 +1,34 @@
+{
+  "unit_displacement_refinement_change": 0.00473003718369247,
+  "cases": [
+    {
+      "water_mm": 250,
+      "max_tab_n": 19.524049157105825,
+      "bracket_unit_fixture_mm": 0.002127713742677222,
+      "bracket_unit_fixture_peak_mpa": 0.6026661675972727,
+      "m5_single_shear_nominal_mpa": 0.9943516584072143
+    },
+    {
+      "water_mm": 500,
+      "max_tab_n": 39.04809831421165,
+      "bracket_unit_fixture_mm": 0.004255427485354444,
+      "bracket_unit_fixture_peak_mpa": 1.2053323351945453,
+      "m5_single_shear_nominal_mpa": 1.9887033168144286
+    },
+    {
+      "water_mm": 750,
+      "max_tab_n": 58.57214747131768,
+      "bracket_unit_fixture_mm": 0.006383141228031688,
+      "bracket_unit_fixture_peak_mpa": 1.8079985027918242,
+      "m5_single_shear_nominal_mpa": 2.9830549752216533
+    },
+    {
+      "water_mm": 1000,
+      "max_tab_n": 78.0961966284233,
+      "bracket_unit_fixture_mm": 0.008510854970708888,
+      "bracket_unit_fixture_peak_mpa": 2.4106646703890906,
+      "m5_single_shear_nominal_mpa": 3.977406633628857
+    }
+  ],
+  "scope": "Scaled 1 N actual seam-bracket FE fixture. Rigid back clamp is optimistic. M5 value is nominal gross-shank single-shear arithmetic, NOT thread, preload, T-nut pull-out, bending or fastener FEA."
+}

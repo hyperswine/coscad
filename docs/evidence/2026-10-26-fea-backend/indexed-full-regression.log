@@ -1,0 +1,141 @@
+
+== diagnostics
+
+== remaining audit diagnostics
+
+== name resolution
+
+== brim reservation
+
+== bed height and packing
+
+== variant names
+
+== named datums, child-only placement, grids and unary hull
+
+== oriented mating frames and rigid assembly constraints
+
+== 2020 cube: independent bracket poses and closed interfaces
+
+== all assembly migrations: bounds, quantities, constraints and instruction joints
+
+== fastener-free tesseract: captive joints and closure order
+
+== examples compile + .scad snapshots
+
+== assemblies load
+
+== build plans
+plan: 3 part instances, 2 fasteners on 1 hosts
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/plan-ball-md/ball_plan.md (3 steps, 2 flips, cost 24.005)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/plan-ball-md/ball_step1..3.scad
+plan: 29 part instances, 40 fasteners on 28 hosts
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/plan-tesseract-md/tesseract_plan.md (28 steps, 1 flips, cost 178.001)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/plan-tesseract-md/tesseract_step1..28.scad
+
+== frame-based hardware geometry and diagnostics
+
+== cli
+
+== silent cases now reported
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/silence/tilted.scad
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/silence/under_bed1.stl (3 parts)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/silence/under_manifest.json
+
+== validate: structured diagnostics
+
+== export lists
+
+== experimental native meshing and FEA
+
+== accepted native example corpus
+
+== geometry via /Applications/OpenSCAD.app/Contents/MacOS/openscad
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/printability-probes/a_bed1.stl (9 parts)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/printability-probes/a_manifest.json
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/printability-probes/b_bed1.stl (4 parts)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/printability-probes/b_manifest.json
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/bow3/bow3_bed1.stl (3 parts)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/bow3/bow3_manifest.json
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/bow3/bow3_asm.scad
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/bow3/bow3_part_center_asis.scad
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/bow3/bow3_part_larch_asis.scad
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/bow3/bow3_part_rarch_asis.scad
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/bow3/bow3_plate.scad (3 parts)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/bow3/bow3_design.json
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/variant-collisions/top_bed1.stl (2 parts)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/variant-collisions/top_manifest.json
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/variant-collisions/alike_bed1.stl (2 parts)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/variant-collisions/alike_manifest.json
+check: 3 parts, clearance = 0.0mm
+       geometry backend: openscad
+       3 placed instances: center, larch, rarch
+contact  center x larch
+contact  center x rarch
+check: 0 overlaps, 0 clearance warnings
+check: 3 parts, clearance = 0.0mm
+       geometry backend: openscad
+       3 placed instances: base, left_post, right_post
+contact  base x left_post
+contact  base x right_post
+check: 0 overlaps, 0 clearance warnings
+scratch renders kept in /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/check-frame-stand
+check: 2 parts, clearance = 0.0mm
+       geometry backend: openscad
+       2 placed instances: base, left_post
+OVERLAP  base x left_post  volume 60.0 mm^3
+check: 1 overlaps, 0 clearance warnings
+check: 2 parts, clearance = 0.0mm
+       geometry backend: openscad
+       2 placed instances: a, b
+contact  a x b
+check: 0 overlaps, 0 clearance warnings
+scratch renders kept in /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/check-top
+check: 2 parts, clearance = 0.0mm
+       geometry backend: openscad
+       2 placed instances: a, b
+contact  a x b
+check: 0 overlaps, 0 clearance warnings
+scratch renders kept in /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/check-on
+check: 2 parts, clearance = 0.0mm
+       geometry backend: openscad
+       2 placed instances: a, b
+contact  a x b
+check: 0 overlaps, 0 clearance warnings
+scratch renders kept in /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/check-chain
+check: 2 parts, clearance = 0.0mm
+       geometry backend: openscad
+       2 placed instances: a, b
+contact  a x b
+check: 0 overlaps, 0 clearance warnings
+scratch renders kept in /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/check-moved
+check: 2 parts, clearance = 0.0mm
+       geometry backend: openscad
+       2 placed instances: a, b
+contact  a x b
+check: 0 overlaps, 0 clearance warnings
+scratch renders kept in /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/check-anchor
+check: 2 parts, clearance = 0.0mm
+       geometry backend: openscad
+       2 placed instances: a, b
+contact  a x b
+check: 0 overlaps, 0 clearance warnings
+scratch renders kept in /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/check-datum
+check: 2 parts, clearance = 0.0mm
+       geometry backend: openscad
+       2 placed instances: a, b
+OVERLAP  a x b  volume 16.0 mm^3
+check: 1 overlaps, 0 clearance warnings
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/spill/spill_asm.scad
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/spill/spill_part_br_top.scad
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/spill/spill_plate1.scad (4 parts)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/spill/spill_plate2.scad (3 parts)
+(7 parts need 2 plates of 120x120)
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/spill/spill_design.json
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/stl/p.scad
+Wrote /var/folders/rd/0pnnmwhx69qdhg4mf34ltqnh0000gn/T/coscad-test/stl/p.stl: 2496 triangles, volume 520.164 mm^3, bounds [-5.00 -4.99 -4.99] .. [5.00 4.99 4.99]
+(geometry tier: 237.1s)
+
+== native backend compared with OpenSCAD
+
+1473 passed, 0 failed

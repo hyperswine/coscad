@@ -1,0 +1,9 @@
+{
+  "automationId": "p1s-globe-runout-check",
+  "kind": "heartbeat",
+  "interval_minutes": 30,
+  "status": "DELETED",
+  "stop_after": "This globe job completes, fails, or is replaced",
+  "notification_policy": "Only meaningful faults, missed dashboard alerts, loss of telemetry, or completion",
+  "stop_reason": "Owner requested stopping checks; no further monitoring scheduled"
+}

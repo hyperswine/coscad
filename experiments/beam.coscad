@@ -1,0 +1,3 @@
+// Geometric counterpart of the fixed-size FEA experiment, in millimetres.
+// The experiment executable constructs its own grid; it does not read this file.
+main = box 20 4 4

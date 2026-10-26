@@ -1,0 +1,112 @@
+{
+  "schema": "coscad.cad-fea-reference.v1",
+  "passed": true,
+  "versions": {
+    "scikit_fem": "12.0.2",
+    "numpy": "2.3.5",
+    "scipy": "1.18.1"
+  },
+  "scope": "Independent occupancy, Hex8 assembly, surface traction, all nodal displacements and cell-centre stresses; not physical validation.",
+  "cases": [
+    {
+      "source": "experiments/cad/l-bracket.coscad",
+      "conditions": "experiments/cad/l-bracket-coarse.json",
+      "cells": [
+        8,
+        8,
+        2
+      ],
+      "elements": 96,
+      "load_average_displacement_mm": [
+        4.000841541743072e-16,
+        -6.982140018062244e-15,
+        -0.031995418442222846
+      ],
+      "max_cell_centre_von_mises_mpa": 0.3885017091222976,
+      "errors": {
+        "all_displacements_relative_l2": 4.784350490503559e-12,
+        "all_centre_stresses_relative_l2": 2.4517557139748276e-10,
+        "energy_relative": 1.0766942892814768e-12,
+        "reaction_absolute_n": 4.1617176824815337e-10,
+        "moment_absolute_n_mm": 8.669582491138793e-09,
+        "volume_absolute_mm3": 0.0
+      },
+      "passed": true
+    },
+    {
+      "source": "experiments/cad/l-bracket.coscad",
+      "conditions": "experiments/cad/l-bracket-medium.json",
+      "cells": [
+        12,
+        12,
+        3
+      ],
+      "elements": 324,
+      "load_average_displacement_mm": [
+        1.4858855248642278e-15,
+        1.1610111201425244e-15,
+        -0.03451780521778493
+      ],
+      "max_cell_centre_von_mises_mpa": 0.5108785369080535,
+      "errors": {
+        "all_displacements_relative_l2": 4.497849480962273e-12,
+        "all_centre_stresses_relative_l2": 1.742192828335076e-10,
+        "energy_relative": 2.890909733821445e-12,
+        "reaction_absolute_n": 4.444861248966527e-10,
+        "moment_absolute_n_mm": 8.854724672072624e-09,
+        "volume_absolute_mm3": 4.547473508864641e-13
+      },
+      "passed": true
+    },
+    {
+      "source": "experiments/cad/l-bracket.coscad",
+      "conditions": "experiments/cad/l-bracket-fine.json",
+      "cells": [
+        20,
+        20,
+        4
+      ],
+      "elements": 1200,
+      "load_average_displacement_mm": [
+        1.377276927488208e-14,
+        7.750375184299371e-15,
+        -0.03604730872787221
+      ],
+      "max_cell_centre_von_mises_mpa": 0.618041944140922,
+      "errors": {
+        "all_displacements_relative_l2": 3.867913719833406e-12,
+        "all_centre_stresses_relative_l2": 1.8330778318281796e-10,
+        "energy_relative": 1.2569945084806022e-12,
+        "reaction_absolute_n": 9.061192442976633e-12,
+        "moment_absolute_n_mm": 1.5088962318744783e-09,
+        "volume_absolute_mm3": 0.0
+      },
+      "passed": true
+    },
+    {
+      "source": "examples/assemble/constraints/post.coscad",
+      "conditions": "experiments/cad/existing-post.json",
+      "cells": [
+        4,
+        4,
+        10
+      ],
+      "elements": 160,
+      "load_average_displacement_mm": [
+        0.007192721976396594,
+        -3.877579189676258e-17,
+        -3.367599710375757e-16
+      ],
+      "max_cell_centre_von_mises_mpa": 0.1984899341621538,
+      "errors": {
+        "all_displacements_relative_l2": 1.7648169423581415e-11,
+        "all_centre_stresses_relative_l2": 2.6238251372284933e-10,
+        "energy_relative": 5.728750807065808e-14,
+        "reaction_absolute_n": 1.0481064970045908e-11,
+        "moment_absolute_n_mm": 7.929755164100017e-10,
+        "volume_absolute_mm3": 0.0
+      },
+      "passed": true
+    }
+  ]
+}

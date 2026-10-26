@@ -1,0 +1,44 @@
+{
+  "printer": "A1",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL A1",
+  "nozzle_temperature": "220",
+  "bed_temperature": "65",
+  "model_id": "N2S",
+  "package": "a1-pla/slice/beach-outrigger.gcode.3mf",
+  "package_sha256": "5d0404dc5b96147f1b4ee4003eb820486c3650e06fd9a2c8d01e2d157391e480",
+  "gcode_sha256": "fc970d4cfa3810a64ee75cfb2ff2716c73c78c0ae700c73688584f3a6db8c1c2",
+  "layers": 288,
+  "model_path_segments": 588055,
+  "support_segments": 0,
+  "longest_bridge_segment_mm": 20.98600343085838,
+  "path_bounds_relative_to_model_mm": [
+    [
+      -115.25754954907335,
+      -102.66499999999999,
+      0.2
+    ],
+    [
+      115.21100000000001,
+      102.66752187778275,
+      57.6
+    ]
+  ],
+  "features": {
+    "Outer wall": 98302,
+    "Inner wall": 272594,
+    "Bottom surface": 1667,
+    "Internal solid infill": 53606,
+    "Gap infill": 30815,
+    "Sparse infill": 79455,
+    "Top surface": 2962,
+    "Overhang wall": 24,
+    "Floating vertical shell": 45343,
+    "Bridge": 3287
+  },
+  "estimated_seconds": 78114.34375,
+  "estimated_hours": 21.698428819444445,
+  "estimated_grams": 424.2075500488281,
+  "solid_geometry_grams": 425.9820403540061,
+  "passed": true
+}

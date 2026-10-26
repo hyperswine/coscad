@@ -1,0 +1,20 @@
+{
+  "observed_at": "2026-10-20T15:35:30+1100",
+  "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 1,
+    "layer_num": 1,
+    "total_layer_num": 587,
+    "mc_remaining_time": 366,
+    "gcode_file": "globe-p1s-20261020.gcode.3mf",
+    "subtask_name": "globe-p1s-20261020.gcode",
+    "nozzle_temper": 220.125,
+    "bed_temper": 55.15625,
+    "print_error": 0
+  },
+  "camera": "20261020-153443-p1s-globe-first-layer-printer-capture.png",
+  "visual_observation": "Yellow first-layer support footprints visible and apparently flat; only part of the first layer is shown.",
+  "local_observer_stopped": true,
+  "print_stop_sent": false,
+  "completion_verified": false
+}

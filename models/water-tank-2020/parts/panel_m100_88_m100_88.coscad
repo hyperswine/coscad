@@ -1,0 +1,5 @@
+// Tank study derivative: examples-next/panel_center.coscad
+// Existing panel_center construction, changed thickness and perimeter trim.
+p = ◙ 188 188 2 0.8 |> move -6.0 -6.0 0
+h = zcyl 1.7 8
+main = p |> cut (χ -80 h) |> cut (χ 80 h) |> cut (ψ -80 h) |> cut (ψ 80 h)

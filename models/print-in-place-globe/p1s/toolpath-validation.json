@@ -1,0 +1,125 @@
+{
+  "machine_extruder_offset_mm": [
+    0.0,
+    2.0
+  ],
+  "toolpath_center_mm": [
+    128.0,
+    126.0
+  ],
+  "support_segments_checked": 57212,
+  "minimum_support_footprint_radius_mm_in_blocker_height": 4.583966466963224,
+  "bearing_gap_crossing_segments": 0,
+  "inspected_lower_rotor_layer_z_mm": 23.4,
+  "near_start_layers": {
+    "22.76": [
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Sparse infill",
+      "Support",
+      "Support interface"
+    ],
+    "22.92": [
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Sparse infill",
+      "Support",
+      "Support interface"
+    ],
+    "23.08": [
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Sparse infill",
+      "Support",
+      "Support interface"
+    ],
+    "23.24": [
+      "Floating vertical shell",
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Sparse infill",
+      "Support"
+    ],
+    "23.4": [
+      "Bridge",
+      "Inner wall",
+      "Internal solid infill",
+      "Outer wall",
+      "Overhang wall",
+      "Support"
+    ]
+  },
+  "arc_sampling_mm": 0.05,
+  "near_support_layers": [
+    87.24,
+    87.4,
+    87.56,
+    87.72,
+    87.88,
+    88.04,
+    88.2,
+    88.36,
+    88.52,
+    88.68,
+    88.84,
+    89.0,
+    89.16,
+    89.32,
+    89.48
+  ],
+  "closest_support": [
+    [
+      88.52,
+      "Support",
+      4.584,
+      5.103
+    ],
+    [
+      88.36,
+      "Support",
+      4.596,
+      5.515
+    ],
+    [
+      88.36,
+      "Support",
+      4.596,
+      5.06
+    ],
+    [
+      88.52,
+      "Support",
+      4.63,
+      5.489
+    ],
+    [
+      88.36,
+      "Support",
+      4.64,
+      5.735
+    ],
+    [
+      88.52,
+      "Support",
+      4.649,
+      5.76
+    ],
+    [
+      88.52,
+      "Support",
+      4.652,
+      5.863
+    ],
+    [
+      88.36,
+      "Support",
+      4.66,
+      6.205
+    ]
+  ],
+  "bearing_region_support": []
+}

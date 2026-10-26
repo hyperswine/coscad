@@ -1,0 +1,9 @@
+{
+  "date": "2026-10-24",
+  "reported_by": "owner",
+  "outcome": "Thread-fit coupon worked",
+  "scope": "Owner confirmed successful fit; no dimensional measurements supplied",
+  "full_print_authorized": true,
+  "bed_clear_confirmed_by_owner": true,
+  "filament_note": "Owner reports the external spool may run out during full print"
+}

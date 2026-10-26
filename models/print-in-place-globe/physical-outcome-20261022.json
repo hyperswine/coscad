@@ -1,0 +1,8 @@
+{
+  "date": "2026-10-22",
+  "reported_by": "owner",
+  "print": "Original P1S globe",
+  "outcome": "Printed well; support removal awkward; gimbal separated from base after rough handling broke neck",
+  "rotation_after_support_removal": "Not explicitly confirmed",
+  "design_response": "v2-threaded: captive globe/gimbal assembly plus separate screw-on base, strengthened ring/foot, build-plate-only trees"
+}

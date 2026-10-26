@@ -1,0 +1,14 @@
+// Tank study derivative: examples-next/rail_x180.coscad
+// 2020 rail segment, 1060mm, running along X, butts between Y rails (x0).
+r = box 1060 20 20
+main = r
+  |> cutat fwd (box 1062 3.6 6.4)
+  |> cutat bak (box 1062 3.6 6.4)
+  |> cutat top (box 1062 6.4 3.6)
+  |> cutat bot (box 1062 6.4 3.6)
+  |> cutat ctr 0 6.8 0 (box 1062 2.8 9.5)
+  |> cutat ctr 0 -6.8 0 (box 1062 2.8 9.5)
+  |> cutat ctr 0 0 6.8 (box 1062 9.5 2.8)
+  |> cutat ctr 0 0 -6.8 (box 1062 9.5 2.8)
+  |> cutat ctr (xcyl 2.1 1062)
+

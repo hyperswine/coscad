@@ -1,0 +1,12 @@
+{
+  "confirmed_at": "2026-10-25T14:26:04+1100",
+  "source": "Direct owner replies in this conversation",
+  "both_build_plates_clear": true,
+  "a1_filament": "Yes - white PLA, physical slot 1 (ams0), avoiding yellow in slot 3",
+  "jobs": {
+    "p1s": "monohull",
+    "a1": "outrigger"
+  },
+  "printing_explicitly_requested": true,
+  "recurring_monitor_requested": false
+}
