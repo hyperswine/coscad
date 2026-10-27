@@ -1,0 +1,11 @@
+// A printed L-bracket: a 60 x 40 x 6 mm base, a 6 mm upright and a 36 mm arm,
+// with 20 N pressing down on the free end of the arm.
+//   coscad stress examples/stress/shelf-bracket.coscad
+base = ▬ 60 40 6
+upright = ▬ 60 6 44 |> y 34
+arm = ▬ 60 36 6 |> y 4 |> z 44 |> datum tip ctr 0 -16 3
+main = base ⊕ upright ⊕ arm
+
+support bot
+load @tip top 0 0 -20
+stress material=pla safety=2

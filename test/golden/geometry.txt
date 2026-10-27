@@ -63,6 +63,7 @@ examples/offset_demo.coscad 8465.956 -32.500 -15.984 0.000 42.997 15.990 10.000
 examples/panel.coscad 99356.566 -100.000 -100.000 -1.250 100.000 100.000 1.250
 examples/simple_transform.coscad 1000.000 5.000 0.000 0.000 15.000 10.000 10.000
 examples/sphere.coscad 14044.425 -15.000 -14.970 -14.970 15.000 14.970 14.970
+examples/stress/shelf-bracket.coscad 41040.000 0.000 0.000 0.000 60.000 40.000 50.000
 examples/topological/datum-plate.coscad 6569.600 -30.000 -16.000 0.000 30.000 16.000 4.000
 examples/topological/mating-corner.coscad 1696.000 -10.000 -10.000 -2.000 16.000 10.000 8.000
 examples/topological/pipeline_basics.coscad 831.384 96.000 93.072 0.000 108.000 106.928 10.000

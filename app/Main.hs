@@ -13,6 +13,7 @@ import Coscad.Plan (processPlan)
 import Coscad.Diagnose (validateJson, validateSource)
 import Coscad.Report (Failure (..), collecting, stderrEmit)
 import Coscad.Site (processSite)
+import Coscad.Stress.Command (processStress)
 import Data.List (isInfixOf, isPrefixOf)
 import Data.Version (showVersion)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
@@ -79,6 +80,11 @@ runCLI = do
       case filter (/= "--png") rest of
         [f] -> needExt ".assemble" f >> processPlan stderrEmit png f >>= finish
         _ -> bad "plan takes one .assemble file (and optionally --png)"
+    ("stress" : rest) -> do
+      (backend,remaining) <- backendArgs "stress" rest
+      let full = "--full" `elem` remaining
+      withInOut "stress" (filter (/= "--full") remaining)
+        (\f o -> processStress backend stderrEmit full f o >>= finish)
     ("check" : rest) -> do
       (backend,remaining) <- backendArgs "check" rest
       let keep = "--keep-temp" `elem` remaining
@@ -151,6 +157,9 @@ usage h =
     , "                                          --strict exits 2 when any part has a printability warning"
     , "  coscad plan <spec.assemble> [--png]     build instructions: ordered steps, preload sheet, BOM"
     , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
+    , "  coscad stress <part.coscad> [-o part_stress.json] [--full]"
+    , "                                          stress and deflection of a part under its support/load lines;"
+    , "                                          exit 2 when the requested safety factor is not met; --full adds every node and cell"
     , "  coscad check <spec.assemble> [--keep-temp]"
     , "                                          interference / clearance check on real meshes"
     , "    --backend=openscad|native-experimental also applies to next and check"
@@ -181,6 +190,8 @@ usage h =
     , "  pipelines    a |> add b |> cut c |> x 5 |> rotz 90 |> at top [dx dy dz] b |> on rt b |> cutat top 0 0 -2 c"
     , "  anchors      top bot lft rt fwd bak ctr, combinable: top+rt  lft+fwd   (a ⌖ top b, a ⋈ rt b)"
     , "  modes        first line !glyph or !simple (ASCII words: Box, Translate.x, Hull, * union, - difference)"
+    , "  stress       support bot | support @foot bot      load top 0 0 -20 | load @tip 0 0 -20"
+    , "               stress material=pla safety=2 cell=1   (materials: pla petg abs asa pa tpu aluminium steel)"
     , ""
     , "Manual: man coscad   Docs: docs/2025-07-14-LANGEXTENSION.md, docs/2026-07-24-TOPOLOGICAL.md, docs/2026-07-24-MANUFACTURING.md"
     ]

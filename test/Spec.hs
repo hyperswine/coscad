@@ -41,6 +41,7 @@ import Tier.Cli
 import Tier.Linalg
 import Tier.Resolution
 import Tier.Silence
+import Tier.Stress
 import Tier.Validate
 
 main :: IO ()
@@ -57,6 +58,7 @@ main = do
   let focused = args == ["--experiments-only"]
   unless focused (coreTiers t update)
   experimentsTier t
+  stressTier t
   render <- lookupEnv "COSCAD_RENDER"
   bin <- findOpenscad
   case (render, bin) of

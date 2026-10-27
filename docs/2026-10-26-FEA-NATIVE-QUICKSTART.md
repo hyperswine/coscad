@@ -5,6 +5,14 @@ compiler still uses OpenSCAD. Run the commands from the repository root.
 The [validation record](2026-10-26-FEA-BACKEND-EXPERIMENTS.md) documents numerical
 checks, accepted geometry, limits and remaining release gates.
 
+## Part stress with `coscad stress`
+
+The user-facing command is documented in [STRESS-COMMAND](2026-10-27-STRESS-COMMAND.md):
+
+```sh
+coscad stress examples/stress/shelf-bracket.coscad
+```
+
 ## Beam or rectangular CAD analysis
 
 No native kernel or Python installation is needed for this path:
@@ -46,33 +54,22 @@ supported. Planner instruction images continue to use OpenSCAD.
 
 ## Curved or holed CAD analysis
 
-Use a separate Python environment for Gmsh and the independent reference solver.
-The pinned dependency set was verified with Python 3.12 on macOS arm64:
+Superseded on 2026-10-27 by `coscad stress`, which voxelizes any rendered part
+in Haskell and needs no Python or Gmsh; see
+[STRESS-COMMAND](2026-10-27-STRESS-COMMAND.md). The tetrahedral experiments
+remain reproducible from a Haskell mesh:
 
 ```sh
-python3.12 -m venv /tmp/coscad-fea-demo/venv
-/tmp/coscad-fea-demo/venv/bin/python -m pip install -r experiments/requirements-fea.txt
-FEA_PY=/tmp/coscad-fea-demo/venv/bin/python
-"$FEA_PY" scripts/mesh-fea-tetra.py /tmp/coscad-fea-demo/flat90.stl \
-  --size 3 --output /tmp/coscad-fea-demo/flat90-mesh.json
+"$FEA_BIN" voxel-mesh examples/assemble/plan/flat90.coscad 2 /tmp/coscad-fea-demo/flat90-mesh.json
 "$FEA_BIN" tetra2 /tmp/coscad-fea-demo/flat90-mesh.json \
   experiments/cad/flat90-tetra-loads.json > /tmp/coscad-fea-demo/flat90-result.json
-"$FEA_PY" scripts/compare-tetra-fea-reference.py --exe "$FEA_BIN" \
-  --order 2 --mesh /tmp/coscad-fea-demo/flat90-mesh.json \
-  --conditions experiments/cad/flat90-tetra-loads.json
 ```
 
-`tetra2` uses quadratic Tet10 displacement interpolation on the same faceted
-geometry. Repeat meshing/solving at sizes 4, 3 and 2 mm, using separate output
-names, before trusting a bending trend. For this bracket the saved final
-displacement change is 0.73%. First-order `tetra` was substantially too stiff at
-the tested resolutions; it did not pass the displacement refinement gate.
-
-To try the existing tesseract strut, render
-`examples/assemble/tesseract/bolted/strut.coscad` and use
-`experiments/cad/strut-tetra-bend.json`. Target sizes 3 and 2 mm passed the saved
-displacement gate with a 0.14% change. Slender-part solves can take thousands of
-iterations; nonconvergence is an error, not a usable result.
+`voxel-mesh` splits every solid voxel into six tetrahedra (a conforming Kuhn
+subdivision), so the geometry is stair-stepped at the chosen cell. The optional
+scikit-fem comparison scripts still run against these meshes with the pinned
+`experiments/requirements-fea.txt` environment (scikit-fem, numpy, scipy; the
+Gmsh pin is gone).
 
 ## Loads, outputs and interpretation
 

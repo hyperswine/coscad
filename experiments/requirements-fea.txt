@@ -1,6 +1,5 @@
 # Optional isolated mesh/reference environment, not core compiler dependencies.
 # Verified together on local macOS arm64 with CPython 3.12.14.
-gmsh==4.15.2
 scikit-fem==12.0.2
 numpy==2.3.5
 scipy==1.18.1

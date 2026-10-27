@@ -55,3 +55,4 @@ at the first three.
 | 2026-10-17 | [FEA-AND-BACKEND](2026-10-17-FEA-AND-BACKEND.md) | intent: `coscad stress` and a native geometry backend |
 | 2026-10-26 | [FEA-BACKEND-EXPERIMENTS](2026-10-26-FEA-BACKEND-EXPERIMENTS.md) | independently checked CAD/beam FEA, pinned native CSG, acceptance evidence and remaining promotion gates |
 | 2026-10-26 | [FEA-NATIVE-QUICKSTART](2026-10-26-FEA-NATIVE-QUICKSTART.md) | build and try native geometry and FEA on existing brackets and struts |
+| 2026-10-27 | [STRESS-COMMAND](2026-10-27-STRESS-COMMAND.md) | `coscad stress`: support/load/stress lines, Haskell voxel Hex20 solver, material table, checks |

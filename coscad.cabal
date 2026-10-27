@@ -76,6 +76,13 @@ library
       Coscad.Stress.Cad
       Coscad.Stress.Experiment
       Coscad.Stress.Tetra
+      Coscad.Stress.Sparse
+      Coscad.Stress.Voxel
+      Coscad.Stress.Hex20
+      Coscad.Stress.Spec
+      Coscad.Stress.Material
+      Coscad.Stress.Part
+      Coscad.Stress.Command
       Coscad.Validate
       Coscad.Variants
       Lib
@@ -144,6 +151,7 @@ test-suite coscad-test
       Tier.Plan
       Tier.Resolution
       Tier.Silence
+      Tier.Stress
       Tier.Validate
       Paths_coscad
   autogen-modules:
@@ -171,7 +179,9 @@ executable coscad-experiments
   ghc-options: -Wall -Wcompat
   build-depends:
       base >=4.7 && <5
+    , containers
     , coscad
+    , time
   default-language: Haskell2010
 
 -- examples/haskell/ are ghci samples, not library code; this suite only

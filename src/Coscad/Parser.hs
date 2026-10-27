@@ -19,6 +19,7 @@ module Coscad.Parser
   , parseExpression
   , parseProgram
   , parseProgramNamed
+  , parseProgramFull
   , prettyBundle
   , reservedNames
   , resolveVariables
@@ -35,6 +36,7 @@ import Coscad.Dim (Dim (..), dimOf)
 import Coscad.Geometry (PointRef (..), MatingFrame (..), datumPoints, pointOf, makeFrame, frameOf, matingPose)
 import Coscad.Linalg (vadd, vneg, vsub)
 import Coscad.Shape
+import Coscad.Stress.Spec (Analysis (..), Where (..), emptyAnalysis, faceAnchor)
 import Coscad.Validate (maxQuantity, maxSides, suggestion, validateShape)
 import Data.Char (isAlphaNum, isLetter, isSpace)
 import Data.Either (lefts, rights)
@@ -272,7 +274,12 @@ numName ctx = do
 
 -- Parse a complete program (file name is used in error messages)
 parseProgramNamed :: FilePath -> String -> Either String (VarTable, Shape)
-parseProgramNamed file input =
+parseProgramNamed file input = (\(table, shape, _) -> (table, shape)) <$> parseProgramFull file input
+
+-- | Like 'parseProgramNamed', also returning the part's analysis directives
+-- (`support`, `load`, `stress` lines) for `coscad stress`.
+parseProgramFull :: FilePath -> String -> Either String (VarTable, Shape, Analysis)
+parseProgramFull file input =
   case checkedPragma file input of
     Left err -> Left err
     Right (mode, body) -> case parse (sc *> program file mode <* eof) file body of
@@ -322,9 +329,11 @@ splitPragma input = go [] (lines input)
     blank l = let t = trim l in null t || take 2 t == "//"
 
 -- Parse the entire program
-program :: FilePath -> SynMode -> Parser (Either String (VarTable, Shape))
+program :: FilePath -> SynMode -> Parser (Either String (VarTable, Shape, Analysis))
 program file mode = do
-  varDefs <- many variableDefinition
+  items <- many ((Left <$> directive) <|> (Right <$> variableDefinition))
+  let varDefs = rights items
+      analysis = foldl' addDirective emptyAnalysis (lefts items)
   return $ do
     varTable <- resolveVariables mode varDefs Map.empty
     case Map.lookup "main" varTable of
@@ -335,7 +344,55 @@ program file mode = do
         Right D2 ->
           let at = maybe file (sourcePosPretty . defPos) (listToMaybe [d | d <- varDefs, defName d == "main"])
            in Left (at ++ ": 'main' is a 2D profile; extrude it to get a solid (⮕ h main, or |> extrude h)")
-        _ -> Right (varTable, mainShape)
+        _ -> Right (varTable, mainShape, analysis)
+
+-- ANALYSIS DIRECTIVES -------------------------------------------
+-- `support WHERE`, `load WHERE fx fy fz`, `stress key=value ...` lines; see
+-- Coscad.Stress.Spec. A definition named support/load/stress still parses
+-- because a directive is never followed by '='.
+data Directive = DSupport Where | DLoad Where (Double, Double, Double) | DSettings [(String, String)]
+
+addDirective :: Analysis -> Directive -> Analysis
+addDirective a d = case d of
+  DSupport w -> a { aSupports = aSupports a ++ [w] }
+  DLoad w f -> a { aLoads = aLoads a ++ [(w, f)] }
+  DSettings kvs -> a { aSettings = aSettings a ++ kvs }
+
+directive :: Parser Directive
+directive = choice
+  [ dir "support" (DSupport <$> whereP)
+  , dir "load" loadP
+  , dir "stress" (DSettings <$> some setting)
+  ]
+  where
+    dir word p = try (keyword word <* notFollowedBy (char '=')) *> p
+    whereP = datumWhere <|> (AtBox <$> faceWord)
+    datumWhere = do
+      _ <- char '@'
+      name <- identifier
+      face <- optional (try faceWord)
+      return (maybe (AtDatum name) (AtDatumFace name) face)
+    faceWord = do
+      o <- getOffset
+      w <- lexeme (some (alphaNumChar <|> char '_' <|> char '+'))
+      case faceAnchor w of
+        Just v -> return v
+        Nothing -> setOffset o *> fail ("'" ++ w ++ "' is not a face anchor; use top, bot, lft, rt, fwd or bak")
+    loadP = do
+      w <- whereP
+      o <- getOffset
+      fx <- double <?> "force x in N"
+      fy <- double <?> "force y in N"
+      fz <- double <?> "force z in N"
+      when (fx == 0 && fy == 0 && fz == 0) (setOffset o *> fail "a load needs a nonzero force (N)")
+      return (DLoad w (fx, fy, fz))
+    setting = do
+      o <- getOffset
+      key <- identifier
+      _ <- char '='
+      value <- lexeme (some (satisfy (\c -> not (isSpace c))))
+      when (key `notElem` ["material", "safety", "cell"]) (setOffset o *> fail ("unknown stress setting '" ++ key ++ "'; use material=, safety= or cell="))
+      return (key, value)
 
 -- | The text of the current line up to (not including) the current
 -- position: what precedes a lazily-parsed expression, for error quoting.

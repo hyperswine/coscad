@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## Unreleased
+
+- **`coscad stress part.coscad [-o part_stress.json] [--full]`.** A part file
+  may now carry `support`, `load` and `stress` lines; the command renders the
+  part with the selected geometry backend, voxelizes it, solves small-strain
+  elasticity with 20-node hexahedra in Haskell and reports deflection, peak
+  stress, across-layer tension and safety factors against a material table.
+  Exit 2 when the requested safety factor is not met. No Python or Gmsh is
+  needed; `scripts/mesh-fea-tetra.py` is removed and `coscad-experiments
+  voxel-mesh` writes tetrahedral meshes for the earlier Tet10 experiments. See
+  docs/2026-10-27-STRESS-COMMAND.md.
+
 ## 1.3.0.0 - 2026-10-21
 
 - **`coscad validate --json` and `--stdin`.** `--json` prints one JSON

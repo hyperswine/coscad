@@ -86,6 +86,7 @@ coscad stl part.coscad       # -> part.scad + part.stl, prints volume + bounds
 coscad frame.assemble        # -> _asm view, packed _plate(N) scads, frame_design.json
 coscad next frame.assemble   # -> frame_bed1.stl ... + frame_manifest.json
 coscad check frame.assemble  # interference / clearance check on real meshes
+coscad stress bracket.coscad # deflection, peak stress and safety factor from the part's support/load lines
 coscad plan frame.assemble   # numbered build steps, preload sheet, BOM, step scenes
 coscad site out/ *.assemble  # phone-first static site: step images, search across builds
 scripts/bambu-slice.py frame_manifest.json [--print 1]  # slice beds with Bambu Studio, optionally print over LAN
@@ -168,6 +169,9 @@ A line starting with `|>` continues the previous definition.
   per-bed STLs plus a variants+placements manifest (`foo_manifest.json`,
   schema `coscad.next/1`) for slice-once /
   stamp-many slicing; `coscad check` verifies fits on the real meshes.
+- **Stress**: `coscad stress` solves a part's `support`/`load` lines with
+  20-node hexahedra in Haskell and reports deflection, peak stress and
+  safety factors (docs/2026-10-27-STRESS-COMMAND.md).
   See docs/2026-07-24-MANUFACTURING.md.
 
 ## Module map
