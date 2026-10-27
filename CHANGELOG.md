@@ -6,6 +6,52 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to the
 [Haskell Package Versioning Policy](https://pvp.haskell.org/).
 
+## Unreleased
+
+- **The native geometry backend is the default.** In a build with the
+  pinned kernel (the Cabal flag `manifold`, now on by default), `coscad
+  stl`, `coscad check` and `coscad next` render through the Haskell
+  tessellation and Manifold 3.5.2 without launching OpenSCAD;
+  `--backend=openscad` opts out per command, and `--backend=native` is
+  accepted as an alias of `native-experimental`. `Coscad.Backend` exports
+  `defaultBackend` (native with the kernel, OpenSCAD without); `--help`
+  and `coscad doctor` name the default of the binary at hand, and doctor
+  reports the linked kernel version and renders its test part through
+  every available backend. A build made with `-f-manifold` is the
+  OpenSCAD-only build of before and refuses `--backend=native`. OpenSCAD
+  remains required for the opt-out, for `plan --png` and `site` step
+  images, and for the test suite's geometry tier.
+
+- **Native coverage: 2D offsets and lofts.** The `↯` operator renders
+  natively through Manifold's CrossSection (Clipper2, the library OpenSCAD
+  itself uses; `native-kernel.lock.json` now pins Clipper2 at Manifold's
+  own revision and `scripts/build-manifold.py` builds it in tree with
+  `MANIFOLD_CROSS_SECTION=ON`, still without downloading during the kernel
+  build). Lofts are tessellated by the new `Coscad.Loft` exactly as BOSL2's
+  `skin()` builds them: the same profile vertex order, the same `reindex`
+  and `distance` correspondences, the `min_edge` quad split and the
+  orientation rule; `examples/loft.coscad` matches OpenSCAD's volume to
+  the third decimal. Every tracked example (75) now renders natively and
+  is listed in `test/golden/native-supported.txt`. An offset inside a loft
+  profile, an offset of a composite 2D shape and nested offsets are still
+  explicit errors, never a fallback.
+
+- **OpenSCAD STL renders use OpenSCAD's Manifold backend** when the
+  installed OpenSCAD understands `--backend` (2025.05 or newer), as the
+  planner images already did. This removes the CGAL assertion on
+  `models/beach-outrigger/beach-outrigger.coscad` and makes the opt-out
+  path 15 to 25 times faster on boolean-heavy parts. `openscadStlArgs`
+  takes the flag; `openscadStlArgsIO` probes once per call;
+  `renderStlFileWith` lets a caller pick CGAL explicitly, which the test
+  suite's exact symmetric-difference probes do (OpenSCAD's multithreaded
+  Manifold backend is not run-to-run stable on exactly coincident faces).
+
+- **Build and CI.** `ci.yml` and `release.yml` build and cache the pinned
+  kernel with `scripts/build-manifold.py` before `cabal build`; one CI job
+  keeps building with `-f-manifold`. The Homebrew formula is unchanged and
+  will need the kernel build step (`python3 scripts/build-manifold.py`
+  plus `PKG_CONFIG_PATH`) or `-f-manifold` before the next release.
+
 ## 1.3.0.0 - 2026-10-21
 
 - **`coscad validate --json` and `--stdin`.** `--json` prints one JSON

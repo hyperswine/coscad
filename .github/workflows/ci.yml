@@ -49,6 +49,23 @@ jobs:
           git -C "$HOME/BOSL2" checkout --detach FETCH_HEAD
           echo "COSCAD_BOSL2=$HOME/BOSL2" >> "$GITHUB_ENV"
 
+      # --- pinned native kernel (native-kernel.lock.json: Manifold 3.5.2 +
+      # Clipper2), the default geometry backend. The static install is cached
+      # by the lock and the builder; a miss rebuilds it from the pinned sources.
+      - name: Cache native kernel
+        id: kernel
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .native/manifold-3.5.2/install
+          key: ${{ runner.os }}-native-kernel-${{ hashFiles('native-kernel.lock.json', 'scripts/build-manifold.py') }}
+      - name: Build native kernel
+        if: steps.kernel.outputs.cache-hit != 'true'
+        run: python3 scripts/build-manifold.py
+      - name: Native kernel pkg-config
+        run: |
+          echo "PKG_CONFIG_PATH=$PWD/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}" >> "$GITHUB_ENV"
+          PKG_CONFIG_PATH="$PWD/.native/manifold-3.5.2/install/lib/pkgconfig" pkg-config --modversion manifold Clipper2
+
       - name: Pin policy and refusal checks
         run: |
           python3 scripts/pipeline-lock.py --check-ci
@@ -69,8 +86,40 @@ jobs:
       - run: cabal build --enable-tests all
       - name: coscad doctor
         run: cabal run coscad -- doctor
-      - name: tests (diagnostics, examples, snapshots, geometry, cli)
+      - name: tests (diagnostics, examples, snapshots, geometry, native oracles, cli)
         run: cabal test --test-show-details=direct
+
+  # The OpenSCAD-only build must keep working: no kernel, no pkg-config, the
+  # default backend is OpenSCAD. The pure tiers run here (the geometry tier is
+  # OpenSCAD code shared with the job above); the experiments tier checks the
+  # kernel-less defaults and refusals.
+  openscad-only:
+    name: ubuntu-latest (-f-manifold)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
+        id: hs
+        with:
+          ghc-version: "9.8.2"
+          cabal-version: "3.16.1.0"
+      - name: Cache cabal
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            ${{ steps.hs.outputs.cabal-store }}
+            dist-newstyle
+          key: ${{ runner.os }}-cabal-nomanifold-${{ hashFiles('cabal.project.freeze', 'coscad.cabal') }}
+          restore-keys: ${{ runner.os }}-cabal-nomanifold-
+      - name: Warnings are errors (CI only)
+        run: |
+          printf 'package coscad\n  ghc-options: -Werror\n' > cabal.project.local
+      - run: cabal update
+      - run: cabal build --enable-tests -f-manifold all
+      - name: tests without the kernel (pure tiers, kernel-less experiments)
+        run: cabal test -f-manifold --test-show-details=direct
+        env:
+          COSCAD_RENDER: "0"
 
   vscode:
     name: vscode extension

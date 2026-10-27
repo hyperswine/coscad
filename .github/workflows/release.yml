@@ -45,11 +45,31 @@ jobs:
             dist-newstyle
           key: ${{ runner.os }}-cabal-${{ hashFiles('cabal.project.freeze', 'coscad.cabal') }}
           restore-keys: ${{ runner.os }}-cabal-
+      # The pinned native kernel (native-kernel.lock.json) is linked statically
+      # into the released binary; macOS runners need pkg-config for the probe.
+      - name: Kernel build tools (macOS)
+        if: runner.os == 'macOS'
+        run: brew install pkg-config cmake
+      - name: Cache native kernel
+        id: kernel
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .native/manifold-3.5.2/install
+          key: ${{ runner.os }}-native-kernel-${{ hashFiles('native-kernel.lock.json', 'scripts/build-manifold.py') }}
+      - name: Build native kernel
+        if: steps.kernel.outputs.cache-hit != 'true'
+        run: python3 scripts/build-manifold.py
+      - name: Native kernel pkg-config
+        shell: bash
+        run: |
+          echo "PKG_CONFIG_PATH=$PWD/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}" >> "$GITHUB_ENV"
+          PKG_CONFIG_PATH="$PWD/.native/manifold-3.5.2/install/lib/pkgconfig" pkg-config --modversion manifold Clipper2
       - run: cabal update
       - name: Build
         run: cabal build --enable-tests all
-      # The pure tiers (diagnostics, examples, snapshots, CLI) guard every
-      # release; the geometry tier needs OpenSCAD and runs in ci.yml.
+      # The pure tiers (diagnostics, examples, snapshots, CLI) and the native
+      # kernel checks guard every release; the geometry tier needs OpenSCAD
+      # and runs in ci.yml.
       - name: Test
         run: cabal test --test-show-details=direct
         env:
