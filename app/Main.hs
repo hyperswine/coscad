@@ -4,7 +4,7 @@
 module Main (main) where
 
 import Coscad.Assemble (processAssemble)
-import Coscad.Backend (Backend (..), parseBackend)
+import Coscad.Backend (Backend, backendName, defaultBackend, parseBackend)
 import Coscad.Check (processCheckWithBackend)
 import Coscad.Doctor (runDoctor)
 import Coscad.Next (processNextWithBackend)
@@ -89,14 +89,16 @@ runCLI = do
     rest -> withInOut "compile" rest (\f o -> compilePart stderrEmit f o >>= finish)
 
 -- | Backend flags are command-local; no silent global selection or fallback.
+-- Without a flag the build's 'defaultBackend' applies (native in a kernel
+-- build, otherwise OpenSCAD); `coscad doctor` and --help name it.
 backendArgs :: String -> [String] -> IO (Backend,[String])
 backendArgs command args = do
   let prefix="--backend="
       choices=[drop (length prefix) a | a<-args, prefix `isPrefixOf` a]
   backend <- case choices of
-    [] -> return OpenScadBackend
-    [name] -> either (\err -> bad err >> return OpenScadBackend) return (parseBackend name)
-    _ -> bad (command ++ ": specify --backend only once") >> return OpenScadBackend
+    [] -> return defaultBackend
+    [name] -> either (\err -> bad err >> return defaultBackend) return (parseBackend name)
+    _ -> bad (command ++ ": specify --backend only once") >> return defaultBackend
   return (backend,filter (not . isPrefixOf prefix) args)
 
 -- | A command's outcome: nothing to do on success; on failure print its
@@ -145,7 +147,7 @@ usage h =
     , "                                          validate source, mating constraints and hardware without writing artifacts;"
     , "                                          --json prints diagnostics as JSON, --stdin reads the file's text from stdin"
     , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"
-    , "    [--backend=openscad|native-experimental]  opt-in native geometry experiment; default openscad"
+    , "    [--backend=openscad|native]            geometry backend; default in this build: " ++ backendName defaultBackend
     , "  coscad <spec.assemble>                  design stage: assembled view, packed plate(s), spec_design.json"
     , "  coscad next [--strict] <spec.assemble>  manufacturing: orient, pack beds, bedN.stl + spec_manifest.json;"
     , "                                          --strict exits 2 when any part has a printability warning"
@@ -153,8 +155,9 @@ usage h =
     , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
     , "  coscad check <spec.assemble> [--keep-temp]"
     , "                                          interference / clearance check on real meshes"
-    , "    --backend=openscad|native-experimental also applies to next and check"
-    , "  coscad doctor                           verify OpenSCAD + BOSL2 + an end-to-end render"
+    , "    --backend=openscad|native also applies to next and check (native needs the kernel build;"
+    , "                                          native-experimental is accepted as an alias; see coscad doctor)"
+    , "  coscad doctor                           verify the geometry backends, OpenSCAD + BOSL2 and end-to-end renders"
     , "  coscad --version | --help"
     , ""
     , "Environment:"

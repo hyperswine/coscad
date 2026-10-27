@@ -34,7 +34,7 @@ extra-source-files:
 
 flag manifold
   description: Link the pinned native Manifold geometry kernel (the default geometry backend); -f-manifold gives the OpenSCAD-only build
-  default: False
+  default: True
   manual: True
 
 source-repository head

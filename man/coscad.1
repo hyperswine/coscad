@@ -18,7 +18,7 @@
 .Cm stl
 .Ar part.coscad
 .Op Fl o Ar part.stl
-.Op Fl -backend=openscad|native-experimental
+.Op Fl -backend=openscad|native
 .Nm
 .Ar spec.assemble
 .Nm
@@ -95,16 +95,27 @@ count, volume, and bounding box.
 The intermediate
 .Pa .scad
 is kept beside the STL.
-The optional
-.Fl -backend=native-experimental
-selects an experimental native mesher for boxes, polygonal cylinders,
-spheres, cones, frusta, regular prisms, tubes, wedges, prismoids, chamfered
-cylinders, rounded cuboids/cylinders, ordinary tori and transforms.
-Builds with the optional Cabal manifold flag additionally support booleans,
-hulls, Minkowski sums, chamfered cuboids and simple-profile extrusions
-through the pinned native kernel.
-Unsupported operations are errors; there is no automatic fallback. The default is
-.Fl -backend=openscad .
+.Fl -backend=native
+(alias
+.Fl -backend=native-experimental )
+renders through the pinned native kernel (Haskell tessellation plus
+Manifold): boxes, polygonal cylinders, spheres, cones, frusta, regular
+prisms, tubes, wedges, prismoids, chamfered and rounded cuboids and
+cylinders, ordinary tori, transforms, booleans, hulls, Minkowski sums,
+simple-profile extrusions, round 2D offsets of a single outline, and lofts
+(as BOSL2's skin builds them).
+.Fl -backend=openscad
+renders through OpenSCAD and BOSL2 instead, using OpenSCAD's own Manifold
+backend when the installed OpenSCAD has one.
+Builds with the kernel (the Cabal
+.Ar manifold
+flag, on by default) default to native; a build made with
+.Fl f-manifold
+has only OpenSCAD and refuses
+.Fl -backend=native .
+.Cm coscad doctor
+names the default of the installed binary.
+Unsupported native operations are errors; there is no automatic fallback.
 This flag also applies to
 .Cm check
 and
