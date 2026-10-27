@@ -32,12 +32,23 @@ and examples; put `coscad` on your PATH and, if you want `man coscad`,
 copy `man/coscad.1` into a `man1` directory on your MANPATH. Or build
 from source with [cabal](https://www.haskell.org/cabal/) and GHC 9.8
 (both installable with [ghcup](https://www.haskell.org/ghcup/); the
-dependency set is pinned in `cabal.project.freeze`):
+dependency set is pinned in `cabal.project.freeze`). The default build
+links the pinned native geometry kernel (Manifold 3.5.2 plus Clipper2,
+`native-kernel.lock.json`), which needs CMake, pkg-config and a C++17
+compiler; `scripts/build-manifold.py` fetches the two pinned checkouts,
+builds them statically under `.native/` and never downloads during the
+kernel build itself:
 
 ```sh
+python3 scripts/build-manifold.py
+export PKG_CONFIG_PATH="$PWD/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 cabal update
 cabal install exe:coscad --install-method=copy --installdir=bin   # binary lands in bin/
 ```
+
+Without the kernel, `cabal install exe:coscad -f-manifold ...` builds the
+OpenSCAD-only binary: every render goes through OpenSCAD and
+`--backend=native` is refused. `coscad doctor` says which build you have.
 
 macOS note: ghcup's GHC links against the Command Line Tools SDK. If a
 CLT update leaves that SDK newer than Xcode's linker, linking fails with
@@ -50,19 +61,25 @@ package coscad
   ghc-options: -pgml /Library/Developer/CommandLineTools/usr/bin/clang
 ```
 
-Rendering needs [OpenSCAD](https://openscad.org) 2021.01 or newer and a
-[BOSL2](https://github.com/BelfrySCAD/BOSL2) checkout in an OpenSCAD
-library folder (`~/Documents/OpenSCAD/libraries` on macOS,
-`~/.local/share/OpenSCAD/libraries` on Linux) — or anywhere, with
-`COSCAD_BOSL2=/path/to/BOSL2`. Check the
-whole chain with:
+In a kernel build, `coscad stl`, `coscad check` and `coscad next` render
+natively by default (`--backend=openscad` opts out per command; the
+manufacturing manifest records the backend used). OpenSCAD is still
+needed: for that opt-out, for the planner's step images (`plan --png`,
+`site`), and for the test suite. Install
+[OpenSCAD](https://openscad.org) 2021.01 or newer (2025.05 or newer
+renders STL through its own Manifold backend, which `coscad` requests
+when available) and a [BOSL2](https://github.com/BelfrySCAD/BOSL2)
+checkout in an OpenSCAD library folder (`~/Documents/OpenSCAD/libraries`
+on macOS, `~/.local/share/OpenSCAD/libraries` on Linux) — or anywhere,
+with `COSCAD_BOSL2=/path/to/BOSL2`. Check the whole chain with:
 
 ```sh
 coscad doctor
 ```
 
-which reports the OpenSCAD and BOSL2 versions it found and renders a
-boolean test part against a known volume.
+which reports the default backend and the linked kernel version, the
+OpenSCAD and BOSL2 versions it found, and renders a boolean test part
+through every available backend against a known volume.
 
 ## Quick start
 
@@ -204,7 +221,8 @@ src/Coscad/Format.hs    number formatting (showD)
 src/Coscad/OpenScad.hs  finding + running OpenSCAD and BOSL2
 src/Coscad/Mesh/Distance.hs triangle/edge surface distance with bounding-volume pruning
 src/Coscad/Mesh/Indexed.hs  validated indexed mesh contract; connectivity independent of position
-src/Coscad/Backend.hs   STL/check/next backend boundary and opt-in native meshing and CSG
+src/Coscad/Backend.hs   STL/check/next backend boundary: build-time default, native meshing and CSG
+src/Coscad/Loft.hs      lofts tessellated as BOSL2 skin() builds them (reindex/distance, min_edge, caps)
 src/Coscad/Manifold.hs  optional pinned C++ geometry kernel bridge
 src/Coscad/Stress/Experiment.hs  bounded isotropic Hex8 solver and beam validation
 src/Coscad/Stress/Cad.hs  exact rectilinear CAD grid, supports and surface loads
@@ -266,6 +284,7 @@ Nothing in the build or the test suite reads them. Renders and diagrams
 - [Agent skill file](docs/SKILL.md): gotchas and the verification workflow
 - [Stress analysis and a native backend](docs/2026-10-17-FEA-AND-BACKEND.md): intent for `coscad stress` and a native geometry backend
 - [FEA/backend experiments](docs/2026-10-26-FEA-BACKEND-EXPERIMENTS.md): runnable CAD/beam FEA and pinned native CSG, validation results and promotion gates
+- [Native backend by default](docs/2026-10-27-NATIVE-DEFAULT.md): the native kernel becomes the default for `stl`, `check` and `next`; offsets and lofts; timings and affected goldens
 - [Try FEA and native geometry](docs/2026-10-26-FEA-NATIVE-QUICKSTART.md): build, mesh and analyze the existing bracket and strut examples
 
 ## Tests

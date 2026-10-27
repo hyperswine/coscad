@@ -115,7 +115,7 @@ geometry t update bin = do
                   let actual = gen brackets
                       expected = gen original
                       sym = "include <BOSL2/std.scad>\nunion(){translate([-1000,-1000,-1000]) cube(1);difference(){"++actual++expected++"}difference(){"++expected++actual++"}}"
-                  r <- renderMesh bin dir sym
+                  r <- renderMeshExact bin dir sym
                   assertT t "cube: all 16 bracket poses match coordinate reference exactly"
                     (either (const False) (\tris -> abs(meshVolume tris-1) < 1e-7 && length (splitBodies tris) == 1) r) (either id (show . meshVolume) r)
           let panelOnly = Map.fromList [(n,if n == "panel" then sh else Hidden sh) | (n,sh) <- arParts ar]
@@ -141,7 +141,7 @@ geometry t update bin = do
             y = gen expected
             scad = "include <BOSL2/std.scad>\nunion(){translate([-1000,-1000,-1000])cube(1);difference(){"++x++y++"}difference(){"++y++x++"}}"
             limit = 0.00001
-        result <- renderMesh bin dir scad
+        result <- renderMeshExact bin dir scad
         assertT t (file ++ ": assembled solid equivalence")
           (either (const False) (\tris -> abs(meshVolume tris-1) <= limit) result) (either id (\tris -> "symmetric difference mm3: "++show(abs(meshVolume tris-1))) result)
       _ -> failT t (file ++ ": geometry comparison") "cannot load migration pair"
@@ -235,7 +235,7 @@ geometry t update bin = do
       let reference = "union(){cube([20,20,4],center=true);translate([0,0,5]) cube([2,4,6],center=true);translate([13,0,0]) cube([6,2,4],center=true);}"
           actual = gen s
           symmetric = "include <BOSL2/std.scad>\nunion(){translate([-1000,-1000,-1000]) cube(1);difference(){" ++ actual ++ reference ++ "}difference(){" ++ reference ++ actual ++ "}}"
-      r <- renderMesh bin dir symmetric
+      r <- renderMeshExact bin dir symmetric
       assertT t "oriented corner symmetric difference is empty"
         (either (const False) (\tris -> abs (meshVolume tris - 1) < 1e-8 && length (splitBodies tris) == 1) r) (either id (show . meshVolume) r)
   framed <- tempDir "constraint-check"

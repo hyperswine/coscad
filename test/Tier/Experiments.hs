@@ -9,6 +9,8 @@ import Coscad.Mesh
 import Coscad.Mesh.Distance
 import Coscad.Linalg (mApply, rodMat)
 import Coscad.Mesh.Indexed
+import Coscad.Loft (loftTriangles, profilePath, triangulatePolygon)
+import Coscad.Codegen (loftMethod)
 import Coscad.Manifold
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Shape
@@ -81,6 +83,11 @@ experimentsTier t = do
     Right tris -> assertT t "reflection parity survives determinant underflow" (abs (signedVolume tris-1)<1e-9) (show (signedVolume tris))
     Left err -> failT t "extreme reflected scale" err
   expectErr t "unknown backend refused" (parseBackend "magic") ["unknown backend"] []
+  assertT t "default backend follows the build: native with the kernel, openscad without"
+    (defaultBackend == (if manifoldAvailable then NativeExperimental else OpenScadBackend)) (show (defaultBackend, manifoldAvailable))
+  assertT t "--backend=native is an alias of native-experimental"
+    (parseBackend "native" == Right NativeExperimental && parseBackend "native-experimental" == Right NativeExperimental && parseBackend "openscad" == Right OpenScadBackend) ""
+  loftChecks t
   let axial = defaultBeam {beamCells=(4,2,2),poisson=0,tipForceN=(1,0,0)}
   case solveBeam axial of
     Left e -> failT t "axial bar" e
@@ -133,11 +140,21 @@ experimentsTier t = do
         content <- readFile dest
         assertT t "native CLI volume" (either (const False) (\ts -> abs (meshVolume ts-24)<1e-9) (parseStlAscii content)) content
       else return ()
-      writeFile src "main = loft 0 (⭘ 3) 2 (⭘ 4)\n"
+      (aliasCode,_,aliasErr) <- readProcessWithExitCode exe ["stl",src,"--backend=native","-o",dest] ""
+      assertT t "native STL CLI accepts --backend=native" (aliasCode==ExitSuccess) aliasErr
+      writeFile src "main = ◉ 2 5\n"
       writeFile dest "previous valid output"
       (failed,_,why) <- readProcessWithExitCode exe ["stl",src,"--backend=native-experimental","-o",dest] ""
       kept <- readFile dest
-      assertT t "unsupported CLI keeps prior output" (failed==ExitFailure 1 && "unsupported Loft" `isInfixOf` why && kept=="previous valid output") why
+      assertT t "unsupported CLI keeps prior output" (failed==ExitFailure 1 && "spindle/horn torus is unsupported" `isInfixOf` why && kept=="previous valid output") why
+      -- the build's default: a kernel build never needs OpenSCAD for stl; a
+      -- kernel-less build must name OpenSCAD as the missing piece
+      writeFile src "main = box 2 3 4\n"
+      environment <- getEnvironment
+      (defaultCode,_,defaultErr) <- readCreateProcessWithExitCode ((proc exe ["stl",src,"-o",dest]) {env=Just (("COSCAD_OPENSCAD","/nonexistent/native-must-not-fallback"):filter ((/="COSCAD_OPENSCAD") . fst) environment)}) ""
+      if manifoldAvailable
+        then assertT t "default backend renders without OpenSCAD in a kernel build" (defaultCode==ExitSuccess) defaultErr
+        else assertT t "default backend is OpenSCAD in a kernel-less build" (defaultCode==ExitFailure 1 && "could not run /nonexistent/native-must-not-fallback" `isInfixOf` defaultErr) defaultErr
       (badBackend,_,message) <- readProcessWithExitCode exe ["stl",src,"--backend=magic"] ""
       assertT t "CLI rejects unknown backend" (badBackend==ExitFailure 1 && "unknown backend" `isInfixOf` message) message
   if manifoldAvailable then manifoldTier t >> indexedKernelTier t >> extrusionTier t >> nativeCorpusTier t >> nativePipelineTier t else do
@@ -261,6 +278,56 @@ backendOracleTier t = do
           case (actual,expected) of
             (Right a,Right b) -> symmetricDifference t path a b
             r -> failT t path (show (fmap length (fst r),fmap length (snd r)))
+    -- Lofts (BOSL2 skin: reindex and distance) and round 2D offsets against
+    -- the OpenSCAD render, on volume and bounds. A reindex loft is the same
+    -- triangulation on both sides, so its volume agrees far below tolerance.
+    forM_ [ ("reindex loft frustum",Loft [(0,Shape2D 50 10),(30,Shape2D 50 5)],1e-9)
+          , ("reindex loft, offset circles",Loft [(0,Shape2D 40 6),(10,Tx 3 (Shape2D 40 4)),(14,Ty (-2) (Rz 20 (Shape2D 40 5)))],1e-9)
+          , ("reindex loft, bezier to bezier",Loft [(0,bezPoly 8 [(0,0),(10,0),(10,10),(0,10),(-5,5),(-2,2),(0,0)]),(8,Rz 90 (Scale (0.5,0.5,1) (bezPoly 8 [(0,0),(10,0),(10,10),(0,10),(-5,5),(-2,2),(0,0)])))],1e-9)
+          , ("distance loft, circle to triangle",Loft [(0,Shape2D 50 3),(6,Rz 30 (Shape2D 3 4))],1e-9)
+          , ("distance loft, pentagon to square",Loft [(0,Shape2D 5 8),(12,Shape2D 4 5)],1e-9)
+          , ("distance loft, three profiles",Loft [(0,Shape2D 6 4),(5,Shape2D 50 6),(9,Tx 1 (Shape2D 3 3))],1e-9)
+          , ("offset triangle",Extrude 10 (Offset 3 (Shape2D 3 15)),1e-3)
+          , ("offset circle",Extrude 70 (Offset 2 (Shape2D 50 22)),1e-3)
+          , ("negative offset circle",Extrude 5 (Offset (-3) (Shape2D 50 24)),1e-3)
+          , ("offset moved pentagon",Extrude 4 (Offset 1.5 (Tx 10 (Rz 15 (Shape2D 5 6)))),1e-3)
+          , ("offset bezier",Extrude 6 (Offset 2 (bezPoly 8 [(0,0),(10,0),(10,10),(0,10),(-5,5),(-2,2),(0,0)])),1e-3)
+          ] $ \(name,shape,relative) -> do
+      actual<-nativeCSGMesh shape
+      expected<-renderShape OpenScadBackend (dir </> "loft.scad") (dir </> "loft.stl") shape
+      case (actual,expected) of
+        (Right a,Right b) -> do
+          let (va,loA,hiA)=geoOf a; (vb,_,_)=geoOf b
+          assertT t ("native/OpenSCAD "++name++" bounds and volume") (geoClose (geoOf a) (geoOf b)) (show (geoOf a,geoOf b))
+          assertT t ("native/OpenSCAD "++name++" volume within "++show relative) (abs (va-vb)<=relative*abs vb) (show (va,vb,loA,hiA))
+          assertT t ("native "++name++" closed oriented surface") (closed a && signedVolume a>0) "non-manifold edge or reversed face"
+        r -> failT t name (show (fmap length (fst r),fmap length (snd r)))
+    forM_ ["examples/loft.coscad","examples/offset_demo.coscad","examples/waterbottle_advanced.coscad","examples/aerofold_phone_stand.coscad"] $ \path -> do
+      source<-readFile path
+      case parseProgramNamed path source of
+        Left err -> failT t path err
+        Right (_,shape) -> do
+          actual<-nativeCSGMesh shape
+          expected<-renderShape OpenScadBackend (dir </> "corpus.scad") (dir </> "corpus.stl") shape
+          case (actual,expected) of
+            (Right a,Right b) -> assertT t ("native/OpenSCAD "++path++" bounds and volume") (geoClose (geoOf a) (geoOf b)) (show (geoOf a,geoOf b))
+            r -> failT t path (show (fmap length (fst r),fmap length (snd r)))
+    -- OpenSCAD stays available as the explicit opt-out, and next records it
+    bin<-findExecutable "coscad"
+    case bin of
+      Nothing -> failT t "opt-out CLI available" "coscad not on PATH"
+      Just exe -> do
+        optDir<-tempDir "backend-opt-out"
+        writeFile (optDir </> "a.coscad") "main = box 20 20 20\n"
+        writeFile (optDir </> "b.coscad") "main = box 4 4 4\n"
+        writeFile (optDir </> "pair.assemble") "a ← a.coscad ×1\nb ← b.coscad ×1\nasm = a |> at top b\n"
+        (stlCode,stlOut,stlErr)<-readProcessWithExitCode exe ["stl",optDir </> "a.coscad","--backend=openscad","-o",optDir </> "a.stl"] ""
+        assertT t "--backend=openscad still renders stl" (stlCode==ExitSuccess && "volume 8000.000" `isInfixOf` stlOut) (stlOut++stlErr)
+        (nextCode,nextOut,nextErr)<-readProcessWithExitCode exe ["next",optDir </> "pair.assemble","--backend=openscad"] ""
+        manifest<-readJson (optDir </> "pair_manifest.json")
+        assertT t "next --backend=openscad records the openscad backend" (nextCode==ExitSuccess && either (const False) (\m -> lookupKey "geometry_backend" m==Just (JString "openscad")) manifest) (nextOut++nextErr++show manifest)
+        (checkCode,checkOut,checkErr)<-readProcessWithExitCode exe ["check",optDir </> "pair.assemble","--backend=openscad"] ""
+        assertT t "check --backend=openscad still runs" (checkCode==ExitSuccess && "geometry backend: openscad" `isInfixOf` checkOut) (checkOut++checkErr)
   else return ()
 
 cadTier :: T -> IO ()
@@ -454,15 +521,68 @@ nativePipelineTier t = do
       writeFile source "a ← a.coscad ×2\nb ← b.coscad ×1\nasm = a ⊕ (a |> move 2 2 0) ⊕ (b |> move 50 0 0)\n"
       (touchCode,touchOut,touchErr)<-run ["check",source,"--backend=native-experimental"]
       assertT t "native check separates edge-touching instances" (touchCode==ExitSuccess && "3 placed instances" `isInfixOf` touchOut && "contact" `isInfixOf` touchOut) (touchOut++touchErr)
-      writeFile (dir </> "a.coscad") "main = loft 0 (⭘ 3) 2 (⭘ 4)\n"
+      -- the default backend of a kernel build is native: no flag, no OpenSCAD
+      writeFile (dir </> "a.coscad") "main = box 20 20 20\n"
+      writeFile (dir </> "b.coscad") "main = box 4 4 4\n"
+      writeFile source (refs++"asm = a |> at top b\n")
+      (defaultCode,defaultOut,defaultErr)<-run ["next",source]
+      assertT t "default next renders natively without OpenSCAD" (defaultCode==ExitSuccess) (defaultOut++defaultErr)
+      if defaultCode==ExitSuccess then do
+        manifest<-readJson (dir </> "pair_manifest.json")
+        assertT t "default next records the native backend in its manifest" (either (const False) (\m -> lookupKey "geometry_backend" m==Just (JString (backendName defaultBackend))) manifest && defaultBackend==NativeExperimental) (show manifest)
+      else return ()
+      (defaultCheck,defaultCheckOut,_)<-run ["check",source]
+      assertT t "default check runs natively without OpenSCAD" (defaultCheck==ExitSuccess && "geometry backend: native-experimental" `isInfixOf` defaultCheckOut) defaultCheckOut
+      writeFile (dir </> "a.coscad") "main = ◉ 2 5\n"
       forM_ ["next","check"] $ \command -> do
         (code,_,err)<-run [command,source,"--backend=native-experimental"]
-        assertT t ("native "++command++" refuses unsupported part") (code==ExitFailure 1 && "unsupported Loft" `isInfixOf` err) err
+        assertT t ("native "++command++" refuses unsupported part") (code==ExitFailure 1 && "spindle/horn torus is unsupported" `isInfixOf` err) err
+      -- lofts and offsets are native now; the whole example must render with OpenSCAD unreachable
+      forM_ ["examples/loft.coscad","examples/offset_demo.coscad","examples/waterbottle_advanced.coscad"] $ \path -> do
+        (code,out,err)<-run ["stl",path,"-o",dir </> "example.stl"]
+        assertT t ("native stl renders "++path++" without OpenSCAD") (code==ExitSuccess && "volume" `isInfixOf` out) (out++err)
   shell<-nativeCSGMesh (Diff (Rectangle 20 20 20) (Rectangle 12 12 12))
   case shell >>= splitSolidBodies of
     Right [solid] -> assertT t "cavity grouping preserves net volume" (abs (meshVolume solid-6272)<1e-6) (show (meshVolume solid))
     r -> failT t "cavity grouping" (show r)
 
+
+-- | The Haskell loft tessellation on its own (no kernel): BOSL2's frustum
+-- of two equal-count circles, a distance-matched pair, the profile order
+-- conventions, and the cap triangulator on a concave outline.
+loftChecks :: T -> IO ()
+loftChecks t = do
+  let k = (50 / (2 * pi)) * sin (2 * pi / 50)
+      a1 = k * pi * 100; a2 = k * pi * 25
+      frustum = 30 / 3 * (a1 + a2 + sqrt (a1 * a2))
+      layers shapes = mapM (\(z,p) -> (,) z <$> profilePath p) shapes
+  case layers [(0,Shape2D 50 10),(30,Shape2D 50 5)] >>= loftTriangles "reindex" of
+    Left e -> failT t "pure loft frustum" e
+    Right tris -> do
+      assertT t "pure loft frustum volume" (abs (meshVolume tris - frustum) < 1e-9 * frustum) (show (meshVolume tris, frustum))
+      assertT t "pure loft frustum closed oriented surface" (closed tris && signedVolume tris > 0) "non-manifold edge or reversed face"
+  case layers [(0,Shape2D 50 3),(6,Rz 30 (Shape2D 3 4))] >>= loftTriangles "distance" of
+    Left e -> failT t "pure distance loft" e
+    Right tris -> assertT t "pure distance loft closed oriented surface" (closed tris && signedVolume tris > 0 && length tris > 100) (show (length tris))
+  assertT t "loftMethod picks reindex for equal counts and distance otherwise"
+    (loftMethod [Shape2D 50 1,Shape2D 50 2] == "reindex" && loftMethod [Shape2D 50 1,Shape2D 3 2] == "distance") ""
+  assertT t "BOSL2 circle paths are clockwise from angle 0"
+    (case profilePath (Shape2D 4 1) of Right [(1,0),(0,-1),(-1,0),(0,1)] -> True; _ -> False) (show (profilePath (Shape2D 4 1)))
+  assertT t "BOSL2 polygon paths are made counter-clockwise keeping the first point"
+    (profilePath (Poly (PD [(0,0),(0,1),(1,1),(1,0)] [])) == Right [(0,0),(1,0),(1,1),(0,1)]) (show (profilePath (Poly (PD [(0,0),(0,1),(1,1),(1,0)] []))))
+  expectErr t "offset inside a loft profile is refused" (profilePath (Offset 1 (Shape2D 8 2))) ["offset inside a loft profile"] []
+  expectErr t "loft profile must be 2D" (profilePath (Rectangle 1 2 3)) ["2D outline"] []
+  expectErr t "mismatched counts refused under reindex" (layers [(0,Shape2D 4 1),(1,Shape2D 5 1)] >>= loftTriangles "reindex") ["equal vertex counts"] []
+  let lShape = [(0,0),(4,0),(4,1),(1,1),(1,3),(0,3)]
+      area tris = sum [abs ((bx-ax)*(cy-ay)-(by-ay)*(cx-ax))/2 | ((ax,ay),(bx,by),(cx,cy)) <- tris]
+  case triangulatePolygon lShape of
+    Left e -> failT t "ear clipping of a concave outline" e
+    Right tris -> assertT t "ear clipping of a concave outline" (length tris == 4 && abs (area tris - 6) < 1e-12) (show tris)
+  case triangulatePolygon (reverse lShape ++ [(0,0),(0,0)]) of
+    Left e -> failT t "ear clipping tolerates repeated points and clockwise input" e
+    Right tris -> assertT t "ear clipping tolerates repeated points and clockwise input" (length tris == 4 && abs (area tris - 6) < 1e-12) (show tris)
+  expectErr t "bow-tie cap (zero signed area) is an error" (triangulatePolygon [(0,0),(2,2),(2,0),(0,2)]) ["zero area"] []
+  expectErr t "degenerate cap is an error" (triangulatePolygon [(0,0),(1,0),(2,0)]) ["zero area"] []
 
 indexedContractTier :: T -> IO ()
 indexedContractTier t = do

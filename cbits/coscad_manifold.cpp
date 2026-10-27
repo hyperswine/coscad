@@ -1,6 +1,7 @@
 // Small owned ABI: no C++ exception or C++ allocation ownership crosses into
 // Haskell. The native backend uses indexed vertices/faces. Legacy soup entry
 // points remain for import/compatibility and explicitly weld exact positions.
+#include <manifold/cross_section.h>
 #include <manifold/manifold.h>
 #include <manifold/mesh.h>
 #include <manifold/version.h>
@@ -291,8 +292,90 @@ extern "C" void coscad_mesh_free_indices(uint64_t *p) noexcept { delete[] p; }
 extern "C" void coscad_mesh_free(double *p) noexcept { delete[] p; }
 
 
+namespace {
+// A single simple outline, validated (finite, bounded, no repeated vertex,
+// nonzero area, no touching/crossing non-neighbour edges) and oriented
+// counter-clockwise. Shared by plain and offset extrusions.
+manifold::SimplePolygon read_polygon(const double *xy, size_t n) {
+    if (!xy || n<3 || n>4096)
+      throw std::runtime_error("extrusion requires 3..4096 vertices");
+    manifold::SimplePolygon polygon;
+    double scale=1, area=0;
+    std::map<std::array<double,2>,bool> unique;
+    for (size_t i=0; i<n; ++i) {
+      const double x=xy[2*i], y=xy[2*i+1];
+      if (!std::isfinite(x) || !std::isfinite(y) || std::abs(x)>1e9 || std::abs(y)>1e9)
+        throw std::runtime_error("polygon coordinates must be finite and at most 1e9 mm");
+      if (!unique.emplace(std::array<double,2>{x,y},true).second)
+        throw std::runtime_error("polygon has repeated vertices");
+      polygon.push_back({x,y});
+      scale=std::max(scale,std::max(std::abs(x-xy[0]),std::abs(y-xy[1])));
+    }
+    const double eps=1e-12*scale*scale;
+    auto orient=[](auto a,auto b,auto c) { return (b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x); };
+    for (size_t i=0; i<n; ++i) area+=orient(polygon[0],polygon[i],polygon[(i+1)%n]);
+    if (!std::isfinite(area) || std::abs(area)<=eps)
+      throw std::runtime_error("polygon has zero or numerically unresolved area");
+    for (size_t i=0; i<n; ++i) for (size_t j=i+1; j<n; ++j) {
+      if (j==i+1 || (i==0 && j==n-1)) continue;
+      const auto a=polygon[i],b=polygon[(i+1)%n],c=polygon[j],d=polygon[(j+1)%n];
+      if (std::max(a.x,b.x)<std::min(c.x,d.x) || std::max(c.x,d.x)<std::min(a.x,b.x) ||
+          std::max(a.y,b.y)<std::min(c.y,d.y) || std::max(c.y,d.y)<std::min(a.y,b.y)) continue;
+      auto sign=[eps](double v) { return v>eps ? 1 : v < -eps ? -1 : 0; };
+      if (sign(orient(a,b,c))*sign(orient(a,b,d))<=0 && sign(orient(c,d,a))*sign(orient(c,d,b))<=0)
+        throw std::runtime_error("polygon self-intersects or touches a non-neighbour edge");
+    }
+    if (area<0) std::reverse(polygon.begin(),polygon.end());
+    return polygon;
+}
+}
+
+// Round 2D offset (OpenSCAD `offset(r = delta)`) of a single simple outline,
+// then a straight extrusion. The CrossSection backend is Clipper2, the same
+// library OpenSCAD uses, with the arc segment count OpenSCAD derives from
+// $fn; a negative delta shrinks. An offset that removes the whole profile
+// is an error, never an empty success. Same ownership rules as the others.
+extern "C" int coscad_mesh_extrude_offset(const double *xy, size_t n, double delta, int segments,
+    double height, double **output, size_t *count, char *error, size_t error_size) noexcept {
+  if (!output || !count || (error_size && !error)) return 1;
+  *output=nullptr; *count=0;
+  if (error_size) error[0]='\0';
+  try {
+    if (!std::isfinite(height) || height<=0 || height>1e9)
+      throw std::runtime_error("extrusion requires a finite positive height <= 1e9 mm");
+    if (!std::isfinite(delta) || std::abs(delta)>1e9)
+      throw std::runtime_error("offset radius must be finite and at most 1e9 mm");
+    if (segments<3 || segments>4096)
+      throw std::runtime_error("offset arc segments must be 3..4096");
+    const auto polygon=read_polygon(xy,n);
+    manifold::CrossSection section(polygon);
+    if (section.IsEmpty()) throw std::runtime_error("offset profile is empty after import");
+    auto inflated=section;
+    if (delta!=0) inflated=section.Offset(delta,manifold::CrossSection::JoinType::Round,2.0,segments);
+    if (inflated.IsEmpty()) throw std::runtime_error("offset removed the whole profile (negative radius larger than the shape)");
+    const auto polygons=inflated.ToPolygons();
+    size_t total=0;
+    for (const auto &contour : polygons) total+=contour.size();
+    if (polygons.empty() || total<3 || total>65536)
+      throw std::runtime_error("offset produced an unusable outline (empty or more than 65536 vertices)");
+    for (const auto &contour : polygons) for (const auto &p : contour)
+      if (!std::isfinite(p.x) || !std::isfinite(p.y)) throw std::runtime_error("offset produced a non-finite vertex");
+    auto result=Manifold::Extrude(polygons,height);
+    if (result.Status()!=Manifold::Error::NoError)
+      throw std::runtime_error(std::string("offset extrusion: ")+status_name(result.Status()));
+    if (result.IsEmpty()) throw std::runtime_error("offset extrusion produced an empty solid");
+    write_mesh(result,output,count);
+    return 0;
+  } catch (const std::exception &e) {
+    if (error_size) std::snprintf(error,error_size,"%s",e.what());
+  } catch (...) {
+    if (error_size) std::snprintf(error,error_size,"unknown C++ offset extrusion failure");
+  }
+  return 1;
+}
+
 // Single simple outline. Composite 2D operations are distributed over the
-// extrusion by Haskell. Holes/offsets are refused until a profile contract exists.
+// extrusion by Haskell. Holes are refused until a profile contract exists.
 extern "C" int coscad_mesh_extrude(const double *xy, size_t n, double height,
     double **output, size_t *count, char *error, size_t error_size) noexcept {
   if (!output || !count || (error_size && !error)) return 1;

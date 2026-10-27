@@ -7,11 +7,13 @@ module Coscad.OpenScad
   , libraryDirs
   , openscadEnv
   , openscadStlArgs
+  , openscadStlArgsIO
   , openscadPngArgs
   , openscadFullRender
   , runOpenscadRaw
   , runOpenscad
   , renderStlFile
+  , renderStlFileWith
   , openscadVersion
   , bosl2Version
   ) where
@@ -127,9 +129,17 @@ openscadEnv = do
 
 -- | Arguments for a headless STL export. ASCII is requested explicitly:
 -- the mesh reader is ASCII-only and OpenSCAD's default format depends
--- on version and preferences.
-openscadStlArgs :: FilePath -> FilePath -> [String]
-openscadStlArgs stlF scadF = ["-o", stlF, "--export-format", "asciistl", scadF]
+-- on version and preferences. With `manifold`, OpenSCAD evaluates the CSG
+-- with its Manifold backend instead of CGAL (which asserts on some hulls of
+-- curved extrusions and is far slower); only pass it when 'openscadFullRender'
+-- says the installed OpenSCAD understands `--backend`.
+openscadStlArgs :: Bool -> FilePath -> FilePath -> [String]
+openscadStlArgs manifold stlF scadF =
+  ["-o", stlF, "--export-format", "asciistl"] ++ ["--backend=manifold" | manifold] ++ [scadF]
+
+-- | 'openscadStlArgs' after probing the installed OpenSCAD once per call.
+openscadStlArgsIO :: FilePath -> FilePath -> IO [String]
+openscadStlArgsIO stlF scadF = (\manifold -> openscadStlArgs manifold stlF scadF) <$> openscadFullRender
 
 -- | Can this OpenSCAD render scenes fully (CSG evaluated, no preview
 -- z-fighting) at preview speed? True when it has the Manifold backend
@@ -195,7 +205,7 @@ runWithTimeout secs bin cp = withCreateProcess cp $ \_ mout merr ph -> do
 -- | .scad -> .stl, exit status only.
 runOpenscad :: FilePath -> FilePath -> IO (Either String ())
 runOpenscad scadF stlF = do
-  r <- runOpenscadRaw (openscadStlArgs stlF scadF)
+  r <- openscadStlArgsIO stlF scadF >>= runOpenscadRaw
   return $ case r of
     Left e -> Left e
     Right (ExitSuccess, _, _) -> Right ()
@@ -205,8 +215,17 @@ runOpenscad scadF stlF = do
 -- here: a missing include or a dropped child means the mesh is not
 -- what the source asked for, even though OpenSCAD exits 0.
 renderStlFile :: FilePath -> FilePath -> IO (Either String [Tri])
-renderStlFile scadF stlF = do
-  r <- runOpenscadRaw (openscadStlArgs stlF scadF)
+renderStlFile scadF stlF = openscadFullRender >>= \manifold -> renderStlFileWith manifold scadF stlF
+
+-- | 'renderStlFile' with the CSG evaluator chosen by the caller: True asks
+-- for OpenSCAD's Manifold backend, False for CGAL. CGAL is exact
+-- arithmetic; Manifold is multithreaded and, on solids with exactly
+-- coincident faces (a symmetric difference of two equal solids), its result
+-- can differ from run to run. Callers that need an exactness certificate
+-- pass False.
+renderStlFileWith :: Bool -> FilePath -> FilePath -> IO (Either String [Tri])
+renderStlFileWith manifold scadF stlF = do
+  r <- runOpenscadRaw (openscadStlArgs manifold stlF scadF)
   case r of
     Left e -> return (Left e)
     Right (code, out, err) -> do

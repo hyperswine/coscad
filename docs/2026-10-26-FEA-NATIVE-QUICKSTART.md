@@ -1,9 +1,11 @@
 # Try FEA and native geometry
 
-These are opt-in experimental workflows for supported solid parts. The ordinary
-compiler still uses OpenSCAD. Run the commands from the repository root.
-The [validation record](2026-10-26-FEA-BACKEND-EXPERIMENTS.md) documents numerical
-checks, accepted geometry, limits and remaining release gates.
+Run the commands from the repository root. The
+[validation record](2026-10-26-FEA-BACKEND-EXPERIMENTS.md) documents numerical
+checks, accepted geometry, limits and the release gates as they stood on
+2026-10-26; since [2026-10-27](2026-10-27-NATIVE-DEFAULT.md) the native kernel
+is the default geometry backend of a normal build, and the FEA workflows remain
+opt-in experiments.
 
 ## Part stress with `coscad stress`
 
@@ -31,26 +33,32 @@ is refined. A feature that the declared grid cannot resolve is an error.
 ## Native STL, assembly checks and manufacturing
 
 The native CSG backend needs a C++17 compiler, CMake and pkg-config as well as
-Cabal/GHC. The builder fetches and verifies the pinned Manifold source:
+Cabal/GHC. The builder fetches and verifies the pinned Manifold and Clipper2
+checkouts (`native-kernel.lock.json`) and builds them statically; the Cabal
+`manifold` flag is on by default, so an ordinary build links the kernel once
+pkg-config can see it:
 
 ```sh
 python3 scripts/build-manifold.py
 export PKG_CONFIG_PATH="$PWD/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
-cabal build all -fmanifold --builddir=dist-native
-COSCAD_BIN="$(cabal list-bin exe:coscad -fmanifold --builddir=dist-native)"
-FEA_BIN="$(cabal list-bin exe:coscad-experiments -fmanifold --builddir=dist-native)"
+cabal build all
+COSCAD_BIN="$(cabal list-bin exe:coscad)"
+FEA_BIN="$(cabal list-bin exe:coscad-experiments)"
 mkdir -p /tmp/coscad-fea-demo
-"$COSCAD_BIN" stl examples/assemble/plan/flat90.coscad \
-  --backend=native-experimental -o /tmp/coscad-fea-demo/flat90.stl
-"$COSCAD_BIN" check examples/assemble/ball/ball.assemble \
-  --backend=native-experimental
+"$COSCAD_BIN" doctor
+"$COSCAD_BIN" stl examples/assemble/plan/flat90.coscad -o /tmp/coscad-fea-demo/flat90.stl
+"$COSCAD_BIN" check examples/assemble/ball/ball.assemble
 ```
 
-`coscad next INPUT.assemble --backend=native-experimental` also uses the native
-backend and records it in the manifest. It writes the usual manufacturing
-outputs. Neither command dispatches a printer job. Unsupported shapes fail
-explicitly; there is no silent OpenSCAD fallback. Offsets and lofts are not yet
-supported. Planner instruction images continue to use OpenSCAD.
+`stl`, `check` and `next` render natively by default in that build;
+`--backend=openscad` renders through OpenSCAD instead, and `--backend=native`
+(alias `native-experimental`) names the default explicitly. `coscad next`
+records the backend used in its manifest. Neither command dispatches a printer
+job. Unsupported shapes fail explicitly; there is no silent OpenSCAD fallback.
+Round 2D offsets of a single outline and lofts are supported natively; an
+offset inside a loft profile and offsets of composite 2D shapes are still
+explicit errors. Planner instruction images continue to use OpenSCAD. A build
+made with `cabal build -f-manifold` has no kernel and defaults to OpenSCAD.
 
 ## Curved or holed CAD analysis
 

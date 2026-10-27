@@ -16,6 +16,7 @@ examples-next/rail_x180.coscad
 examples-next/rail_y420.coscad
 examples-next/tnut_m5.coscad
 examples/advanced.coscad
+examples/aerofold_phone_stand.coscad
 examples/assemble/ball/core.coscad
 examples/assemble/ball/shell.coscad
 examples/assemble/bow3/center3.coscad
@@ -56,7 +57,9 @@ examples/extrusion.coscad
 examples/gear_test.coscad
 examples/glider.coscad
 examples/grease_claw.coscad
+examples/loft.coscad
 examples/math_zigzag_spring.coscad
+examples/offset_demo.coscad
 examples/panel.coscad
 examples/simple_transform.coscad
 examples/sphere.coscad
@@ -68,5 +71,6 @@ examples/topological/topo_tour.coscad
 examples/transformations.coscad
 examples/union.coscad
 examples/waterbottle.coscad
+examples/waterbottle_advanced.coscad
 examples/zigzag_spring_fixed.coscad
 examples/zoo.coscad

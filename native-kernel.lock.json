@@ -6,11 +6,19 @@
     "tag": "v3.5.2",
     "layout": ".native/manifold-3.5.2/source"
   },
+  "clipper2": {
+    "repository": "https://github.com/AngusJohnson/Clipper2.git",
+    "revision": "46f639177fe418f9689e8ddb74f08a870c71f5b4",
+    "layout": ".native/clipper2/checkout",
+    "note": "Manifold 3.5.2's own CrossSection dependency pin, built in tree from this checkout; the kernel build itself never downloads"
+  },
   "configuration": {
     "CMAKE_BUILD_TYPE": "Release",
     "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
     "BUILD_SHARED_LIBS": "OFF",
-    "MANIFOLD_CROSS_SECTION": "OFF",
+    "MANIFOLD_CROSS_SECTION": "ON",
+    "MANIFOLD_CROSS_SECTION_BACKEND": "clipper2",
+    "MANIFOLD_USE_BUILTIN_CLIPPER2": "ON",
     "MANIFOLD_CBIND": "OFF",
     "MANIFOLD_TEST": "OFF",
     "MANIFOLD_DOWNLOADS": "OFF",

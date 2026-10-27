@@ -38,7 +38,7 @@ import Coscad.Codegen
 import Coscad.IO (readFileLatin1, scratchDir)
 import Coscad.Linalg (V3, cross, dot3, vlen, vsub)
 import Coscad.Mesh (Tri, meshVolume, parseStlAscii, stlAscii)
-import Coscad.OpenScad (openscadStlArgs, renderStlFile, runOpenscadRaw)
+import Coscad.OpenScad (openscadStlArgsIO, renderStlFile, runOpenscadRaw)
 import Coscad.Shape
 import Coscad.Report
 import System.Exit (ExitCode (..))
@@ -159,7 +159,7 @@ marker = "translate([99999,99999,99999]) cube(0.001);"
 -- fallback (often the first operand), so the exit code alone lies.
 runOpenscadChecked :: FilePath -> FilePath -> IO (Either String Bool)
 runOpenscadChecked scadF stlF = do
-  r <- runOpenscadRaw (openscadStlArgs stlF scadF)
+  r <- openscadStlArgsIO stlF scadF >>= runOpenscadRaw
   return $ case r of
     Left e -> Left e
     Right (code, out, err) ->

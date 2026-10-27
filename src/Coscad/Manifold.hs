@@ -2,7 +2,7 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 -- | Optional direct Manifold bridge. No subprocess, implicit fallback or
 -- unsafePerformIO. Empty results are valid intermediate CSG operands.
-module Coscad.Manifold (MeshOp (..), manifoldAvailable, meshOperation, indexedOperation, indexedOperationWithLimit, extrudePolygon) where
+module Coscad.Manifold (MeshOp (..), manifoldAvailable, manifoldKernelVersion, meshOperation, indexedOperation, indexedOperationWithLimit, extrudePolygon, extrudeOffsetPolygon) where
 
 import Coscad.Mesh (Tri)
 import Coscad.Mesh.Indexed
@@ -16,8 +16,13 @@ data MeshOp = MeshUnion | MeshDifference | MeshIntersection | MeshHull | MeshMin
   deriving (Eq, Show, Enum)
 
 manifoldAvailable :: Bool
+-- | The linked kernel's version. It is a constant, not a probe: the Cabal
+-- pkg-config constraint and the static_assert in cbits/coscad_manifold.cpp
+-- both refuse any other version than the one native-kernel.lock.json pins.
+manifoldKernelVersion :: Maybe String
 #ifdef COSCAD_MANIFOLD
 manifoldAvailable = True
+manifoldKernelVersion = Just "3.5.2"
 
 foreign import ccall safe "coscad_mesh_op_indexed_timed"
   c_indexed :: Word64 -> CInt -> Ptr CDouble -> CSize -> Ptr Word64 -> CSize
@@ -30,6 +35,8 @@ foreign import ccall safe "coscad_mesh_extrude"
   c_extrude :: Ptr CDouble -> CSize -> CDouble -> Ptr (Ptr CDouble) -> Ptr CSize -> Ptr CChar -> CSize -> IO CInt
 foreign import ccall unsafe "coscad_mesh_free"
   c_free :: Ptr CDouble -> IO ()
+foreign import ccall safe "coscad_mesh_extrude_offset"
+  c_extrude_offset :: Ptr CDouble -> CSize -> CDouble -> CInt -> CDouble -> Ptr (Ptr CDouble) -> Ptr CSize -> Ptr CChar -> CSize -> IO CInt
 
 -- | The limit is cooperative: a large Boolean phase may overrun it. A timed
 -- out operation is never accepted, and every call gets a fresh kernel context.
@@ -67,6 +74,15 @@ extrudePolygon height points
   | otherwise = withArray (concatMap (\(x,y) -> map realToFrac [x,y]) points) $ \ptr ->
       withMeshResult (c_extrude ptr (fromIntegral (length points)) (realToFrac height))
 
+-- | OpenSCAD's @offset(r = delta)@ of one simple outline (round joins with
+-- @segments@ arc steps, as OpenSCAD derives them from @$fn@) followed by a
+-- straight extrusion, through the kernel's Clipper2 CrossSection.
+extrudeOffsetPolygon :: Double -> Int -> Double -> [(Double,Double)] -> IO (Either String [Tri])
+extrudeOffsetPolygon height segments delta points
+  | length points>4096 = return (Left "Manifold: offset profile exceeds 4096 vertices")
+  | otherwise = withArray (concatMap (\(x,y) -> map realToFrac [x,y]) points) $ \ptr ->
+      withMeshResult (c_extrude_offset ptr (fromIntegral (length points)) (realToFrac delta) (fromIntegral segments) (realToFrac height))
+
 withMeshResult :: (Ptr (Ptr CDouble) -> Ptr CSize -> Ptr CChar -> CSize -> IO CInt) -> IO (Either String [Tri])
 withMeshResult action = alloca $ \out -> alloca $ \count -> allocaBytes 256 $ \err -> mask $ \restore -> do
   poke out nullPtr
@@ -85,14 +101,18 @@ withMeshResult action = alloca $ \out -> alloca $ \count -> allocaBytes 256 $ \e
     v=realToFrac
 #else
 manifoldAvailable = False
+manifoldKernelVersion = Nothing
 
 indexedOperationWithLimit :: Int -> MeshOp -> IndexedMesh -> IndexedMesh -> IO (Either String IndexedMesh)
-indexedOperationWithLimit _ _ _ _ = return (Left "native CSG needs a build with -fmanifold; see scripts/build-manifold.py")
+indexedOperationWithLimit _ _ _ _ = return (Left "native CSG needs a build with the manifold flag (-fmanifold, the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
 #endif
 
 #ifndef COSCAD_MANIFOLD
 extrudePolygon :: Double -> [(Double,Double)] -> IO (Either String [Tri])
-extrudePolygon _ _ = return (Left "native extrusion needs a build with -fmanifold; see scripts/build-manifold.py")
+extrudePolygon _ _ = return (Left "native extrusion needs a build with the manifold flag (-fmanifold, the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
+
+extrudeOffsetPolygon :: Double -> Int -> Double -> [(Double,Double)] -> IO (Either String [Tri])
+extrudeOffsetPolygon _ _ _ _ = return (Left "native 2D offset needs a build with the manifold flag (-fmanifold, the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
 #endif
 
 -- | Legacy triangle-soup boundary: import by exact-position welding. Native CSG

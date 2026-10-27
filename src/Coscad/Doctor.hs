@@ -1,19 +1,25 @@
 -- | `coscad doctor`: is the machine able to run the whole pipeline?
--- Finds OpenSCAD and BOSL2 the same way the other commands do, asks
--- both for their versions, and renders a small boolean part end to end
--- against a known volume. Exit 1 if anything is missing.
+-- Reports which geometry backends this binary has and which one is the
+-- default, finds OpenSCAD and BOSL2 the same way the other commands do,
+-- asks both for their versions, and renders a small boolean part end to
+-- end through every available backend against a known volume. OpenSCAD
+-- stays required even in a kernel build: planner step images (`plan
+-- --png`, `site`) and `--backend=openscad` use it. Exit 1 if anything
+-- is missing or a round trip disagrees.
 module Coscad.Doctor (runDoctor) where
 
+import Coscad.Backend (backendName, defaultBackend, nativeCSGMesh)
 import Coscad.Codegen (renderScad)
 import Coscad.IO (scratchDir)
-import Coscad.Mesh (meshVolume)
+import Coscad.Manifold (manifoldAvailable, manifoldKernelVersion)
+import Coscad.Mesh (Tri, meshVolume)
 import Coscad.OpenScad
 import Coscad.Parser (parseProgramNamed)
+import Coscad.Report (Failure (..))
 import Data.Version (showVersion)
 import Paths_coscad (version)
 import System.Directory (doesFileExist, removePathForcibly)
 import System.Environment (lookupEnv)
-import Coscad.Report (Failure (..))
 import System.FilePath ((</>))
 import Text.Printf (printf)
 
@@ -21,6 +27,12 @@ runDoctor :: IO (Either Failure ())
 runDoctor = do
   putStrLn ("coscad " ++ showVersion version)
   dir <- scratchDir "doctor"
+  -- geometry backends: a build-time fact, reported before any probe
+  putStrLn ("backends    default  " ++ backendName defaultBackend ++ " (for stl, check and next; --backend=openscad|native overrides)")
+  case manifoldKernelVersion of
+    Just kernel -> putStrLn ("native      ok       Manifold " ++ kernel ++ " kernel linked statically (pinned by native-kernel.lock.json, with CrossSection)")
+    Nothing -> putStrLn "native      absent   this binary was built without the pinned kernel (-f-manifold); --backend=native is refused. Build it with scripts/build-manifold.py"
+  putStrLn ("openscad    needed   " ++ (if manifoldAvailable then "for --backend=openscad and " else "for every render, and ") ++ "for plan --png and site step images")
   -- OpenSCAD
   bin <- findOpenscad
   okScad <- case bin of
@@ -30,7 +42,10 @@ runDoctor = do
     Just b -> do
       v <- openscadVersion
       case v of
-        Just ver -> putStrLn ("OpenSCAD    ok       " ++ b ++ " (" ++ ver ++ ")") >> return True
+        Just ver -> do
+          full <- openscadFullRender
+          putStrLn ("OpenSCAD    ok       " ++ b ++ " (" ++ ver ++ (if full then ", Manifold backend for STL and images" else ", CGAL only: no --backend; STL renders are slower") ++ ")")
+          return True
         Nothing -> putStrLn ("OpenSCAD    BROKEN   " ++ b ++ " did not report a version (is it runnable? on a headless box set COSCAD_OPENSCAD to an xvfb-run wrapper)") >> return False
   -- BOSL2
   dirs <- libraryDirs
@@ -56,28 +71,36 @@ runDoctor = do
           putStrLn ("BOSL2       BROKEN   found at " ++ d ++ " but OpenSCAD cannot include it: " ++ why)
           putStrLn "                     (set COSCAD_BOSL2 to that directory, or move it into a library folder)"
           return False
-  -- round trip
+  -- round trips: the same part through every backend this binary has
+  let probe = parseProgramNamed "doctor.coscad" "main = box 10 10 10 ⊖ zcyl 2 20\n"
+  okNative <-
+    if not manifoldAvailable
+      then return True
+      else case probe of
+        Left e -> putStrLn ("trip native BROKEN   compiler: " ++ e) >> return False
+        Right (_, shape) -> nativeCSGMesh shape >>= report "trip native"
   okRt <-
     if not (okScad && okBosl)
-      then putStrLn "round trip  skipped" >> return False
-      else case parseProgramNamed "doctor.coscad" "main = box 10 10 10 ⊖ zcyl 2 20\n" of
-        Left e -> putStrLn ("round trip  BROKEN   compiler: " ++ e) >> return False
+      then putStrLn "trip scad   skipped" >> return False
+      else case probe of
+        Left e -> putStrLn ("trip scad   BROKEN   compiler: " ++ e) >> return False
         Right (_, shape) -> do
           let scadF = dir </> "doctor.scad"
               stlF = dir </> "doctor.stl"
           writeFile scadF (renderScad shape)
-          r <- renderStlFile scadF stlF
-          case r of
-            Left e -> putStrLn ("round trip  BROKEN   " ++ e) >> return False
-            Right tris -> do
-              -- 10^3 minus a 50-gon prism of radius 2 through the full height
-              let k = (50 / (2 * pi)) * sin (2 * pi / 50)
-                  want = 1000 - k * pi * 4 * 10
-                  got = meshVolume tris
-                  ok = abs (got - want) < 0.01 * want
-              printf "round trip  %s   box 10 10 10 ⊖ zcyl 2 20 -> %.2f mm^3 (expected %.2f), %d triangles\n" (if ok then "ok    " else "BROKEN") got want (length tris)
-              return ok
+          renderStlFile scadF stlF >>= report "trip scad  "
   removePathForcibly dir
-  if okScad && okBosl && okRt
+  if okScad && okBosl && okRt && okNative
     then putStrLn "all good" >> return (Right ())
     else return (Left (Failure 1 []))
+  where
+    -- 10^3 minus a 50-gon prism of radius 2 through the full height
+    want = let k = (50 / (2 * pi)) * sin (2 * pi / 50) in 1000 - k * pi * 4 * 10
+    report :: String -> Either String [Tri] -> IO Bool
+    report label r = case r of
+      Left e -> putStrLn (label ++ " BROKEN   " ++ e) >> return False
+      Right tris -> do
+        let got = meshVolume tris
+            ok = abs (got - want) < 0.01 * want
+        printf "%s %s   box 10 10 10 ⊖ zcyl 2 20 -> %.2f mm^3 (expected %.2f), %d triangles\n" label (if ok then "ok    " else "BROKEN") got want (length tris)
+        return ok
