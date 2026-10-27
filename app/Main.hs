@@ -10,7 +10,10 @@ import Coscad.Doctor (runDoctor)
 import Coscad.Next (processNextWithBackend)
 import Coscad.Part (compilePart, renderPartWith)
 import Coscad.Plan (processPlan)
-import Coscad.Diagnose (validateJson, validateSource)
+import Coscad.Diagnose (validateProjectJson, validateProject, projectSources)
+import Coscad.Json
+import Coscad.Manifold (manifoldAvailable)
+import Coscad.Stress.Material (Material (..), materialTable)
 import Coscad.Report (Failure (..), collecting, stderrEmit)
 import Coscad.Site (processSite)
 import Coscad.Stress.Command (processStress)
@@ -44,24 +47,35 @@ runCLI = do
     [] -> usage stderr >> exitFailure
     (a : _) | a `elem` ["--help", "-h", "help"] -> usage stdout >> exitSuccess
     (a : _) | a `elem` ["--version", "-V", "version"] -> putStrLn ("coscad " ++ showVersion version)
+    ["capabilities", "--json"] -> putStrLn (encode (jobj
+      [("schema",JString "coscad.capabilities/1"), ("version",JString (showVersion version))
+      ,("default_backend",JString (backendName defaultBackend))
+      ,("backends",JArray (map JString (["openscad"] ++ ["native-experimental" | manifoldAvailable])))
+      ,("features",JArray (map JString ["validate-json", "project-buffers", "stress", "stl", "check", "next", "plan"]))
+      ,("materials",JArray [jobj [("name",JString (matName m)),("young_mpa",JNumber (matYoungMPa m))]
+          | m <- materialTable])]))
     ["doctor"] -> runDoctor >>= finish
-    ("validate" : rest) -> case partitionFlags ["--json", "--stdin"] rest of
+    ("validate" : rest) -> case partitionFlags ["--json", "--stdin", "--project-stdin"] rest of
       Right (flags, [f]) -> do
         let json = "--json" `elem` flags
         unless (takeExtension f `elem` [".coscad", ".assemble"]) (bad "validate needs a .coscad or .assemble file")
-        -- --stdin: the file's text comes from stdin (an unsaved editor
-        -- buffer); relative references still resolve from f's directory
-        source <- if "--stdin" `elem` flags then Just <$> getContents' else return Nothing
+        unless (not ("--stdin" `elem` flags && "--project-stdin" `elem` flags))
+          (bad "choose --stdin or --project-stdin, not both")
+        sources <- if "--project-stdin" `elem` flags
+          then getContents' >>= either (\e -> bad e >> return []) return . projectSources
+          else if "--stdin" `elem` flags then (\t -> [(f,t)]) <$> getContents' else return []
         if json
           then do
             (emit, collected) <- collecting
-            outcome <- validateSource emit f source
+            (outcome,deps) <- validateProject emit f sources
             diags <- collected
-            putStrLn (validateJson f outcome diags)
+            putStrLn (validateProjectJson f outcome diags deps)
             either (\(Failure code _) -> exitWith (ExitFailure (if code == 0 then 1 else code))) (const (return ())) outcome
-          else validateSource stderrEmit f source >>= either (finish . Left) putStrLn
+          else do
+            (outcome,_) <- validateProject stderrEmit f sources
+            either (finish . Left) putStrLn outcome
       Right _ -> bad "validate needs one .coscad or .assemble file. Usage: coscad validate [--json] [--stdin] file"
-      Left flag -> bad ("validate: unknown option " ++ flag ++ " (use --json, --stdin)")
+      Left flag -> bad ("validate: unknown option " ++ flag ++ " (use --json, --stdin, --project-stdin)")
     ("stl" : rest) -> do
       (backend,remaining) <- backendArgs "stl" rest
       withInOut "stl" remaining
@@ -149,7 +163,8 @@ usage h =
     , ""
     , "Usage:"
     , "  coscad <part.coscad> [-o part.scad]     compile one part to OpenSCAD"
-    , "  coscad validate [--json] [--stdin] <part.coscad|spec.assemble>"
+    , "  coscad capabilities --json               build features, backends and materials for tools"
+    , "  coscad validate [--json] [--stdin|--project-stdin] <part.coscad|spec.assemble>"
     , "                                          validate source, mating constraints and hardware without writing artifacts;"
     , "                                          --json prints diagnostics as JSON, --stdin reads the file's text from stdin"
     , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"

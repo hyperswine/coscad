@@ -1,8 +1,8 @@
 # CoScad Language Support for VS Code
 
 Language support for CoScad `.coscad` part files and `.assemble` assembly files,
-in step with the CoScad compiler 1.1 (numeric bindings, lofts, positioned
-diagnostics, named datums, oriented mating frames and rigid assembly constraints).
+with compiler capability discovery for stress analysis, geometry backend selection
+and unsaved recursive project validation.
 
 ## Features
 
@@ -33,11 +33,29 @@ diagnostics, named datums, oriented mating frames and rigid assembly constraints
   variables, parts, and assembly source paths
 - Commands: **Compile to OpenSCAD**, **Validate**, **Render to STL**,
   **Check Assembly**, **Manufacture (coscad next)**, **Build Plan** (with or
-  without step images), **Doctor** (verify OpenSCAD + BOSL2); they run in a
+  without step images), **Run Stress Analysis**, **Select Geometry Backend** and
+  **Doctor** (verify runtime dependencies); output commands save the active
+  source and its dirty dependencies, then run in a
   COSCAD terminal opened in the file's folder
+
+With a compiler advertising `project-buffers`, validation sends a bounded
+snapshot of the root and all reachable open buffers. Changes to parts, nested
+assemblies or closed files recheck dependent open assemblies. Closing an unsaved
+part rechecks against disk. Superseded compiler processes are cancelled and
+stale results cannot publish. External dependencies are watched too.
+Older compilers retain root-buffer validation and show a warning when references
+come from disk. Parser diagnostics remain available without a compiler.
+
+The status bar shows the selected backend (or the compiler default). Capability
+probes are invalidated by configuration and direct executable changes. A compiler
+behind a wrapper such as `cabal run` should be refreshed by reloading the extension
+after a rebuild. OpenSCAD source output and plan images retain their own renderer;
+the backend choice applies to STL, check, next and stress.
 
 ## Supported syntax
 
+- `support`, `load` and `stress`: force/unit hovers, datum navigation, material
+  and setting completion, and compiler validation of materials/settings/datums
 - `!glyph`, `!simple`, and legacy mixed mode; `$` loose application
 - Glyph, word, BOSL2 and simple-mode primitives; `✎` bezier profiles
 - Numeric bindings: `w = 20`, `t = w / 5 - 1`, used as `box w (w / 2) t`,
@@ -62,6 +80,7 @@ See COSCADLANG.md for examples and a compact syntax reference.
 |---|---|---|
 | `coscad.executableCommand` | `coscad` | command that runs the compiler: a binary on PATH, a full path, or `cabal run coscad --` inside a checkout |
 | `coscad.workingDirectory` | `""` | working directory for that command; empty = the file's folder (`coscad.executablePath` is the deprecated name) |
+| `coscad.backend` | `auto` | compiler default, `native-experimental`, or `openscad`; availability comes from the compiler |
 | `coscad.compilerDiagnostics` | `true` | validate parts and assemblies with the compiler and show its errors and warnings (as you type with `validate --json --stdin`, else on open/save); needs compiler 1.2.0.0 or newer |
 
 For a local checkout:
@@ -73,8 +92,12 @@ For a local checkout:
 }
 ```
 
-Rendering commands need OpenSCAD and BOSL2 on the machine; run **COSCAD:
-Doctor** (or `coscad doctor`) to verify both.
+Native geometry commands need a compiler built with Manifold. OpenSCAD rendering
+and plan images need OpenSCAD and BOSL2. Run **COSCAD: Doctor** to verify the
+installed dependencies. Run **COSCAD: Run Stress Analysis** on
+`examples/stress/shelf-bracket.coscad`; inspect the terminal summary and adjacent
+`_stress.json` (including full node/cell fields). See the repository
+[workflow guide](../docs/2026-10-27-EDITOR-WORKFLOW.md) for the remaining steps.
 
 ## Development
 

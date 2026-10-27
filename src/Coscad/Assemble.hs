@@ -11,6 +11,7 @@ module Coscad.Assemble
   , loadAssembleFile
   , loadAssembly
   , loadAssemblyText
+  , loadAssemblyWith
   , nextManifestPath
   , nextSchema
   , processAssemble
@@ -38,7 +39,7 @@ import Data.List (intercalate)
 import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
 import Data.Maybe (isJust, isNothing)
-import System.Directory (doesFileExist)
+import System.Directory (doesFileExist, canonicalizePath)
 import System.FilePath (dropExtension, takeDirectory, takeExtension, takeFileName, (</>))
 import Data.Void (Void)
 import Text.Megaparsec
@@ -521,24 +522,37 @@ asmFailure e = case e of
 -- miss their geometry, print counts that differ from the placements) go
 -- to @emit@ as they are found.
 loadAssembly :: Emit -> [FilePath] -> FilePath -> IO (Either AsmError AsmResult)
-loadAssembly emit visited path
-  | path `elem` visited = return (Left (InputError (path ++ ": cycle in .assemble references involving this file" ++ concatMap (" <- " ++) (reverse visited))))
-  | otherwise = do
-      exists <- doesFileExist path
-      if not exists
-        then return (Left (InputError (path ++ ": file not found")))
-        else do
-          contents <- readFileUtf8 path
-          loadAssemblyFrom emit visited path contents
+loadAssembly = loadAssemblyWith diskSource
 
--- | 'loadAssembly' with the top file's text supplied (an unsaved editor
--- buffer for @coscad validate --stdin@). Referenced parts and
--- subassemblies are still read from disk, relative to @path@.
+-- | Injectable source reader for consistent editor snapshots. Called for every
+-- dependency, including missing files, so clients can track invalidation.
+loadAssemblyWith :: (FilePath -> IO (Maybe String)) -> Emit -> [FilePath] -> FilePath -> IO (Either AsmError AsmResult)
+loadAssemblyWith reader emit visited path = do
+  identity <- canonicalizePath path
+  if identity `elem` visited
+    then return (Left (InputError (path ++ ": cycle in .assemble references involving this file")))
+    else do
+      source <- reader path
+      case source of
+        Nothing -> return (Left (InputError (path ++ ": file not found")))
+        Just contents -> loadAssemblyFrom reader emit (identity : visited) path contents
+
+diskSource :: FilePath -> IO (Maybe String)
+diskSource path = do
+  exists <- doesFileExist path
+  if exists then Just <$> readFileUtf8 path else return Nothing
+
+-- | Compatibility entry point: only the root buffer is supplied.
 loadAssemblyText :: Emit -> FilePath -> String -> IO (Either AsmError AsmResult)
-loadAssemblyText emit = loadAssemblyFrom emit []
+loadAssemblyText emit path contents = do
+  root <- canonicalizePath path
+  let reader file = do
+        key <- canonicalizePath file
+        if key == root then return (Just contents) else diskSource file
+  loadAssemblyWith reader emit [] path
 
-loadAssemblyFrom :: Emit -> [FilePath] -> FilePath -> String -> IO (Either AsmError AsmResult)
-loadAssemblyFrom emit visited path contents =
+loadAssemblyFrom :: (FilePath -> IO (Maybe String)) -> Emit -> [FilePath] -> FilePath -> String -> IO (Either AsmError AsmResult)
+loadAssemblyFrom reader emit visited path contents =
           case checkedPragma path contents of
             Left err -> return (Left (InputError err))
             Right (fmode, fbody) -> case parse (sc *> asmProgram fmode <* eof) path fbody of
@@ -553,7 +567,7 @@ loadAssemblyFrom emit visited path contents =
                     plateMaxZ = last (defaultMaxZ : [z | APlate _ _ _ z _ <- stmts])
                     plateBrim = last (Nothing : [b | APlate _ _ _ _ b <- stmts])
                     clr = last (0 : [c | AClearance c <- stmts])
-                loaded <- mapM (loadRef emit (path : visited) dir) partsS
+                loaded <- mapM (loadRef reader emit visited dir) partsS
                 case sequence loaded of
                   Left err -> return (Left err)
                   Right entries | sum [toInteger (fpCount f) | (_, _, fs) <- entries, f <- fs] > toInteger maxQuantity ->
@@ -623,24 +637,23 @@ countMismatches mode tol defs meta positions constraints table0 =
       Tag n _ -> [n]
       _ -> concatMap tags (shapeChildren sh)
 
-loadRef :: Emit -> [FilePath] -> FilePath -> AsmStmt -> IO (Either AsmError (String, Shape, [FlatPart]))
-loadRef emit visited dir (APart name rel cnt down hints) = do
+loadRef :: (FilePath -> IO (Maybe String)) -> Emit -> [FilePath] -> FilePath -> AsmStmt -> IO (Either AsmError (String, Shape, [FlatPart]))
+loadRef reader emit visited dir (APart name rel cnt down hints) = do
   let p = dir </> rel
       referrer = case visited of (v : _) -> takeFileName v; [] -> "the assembly"
   case takeExtension p of
     ".coscad" -> do
-      exists <- doesFileExist p
-      if not exists
-        then return (Left (InputError (p ++ ": part file not found (referenced from " ++ referrer ++ ")")))
-        else do
-          c <- readFileUtf8 p
+      source <- reader p
+      case source of
+        Nothing -> return (Left (InputError (p ++ ": part file not found (referenced from " ++ referrer ++ ")")))
+        Just c -> do
           case parseProgramNamed p c of
             Left err -> return (Left (InputError err))
             Right (_, shape) -> do
               mapM_ (emit . Warning . formatAnchorWarning p) (anchorWarnings shape)
               return (Right (name, shape, [FlatPart [] name p cnt down hints shape]))
     ".assemble" -> do
-      r <- loadAssembly emit visited p
+      r <- loadAssemblyWith reader emit visited p
       case r of
         Left err -> return (Left err)
         Right ar -> case arAsm ar of
@@ -661,7 +674,7 @@ loadRef emit visited dir (APart name rel cnt down hints) = do
                   ]
                 )
     ext -> return (Left (InputError (p ++ ": unsupported part reference (" ++ ext ++ "); use a .coscad or .assemble file")))
-loadRef _ _ _ _ = return (Left (InputError "internal error: loadRef on non-part statement"))
+loadRef _ _ _ _ _ = return (Left (InputError "internal error: loadRef on non-part statement"))
 
 -- | Manifest schema identifiers. The design stage and `coscad next` write
 -- different files with different shapes; consumers check `schema` first.

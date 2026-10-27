@@ -6,11 +6,11 @@ module Tier.Validate
 where
 
 import Coscad.Diagnose
-import Coscad.Json (JValue (..), asArray, asNumber, asString, decode, lookupKey)
+import Coscad.Json (JValue (..), asArray, asNumber, asString, decode, encode, lookupKey)
 import Coscad.Report (Diag (..), Failure (..), collecting, inputFailure, designFailures)
 import Data.List (isInfixOf)
 import Data.Maybe (fromMaybe)
-import System.Directory (findExecutable)
+import System.Directory (findExecutable, canonicalizePath, doesFileExist)
 import System.Exit (ExitCode (..))
 import System.FilePath ((</>))
 import System.Process (readProcessWithExitCode)
@@ -55,11 +55,54 @@ validateTier t = do
     (asm == Right "Valid assembly" && any (\d -> case d of Warning m -> "declared ×3" `isInfixOf` m; _ -> False) diags) (show asm)
   assertT t "library: a syntax error in unsaved text is a Failure (exit 1)"
     (case bad of Left (Failure 1 (l : _)) -> "broken.coscad:1:" `isInfixOf` l; _ -> False) (show bad)
+  root <- canonicalizePath (dir </> "project.assemble")
+  sub <- canonicalizePath (dir </> "nested.assemble")
+  leaf <- canonicalizePath (dir </> "virtual.coscad")
+  let overlays = [(root,"sub ← nested.assemble ×1\nasm = sub\n"),
+                  (sub,"leaf ← virtual.coscad ×1\nasm = leaf\n"),
+                  (leaf,"main = box 10 10 10\nsupport bot\nload top 0 0 -10\nstress material=pla\n")]
+  (validProject, dependencies) <- validateProject emit root overlays
+  exists <- doesFileExist leaf
+  assertT t "project: nested unsaved references including nonexistent files; no writes"
+    (validProject == Right "Valid assembly" && all (`elem` dependencies) [root,sub,leaf] && not exists) (show (validProject,dependencies))
+  (invalidProject,_) <- validateProject emit root ((leaf,"main = box 1 2\n") : filter ((/=leaf) . fst) overlays)
+  assertT t "project: errors in an unsaved referenced part retain its source path"
+    (case invalidProject of Left f -> any ((==Just leaf) . dgFile) (failureDiagnostics f); _ -> False) (show invalidProject)
+  (badMaterial,_) <- validateProject emit root ((leaf,"main = box 1 2 3\nstress material=unknown\n") : filter ((/=leaf) . fst) overlays)
+  assertT t "project: referenced stress settings are checked without rendering"
+    (case badMaterial of Left f -> "unknown material" `isInfixOf` show f; _ -> False) (show badMaterial)
+  (badDatum,_) <- validateProject emit leaf [(leaf,"main = box 1 2 3\nload @absent 0 0 -1\n")]
+  assertT t "validate: unknown analysis datum is diagnosed"
+    (case badDatum of Left f -> "unknown datum" `isInfixOf` show f; _ -> False) (show badDatum)
+  (duplicate,_) <- validateProject emit leaf [(leaf,"main = box 1 1 1"),(dir </> "." </> "virtual.coscad","main = box 2 2 2")]
+  assertT t "project: canonical duplicate identities are rejected"
+    (case duplicate of Left f -> "duplicate buffer" `isInfixOf` show f; _ -> False) (show duplicate)
+  (cycleResult,_) <- validateProject emit root [(root,"sub ← nested.assemble ×1\nasm = sub\n"),(sub,"root ← ./project.assemble ×1\nasm = root\n")]
+  assertT t "project: unsaved recursive aliases cannot bypass cycle detection"
+    (case cycleResult of Left f -> "cycle" `isInfixOf` show f; _ -> False) (show cycleResult)
+  assertT t "project protocol: relative buffer paths rejected"
+    (case projectSources "{\"schema\":\"coscad.project/1\",\"files\":[{\"path\":\"part.coscad\",\"text\":\"\"}]}" of Left _ -> True; _ -> False) ""
   -- the CLI
   exe <- findExecutable "coscad"
   case exe of
     Nothing -> failT t "coscad executable on PATH" "run the suite with `cabal test`"
     Just bin -> do
+      let snapshot = encode (JObject [("schema",JString "coscad.project/1"),
+                         ("files",JArray [JObject [("path",JString p),("text",JString s)] | (p,s) <- overlays])])
+      (cp, op, ep) <- readProcessWithExitCode bin ["validate", "--json", "--project-stdin", root] snapshot
+      assertT t "CLI project snapshot: nested virtual buffers and canonical dependency list"
+        (cp == ExitSuccess && null ep && case decode op of
+          Right j -> lookupKey "valid" j == Just (JBool True) && all (\p -> JString p `elem` fromMaybe [] (lookupKey "dependencies" j >>= asArray)) [root,sub,leaf]
+          _ -> False) op
+      (cc, oc, ec) <- readProcessWithExitCode bin ["capabilities", "--json"] ""
+      assertT t "capabilities: versioned build features and material registry"
+        (cc == ExitSuccess && null ec && case decode oc of
+          Right j -> lookupKey "schema" j == Just (JString "coscad.capabilities/1") &&
+            maybe False (JString "project-buffers" `elem`) (lookupKey "features" j >>= asArray) &&
+            maybe False (not . null) (lookupKey "materials" j >>= asArray)
+          _ -> False) oc
+      (cm, _, _) <- readProcessWithExitCode bin ["validate", "--stdin", "--project-stdin", root] snapshot
+      assertT t "CLI snapshot modes are mutually exclusive" (cm == ExitFailure 1) (show cm)
       writeFile (dir </> "tilt.coscad") "main = box 10 10 10\n  |> roty 45\n  |> at top 0 0 0 (box 1 1 1)\n"
       (c1, o1, e1) <- readProcessWithExitCode bin ["validate", "--json", dir </> "tilt.coscad"] ""
       let j1 = decode o1

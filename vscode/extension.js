@@ -1,6 +1,8 @@
 // extension.js
 const vscode = require('vscode')
 const path = require('path')
+const fs = require('fs')
+const { identity, snapshot, ValidationQueue } = require('./project-state')
 const { execFile } = require('child_process')
 const { LanguageClient, TransportKind } = require('vscode-languageclient/node')
 
@@ -13,6 +15,9 @@ const LIVE_DELAY_MS = 400 // pause after typing before validating the buffer
 
 let client
 let compilerDiagnostics
+let validationQueue
+let backendStatus
+let discoveredCapabilities = null
 
 function config() {
   const settings = vscode.workspace.getConfiguration('coscad')
@@ -22,7 +27,8 @@ function config() {
   return {
     command: settings.get('executableCommand', 'coscad'),
     cwd,
-    compilerDiagnostics: settings.get('compilerDiagnostics', true)
+    compilerDiagnostics: settings.get('compilerDiagnostics', true),
+    backend: settings.get('backend', 'auto')
   }
 }
 
@@ -82,8 +88,30 @@ function registerFileCommand(context, id, allowedExtensions, makeArgs) {
   context.subscriptions.push(vscode.commands.registerCommand(id, async () => {
     const document = activeCoscadDocument(allowedExtensions)
     if (!document) return
-    if (document.isDirty) await document.save()
-    runInTerminal(makeArgs(document.fileName), document.fileName)
+    // Explicit output commands run saved sources; save the entire dependency
+    // closure and stop if any save is declined/failed.
+    let project
+    try { project = snapshot(document, vscode.workspace.textDocuments) }
+    catch (error) { vscode.window.showErrorMessage(error.message); return }
+    for (const doc of vscode.workspace.textDocuments) {
+      if (doc.uri.scheme === 'file' && project.dependencies.has(identity(doc.fileName)) && doc.isDirty && !await doc.save()) {
+        vscode.window.showErrorMessage('CoScad command cancelled: a project file was not saved.'); return
+      }
+    }
+    const args = makeArgs(document.fileName)
+    const info = await compilerUsable(config().cwd || path.dirname(document.fileName))
+    if (!info.ok) return
+    if (id === 'coscad.stress' && !info.capabilities?.features?.includes('stress')) {
+      vscode.window.showErrorMessage('This compiler does not advertise stress analysis. Update the compiler.'); return
+    }
+    const backend = config().backend
+    if (['stl','stress','check','next'].includes(args[0]) && backend !== 'auto') {
+      if (!info.capabilities?.backends.includes(backend)) {
+        vscode.window.showErrorMessage(`Backend ${backend} is unavailable in this compiler build.`); return
+      }
+      args.push(`--backend=${backend}`)
+    }
+    runInTerminal(args, document.fileName)
   }))
 }
 
@@ -184,10 +212,10 @@ function versionAtLeast(have, want) {
 
 // `input`, when given, is written to the compiler's stdin (an unsaved buffer
 // for `validate --stdin`).
-function runCompiler(args, cwd, timeout, input) {
+function runCompiler(args, cwd, timeout, input, signal) {
   return new Promise(resolve => {
     const [exe, ...pre] = splitCommand(config().command)
-    const child = execFile(exe, [...pre, ...args], { cwd, timeout, maxBuffer: 8 * 1024 * 1024 }, (error, stdout, stderr) => {
+    const child = execFile(exe, [...pre, ...args], { cwd, timeout, signal, maxBuffer: 8 * 1024 * 1024 }, (error, stdout, stderr) => {
       resolve({ error, stdout: String(stdout || ''), stderr: String(stderr || '') })
     })
     if (child.stdin) {
@@ -230,6 +258,7 @@ function notifyServer() {
   if (!client || !client.isRunning || !client.isRunning()) return // sent once the client starts
   try {
     Promise.resolve(client.sendNotification('coscad/compilerDiagnostics', { active: compilerOwns })).catch(() => {})
+    Promise.resolve(client.sendNotification('coscad/compilerCapabilities', discoveredCapabilities)).catch(() => {})
   } catch {}
 }
 
@@ -240,7 +269,15 @@ function setCompilerOwnsDiagnostics(active) {
 }
 
 let warned = false
-let probe = null // Promise<{ok: boolean}>; reset when settings change
+let probe = null // Promise for one compiler identity
+let probeKey = ''
+function compilerIdentity(cwd) {
+  const command = config().command, exe = splitCommand(command)[0]
+  const candidate = exe && (path.isAbsolute(exe) ? exe : exe.includes(path.sep) ? path.resolve(cwd,exe) : (process.env.PATH || '').split(path.delimiter).map(p=>path.join(p,exe)).find(p=>fs.existsSync(p)))
+  let stamp = ''
+  try { const stat=fs.statSync(candidate); stamp=`${stat.size}:${stat.mtimeMs}` } catch {}
+  return JSON.stringify([command,cwd,candidate,stamp])
+}
 
 function warnOnce(message, settingKey) {
   if (warned) return
@@ -255,8 +292,10 @@ function warnOnce(message, settingKey) {
 // for `validate`; otherwise say so once and keep the editor quiet rather
 // than painting a usage error on every file.
 function compilerUsable(cwd) {
+  const key = compilerIdentity(cwd)
+  if (key !== probeKey) { probeKey=key; probe=null; jsonValidate=null }
   if (!probe) {
-    probe = runCompiler(['--version'], cwd, 10000).then(({ error, stdout, stderr }) => {
+    probe = runCompiler(['--version'], cwd, 10000).then(async ({ error, stdout, stderr }) => {
       const { command } = config()
       if (error && (error.code === 'ENOENT' || error.code === 127 || /not found|is not recognized/i.test(stderr + error.message))) {
         warnOnce(`CoScad compiler not found ("${command}"); compiler diagnostics are off until coscad.executableCommand points at it (a release binary on PATH, or "cabal run coscad --" with coscad.workingDirectory set to the checkout).`, 'coscad.executableCommand')
@@ -271,60 +310,53 @@ function compilerUsable(cwd) {
         warnOnce(`CoScad compiler ${version.join('.')} has no "validate" command; compiler diagnostics need ${MIN_COMPILER.join('.')} or newer. Update the compiler or disable coscad.compilerDiagnostics.`, 'coscad.compilerDiagnostics')
         return { ok: false }
       }
-      return { ok: true }
+      const run = await runCompiler(['capabilities','--json'], cwd, 10000)
+      let capabilities = null
+      try { const value=JSON.parse(run.stdout); if (!run.error && value.schema==='coscad.capabilities/1' && Array.isArray(value.backends) && Array.isArray(value.features)) capabilities=value } catch {}
+      if (key === probeKey) { discoveredCapabilities = capabilities; notifyServer() }
+      if (backendStatus && key === probeKey) {
+        backendStatus.text = `CoScad: ${config().backend === 'auto' ? capabilities?.default_backend || 'compiler default' : config().backend}`
+        backendStatus.tooltip = capabilities ? `Compiler ${capabilities.version}; available backends: ${capabilities.backends.join(', ')}. Click to select.` : 'Legacy compiler: capability discovery unavailable.'
+      }
+      return { ok: true, capabilities }
     })
   }
   return probe
 }
 
-async function compileForDiagnostics(document) {
-  const { command, cwd, compilerDiagnostics: enabled } = config()
-  if (!enabled || !command || document.languageId !== 'coscad' || !['.coscad', '.assemble'].includes(path.extname(document.fileName).toLowerCase())) return
-  if (document.uri.scheme !== 'file') return
-  const workingDirectory = cwd || path.dirname(document.fileName)
-  const { ok } = await compilerUsable(workingDirectory)
-  if (!ok) { setCompilerOwnsDiagnostics(false); return }
-  const version = document.version
-  if (jsonValidate !== false) {
-    // the buffer as it is, saved or not
-    const run = await runCompiler(['validate', '--json', '--stdin', document.fileName], workingDirectory, VALIDATE_TIMEOUT_MS, document.getText())
-    if (document.version !== version || document.isClosed || !config().compilerDiagnostics) return
-    if (run.error && (run.error.killed || run.error.signal)) {
-      compilerDiagnostics.set(document.uri, [new vscode.Diagnostic(new vscode.Range(0, 0, 0, 1), `coscad validate did not finish within ${VALIDATE_TIMEOUT_MS / 1000} s; compiler diagnostics for this file are stale`, vscode.DiagnosticSeverity.Warning)])
-      return
-    }
-    const found = diagnosticsFromJson(run.stdout, document.fileName)
-    if (found) {
-      if (jsonValidate !== true) { jsonValidate = true; setCompilerOwnsDiagnostics(true) }
-      compilerDiagnostics.set(document.uri, found)
-      return
-    }
-    // an older compiler: fall back to text output on saved files
-    jsonValidate = false
-    setCompilerOwnsDiagnostics(false)
+async function compileForDiagnostics(document, project, signal, current) {
+  const settings = config()
+  if (!settings.compilerDiagnostics || !settings.command || !['.coscad','.assemble'].includes(path.extname(document.fileName).toLowerCase())) return
+  const show = (message, severity = vscode.DiagnosticSeverity.Warning) => {
+    if (current()) compilerDiagnostics.set(document.uri,[new vscode.Diagnostic(new vscode.Range(0,0,0,1),message,severity)])
   }
-  if (document.isDirty) return
-  const { error, stdout, stderr } = await runCompiler(['validate', document.fileName], workingDirectory, VALIDATE_TIMEOUT_MS)
-  if (document.version !== version || document.isClosed || !config().compilerDiagnostics) return
-  // a valid file can still carry warnings on stderr; keep only those
-  // (unprefixed output on success is never turned into an error)
-  if (!error) {
-    const warnings = parseCompilerErrors(stderr || '', document.fileName).filter(d => d.severity === vscode.DiagnosticSeverity.Warning)
-    compilerDiagnostics.set(document.uri, warnings)
-    return
+  if (project.error) { show(project.error.message); return }
+  const cwd = settings.cwd || path.dirname(document.fileName)
+  const identityAtStart = compilerIdentity(cwd)
+  const info = await compilerUsable(cwd)
+  if (!current()) return
+  if (!info.ok) { setCompilerOwnsDiagnostics(false); return }
+  const overlays = info.capabilities?.features.includes('project-buffers')
+  const args = overlays ? ['validate','--json','--project-stdin',document.fileName] : ['validate','--json','--stdin',document.fileName]
+  let run = await runCompiler(args,cwd,VALIDATE_TIMEOUT_MS,overlays ? project.input : document.getText(),signal)
+  if (!current() || compilerIdentity(cwd) !== identityAtStart) return
+  if (run.error?.killed || run.error?.signal) { show('CoScad validation timed out; diagnostics are stale.'); return }
+  let found = diagnosticsFromJson(run.stdout,document.fileName)
+  if (found !== null) {
+    jsonValidate=true; setCompilerOwnsDiagnostics(true)
+    if (!overlays && project.dependencies.size > 1) found.push(new vscode.Diagnostic(new vscode.Range(0,0,0,1),'This compiler reads referenced files from disk. Update it for unsaved project validation.',vscode.DiagnosticSeverity.Warning))
+    compilerDiagnostics.set(document.uri,found)
+    const response=JSON.parse(run.stdout)
+    return response.valid && Array.isArray(response.dependencies) ? response.dependencies : undefined
   }
-  if (error.killed || error.signal) {
-    const d = new vscode.Diagnostic(new vscode.Range(0, 0, 0, 1), `coscad validate did not finish within ${VALIDATE_TIMEOUT_MS / 1000} s; compiler diagnostics for this file are stale`, vscode.DiagnosticSeverity.Warning)
-    compilerDiagnostics.set(document.uri, [d])
-    return
-  }
-  const found = parseCompilerErrors(stderr || stdout, document.fileName)
-  if (!found.length) {
-    // non-zero exit with nothing we could parse: show the raw tail rather than nothing
-    const tail = (stderr || stdout || error.message || '').trim().split('\n').slice(-3).join(' ')
-    found.push(new vscode.Diagnostic(new vscode.Range(0, 0, 0, 1), `coscad validate failed (exit ${error.code}): ${tail || 'no output'}`, vscode.DiagnosticSeverity.Error))
-  }
-  compilerDiagnostics.set(document.uri, found)
+  // Older compilers may lack JSON input; never pretend they validated edits.
+  jsonValidate=false; setCompilerOwnsDiagnostics(false)
+  if (document.isDirty) { show('Compiler lacks live validation; save to validate, or update the compiler.'); return }
+  run=await runCompiler(['validate',document.fileName],cwd,VALIDATE_TIMEOUT_MS,undefined,signal)
+  if (!current() || compilerIdentity(cwd) !== identityAtStart) return
+  found=parseCompilerErrors(run.stderr,document.fileName)
+  if (run.error && !found.length) { show(`CoScad validation failed: ${run.error.message}`); return }
+  compilerDiagnostics.set(document.uri,found)
 }
 
 function activate(context) {
@@ -343,6 +375,7 @@ function activate(context) {
   // commands (coscad.runmain keeps its historical id: compile the active file)
   registerFileCommand(context, 'coscad.runmain', ['.coscad', '.assemble'], file => [file])
   registerFileCommand(context, 'coscad.validate', ['.coscad', '.assemble'], file => ['validate', file])
+  registerFileCommand(context, 'coscad.stress', ['.coscad'], file => ['stress', file, '--full'])
   registerFileCommand(context, 'coscad.stl', ['.coscad'], file => ['stl', file])
   registerFileCommand(context, 'coscad.check', ['.assemble'], file => ['check', file])
   registerFileCommand(context, 'coscad.next', ['.assemble'], file => ['next', file])
@@ -359,27 +392,47 @@ function activate(context) {
   // compiler diagnostics
   compilerDiagnostics = vscode.languages.createDiagnosticCollection('coscad-compiler')
   context.subscriptions.push(compilerDiagnostics)
-  context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(compileForDiagnostics))
-  context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(compileForDiagnostics))
-  context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(document => compilerDiagnostics.delete(document.uri)))
-  // with `validate --json --stdin`, follow edits (debounced) as well as saves
-  const pending = new Map()
-  context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(event => {
-    if (jsonValidate !== true) return
-    const key = event.document.uri.toString()
-    clearTimeout(pending.get(key))
-    pending.set(key, setTimeout(() => { pending.delete(key); compileForDiagnostics(event.document) }, LIVE_DELAY_MS))
-  }))
+  const externalWatchers = new Map()
+  validationQueue = new ValidationQueue({
+    documents: () => vscode.workspace.textDocuments,
+    validate: compileForDiagnostics,
+    onDependencies: paths => {
+      const external = new Set([...paths].filter(file=>!vscode.workspace.getWorkspaceFolder(vscode.Uri.file(file))))
+      for (const [file,watcher] of externalWatchers) if (!external.has(file)) { watcher.dispose(); externalWatchers.delete(file) }
+      for (const file of external) if (!externalWatchers.has(file)) {
+        const watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(path.dirname(file),path.basename(file)))
+        watcher.onDidCreate(()=>validationQueue.changed(file)); watcher.onDidChange(()=>validationQueue.changed(file)); watcher.onDidDelete(()=>validationQueue.changed(file))
+        externalWatchers.set(file,watcher)
+      }
+    },
+    clear: doc => compilerDiagnostics.delete(doc.uri),
+    delay: LIVE_DELAY_MS
+  })
+  context.subscriptions.push(validationQueue)
+  context.subscriptions.push(vscode.workspace.onDidSaveTextDocument(doc => validationQueue.changed(doc.fileName,true)))
+  context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(doc => validationQueue.changed(doc.fileName,true)))
+  context.subscriptions.push(vscode.workspace.onDidCloseTextDocument(doc => { compilerDiagnostics.delete(doc.uri); validationQueue.close(doc) }))
+  context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(event => validationQueue.changed(event.document.fileName)))
+  const watcher = vscode.workspace.createFileSystemWatcher('**/*.{coscad,assemble}')
+  context.subscriptions.push(watcher, watcher.onDidCreate(uri=>validationQueue.changed(uri.fsPath)), watcher.onDidChange(uri=>validationQueue.changed(uri.fsPath)), watcher.onDidDelete(uri=>validationQueue.changed(uri.fsPath)))
   context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(event => {
     if (event.affectsConfiguration('coscad')) {
-      warned = false
-      probe = null
-      jsonValidate = null
-      if (!config().compilerDiagnostics) { compilerDiagnostics.clear(); setCompilerOwnsDiagnostics(false) }
-      else for (const document of vscode.workspace.textDocuments) compileForDiagnostics(document)
+      warned=false; probe=null; probeKey=''; jsonValidate=null; discoveredCapabilities=null
+      notifyServer()
+      setCompilerOwnsDiagnostics(false)
+      validationQueue.reset()
     }
   }))
-  for (const document of vscode.workspace.textDocuments) compileForDiagnostics(document)
+  backendStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 20)
+  backendStatus.text='CoScad: detecting compiler'; backendStatus.command='coscad.selectBackend'; backendStatus.show()
+  context.subscriptions.push(backendStatus, vscode.commands.registerCommand('coscad.selectBackend', async () => {
+    const doc=vscode.window.activeTextEditor?.document
+    const info=await compilerUsable(config().cwd || (doc ? path.dirname(doc.fileName) : process.cwd()))
+    const choices=['auto',...(info.capabilities?.backends || ['openscad'])]
+    const selected=await vscode.window.showQuickPick(choices,{placeHolder:'Geometry backend (auto uses this compiler build’s default)'})
+    if (selected) await vscode.workspace.getConfiguration('coscad').update('backend',selected,vscode.ConfigurationTarget.Workspace)
+  }))
+  validationQueue.reset()
 
   client.start().then(notifyServer, error => {
     vscode.window.showErrorMessage(`Failed to start COSCAD Language Server: ${error.message}`)
@@ -387,6 +440,7 @@ function activate(context) {
 }
 
 function deactivate() {
+  validationQueue?.dispose()
   return client ? client.stop() : undefined
 }
 

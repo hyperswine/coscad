@@ -1,0 +1,57 @@
+// File graph and async race tests, independent of a VS Code installation.
+const assert = require('assert/strict')
+const fs = require('fs'), os = require('os'), path = require('path')
+const { identity, snapshot, ValidationQueue } = require('./project-state')
+const { COSCADParser } = require('./coscad-parser')
+const tick = () => new Promise(resolve=>setTimeout(resolve,10))
+async function run() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(),'coscad-project-'))
+  let queue
+  try {
+    const document = (name,text) => ({fileName:path.join(dir,name),uri:{scheme:'file'},languageId:'coscad',isClosed:false,getText:()=>text})
+    const root=document('root.assemble','sub ← sub.assemble ×1\nasm = sub\n')
+    const leaf=document('leaf.coscad','main = box 5 6 7\n')
+    const other=document('other.coscad','main = box 1 1 1\n')
+    fs.writeFileSync(path.join(dir,'sub.assemble'),'leaf ← leaf.coscad ×1\nasm = leaf\n')
+    fs.writeFileSync(leaf.fileName,'broken disk contents')
+    let docs=[root,leaf,other]
+    const project=snapshot(root,docs)
+    assert.equal(project.dependencies.size,3)
+    assert.equal(JSON.parse(project.input).files.find(f=>f.path===identity(leaf.fileName)).text,leaf.getText())
+    assert.equal(fs.readFileSync(leaf.fileName,'utf8'),'broken disk contents','snapshot never writes source')
+    const runs=[], published=[]
+    queue=new ValidationQueue({documents:()=>docs,delay:0,validate:(doc,project,signal,current)=>new Promise(resolve=>runs.push({doc,project,signal,current,finish:()=>{if(current()) published.push(doc.fileName);resolve([...project.dependencies])}}))})
+    queue.reset(); await tick()
+    assert.equal(runs.length,3)
+    const first=runs.slice(); first.forEach(r=>r.finish()); await tick()
+    queue.changed(leaf.fileName); await tick()
+    assert.equal(runs.length,5,'leaf edit checks leaf and dependent root, not unrelated file')
+    const superseded=runs.slice(3)
+    queue.changed(leaf.fileName); await tick()
+    assert(superseded.every(r=>r.signal.aborted && !r.current()))
+    const before=published.length
+    superseded.forEach(r=>r.finish()); await tick()
+    assert.equal(published.length,before,'late result cannot publish')
+    runs.slice(5).forEach(r=>r.finish()); await tick()
+    leaf.isClosed=true; docs=docs.filter(d=>d!==leaf); queue.close(leaf); await tick()
+    const closed=runs.at(-1)
+    assert.equal(closed.doc,root,'closing unsaved child rechecks parent from disk')
+    assert(!JSON.parse(closed.project.input).files.some(f=>f.path===identity(leaf.fileName)))
+    closed.finish(); await tick()
+    queue.reset(); await tick()
+    const resetting=runs.slice(-2)
+    queue.reset(); await tick()
+    assert(resetting.every(r=>r.signal.aborted && !r.current()),'config changes cancel old jobs')
+    queue.dispose()
+    assert(runs.slice(-2).every(r=>r.signal.aborted && !r.current()))
+    const parser=new COSCADParser()
+    const source='main = box 10 10 10 |> datum tip top 0 0 0\nsupport bot\nload @tip top 0 0 -20\nstress material=pla safety=2 cell=1.5\n'
+    assert.deepEqual(parser.parse(source).errors,[])
+    assert(parser.parse(source,{fileType:'assemble'}).errors.length>=3)
+    for(const directive of ['support left','load bot 0 0 0','load @tip 0 0','stress bogus=1','stress material='])
+      assert(parser.parse('main = box 1 1 1\n'+directive).errors.length, directive)
+    assert.deepEqual(parser.parse('support = box 1 1 1\nmain = support').errors,[],'directive names remain usable bindings')
+    console.log('Project graph, unsaved snapshots, cancellation, stale-result and analysis syntax tests passed')
+  } finally { queue?.dispose(); fs.rmSync(dir,{recursive:true,force:true}) }
+}
+run().catch(error=>{console.error(error);process.exitCode=1})

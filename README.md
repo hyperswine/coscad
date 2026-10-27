@@ -99,6 +99,8 @@ coscad part.coscad           # -> part.scad
 coscad validate part.coscad # source checks, no output files
 coscad validate model.assemble # source + rigid constraint checks
 coscad validate --json --stdin part.coscad < buffer  # JSON diagnostics for unsaved text
+coscad validate --json --project-stdin model.assemble < snapshot.json # recursive editor buffers
+coscad capabilities --json # build features, supported backends and materials
 coscad stl part.coscad       # -> part.scad + part.stl, prints volume + bounds
 coscad frame.assemble        # -> _asm view, packed _plate(N) scads, frame_design.json
 coscad next frame.assemble   # -> frame_bed1.stl ... + frame_manifest.json
@@ -191,6 +193,9 @@ A line starting with `|>` continues the previous definition.
   safety factors (docs/2026-10-27-STRESS-COMMAND.md).
   See docs/2026-07-24-MANUFACTURING.md.
 
+See [the shelf bracket integration workflow](docs/2026-10-27-EDITOR-WORKFLOW.md)
+for editor diagnostics, backend selection and a reproducible stress-to-slice example.
+
 ## Module map
 
 ```
@@ -228,6 +233,13 @@ src/Coscad/Stress/Experiment.hs  bounded isotropic Hex8 solver and beam validati
 src/Coscad/Stress/Cad.hs  exact rectilinear CAD grid, supports and surface loads
 src/Coscad/Stress/Tetra.hs  experimental conforming Tet4/Tet10 solver for curved parts
 src/Coscad/Stress/Linear.hs  shared sparse solver and residual checks
+src/Coscad/Stress/Spec.hs    support/load/settings directives
+src/Coscad/Stress/Material.hs material properties and strength assumptions
+src/Coscad/Stress/Hex20.hs   quadratic hexahedra and stress recovery
+src/Coscad/Stress/Sparse.hs  CSR matrix and preconditioned solver
+src/Coscad/Stress/Voxel.hs   mesh voxelization and connectivity
+src/Coscad/Stress/Part.hs    part regions, solve and safety report
+src/Coscad/Stress/Command.hs stress CLI and report output
 src/Coscad/Part.hs      single-part compile / stl commands
 src/Coscad/Diagnose.hs  `coscad validate`, structured diagnostics, --json output
 src/Coscad/Doctor.hs    `coscad doctor`

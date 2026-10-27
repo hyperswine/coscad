@@ -12,7 +12,7 @@
 .Nm
 .Cm validate
 .Op Fl -json
-.Op Fl -stdin
+.Op Fl -stdin | Fl -project-stdin
 .Ar part.coscad | spec.assemble
 .Nm
 .Cm stl
@@ -40,6 +40,15 @@
 .Nm
 .Cm doctor
 .Nm
+.Cm capabilities
+.Fl -json
+.Nm
+.Cm stress
+.Ar part.coscad
+.Op Fl o Ar report.json
+.Op Fl -full
+.Op Fl -backend=openscad|native
+.Nm
 .Fl -version | Fl -help
 .Sh DESCRIPTION
 .Cm validate
@@ -61,6 +70,26 @@ With
 .Fl -stdin
 the file's text is read from standard input (an unsaved editor buffer);
 part and subassembly references still resolve from the file's directory.
+With
+.Fl -project-stdin
+the input is a JSON snapshot with schema coscad.project/1 and a files array
+of objects containing absolute path and text strings. All supplied buffers
+are used for recursive references; other sources come from disk.
+The response includes canonical dependency paths, including missing references.
+The snapshot limit is 256 buffers and 8 Mi characters. Aliases of the same
+buffer path are rejected. Neither input mode writes source files.
+.Pp
+.Cm capabilities --json
+reports schema coscad.capabilities/1, compiler version, build default and
+implemented geometry backends, feature names and material names/moduli.
+This describes compiled support, not external executable availability;
+use doctor for runtime dependency checks.
+.Pp
+.Cm stress
+renders and analyses the part's support/load/stress directives. The full
+report includes node and cell fields. Exit 2 means the requested safety
+factor was not met, 1 means analysis could not run. Validation checks
+analysis settings and datum identities without solving the part.
 .Nm
 compiles CoScad part files to OpenSCAD source and, with OpenSCAD and the
 BOSL2 library installed, renders them to STL.

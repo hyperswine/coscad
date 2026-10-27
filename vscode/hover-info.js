@@ -18,6 +18,11 @@ const syntax = {
   '*': ['Multiplication or union', 'Multiplies numeric operands, or unions shapes in simple mode.'],
   '/': ['Division or path separator', 'Divides numeric operands in arithmetic, or separates directories in a part source path.'],
   '|>': ['Pipeline', 'Applies a stage to the shape built so far. A line starting with |> continues the previous definition.'],
+  support: ['Clamped support', 'support face or support @datum [face]. Clamps selected exterior nodes; a datum with a face selects its plane. No joint or contact model.'],
+  load: ['Applied load · N', 'load face fx fy fz or load @datum [face] fx fy fz. World-axis total force in newtons. Bare @datum is a point load and introduces a stress singularity.'],
+  stress: ['Part stress analysis', 'stress material=pla safety=2 cell=1.5. Small-strain isotropic analysis; cell is in mm. Run Stress Analysis explicitly; compare refinements and inspect assumptions.'],
+  safety: ['Requested safety factor', 'Dimensionless target from 1 to 100; default 2. A modeled threshold result is not a physical safety certification.'],
+  cell: ['Analysis cell size · mm', 'Positive voxel spacing. Use at least two cells through thin walls and compare refined results.'],
   fixed: ['Fixed pose', 'fixed alias [x y z rx ry rz]. Grounds one part: translation in millimetres and XYZ rotation in degrees; omitted pose is identity. Each number may be a numeric binding, -atom or (arithmetic). Every constraint component needs a fixed root.'],
   tolerance: ['Loop closure tolerance', 'tolerance mm [rotation]. How far a mating loop may miss and still close: position in mm (default 1e-6) and rotation-matrix entries (default 1e-8).'],
   mate: ['Rigid mating constraint', 'mate child @own parent @target [roll=degrees gap=mm] (numeric atoms: 90, w, -w, (w / 2)), or child |> mate parent @target @own [roll gap]. Normals oppose, up directions agree at zero roll. Fixes all six degrees of freedom; does not infer hardware or assembly order.'],
@@ -37,7 +42,7 @@ const syntax = {
   at: ['Fastener distances · mm', 'Distances measured along the host from its marked low end; multiple distances are comma-separated. In a pipeline, at positions and unions a child at a bounding-box anchor.'],
   through: ['Clamped thickness · mm', 'Material under the screw head; overrides the clamped bounding-box thickness for recessed holes.'],
   torque: ['Tightening torque · Nm', 'Finite positive torque override.'],
-  material: ['Material hint', 'Sets the default torque class and material label; aluminium, printed, steel and common filament names are recognized.'],
+  material: ['Material', 'Stress materials: pla, petg, abs, asa, pa, tpu, aluminium, steel. Modulus/strength values are illustrative defaults, not measured spool properties. In assemblies this is also a torque/material hint.'],
   profile: ['Rail profile', 'profile=2020 identifies a rail with four long T-slot faces.'],
   ends: ['Rail ends', 'ends=open,blocked marks access at the low and high rail ends.'],
   head: ['Screw head', 'head=button|socket selects the screw head and driver envelope.'],
@@ -49,6 +54,10 @@ const syntax = {
   rest: ['Bench faces', 'Comma-separated permitted rest faces, such as rest=bot,top.'],
   astar: ['Exact-search cap · integer', 'Positive expansion cap for trying exact search before beam search.'],
   mass: ['Mass · grams', 'Finite positive override for the volume-based mass estimate.']
+}
+
+for (const name of ['pla','petg','abs','asa','pa','tpu','aluminium','steel']) {
+  syntax[name] = ['Stress material', `${name}: homogeneous isotropic material-table assumption. Printed strength depends on the real print; inspect the stress report and refinement. Across-layer assessment currently assumes the part Z axis.`]
 }
 
 function walk(node, fn) {
@@ -93,9 +102,11 @@ function numberRole(token, ast, text) {
     const index = values.findIndex(t => t.position === token.position)
     role = index < 3 ? `fixed: ${['X','Y','Z'][index]} translation in millimetres.` : `fixed: ${['X','Y','Z'][index-3]} rotation in degrees.`
   }
+  const analysis = ast.body.find(n => n.type === 'analysis_declaration' && n.line === token.line)
+  if (analysis?.name === 'load') role = 'Applied force component in newtons, in world axes; components specify a total force, not pressure.'
   const prefix = (text.split(/\r?\n/)[token.line] || '').slice(0, token.column)
   if (/×\s*$/.test(prefix)) role = 'Integer quantity. Part counts are non-negative; ×0 marks a premade part. Fastener counts are positive.'
-  const option = prefix.match(/\b(roll|gap|inset|through|torque|mass|beam|astar|at|profile)\s*=\s*[^=]*$/)?.[1]
+  const option = prefix.match(/\b(roll|gap|inset|through|torque|mass|beam|astar|at|profile|cell|safety)\s*=\s*[^=]*$/)?.[1]
   if (option && syntax[option]) role = syntax[option][0] + '. ' + syntax[option][1]
   return role
 }

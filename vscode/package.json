@@ -1,8 +1,8 @@
 {
   "name": "coscad-lsp",
   "displayName": "COSCAD Language Support",
-  "description": "CoScad language support: highlighting, hover, completion, in-editor and compiler diagnostics, and commands for compile, validate, STL, check, next, plan and doctor",
-  "version": "0.4.0",
+  "description": "CoScad language support: highlighting, hover, completion, in-editor and compiler diagnostics, and commands for compile, validate, STL, check, next, plan stress, backend selection and doctor",
+  "version": "0.5.0",
   "publisher": "hyperswine",
   "license": "GPL-3.0-only",
   "repository": {
@@ -80,11 +80,19 @@
       },
       {
         "command": "coscad.doctor",
-        "title": "COSCAD: Doctor (verify OpenSCAD + BOSL2)"
+        "title": "COSCAD: Doctor (backends, OpenSCAD and BOSL2)"
       },
       {
         "command": "coscad.openSettings",
         "title": "COSCAD: Open Settings"
+      },
+      {
+        "command": "coscad.stress",
+        "title": "COSCAD: Run Stress Analysis"
+      },
+      {
+        "command": "coscad.selectBackend",
+        "title": "COSCAD: Select Geometry Backend"
       }
     ],
     "menus": {
@@ -133,6 +141,11 @@
           "when": "resourceExtname == .coscad || resourceExtname == .assemble",
           "command": "coscad.openSettings",
           "group": "coscad@6"
+        },
+        {
+          "when": "resourceExtname == .coscad",
+          "command": "coscad.stress",
+          "group": "coscad@3b"
         }
       ]
     },
@@ -156,7 +169,7 @@
         "coscad.compilerDiagnostics": {
           "type": "boolean",
           "default": true,
-          "description": "On open/save, run coscad validate on parts and assemblies without writing artifacts and show its errors (exit 1 = cannot run, exit 2 = design problem). Needs compiler 1.2.0.0 or newer; the extension checks `coscad --version` once and says so otherwise.",
+          "description": "Validate on edits, opens, saves and dependency changes. Compilers advertising project-buffers use unsaved referenced files too; older compilers show a disk-dependency warning.",
           "order": 3
         },
         "coscad.workingDirectory": {
@@ -164,13 +177,23 @@
           "default": "",
           "description": "Working directory for the CoScad command (e.g. a cabal checkout when coscad.executableCommand is \"cabal run coscad --\"). Leave empty to run from the source file's directory.",
           "order": 1
+        },
+        "coscad.backend": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "native-experimental",
+            "openscad"
+          ],
+          "default": "auto",
+          "description": "Geometry backend for STL, check, next and stress. Auto uses the compiler build default; unavailable backends are refused."
         }
       }
     }
   },
   "scripts": {
     "package": "vsce package --allow-missing-repository",
-    "test": "node test-parser.js && node test-extension.js && node test-hover.js && node test-server.js"
+    "test": "node test-parser.js && node test-extension.js && node test-hover.js && node test-server.js && node test-project.js && node test-host.js"
   },
   "dependencies": {
     "vscode-languageclient": "^9.0.1",

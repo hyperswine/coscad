@@ -634,7 +634,9 @@ class COSCADParser {
             position: first.position, line: first.line, column: first.column
           })
         } else {
-          ast.body.push(this.parseStatement(tokens, ast.mode, numericNames))
+          const node = this.parseStatement(tokens, ast.mode, numericNames)
+          if (ast.fileType === 'assemble' && node.type === 'analysis_declaration') throw new ParseError('Analysis directives belong in .coscad part files', first)
+          ast.body.push(node)
         }
       } catch (error) {
         if (error instanceof ParseError) {
@@ -697,6 +699,7 @@ class COSCADParser {
   parseStatement(tokens, mode, numericNames = new Set()) {
     const first = tokens[0]
     const identifierLike = ['identifier', 'anchor', 'pipeline_stage'].includes(first.type)
+    if (identifierLike && ['support', 'load', 'stress'].includes(first.value) && tokens[1]?.type !== 'assignment') return this.parseAnalysis(tokens)
     if (identifierLike && first.value === 'plate' && tokens[1]?.type !== 'assignment') return this.parsePlate(tokens)
     if (identifierLike && first.value === 'clearance' && tokens[1]?.type !== 'assignment') return this.parseClearance(tokens)
     if (identifierLike && first.value === 'tolerance' && tokens[1]?.type !== 'assignment') return this.parseTolerance(tokens)
@@ -712,6 +715,46 @@ class COSCADParser {
       }
     }
     throw new ParseError('Expected a definition (name = expression), part (name ← file), plate, or clearance line', first)
+  }
+
+  parseAnalysis(tokens) {
+    const first = tokens[0], p = new ExpressionParser(this, tokens.slice(1), 'legacy')
+    const node = { type: 'analysis_declaration', name: first.value, position: first.position, line: first.line, column: first.column }
+    const fail = message => { throw new ParseError(message, p.current() || first) }
+    const faces = new Set(['top','bot','lft','rt','fwd','bak'])
+    if (first.value === 'stress') {
+      node.options = []
+      while (!p.atEnd()) {
+        const key = p.current(); p.index++
+        if (!['material','safety','cell'].includes(key.value)) fail('Unknown stress option; use material, safety or cell')
+        p.expect('=')
+        const value = []
+        while (!p.atEnd() && p.peek()?.value !== '=') { value.push(p.current()); p.index++ }
+        if (!value.length) fail('Stress option needs a value')
+        node.options.push({ key: key.value, value: value.map(t => t.raw ?? t.value).join('') })
+      }
+      if (!node.options.length) fail('stress needs material=, safety= or cell=')
+    } else {
+      if (p.match('@')) {
+        const ref = p.current()
+        if (!ref || !/^[\p{L}_][\p{L}\p{N}_]*$/u.test(ref.value)) fail('Expected a datum name after @')
+        node.datum = ref.value; p.index++
+        if (faces.has(p.current()?.value)) { node.face = p.current().value; p.index++ }
+      } else {
+        if (!faces.has(p.current()?.value)) fail('Use a face (top, bot, lft, rt, fwd, bak) or @datum')
+        node.face = p.current().value; p.index++
+      }
+      if (first.value === 'load') {
+        node.force = []
+        for (let i=0;i<3;i++) {
+          const sign = p.match('-') ? -1 : (p.match('+'), 1)
+          node.force.push(sign * p.number('Expected force component in N'))
+        }
+        if (node.force.every(x => x === 0)) fail('A load needs a nonzero force (N)')
+      }
+      if (!p.atEnd()) fail('Unexpected value in analysis directive')
+    }
+    return node
   }
 
   parsePlate(tokens) {
@@ -789,6 +832,7 @@ class COSCADParser {
 
   framePartAt(text, offset) {
     const line = text.slice(text.lastIndexOf('\n', offset - 1) + 1, offset)
+    if (/^\s*(support|load)\s+@/u.test(line)) return null
     const fast = line.match(/^\s*fastener\s+\S+\s+(\S+)\s+(\S+)\s+(.*)$/u)
     if (fast) {
       const option = fast[3].match(/(seat|pocket)=(clamped\.|host\.)?@[\p{L}\p{N}_]*$/u)

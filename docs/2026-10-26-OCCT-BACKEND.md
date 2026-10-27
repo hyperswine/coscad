@@ -1,13 +1,18 @@
 # An OCCT (Open CASCADE) geometry backend
 
-Status: **intent**, written 2026-10-26. Nothing here is implemented. This
-note plans a second geometry backend built on Open CASCADE Technology
-(OCCT), next to OpenSCAD, linked **in-process into the single `coscad` Haskell
-binary** through a small C ABI shim. It is written against `main` at
-`421ef45` (the merge of PR #27). It builds on Part 2 of
-[2026-10-17-FEA-AND-BACKEND](2026-10-17-FEA-AND-BACKEND.md): Stage 2 there
-("one backend interface") is the shared foundation, and **OCCT replaces
-that page's Stage 3 (Manifold)**.
+Status: **intent**, written 2026-10-26, revised 2026-10-27 after review
+against `main` at `2b307d6`. No OCCT integration is implemented here.
+OCCT is an **additional, opt-in backend alongside OpenSCAD and the existing
+native/Manifold backend**, not a replacement for either. This extends
+[2026-10-17-FEA-AND-BACKEND](2026-10-17-FEA-AND-BACKEND.md) and preserves
+its native geometry work and pins.
+
+The proposed integration uses a small C ABI shim called from Haskell.
+For pipeline use, kernel work runs in a supervised worker mode of the
+**same `coscad` executable**. There is no Python/OCP dependency for OCCT.
+One executable does not imply one process or a self-contained distribution;
+shared-library packaging is a separate acceptance gate. The original Linux
+spike results below remain historical evidence, not Mac or production proof.
 
 **STL is the default output.** coscad is mostly for 3D printing, so the
 default path (`coscad stl`, `coscad next`, bed STLs, slicing, `verify.py`)
@@ -16,26 +21,30 @@ good print meshes by default: the right tolerance, watertight, manifold,
 one valid solid per body. STEP and BREP are an optional secondary export
 (assemblies, CAD interchange, exact checks), asked for explicitly.
 
-This page was committed on its own. The matching edits to the 10-17 page
-and the `docs/README.md` index line are listed in "Changes to 2026-10-17"
-below rather than applied.
+This amendment is confined to the proposal. The "Relationship to the
+existing roadmap" section explains how a later roadmap/index update should
+present the additional backend without superseding existing work.
 
 ## Decisions
 
-Decided on 2026-10-26:
+Revised decisions on 2026-10-27:
 
-1. **One Haskell-only binary, no Python.** OCCT is called through the
-   Haskell FFI via our own C shim (below). There is no Python/OCP driver,
-   JSON IR, batch mode or OCCT venv.
+1. **One executable with a Haskell API and C++ shim, no Python for OCCT.**
+   The parent supervises a worker invocation of the same executable.
+   A bounded, versioned request/result protocol is part of the work;
+   its encoding and batching are implementation choices to measure.
 2. **STL first.** STL meshes are the default output; STEP/BREP is
    optional (`--step`, `coscad step`).
-3. **Mesh tolerance:** OCCT meshes use a fine deflection-based default
-   (0.01 mm / 0.1 rad), not an emulation of OpenSCAD's `$fn = 50`. The
-   OpenSCAD backend is unchanged.
-4. **Hull and Minkowski:** do what is orthodox for OCCT and extend the
-   syntax where needed.
-5. **OCCT replaces the Manifold stage** of the 10-17 page. Mesh checks in
-   `verify.py` stay.
+3. **Mesh tolerance:** start by evaluating 0.01 mm / 0.1 rad as OCCT's
+   deflection-based defaults; qualify accuracy and cost on the fixtures.
+   Existing OpenSCAD and native sampling behavior stays unchanged.
+4. **Hull and Minkowski:** support narrowly specified, tested cases;
+   report approximation or refusal explicitly. Kernel API availability
+   alone does not establish correct support for arbitrary operands.
+5. **Keep all three backends.** OpenSCAD remains the default and the
+   native/Manifold backend remains available and independently tested.
+   OCCT adds CAD features and exchange; no backend retirement is planned.
+   Mesh checks in `verify.py` stay.
 6. **When STEP is asked for, it covers what it can do well:** assemblies
    with placements, names and colours for the whole `coscad next` project.
 7. **macOS only** for OCCT: the only OCCT CI job is macOS. The pure tier
@@ -44,10 +53,11 @@ Decided on 2026-10-26:
 
 ## Why
 
-For printing, the gain is better meshes: true curves meshed to a chosen
-tolerance instead of a fixed `$fn`, from a kernel that knows when a solid is
-valid. OpenSCAD only produces meshes from meshes, which also blocks several
-secondary things:
+The strongest expected gains are CAD features, analytic curved geometry,
+STEP exchange and a better geometry foundation for FEA. Deflection-controlled
+meshing may improve printing results, but speed, reliability and fit must be
+measured against both existing backends. A valid B-rep alone does not prove
+a watertight mesh or a printable part.
 
 - **Exchange (optional).** You cannot hand a coscad part or assembly to a
   machinist, a CNC CAM package or a colleague's Fusion/FreeCAD as STEP.
@@ -57,10 +67,11 @@ secondary things:
   `src/Coscad/Shape.hs`). Nothing can fillet the edge where two booleaned
   solids meet. OCCT's `BRepFilletAPI_MakeFillet`/`MakeChamfer` can.
 - **Measurement.** `Mesh.meshVolume` and `meshBounds` measure a
-  tessellation. B-rep gives exact volume, area, centroid, inertia
-  (`BRepGProp`) and exact minimum distance (`BRepExtrema_DistShapeShape`).
-  `check`'s vertex-sampled gap and the `stress` membership work both
-  benefit.
+  tessellation. B-rep supports volume, area, centroid, inertia
+  (`BRepGProp`) and minimum distance (`BRepExtrema_DistShapeShape`) on the
+  CAD geometry, subject to numerical tolerances. The current mesh checker
+  already includes triangle and edge-to-edge distances with BVH acceleration;
+  OCCT's benefit is avoiding tessellation error, not fixing vertex-only checks.
 - **Sweeps, lofts, offsets, threads.** `Loft` is BOSL2 `skin()` today. OCCT
   has `ThruSections`, `MakePipe`/`MakePipeShell`, `MakeRevol`, 3D
   `MakeOffsetShape`/`MakeThickSolid` and `DraftAngle`. These are the
@@ -70,10 +81,11 @@ secondary things:
 ## Goals
 
 1. **Print-ready STL by default.** `--backend=occt` (and
-   `COSCAD_BACKEND=occt`) on `coscad stl`, the default compile and `coscad
-   next`. It produces the STL meshes the existing pipeline consumes
-   (packer, `scripts/bambu-slice.py`, the `verify.py` scripts) from an
-   exact B-rep, in the same process: meshed at 0.01 mm / 0.1 rad,
+   `COSCAD_BACKEND=occt`) on `coscad stl` and `coscad next`.
+   Default compilation to `.scad` retains its existing behavior. The OCCT
+   render path produces the STL meshes the existing pipeline consumes
+   (packer, `scripts/bambu-slice.py`, the `verify.py` scripts) from a
+   validated B-rep in the worker, using the candidate meshing defaults,
    watertight and edge-manifold, one valid solid per body, checked before
    writing.
 2. **Optional exact outputs.** `coscad step` (or `--step` on `stl` and
@@ -91,16 +103,16 @@ secondary things:
 5. Language growth that only an exact kernel makes honest: `fillet` and
    `chamfer` on selected edges, `shell`, 3D `Offset`, `Revolve`, `Sweep`,
    smooth `Loft`, `draft` and threads, with the syntax below. They come
-   after parity and are refused on the OpenSCAD backend (or approximated
-   where BOSL2 has an equivalent, listed per feature).
+   incrementally: one useful fillet or loft belongs in the initial experiment;
+   the rest are later options. Each backend declares support or refusal,
+   with approximations explicit where an equivalent is available.
 
 ## Non-goals
 
 - STEP as the default output. The default stays STL for printing; STEP is
   never written unless asked for.
-- OpenSCAD stops being the default. It stays the default until OCCT has
-  passed the full geometry tier for a release. Changing the default is a
-  separate decision.
+- Replacing OpenSCAD or native/Manifold, or changing the default backend.
+  Qualifying OCCT for optional distribution does not imply any such change.
 - Byte-identical meshes across backends. Parity is measured (volume,
   bounds, topology), not diffed.
 - A GUI or viewer. The VS Code extension keeps its current preview path.
@@ -113,6 +125,18 @@ secondary things:
   as today.)
 
 ## What the code looks like today
+
+The original inventory was written against `421ef45`. At the review baseline
+`2b307d6`, `Coscad.Backend` already selects `openscad` or
+`native-experimental`; the latter uses native tessellation and optional
+Manifold for CSG, and is wired into `stl`, `check` and `next`. Indexed meshes
+retain topology across CSG and distinguish touching solids and cavity shells.
+The original native corpus evidence covers 71/74 fixtures; the current geometry
+corpus has 75 entries after an additional separately checked phone stand.
+The publication receipt records 1,475 local regression checks, not an OCCT
+qualification or a new run during this review. See
+[the validation record](2026-10-26-FEA-BACKEND-EXPERIMENTS.md) and
+[the quickstart](2026-10-26-FEA-NATIVE-QUICKSTART.md).
 
 - **The tree.** `Coscad.Shape.Shape` is the one AST and the IR at the
   same time. It holds primitives (`Rectangle`, `Sphere`, `Cylinder`,
@@ -146,12 +170,11 @@ secondary things:
   Steel`. `check` splits mirrored pairs into instances (`wing#1`,
   `wing#2`). `next` writes `foo_manifest.json` with schema
   `coscad.next/1` (`Assemble.nextSchema`).
-- **Callers.** `Next.hs` writes `.scad`, calls `renderStlFile`,
-  transforms the `[Tri]` onto beds and writes `stlAscii`. `check`, `plan
-  --png`, `site` and `doctor` all call OpenSCAD the same way.
-  `app/Main.hs` dispatches by plain pattern matching: `stl`, `next`,
-  `site`, `plan`, `check`, `validate`, `doctor`, and the default
-  compile-to-`.scad`.
+- **Callers.** `Next`, `check` and `Main` already have backend selection
+  for supported mesh operations. Extend that boundary rather than rebuild
+  those integrations. `plan --png`, `site` and preview workflows retain
+  their OpenSCAD image path. Default compilation remains `.scad` emission.
+
 - **Build.** One cabal package, `coscad` 1.3.0.0, GPL-3.0-only, no
   Template Haskell anywhere in `src`, `app` or `test`. CI and release use
   GHC 9.8.2. `release.yml` builds the macOS artifact on `macos-15` and
@@ -179,12 +202,20 @@ generic. `Codegen`, `OpenScad`, the `$fn` footer, BOSL2 detection and the
 
 ### A small lowered IR: `Coscad.Solid`
 
-`Shape` is unsuitable as the backend input as it stands. It carries
+This is a proposed later shared representation, not a prerequisite to the
+first OCCT experiment. Initially adapt the supported resolved `Shape` subset
+at the existing backend boundary. Do not simultaneously rewrite OpenSCAD
+codegen or require all constructors and language extensions before measuring
+OCCT's value. If the shared IR is adopted, migrate incrementally and keep
+existing OpenSCAD snapshots and native geometry tests passing.
+
+A later common lowering pass could normalize `Shape`, which carries
 sugar, metadata, anchor-only nodes (`Hidden`), two families of the same
 primitive (`Cylinder` vs `Cyl`/`ZCyl`), and BOSL2 anchoring conventions
 (centred `Cuboid`, `Prismoid … anchor = CENTER`) that each backend would
-otherwise have to rediscover. Add one pure lowering pass, `lower ::
-Shape -> Either Diag Solid`, after `resolve`:
+otherwise have to rediscover. The sketch below proposes a pure lowering
+pass after `resolve`; its eventual result must include geometry and metadata,
+not just `Solid`:
 
 ```haskell
 data Solid                                   -- 3D
@@ -200,7 +231,7 @@ data Solid                                   -- 3D
   | SHull [Solid] | SMinkowski Solid Solid
   | SExtrude D Profile
   | SLoft LoftKind [(D, Profile)]            -- Ruled (today's skin) | Smooth (OCCT only)
-  -- OCCT-only nodes (M4); `supports` refuses them on OpenSCAD unless noted
+  -- Later OCCT feature nodes; `supports` refuses them on OpenSCAD unless noted
   | SRevolve D Profile                       -- degrees about Z, profile in the XZ half-plane x >= 0
   | SSweep Path Profile SweepMode
   | SOffset3 D Solid                         -- 3D offset, arc joins
@@ -222,9 +253,12 @@ other curved primitive lowers to `Exact`. OpenSCAD then prints its
 global `$fn = 50` as today, and OCCT builds a true circle and leaves the
 facet count to the mesh tolerance (see "Mesh tolerance").
 
-`SSrc` nodes are kept at every user-visible operation, so an OCCT failure
-deep in a boolean or fillet is reported at the `.coscad` line that asked
-for it.
+`SSrc` is a target for diagnostics, not data that lowering can recover today.
+Current `Shape` records positions mainly on attachment nodes. Parser and
+resolution changes must preserve operation spans, file identity and provenance
+through expansion before every boolean or feature can report its exact source
+location. Haskell-built shapes may have no source span. Initially report the
+part and operation plus any known location; never invent a line number.
 
 `Tag`, `Datum` and `Frame` do not reach `Solid`. Instead `lower` returns
 a side table `[(tag, Solid)]`, so `next` and STEP export can name bodies.
@@ -237,7 +271,7 @@ Datums and frames stay available to the edge selectors (below), which
 data Backend = Backend
   { backendName  :: String
   , backendProbe :: IO (Either String String)           -- version line for doctor; Left = unusable
-  , renderMesh   :: MeshOpts -> Solid -> IO (Either Diag [Tri])
+  , renderMesh   :: MeshOpts -> Solid -> IO (Either Diag IndexedMesh)
   , exportExact  :: Maybe (ExactFormat -> ExportTree -> FilePath -> IO (Either Diag ()))  -- Nothing for OpenSCAD
   , measure      :: Solid -> IO (Either Diag Measures)  -- volume, area, bbox, centroid, topology, valid, approximate
   , minDistance  :: Maybe (Solid -> Solid -> IO (Either Diag D))
@@ -249,21 +283,24 @@ data ExportTree = ExportPart String Solid               -- one body
 
 `Coscad.Backend.OpenScad` wraps today's `Codegen` (fed from `Solid`) and
 `OpenScad.renderStlFile`. `Coscad.Backend.Occt` is new and calls the shim
-in-process. Callers in `Next`, `check`, `Main` and `doctor` take a
-`Backend` instead of calling `renderStlFile`. The selection is
-`--backend=openscad|occt` on every command that renders, then
-`COSCAD_BACKEND`, then `openscad`. This matches the 10-17 page.
+inside the supervised worker. The existing native adapter remains part of
+this interface. Extend current callers without removing their native path.
+Selection for mesh commands is `--backend=openscad|native-experimental|occt`,
+then the proposed `COSCAD_BACKEND`, then `openscad`. Image commands and default
+`.scad` compilation keep their existing behavior until explicitly extended.
+The parent must validate indexed results before exposing them to consumers.
 
 Two compatibility rules:
 
 1. `coscad part.coscad` (compile to `.scad`) keeps generating from
-   `Shape`. M1 adds a test that `gen` from `Solid` gives the same text as
+   `Shape`. A later IR migration adds a test that `gen` from `Solid` gives the same text as
    the snapshots in `test/golden/scad/`. When the two agree, the old path
    can go. If any snapshot changes, that is a regression.
-2. `supports` is pure, so `validate --backend=occt` reports everything
-   OCCT will refuse (and every approximate hull) on any machine, with or
-   without OCCT built in. The VS Code extension gets the same
-   diagnostics.
+2. `supports` is pure: it reports statically unsupported constructs and
+   expected approximations without an installed kernel. It cannot predict
+   every failed boolean, offset or fillet. Runtime validation and structured
+   kernel errors remain mandatory. The VS Code extension exposes this same
+   distinction between static diagnostics and execution results.
 
 ### BOSL2 features under OCCT
 
@@ -282,7 +319,34 @@ Two compatibility rules:
 Because BOSL2 is only used for primitives and `skin`, nothing BOSL2 does is
 unreachable from OCCT.
 
-## Integration: an in-process FFI bridge
+## Integration: FFI inside a supervised worker
+
+The parent launches the same executable in an internal OCCT worker mode.
+The worker owns all kernel handles; raw pointers never cross the process
+boundary. Requests and results need a versioned protocol, bounded sizes,
+validated indices and finite coordinates. Benchmark per-part jobs against
+bounded batches; do not assume that batching is unnecessary.
+
+Before relying on this path in the planner or printer pipeline, establish:
+
+- Parent-enforced wall-clock deadlines, cancellation, worker termination and
+  reaping; do not depend on a Haskell timeout interrupting a C++ call.
+- Input, output, job-count and resource budgets. Measure and qualify memory
+  enforcement on the supported Mac environment; a worker alone does not
+  protect the host from system-wide memory pressure.
+- Temporary job outputs and validation before atomic publication. Preserve
+  prior outputs on crash, timeout or invalid geometry. Publish multi-file
+  manufacturing bundles as a coherent unit rather than mixing old and new files.
+- Structured failure results, bounded stderr, and the last operation context
+  recorded outside the worker. Signal handlers are not a recovery mechanism.
+- Tests for crash, hang, malformed response, cancellation and a subsequent
+  successful job. No automatic backend fallback and no printer dispatch.
+
+Direct in-process calls are acceptable for the initial scratch spike only.
+The C ABI below describes the worker's internal bridge, not a crash-safe
+parent interface. Optional library loading must also be qualified if the
+parent is expected to start without OCCT dylibs; worker mode alone does not
+remove startup dependencies from a dynamically linked executable.
 
 ### Facts, checked on 2026-10-26
 
@@ -396,7 +460,7 @@ ccall`, compiled by cabal's `cxx-sources`, linked with `extra-libraries`.
   Everything we need (XDE assemblies, `BRepExtrema`, `MakeThickSolid`,
   `Interface_Static`, boolean history) is more C++ in the same style. No
   Haskell dependency added. It was proven on the box in about an hour.
-- Against: we own perhaps 1,500–2,500 lines of C++ by M4, its build
+- Against: we own perhaps 1,500–2,500 lines of C++ at broader feature coverage, its build
   flags, and OCCT API drift (7.9 to 8.0 changes land on us).
 
 **(c) Hybrid**: `opencascade-hs` where it covers the need, our shim for
@@ -407,17 +471,20 @@ all of (b)'s C++.
 
 ### Recommendation: (b), our own shim
 
-coscad already has the right abstraction: a closed, typed `Solid` IR. The
-shim is the OCCT half of a `Solid` interpreter, and a coarse C API that
-mirrors `Solid` is smaller, faster and easier to make crash-safe than a
-general binding. `opencascade-hs` stays useful as a reference for tricky
+CoScad already has a backend boundary and a closed `Shape` tree; `Solid`
+is a proposal rather than an existing abstraction. A small C API over the
+supported subset lets us control ownership, errors and dependencies. Its
+performance advantage over a general binding must be measured, and it does
+not make OCCT memory-safe or crash-safe. Process supervision supplies the
+failure boundary. `opencascade-hs` stays useful as a reference for tricky
 signatures and for quick experiments in M0; if its coverage grows, a later
 switch touches only `Coscad.Backend.Occt`. Licence does not decide it:
 LGPL-2.1 code (OCCT, or `opencascade-hs`, which GHC would link statically)
 may be combined into GPL-3.0-only coscad, whose source is public.
 
-Effort for the bridge itself: 1–2 days in the M0 spike on the Mac (mostly
-build plumbing); after that it grows feature by feature inside M1–M5.
+The original 1–2 day estimate covered only the Mac FFI spike, not worker
+containment or distribution. Re-estimate the bridge after the first build;
+additional operations grow behind fixture-specific acceptance checks.
 
 ### The shim, concretely
 
@@ -434,7 +501,7 @@ src-occt/Coscad/Backend/Occt.hs        -- the Solid interpreter and the Backend 
 src-occt-stub/Coscad/Backend/Occt.hs   -- same module name, built when the flag is off
 ```
 
-Header (the verified spike, trimmed):
+Header (the historical spike, trimmed; not a production ownership contract):
 
 ```c
 typedef struct cs_shape cs_shape;   /* owns one TopoDS_Shape (a handle; copies share the TShape) */
@@ -453,7 +520,10 @@ void cs_free_error(char *err);
 const char *cs_occt_version(void);
 ```
 
-The C++ side; every entry point goes through one guard:
+The C++ side; the sketch routes calls through a guard. Production code must
+also make allocation/error paths non-throwing, handle allocation failure,
+validate null inputs and output bounds, and prevent exceptions from escaping
+cleanup functions. This illustrative guard alone does not establish those properties:
 
 ```cpp
 struct cs_shape { TopoDS_Shape s; };
@@ -524,7 +594,11 @@ cut :: Shape -> Shape -> IO (Either OcctError Shape)
 cut (Shape a) (Shape b) = withForeignPtr a $ \pa -> withForeignPtr b $ \pb -> own (c_bool 1 pa pb)
 ```
 
-`Coscad.Backend.Occt` maps `OcctError` to a `Diag` at the nearest `SSrc`
+Production wrappers need async-exception-safe ownership transfer (`mask` and
+cleanup established before allocation-returning calls), null-result checks,
+and boundary sanitizer tests. The unmasked `own` sketch is not sufficient.
+
+`Coscad.Backend.Occt` maps `OcctError` to a `Diag` at an available `SSrc`
 position, so a failing fillet reads `part.coscad:12:5: fillet 2 top:
 BRepFilletAPI_MakeFillet failed (StdFail_NotDone)`.
 
@@ -534,9 +608,11 @@ Rules the shim follows:
   cheap reference to a shared, reference-counted `TShape`. Freeing one box
   never invalidates another, so GHC finalizers may run in any order on
   any thread. Shapes are not mutated after creation, except that meshing
-  attaches triangulation; `cs_mesh` therefore meshes a copy when the shape
-  is shared (or cleans old triangulation with `BRepTools::Clean`), so a
-  cached subtree is never left meshed at the wrong tolerance. Non-shape
+  attaches triangulation. A shallow `TopoDS_Shape` copy still shares the
+  underlying topology; cleaning it can alter cached aliases. Use explicitly
+  independent topology/triangulation ownership and test different-tolerance
+  meshing of shared subtrees. Qualify the chosen `BRepBuilderAPI_Copy`
+  options against the pinned kernel rather than treating assignment as a copy. Non-shape
   OCCT objects (`TDocStd_Document`, XCAF tools) never cross the boundary:
   an export is one call that takes the whole export tree and builds and
   frees the document inside C++.
@@ -547,12 +623,13 @@ Rules the shim follows:
   first version used a thread-local and was changed for this reason).
   Algorithms that fail without throwing (`IsDone() == false`,
   `HasErrors()`, an invalid `BRepCheck_Analyzer` result) also `fail`. A
-  hard crash (a segfault inside BOPAlgo) still takes the process down;
-  see Risks.
+  hard crash still kills the worker; the parent reports failure, preserves
+  prior artifacts and can start a fresh worker. Exception guards do not
+  handle segmentation faults or enforce time/memory limits.
 - **Threads.** OCCT modelling algorithms may run concurrently on
   different shapes, but some state is global: `Interface_Static` (STEP
-  parameters), the messenger, the `XCAFApp_Application` singleton. M1
-  runs all kernel work on **one** dedicated bound thread (a `forkOS`
+  parameters), the messenger, the `XCAFApp_Application` singleton. Initially
+  runs all kernel work inside each worker on **one** dedicated bound thread (a `forkOS`
   worker fed by an `MVar` queue; the rest of coscad's `-N` runtime is
   unaffected). Parallel booleans and meshing for `next` variants can come
   later, with exports still serialised by a lock. Inside one call
@@ -574,7 +651,7 @@ Rules the shim follows:
 - **Library list.** Name every toolkit whose symbols we call. The spike
   failed first with `DSO missing from command line` for
   `GProp_GProps::Mass` until `TKG3d`/`TKG2d` were added: modern linkers do
-  not resolve through indirect dependencies. M1 list: `TKernel TKMath
+  not resolve through indirect dependencies. Candidate broader library list (reduce to the spike subset initially): `TKernel TKMath
   TKG2d TKG3d TKGeomBase TKBRep TKGeomAlgo TKTopAlgo TKPrim TKBO TKBool
   TKFillet TKOffset TKShHealing TKMesh TKXSBase TKDESTEP TKDESTL TKLCAF
   TKCAF TKXCAF TKCDF`.
@@ -583,7 +660,7 @@ Rules the shim follows:
 
 ```
 flag occt
-  description: Build the in-process OCCT backend (needs Homebrew opencascade)
+  description: Build the optional OCCT worker backend (needs OCCT libraries)
   default:     False
   manual:      True
 
@@ -641,22 +718,23 @@ executable coscad
 
 ### Linking and distribution on macOS
 
-- **Dynamic, against Homebrew's OCCT (recommended).** The release artifact
+- **Dynamic, against Homebrew's OCCT (development / managed installation).** An optional artifact
   built with `-f occt` links `/opt/homebrew/opt/opencascade/lib/
   libTK*.dylib`, and the formula gains `depends_on "opencascade"` (about
   40 MB download plus `tbb`, `freetype`, `fontconfig`). The coscad binary
   stays small (10 MB in the Linux spike, mostly the GHC runtime and
-  coscad). Dynamic linking meets the LGPL trivially. Things for M0 to
+  coscad). Distribution must document the applicable licence and notice
+  obligations. This is not a self-contained downloadable binary. Things for M0 to
   check: the install names in the binary (`otool -L`; if Homebrew's OCCT
   dylibs use `@rpath/…`, add `ghc-options:
   -optl-Wl,-rpath,/opt/homebrew/opt/opencascade/lib`, as the
   `opencascade-hs` README's Apple-silicon notes hint), and **soname
   churn**: the dylibs are versioned (`libTKernel.7.9.dylib`), so an OCCT
   bump to 8.0 in Homebrew breaks an installed coscad until it is rebuilt.
-  Mitigation: a formula `revision` bump when OCCT changes (automatic for
-  formulae in homebrew-core, our job in a tap), and `coscad doctor`
-  compares the OCCT version the binary was built against
-  (`cs_occt_version`) with the installed one.
+  Mitigation: a managed formula dependency and rebuild policy, plus clean-machine
+  and upgrade tests. `doctor` may report build/runtime version information only
+  if the executable starts: it cannot repair a missing startup dylib. A compile-time
+  `cs_occt_version` string alone also does not prove the loaded library version.
 - **Static OCCT (not now).** Neither Homebrew nor Debian ships static
   OCCT, so we would build it ourselves in CI (CMake,
   `BUILD_LIBRARY_TYPE=Static`, modelling and data-exchange modules only,
@@ -677,6 +755,17 @@ executable coscad
   the same runner image as the release, or it proves nothing about the
   release.
 
+### Distribution acceptance gate
+
+Choose and document either a Homebrew-managed installation or a relocatable
+bundle containing its required libraries (or a separately qualified static
+build). Until this gate passes, OCCT is an experimental source build only.
+Test on a clean Mac without the developer's Cellar paths, including transitive
+libraries, install names/rpaths, signatures, upgrades and missing-library
+behavior. Record dependency versions and hashes in the pipeline lock and
+artifact provenance. Source-build success is not release-artifact evidence.
+The existing OCCT-free distribution remains supported.
+
 ### What the M0 spike must prove
 
 On `macm4.local` (Apple silicon, Homebrew `opencascade` 7.9.3, GHC 9.8
@@ -691,17 +780,23 @@ with cabal), on a scratch branch:
    for a degenerate box without crashing.
 3. The STL opens in Bambu Studio, and the STEP in FreeCAD or Fusion with
    the hole as a true cylinder and units in mm.
-4. The XDE spike's assembly opens in FreeCAD with names, one shared part
-   definition, both placements and the colour.
+4. Record single-part STEP read-back geometry and mm units. The historical
+   XDE spike is useful reference material; full assembly import acceptance
+   belongs to Later C, not the initial integration gate.
 5. A clean `cabal build -f occt` on a GitHub macOS runner with cached
    Homebrew OCCT, and its wall time.
-6. Timings: a 100-cylinder union and a 50-variant loop in-process, to
-   confirm `next` needs no batching.
+6. Compare runtime, peak memory and mesh size with OpenSCAD and native/Manifold
+   on representative parts; include a 100-cylinder union and a 50-variant loop.
+   Measure worker startup and batching costs rather than assuming either away.
+7. Exercise the supervised worker's timeout, crash and malformed-output paths;
+   verify prior-output preservation and recovery with a fresh job.
 
-**Go** if 1, 2 and 5 pass: the FFI path builds and runs on the Mac.
-**No-go** if it cannot be linked or run without patching Homebrew's OCCT;
-then the fallback is building OCCT from source as a static library in CI
-(a larger M1), not a separate process.
+**Go to the bounded experiment** only when build, geometry checks, error paths
+and worker containment pass locally and on the Mac CI runner. STEP/STL import
+and comparative measurements are required evidence, not optional demonstrations.
+This is not a release or backend-replacement gate. Failure means narrow the
+supported subset or investigate packaging; source-built static OCCT is an
+option to evaluate, not an automatic commitment.
 
 **Unverified so far:** everything on macOS (header location under
 `opt/opencascade/include/opencascade`, dylib install names and rpath,
@@ -760,9 +855,11 @@ class) and takes the first rule that applies:
    tangent frustum, built as a revolve of the 2D hull of two circles about
    their centre line. Exact. A chain of pairwise sphere hulls ("piecewise
    hulls of spheres", the glider fuselage) is a union of these.
-4. **Hull of two coaxial discs or cylinders of different radii** (a
-   tapered transition): a frustum or a ruled `ThruSections` between the
-   two circles. Exact.
+4. **Hull of two coaxial discs** at distinct axial positions: a frustum
+   between the circles, subject to degenerate/contained-case handling.
+   Finite cylinders additionally require the axial convex envelope, including
+   any cylindrical portions; a single frustum is not generally their hull.
+   Refuse unimplemented cases rather than misclassifying them as exact.
 5. **Hull of polyhedral solids** (boxes, prisms, prismoids, wedges,
    polygon extrusions, in any orientation): a 3D quickhull in Haskell over
    their exact vertices; faces rebuilt as planar polygons, sewn
@@ -777,9 +874,9 @@ class) and takes the first rule that applies:
    faceted at 0.01 mm"); `--strict` makes it an error; its STEP body name (if exported)
    gets an `(approximate)` suffix.
 
-The hulls live in a new pure module, `Coscad.Hull`, so rules 1–5 and the
+The hulls live in a new pure module, `Coscad.Hull`, so the supported rules and the
 classifier are tested in the pure tier without OCCT. Which rule each
-existing hull in `examples/`, `experiments/` and `models/` hits is an M2
+existing hull in `examples/`, `experiments/` and `models/` hits is a broader-parity
 deliverable. The comments in those files suggest rules 2 and 3 cover
 most of them; `grease_claw`'s taper (a thin rectangular end-cap hulled
 with a thin disk further along the axis) is a hull of two parallel flat
@@ -789,22 +886,28 @@ triangles and cone patches. It falls to rule 6 at first; an exact
 
 ### Minkowski: decision
 
-The exact cases are the ones where a Minkowski sum is an offset or a
-hull, both of which OCCT does exactly:
+A mathematical Minkowski sum with a ball is a dilation, but OCCT's offset
+API is not a general robust implementation of that operation. Its pinned
+[7.9.3 header](https://raw.githubusercontent.com/Open-Cascade-SAS/OCCT/V7_9_3/src/BRepOffsetAPI/BRepOffsetAPI_MakeOffsetShape.hxx)
+documents self-intersection limitations, surface restrictions and failure cases.
+In particular, self-intersection elimination is not implemented. Do not
+advertise support for "any solid" or "any profile" merely because an API exists.
 
-| first operand A | second operand B (any translation) | OCCT construction | exact? |
-|---|---|---|---|
-| any 3D solid | `Sphere r` | `BRepOffsetAPI_MakeOffsetShape`, offset r, `GeomAbs_Arc` joins (the sum with a ball *is* the r-offset), moved by B's centre | exact |
-| any 2D profile | `Circle r` | 2D `Offset r` (`MakeOffset`, arc joins) | exact |
-| `Extrude H P` (or a Z-prism) | Z-cylinder `(r, h)` | `Extrude (H + h) (Offset r P)`, shifted by B's z-start | exact |
-| convex 2D or Z-extruded P | axis-aligned box or rectangle | 2D hull of P moved to the rectangle's corners, extruded by `H + h` | exact |
-| convex polyhedral | convex polyhedral | hull of pairwise vertex sums (the 10-17 page's convex rule) | exact |
-| anything else | anything else | — | **refused**: "minkowski: OCCT handles a sphere or circle second operand on any shape, or a cylinder or box on an extrusion; got a torus" |
+| operands | candidate construction | acceptance contract |
+|---|---|---|
+| specifically qualified solid + sphere | arc-joined 3D offset, translated by the sphere centre | Only tested shape/offset domains; check topology, orientation, geometry and tolerances; otherwise explicit refusal/failure |
+| specifically qualified planar profile + circle | 2D offset with arc joins | Test holes, collapse, merging and concavities; no general guarantee |
+| qualified Z-extrusion + aligned Z-cylinder | extrusion of qualified profile offset, combined interval and height | Only if the profile operation passes its contract |
+| convex planar/extruded profile + aligned rectangle/box | hull of translated profiles, with combined axial interval where applicable | Verify convexity, frames and degenerate cases |
+| convex polyhedral + convex polyhedral | hull of pairwise vertex sums | Explicit finite convex input contract and geometry tests |
+| other cases | none initially | Refuse with operands and operation identified; other backends remain explicitly selectable |
 
-`waterbottle_advanced.coscad` ("offset + minkowski") falls under rows 2
-or 3. The refusal is a `supports` diagnostic, visible in `validate` and in
-the VS Code extension, and the file still renders with
-`--backend=openscad`.
+Classify the actual corpus before claiming support for examples such as
+`waterbottle_advanced.coscad`. Static `supports` diagnostics describe supported
+forms, not a promise that a particular kernel operation will succeed. A failed
+or invalid offset must never be accepted as the requested Minkowski sum.
+Numerical B-rep geometry also has tolerances: "exact" distinguishes it from
+intentional faceting, not from floating-point or kernel approximation error.
 
 ## Language extensions
 
@@ -898,26 +1001,20 @@ design proves too weak.
 OCCT meshes with `BRepMesh_IncrementalMesh(shape, linDefl, isRelative =
 false, angDefl, isInParallel = true)`.
 
-- **Default: linear deflection δ = 0.01 mm, angular deflection α = 0.1 rad
-  (5.7°).** α bounds the angle between neighbouring facets, so every full
-  circle gets at least 2π/0.1 ≈ 63 segments (OpenSCAD's default here is
-  50). The chord height of such a segment is `r·(1 − cos 0.05) ≈
-  0.00125·r`, so up to r = 8 mm α is the binding limit and the error stays
-  under 0.01 mm; above 8 mm δ takes over (r = 50 mm gets about 157
-  segments). 0.01 mm is below anything an FFF printer resolves (0.4 mm
-  lines, 0.08–0.28 mm layers, motion resolution around 0.01 mm), and
-  slicers simplify input to about that size anyway (Bambu Studio's
-  default `resolution` is 0.012 mm; not verified here). Absolute rather
-  than relative deflection keeps small holes as accurate as large ones,
-  which matters for fits checked to 0.02 mm. Going finer buys nothing a
-printer or slicer can use and only grows the STL; going coarser starts
-to show as flats on small holes and pins. Cost: the spike's part at
-  these settings was 520 triangles; a 200 mm part with many holes stays in
-  the tens of thousands, well within what the slicer and packer handle.
+- **Candidate defaults: δ = 0.01 mm, α = 0.1 rad (5.7°).** Use absolute
+  rather than relative deflection initially. Ideal circle chord geometry
+  suggests roughly 157 segments at radius 50 mm for a 0.01 mm sagitta,
+  but actual kernel triangulation must be measured. These parameters are
+  meshing controls, not a universal guarantee of feature accuracy or
+  printability. Compare mesh size, local dimensions, mating clearances,
+  render time and slicer time on the representative parts. Avoid assumptions
+  about Bambu's resolution defaults or a universal FFF accuracy limit;
+  record the actual slicer profile and measured results before choosing
+  final defaults. Smaller deflection cannot repair incorrect topology.
 - **Exposure**, in precedence order:
-  - CLI: `--deflection=MM` and `--angular=RAD` on `stl`, `next`, `check`
-    and the default compile when the backend is OCCT; ignored with a
-    notice on the OpenSCAD backend.
+  - CLI: `--deflection=MM` and `--angular=RAD` on OCCT `stl`, `next`
+    and `check`. Reject OCCT-specific mesh options for other backends
+    rather than silently ignoring them. Default `.scad` compilation is unchanged.
   - Project: a new `.assemble` statement, `mesh deflection=0.01
     angular=0.1`, in the style of the existing `clearance` and `tolerance`
     lines (`tolerance` already means mating-loop tolerance, hence `mesh`).
@@ -925,11 +1022,12 @@ to show as flats on small holes and pins. Cost: the spike's part at
     carry the same line, for `coscad stl part.coscad`.
   - The default above.
 - **Manifest.** `coscad.next/1` gains an optional top-level `mesh` object,
-  written by either backend, so a bed can be reproduced:
+  written by each backend, so a bed can be reproduced:
 
   ```json
   "mesh": {"backend": "occt", "occt": "7.9.3", "deflection": 0.01, "angular": 0.1, "relative": false, "source": "default"}
   "mesh": {"backend": "openscad", "fn": 50}
+  "mesh": {"backend": "native-experimental", "fn": 50, "manifold": "3.5.2"}
   ```
 
   `source` is `cli`, `assemble` or `default`. Optional keys keep the
@@ -944,10 +1042,16 @@ to show as flats on small holes and pins. Cost: the spike's part at
   no STL file round trip), through the in-memory mesh type of the 10-17
   Stage 2. `next` keeps writing `foo_bed<N>.stl`; the packer and
   `bambu-slice.py` are unchanged. Before writing, every body is checked:
-  `BRepCheck_Analyzer` valid, one closed shell per solid, and the mesh
-  closed and edge-manifold with consistent orientation (shared vertices
-  welded from the triangulation, not re-derived from floats). A failure
-  is a diagnostic at the source position, not a broken STL.
+  `BRepCheck_Analyzer` valid, a valid outer shell and correctly oriented
+  cavity shells for each solid, and a closed, edge-manifold, consistently
+  oriented mesh. Enclosed cavities are valid; do not require exactly one shell.
+  OCCT triangulations are face-local. Reconstruct shared-edge connectivity
+  using topology and edge polygons, including periodic seams, reversed faces
+  and locations, while retaining distinct touching bodies. Preserve the existing
+  `IndexedMesh` representation until STL serialization; coordinate welding or
+  triangle soup must not silently merge topologically distinct vertices.
+  Validate results before publishing, with errors at any available source context.
+  See [OCCT's mesh architecture](https://github.com/Open-Cascade-SAS/OCCT/blob/master/dox/user_guides/mesh/mesh.md).
 - **Exact (optional):** `coscad step part.coscad -o part.step`, `coscad
   step foo.assemble -o foo.step` (the whole assembly, below), `--step` on
   `stl` and `next`, and `--brep` (`BRepTools::Write`) for goldens and
@@ -1040,65 +1144,62 @@ scripts) are separate from the backend and stay as they are. Changes:
    clearance and loose-fit checks, the exact pairwise distances that
    `coscad check --backend=occt --json` reports (`BRepExtrema`). No new
    Python dependency.
-3. **Two-number check.** Exact volume against mesh volume per body; a
-   difference over about `δ·area` means the tessellation is wrong.
+3. **Two-number check.** Compare B-rep and mesh volumes per body. `δ·area`
+   is an initial heuristic for investigation, not a proof of correct or
+   incorrect tessellation. Add local dimension, clearance and topology checks.
 4. Scripts keep working on OpenSCAD output; exact checks are skipped with
    a notice when the manifest has no `exact` object. Scripts that use
    OpenSCAD as a boolean engine may keep doing so; moving them to `coscad
    check` is optional.
 
-## Changes to 2026-10-17-FEA-AND-BACKEND
+## Relationship to the existing roadmap
 
-OCCT replaces the Manifold stage. Jack asked for this plan as a single
-file, so these supersession edits to that page (and to `docs/README.md`)
-are listed here rather than applied; they belong in a later change:
+This proposal adds an OCCT track to
+[2026-10-17-FEA-AND-BACKEND](2026-10-17-FEA-AND-BACKEND.md). It does not
+supersede the native tessellation or Manifold stages, remove their pins,
+or alter the default backend. Their implementation and historical validation
+remain documented in [the experiment record](2026-10-26-FEA-BACKEND-EXPERIMENTS.md).
+Any later roadmap/index edits should describe OCCT as an additional backend.
 
-- **Intro**, "first by calling the Manifold library directly": becomes
-  "first by linking OCCT in-process (see
-  [2026-10-26-OCCT-BACKEND](2026-10-26-OCCT-BACKEND.md))".
-- **Stage 1 (native tessellation in Haskell):** add a note that it is
-  **deferred**. Its purpose was to stop relying on OpenSCAD for meshing,
-  which OCCT now covers on macOS. It stays an option if an OCCT-free build
-  ever needs to render without OpenSCAD.
-- **Stage 2 (one backend interface):** unchanged, now explicitly the
-  shared foundation (the `Backend` record, `Coscad.Solid`, the in-memory
-  mesh type, binary STL and 3MF). Point to this page for the record.
-- **Stage 3 (Manifold):** replace the body with "Superseded by
-  2026-10-26-OCCT-BACKEND: OCCT gives exact B-rep, STEP, fillets and exact
-  distance as well as booleans and meshing." Keep the paragraph of
-  Manifold facts under a "Considered" note. Its points map over: the C
-  shim through the FFI becomes the OCCT shim; the Minkowski note becomes
-  this page's Minkowski table; "check becomes a direct intersection plus
-  Manifold's minimum gap" becomes a `BRepAlgoAPI_Common` volume plus
-  `BRepExtrema_DistShapeShape`; "releases link Manifold statically on
-  Linux, macOS and Windows" becomes "the macOS release links Homebrew's
-  OCCT dynamically; other platforms keep OpenSCAD"; `pipeline.lock.json`
-  pins the OCCT version instead.
-- **Stage 4 (images)** and **Stage 5 (SDF or our own mesh booleans):**
-  unchanged, except that Stage 5's "after stages 1 to 3" becomes "after
-  stage 2 and OCCT", and Manifold's level-set meshing as a reference is
-  dropped.
-- **Shared foundations and order:** "backend stages 1 and 2 next; then
-  Manifold" becomes "backend stage 2 next, then OCCT (M1–M5 of
-  2026-10-26-OCCT-BACKEND)".
-- **Risks:** "Linking C++ into Haskell release binaries, Windows
-  especially" becomes "Linking OCCT into the macOS release binary (see
-  2026-10-26-OCCT-BACKEND); Linux and Windows builds stay OCCT-free".
-- `docs/README.md`: add this page's index line, `| 2026-10-26 |
-  [OCCT-BACKEND](2026-10-26-OCCT-BACKEND.md) | intent: an in-process Open
-  CASCADE backend beside OpenSCAD for print STLs, optional STEP; replaces
-  the Manifold stage |`; the 10-17 line's description gains "(Manifold
-  stage superseded by OCCT-BACKEND)".
+Shared infrastructure should evolve from the existing backend selection,
+indexed mesh, validation and manufacturing integrations. Keep the native
+backend independently testable and use both existing backends as comparison
+oracles. A common lowered IR is a later migration with compatibility gates,
+not a requirement to rewrite working code before the experiment.
+
+## Early CAD-to-FEA experiment
+
+Bring single-part BREP/STEP export and one FEA example forward, rather than
+waiting for full XDE assembly export. Use a rail or bracket with identifiable
+support and load regions. Preserve named geometric regions through export
+and volume meshing; verify that the applied force, moment and selected area
+still match the intended boundary conditions after refinement.
+
+The current tetrahedral solver uses affine geometry; its Tet10 displacement
+interpolation does not make the element geometry curved. OCCT export alone
+adds no curved-element formulation, joint contact, large-deformation behavior,
+creep, anisotropy or failure model. Curved high-order elements would require
+separate solver work and validation. The thin PLA tank study's large-deflection
+and joint/seal limitations therefore remain even with better CAD geometry.
+
+Acceptance: a reproducible CAD-to-volume-mesh path, preserved boundary regions,
+geometry checks, force/moment balance, residual checks, displacement refinement
+and an independent reference or analytic comparison. Compare with the existing
+STL-derived workflow and state whether the benefit is geometry fidelity,
+region selection, runtime or none of these. Do not claim improved physical
+accuracy merely because the source is B-rep.
 
 ## Testing
 
 ### Pure tier (no OCCT, no OpenSCAD; `cabal test` on any machine)
 
-- `lower` is total over every example. Snapshot the pretty-printed
+- For the initial subset, `lower` either succeeds or explicitly refuses each
+  unsupported example; unsupported syntax must never crash. If the shared IR
+  is adopted later, snapshot the pretty-printed
   `Solid` (a stable text form) under `test/golden/solid/`, next to
   `test/golden/scad/`, with the same `COSCAD_UPDATE_GOLDEN=1` flow.
-- `gen` from `Solid` equals the existing `.scad` snapshots (the refactor
-  must not change a byte).
+- If OpenSCAD generation is later migrated to `Solid`, retain byte-identical
+  `.scad` snapshots. Keep native regression tests and its accepted path list.
 - `Coscad.Hull`: 2D circle hulls and the 3D quickhull against
   hand-checked cases (areas, vertex counts), and the classifier (which
   rule fires) for every hull in the examples.
@@ -1124,12 +1225,19 @@ Compiled always; runs only in a `-f occt` build with `COSCAD_RENDER` not
   cut, 0.5 % relative on curved parts and 1e-6 on purely polygonal parts
   (boxes, `Prism n`, polygons), which must agree exactly. Faceted hulls
   get the hull's own allowance. Every disagreement prints both numbers.
-- **Mesh check:** the OCCT mesh is closed and edge-manifold (the existing
-  check), and its volume is within `δ·area` of the exact volume.
-- **Crash isolation:** each example runs in a child `coscad` process
-  (`coscad stl --backend=occt --measures`), so one segfault fails one
-  test, not the suite.
-- **STL quality:** every example's OCCT STL is closed, edge-manifold,
+- **Mesh check:** the OCCT mesh is closed and edge-manifold, with a
+  fixture-qualified B-rep/mesh volume allowance. Record `δ·area` as a useful
+  heuristic alongside local geometry checks, not a universal error bound.
+- **Crash isolation:** test the production parent/worker path as well as
+  individual child fixtures. Inject worker crashes, hangs and malformed replies;
+  verify deadlines, cleanup, bounded results, prior-artifact preservation and
+  success of the next job. Exception-only tests do not establish isolation.
+- **Topology and geometry:** test enclosed cavities, disconnected bodies,
+  point/edge contact, tiny gaps, periodic seams, reversed/mirrored faces and
+  shared shapes meshed at different tolerances. Check local dimensions and
+  clearances and use analytic or symmetric-difference checks where applicable;
+  volume/bounds agreement and the `δ·area` heuristic alone are insufficient.
+- **STL quality:** every supported example's OCCT STL is closed, edge-manifold,
   consistently oriented and has no degenerate triangles; this is the
   primary OCCT test.
 - **STEP read-back** (optional export): write each assembly example, read it back through a
@@ -1158,7 +1266,7 @@ Compiled always; runs only in a `-f occt` build with `COSCAD_RENDER` not
     `COSCAD_RENDER=1`. OpenSCAD is not installed, so the OpenSCAD tiers
     skip and the cross-backend test uses the committed golden.
   - Uploads the STEP and STL of failing examples as artifacts.
-  - `continue-on-error: true` until M2, then required.
+  - Exploratory at first; required before the corresponding features are advertised as supported.
 - **Pins:** `pipeline.lock.json` records the OCCT version the release was
   built against; `scripts/pipeline-lock.py` and the pin-policy step learn
   about it.
@@ -1174,75 +1282,58 @@ coscad doctor                  # occt backend: OCCT 7.9.3 (built against 7.9.3)
 
 ## Milestones
 
-Effort is in focused days for one person who knows the codebase.
+Start with a bounded experiment, then decide whether to expand. The original
+37–51 focused-day estimate covered a much broader, unqualified implementation;
+it is provisional historical planning, not a delivery commitment. Re-estimate
+using measured integration, geometry and packaging results.
 
-| | milestone | contents | effort |
-|---|---|---|---|
-| **M0** | FFI spike, go/no-go | On `macm4.local` with Homebrew OCCT 7.9.3 and GHC 9.8 cabal: build `out/occt-spike` with `-f occt`; box minus cylinder, mesh, STL, STEP, exact volume, error path; open the XDE assembly in FreeCAD; `otool -L` and rpath; the same build on a GitHub macOS runner with cached Homebrew; timings. **Go if the FFI path builds and runs on the Mac** | 1–2 |
-| **M1** | IR, flag, primitives, booleans | `Coscad.Solid` and `lower` (with `SSrc`), pure snapshots; OpenSCAD backend fed from `Solid` with byte-identical `.scad`; `Backend` record, `--backend`/`COSCAD_BACKEND`, the stub module, `doctor`. Cabal flag and internal library; shim: every primitive incl. the BOSL2 nine, transforms, booleans, meshing with the new defaults and flags, binary STL through the in-memory mesh; the kernel thread; OCCT tier with crash isolation; macOS `occt` CI job (non-blocking) | 8–10 |
-| **M2** | 2D, extrusions, lofts, hull, Minkowski, `next` | profiles, polygons with holes, 2D offset and booleans, `Extrude`, `Loft` with Haskell resampling; `Coscad.Hull` (rules 1–6) and the Minkowski table; the `mesh` statement, manifest `mesh` and `exact` keys; `next --backend=occt`; cross-backend golden over all 75 entries; CI job required | 8–11 |
-| **M3** | print-path features | `fillet`/`chamfer` with the selector grammar (`seam` through boolean history), `shell`, 3D `Offset`, `Revolve`, `Extrude twist= scale=`, `Sweep`/`Path`/`Helix`, `Loft smooth`, `draft`; OpenSCAD refusals or BOSL2 approximations; LANGEXTENSION and SYNTAX updated | 10–14 |
-| **M4** | threads, exact check, verify | `Thread`/`tap` from fastener specs; exact `check` under OCCT (`BRepAlgoAPI_Common` overlap volume and `BRepExtrema` gaps instead of the CGAL retry and vertex sampling); `scripts/coscad_verify.py` with binary STL and manifest measures; migrate the model `verify.py` scripts; measures for `stress` | 6–8 |
-| **M5** | optional STEP and assemblies | `coscad step` and `--step` for parts and `.assemble` files; XDE product structure from `Inst`/`FlatPart` with shared definitions, names, colours (`color=` hint, material defaults), mirrored definitions, nested assemblies; per-bed STEP in `next --step`; schema and unit options; read-back tests; manual import check in FreeCAD and one CAM tool. Single-part STEP (one call, already in the spike) may land earlier as a debugging aid | 4–6 |
+| | milestone | deliverable and acceptance |
+|---|---|---|
+| **M0** | Mac integration and containment | Optional Cabal flag, small shim, primitives/booleans, indexed mesh, single-part STEP/BREP, structured errors and same-executable worker. Pass the M0 gates above locally and on Mac CI. Keep existing backends and OpenSCAD codegen intact. |
+| **M1** | Representative parts | Rail, bracket, threaded-globe components and boat hull. Record supported/refused features; compare geometry, clearances, runtime, peak memory, mesh size and Bambu Studio acceptance against both existing backends. Add a capability only as needed for a named fixture; no claim of whole-corpus parity. |
+| **M2** | One useful new feature and one FEA example | A selected-edge fillet or useful loft unavailable in the current native subset, plus CAD-to-volume meshing with identifiable load/support regions and displacement convergence. Preserve source provenance for the new feature. Demonstrate practical benefit rather than just a successful API call. |
+| **Decision gate** | Continue, narrow or stop | Review M0–M2 evidence and maintenance cost. Qualify the optional distribution on a clean Mac before a release. Adoption for selected workloads is independent of default selection; neither existing backend is retired. |
+| **Later A** | Broader parity and manufacturing | Incremental profile/offset/loft/hull/Minkowski support with explicit contracts, `next` integration and validated atomic bundles. Optional shared IR migration with existing-backend compatibility tests. Inventory the entire current corpus and retain explicit refusals. |
+| **Later B** | Additional CAD features and checks | Expand fillets, shell, sweep, revolve, draft and threads only against useful fixtures; add B-rep measurements and distances to `check`, shared verification helpers and recorded tolerance provenance. |
+| **Later C** | STEP assemblies | XDE shared definitions, names, colours, mirrored/nested placements and optional bed exports. Read-back tests plus manual import in FreeCAD and a target CAM tool. Single-part STEP is already in M0. |
 
-Total: roughly 37–51 days. Order follows the print path: M1–M2 give STL
-parity (M1 already includes meshing with the print defaults and the STL
-checks), M3–M4 add the features and checks that make better printed
-parts, and STEP assemblies move last, to M5, because they are not needed
-for printing. M5 needs only primitives and booleans, so it can be pulled
-forward if CAD interchange becomes urgent.
+Mac CI can remain exploratory during the spike. Before an OCCT feature is
+advertised as supported, its acceptance checks become required for that
+configuration. Cross-platform OCCT distribution requires separate qualification;
+Mac results do not qualify Linux or Windows.
 
 ## Risks
 
 - **Build and link on macOS.** Unverified until M0: header paths, dylib
   install names and rpath, `-lc++`, the `tapi` linker error already seen
   on `macos-latest` in `release.yml`, and OCCT 7.9.3 against the 7.8.1
-  the shim was compiled with. Mitigation: M0 is exactly this check, with
-  a static-OCCT fallback.
-- **Crashes in-process.** A segfault in BOPAlgo or the fillet code now
-  kills `coscad` itself, where an OpenSCAD failure only failed a child.
-  Mitigations: `guard` for every exception, fuzzy booleans,
-  `BRepCheck_Analyzer` on inputs to fragile operations, tests in child
-  processes, and a fatal-signal handler that prints the last `SSrc`
-  entered ("the OCCT kernel crashed while building part.coscad:12:5").
+  the shim was compiled with. Mitigation: M0 checks this; evaluate a
+  source-built kernel only if needed, with its own cost and packaging gate.
+- **Kernel crashes, hangs and allocations.** Guards and a bound thread do
+  not contain these. Supervise production worker jobs, enforce and test budgets,
+  retain operation context in the parent and preserve published artifacts.
+  Memory isolation on macOS must be demonstrated, not inferred from subprocess use.
 - **Homebrew OCCT upgrades.** A soname bump breaks installed binaries
   until coscad is rebuilt; API changes (7.9 to 8.0) break the shim build.
-  Mitigations: the `doctor` version check, `depends_on` with revision
-  bumps, CI on the current Homebrew OCCT so breakage shows there first.
+  Mitigations: the distribution gate, pinned dependencies and managed rebuilds,
+  plus separate upgrade CI. `doctor` is only available after successful startup.
 - **Boolean failures.** OCCT booleans fail differently from CGAL's, on
   near-tangent and coincident curved cases and with invalid results.
-  Mitigations: `SetFuzzyValue`, `ShapeFix`, `UnifySameDomain`,
-  diagnostics at the `SSrc` position. No silent fallback.
+  Mitigations: declared operation tolerances, input/output validation and
+  explicit diagnostics. Fuzzy booleans, healing and unification can alter
+  geometry or feature history: record their use and bound resulting changes;
+  do not silently heal away thin walls, holes or clearance gaps. No silent fallback.
 - **Fillet failures** on complex edge chains are common in all OCCT-based
   CAD. Mitigation: the selector grammar encourages filleting early on
   simple geometry, and failures name the selector.
 - **Approximate hulls.** Rule 6 output is faceted; flagged in measures,
   `validate`, `--strict` and (when exported) STEP names.
 - **Mesh size.** The finer default gives more triangles than `$fn = 50`
-  on large curved parts; watch `next` and slicer times in M2.
+  on large curved parts; measure part/slicer costs in M1 and `next` costs during Later A.
 - **Golden churn.** Two goldens per example; `occt.txt` is separate.
 - **Linux.** A `-f occt` build on Linux is untested by policy and may rot.
   Accepted.
 
-
-
-1. **Fillet selection.** Is the geometric selector grammar (anchor face
-   words, `face+face`, `|z`, `seam`, `@datum`, `&`) the right primary
-   design, with named faces only as a later alternative?
-2. **Release artifact.** Should the macOS release tarball and the
-   Homebrew formula switch to the `-f occt` build (adding `depends_on
-   "opencascade"`, about 40 MB plus `tbb`, `freetype`, `fontconfig`) as
-   soon as M2 passes, or only once OCCT becomes the default backend?
-3. **Colours, materials and fasteners in STEP.** Is a `color=#rrggbb` hint
-   on `part` lines plus a default colour per material what you want? Should
-   fasteners be exported as simple screw bodies by default, or only with
-   `--fasteners`?
-4. **Approximate hulls.** Rule 6 (faceted hull) as a warning that
-   `--strict` turns into an error, or always an error under OCCT?
-5. **Modelled threads.** Plain clearance holes by default (as today) with
-   modelled threads opt-in per part, or modelled above some size?
-6. **STEP schema default.** AP242 (current) or AP214 (read best by some
-   older CAM tools)? Which tool will the files go to first?
 ## Open questions
 
 Each has a recommended default, used unless decided otherwise.
@@ -1251,11 +1342,11 @@ Each has a recommended default, used unless decided otherwise.
    words, `face+face`, `|z`, `seam`, `@datum`, `&`) the right design, or
    should named faces carried through operations be primary? *Default:*
    geometric selectors; named faces only if they prove too weak.
-2. **Release artifact.** Should the macOS release tarball and the Homebrew
-   formula switch to the `-f occt` build (adding `depends_on
-   "opencascade"`, about 40 MB plus `tbb`, `freetype`, `fontconfig`) after
-   M2, or only once OCCT is the default backend? *Default:* only once OCCT
-   is the default; until then `-f occt` is a source build.
+2. **Release artifact.** Choose a Homebrew-managed optional build or a
+   relocatable dependency bundle. *Default:* experimental source build until
+   the distribution gate passes; then an explicitly optional OCCT artifact.
+   Shipping it does not change the default backend or remove the native build.
+
 3. **STEP colours and fasteners** (only relevant to the optional STEP
    export). A `color=#rrggbb` hint on `part` lines plus a default colour per
    material, and are fasteners exported by default? *Default:* yes to the
@@ -1268,9 +1359,10 @@ Each has a recommended default, used unless decided otherwise.
    per part (`threads=model`).
 6. **STEP schema.** AP242 or AP214 by default, and which tool reads the
    files first? *Default:* AP242 with `--step-schema=ap214`; first reader
-   to be confirmed (FreeCAD assumed for the M5 import check).
+   to be confirmed (FreeCAD assumed for the later assembly import check).
 
-Already decided (see Decisions): a single Haskell-only binary through our
-own C shim, no Python; OCCT replaces the planned Manifold stage; only macOS
-CI for OCCT; the cabal flag `occt` is off by default; STL is the default
-output.
+Already decided (see Decisions): OCCT is an additional backend alongside
+OpenSCAD and native/Manifold. One executable provides the parent and supervised
+worker modes, using a small C ABI shim without Python for OCCT. Initial OCCT
+qualification is macOS-only, the Cabal flag is off by default, STL remains
+the default manufacturing output, and existing backend defaults are unchanged.

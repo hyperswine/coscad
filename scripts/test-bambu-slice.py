@@ -20,6 +20,23 @@ spec.loader.exec_module(slicer)
 
 
 class SliceTests(unittest.TestCase):
+    def test_vendor_filament_inheritance(self):
+        with tempfile.TemporaryDirectory() as d, patch.object(slicer, 'SYSTEM', d):
+            root = Path(d) / 'filament'
+            (root / 'SUNLU').mkdir(parents=True)
+            (root / 'common.json').write_text('{"temperature":"220"}')
+            (root / 'SUNLU' / 'base.json').write_text('{"inherits":"common","density":"1.21"}')
+            (root / 'SUNLU' / 'PLA.json').write_text('{"inherits":"base","flow":"1.0"}')
+            self.assertEqual(slicer.flatten('filament', 'PLA'),
+                             {'temperature':'220','density':'1.21','flow':'1.0','inherits':''})
+            (root / 'Other').mkdir()
+            (root / 'Other' / 'PLA.json').write_text('{}')
+            with self.assertRaisesRegex(SystemExit, 'ambiguous'):
+                slicer.flatten('filament', 'PLA')
+            (root / 'SUNLU' / 'base.json').write_text('{"inherits":"SUNLU/PLA"}')
+            with self.assertRaisesRegex(SystemExit, 'cycle'):
+                slicer.flatten('filament', 'SUNLU/PLA')
+
     def override(self, value, preset, additional=()):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "overrides.json"

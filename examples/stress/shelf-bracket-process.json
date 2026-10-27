@@ -1,0 +1,8 @@
+{
+  "enable_support": "1",
+  "support_type": "normal(auto)",
+  "support_on_build_plate_only": "0",
+  "wall_loops": "4",
+  "sparse_infill_density": "100%",
+  "sparse_infill_pattern": "zig-zag"
+}

@@ -6,6 +6,7 @@ const {
   DidChangeConfigurationNotification,
   TextDocumentSyncKind,
   SymbolKind,
+  CompletionItemKind,
   MarkupKind,
   Location,
   Range,
@@ -18,6 +19,7 @@ const {
 
 const { TextDocument } = require('vscode-languageserver-textdocument')
 const { COSCADParser } = require('./coscad-parser')
+const { identity } = require('./project-state')
 const { hoverInfo, walk, syntax: syntaxDocs } = require('./hover-info')
 const fs = require('fs')
 const path = require('path')
@@ -26,6 +28,12 @@ const { fileURLToPath, pathToFileURL } = require('url')
 const connection = createConnection(ProposedFeatures.all)
 const documents = new TextDocuments(TextDocument)
 const parser = new COSCADParser()
+
+const fallbackMaterials = ['pla','petg','abs','asa','pa','tpu','aluminium','steel']
+let materialNames = fallbackMaterials
+connection.onNotification('coscad/compilerCapabilities', info => {
+  materialNames = Array.isArray(info?.materials) ? info.materials.map(m=>m.name).filter(n=>typeof n==='string') : fallbackMaterials
+})
 
 let hasConfigurationCapability = false
 let hasWorkspaceFolderCapability = false
@@ -247,7 +255,8 @@ function loadPart(document, part) {
   if (!document.uri.startsWith('file:')) return null
   const file = path.resolve(path.dirname(fileURLToPath(document.uri)),part.source)
   try {
-    const text = documents.get(pathToFileURL(file).href)?.getText() ?? fs.readFileSync(file,'utf8')
+    const open = documents.all().find(d=>d.uri.startsWith('file:') && identity(fileURLToPath(d.uri))===identity(file))
+    const text = open?.getText() ?? fs.readFileSync(file,'utf8')
     return {file,ast:parser.parse(text,{fileType:getFileType(file)})}
   } catch { return null }
 }
@@ -297,13 +306,15 @@ function classifyToken(token, numericNames) {
 
 function buildSemanticTokens(document, range) {
   const text = document.getText()
-  const numericNames = parser.parse(text, { fileType: getFileType(document.uri) }).numericNames
+  const ast = parser.parse(text, { fileType: getFileType(document.uri) })
+  const numericNames = ast.numericNames
+  const analysisStarts = new Set(ast.body.filter(n=>n.type==='analysis_declaration').map(n=>n.position))
   const builder = new SemanticTokensBuilder()
   const startOffset = range ? document.offsetAt(range.start) : 0
   const endOffset = range ? document.offsetAt(range.end) : Infinity
   for (const token of parser.tokenize(text)) {
     if (token.type === 'newline' || token.position < startOffset || token.position > endOffset) continue
-    const [tokenType, tokenMods] = classifyToken(token, numericNames)
+    const [tokenType, tokenMods] = analysisStarts.has(token.position) ? ['keyword', []] : classifyToken(token, numericNames)
     const length = String(token.raw ?? token.value).length
     const tokenTypeIndex = tokenTypes.get(tokenType) || 0
     const tokenModifiersIndex = tokenMods.reduce((acc, mod) => acc | (1 << (tokenModifiers.get(mod) || 0)), 0)
@@ -326,6 +337,12 @@ connection.onRequest('textDocument/semanticTokens/range', (params) => {
 connection.onCompletion((params) => {
   const document = documents.get(params.textDocument.uri)
   const completionItems = []
+  if (!document) return completionItems
+  const sourceLine = document.getText().split(/\r?\n/)[params.position.line]?.slice(0, params.position.character) || ''
+  if (/^\s*stress\s+.*material=\w*$/.test(sourceLine)) return materialNames.map(label => ({label,kind:CompletionItemKind.EnumMember}))
+  if (/^\s*stress\s+/.test(sourceLine)) completionItems.push(...['material=','safety=','cell='].map(label => ({label,kind:CompletionItemKind.Property})))
+  if (/^\s*\w*$/.test(sourceLine) && getFileType(params.textDocument.uri) !== 'assemble') completionItems.push(...['support','load','stress'].map(label => ({label,kind:CompletionItemKind.Keyword,documentation: {kind:'markdown',value:require('./hover-info').syntax[label][1]}})))
+
 
   // Add variables from the current document
   if (document) {
@@ -426,7 +443,7 @@ connection.onDefinition((params) => {
   )
   if (sourcePart && params.textDocument.uri.startsWith('file:')) {
     const target = path.resolve(path.dirname(fileURLToPath(params.textDocument.uri)), sourcePart.source)
-    if (fs.existsSync(target)) {
+    if (fs.existsSync(target) || documents.all().some(d=>d.uri.startsWith('file:') && identity(fileURLToPath(d.uri))===identity(target))) {
       return Location.create(pathToFileURL(target).href, Range.create(0, 0, 0, 0))
     }
   }

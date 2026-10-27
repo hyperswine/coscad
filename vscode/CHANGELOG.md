@@ -1,5 +1,14 @@
 # Changelog for the CoScad VS Code extension
 
+## 0.5.0
+
+- Add stress syntax, force/unit hovers, material completion and datum navigation.
+- Add Run Stress Analysis and compiler-advertised backend selection/status.
+- Validate complete unsaved project snapshots, track recursive dependencies,
+  watch external files, cancel superseded checks and reject stale results.
+- Save dirty dependencies before output commands; stop on a failed save.
+- Refresh capability probes when the command, configuration or direct binary changes.
+
 ## Unreleased
 
 - With a compiler that has `validate --json --stdin`, compiler diagnostics

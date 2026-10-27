@@ -33,7 +33,7 @@
     },
     "assembly": {
       "patterns": [
-        { "name": "keyword.declaration.assembly.coscad", "match": "\\b(?:plate|clearance|tolerance|fastener|plan|fixed|mate)\\b" },
+        { "name": "keyword.declaration.assembly.coscad", "match": "\\b(?:plate|clearance|tolerance|fastener|plan|fixed|mate|support|load|stress)\\b" },
         { "name": "keyword.operator.assembly.coscad", "match": "[←×▽@]" },
         { "name": "string.unquoted.filename.coscad", "match": "[^\\s]+\\.(?:coscad|assemble)\\b" },
         { "name": "constant.other.screw.coscad", "match": "\\bM\\d+(?:\\.\\d+)?x\\d+(?:\\.\\d+)?\\b" },

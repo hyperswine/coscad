@@ -1,0 +1,5 @@
+// Preserve model Z as print Z: the stress model assumes layers stacked along Z.
+// Brim space is reserved here and passed to the slicer by bambu-slice.py.
+bracket ← shelf-bracket.coscad ×1 ▽bot material=pla brim=5
+asm = bracket
+plate 256 256 6 256

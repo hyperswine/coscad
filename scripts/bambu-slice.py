@@ -26,6 +26,7 @@ process does not set one, and an explicit brim wider than a part's
 reserved space is reported.
 """
 import argparse, json, os, shutil, subprocess, sys, tempfile, time
+from pathlib import Path
 
 APP = os.environ.get("BAMBU_STUDIO", "/Applications/BambuStudio.app/Contents/MacOS/BambuStudio")
 SYSTEM = os.environ.get("BAMBU_PROFILES", os.path.expanduser("~/Library/Application Support/BambuStudio/system/BBL"))
@@ -35,14 +36,23 @@ FILAMENT_BY_MATERIAL = {"pla": "Bambu PLA Basic", "petg": "Bambu PETG Basic", "a
                         "asa": "Bambu ASA", "tpu": "Bambu TPU 95A HF", "pa": "Bambu PA-CF"}
 
 
-def flatten(kind, name):
+def flatten(kind, name, active=()):
     """Resolve a system preset's `inherits` chain into one flat dict."""
     path = os.path.join(SYSTEM, kind, name + ".json")
     if not os.path.exists(path):
-        sys.exit(f"no {kind} preset '{name}' under {SYSTEM}/{kind}")
-    d = json.load(open(path))
+        # Vendor filaments (e.g. SUNLU) live in subdirectories, while their
+        # inherits fields use unqualified preset names. Refuse ambiguous names.
+        hits = [p for p in Path(SYSTEM, kind).rglob('*.json') if p.stem == name]
+        if len(hits) != 1:
+            sys.exit(f"{'ambiguous' if hits else 'no'} {kind} preset '{name}' under {SYSTEM}/{kind}")
+        path = str(hits[0])
+    identity = os.path.realpath(path)
+    if identity in active:
+        sys.exit(f"cycle in {kind} preset inheritance at '{name}'")
+    with open(path, encoding="utf-8") as source:
+        d = json.load(source)
     parent = d.pop("inherits", None)
-    base = flatten(kind, parent) if parent else {}
+    base = flatten(kind, parent, (*active, identity)) if parent else {}
     base.update(d)
     base["inherits"] = ""
     return base
