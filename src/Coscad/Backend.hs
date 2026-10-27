@@ -1,7 +1,10 @@
--- | Opt-in geometry experiments. The production default remains OpenSCAD.
--- Unsupported native operations are errors, never an implicit backend switch.
+-- | Geometry backends. A build with the pinned native kernel renders
+-- natively by default; OpenSCAD is the explicit opt-out, and the only
+-- renderer in a kernel-less build. Unsupported native operations are
+-- errors, never an implicit backend switch.
 module Coscad.Backend
   ( Backend (..)
+  , defaultBackend
   , parseBackend
   , backendName
   , renderShape
@@ -13,10 +16,11 @@ module Coscad.Backend
 
 import Control.Monad (unless)
 import Data.List (nub)
-import Coscad.Codegen (renderScad)
+import Coscad.Codegen (loftMethod, renderScad)
 import Coscad.Geometry (resolve)
 import Coscad.IO (writeFileUtf8)
 import Coscad.Linalg
+import Coscad.Loft (loftTriangles, profilePath)
 import Coscad.Mesh (Tri, meshMap, stlAscii, triArea)
 import Coscad.Manifold
 import Coscad.Mesh.Indexed
@@ -26,10 +30,18 @@ import Coscad.Validate (finite, validateShape)
 
 data Backend = OpenScadBackend | NativeExperimental deriving (Eq, Show)
 
+-- | Decided by the build, not by a runtime probe: a kernel build renders
+-- natively unless @--backend=openscad@ is given; without the kernel there is
+-- nothing to default to but OpenSCAD.
+defaultBackend :: Backend
+defaultBackend = if manifoldAvailable then NativeExperimental else OpenScadBackend
+
+-- | @native@ and its original spelling @native-experimental@ name the same backend.
 parseBackend :: String -> Either String Backend
 parseBackend "openscad" = Right OpenScadBackend
+parseBackend "native" = Right NativeExperimental
 parseBackend "native-experimental" = Right NativeExperimental
-parseBackend name = Left ("unknown backend '" ++ name ++ "'; use openscad or native-experimental")
+parseBackend name = Left ("unknown backend '" ++ name ++ "'; use openscad or native (alias native-experimental)")
 
 backendName :: Backend -> String
 backendName OpenScadBackend = "openscad"
@@ -117,11 +129,17 @@ nativeIndexedCSGMesh shape = case structure shape >> validateShape shape of
       Tag _ x -> go x
       Datum _ _ x -> go x
       Frame _ _ _ x -> go x
+      Offset _ _ -> return (Left "native: a 2D offset (↯) must be extruded (⮕) before it is a solid; OpenSCAD renders nothing for it either")
       _ -> return (nativeMesh s >>= weldTriangles)
     extruded h profile = case profile of
-      Shape2D n r | n<=4096 -> extrudedSimple h [(r*cos a,r*sin a) | j<-[0..n-1],let a=2*pi*fromIntegral j/fromIntegral n]
+      Shape2D n r | n<=4096 -> extrudedSimple h (circleOutline n r)
       Poly (PD points []) -> extrudedSimple h (unclose points)
       Poly _ -> return (Left "native-experimental: explicit polygon paths/holes are unsupported; use a 2D difference")
+      -- OpenSCAD's offset(r=) is a round offset with $fn (50) arc segments;
+      -- the kernel's Clipper2 CrossSection computes it from the same formula.
+      Offset r p -> case outline2D p of
+        Left err -> return (Left err)
+        Right points -> fmap (>>= weldTriangles) (extrudeOffsetPolygon h 50 r points)
       Union xs -> go (Union (map (Extrude h) xs))
       Diff a b -> go (Diff (Extrude h a) (Extrude h b))
       Intersection xs -> go (Intersection (map (Extrude h) xs))
@@ -161,9 +179,42 @@ nativeIndexedCSGMesh shape = case structure shape >> validateShape shape of
           combined <- indexedOperation op acc mesh
           case combined of Left e -> return (Left e); Right result -> many op result xs
 
+-- | OpenSCAD's circle(): counter-clockwise from angle 0 (the linear_extrude
+-- profile order; lofts use BOSL2's clockwise path order instead).
+circleOutline :: Int -> Double -> [(Double,Double)]
+circleOutline n r = [(r*cos a,r*sin a) | j<-[0..n-1],let a=2*pi*fromIntegral j/fromIntegral n]
+
+-- | A single simple outline for an extruded offset: the 2D primitives and
+-- their in-plane transforms, as points. Composite 2D shapes under an offset
+-- would need 2D booleans and are refused explicitly.
+outline2D :: Shape -> Either String [(Double,Double)]
+outline2D s = case s of
+  Shape2D n r | n<=4096 -> Right (circleOutline n r)
+  Shape2D _ _ -> Left "native: a 2D profile may have at most 4096 sides"
+  Poly (PD points []) -> Right (unclosePoints points)
+  Poly _ -> Left "native: explicit polygon paths/holes are unsupported under an offset"
+  Tx d p -> map (\(x,y) -> (x+d,y)) <$> outline2D p
+  Ty d p -> map (\(x,y) -> (x,y+d)) <$> outline2D p
+  Translate (dx,dy,0) p -> map (\(x,y) -> (x+dx,y+dy)) <$> outline2D p
+  Rz a p -> map (mApply2 (rodMat a (0,0,1))) <$> outline2D p
+  Scale (sx,sy,_) p -> map (\(x,y) -> (x*sx,y*sy)) <$> outline2D p
+  Mirror (nx,ny,0) p -> map (mApply2 (mirrorMat (nx,ny,0))) <$> outline2D p
+  Tag _ p -> outline2D p
+  Datum _ _ p -> outline2D p
+  Frame _ _ _ p -> outline2D p
+  Offset _ _ -> Left "native: nested 2D offsets are unsupported; select --backend=openscad explicitly"
+  _ -> Left ("native: offset of a composite or non-2D shape ("++takeWhile (/=' ') (show s)++") is unsupported; select --backend=openscad explicitly")
+  where
+    mApply2 m (x,y) = let (x',y',_) = mApply m (x,y,0) in (x',y')
+    unclosePoints []=[]
+    unclosePoints points@(x:_)=case reverse points of
+      y:rest | x==y && not (null rest) -> reverse rest
+      _ -> points
+
 -- | Deliberately small surface: boxes, polygonal cylinders/cones/frusta,
--- unrounded centered variants, and affine transforms. No CSG concatenation:
--- overlapping closed meshes would not be a boolean union.
+-- unrounded centered variants, affine transforms, and lofts (tessellated
+-- exactly as BOSL2's skin() would). No CSG concatenation: overlapping closed
+-- meshes would not be a boolean union.
 nativeMesh :: Shape -> Either String [Tri]
 nativeMesh shape = do
   -- Check the supported tree before the general validator computes bounds;
@@ -213,6 +264,9 @@ nativeMesh shape = do
       Tag _ x -> go x
       Datum _ _ x -> go x
       Frame _ _ _ x -> go x
+      Loft layers -> do
+        paths <- mapM (\(z,p) -> (,) z <$> either (Left . ("native: in loft profile: "++)) Right (profilePath p)) layers
+        loftTriangles (loftMethod (map snd layers)) paths
       _ -> Left ("native-experimental: unsupported " ++ takeWhile (/= ' ') (show s)
                  ++ "; select --backend=openscad explicitly")
     orient False = id

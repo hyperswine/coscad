@@ -201,6 +201,7 @@ src/Coscad/OpenScad.hs  finding + running OpenSCAD and BOSL2
 src/Coscad/Mesh/Distance.hs triangle/edge surface distance with bounding-volume pruning
 src/Coscad/Mesh/Indexed.hs  validated indexed mesh contract; connectivity independent of position
 src/Coscad/Backend.hs   STL/check/next backend boundary and opt-in native meshing and CSG
+src/Coscad/Loft.hs      lofts tessellated as BOSL2 skin() builds them (reindex/distance, min_edge, caps)
 src/Coscad/Manifold.hs  optional pinned C++ geometry kernel bridge
 src/Coscad/Stress/Experiment.hs  bounded isotropic Hex8 solver and beam validation
 src/Coscad/Stress/Cad.hs  exact rectilinear CAD grid, supports and surface loads
