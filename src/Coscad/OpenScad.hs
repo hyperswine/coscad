@@ -13,6 +13,7 @@ module Coscad.OpenScad
   , runOpenscadRaw
   , runOpenscad
   , renderStlFile
+  , renderStlFileWith
   , openscadVersion
   , bosl2Version
   ) where
@@ -214,8 +215,17 @@ runOpenscad scadF stlF = do
 -- here: a missing include or a dropped child means the mesh is not
 -- what the source asked for, even though OpenSCAD exits 0.
 renderStlFile :: FilePath -> FilePath -> IO (Either String [Tri])
-renderStlFile scadF stlF = do
-  r <- openscadStlArgsIO stlF scadF >>= runOpenscadRaw
+renderStlFile scadF stlF = openscadFullRender >>= \manifold -> renderStlFileWith manifold scadF stlF
+
+-- | 'renderStlFile' with the CSG evaluator chosen by the caller: True asks
+-- for OpenSCAD's Manifold backend, False for CGAL. CGAL is exact
+-- arithmetic; Manifold is multithreaded and, on solids with exactly
+-- coincident faces (a symmetric difference of two equal solids), its result
+-- can differ from run to run. Callers that need an exactness certificate
+-- pass False.
+renderStlFileWith :: Bool -> FilePath -> FilePath -> IO (Either String [Tri])
+renderStlFileWith manifold scadF stlF = do
+  r <- runOpenscadRaw (openscadStlArgs manifold stlF scadF)
   case r of
     Left e -> return (Left e)
     Right (code, out, err) -> do

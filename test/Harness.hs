@@ -13,6 +13,7 @@ module Harness
   , readJson
   , readStl
   , renderMesh
+  , renderMeshExact
   , Geo
   , geoOf
   , showGeo
@@ -24,7 +25,7 @@ where
 import Coscad.Codegen (renderScad)
 import Coscad.Json (JValue (..), decode)
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
-import Coscad.OpenScad (renderStlFile)
+import Coscad.OpenScad (renderStlFile, renderStlFileWith)
 import Coscad.Shape (Shape (..))
 import Data.IORef
 import Data.List (isInfixOf)
@@ -79,6 +80,19 @@ renderMesh _ dir scadText = do
       stlF = dir </> "part.stl"
   writeFile scadF scadText
   r <- renderStlFile scadF stlF
+  removePathForcibly stlF
+  return r
+
+-- | Like 'renderMesh' but always through CGAL: exactness probes (an empty
+-- symmetric difference of two equal solids) need exact arithmetic, where
+-- OpenSCAD's multithreaded Manifold backend is not run-to-run stable on
+-- exactly coincident faces.
+renderMeshExact :: FilePath -> FilePath -> String -> IO (Either String [Tri])
+renderMeshExact _ dir scadText = do
+  let scadF = dir </> "exact.scad"
+      stlF = dir </> "exact.stl"
+  writeFile scadF scadText
+  r <- renderStlFileWith False scadF stlF
   removePathForcibly stlF
   return r
 

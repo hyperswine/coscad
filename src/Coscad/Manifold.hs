@@ -104,15 +104,15 @@ manifoldAvailable = False
 manifoldKernelVersion = Nothing
 
 indexedOperationWithLimit :: Int -> MeshOp -> IndexedMesh -> IndexedMesh -> IO (Either String IndexedMesh)
-indexedOperationWithLimit _ _ _ _ = return (Left "native CSG needs a build with the manifold flag (the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
+indexedOperationWithLimit _ _ _ _ = return (Left "native CSG needs a build with the manifold flag (-fmanifold, the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
 #endif
 
 #ifndef COSCAD_MANIFOLD
 extrudePolygon :: Double -> [(Double,Double)] -> IO (Either String [Tri])
-extrudePolygon _ _ = return (Left "native extrusion needs a build with the manifold flag (the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
+extrudePolygon _ _ = return (Left "native extrusion needs a build with the manifold flag (-fmanifold, the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
 
 extrudeOffsetPolygon :: Double -> Int -> Double -> [(Double,Double)] -> IO (Either String [Tri])
-extrudeOffsetPolygon _ _ _ _ = return (Left "native 2D offset needs a build with the manifold flag (the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
+extrudeOffsetPolygon _ _ _ _ = return (Left "native 2D offset needs a build with the manifold flag (-fmanifold, the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
 #endif
 
 -- | Legacy triangle-soup boundary: import by exact-position welding. Native CSG
