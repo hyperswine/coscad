@@ -28,7 +28,6 @@ extra-source-files:
     scripts/compare-cad-fea-reference.py
     scripts/compare-native-pipeline.py
     scripts/compare-tetra-fea-reference.py
-    scripts/mesh-fea-tetra.py
     experiments/requirements-fea.txt
     test/native/bridge_smoke.cpp
     test/golden/native-supported.txt

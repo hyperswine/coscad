@@ -3,8 +3,7 @@ name: release
 on:
   push:
     tags: ["v*"]
-  # Rebuild an existing tag with this workflow (e.g. after a runner image
-  # change) without moving the tag, which would change the Formula sha256.
+  # Candidate builds validate archives; pushing a version tag publishes them.
   workflow_dispatch:
     inputs:
       tag:
@@ -86,7 +85,9 @@ jobs:
           have=$(cabal run -v0 coscad -- --version | awk '{print $2}')
           test "$want" = "$have" || { echo "tag $TAG but coscad --version says $have"; exit 1; }
       - name: Install
-        run: cabal install exe:coscad --install-method=copy --overwrite-policy=always --installdir=dist-bin
+        run: |
+          mkdir -p dist-bin
+          cp "$(cabal list-bin exe:coscad)" dist-bin/coscad
       - name: Sign macOS executable
         if: runner.os == 'macOS'
         run: codesign --force --sign - dist-bin/coscad
