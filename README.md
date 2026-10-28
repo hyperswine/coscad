@@ -15,14 +15,16 @@ manifest  ─bambu-slice▶ bedN.gcode.3mf → printer        (scripts/bambu-sli
 
 ## Install
 
-Homebrew (macOS and Linux), from this repository's tap:
+On Apple Silicon with macOS 15 or newer, install the prebuilt native-kernel
+release from the shared [Homebrew tap](https://github.com/hyperswine/homebrew-tap):
 
 ```sh
-brew tap hyperswine/coscad https://github.com/hyperswine/coscad
-brew install coscad          # tagged release; --HEAD for current main
+brew install hyperswine/tap/coscad
+coscad --version
 ```
 
-That installs `coscad`, `man coscad`, the docs under
+This downloads a checksum-verified binary; GHC, Cabal and a source checkout
+are not required. It installs `coscad`, `man coscad`, the docs under
 `$(brew --prefix)/share/doc/coscad`, and the examples under
 `$(brew --prefix)/share/coscad/examples`.
 
@@ -272,8 +274,9 @@ OpenSCAD). manual.cswine.cloud rebuilds it from `main` automatically; see
 1. Bump `version` in `coscad.cabal` and the CHANGELOG, commit, tag
    `v<version>`, push the tag: the release workflow runs the pure test
    tiers, checks the tag against `coscad --version`, and attaches binaries.
-2. `scripts/update-formula.sh <version>` rewrites the formula's `url` and
-   `sha256` for that tag; commit `Formula/coscad.rb`.
+2. After the release succeeds, run `scripts/update-release.py coscad v<version>`
+   in the shared `homebrew-tap` repository. It downloads the archive and verifies
+   the published checksum and build metadata before updating the binary formula.
 
 ## Print photos
 

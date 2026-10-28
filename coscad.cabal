@@ -1,7 +1,7 @@
 cabal-version: 2.2
 
 name:           coscad
-version:        1.3.0.0
+version:        1.4.0.0
 description:    Please see the README on GitHub at <https://github.com/hyperswine/coscad#readme>
 homepage:       https://github.com/hyperswine/coscad#readme
 bug-reports:    https://github.com/hyperswine/coscad/issues
@@ -23,11 +23,11 @@ extra-source-files:
     third-party/bosl2/LICENSE
     third-party/bosl2/README.md
     scripts/build-manifold.py
+    scripts/package-release.py
     scripts/compare-fea-reference.py
     scripts/compare-cad-fea-reference.py
     scripts/compare-native-pipeline.py
     scripts/compare-tetra-fea-reference.py
-    scripts/mesh-fea-tetra.py
     experiments/requirements-fea.txt
     test/native/bridge_smoke.cpp
     test/golden/native-supported.txt

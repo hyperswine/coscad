@@ -280,13 +280,15 @@ backendOracleTier t = do
             r -> failT t path (show (fmap length (fst r),fmap length (snd r)))
     -- Lofts (BOSL2 skin: reindex and distance) and round 2D offsets against
     -- the OpenSCAD render, on volume and bounds. A reindex loft is the same
-    -- triangulation on both sides, so its volume agrees far below tolerance.
-    forM_ [ ("reindex loft frustum",Loft [(0,Shape2D 50 10),(30,Shape2D 50 5)],1e-9)
-          , ("reindex loft, offset circles",Loft [(0,Shape2D 40 6),(10,Tx 3 (Shape2D 40 4)),(14,Ty (-2) (Rz 20 (Shape2D 40 5)))],1e-9)
-          , ("reindex loft, bezier to bezier",Loft [(0,bezPoly 8 [(0,0),(10,0),(10,10),(0,10),(-5,5),(-2,2),(0,0)]),(8,Rz 90 (Scale (0.5,0.5,1) (bezPoly 8 [(0,0),(10,0),(10,10),(0,10),(-5,5),(-2,2),(0,0)])))],1e-9)
-          , ("distance loft, circle to triangle",Loft [(0,Shape2D 50 3),(6,Rz 30 (Shape2D 3 4))],1e-9)
-          , ("distance loft, pentagon to square",Loft [(0,Shape2D 5 8),(12,Shape2D 4 5)],1e-9)
-          , ("distance loft, three profiles",Loft [(0,Shape2D 6 4),(5,Shape2D 50 6),(9,Tx 1 (Shape2D 3 3))],1e-9)
+    -- triangulation on both sides, but OpenSCAD 2021's ASCII STL rounds its
+    -- coordinates. Keep analytic native-mesh checks below at 1e-9; allow the
+    -- external serialized oracle 1e-6 relative volume error.
+    forM_ [ ("reindex loft frustum",Loft [(0,Shape2D 50 10),(30,Shape2D 50 5)],1e-6)
+          , ("reindex loft, offset circles",Loft [(0,Shape2D 40 6),(10,Tx 3 (Shape2D 40 4)),(14,Ty (-2) (Rz 20 (Shape2D 40 5)))],1e-6)
+          , ("reindex loft, bezier to bezier",Loft [(0,bezPoly 8 [(0,0),(10,0),(10,10),(0,10),(-5,5),(-2,2),(0,0)]),(8,Rz 90 (Scale (0.5,0.5,1) (bezPoly 8 [(0,0),(10,0),(10,10),(0,10),(-5,5),(-2,2),(0,0)])))],1e-6)
+          , ("distance loft, circle to triangle",Loft [(0,Shape2D 50 3),(6,Rz 30 (Shape2D 3 4))],1e-6)
+          , ("distance loft, pentagon to square",Loft [(0,Shape2D 5 8),(12,Shape2D 4 5)],1e-6)
+          , ("distance loft, three profiles",Loft [(0,Shape2D 6 4),(5,Shape2D 50 6),(9,Tx 1 (Shape2D 3 3))],1e-6)
           , ("offset triangle",Extrude 10 (Offset 3 (Shape2D 3 15)),1e-3)
           , ("offset circle",Extrude 70 (Offset 2 (Shape2D 50 22)),1e-3)
           , ("negative offset circle",Extrude 5 (Offset (-3) (Shape2D 50 24)),1e-3)
@@ -386,7 +388,13 @@ cadTier t = do
       assertT t "CAD bracket work/energy" (abs (strainEnergyNMM s+uz/2)<1e-9) (show s)
 
 symmetricDifference :: T -> String -> [Tri] -> [Tri] -> IO ()
-symmetricDifference t name a b = do
+symmetricDifference t name a rawOracle = do
+  -- Zero-radius poles in the external STL can retain sin/cos noise at 1e-16.
+  -- Canonicalize only that oracle noise before exact-position soup welding;
+  -- production meshing/import rules and native operands stay unchanged.
+  let zero x = if abs x < 1e-12 then 0 else x
+      b = filter ((>0) . triArea) (meshMap (\(x,y,z) -> (zero x,zero y,zero z)) rawOracle)
+  assertT t ("oracle closed surface "++name) (closed b) "external reference has an open/nonmanifold edge"
   ab<-meshOperation MeshDifference a b
   ba<-meshOperation MeshDifference b a
   case (ab,ba) of

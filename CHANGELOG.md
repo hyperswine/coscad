@@ -8,6 +8,13 @@ and this project adheres to the
 
 ## Unreleased
 
+## 1.4.0.0 - 2026-10-28
+
+- Release the native geometry and stress workflows as prebuilt macOS ARM64
+  and Linux x86_64 archives. Include pinned native-kernel license notices,
+  build provenance and checksums. The shared Homebrew tap installs the
+  macOS archive without GHC, Cabal or a source checkout.
+
 - **`coscad stress part.coscad [-o part_stress.json] [--full]`.** A part file
   may now carry `support`, `load` and `stress` lines; the command renders the
   part with the selected geometry backend, voxelizes it, solves small-strain

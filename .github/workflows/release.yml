@@ -3,15 +3,18 @@ name: release
 on:
   push:
     tags: ["v*"]
-  # Rebuild an existing tag with this workflow (e.g. after a runner image
-  # change) without moving the tag, which would change the Formula sha256.
+  # Candidate builds validate archives; pushing a version tag publishes them.
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing release tag to build, e.g. v1.3.0.0
+        description: Tag or candidate branch to build (push a v tag to publish)
         required: true
 
+permissions:
+  contents: read
+
 env:
+  MACOSX_DEPLOYMENT_TARGET: "15.0"
   TAG: ${{ inputs.tag || github.ref_name }}
 
 jobs:
@@ -77,24 +80,23 @@ jobs:
       - name: Tag matches package version
         shell: bash
         run: |
-          want="${TAG#v}"
+          want="$(awk '/^version:/ { print $2 }' coscad.cabal)"
+          if [[ "$TAG" == v* ]]; then test "${TAG#v}" = "$want"; fi
           have=$(cabal run -v0 coscad -- --version | awk '{print $2}')
           test "$want" = "$have" || { echo "tag $TAG but coscad --version says $have"; exit 1; }
       - name: Install
-        run: cabal install exe:coscad --install-method=copy --overwrite-policy=always --installdir=dist-bin
-      - name: Package
-        shell: bash
         run: |
-          mkdir -p "${{ matrix.artifact }}"
-          cp dist-bin/coscad* README.md LICENSE CHANGELOG.md "${{ matrix.artifact }}/"
-          cp -r docs "${{ matrix.artifact }}/docs"
-          cp -r man "${{ matrix.artifact }}/man"
-          cp -r examples "${{ matrix.artifact }}/examples"
-          tar czf "${{ matrix.artifact }}.tar.gz" "${{ matrix.artifact }}"
+          mkdir -p dist-bin
+          cp "$(cabal list-bin exe:coscad)" dist-bin/coscad
+      - name: Sign macOS executable
+        if: runner.os == 'macOS'
+        run: codesign --force --sign - dist-bin/coscad
+      - name: Package binary and native notices
+        run: python3 scripts/package-release.py --binary dist-bin/coscad
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ matrix.artifact }}
-          path: ${{ matrix.artifact }}.tar.gz
+          path: dist-release/*
           if-no-files-found: error
 
   vscode:
@@ -119,6 +121,7 @@ jobs:
           path: vscode/*.vsix
 
   publish:
+    if: github.event_name == 'push'
     needs: [build, vscode]
     runs-on: ubuntu-latest
     permissions:
