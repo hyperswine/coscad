@@ -1,0 +1,6 @@
+// Assemble the coupon by hand only after printing. No machine dispatch.
+plate 256 256 6 250
+rail ← parts/rail_print_50.coscad ×1 ▽bot material=pla brim=5
+gusset ← parts/gusset_l.coscad ×1 ▽bot material=pla brim=5
+panel ← parts/panel_mount_coupon.coscad ×1 ▽top material=pla brim=5
+asm = rail ⊕ (gusset |> x 90) ⊕ (panel |> x -65)

@@ -1,0 +1,46 @@
+{
+  "created_at": "2026-10-28T11:36:18+11:00",
+  "job": "tesseract-v3-full",
+  "printer": "p1s",
+  "authorization": "Owner approved printing the full tesseract on P1S if it fits one bed; validated one-bed layout and confirmed both beds clear on 2026-10-28.",
+  "bed_clear_owner_confirmed": true,
+  "package_sha256": "d10f915d8dc9b25ef83093a83cf495b03769e7271412a4dfd519a7486fae0b1c",
+  "remote_content_sha256": "d10f915d8dc9b25ef83093a83cf495b03769e7271412a4dfd519a7486fae0b1c",
+  "remote_name": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+  "expected_layers": 496,
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "148077478"
+  },
+  "first_layer_reached": null,
+  "needs_attention": null,
+  "latest_observation": {
+    "at": "2026-10-28T11:42:17+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 0,
+      "layer_num": 0,
+      "total_layer_num": 496,
+      "mc_remaining_time": 1188,
+      "gcode_file": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+      "subtask_name": "tesseract-v3-full-p1s-20261028-113618.gcode",
+      "nozzle_temper": 174.34375,
+      "bed_temper": 34.9375,
+      "print_error": 0
+    },
+    "hms": []
+  },
+  "physical_outcome": "failed relatively early; owner reports loss of adhesion and spaghetti",
+  "terminal_snapshot": {
+    "gcode_state": "FAILED",
+    "layer_num": 5,
+    "total_layer_num": 496,
+    "print_error": 0,
+    "hms": []
+  },
+  "failure_details": "physical-failure-20261028.json"
+}

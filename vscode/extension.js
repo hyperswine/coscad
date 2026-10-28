@@ -227,14 +227,16 @@ function runCompiler(args, cwd, timeout, input, signal) {
 
 // `coscad validate --json` output -> diagnostics for `filePath`, or null when
 // the output is not that JSON document (an older compiler without --json).
-function diagnosticsFromJson(stdout, filePath) {
+// Diagnostics positioned on a line of `skipLines` (0-based) are dropped: the
+// language server owns those lines.
+function diagnosticsFromJson(stdout, filePath, skipLines = new Set()) {
   let doc
   try { doc = JSON.parse(stdout) } catch { return null }
   if (!doc || doc.schema !== 'coscad.validate/1' || !Array.isArray(doc.diagnostics)) return null
   const same = file => path.resolve(file) === path.resolve(filePath)
   const severity = s => s === 'error' ? vscode.DiagnosticSeverity.Error
     : s === 'warning' ? vscode.DiagnosticSeverity.Warning : vscode.DiagnosticSeverity.Information
-  return doc.diagnostics.map(d => {
+  return doc.diagnostics.filter(d => !(d.file && Number.isInteger(d.line) && same(d.file) && skipLines.has(d.line - 1))).map(d => {
     const located = d.file && Number.isInteger(d.line)
     if (located && same(d.file)) {
       const l = Math.max(0, d.line - 1)
@@ -245,6 +247,19 @@ function diagnosticsFromJson(stdout, filePath) {
     const where = d.file && !same(d.file) ? `${d.file}${located ? `:${d.line}:${d.column}` : ''}: ` : ''
     return new vscode.Diagnostic(new vscode.Range(0, 0, 0, 1), where + d.message, severity(d.severity))
   })
+}
+
+// 0-based lines that carry an analysis directive for `coscad stress`
+// (`support bot`, `load @tip 0 0 -20`, `stress material=pla`). A definition
+// that happens to be named support/load/stress is an assignment, not a
+// directive, so it is not listed.
+function analysisLines(text) {
+  const lines = new Set()
+  text.replace(/\r/g, '').split('\n').forEach((line, index) => {
+    const code = line.split('//')[0].trim()
+    if (/^(?:support|load|stress)(?:\s|$)/u.test(code) && !/^(?:support|load|stress)\s*=/u.test(code)) lines.add(index)
+  })
+  return lines
 }
 
 // Whether the compiler understands `validate --json --stdin`: null until the
@@ -268,7 +283,6 @@ function setCompilerOwnsDiagnostics(active) {
   notifyServer()
 }
 
-let warned = false
 let probe = null // Promise for one compiler identity
 let probeKey = ''
 function compilerIdentity(cwd) {
@@ -279,9 +293,12 @@ function compilerIdentity(cwd) {
   return JSON.stringify([command,cwd,candidate,stamp])
 }
 
-function warnOnce(message, settingKey) {
-  if (warned) return
-  warned = true
+// Once per notice: `key` identifies the notice so a later, different one
+// (a compiler that went missing after a settings change) still shows.
+const warnedAbout = new Set()
+function warnOnce(message, settingKey, key = message) {
+  if (warnedAbout.has(key)) return
+  warnedAbout.add(key)
   vscode.window.showWarningMessage(message, 'Open Settings', 'Disable').then(choice => {
     if (choice === 'Open Settings') vscode.commands.executeCommand('workbench.action.openSettings', settingKey)
     if (choice === 'Disable') vscode.workspace.getConfiguration('coscad').update('compilerDiagnostics', false, vscode.ConfigurationTarget.Global)
@@ -318,7 +335,7 @@ function compilerUsable(cwd) {
         backendStatus.text = `CoScad: ${config().backend === 'auto' ? capabilities?.default_backend || 'compiler default' : config().backend}`
         backendStatus.tooltip = capabilities ? `Compiler ${capabilities.version}; available backends: ${capabilities.backends.join(', ')}. Click to select.` : 'Legacy compiler: capability discovery unavailable.'
       }
-      return { ok: true, capabilities }
+      return { ok: true, capabilities, version: version.join('.') }
     })
   }
   return probe
@@ -337,13 +354,19 @@ async function compileForDiagnostics(document, project, signal, current) {
   if (!current()) return
   if (!info.ok) { setCompilerOwnsDiagnostics(false); return }
   const overlays = info.capabilities?.features.includes('project-buffers')
+  // `support`, `load` and `stress` are data for `coscad stress`; a compiler
+  // that predates them reads the space after the keyword as a missing '='.
+  // The language server mirrors the current grammar, so it keeps the verdict
+  // on those lines while the older compiler's rules apply to the rest.
+  const understandsAnalysis = !!info.capabilities?.features?.includes('stress')
   const args = overlays ? ['validate','--json','--project-stdin',document.fileName] : ['validate','--json','--stdin',document.fileName]
   let run = await runCompiler(args,cwd,VALIDATE_TIMEOUT_MS,overlays ? project.input : document.getText(),signal)
   if (!current() || compilerIdentity(cwd) !== identityAtStart) return
   if (run.error?.killed || run.error?.signal) { show('CoScad validation timed out; diagnostics are stale.'); return }
-  let found = diagnosticsFromJson(run.stdout,document.fileName)
+  let found = diagnosticsFromJson(run.stdout,document.fileName,understandsAnalysis ? undefined : analysisLines(document.getText()))
   if (found !== null) {
     jsonValidate=true; setCompilerOwnsDiagnostics(true)
+    if (!understandsAnalysis) warnOnce(`CoScad compiler ${info.version} predates the support/load/stress lines this extension parses; its errors on those lines are ignored. Update the compiler (cabal build exe:coscad) or point coscad.executableCommand at a newer build.`, 'coscad.executableCommand', 'stale-analysis')
     if (!overlays && project.dependencies.size > 1) found.push(new vscode.Diagnostic(new vscode.Range(0,0,0,1),'This compiler reads referenced files from disk. Update it for unsaved project validation.',vscode.DiagnosticSeverity.Warning))
     compilerDiagnostics.set(document.uri,found)
     const response=JSON.parse(run.stdout)
@@ -417,7 +440,7 @@ function activate(context) {
   context.subscriptions.push(watcher, watcher.onDidCreate(uri=>validationQueue.changed(uri.fsPath)), watcher.onDidChange(uri=>validationQueue.changed(uri.fsPath)), watcher.onDidDelete(uri=>validationQueue.changed(uri.fsPath)))
   context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(event => {
     if (event.affectsConfiguration('coscad')) {
-      warned=false; probe=null; probeKey=''; jsonValidate=null; discoveredCapabilities=null
+      warnedAbout.clear(); probe=null; probeKey=''; jsonValidate=null; discoveredCapabilities=null
       notifyServer()
       setCompilerOwnsDiagnostics(false)
       validationQueue.reset()
@@ -444,4 +467,4 @@ function deactivate() {
   return client ? client.stop() : undefined
 }
 
-module.exports = { activate, deactivate, parseCompilerErrors, diagnosticsFromJson, parseVersion, versionAtLeast, splitCommand }
+module.exports = { activate, deactivate, parseCompilerErrors, diagnosticsFromJson, analysisLines, parseVersion, versionAtLeast, splitCommand }

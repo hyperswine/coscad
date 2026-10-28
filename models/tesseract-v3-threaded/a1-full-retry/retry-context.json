@@ -1,0 +1,357 @@
+{
+  "printer_before": "P1S",
+  "printer_retry": "A1",
+  "geometry_changed": false,
+  "packing_changed": false,
+  "brims_changed": false,
+  "support_exclusions_changed": false,
+  "filament_selection": "physical AMS slot 1 (ams0), white PLA, not slot 3",
+  "failure_record": "../p1s-full/physical-failure-20261028.json",
+  "bed_clear_owner_confirmed": true,
+  "source_meshes_identical": true,
+  "comparison_limit": "Printer, filament and machine-specific slicing/calibration differ; cannot identify one root cause from this retry.",
+  "process_profile_delta": {
+    "bridge_speed": {
+      "P1S": [
+        "50",
+        "50"
+      ],
+      "A1": [
+        "50"
+      ]
+    },
+    "compatible_printers": {
+      "P1S": [
+        "Bambu Lab X1 Carbon 0.4 nozzle",
+        "Bambu Lab X1 0.4 nozzle",
+        "Bambu Lab P1S 0.4 nozzle",
+        "Bambu Lab X1E 0.4 nozzle"
+      ],
+      "A1": [
+        "Bambu Lab A1 0.4 nozzle"
+      ]
+    },
+    "elefant_foot_compensation": {
+      "P1S": "0.15",
+      "A1": "0.075"
+    },
+    "enable_height_slowdown": {
+      "P1S": [
+        "0",
+        "0"
+      ],
+      "A1": [
+        "0"
+      ]
+    },
+    "enable_overhang_speed": {
+      "P1S": [
+        "1",
+        "1"
+      ],
+      "A1": [
+        "1"
+      ]
+    },
+    "gap_infill_speed": {
+      "P1S": [
+        "250",
+        "250"
+      ],
+      "A1": [
+        "250"
+      ]
+    },
+    "initial_layer_acceleration": {
+      "P1S": [
+        "500",
+        "500"
+      ],
+      "A1": [
+        "500"
+      ]
+    },
+    "initial_layer_infill_speed": {
+      "P1S": [
+        "105",
+        "105"
+      ],
+      "A1": [
+        "105"
+      ]
+    },
+    "initial_layer_speed": {
+      "P1S": [
+        "50",
+        "50"
+      ],
+      "A1": [
+        "50"
+      ]
+    },
+    "initial_layer_travel_acceleration": {
+      "P1S": [
+        "6000",
+        "6000"
+      ],
+      "A1": [
+        "6000"
+      ]
+    },
+    "internal_solid_infill_speed": {
+      "P1S": [
+        "250",
+        "350"
+      ],
+      "A1": [
+        "250"
+      ]
+    },
+    "name": {
+      "P1S": "0.20mm Standard @BBL X1C",
+      "A1": "0.20mm Standard @BBL A1"
+    },
+    "overhang_1_4_speed": {
+      "P1S": [
+        "0",
+        "0"
+      ],
+      "A1": [
+        "0"
+      ]
+    },
+    "overhang_2_4_speed": {
+      "P1S": [
+        "50",
+        "50"
+      ],
+      "A1": [
+        "50"
+      ]
+    },
+    "overhang_3_4_speed": {
+      "P1S": [
+        "30",
+        "30"
+      ],
+      "A1": [
+        "30"
+      ]
+    },
+    "overhang_4_4_speed": {
+      "P1S": [
+        "10",
+        "10"
+      ],
+      "A1": [
+        "10"
+      ]
+    },
+    "overhang_totally_speed": {
+      "P1S": [
+        "10",
+        "30"
+      ],
+      "A1": [
+        "10"
+      ]
+    },
+    "print_extruder_id": {
+      "P1S": [
+        "1",
+        "1"
+      ],
+      "A1": [
+        "1"
+      ]
+    },
+    "print_extruder_variant": {
+      "P1S": [
+        "Direct Drive Standard",
+        "Direct Drive High Flow"
+      ],
+      "A1": [
+        "Direct Drive Standard"
+      ]
+    },
+    "setting_id": {
+      "P1S": "GP004",
+      "A1": "GP079"
+    },
+    "slowdown_end_acc": {
+      "P1S": [
+        "100000",
+        "100000"
+      ],
+      "A1": [
+        "100000"
+      ]
+    },
+    "slowdown_end_height": {
+      "P1S": [
+        "400",
+        "400"
+      ],
+      "A1": [
+        "400"
+      ]
+    },
+    "slowdown_end_speed": {
+      "P1S": [
+        "1000",
+        "1000"
+      ],
+      "A1": [
+        "1000"
+      ]
+    },
+    "slowdown_start_acc": {
+      "P1S": [
+        "100000",
+        "100000"
+      ],
+      "A1": [
+        "100000"
+      ]
+    },
+    "slowdown_start_height": {
+      "P1S": [
+        "0",
+        "0"
+      ],
+      "A1": [
+        "0"
+      ]
+    },
+    "slowdown_start_speed": {
+      "P1S": [
+        "1000",
+        "1000"
+      ],
+      "A1": [
+        "1000"
+      ]
+    },
+    "small_perimeter_speed": {
+      "P1S": [
+        "50%",
+        "50%"
+      ],
+      "A1": [
+        "50%"
+      ]
+    },
+    "small_perimeter_threshold": {
+      "P1S": [
+        "0",
+        "0"
+      ],
+      "A1": [
+        "0"
+      ]
+    },
+    "smooth_coefficient": {
+      "P1S": "150",
+      "A1": "80"
+    },
+    "sparse_infill_acceleration": {
+      "P1S": [
+        "100%",
+        "100%"
+      ],
+      "A1": [
+        "100%"
+      ]
+    },
+    "sparse_infill_speed": {
+      "P1S": [
+        "270",
+        "370"
+      ],
+      "A1": [
+        "270"
+      ]
+    },
+    "support_interface_speed": {
+      "P1S": [
+        "80",
+        "80"
+      ],
+      "A1": [
+        "80"
+      ]
+    },
+    "support_speed": {
+      "P1S": [
+        "150",
+        "150"
+      ],
+      "A1": [
+        "150"
+      ]
+    },
+    "top_solid_infill_flow_ratio": {
+      "P1S": [
+        "1",
+        "1"
+      ],
+      "A1": [
+        "1"
+      ]
+    },
+    "top_surface_acceleration": {
+      "P1S": [
+        "2000",
+        "2000"
+      ],
+      "A1": [
+        "2000"
+      ]
+    },
+    "top_surface_speed": {
+      "P1S": [
+        "200",
+        "300"
+      ],
+      "A1": [
+        "200"
+      ]
+    },
+    "travel_short_distance_acceleration": {
+      "P1S": [
+        "250",
+        "250"
+      ],
+      "A1": [
+        "250"
+      ]
+    },
+    "travel_speed": {
+      "P1S": [
+        "500",
+        "500"
+      ],
+      "A1": [
+        "700"
+      ]
+    },
+    "travel_speed_z": {
+      "P1S": [
+        "0",
+        "0"
+      ],
+      "A1": [
+        "0"
+      ]
+    },
+    "vertical_shell_speed": {
+      "P1S": [
+        "80%",
+        "80%"
+      ],
+      "A1": [
+        "80%"
+      ]
+    }
+  }
+}

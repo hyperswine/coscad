@@ -1,0 +1,2588 @@
+{
+  "schema": "coscad.shelf-study/1",
+  "load_target_kg_per_tier": 1,
+  "deck_mm": [
+    400,
+    200
+  ],
+  "top_heights_mm": [
+    81,
+    241
+  ],
+  "clear_between_tiers_mm": 129,
+  "slot": {
+    "mouth_mm": 6.4,
+    "pocket_width_mm": 10.0,
+    "pocket_depth_mm": 3.0,
+    "lip_mm": 1.5,
+    "screw_tip_depth_mm": 6.5,
+    "physical_fit_verified": false
+  },
+  "parts": {
+    "rail_50": {
+      "holes_mm": [],
+      "down": "bot"
+    },
+    "rail_print_50": {
+      "holes_mm": [],
+      "down": "bot"
+    },
+    "rail_160": {
+      "holes_mm": [],
+      "down": "bot"
+    },
+    "rail_print_160": {
+      "holes_mm": [],
+      "down": "bot"
+    },
+    "rail_170": {
+      "holes_mm": [],
+      "down": "bot"
+    },
+    "rail_print_170": {
+      "holes_mm": [],
+      "down": "bot"
+    },
+    "rail_230": {
+      "holes_mm": [],
+      "down": "bot"
+    },
+    "rail_print_230": {
+      "holes_mm": [],
+      "down": "bot"
+    },
+    "gusset_l": {
+      "holes_mm": [
+        [
+          25,
+          0,
+          0
+        ],
+        [
+          45,
+          0,
+          0
+        ],
+        [
+          0,
+          -25,
+          0
+        ],
+        [
+          0,
+          -45,
+          0
+        ]
+      ],
+      "down": "bot"
+    },
+    "gusset_t": {
+      "holes_mm": [
+        [
+          25,
+          0,
+          0
+        ],
+        [
+          45,
+          0,
+          0
+        ],
+        [
+          0,
+          -25,
+          0
+        ],
+        [
+          0,
+          -45,
+          0
+        ],
+        [
+          -25,
+          0,
+          0
+        ],
+        [
+          -45,
+          0,
+          0
+        ]
+      ],
+      "down": "bot"
+    },
+    "panel_left": {
+      "holes_mm": [
+        [
+          -50,
+          -90,
+          0
+        ],
+        [
+          -50,
+          90,
+          0
+        ],
+        [
+          50,
+          -90,
+          0
+        ],
+        [
+          50,
+          90,
+          0
+        ]
+      ],
+      "down": "top"
+    },
+    "panel_right": {
+      "holes_mm": [
+        [
+          -50,
+          -90,
+          0
+        ],
+        [
+          -50,
+          90,
+          0
+        ],
+        [
+          50,
+          -90,
+          0
+        ],
+        [
+          50,
+          90,
+          0
+        ]
+      ],
+      "down": "top"
+    },
+    "panel_mount_coupon": {
+      "holes_mm": [],
+      "down": "top"
+    }
+  },
+  "instances": [
+    {
+      "id": "post_0_0",
+      "part": "rail_230",
+      "kind": "post",
+      "position_mm": [
+        -190,
+        -90,
+        115
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        -90.0,
+        0.0
+      ]
+    },
+    {
+      "id": "post_0_180",
+      "part": "rail_230",
+      "kind": "post",
+      "position_mm": [
+        -190,
+        90,
+        115
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        -90.0,
+        0.0
+      ]
+    },
+    {
+      "id": "post_190_0",
+      "part": "rail_230",
+      "kind": "post",
+      "position_mm": [
+        0,
+        -90,
+        115
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        -90.0,
+        0.0
+      ]
+    },
+    {
+      "id": "post_190_180",
+      "part": "rail_230",
+      "kind": "post",
+      "position_mm": [
+        0,
+        90,
+        115
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        -90.0,
+        0.0
+      ]
+    },
+    {
+      "id": "post_380_0",
+      "part": "rail_230",
+      "kind": "post",
+      "position_mm": [
+        190,
+        -90,
+        115
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        -90.0,
+        0.0
+      ]
+    },
+    {
+      "id": "post_380_180",
+      "part": "rail_230",
+      "kind": "post",
+      "position_mm": [
+        190,
+        90,
+        115
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        -90.0,
+        0.0
+      ]
+    },
+    {
+      "id": "xrail_1_0_0",
+      "part": "rail_170",
+      "kind": "rail",
+      "position_mm": [
+        -95,
+        -90,
+        60
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "xrail_1_0_180",
+      "part": "rail_170",
+      "kind": "rail",
+      "position_mm": [
+        -95,
+        90,
+        60
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "xrail_1_190_0",
+      "part": "rail_170",
+      "kind": "rail",
+      "position_mm": [
+        95,
+        -90,
+        60
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "xrail_1_190_180",
+      "part": "rail_170",
+      "kind": "rail",
+      "position_mm": [
+        95,
+        90,
+        60
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "yrail_1_0",
+      "part": "rail_160",
+      "kind": "rail",
+      "position_mm": [
+        -190,
+        0,
+        60
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "yrail_1_190",
+      "part": "rail_160",
+      "kind": "rail",
+      "position_mm": [
+        0,
+        0,
+        60
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "yrail_1_380",
+      "part": "rail_160",
+      "kind": "rail",
+      "position_mm": [
+        190,
+        0,
+        60
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "xgusset_1_0_0",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        -190,
+        -103,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "ygusset_1_0_0",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        -203,
+        -90,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "xgusset_1_0_180",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        -190,
+        103,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "ygusset_1_0_180",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        -203,
+        90,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        -90.0
+      ]
+    },
+    {
+      "id": "xgusset_1_190_0",
+      "part": "gusset_t",
+      "kind": "connector",
+      "position_mm": [
+        0,
+        -103,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "ygusset_1_190_0",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        13,
+        -90,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "xgusset_1_190_180",
+      "part": "gusset_t",
+      "kind": "connector",
+      "position_mm": [
+        0,
+        103,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "ygusset_1_190_180",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        13,
+        90,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        -90.0
+      ]
+    },
+    {
+      "id": "xgusset_1_380_0",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        190,
+        -103,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        -180.0
+      ]
+    },
+    {
+      "id": "ygusset_1_380_0",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        203,
+        -90,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "xgusset_1_380_180",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        190,
+        103,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        -180.0
+      ]
+    },
+    {
+      "id": "ygusset_1_380_180",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        203,
+        90,
+        60
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        -90.0
+      ]
+    },
+    {
+      "id": "panel_1_left",
+      "part": "panel_left",
+      "kind": "panel",
+      "position_mm": [
+        -100,
+        0,
+        70
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "panel_1_right",
+      "part": "panel_right",
+      "kind": "panel",
+      "position_mm": [
+        100,
+        0,
+        70
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "xrail_2_0_0",
+      "part": "rail_170",
+      "kind": "rail",
+      "position_mm": [
+        -95,
+        -90,
+        220
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "xrail_2_0_180",
+      "part": "rail_170",
+      "kind": "rail",
+      "position_mm": [
+        -95,
+        90,
+        220
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "xrail_2_190_0",
+      "part": "rail_170",
+      "kind": "rail",
+      "position_mm": [
+        95,
+        -90,
+        220
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "xrail_2_190_180",
+      "part": "rail_170",
+      "kind": "rail",
+      "position_mm": [
+        95,
+        90,
+        220
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "yrail_2_0",
+      "part": "rail_160",
+      "kind": "rail",
+      "position_mm": [
+        -190,
+        0,
+        220
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "yrail_2_190",
+      "part": "rail_160",
+      "kind": "rail",
+      "position_mm": [
+        0,
+        0,
+        220
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "yrail_2_380",
+      "part": "rail_160",
+      "kind": "rail",
+      "position_mm": [
+        190,
+        0,
+        220
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "xgusset_2_0_0",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        -190,
+        -103,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "ygusset_2_0_0",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        -203,
+        -90,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "xgusset_2_0_180",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        -190,
+        103,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "ygusset_2_0_180",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        -203,
+        90,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        -90.0
+      ]
+    },
+    {
+      "id": "xgusset_2_190_0",
+      "part": "gusset_t",
+      "kind": "connector",
+      "position_mm": [
+        0,
+        -103,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "ygusset_2_190_0",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        13,
+        -90,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "xgusset_2_190_180",
+      "part": "gusset_t",
+      "kind": "connector",
+      "position_mm": [
+        0,
+        103,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "ygusset_2_190_180",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        13,
+        90,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        -90.0
+      ]
+    },
+    {
+      "id": "xgusset_2_380_0",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        190,
+        -103,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        -180.0
+      ]
+    },
+    {
+      "id": "ygusset_2_380_0",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        203,
+        -90,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        90.0
+      ]
+    },
+    {
+      "id": "xgusset_2_380_180",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        190,
+        103,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        -180.0
+      ]
+    },
+    {
+      "id": "ygusset_2_380_180",
+      "part": "gusset_l",
+      "kind": "connector",
+      "position_mm": [
+        203,
+        90,
+        220
+      ],
+      "rotation_xyz_deg": [
+        90.0,
+        0.0,
+        -90.0
+      ]
+    },
+    {
+      "id": "panel_2_left",
+      "part": "panel_left",
+      "kind": "panel",
+      "position_mm": [
+        -100,
+        0,
+        230
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "panel_2_right",
+      "part": "panel_right",
+      "kind": "panel",
+      "position_mm": [
+        100,
+        0,
+        230
+      ],
+      "rotation_xyz_deg": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "hardware": [
+    {
+      "part": "xgusset_1_0_0",
+      "host": "xrail_1_0_0",
+      "face": "fwd",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        -165.0,
+        -103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_0_0",
+      "host": "xrail_1_0_0",
+      "face": "fwd",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        -145.0,
+        -103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_0_0",
+      "host": "post_0_0",
+      "face": "fwd",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        -190.0,
+        -103.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_0_0",
+      "host": "post_0_0",
+      "face": "fwd",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        -190.0,
+        -103.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_0_0",
+      "host": "yrail_1_0",
+      "face": "lft",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        -203.0,
+        -65.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_0_0",
+      "host": "yrail_1_0",
+      "face": "lft",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        -203.0,
+        -45.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_0_0",
+      "host": "post_0_0",
+      "face": "lft",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        -203.0,
+        -90.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_0_0",
+      "host": "post_0_0",
+      "face": "lft",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        -203.0,
+        -90.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_0_180",
+      "host": "xrail_1_0_180",
+      "face": "bak",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        -165.0,
+        103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_0_180",
+      "host": "xrail_1_0_180",
+      "face": "bak",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        -145.0,
+        103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_0_180",
+      "host": "post_0_180",
+      "face": "bak",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        -190.0,
+        103.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_0_180",
+      "host": "post_0_180",
+      "face": "bak",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        -190.0,
+        103.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_0_180",
+      "host": "yrail_1_0",
+      "face": "lft",
+      "at_mm": 145.0,
+      "hole_world_mm": [
+        -203.0,
+        65.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_0_180",
+      "host": "yrail_1_0",
+      "face": "lft",
+      "at_mm": 125.0,
+      "hole_world_mm": [
+        -203.0,
+        45.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_0_180",
+      "host": "post_0_180",
+      "face": "lft",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        -203.0,
+        90.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_0_180",
+      "host": "post_0_180",
+      "face": "lft",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        -203.0,
+        90.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_0",
+      "host": "xrail_1_190_0",
+      "face": "fwd",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        25.0,
+        -103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_0",
+      "host": "xrail_1_190_0",
+      "face": "fwd",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        45.0,
+        -103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_0",
+      "host": "post_190_0",
+      "face": "fwd",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        0.0,
+        -103.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_0",
+      "host": "post_190_0",
+      "face": "fwd",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        0.0,
+        -103.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_0",
+      "host": "xrail_1_0_0",
+      "face": "fwd",
+      "at_mm": 155.0,
+      "hole_world_mm": [
+        -25.0,
+        -103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_0",
+      "host": "xrail_1_0_0",
+      "face": "fwd",
+      "at_mm": 135.0,
+      "hole_world_mm": [
+        -45.0,
+        -103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_190_0",
+      "host": "yrail_1_190",
+      "face": "rt",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        13.0,
+        -65.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_190_0",
+      "host": "yrail_1_190",
+      "face": "rt",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        13.0,
+        -45.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_190_0",
+      "host": "post_190_0",
+      "face": "rt",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        13.0,
+        -90.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_190_0",
+      "host": "post_190_0",
+      "face": "rt",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        13.0,
+        -90.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_180",
+      "host": "xrail_1_190_180",
+      "face": "bak",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        25.0,
+        103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_180",
+      "host": "xrail_1_190_180",
+      "face": "bak",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        45.0,
+        103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_180",
+      "host": "post_190_180",
+      "face": "bak",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        0.0,
+        103.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_180",
+      "host": "post_190_180",
+      "face": "bak",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        0.0,
+        103.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_180",
+      "host": "xrail_1_0_180",
+      "face": "bak",
+      "at_mm": 155.0,
+      "hole_world_mm": [
+        -25.0,
+        103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_190_180",
+      "host": "xrail_1_0_180",
+      "face": "bak",
+      "at_mm": 135.0,
+      "hole_world_mm": [
+        -45.0,
+        103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_190_180",
+      "host": "yrail_1_190",
+      "face": "rt",
+      "at_mm": 145.0,
+      "hole_world_mm": [
+        13.0,
+        65.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_190_180",
+      "host": "yrail_1_190",
+      "face": "rt",
+      "at_mm": 125.0,
+      "hole_world_mm": [
+        13.0,
+        45.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_190_180",
+      "host": "post_190_180",
+      "face": "rt",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        13.0,
+        90.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_190_180",
+      "host": "post_190_180",
+      "face": "rt",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        13.0,
+        90.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_380_0",
+      "host": "xrail_1_190_0",
+      "face": "fwd",
+      "at_mm": 155.0,
+      "hole_world_mm": [
+        165.0,
+        -103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_380_0",
+      "host": "xrail_1_190_0",
+      "face": "fwd",
+      "at_mm": 135.0,
+      "hole_world_mm": [
+        145.0,
+        -103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_380_0",
+      "host": "post_380_0",
+      "face": "fwd",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        190.0,
+        -103.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_380_0",
+      "host": "post_380_0",
+      "face": "fwd",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        190.0,
+        -103.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_380_0",
+      "host": "yrail_1_380",
+      "face": "rt",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        203.0,
+        -65.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_380_0",
+      "host": "yrail_1_380",
+      "face": "rt",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        203.0,
+        -45.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_380_0",
+      "host": "post_380_0",
+      "face": "rt",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        203.0,
+        -90.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_380_0",
+      "host": "post_380_0",
+      "face": "rt",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        203.0,
+        -90.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_380_180",
+      "host": "xrail_1_190_180",
+      "face": "bak",
+      "at_mm": 155.0,
+      "hole_world_mm": [
+        165.0,
+        103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_380_180",
+      "host": "xrail_1_190_180",
+      "face": "bak",
+      "at_mm": 135.0,
+      "hole_world_mm": [
+        145.0,
+        103.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_380_180",
+      "host": "post_380_180",
+      "face": "bak",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        190.0,
+        103.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_1_380_180",
+      "host": "post_380_180",
+      "face": "bak",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        190.0,
+        103.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_380_180",
+      "host": "yrail_1_380",
+      "face": "rt",
+      "at_mm": 145.0,
+      "hole_world_mm": [
+        203.0,
+        65.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_380_180",
+      "host": "yrail_1_380",
+      "face": "rt",
+      "at_mm": 125.0,
+      "hole_world_mm": [
+        203.0,
+        45.0,
+        60.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_380_180",
+      "host": "post_380_180",
+      "face": "rt",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        203.0,
+        90.0,
+        35.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_1_380_180",
+      "host": "post_380_180",
+      "face": "rt",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        203.0,
+        90.0,
+        15.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_1_left",
+      "host": "xrail_1_0_0",
+      "face": "top",
+      "at_mm": 30,
+      "hole_world_mm": [
+        -150,
+        -90,
+        76
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_1_left",
+      "host": "xrail_1_0_180",
+      "face": "top",
+      "at_mm": 30,
+      "hole_world_mm": [
+        -150,
+        90,
+        76
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_1_left",
+      "host": "xrail_1_0_0",
+      "face": "top",
+      "at_mm": 130,
+      "hole_world_mm": [
+        -50,
+        -90,
+        76
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_1_left",
+      "host": "xrail_1_0_180",
+      "face": "top",
+      "at_mm": 130,
+      "hole_world_mm": [
+        -50,
+        90,
+        76
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_1_right",
+      "host": "xrail_1_190_0",
+      "face": "top",
+      "at_mm": 40,
+      "hole_world_mm": [
+        50,
+        -90,
+        76
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_1_right",
+      "host": "xrail_1_190_180",
+      "face": "top",
+      "at_mm": 40,
+      "hole_world_mm": [
+        50,
+        90,
+        76
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_1_right",
+      "host": "xrail_1_190_0",
+      "face": "top",
+      "at_mm": 140,
+      "hole_world_mm": [
+        150,
+        -90,
+        76
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_1_right",
+      "host": "xrail_1_190_180",
+      "face": "top",
+      "at_mm": 140,
+      "hole_world_mm": [
+        150,
+        90,
+        76
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_0_0",
+      "host": "xrail_2_0_0",
+      "face": "fwd",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        -165.0,
+        -103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_0_0",
+      "host": "xrail_2_0_0",
+      "face": "fwd",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        -145.0,
+        -103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_0_0",
+      "host": "post_0_0",
+      "face": "fwd",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        -190.0,
+        -103.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_0_0",
+      "host": "post_0_0",
+      "face": "fwd",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        -190.0,
+        -103.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_0_0",
+      "host": "yrail_2_0",
+      "face": "lft",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        -203.0,
+        -65.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_0_0",
+      "host": "yrail_2_0",
+      "face": "lft",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        -203.0,
+        -45.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_0_0",
+      "host": "post_0_0",
+      "face": "lft",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        -203.0,
+        -90.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_0_0",
+      "host": "post_0_0",
+      "face": "lft",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        -203.0,
+        -90.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_0_180",
+      "host": "xrail_2_0_180",
+      "face": "bak",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        -165.0,
+        103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_0_180",
+      "host": "xrail_2_0_180",
+      "face": "bak",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        -145.0,
+        103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_0_180",
+      "host": "post_0_180",
+      "face": "bak",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        -190.0,
+        103.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_0_180",
+      "host": "post_0_180",
+      "face": "bak",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        -190.0,
+        103.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_0_180",
+      "host": "yrail_2_0",
+      "face": "lft",
+      "at_mm": 145.0,
+      "hole_world_mm": [
+        -203.0,
+        65.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_0_180",
+      "host": "yrail_2_0",
+      "face": "lft",
+      "at_mm": 125.0,
+      "hole_world_mm": [
+        -203.0,
+        45.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_0_180",
+      "host": "post_0_180",
+      "face": "lft",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        -203.0,
+        90.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_0_180",
+      "host": "post_0_180",
+      "face": "lft",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        -203.0,
+        90.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_0",
+      "host": "xrail_2_190_0",
+      "face": "fwd",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        25.0,
+        -103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_0",
+      "host": "xrail_2_190_0",
+      "face": "fwd",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        45.0,
+        -103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_0",
+      "host": "post_190_0",
+      "face": "fwd",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        0.0,
+        -103.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_0",
+      "host": "post_190_0",
+      "face": "fwd",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        0.0,
+        -103.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_0",
+      "host": "xrail_2_0_0",
+      "face": "fwd",
+      "at_mm": 155.0,
+      "hole_world_mm": [
+        -25.0,
+        -103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_0",
+      "host": "xrail_2_0_0",
+      "face": "fwd",
+      "at_mm": 135.0,
+      "hole_world_mm": [
+        -45.0,
+        -103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_190_0",
+      "host": "yrail_2_190",
+      "face": "rt",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        13.0,
+        -65.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_190_0",
+      "host": "yrail_2_190",
+      "face": "rt",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        13.0,
+        -45.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_190_0",
+      "host": "post_190_0",
+      "face": "rt",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        13.0,
+        -90.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_190_0",
+      "host": "post_190_0",
+      "face": "rt",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        13.0,
+        -90.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_180",
+      "host": "xrail_2_190_180",
+      "face": "bak",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        25.0,
+        103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_180",
+      "host": "xrail_2_190_180",
+      "face": "bak",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        45.0,
+        103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_180",
+      "host": "post_190_180",
+      "face": "bak",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        0.0,
+        103.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_180",
+      "host": "post_190_180",
+      "face": "bak",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        0.0,
+        103.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_180",
+      "host": "xrail_2_0_180",
+      "face": "bak",
+      "at_mm": 155.0,
+      "hole_world_mm": [
+        -25.0,
+        103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_190_180",
+      "host": "xrail_2_0_180",
+      "face": "bak",
+      "at_mm": 135.0,
+      "hole_world_mm": [
+        -45.0,
+        103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_190_180",
+      "host": "yrail_2_190",
+      "face": "rt",
+      "at_mm": 145.0,
+      "hole_world_mm": [
+        13.0,
+        65.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_190_180",
+      "host": "yrail_2_190",
+      "face": "rt",
+      "at_mm": 125.0,
+      "hole_world_mm": [
+        13.0,
+        45.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_190_180",
+      "host": "post_190_180",
+      "face": "rt",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        13.0,
+        90.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_190_180",
+      "host": "post_190_180",
+      "face": "rt",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        13.0,
+        90.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_380_0",
+      "host": "xrail_2_190_0",
+      "face": "fwd",
+      "at_mm": 155.0,
+      "hole_world_mm": [
+        165.0,
+        -103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_380_0",
+      "host": "xrail_2_190_0",
+      "face": "fwd",
+      "at_mm": 135.0,
+      "hole_world_mm": [
+        145.0,
+        -103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_380_0",
+      "host": "post_380_0",
+      "face": "fwd",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        190.0,
+        -103.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_380_0",
+      "host": "post_380_0",
+      "face": "fwd",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        190.0,
+        -103.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_380_0",
+      "host": "yrail_2_380",
+      "face": "rt",
+      "at_mm": 15.0,
+      "hole_world_mm": [
+        203.0,
+        -65.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_380_0",
+      "host": "yrail_2_380",
+      "face": "rt",
+      "at_mm": 35.0,
+      "hole_world_mm": [
+        203.0,
+        -45.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_380_0",
+      "host": "post_380_0",
+      "face": "rt",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        203.0,
+        -90.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_380_0",
+      "host": "post_380_0",
+      "face": "rt",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        203.0,
+        -90.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_380_180",
+      "host": "xrail_2_190_180",
+      "face": "bak",
+      "at_mm": 155.0,
+      "hole_world_mm": [
+        165.0,
+        103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_380_180",
+      "host": "xrail_2_190_180",
+      "face": "bak",
+      "at_mm": 135.0,
+      "hole_world_mm": [
+        145.0,
+        103.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_380_180",
+      "host": "post_380_180",
+      "face": "bak",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        190.0,
+        103.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "xgusset_2_380_180",
+      "host": "post_380_180",
+      "face": "bak",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        190.0,
+        103.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_380_180",
+      "host": "yrail_2_380",
+      "face": "rt",
+      "at_mm": 145.0,
+      "hole_world_mm": [
+        203.0,
+        65.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_380_180",
+      "host": "yrail_2_380",
+      "face": "rt",
+      "at_mm": 125.0,
+      "hole_world_mm": [
+        203.0,
+        45.0,
+        220.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_380_180",
+      "host": "post_380_180",
+      "face": "rt",
+      "at_mm": 195.0,
+      "hole_world_mm": [
+        203.0,
+        90.0,
+        195.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "ygusset_2_380_180",
+      "host": "post_380_180",
+      "face": "rt",
+      "at_mm": 175.0,
+      "hole_world_mm": [
+        203.0,
+        90.0,
+        175.0
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_2_left",
+      "host": "xrail_2_0_0",
+      "face": "top",
+      "at_mm": 30,
+      "hole_world_mm": [
+        -150,
+        -90,
+        236
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_2_left",
+      "host": "xrail_2_0_180",
+      "face": "top",
+      "at_mm": 30,
+      "hole_world_mm": [
+        -150,
+        90,
+        236
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_2_left",
+      "host": "xrail_2_0_0",
+      "face": "top",
+      "at_mm": 130,
+      "hole_world_mm": [
+        -50,
+        -90,
+        236
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_2_left",
+      "host": "xrail_2_0_180",
+      "face": "top",
+      "at_mm": 130,
+      "hole_world_mm": [
+        -50,
+        90,
+        236
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_2_right",
+      "host": "xrail_2_190_0",
+      "face": "top",
+      "at_mm": 40,
+      "hole_world_mm": [
+        50,
+        -90,
+        236
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_2_right",
+      "host": "xrail_2_190_180",
+      "face": "top",
+      "at_mm": 40,
+      "hole_world_mm": [
+        50,
+        90,
+        236
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_2_right",
+      "host": "xrail_2_190_0",
+      "face": "top",
+      "at_mm": 140,
+      "hole_world_mm": [
+        150,
+        -90,
+        236
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    },
+    {
+      "part": "panel_2_right",
+      "host": "xrail_2_190_180",
+      "face": "top",
+      "at_mm": 140,
+      "hole_world_mm": [
+        150,
+        90,
+        236
+      ],
+      "bolt": "M5x12",
+      "nut": "M5 sliding T-nut for 6 mm-slot 2020",
+      "through_mm": 6
+    }
+  ],
+  "bom": {
+    "printed": {
+      "rail_230": 6,
+      "rail_170": 8,
+      "rail_160": 6,
+      "gusset_l": 20,
+      "gusset_t": 4,
+      "panel_left": 2,
+      "panel_right": 2
+    },
+    "M5x12": 120,
+    "sliding_M5_nuts": 120
+  },
+  "physical_load_tested": false,
+  "dispatched": false
+}

@@ -1,0 +1,13 @@
+// Custom printed 2020; end-loaded M5 nuts. NOT aluminium-rated.
+// Slot: mouth 6.4; nut pocket 10.0 x 3.0, 1.5 mm lips.
+// Narrow screw-tip relief reaches 6.5 mm below each face (M5x12 through 6).
+// Four cavities leave diagonal webs; verify one connected solid after edits.
+blank = box 170 20 20
+mouth = box 172 6.4 3.1 |> z 9.95
+pocket = box 172 10.0 3.0 |> z 7
+tip = box 172 5.6 5 |> z 6
+slot = mouth ⊕ pocket ⊕ tip
+profile = blank ⊖ slot ⊖ (slot |> rotx 90) ⊖ (slot |> rotx 180) ⊖ (slot |> rotx 270) ⊖ (xcyl 2.1 172)
+// Print flat along X for beam strength and shorter toolpaths.
+// Bed-only supports under the downward slot require cleanup and a nut-fit trial.
+main = profile

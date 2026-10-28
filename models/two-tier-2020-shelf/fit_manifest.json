@@ -1,0 +1,121 @@
+{
+  "schema": "coscad.next/1",
+  "geometry_backend": "native-experimental",
+  "source": "models/two-tier-2020-shelf/fit.assemble",
+  "bed": {
+    "w": 256,
+    "d": 256,
+    "margin": 6,
+    "max_z": 250
+  },
+  "variants": [
+    {
+      "id": "rail_bot",
+      "part": "rail",
+      "source": "models/two-tier-2020-shelf/parts/rail_print_50.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.52,
+      "printability": {
+        "bed_contact_mm2": 680,
+        "elevated_start_heights_mm": [13.2],
+        "overhang_mm2": 18.333,
+        "first_layer_mm2": 680,
+        "min_width_mm": 20,
+        "warnings": ["elevated downward-facing start at 13.2 mm above the bed; inspect supports before printing"],
+        "warning_codes": ["elevated_start"]
+      },
+      "footprint": [50, 20, 20],
+      "mesh": "models/two-tier-2020-shelf/fit_next_rail_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    },
+    {
+      "id": "gusset_bot",
+      "part": "gusset",
+      "source": "models/two-tier-2020-shelf/parts/gusset_l.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": 0.325,
+      "printability": {
+        "bed_contact_mm2": 2237.949,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 2237.949,
+        "min_width_mm": 45.821,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [65, 65, 6],
+      "mesh": "models/two-tier-2020-shelf/fit_next_gusset_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    },
+    {
+      "id": "panel_top",
+      "part": "panel",
+      "source": "models/two-tier-2020-shelf/parts/panel_mount_coupon.coscad",
+      "down": "top",
+      "orientation_mode": "declared",
+      "fff_score": -2.6e-2,
+      "printability": {
+        "bed_contact_mm2": 481.217,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 481.217,
+        "min_width_mm": 24,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [24, 24, 11],
+      "mesh": "models/two-tier-2020-shelf/fit_next_panel_top.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    }
+  ],
+  "beds": [
+    {
+      "index": 1,
+      "stl": "models/two-tier-2020-shelf/fit_bed1.stl",
+      "placements": [
+        {
+          "instance": "gusset_1",
+          "variant": "gusset_bot",
+          "x": 11,
+          "y": 11,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_1",
+          "variant": "rail_bot",
+          "x": 92,
+          "y": 11,
+          "w": 50,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "panel_1",
+          "variant": "panel_top",
+          "x": 158,
+          "y": 11,
+          "w": 24,
+          "d": 24,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    }
+  ],
+  "assembly_only": []
+}

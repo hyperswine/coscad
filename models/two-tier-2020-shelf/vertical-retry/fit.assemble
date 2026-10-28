@@ -1,0 +1,4 @@
+// Same rail section; X axis upright. No dispatch from this file.
+plate 256 256 6 250
+rail ← ../parts/rail_print_50.coscad ×1 ▽lft material=pla brim=5
+asm = rail

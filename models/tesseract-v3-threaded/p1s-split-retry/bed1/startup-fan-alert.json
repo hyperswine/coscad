@@ -1,0 +1,22 @@
+{
+  "observed_at": "2026-10-28T14:49:21+11:00",
+  "printer": "P1S",
+  "job": "tesseract-v3-split-bed1-p1s-20261028-144522.gcode",
+  "hms": [
+    {
+      "attr": 50344192,
+      "code": 65537,
+      "action": 0,
+      "timestamp": 1789347417
+    }
+  ],
+  "code": "0300310000010001",
+  "message": "Part cooling fan speed too slow or stopped; possible obstruction or connector problem",
+  "source": "Installed Bambu Studio English HMS dictionary",
+  "relation_to_prior_adhesion_failure": "not established",
+  "phase": "startup calibration",
+  "recheck_pending": false,
+  "cleared_on_fresh_report": true,
+  "rechecked_at": "2026-10-28T14:51:34+11:00",
+  "recheck_hms": []
+}

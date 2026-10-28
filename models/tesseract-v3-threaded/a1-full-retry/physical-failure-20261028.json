@@ -1,0 +1,33 @@
+{
+  "reported_on": "2026-10-28",
+  "source": "owner report",
+  "printer": "A1",
+  "outcome": "full tesseract print failed early",
+  "cause": "unknown",
+  "reported_timing": "before or around layers 4–5; exact first failure not established",
+  "owner_observations": [
+    "A1 had no known pre-existing issues comparable to the P1S",
+    "other prints shortly before this worked very well",
+    "no obvious gross slicing defect identified by owner that explains such an early failure",
+    "similar failures have occurred before on densely occupied plates, irregular parts, small/no brims, or geometry near bed edges"
+  ],
+  "hypotheses_not_diagnoses": [
+    "plate contamination or adhesion conditions",
+    "plate crowding and travel between many objects",
+    "small bed-contact patches or inadequate brim area",
+    "placement near bed edges"
+  ],
+  "comparison_note": "Failure on both printers makes a P1S-only mechanical explanation less persuasive, but does not identify a unique cause.",
+  "prior_attempt": "../p1s-full/physical-failure-20261028.json",
+  "next_experiment": "Separate geometry classes across plates; substantial brims on every object; first retry plate on P1S contains eight flat caps only.",
+  "last_printer_report": {
+    "gcode_state": "FAILED",
+    "layer_num": 13,
+    "total_layer_num": 496,
+    "print_error": 0,
+    "hms": []
+  },
+  "timing_note": "Owner describes very early trouble; printer later reported layer 13 at terminal FAILED. The first detachment time remains unknown.",
+  "subsequent_confirmed_slicing_error": "../slicing-plate-mismatch-20261028.json",
+  "causality_update": "The exported job used Cool Plate at 35 C instead of intended Textured PEI at 55 C. This is a confirmed configuration error and plausible contributor; other causes are not excluded."
+}

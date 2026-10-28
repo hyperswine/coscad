@@ -220,6 +220,40 @@ mode with developer mode on, `BAMBU_HOST`, `BAMBU_SERIAL` and
 scripts (`BAMBU_LAN_DIR`) for the FTPS client with the printer's TLS
 quirks. Nothing is sent without `--print`.
 
+**Mandatory sliced-file preflight.** After slicing and again before each
+dispatch, `scripts/bambu_preflight.py` checks the actual `.gcode.3mf` against
+the intended plate and temperatures from the flattened input presets. It
+compares the exported `curr_bed_type` and filament temperatures, the final
+startup bed target and `M190` wait, and the bed/nozzle targets at deposition
+moves throughout the first and subsequent layers. Startup flushing temperatures
+and shutdown cooling are allowed; an ambiguous conditional target is refused.
+This would reject the tesseract packages accidentally exported as Cool Plate
+at 35°C instead of Textured PEI at 55°C.
+
+The gate has no bypass flag, including `--accept-printability`, and remains
+active under Python `-O`. Missing data, unsupported plate types, multi-plate
+packages, and filaments needing different temperatures are refused. The
+current validator supports single-plate Bambu output with explicit layer/end
+markers and one common temperature schedule. A new format or temperature
+schedule needs an explicit validator extension and refusal tests.
+
+`_print.json` records `thermal_preflight` for each bed, with intended values,
+the checked package hash, layers and deposition moves. Model-specific dispatch
+scripts use the same gate and record its evidence before connecting to the
+printer; their remote hash checks bind the uploaded bytes to that evidence.
+The standard dispatcher freezes the verified bytes for upload and checks the
+remote content hash before sending the start command. Saved reports never
+replace a fresh check. This verifies commands and file settings; it cannot
+identify the physical plate or prove the heater reaches its target.
+
+For an offline check of a custom composition, keep its flattened input presets
+and run:
+
+```sh
+python3 scripts/bambu_preflight.py job.gcode.3mf --presets job/presets \
+  --plate 'Textured PEI Plate'
+```
+
 **Printability gate.** `bambu-slice.py` reads each variant's
 `printability` and prints the warnings for the parts on each bed it
 slices, with what addresses them.

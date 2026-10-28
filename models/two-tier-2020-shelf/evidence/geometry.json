@@ -1,0 +1,259 @@
+{
+  "parts": {
+    "rail_50": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 9149.100549976773,
+      "bounds_mm": [
+        [
+          -25.0,
+          -10.0,
+          -10.0
+        ],
+        [
+          25.0,
+          10.0,
+          10.0
+        ]
+      ],
+      "source_sha256": "3050648a533d3f9645bd6b9d1aa7994dcfc1e53474c98129a60cc33411446c7f"
+    },
+    "rail_print_50": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 9149.100549976773,
+      "bounds_mm": [
+        [
+          -25.0,
+          -10.0,
+          -10.0
+        ],
+        [
+          25.0,
+          10.0,
+          10.0
+        ]
+      ],
+      "source_sha256": "3050648a533d3f9645bd6b9d1aa7994dcfc1e53474c98129a60cc33411446c7f"
+    },
+    "rail_160": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 29277.121759925674,
+      "bounds_mm": [
+        [
+          -80.0,
+          -10.0,
+          -10.0
+        ],
+        [
+          80.0,
+          10.0,
+          10.0
+        ]
+      ],
+      "source_sha256": "929bb8550c8ad1de5fe7c1adc9f8080cdf28d060513e7a223446a4e07a5a1a7c"
+    },
+    "rail_print_160": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 29277.121759925674,
+      "bounds_mm": [
+        [
+          -80.0,
+          -10.0,
+          -10.0
+        ],
+        [
+          80.0,
+          10.0,
+          10.0
+        ]
+      ],
+      "source_sha256": "929bb8550c8ad1de5fe7c1adc9f8080cdf28d060513e7a223446a4e07a5a1a7c"
+    },
+    "rail_170": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 31106.941869921033,
+      "bounds_mm": [
+        [
+          -85.0,
+          -10.0,
+          -10.0
+        ],
+        [
+          85.0,
+          10.0,
+          10.0
+        ]
+      ],
+      "source_sha256": "84fc4d3726cb1c1e8543fa5ea84ebfd08227dfca7fee2c16aa277971bfd84fb0"
+    },
+    "rail_print_170": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 31106.941869921033,
+      "bounds_mm": [
+        [
+          -85.0,
+          -10.0,
+          -10.0
+        ],
+        [
+          85.0,
+          10.0,
+          10.0
+        ]
+      ],
+      "source_sha256": "84fc4d3726cb1c1e8543fa5ea84ebfd08227dfca7fee2c16aa277971bfd84fb0"
+    },
+    "rail_230": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 42085.86252989315,
+      "bounds_mm": [
+        [
+          -115.0,
+          -10.0,
+          -10.0
+        ],
+        [
+          115.0,
+          10.0,
+          10.0
+        ]
+      ],
+      "source_sha256": "e23f391d9816fa7bc0ab62af447279009cc014703f2646c09db3675f6bad88ae"
+    },
+    "rail_print_230": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 42085.86252989315,
+      "bounds_mm": [
+        [
+          -115.0,
+          -10.0,
+          -10.0
+        ],
+        [
+          115.0,
+          10.0,
+          10.0
+        ]
+      ],
+      "source_sha256": "e23f391d9816fa7bc0ab62af447279009cc014703f2646c09db3675f6bad88ae"
+    },
+    "gusset_l": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 13427.692469313513,
+      "bounds_mm": [
+        [
+          -10.0,
+          -55.0,
+          -3.0
+        ],
+        [
+          55.0,
+          10.0,
+          3.0
+        ]
+      ],
+      "source_sha256": "97053883e13938d6588800a4968e5f2a03113084012a3e3f21583914de9e2319"
+    },
+    "gusset_t": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 21774.168703970267,
+      "bounds_mm": [
+        [
+          -55.0,
+          -55.0,
+          -3.0
+        ],
+        [
+          55.0,
+          10.0,
+          3.0
+        ]
+      ],
+      "source_sha256": "09e77f7331adfd624e77977e61736bc4838227a589c7500a56496cb5f4bff58c"
+    },
+    "panel_left": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 247171.52731165336,
+      "bounds_mm": [
+        [
+          -99.8,
+          -99.8,
+          0.0
+        ],
+        [
+          99.8,
+          99.8,
+          11.0
+        ]
+      ],
+      "source_sha256": "c5c2a35c1da3c3b1d0b7cbd0c44da4749382a72ddc404826fbfa5fdacbc3a17d"
+    },
+    "panel_right": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 247171.52731165336,
+      "bounds_mm": [
+        [
+          -99.8,
+          -99.8,
+          0.0
+        ],
+        [
+          99.8,
+          99.8,
+          11.0
+        ]
+      ],
+      "source_sha256": "dfaec82bec3f6c09e468d31a9af969660869de1ecbdd0c61315d1df0f08ee499"
+    },
+    "panel_mount_coupon": {
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 5714.691827913352,
+      "bounds_mm": [
+        [
+          -12.0,
+          -12.0,
+          -5.5
+        ],
+        [
+          12.0,
+          12.0,
+          5.5
+        ]
+      ],
+      "source_sha256": "ba4946ecd989a75186403fb5a7d1206cb486ca81cfe6cfd2d593b30cccec0a90"
+    }
+  },
+  "hardware_paths": 120,
+  "physical_fit_verified": false,
+  "physical_load_tested": false,
+  "dispatched": false,
+  "nominal_nut_envelope_mm": [
+    10,
+    9.6,
+    2.6
+  ],
+  "nut_envelope_interference_mm3": 0.0,
+  "assembly_overlaps": [],
+  "manufacture": {
+    "beds": 11,
+    "parts": 48,
+    "brim_included": true
+  },
+  "fit": {
+    "beds": 1,
+    "parts": 3,
+    "brim_included": true
+  }
+}

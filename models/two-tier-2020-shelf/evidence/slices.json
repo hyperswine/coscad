@@ -1,0 +1,254 @@
+{
+  "dispatched": false,
+  "verified_settings": {
+    "wall_loops": "6",
+    "sparse_infill_density": "35%",
+    "sparse_infill_pattern": "gyroid",
+    "top_shell_layers": "5",
+    "bottom_shell_layers": "5",
+    "enable_support": "1",
+    "support_type": "normal(auto)",
+    "support_on_build_plate_only": "1",
+    "layer_height": "0.2",
+    "outer_wall_speed": "50",
+    "inner_wall_speed": "100",
+    "default_acceleration": "3000",
+    "outer_wall_acceleration": "1000",
+    "inner_wall_acceleration": "3000",
+    "travel_acceleration": "5000",
+    "printer_settings_id": "Bambu Lab X1 Carbon 0.4 nozzle",
+    "filament_settings_id": "Generic PLA",
+    "brim_type": "outer_only",
+    "brim_width": "5"
+  },
+  "builds": {
+    "fit": {
+      "plates": [
+        {
+          "plate": 1,
+          "file": "fit_bed1.gcode.3mf",
+          "sha256": "05eb5c3fc09c3d9e16f0813ccb14890baee4a66f09b61bd838b8aa1ba40440cd",
+          "stl_sha256": "081672ff470ea1693b437bf3523a13285c5e8aef7a20c2332132a1d0f817fc3f",
+          "grams": 30.22,
+          "estimated_seconds": 5552.39599609375,
+          "time": "1h 23m 53s",
+          "max_z_mm": 20.0,
+          "bbox_xy": [
+            37.82929,
+            90.8293,
+            218.17069,
+            165.1707
+          ],
+          "support_toolpaths": true,
+          "checked_extrusion_endpoints": 64417
+        }
+      ],
+      "grams": 30.22,
+      "estimated_hours": 1.5423322211371528
+    },
+    "manufacture": {
+      "plates": [
+        {
+          "plate": 1,
+          "file": "manufacture_bed1.gcode.3mf",
+          "sha256": "4cb9fcd8382881823235cdd95a04d102e269b36949af376607e213256711a7c0",
+          "stl_sha256": "166cd4fd5b58fd9eb7c19807aa131de84a10b273b5e482382ba9399e67e34190",
+          "grams": 221.17,
+          "estimated_seconds": 30766.255859375,
+          "time": "8h 24m 6s",
+          "max_z_mm": 11.0,
+          "bbox_xy": [
+            23.529290000000003,
+            23.529300000000003,
+            232.47069000000002,
+            232.47070000000002
+          ],
+          "support_toolpaths": true,
+          "checked_extrusion_endpoints": 510297
+        },
+        {
+          "plate": 2,
+          "file": "manufacture_bed2.gcode.3mf",
+          "sha256": "142eaa2ea7f39e476314fd5fef5c97b706ba3e8dac11241483e537231a373d7b",
+          "stl_sha256": "166cd4fd5b58fd9eb7c19807aa131de84a10b273b5e482382ba9399e67e34190",
+          "grams": 221.17,
+          "estimated_seconds": 30765.435546875,
+          "time": "8h 24m 6s",
+          "max_z_mm": 11.0,
+          "bbox_xy": [
+            23.529290000000003,
+            23.529300000000003,
+            232.47069000000002,
+            232.47070000000002
+          ],
+          "support_toolpaths": true,
+          "checked_extrusion_endpoints": 510297
+        },
+        {
+          "plate": 3,
+          "file": "manufacture_bed3.gcode.3mf",
+          "sha256": "d2123bb4545623cdc2bad4555c82b9030e15fef436e6a1696684113439d0d1b6",
+          "stl_sha256": "c67c8963b16417a61676a578c91bcaa15fe58e4427f659187dcbcf475c92a4fa",
+          "grams": 221.21,
+          "estimated_seconds": 30725.828125,
+          "time": "8h 23m 26s",
+          "max_z_mm": 11.0,
+          "bbox_xy": [
+            23.529290000000003,
+            23.529300000000003,
+            232.47069000000002,
+            232.47070000000002
+          ],
+          "support_toolpaths": true,
+          "checked_extrusion_endpoints": 508389
+        },
+        {
+          "plate": 4,
+          "file": "manufacture_bed4.gcode.3mf",
+          "sha256": "6b0bc2813acea4b4e4bc75e02f7910c3ee8b6adc29b095f68d165ed613c4d83b",
+          "stl_sha256": "c67c8963b16417a61676a578c91bcaa15fe58e4427f659187dcbcf475c92a4fa",
+          "grams": 221.21,
+          "estimated_seconds": 30721.23046875,
+          "time": "8h 23m 21s",
+          "max_z_mm": 11.0,
+          "bbox_xy": [
+            23.529290000000003,
+            23.529300000000003,
+            232.47069000000002,
+            232.47070000000002
+          ],
+          "support_toolpaths": true,
+          "checked_extrusion_endpoints": 508389
+        },
+        {
+          "plate": 5,
+          "file": "manufacture_bed5.gcode.3mf",
+          "sha256": "afbbd288985996e7ec70e6754192bb651ecff1e4d4d5f37e28c69292114a1859",
+          "stl_sha256": "5e84587aa0f399001368e26389a2496012deea5a33a573542b4ffdaa00990cc3",
+          "grams": 327.0,
+          "estimated_seconds": 50814.00390625,
+          "time": "13h 58m 15s",
+          "max_z_mm": 20.0,
+          "bbox_xy": [
+            8.329310000000001,
+            33.32931,
+            247.67071,
+            222.67071
+          ],
+          "support_toolpaths": true,
+          "checked_extrusion_endpoints": 126986
+        },
+        {
+          "plate": 6,
+          "file": "manufacture_bed6.gcode.3mf",
+          "sha256": "3653884b3e7c82705596f6a8bdb02a3aac1dc241d6a7c3a1e0699b53ad04d442",
+          "stl_sha256": "4c65b435667ad4c1ec13c57150bb22931c1afcfc65bfe47ec3af0b03ef64a7c1",
+          "grams": 281.87,
+          "estimated_seconds": 44410.29296875,
+          "time": "12h 11m 30s",
+          "max_z_mm": 20.0,
+          "bbox_xy": [
+            38.3293,
+            17.329310000000003,
+            217.6707,
+            238.67071
+          ],
+          "support_toolpaths": true,
+          "checked_extrusion_endpoints": 120251
+        },
+        {
+          "plate": 7,
+          "file": "manufacture_bed7.gcode.3mf",
+          "sha256": "97b8b53dc19c1e46419f464a8f5b4e27cdd09da052fbaaf331dfbb1e86932d32",
+          "stl_sha256": "306629375f5de5d158591043b0a6c1433465b0806a43b9931425823f0f465499",
+          "grams": 267.6,
+          "estimated_seconds": 42279.77734375,
+          "time": "11h 36m 0s",
+          "max_z_mm": 20.0,
+          "bbox_xy": [
+            38.3293,
+            17.329310000000003,
+            217.6707,
+            238.67071
+          ],
+          "support_toolpaths": true,
+          "checked_extrusion_endpoints": 115956
+        },
+        {
+          "plate": 8,
+          "file": "manufacture_bed8.gcode.3mf",
+          "sha256": "719d3dbc0a2083967ec9c04214a5187d2f4bb1b2ce0c487e1236a04ea8b3728d",
+          "stl_sha256": "37dda0ad0f0088864185dbdcbe68f1bf657a1c49d19495f938f6b7d0aed7ca5b",
+          "grams": 74.15,
+          "estimated_seconds": 12451.2275390625,
+          "time": "3h 18m 51s",
+          "max_z_mm": 6.0,
+          "bbox_xy": [
+            52.3293,
+            13.829310000000001,
+            203.6707,
+            242.17071
+          ],
+          "support_toolpaths": false,
+          "checked_extrusion_endpoints": 208398
+        },
+        {
+          "plate": 9,
+          "file": "manufacture_bed9.gcode.3mf",
+          "sha256": "2efbcf1cd6fb8187cb94b8b88e7b9aabdeb8b553233af676739e1cab3ef47204",
+          "stl_sha256": "37dda0ad0f0088864185dbdcbe68f1bf657a1c49d19495f938f6b7d0aed7ca5b",
+          "grams": 74.15,
+          "estimated_seconds": 12453.259765625,
+          "time": "3h 18m 53s",
+          "max_z_mm": 6.0,
+          "bbox_xy": [
+            52.3293,
+            13.829310000000001,
+            203.6707,
+            242.17071
+          ],
+          "support_toolpaths": false,
+          "checked_extrusion_endpoints": 208401
+        },
+        {
+          "plate": 10,
+          "file": "manufacture_bed10.gcode.3mf",
+          "sha256": "8631be025c2a858bb7d55eaa403c5c94fd4d4a3bea25c21063f13c51e7050f52",
+          "stl_sha256": "37dda0ad0f0088864185dbdcbe68f1bf657a1c49d19495f938f6b7d0aed7ca5b",
+          "grams": 74.15,
+          "estimated_seconds": 12452.4208984375,
+          "time": "3h 18m 52s",
+          "max_z_mm": 6.0,
+          "bbox_xy": [
+            52.3293,
+            13.829310000000001,
+            203.6707,
+            242.17071
+          ],
+          "support_toolpaths": false,
+          "checked_extrusion_endpoints": 208406
+        },
+        {
+          "plate": 11,
+          "file": "manufacture_bed11.gcode.3mf",
+          "sha256": "4dfc5321a63645bd0179f5473554f98ed57ec7ad663638f86791ca001371e5ab",
+          "stl_sha256": "011c57d47f6f48bbc1cd708706803c50a7cc1cd64ccf9b7bad1cfb62b8f5b366",
+          "grams": 103.08,
+          "estimated_seconds": 17034.3984375,
+          "time": "4h 35m 14s",
+          "max_z_mm": 6.0,
+          "bbox_xy": [
+            7.329300000000001,
+            13.829310000000001,
+            248.6707,
+            242.17071
+          ],
+          "support_toolpaths": false,
+          "checked_extrusion_endpoints": 295697
+        }
+      ],
+      "grams": 2086.76,
+      "estimated_hours": 87.46503634982639
+    }
+  }
+}

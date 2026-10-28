@@ -1,0 +1,5 @@
+// Separate coarse-thread coupon; no dispatch.
+plate 256 256 6 250
+socket ← coupon-socket.coscad ×1 ▽bot material=pla brim=5
+screw ← coupon-screw.coscad ×1 ▽top material=pla brim=5
+asm = socket ⊕ (screw |> x 30)

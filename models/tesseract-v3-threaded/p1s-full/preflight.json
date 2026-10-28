@@ -1,0 +1,1 @@
+{"at": "2026-10-28T11:35:12+11:00", "status": {"gcode_state": "FINISH", "mc_percent": 100, "layer_num": 55, "total_layer_num": 55, "mc_remaining_time": 0, "gcode_file": "", "subtask_name": "tesseract-v3-thread-fit-p1s-20261028-063917.gcode", "nozzle_temper": 23.78125, "bed_temper": 20.90625, "print_error": 0}, "hms": [], "spools": [["external", "PLA", "FFF144FF", true]]}

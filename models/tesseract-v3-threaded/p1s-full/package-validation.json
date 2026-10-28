@@ -1,0 +1,39 @@
+{
+  "package": "slice-onebed/tesseract-full-p1s.gcode.3mf",
+  "package_sha256": "d10f915d8dc9b25ef83093a83cf495b03769e7271412a4dfd519a7486fae0b1c",
+  "gcode_sha256": "579f6ad84c2e798afb9681bf86ad09b55462a6f247c3c74fd17e0ebf002c82ff",
+  "printer_model_id": "C12",
+  "normal_objects": 37,
+  "single_plate": true,
+  "max_geometry_bound_error_mm": 7.754296859729948e-06,
+  "deposition_segments": 1485727,
+  "arc_segments": 466205,
+  "arc_sampling_mm": 0.25,
+  "support_segments": 27939,
+  "support_thread_intrusions": 0,
+  "support_footprint_violations": 0,
+  "brim_segments": 14463,
+  "support_roots": {
+    "raster_mm": 0.5,
+    "lateral_allowance_mm": 1,
+    "previous_layers_considered": 3,
+    "support_layers": 205,
+    "support_components_checked": 1492,
+    "bed_components": 1,
+    "components_without_prior_support": [],
+    "limitation": "Sampled continuity, not exact extrusion topology or physical support strength"
+  },
+  "total_estimated_seconds": 71340.171875,
+  "filaments": [
+    {
+      "filament_id": "GFL99",
+      "id": 1,
+      "main_used_g": 309.3893127441406,
+      "total_used_g": 309.3893127441406
+    }
+  ],
+  "slicer_warnings": "",
+  "checked": false,
+  "full_circle_arcs_with_identical_endpoints": 0,
+  "invalidated_reason": "Exported Cool Plate with M190 S35; intended Textured PEI requires M190 S55. Retained for historical evidence."
+}

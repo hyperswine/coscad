@@ -1,0 +1,10 @@
+// Manufacturing inventory; assembled geometry is shelf.assemble.
+plate 256 256 6 250
+rail_230 ← parts/rail_print_230.coscad ×6 ▽bot material=pla brim=5
+rail_170 ← parts/rail_print_170.coscad ×8 ▽bot material=pla brim=5
+rail_160 ← parts/rail_print_160.coscad ×6 ▽bot material=pla brim=5
+gusset_l ← parts/gusset_l.coscad ×20 ▽bot material=pla brim=5
+gusset_t ← parts/gusset_t.coscad ×4 ▽bot material=pla brim=5
+panel_left ← parts/panel_left.coscad ×2 ▽top material=pla brim=5
+panel_right ← parts/panel_right.coscad ×2 ▽top material=pla brim=5
+asm = (rail_230 |> x 0) ⊕ (rail_230 |> x 300) ⊕ (rail_230 |> x 600) ⊕ (rail_230 |> x 900) ⊕ (rail_230 |> x 1200) ⊕ (rail_230 |> x 1500) ⊕ (rail_170 |> x 1800) ⊕ (rail_170 |> x 2100) ⊕ (rail_170 |> x 2400) ⊕ (rail_170 |> x 2700) ⊕ (rail_170 |> x 3000) ⊕ (rail_170 |> x 3300) ⊕ (rail_170 |> x 3600) ⊕ (rail_170 |> x 3900) ⊕ (rail_160 |> x 4200) ⊕ (rail_160 |> x 4500) ⊕ (rail_160 |> x 4800) ⊕ (rail_160 |> x 5100) ⊕ (rail_160 |> x 5400) ⊕ (rail_160 |> x 5700) ⊕ (gusset_l |> x 6000) ⊕ (gusset_l |> x 6300) ⊕ (gusset_l |> x 6600) ⊕ (gusset_l |> x 6900) ⊕ (gusset_l |> x 7200) ⊕ (gusset_l |> x 7500) ⊕ (gusset_l |> x 7800) ⊕ (gusset_l |> x 8100) ⊕ (gusset_l |> x 8400) ⊕ (gusset_l |> x 8700) ⊕ (gusset_l |> x 9000) ⊕ (gusset_l |> x 9300) ⊕ (gusset_l |> x 9600) ⊕ (gusset_l |> x 9900) ⊕ (gusset_l |> x 10200) ⊕ (gusset_l |> x 10500) ⊕ (gusset_l |> x 10800) ⊕ (gusset_l |> x 11100) ⊕ (gusset_l |> x 11400) ⊕ (gusset_l |> x 11700) ⊕ (gusset_t |> x 12000) ⊕ (gusset_t |> x 12300) ⊕ (gusset_t |> x 12600) ⊕ (gusset_t |> x 12900) ⊕ (panel_left |> x 13200) ⊕ (panel_left |> x 13500) ⊕ (panel_right |> x 13800) ⊕ (panel_right |> x 14100)

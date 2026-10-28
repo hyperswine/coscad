@@ -1,0 +1,105 @@
+{
+  "schema": "coscad.next/1",
+  "geometry_backend": "native-experimental",
+  "source": "models/tesseract-v3-threaded/thread-fit.assemble",
+  "bed": {
+    "w": 256,
+    "d": 256,
+    "margin": 6,
+    "max_z": 250
+  },
+  "variants": [
+    {
+      "id": "socket_bot",
+      "part": "socket",
+      "source": "models/tesseract-v3-threaded/coupon-socket.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.065,
+      "printability": {
+        "bed_contact_mm2": 139.872,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 139.872,
+        "min_width_mm": 15.968,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [
+        16,
+        15.968,
+        10
+      ],
+      "mesh": "models/tesseract-v3-threaded/thread-fit_next_socket_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    },
+    {
+      "id": "screw_top",
+      "part": "screw",
+      "source": "models/tesseract-v3-threaded/coupon-screw.coscad",
+      "down": "top",
+      "orientation_mode": "declared",
+      "fff_score": 0.031,
+      "printability": {
+        "bed_contact_mm2": 200.533,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0.029,
+        "first_layer_mm2": 200.533,
+        "min_width_mm": 15.968,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [
+        16,
+        15.968,
+        11
+      ],
+      "mesh": "models/tesseract-v3-threaded/thread-fit_next_screw_top.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    }
+  ],
+  "beds": [
+    {
+      "index": 1,
+      "stl": "models/tesseract-v3-threaded/p1s-thread-fit/thread-fit_bed1.stl",
+      "placements": [
+        {
+          "instance": "socket_1",
+          "variant": "socket_bot",
+          "x": 104.0,
+          "y": 120.01578617257383,
+          "w": 16,
+          "d": 15.968,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "screw_1",
+          "variant": "screw_top",
+          "x": 136.0,
+          "y": 120.01578617257383,
+          "w": 16,
+          "d": 15.968,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    }
+  ],
+  "assembly_only": [],
+  "packing": {
+    "method": "centered two-part coupon",
+    "front_left_keepout_mm": [
+      0,
+      0,
+      18,
+      28
+    ]
+  }
+}

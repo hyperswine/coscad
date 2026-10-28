@@ -9,6 +9,7 @@ for scenario in ['acknowledged','lost-ack','corrupt-upload']:
  with tempfile.TemporaryDirectory(prefix='boat-dispatch-test-') as temporary:
   root=Path(temporary);folder=root/'monohull';(folder/'slice').mkdir(parents=True)
   for src,dst in [(B/'monohull/package-validation.json',folder/'package-validation.json'),(B/'monohull/slice/monohull.gcode.3mf',folder/'slice/monohull.gcode.3mf')]:shutil.copyfile(src,dst)
+  shutil.copytree(B/'monohull/presets',folder/'presets')
   state={'gcode_state':'FINISH','print_error':0,'hms':[],'nozzle_diameter':'0.4'};calls=[];replies=[];stored={};clock=[0]
   def now():clock[0]+=10;return clock[0]
   def send(command):
@@ -37,7 +38,7 @@ for scenario in ['acknowledged','lost-ack','corrupt-upload']:
   with patch.object(d,'B',root),patch.object(d,'context',fake_context),patch.object(d.time,'monotonic',now),patch.object(d.time,'sleep',lambda _:None),patch.dict('os.environ',{'BAMBU_SERIAL':'TEST','BAMBU_HOST':'127.0.0.1','BAMBU_ACCESS_CODE':'synthetic'}),patch.dict('sys.modules',{'ftp':SimpleNamespace(ImplicitFTPS=FTP)}),patch('sys.argv',['dispatch.py','monohull','--spool','external','--confirm-bed-clear','--authorization-note','Synthetic test only']),contextlib.redirect_stdout(io.StringIO()):
    if scenario=='corrupt-upload':
     try:d.main();raise AssertionError('Corrupt upload accepted')
-    except AssertionError as e:assert str(e)=='Remote content mismatch'
+    except ValueError as e:assert str(e)=='Remote content mismatch'
     assert not calls
    else:
     d.main();record=json.loads((folder/'print-run.json').read_text());assert record['first_layer_reached'] and len(calls)==1

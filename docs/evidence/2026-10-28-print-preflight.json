@@ -1,0 +1,125 @@
+{
+  "read_only": true,
+  "printer_connections": 0,
+  "checks": [
+    {
+      "name": "corrected-p1s",
+      "file": "models/tesseract-v3-threaded/p1s-split-retry/bed1/slice-corrected/tesseract-bed1-p1s.gcode.3mf",
+      "expected_accept": true,
+      "accepted": true,
+      "evidence": {
+        "schema": "coscad.thermal-preflight/1",
+        "checked": true,
+        "expected": {
+          "plate": "Textured PEI Plate",
+          "bed_initial_c": 55.0,
+          "bed_c": 55.0,
+          "nozzle_initial_c": 220.0,
+          "nozzle_c": 220.0
+        },
+        "layers_checked": 78,
+        "deposition_moves_checked": 267280,
+        "package_sha256": "db6ae97bf854dd5dfbe5f168c96158436504c7323c58968bd8b7af1db1e106a6"
+      }
+    },
+    {
+      "name": "failed-p1s-35C",
+      "file": "models/tesseract-v3-threaded/p1s-full/slice-onebed/tesseract-full-p1s.gcode.3mf",
+      "expected_accept": false,
+      "accepted": false,
+      "evidence": {
+        "refusal": "Exported plate mismatch: expected 'Textured PEI Plate', got 'Cool Plate'"
+      }
+    },
+    {
+      "name": "failed-a1-35C",
+      "file": "models/tesseract-v3-threaded/a1-full-retry/slice/tesseract-full-a1.gcode.3mf",
+      "expected_accept": false,
+      "accepted": false,
+      "evidence": {
+        "refusal": "Exported plate mismatch: expected 'Textured PEI Plate', got 'Cool Plate'"
+      }
+    },
+    {
+      "name": "successful-p1s-coupon",
+      "file": "models/tesseract-v3-threaded/p1s-thread-fit/thread-fit_bed1.gcode.3mf",
+      "expected_accept": true,
+      "accepted": true,
+      "evidence": {
+        "schema": "coscad.thermal-preflight/1",
+        "checked": true,
+        "expected": {
+          "plate": "Textured PEI Plate",
+          "bed_initial_c": 55.0,
+          "bed_c": 55.0,
+          "nozzle_initial_c": 220.0,
+          "nozzle_c": 220.0
+        },
+        "layers_checked": 55,
+        "deposition_moves_checked": 30014,
+        "package_sha256": "8397eb7dc5808655ff1c5723ad214a64b73c1599ca3ed7271d3130c8e0c10182"
+      }
+    },
+    {
+      "name": "x1c-upright-rail",
+      "file": "models/two-tier-2020-shelf/vertical-loose-fit/fit_bed1.gcode.3mf",
+      "expected_accept": true,
+      "accepted": true,
+      "evidence": {
+        "schema": "coscad.thermal-preflight/1",
+        "checked": true,
+        "expected": {
+          "plate": "Textured PEI Plate",
+          "bed_initial_c": 55.0,
+          "bed_c": 55.0,
+          "nozzle_initial_c": 220.0,
+          "nozzle_c": 220.0
+        },
+        "layers_checked": 250,
+        "deposition_moves_checked": 58026,
+        "package_sha256": "de095d6480ad7fc1c9786798bc3d3a4c9a811c3e866ad329ecf00bebe9d0f8e8"
+      }
+    },
+    {
+      "name": "a1-boat",
+      "file": "models/twin-boat-trials/outrigger/slice/outrigger.gcode.3mf",
+      "expected_accept": true,
+      "accepted": true,
+      "evidence": {
+        "schema": "coscad.thermal-preflight/1",
+        "checked": true,
+        "expected": {
+          "plate": "Textured PEI Plate",
+          "bed_initial_c": 65.0,
+          "bed_c": 65.0,
+          "nozzle_initial_c": 220.0,
+          "nozzle_c": 220.0
+        },
+        "layers_checked": 137,
+        "deposition_moves_checked": 126729,
+        "package_sha256": "570a5a951c4096238847f755ca1e92a97885170bb8114e79b9a221ba15f8e1b8"
+      }
+    },
+    {
+      "name": "p1s-petg",
+      "file": "models/beach-outrigger/p1s-petg/slice/beach-outrigger.gcode.3mf",
+      "expected_accept": true,
+      "accepted": true,
+      "evidence": {
+        "schema": "coscad.thermal-preflight/1",
+        "checked": true,
+        "expected": {
+          "plate": "Textured PEI Plate",
+          "bed_initial_c": 70.0,
+          "bed_c": 70.0,
+          "nozzle_initial_c": 230.0,
+          "nozzle_c": 245.0
+        },
+        "layers_checked": 288,
+        "deposition_moves_checked": 590550,
+        "package_sha256": "ea989f2d3133e0494c96033f009dfbd1d8d205a71b1eb518dfec0e66e0c65a8f"
+      }
+    }
+  ],
+  "validator_sha256": "8919545ccb34a8cf4db873ca8e257f8a46d7edb964c6e778d2e554fc6a014081"
+}

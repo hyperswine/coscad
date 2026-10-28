@@ -1,0 +1,17 @@
+{
+  "reported_on": "2026-10-28",
+  "source": "owner report",
+  "result": "thread fit worked",
+  "printer": "P1S",
+  "dispatch_record": "p1s-thread-fit/fit_run.json",
+  "clearance_mm": {
+    "radial": 0.35,
+    "axial_flank": 0.18
+  },
+  "validates": "printed screw/socket coupon fit",
+  "not_yet_tested": [
+    "full corner cap",
+    "complete assembly",
+    "strength or wear"
+  ]
+}

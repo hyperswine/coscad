@@ -1,0 +1,5 @@
+bed 1: rail_bot: elevated downward-facing start at 13.2 mm above the bed; inspect supports before printing [addressed by supports]
+brim: 5 mm outer brim, as reserved in the manifest
+printer Bambu Lab X1 Carbon 0.4 nozzle | process 0.20mm Standard @BBL X1C | filament Generic PLA | Textured PEI Plate
+bed 1: 3 parts, 1h 23m 53s, 30.22 g -> models/two-tier-2020-shelf/fit_bed1.gcode.3mf
+Wrote models/two-tier-2020-shelf/fit_print.json

@@ -1,0 +1,68 @@
+{
+  "schema": "coscad.next/1",
+  "geometry_backend": "native-experimental",
+  "source": "models/two-tier-2020-shelf/vertical-retry/fit.assemble",
+  "bed": {
+    "w": 256,
+    "d": 256,
+    "margin": 6,
+    "max_z": 250
+  },
+  "variants": [
+    {
+      "id": "rail_lft",
+      "part": "rail",
+      "source": "models/two-tier-2020-shelf/vertical-retry/../parts/rail_print_50.coscad",
+      "down": "lft",
+      "orientation_mode": "declared",
+      "fff_score": -0.33,
+      "printability": {
+        "bed_contact_mm2": 182.982,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 182.982,
+        "min_width_mm": 20,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [
+        20,
+        20,
+        50
+      ],
+      "mesh": "models/two-tier-2020-shelf/vertical-retry/fit_next_rail_lft.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    }
+  ],
+  "beds": [
+    {
+      "index": 1,
+      "stl": "models/two-tier-2020-shelf/vertical-retry/fit_bed1.stl",
+      "placements": [
+        {
+          "instance": "rail_1",
+          "variant": "rail_lft",
+          "x": 118,
+          "y": 118,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    }
+  ],
+  "assembly_only": [],
+  "packing": {
+    "method": "centered single upright rail",
+    "front_left_keepout_mm": [
+      0,
+      0,
+      18,
+      28
+    ]
+  }
+}

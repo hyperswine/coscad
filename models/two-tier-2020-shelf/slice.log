@@ -1,0 +1,18 @@
+bed 5: rail_230_bot: elevated downward-facing start at 13.2 mm above the bed; inspect supports before printing [addressed by supports]
+bed 6: rail_170_bot: elevated downward-facing start at 13.2 mm above the bed; inspect supports before printing [addressed by supports]
+bed 7: rail_170_bot: elevated downward-facing start at 13.2 mm above the bed; inspect supports before printing [addressed by supports]
+bed 7: rail_160_bot: elevated downward-facing start at 13.2 mm above the bed; inspect supports before printing [addressed by supports]
+brim: 5 mm outer brim, as reserved in the manifest
+printer Bambu Lab X1 Carbon 0.4 nozzle | process 0.20mm Standard @BBL X1C | filament Generic PLA | Textured PEI Plate
+bed 1: 1 parts, 8h 24m 6s, 221.17 g -> models/two-tier-2020-shelf/manufacture_bed1.gcode.3mf
+bed 2: 1 parts, 8h 24m 6s, 221.17 g -> models/two-tier-2020-shelf/manufacture_bed2.gcode.3mf
+bed 3: 1 parts, 8h 23m 26s, 221.21 g -> models/two-tier-2020-shelf/manufacture_bed3.gcode.3mf
+bed 4: 1 parts, 8h 23m 21s, 221.21 g -> models/two-tier-2020-shelf/manufacture_bed4.gcode.3mf
+bed 5: 6 parts, 13h 58m 15s, 327.00 g -> models/two-tier-2020-shelf/manufacture_bed5.gcode.3mf
+bed 6: 7 parts, 12h 11m 30s, 281.87 g -> models/two-tier-2020-shelf/manufacture_bed6.gcode.3mf
+bed 7: 7 parts, 11h 36m 0s, 267.60 g -> models/two-tier-2020-shelf/manufacture_bed7.gcode.3mf
+bed 8: 6 parts, 3h 18m 51s, 74.15 g -> models/two-tier-2020-shelf/manufacture_bed8.gcode.3mf
+bed 9: 6 parts, 3h 18m 53s, 74.15 g -> models/two-tier-2020-shelf/manufacture_bed9.gcode.3mf
+bed 10: 6 parts, 3h 18m 52s, 74.15 g -> models/two-tier-2020-shelf/manufacture_bed10.gcode.3mf
+bed 11: 6 parts, 4h 35m 14s, 103.08 g -> models/two-tier-2020-shelf/manufacture_bed11.gcode.3mf
+Wrote models/two-tier-2020-shelf/manufacture_print.json

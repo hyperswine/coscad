@@ -1,0 +1,4 @@
+// Looser nut fit; same upright orientation as the successful rail trial.
+plate 256 256 6 250
+rail ← rail.coscad ×1 ▽lft material=pla brim=5
+asm = rail

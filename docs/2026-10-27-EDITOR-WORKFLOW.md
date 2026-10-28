@@ -10,7 +10,12 @@ OpenSCAD backends.
 Build the compiler with Cabal and configure `coscad.executableCommand` to the
 result of `cabal list-bin exe:coscad` (use the same build directory/flags as your
 build). A direct executable is recommended for prompt cancellation. Package
-`vscode/` with `npm run package`, install the VSIX, then reload VS Code.
+`vscode/` with `npm run package`, install the VSIX, then reload VS Code. Point
+this at a current build: a copied or installed binary from before the analysis
+directives still answers `--version` and `validate --json`, but rejects
+`support`/`load`/`stress` as syntax errors. The extension notices a compiler
+that does not advertise `stress` in `capabilities --json`, warns once, and keeps
+its own verdict on those lines.
 
 - `support`, `load`, and `stress` have parsing, highlighting, documentation,
   completion and datum navigation. Material completion follows the compiler's

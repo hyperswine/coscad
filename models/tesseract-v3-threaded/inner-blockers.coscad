@@ -1,0 +1,160 @@
+// Selected from design.coscad by export.py; edit the master.
+// Tesseract III: rigid frame, drop-in bars, individually threaded corner caps.
+// Geometry is authored here in pure CoScad. export.py only selects named parts.
+// Named frames are saved on construction blanks, before asymmetric features.
+// Custom coarse RH thread: 10 mm major, 3 mm pitch, 8 mm engagement.
+pitch = 3
+root_radius = 4.05
+major_radius = 5
+radial_clearance = 0.35
+flank_clearance = 0.18
+thread_length = 8
+outer_half = 60
+inner_half = 20
+boss_offset = 3
+hub_depth = 24
+cap_recess = 3.7
+strut_length = ((outer_half - inner_half) * 1.7320508075688772 - boss_offset - hub_depth)
+bar_half = (outer_half - 13)
+
+// One 15 degree helical facet; doubling builds a turn without foreign geometry.
+// Thin sections overlap the core and neighboring facets by 0.02 mm.
+root_section = box 0.04 0.04 2.2 |> x 4.02
+crest_section = box 0.04 0.04 0.2 |> x major_radius
+section = root_section |> hull crest_section
+facet = section |> hull (section |> rotz 15 |> z (pitch / 24))
+eighth = facet ⊕ (facet |> rotz 15 |> z (pitch / 24)) ⊕ (facet |> rotz 30 |> z (pitch / 12))
+quarter = eighth ⊕ (eighth |> rotz 45 |> z (pitch / 8))
+half_turn = quarter ⊕ (quarter |> rotz 90 |> z (pitch / 4))
+turn = half_turn ⊕ (half_turn |> rotz 180 |> z (pitch / 2))
+two_turns = turn ⊕ (turn |> z pitch)
+four_turns = two_turns ⊕ (two_turns |> z (2 * pitch))
+ridge = four_turns |> z (-3 * pitch)
+thread_clip = zcyl (major_radius + 0.1) (thread_length - 0.6) |> anchor top
+thread_core = ⌭ root_radius thread_length 0.4 |> anchor top
+male = thread_core ⊕ (ridge ∩ thread_clip)
+
+// Matching cutter has both radial and axial flank clearance, never global scale.
+f_root = box 0.04 0.04 (2.2 + 2 * flank_clearance) |> x (4.02 + radial_clearance)
+f_crest = box 0.04 0.04 (0.2 + 2 * flank_clearance) |> x (major_radius + radial_clearance)
+f_section = f_root |> hull f_crest
+f_facet = f_section |> hull (f_section |> rotz 15 |> z (pitch / 24))
+f_eighth = f_facet ⊕ (f_facet |> rotz 15 |> z (pitch / 24)) ⊕ (f_facet |> rotz 30 |> z (pitch / 12))
+f_quarter = f_eighth ⊕ (f_eighth |> rotz 45 |> z (pitch / 8))
+f_half = f_quarter ⊕ (f_quarter |> rotz 90 |> z (pitch / 4))
+f_turn = f_half ⊕ (f_half |> rotz 180 |> z (pitch / 2))
+f_two = f_turn ⊕ (f_turn |> z pitch)
+f_four = f_two ⊕ (f_two |> z (2 * pitch))
+f_ridge = f_four |> z (-3 * pitch)
+f_core = zcyl (root_radius + radial_clearance) (thread_length + 0.6) |> anchor top |> z 0.3
+f_clip = zcyl (major_radius + radial_clearance + 0.1) (thread_length + 0.6) |> anchor top |> z 0.3
+mouth = zcyl (major_radius + radial_clearance + 0.2) 0.8
+female = f_core ⊕ (f_ridge ∩ f_clip) ⊕ mouth
+female_tool = female |> frame root top bot bak 0 0 -0.4
+
+// Corner construction references. All three bar ports refer to this blank.
+node = box 40 40 40
+  |> frame closure ctr top+rt+bak top
+  |> frame rear ctr bot+lft+fwd top (-hub_depth / 1.7320508075688772) (-hub_depth / 1.7320508075688772) (-hub_depth / 1.7320508075688772)
+  |> frame edge_x ctr lft top -13 0 0
+  |> frame edge_y ctr fwd top 0 -13 0
+  |> frame edge_z ctr bot bak 0 0 -13
+outward_cut = box 100 100 100 |> anchor bot |> frame root bot bot bak
+upper_cut = outward_cut |> mate node @closure @root
+lower_cut = outward_cut |> mate node @rear @root
+hub_blank = node |> cut upper_cut |> cut lower_cut
+
+// Collared ends enter from the cube's exterior face diagonal, not axially.
+// The same insertion direction works at BOTH ends of each edge.
+x_seat = sphere 3.7 |> place node @edge_x ctr
+x_neck = xcyl 2.8 25 |> place node @edge_x rt
+x_channel = (x_seat ⊕ x_neck) |> hull ((x_seat ⊕ x_neck) |> move 0 35 35)
+y_seat = sphere 3.7 |> place node @edge_y ctr
+y_neck = ycyl 2.8 25 |> place node @edge_y bak
+y_channel = (y_seat ⊕ y_neck) |> hull ((y_seat ⊕ y_neck) |> move 35 0 35)
+z_seat = sphere 3.7 |> place node @edge_z ctr
+z_neck = zcyl 2.8 25 |> place node @edge_z top
+z_channel = (z_seat ⊕ z_neck) |> hull ((z_seat ⊕ z_neck) |> move 35 35 0)
+cap_pocket = zcyl 16.35 (cap_recess + 0.35) |> anchor top |> z 0.2 |> frame root top bot bak 0 0 -0.2
+hub = hub_blank |> cut x_channel |> cut y_channel |> cut z_channel
+  |> cut (cap_pocket |> mate node @closure @root)
+  |> cut (female_tool |> mate node @closure @root 0 (-cap_recess))
+  |> cut (female_tool |> mate node @rear @root)
+
+// Cap rotates above the bar ends, with only its central male screw below.
+// Print broad outer face down so the screw grows upright without supports.
+cap_head = zcyl 19.5 4 |> anchor bot
+cap_land = zcyl 16 cap_recess |> anchor top
+cap_stem = male |> place cap_land bot top
+cap_part = (cap_head ⊕ cap_land ⊕ cap_stem)
+  |> frame joint bot bot bak 0 0 (thread_length + cap_recess)
+
+bar_body = xcyl 2.5 (2 * bar_half)
+bar_left = sphere 3.4 |> place bar_body lft ctr
+bar_right = sphere 3.4 |> place bar_body rt ctr
+bar = (bar_body ⊕ bar_left ⊕ bar_right)
+  |> frame left ctr lft top (-bar_half) 0 0
+  |> frame right ctr rt top bar_half 0 0
+
+// The inner end screws in first; each empty hub can rotate onto the outer end.
+strut_body = zcyl 3.5 strut_length |> anchor bot
+strut_bottom = male |> place strut_body bot top
+strut_top = (male |> roty 180) |> place strut_body top bot
+shoulder = ⌭ 6.5 3 1.4
+strut_shoulders = (shoulder |> place strut_body bot bot) ⊕ (shoulder |> place strut_body top top)
+strut = (strut_body ⊕ strut_shoulders ⊕ strut_bottom ⊕ strut_top)
+  |> frame inner bot bot bak 0 0 thread_length
+  |> frame outer top top bak 0 0 (-thread_length)
+
+// Inner cube is an open frame. Bosses and sockets share saved corner frames.
+corner_offset = (boss_offset / 1.7320508075688772)
+inner_reference = box (2 * inner_half) (2 * inner_half) (2 * inner_half)
+  |> frame c1 top+rt+bak top+rt+bak top corner_offset corner_offset corner_offset
+  |> frame c2 top+lft+bak top+lft+bak top (-corner_offset) corner_offset corner_offset
+  |> frame c3 top+lft+fwd top+lft+fwd top (-corner_offset) (-corner_offset) corner_offset
+  |> frame c4 top+rt+fwd top+rt+fwd top corner_offset (-corner_offset) corner_offset
+  |> frame c5 bot+rt+bak bot+rt+bak bot corner_offset corner_offset (-corner_offset)
+  |> frame c6 bot+lft+bak bot+lft+bak bot (-corner_offset) corner_offset (-corner_offset)
+  |> frame c7 bot+lft+fwd bot+lft+fwd bot (-corner_offset) (-corner_offset) (-corner_offset)
+  |> frame c8 bot+rt+fwd bot+rt+fwd bot corner_offset (-corner_offset) (-corner_offset)
+inner_frame = inner_reference |> cut (box 26 26 42) |> cut (box 26 42 26) |> cut (box 42 26 26)
+boss = zcyl 8 13 |> anchor top |> frame root top bot bak
+inner_solid = inner_frame
+  |> add (boss |> mate inner_reference @c1 @root)
+  |> add (boss |> mate inner_reference @c2 @root)
+  |> add (boss |> mate inner_reference @c3 @root)
+  |> add (boss |> mate inner_reference @c4 @root)
+  |> add (boss |> mate inner_reference @c5 @root)
+  |> add (boss |> mate inner_reference @c6 @root)
+  |> add (boss |> mate inner_reference @c7 @root)
+  |> add (boss |> mate inner_reference @c8 @root)
+inner = inner_solid
+  |> cut (female_tool |> mate inner_reference @c1 @root)
+  |> cut (female_tool |> mate inner_reference @c2 @root)
+  |> cut (female_tool |> mate inner_reference @c3 @root)
+  |> cut (female_tool |> mate inner_reference @c4 @root)
+  |> cut (female_tool |> mate inner_reference @c5 @root)
+  |> cut (female_tool |> mate inner_reference @c6 @root)
+  |> cut (female_tool |> mate inner_reference @c7 @root)
+  |> cut (female_tool |> mate inner_reference @c8 @root)
+
+// Small separate screw and socket coupon, same thread definitions as the model.
+coupon_blank = zcyl 8 10 |> anchor top
+coupon_socket = coupon_blank |> cut female |> cut (zcyl (root_radius + radial_clearance) 24)
+coupon_screw = (zcyl 8 3 |> anchor bot) ⊕ male
+main = inner_blockers
+
+// Manufacturing-only flats: improve vertical bar adhesion, retaining its head centres.
+bar_print = bar |> cut (box 3 30 30 |> place bar lft rt 0.8 0 0) |> cut (box 3 30 30 |> place bar rt lft -0.8 0 0)
+
+// Slicer-only exclusions: keep removable supports out of the actual thread bores.
+bore_keepout = zcyl 5.65 10 |> anchor top |> z 0.6 |> frame root top bot bak 0 0 -0.6
+hub_blockers = (bore_keepout |> mate node @closure @root 0 (-cap_recess)) ⊕ (bore_keepout |> mate node @rear @root)
+inner_blockers = (bore_keepout |> mate inner_reference @c1 @root)
+  |> add (bore_keepout |> mate inner_reference @c2 @root)
+  |> add (bore_keepout |> mate inner_reference @c3 @root)
+  |> add (bore_keepout |> mate inner_reference @c4 @root)
+  |> add (bore_keepout |> mate inner_reference @c5 @root)
+  |> add (bore_keepout |> mate inner_reference @c6 @root)
+  |> add (bore_keepout |> mate inner_reference @c7 @root)
+  |> add (bore_keepout |> mate inner_reference @c8 @root)

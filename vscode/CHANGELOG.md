@@ -11,6 +11,12 @@
 
 ## Unreleased
 
+- A compiler that predates `support`/`load`/`stress` no longer paints
+  `unexpected 'b'; expecting '='` on those lines: the extension recognises the
+  directives itself and drops the older compiler's errors on them, warning once
+  that the compiler is older than the language support (the visible symptom of
+  pointing `coscad.executableCommand` at a stale build).
+
 - With a compiler that has `validate --json --stdin`, compiler diagnostics
   follow the buffer as you type (debounced) as well as open and save, and
   are read from JSON instead of parsed from stderr. While they are live the

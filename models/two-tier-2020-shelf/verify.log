@@ -1,0 +1,25 @@
+/Users/jasonqin/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/trimesh/triangles.py:302: RuntimeWarning: invalid value encountered in divide
+  center_mass = integrated[1:4] / volume
+{
+  "hardware_paths": 120,
+  "physical_fit_verified": false,
+  "physical_load_tested": false,
+  "dispatched": false,
+  "nominal_nut_envelope_mm": [
+    10,
+    9.6,
+    2.6
+  ],
+  "nut_envelope_interference_mm3": 0.0,
+  "assembly_overlaps": [],
+  "manufacture": {
+    "beds": 11,
+    "parts": 48,
+    "brim_included": true
+  },
+  "fit": {
+    "beds": 1,
+    "parts": 3,
+    "brim_included": true
+  }
+}

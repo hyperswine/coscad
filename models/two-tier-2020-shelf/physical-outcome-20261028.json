@@ -1,0 +1,15 @@
+{
+  "reported_on": "2026-10-28",
+  "source": "owner report",
+  "job_record": "fit_run.json",
+  "result": "partial success",
+  "decent_items": 2,
+  "total_items": 3,
+  "issue": "T-slot extrusion top lips printed poorly in horizontal orientation",
+  "unverified": [
+    "actual nut fit",
+    "bolt clamp strength",
+    "shelf load capacity"
+  ],
+  "next_test": "same 50 mm rail upright, without support, on X1C"
+}

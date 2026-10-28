@@ -1,0 +1,38 @@
+{
+  "recorded_utc": "2026-10-27T08:58:23.902236+00:00",
+  "status": "sliced-prototype-awaiting-hardware-fit",
+  "dispatched": false,
+  "assembly_planner": {
+    "status": "stopped",
+    "reason": "several minutes without output; explicit assembly sequence supplied"
+  },
+  "checks": {
+    "assembly_validation": true,
+    "interference": true,
+    "geometry": "evidence/geometry.json",
+    "slice_readback": "evidence/slices.json"
+  },
+  "sources": {
+    "build_model.py": "3422d84bac8b7190edbfc26629a844a7944b2ab12e353f13143ca6b98eb6706e",
+    "fit.assemble": "3e7f4ea40ef29af3c342deac32e1ac39b5a027e8f7ea62ba2ef9096a61dc7822",
+    "manufacture.assemble": "c09cb1c2f1ef342d32b0bcd8eae0a78d4b6862da609ecaebffaa4dbbc6476e6d",
+    "pack_x1c.py": "316643a42ce065f169520baf5856442d779b8fa6655a6ee2b411101990add338",
+    "parts/gusset_l.coscad": "97053883e13938d6588800a4968e5f2a03113084012a3e3f21583914de9e2319",
+    "parts/gusset_t.coscad": "09e77f7331adfd624e77977e61736bc4838227a589c7500a56496cb5f4bff58c",
+    "parts/panel_left.coscad": "c5c2a35c1da3c3b1d0b7cbd0c44da4749382a72ddc404826fbfa5fdacbc3a17d",
+    "parts/panel_mount_coupon.coscad": "ba4946ecd989a75186403fb5a7d1206cb486ca81cfe6cfd2d593b30cccec0a90",
+    "parts/panel_right.coscad": "dfaec82bec3f6c09e468d31a9af969660869de1ecbdd0c61315d1df0f08ee499",
+    "parts/rail_160.coscad": "929bb8550c8ad1de5fe7c1adc9f8080cdf28d060513e7a223446a4e07a5a1a7c",
+    "parts/rail_170.coscad": "84fc4d3726cb1c1e8543fa5ea84ebfd08227dfca7fee2c16aa277971bfd84fb0",
+    "parts/rail_230.coscad": "e23f391d9816fa7bc0ab62af447279009cc014703f2646c09db3675f6bad88ae",
+    "parts/rail_50.coscad": "3050648a533d3f9645bd6b9d1aa7994dcfc1e53474c98129a60cc33411446c7f",
+    "parts/rail_print_160.coscad": "929bb8550c8ad1de5fe7c1adc9f8080cdf28d060513e7a223446a4e07a5a1a7c",
+    "parts/rail_print_170.coscad": "84fc4d3726cb1c1e8543fa5ea84ebfd08227dfca7fee2c16aa277971bfd84fb0",
+    "parts/rail_print_230.coscad": "e23f391d9816fa7bc0ab62af447279009cc014703f2646c09db3675f6bad88ae",
+    "parts/rail_print_50.coscad": "3050648a533d3f9645bd6b9d1aa7994dcfc1e53474c98129a60cc33411446c7f",
+    "shelf.assemble": "21b4916cc5dbe9c655510409a3542217e9745d6c7a107e79a5cba6914270eb4e",
+    "verify.py": "3eced65ee8d3b66bc609e06b719317ae7c4ded96bff1faed466b7e1d099f5613",
+    "verify_slices.py": "8e7dfc185a0ece677d2c191d1b702ee0779845fdc820c8eb1c97c046e6339f21"
+  },
+  "pipeline_lock_sha256": "ad5b91a0a6458773905c8dade10e640c0caea1336995ad4c2468d0e93bbd9120"
+}

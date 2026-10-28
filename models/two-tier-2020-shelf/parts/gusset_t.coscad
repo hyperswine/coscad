@@ -1,0 +1,9 @@
+// Flat gusset, 6 mm, two M5 screws per arm. Hole diameter 5.6 mm.
+// Joint-centre relief avoids the perpendicular rail at six-leg intersections.
+arm = box 45 20 6 |> x 32.5
+stem = box 20 45 6 |> y -32.5
+web = (box 1 1 6 |> move 10 -10 0) ⇓ (box 1 1 6 |> move 42 -10 0) ⇓ (box 1 1 6 |> move 10 -42 0)
+right = arm ⊕ stem ⊕ web
+relief = box 20.4 20.4 10
+hole = zcyl 2.8 10
+main = (right ⊕ (right |> mirror 1 0 0)) ⊖ relief |> cut (hole |> move 25 0 0) |> cut (hole |> move 45 0 0) |> cut (hole |> move 0 -25 0) |> cut (hole |> move 0 -45 0) |> cut (hole |> move -25 0 0) |> cut (hole |> move -45 0 0)

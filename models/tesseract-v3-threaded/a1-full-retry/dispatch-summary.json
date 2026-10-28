@@ -1,0 +1,55 @@
+{
+  "created_at": "2026-10-28T12:37:08+11:00",
+  "job": "tesseract-v3-full",
+  "printer": "a1",
+  "authorization": "Owner requested the tesseract retry on A1 using physical AMS slot 1 instead of slot 3, and confirmed the A1 bed clear on 2026-10-28.",
+  "bed_clear_owner_confirmed": true,
+  "package_sha256": "67d9ffc1d20296e83f88a0088ef31604d61b47dc42c04c6cdc8944eb5fb46a30",
+  "remote_content_sha256": "67d9ffc1d20296e83f88a0088ef31604d61b47dc42c04c6cdc8944eb5fb46a30",
+  "remote_name": "tesseract-v3-full-a1-20261028-123708.gcode.3mf",
+  "spool": "ams0",
+  "physical_ams_slot": 1,
+  "ams_mapping": [
+    0
+  ],
+  "expected_layers": 496,
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "151644204"
+  },
+  "first_layer_reached": null,
+  "needs_attention": null,
+  "latest_observation": {
+    "at": "2026-10-28T12:43:44+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 0,
+      "layer_num": 0,
+      "total_layer_num": 496,
+      "mc_remaining_time": 1214,
+      "gcode_file": "tesseract-v3-full-a1-20261028-123708.gcode.3mf",
+      "subtask_name": "tesseract-v3-full-a1-20261028-123708.gcode",
+      "nozzle_temper": 221.84375,
+      "bed_temper": 35.28125,
+      "print_error": 0
+    },
+    "hms": [],
+    "ams_tray_now": "0"
+  },
+  "selected_slot_verified": true,
+  "selected_slot_evidence": "Live AMS tray_now=0: physical AMS slot 1",
+  "physical_outcome": "Owner reports another early full-plate failure",
+  "terminal_snapshot": {
+    "gcode_state": "FAILED",
+    "layer_num": 13,
+    "total_layer_num": 496,
+    "print_error": 0,
+    "hms": []
+  },
+  "first_problem_time": "Not established; terminal layer is not necessarily the first failed layer",
+  "failure_details": "physical-failure-20261028.json"
+}

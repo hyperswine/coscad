@@ -5,6 +5,11 @@ an uncertain print command. No long-running follow-up is scheduled.
 """
 from pathlib import Path
 import argparse,hashlib,importlib,importlib.util,json,os,socket,ssl,sys,time
+
+# Every dispatch rechecks the actual package against independent thermal intent.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]/'scripts'))
+from bambu_preflight import preset_expectations, verify_package
+
 B=Path(__file__).resolve().parent
 sys.path.insert(0,str(B));context=importlib.import_module('printer-context')
 def write(path,record):
@@ -16,6 +21,9 @@ def main():
  folder=B/args.boat;record_path=folder/'print-run.json';assert not record_path.exists(),'Existing dispatch record: inspect it and the printer instead of resending'
  package=folder/'slice'/f'{args.boat}.gcode.3mf';verified=json.loads((folder/'package-validation.json').read_text());assert verified['passed']
  digest=hashlib.sha256(package.read_bytes()).hexdigest();assert digest==verified['package_sha256']
+ thermal_preflight = verify_package(package, preset_expectations(folder/'presets', plate='Textured PEI Plate'))
+ if thermal_preflight['package_sha256'] != digest:
+     raise ValueError('Package changed during preflight; refusing to print')
  run,p=context.connect(device)
  record=None
  try:
@@ -26,7 +34,7 @@ def main():
   if device=='a1':assert any(name=='ams0' and material=='PLA' and colour.upper()=='FFFFFFFF' for name,material,colour,loaded in p.spools()),'Confirmed white PLA is not reported in physical AMS slot 1'
   if args.spool=='external':assert any(name=='external' and loaded for name,material,colour,loaded in p.spools())
   remote=f'{args.boat}-{device}-{time.strftime("%Y%m%d-%H%M%S")}.gcode.3mf'
-  record={'boat':args.boat,'printer':device,'package_sha256':digest,'remote_name':remote,'spool':args.spool,'material':'PLA','bed_clear_owner_confirmed':True,'authorization_note':args.authorization_note,'before':p.summary(),'hms_before':p.state.get('hms'),'phase':'preflight','dispatch_attempted':False,'events':[],'created_at':time.strftime('%Y-%m-%dT%H:%M:%S%z')}
+  record={'boat':args.boat,'printer':device,'package_sha256':digest,'thermal_preflight':thermal_preflight,'remote_name':remote,'spool':args.spool,'material':'PLA','bed_clear_owner_confirmed':True,'authorization_note':args.authorization_note,'before':p.summary(),'hms_before':p.state.get('hms'),'phase':'preflight','dispatch_attempted':False,'events':[],'created_at':time.strftime('%Y-%m-%dT%H:%M:%S%z')}
   with record_path.open('x') as f:f.write(json.dumps(record,indent=2)+'\n')
   # Reuse the repository's implicit-FTPS implementation/session reuse, but
   # supply verified serial-name TLS and verify the remote content before start.
@@ -47,7 +55,9 @@ def main():
      data=stream.recv(32768)
      if not data:break
      remote_hash.update(data);received+=len(data)
-   ftp.voidresp();assert remote_hash.hexdigest()==digest and received==package.stat().st_size,'Remote content mismatch'
+   ftp.voidresp()
+   if remote_hash.hexdigest()!=digest or received!=package.stat().st_size:
+    raise ValueError('Remote content mismatch')
   finally:ftp.close()
   record.update(phase='uploaded-verified',remote_content_sha256=digest);write(record_path,record)
   assert p.state.get('gcode_state') in ['FINISH','IDLE'] and p.state.get('print_error')==0 and not p.state.get('hms'),'Printer changed during upload'

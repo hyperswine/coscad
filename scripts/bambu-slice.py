@@ -28,6 +28,10 @@ reserved space is reported.
 import argparse, json, os, shutil, subprocess, sys, tempfile, time
 from pathlib import Path
 
+# Also works when this script is loaded by a model-specific importlib loader.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from bambu_preflight import checked_package, expectations, verify_package
+
 APP = os.environ.get("BAMBU_STUDIO", "/Applications/BambuStudio.app/Contents/MacOS/BambuStudio")
 SYSTEM = os.environ.get("BAMBU_PROFILES", os.path.expanduser("~/Library/Application Support/BambuStudio/system/BBL"))
 BED_TYPES = {"textured": "Textured PEI Plate", "cool": "Cool Plate", "smooth": "Cool Plate",
@@ -191,7 +195,14 @@ def spool_mapping(spool):
     sys.exit(f"--spool must be external or ams0..ams3, not '{spool}'")
 
 
-def lan_print(threemf, name, spool="external"):
+def lan_print(threemf, name, spool="external", *, expected):
+    """Verify a frozen package before any network access, then upload those bytes."""
+    with checked_package(threemf, expected) as (package, report):
+        _lan_print(package, report, name, spool)
+    return report
+
+
+def _lan_print(package, report, name, spool):
     """Upload to the printer's SD card over FTPS and start it over MQTT."""
     use_ams, mapping = spool_mapping(spool)
     lan = os.environ.get("BAMBU_LAN_DIR", os.path.expanduser("~/Documents/GitHub/3d-models/bambu-lan"))
@@ -203,10 +214,23 @@ def lan_print(threemf, name, spool="external"):
     import ssl
     import paho.mqtt.client as mqtt
     f = lanftp.connect()
-    with open(threemf, "rb") as fh:
-        f.storbinary(f"STOR {name}", fh)
-    f.quit()
-    print(f"uploaded {threemf} -> /{name}")
+    try:
+        f.storbinary(f"STOR {name}", package)
+        # The command must reference exactly the content that passed preflight.
+        import hashlib
+        remote_hash = hashlib.sha256()
+        # Bambu's implicit FTPS sessions do not reliably complete TLS unwrap
+        # on data connections. Close the read stream like the model dispatchers.
+        f.voidcmd('TYPE I')
+        with f.transfercmd(f'RETR {name}') as remote:
+            while chunk := remote.recv(32768):
+                remote_hash.update(chunk)
+        f.voidresp()
+        if remote_hash.hexdigest() != report['package_sha256']:
+            raise ValueError('Uploaded package differs from the verified print file; refusing to start')
+    finally:
+        f.close()
+    print(f"uploaded verified package -> /{name}")
     serial, host, code = os.environ["BAMBU_SERIAL"], os.environ["BAMBU_HOST"], os.environ["BAMBU_ACCESS_CODE"]
     cmd = {"print": {"sequence_id": "1", "command": "project_file", "param": "Metadata/plate_1.gcode",
                      "project_id": "0", "profile_id": "0", "task_id": "0", "subtask_id": "0",
@@ -454,6 +478,8 @@ def main():
     try:
         summary = slice_beds(a, m, beds, presets, process, filament, bed_name, machine, outdir, base,
                              issues, measures, derived)
+    except (OSError, ValueError) as error:
+        sys.exit(f'Print preflight refused: {error}')
     finally:
         shutil.rmtree(os.path.dirname(presets["machine"]), ignore_errors=True)
 
@@ -461,7 +487,11 @@ def main():
         hit = [b for b in summary["beds"] if b["index"] == a.print_bed]
         if not hit:
             sys.exit(f"bed {a.print_bed} was not sliced")
-        lan_print(hit[0]["3mf"], os.path.basename(hit[0]["3mf"]), a.spool)
+        try:
+            lan_print(hit[0]["3mf"], os.path.basename(hit[0]["3mf"]), a.spool,
+                      expected=hit[0]['thermal_preflight']['expected'])
+        except (OSError, ValueError) as error:
+            sys.exit(f'Print preflight refused: {error}')
 
 
 def printer_fit_warnings(m, beds, machine):
@@ -494,6 +524,9 @@ def printer_fit_warnings(m, beds, machine):
 def slice_beds(a, m, beds, presets, process, filament, bed_name, machine, outdir, base, issues, measures, derived):
     """Slice the selected beds and write `<base>_print.json`."""
     print(f"printer {a.printer} | process {process} | filament {filament} | {bed_name}")
+    # Capture intent from flattened INPUT presets, not the exported settings.
+    expected = expectations(json.loads(Path(presets['process']).read_text()),
+                            json.loads(Path(presets['filament']).read_text()), plate=bed_name)
 
     for warning in printer_fit_warnings(m, beds, machine):
         print(f"warning: {warning}", file=sys.stderr)
@@ -515,6 +548,10 @@ def slice_beds(a, m, beds, presets, process, filament, bed_name, machine, outdir
         out3mf = f"{base}_bed{bed['index']}.gcode.3mf"
         t0 = time.time()
         info = slice_bed(stl, out3mf, presets, a.slicer_arg)
+        try:
+            info['thermal_preflight'] = verify_package(out3mf, expected)
+        except (OSError, ValueError) as error:
+            sys.exit(f'Print preflight refused for bed {bed["index"]}: {error}')
         info.update({"index": bed["index"], "parts": [p["instance"] for p in bed["placements"]], "slice_s": round(time.time() - t0, 1),
                      "printability_warnings": [i["warning"] for i in issues if i["bed"] == bed["index"]]})
         summary["beds"].append(info)

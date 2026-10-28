@@ -1,0 +1,2 @@
+// Same 11 mm rib depth / 6 mm remaining bearing as the full panel.
+main = box 24 24 11 |> cut (zcyl 2.8 20) |> cut (zcyl 5.5 10 |> z 5.5)

@@ -1,0 +1,186 @@
+{
+  "parts": {
+    "hub": {
+      "volume_mm3": 24077.614111598497,
+      "components": 1,
+      "watertight": true,
+      "bounds_mm": [
+        [
+          -20.0,
+          -20.0,
+          -20.0
+        ],
+        [
+          20.0,
+          20.0,
+          20.0
+        ]
+      ],
+      "sha256": "934de97e014aec36ed23342f1539fa3983a956a7cf85eff0e5bc8d06005d28eb"
+    },
+    "cap": {
+      "volume_mm3": 8217.499432175866,
+      "components": 1,
+      "watertight": true,
+      "bounds_mm": [
+        [
+          -19.5,
+          -19.461521204351296,
+          -11.7
+        ],
+        [
+          19.5,
+          19.461521204351296,
+          4.0
+        ]
+      ],
+      "sha256": "1f67ee71645abd7c036e9b08a2022d1070c655410a965af8f3613479cad4385e"
+    },
+    "bar": {
+      "volume_mm3": 2055.187579191957,
+      "components": 1,
+      "watertight": true,
+      "bounds_mm": [
+        [
+          -50.4,
+          -3.393290876656123,
+          -3.393290876656123
+        ],
+        [
+          50.4,
+          3.393290876656123,
+          3.393290876656123
+        ]
+      ],
+      "sha256": "e9096c07ac6f5536917dae86c734266a8f06597e82166c0c233a5860e611c885"
+    },
+    "strut": {
+      "volume_mm3": 3006.337382747062,
+      "components": 1,
+      "watertight": true,
+      "bounds_mm": [
+        [
+          -6.5,
+          -6.487173734783765,
+          -8.0
+        ],
+        [
+          6.5,
+          6.487173734783765,
+          50.282032302755084
+        ]
+      ],
+      "sha256": "99db393ce38da9b02c4d86680ff7a4976803a804c1aad423997632c00b883322"
+    },
+    "inner": {
+      "volume_mm3": 27867.140134394907,
+      "components": 1,
+      "watertight": true,
+      "bounds_mm": [
+        [
+          -28.26259088544725,
+          -28.26259088544725,
+          -28.25113409905822
+        ],
+        [
+          28.26259088544725,
+          28.26259088544725,
+          28.25113409905822
+        ]
+      ],
+      "sha256": "9c8417961c7dc99c3cc973e75262ded92f07571c22c171a7e9bf4b8985b1ef19"
+    },
+    "coupon-socket": {
+      "volume_mm3": 1269.720413281696,
+      "components": 1,
+      "watertight": true,
+      "bounds_mm": [
+        [
+          -8.0,
+          -7.9842138274261725,
+          -10.0
+        ],
+        [
+          8.0,
+          7.9842138274261725,
+          0.0
+        ]
+      ],
+      "sha256": "4ef2b6eab26523d941399350a655e6ae44dd322ee7caef2f1d4aac02ccaa7fcb"
+    },
+    "coupon-screw": {
+      "volume_mm3": 1085.411776199133,
+      "components": 1,
+      "watertight": true,
+      "bounds_mm": [
+        [
+          -8.0,
+          -7.9842138274261725,
+          -8.0
+        ],
+        [
+          8.0,
+          7.9842138274261725,
+          3.0
+        ]
+      ],
+      "sha256": "96bab708fd3df89c8f7a0d03252efc26480070cd6347ed14221c78be324d8322"
+    },
+    "male": {
+      "volume_mm3": 483.8122550904725,
+      "components": 1,
+      "watertight": true,
+      "bounds_mm": [
+        [
+          -5.02,
+          -5.02,
+          -8.0
+        ],
+        [
+          5.02,
+          5.02,
+          0.0
+        ]
+      ],
+      "sha256": "41b342dbcf60142c6e278a966be27c0b90f06df050fb65c541e46496e5f29e22"
+    },
+    "female-tool": {
+      "volume_mm3": 671.0929084391074,
+      "components": 1,
+      "watertight": true,
+      "bounds_mm": [
+        [
+          -5.55,
+          -5.539048342776907,
+          -8.299999999999999
+        ],
+        [
+          5.55,
+          5.539048342776907,
+          0.4
+        ]
+      ],
+      "sha256": "1a388140c2ae54e279cd419b7d1761f49d0c4d7b014b33171e23c633ee9071cc"
+    }
+  },
+  "assembled_parts": 37,
+  "pair_checks": 666,
+  "max_assembly_interference_mm3": 1.3269784496522835e-05,
+  "cap_screw_poses": 121,
+  "cap_screw_max_mm3": 1.2614141382906728e-05,
+  "wrong_phase_control_mm3": 26.154890430724237,
+  "bar_entry_samples": 792,
+  "bar_entry_max_mm3": 0,
+  "closed_cap_pull_control_mm3": 124.31064731390023,
+  "coupon_screw_samples": 73,
+  "coupon_screw_max_mm3": 0,
+  "strut_unscrew_samples": 73,
+  "strut_unscrew_max_mm3": 0,
+  "hub_unscrew_samples": 73,
+  "hub_unscrew_max_mm3": 0,
+  "physical_fit": "not tested",
+  "sources_sha256": {
+    "design.coscad": "bd35a1aec4157e294c0e10538ea5882e16df677f97ff7e9d34c4e28b9a94fe03",
+    "tesseract.assemble": "a8b3115f086284ccb1fabd98d5238106ca3a5a5fa0a96e1bda8d90105ac72f85"
+  }
+}

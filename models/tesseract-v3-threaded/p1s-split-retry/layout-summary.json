@@ -1,0 +1,66 @@
+{
+  "parts": {
+    "cap": 8,
+    "inner": 1,
+    "hub": 8,
+    "strut": 8,
+    "bar-print": 12
+  },
+  "total_parts": 37,
+  "beds": {
+    "1": {
+      "bed_index": 1,
+      "count": 8,
+      "minimum_reserved_envelope_gap_mm": 8.03354561671938,
+      "minimum_edge_inset_mm": 20,
+      "brim_mm": 8,
+      "normal_objects_by_type": {
+        "cap": 8
+      }
+    },
+    "2": {
+      "bed_index": 2,
+      "count": 5,
+      "minimum_reserved_envelope_gap_mm": 8.184252721201883,
+      "minimum_edge_inset_mm": 20,
+      "brim_mm": 8,
+      "normal_objects_by_type": {
+        "inner": 1,
+        "hub": 4
+      }
+    },
+    "3": {
+      "bed_index": 3,
+      "count": 4,
+      "minimum_reserved_envelope_gap_mm": 4.166546258254168,
+      "minimum_edge_inset_mm": 20,
+      "brim_mm": 8,
+      "normal_objects_by_type": {
+        "hub": 4
+      }
+    },
+    "4": {
+      "bed_index": 4,
+      "count": 8,
+      "minimum_reserved_envelope_gap_mm": 10.025652530432467,
+      "minimum_edge_inset_mm": 20,
+      "brim_mm": 8,
+      "normal_objects_by_type": {
+        "strut": 8
+      }
+    },
+    "5": {
+      "bed_index": 5,
+      "count": 12,
+      "minimum_reserved_envelope_gap_mm": 16.213418246687752,
+      "minimum_edge_inset_mm": 20,
+      "brim_mm": 8,
+      "normal_objects_by_type": {
+        "bar-print": 12
+      }
+    }
+  },
+  "dispatch_authorized_beds": [
+    1
+  ]
+}

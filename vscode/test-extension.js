@@ -14,7 +14,7 @@ Module._load = function (request, ...rest) {
   if (request === 'vscode-languageclient/node') return { LanguageClient: class {}, TransportKind: {} }
   return originalLoad.call(this, request, ...rest)
 }
-const { parseCompilerErrors, diagnosticsFromJson, parseVersion, versionAtLeast, splitCommand } = require('./extension')
+const { parseCompilerErrors, diagnosticsFromJson, analysisLines, parseVersion, versionAtLeast, splitCommand } = require('./extension')
 
 // compiler 1.1: reason on the position line, excerpt after it
 const block = `Error: /tmp/x/part.coscad:3:14: unexpected "▼ 3"; expecting a shape (glyph or word), a variable, or '(' or a transform
@@ -144,6 +144,22 @@ assert.deepEqual(diagnosticsFromJson(doc([]), '/tmp/x/part.coscad'), [])
 // not that document (an older compiler printing usage text): null, so the text path is used
 assert.equal(diagnosticsFromJson('Error: validate needs one .coscad or .assemble file\n', '/tmp/x/part.coscad'), null)
 assert.equal(diagnosticsFromJson(JSON.stringify({ schema: 'other/1', diagnostics: [] }), '/tmp/x/part.coscad'), null)
+
+// analysis directives the language server owns when the compiler predates them
+assert.deepEqual([...analysisLines('main = box 1 2 3\nsupport bot\nload @tip 0 0 -20\nstress material=pla\n')], [1, 2, 3])
+assert.deepEqual([...analysisLines('support = box 1 2 3\nload = box 1 1 1\nstress = 2\n')], [])
+assert.deepEqual([...analysisLines('// support bot\nsupport\t@foot bot   // clamp\n  stress  safety=2\n')], [1, 2])
+// a compiler older than support/load/stress reports a false error on those
+// lines; the language server keeps the verdict there
+const stale = doc([
+  { severity: 'error', file: '/tmp/x/part.coscad', line: 2, column: 9, message: "unexpected 'b'; expecting '='", excerpt: [] },
+  { severity: 'error', file: '/tmp/x/part.coscad', line: 1, column: 8, message: "unexpected '▼'", excerpt: [] }
+])
+d = diagnosticsFromJson(stale, '/tmp/x/part.coscad', analysisLines('main = ▼\nsupport bot\n'))
+assert.deepEqual(d.map(x => [x.range.start.line, x.message]), [[0, "unexpected '▼'"]])
+// every diagnostic survives when the compiler understands the directives
+d = diagnosticsFromJson(stale, '/tmp/x/part.coscad', new Set())
+assert.equal(d.length, 2)
 
 // version probe helpers
 assert.deepEqual(parseVersion('coscad 1.1.0.0\n'), [1, 1, 0, 0])

@@ -76,7 +76,7 @@ jobs:
       # Offline: presets and the slicer are mocked, no Bambu Studio needed.
       # unittest, not bare asserts, so nothing is stripped under -O.
       - name: bambu-slice tests
-        run: python3 -m unittest -v scripts/test-bambu-slice.py
+        run: python3 -m unittest -v scripts/test-bambu-slice.py scripts/test-bambu-preflight.py
       # Warnings are errors in CI only: a newer GHC with new warnings must
       # not break a user's `cabal build`, but nothing new lands warning.
       - name: Warnings are errors (CI only)

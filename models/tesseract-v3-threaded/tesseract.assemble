@@ -1,0 +1,88 @@
+// Frame-defined assembly. Root only is positioned absolutely.
+plate 256 256 6 250
+inner ← inner.coscad ×1 ▽bot material=pla brim=5
+strut1 ← strut.coscad ×1 ▽bot material=pla brim=5
+hub1 ← hub.coscad ×1 ▽lft+fwd+bot material=pla brim=5
+cap1 ← cap.coscad ×1 ▽top material=pla brim=5
+strut2 ← strut.coscad ×1 ▽bot material=pla brim=5
+hub2 ← hub.coscad ×1 ▽lft+fwd+bot material=pla brim=5
+cap2 ← cap.coscad ×1 ▽top material=pla brim=5
+strut3 ← strut.coscad ×1 ▽bot material=pla brim=5
+hub3 ← hub.coscad ×1 ▽lft+fwd+bot material=pla brim=5
+cap3 ← cap.coscad ×1 ▽top material=pla brim=5
+strut4 ← strut.coscad ×1 ▽bot material=pla brim=5
+hub4 ← hub.coscad ×1 ▽lft+fwd+bot material=pla brim=5
+cap4 ← cap.coscad ×1 ▽top material=pla brim=5
+strut5 ← strut.coscad ×1 ▽bot material=pla brim=5
+hub5 ← hub.coscad ×1 ▽lft+fwd+bot material=pla brim=5
+cap5 ← cap.coscad ×1 ▽top material=pla brim=5
+strut6 ← strut.coscad ×1 ▽bot material=pla brim=5
+hub6 ← hub.coscad ×1 ▽lft+fwd+bot material=pla brim=5
+cap6 ← cap.coscad ×1 ▽top material=pla brim=5
+strut7 ← strut.coscad ×1 ▽bot material=pla brim=5
+hub7 ← hub.coscad ×1 ▽lft+fwd+bot material=pla brim=5
+cap7 ← cap.coscad ×1 ▽top material=pla brim=5
+strut8 ← strut.coscad ×1 ▽bot material=pla brim=5
+hub8 ← hub.coscad ×1 ▽lft+fwd+bot material=pla brim=5
+cap8 ← cap.coscad ×1 ▽top material=pla brim=5
+bar1 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar2 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar3 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar4 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar5 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar6 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar7 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar8 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar9 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar10 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar11 ← bar.coscad ×1 ▽lft material=pla brim=5
+bar12 ← bar.coscad ×1 ▽lft material=pla brim=5
+fixed inner 0 0 0 0 0 0
+mate strut1 @inner inner @c1
+mate hub1 @rear strut1 @outer
+mate cap1 @joint hub1 @closure
+mate strut2 @inner inner @c2
+mate hub2 @rear strut2 @outer
+mate cap2 @joint hub2 @closure
+mate strut3 @inner inner @c3
+mate hub3 @rear strut3 @outer
+mate cap3 @joint hub3 @closure
+mate strut4 @inner inner @c4
+mate hub4 @rear strut4 @outer
+mate cap4 @joint hub4 @closure
+mate strut5 @inner inner @c5
+mate hub5 @rear strut5 @outer
+mate cap5 @joint hub5 @closure
+mate strut6 @inner inner @c6
+mate hub6 @rear strut6 @outer
+mate cap6 @joint hub6 @closure
+mate strut7 @inner inner @c7
+mate hub7 @rear strut7 @outer
+mate cap7 @joint hub7 @closure
+mate strut8 @inner inner @c8
+mate hub8 @rear strut8 @outer
+mate cap8 @joint hub8 @closure
+mate bar1 @left hub1 @edge_x
+mate bar1 @right hub2 @edge_y roll=0
+mate bar2 @left hub1 @edge_y
+mate bar2 @right hub4 @edge_x roll=0
+mate bar3 @left hub1 @edge_z
+mate bar3 @right hub5 @edge_z roll=90
+mate bar4 @left hub2 @edge_x
+mate bar4 @right hub3 @edge_y roll=0
+mate bar5 @left hub2 @edge_z
+mate bar5 @right hub6 @edge_z roll=90
+mate bar6 @left hub3 @edge_x
+mate bar6 @right hub4 @edge_y roll=0
+mate bar7 @left hub3 @edge_z
+mate bar7 @right hub7 @edge_z roll=90
+mate bar8 @left hub4 @edge_z
+mate bar8 @right hub8 @edge_z roll=90
+mate bar9 @left hub5 @edge_x
+mate bar9 @right hub8 @edge_y roll=0
+mate bar10 @left hub5 @edge_y
+mate bar10 @right hub6 @edge_x roll=0
+mate bar11 @left hub6 @edge_y
+mate bar11 @right hub7 @edge_x roll=0
+mate bar12 @left hub7 @edge_y
+mate bar12 @right hub8 @edge_x roll=0

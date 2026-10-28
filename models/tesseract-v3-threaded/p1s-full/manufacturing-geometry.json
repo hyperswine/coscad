@@ -1,0 +1,11 @@
+{
+  "watertight": true,
+  "components": 1,
+  "tip_flat_mm": 0.8,
+  "length_mm": 99.2,
+  "extra_volume_outside_nominal_bar_mm3": 2.1139054678771585e-08,
+  "removed_volume_mm3": 12.313334616915654,
+  "thread_geometry_changed": false,
+  "master_sha256": "eddc5d21a80b57d52f4d7f9419d865f536c243c9b80a9c2a8568159ff12cc02a",
+  "closed_cap_pull_control_mm3": 112.96473857331158
+}

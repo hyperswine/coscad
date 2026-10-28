@@ -1,0 +1,780 @@
+{
+  "schema": "coscad.next/1",
+  "geometry_backend": "native-experimental",
+  "source": "models/two-tier-2020-shelf/manufacture.assemble",
+  "bed": {
+    "w": 256,
+    "d": 256,
+    "margin": 6,
+    "max_z": 250
+  },
+  "variants": [
+    {
+      "id": "rail_230_bot",
+      "part": "rail_230",
+      "source": "models/two-tier-2020-shelf/parts/rail_print_230.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.439,
+      "printability": {
+        "bed_contact_mm2": 3128,
+        "elevated_start_heights_mm": [
+          13.2
+        ],
+        "overhang_mm2": 84.333,
+        "first_layer_mm2": 3128,
+        "min_width_mm": 20,
+        "warnings": [
+          "elevated downward-facing start at 13.2 mm above the bed; inspect supports before printing"
+        ],
+        "warning_codes": [
+          "elevated_start"
+        ]
+      },
+      "footprint": [
+        230,
+        20,
+        20
+      ],
+      "mesh": "models/two-tier-2020-shelf/manufacture_next_rail_230_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    },
+    {
+      "id": "rail_170_bot",
+      "part": "rail_170",
+      "source": "models/two-tier-2020-shelf/parts/rail_print_170.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.447,
+      "printability": {
+        "bed_contact_mm2": 2312,
+        "elevated_start_heights_mm": [
+          13.2
+        ],
+        "overhang_mm2": 62.333,
+        "first_layer_mm2": 2312,
+        "min_width_mm": 20,
+        "warnings": [
+          "elevated downward-facing start at 13.2 mm above the bed; inspect supports before printing"
+        ],
+        "warning_codes": [
+          "elevated_start"
+        ]
+      },
+      "footprint": [
+        170,
+        20,
+        20
+      ],
+      "mesh": "models/two-tier-2020-shelf/manufacture_next_rail_170_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    },
+    {
+      "id": "rail_160_bot",
+      "part": "rail_160",
+      "source": "models/two-tier-2020-shelf/parts/rail_print_160.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.449,
+      "printability": {
+        "bed_contact_mm2": 2176,
+        "elevated_start_heights_mm": [
+          13.2
+        ],
+        "overhang_mm2": 58.667,
+        "first_layer_mm2": 2176,
+        "min_width_mm": 20,
+        "warnings": [
+          "elevated downward-facing start at 13.2 mm above the bed; inspect supports before printing"
+        ],
+        "warning_codes": [
+          "elevated_start"
+        ]
+      },
+      "footprint": [
+        160,
+        20,
+        20
+      ],
+      "mesh": "models/two-tier-2020-shelf/manufacture_next_rail_160_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    },
+    {
+      "id": "gusset_l_bot",
+      "part": "gusset_l",
+      "source": "models/two-tier-2020-shelf/parts/gusset_l.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": 0.325,
+      "printability": {
+        "bed_contact_mm2": 2237.949,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 2237.949,
+        "min_width_mm": 45.821,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [
+        65,
+        65,
+        6
+      ],
+      "mesh": "models/two-tier-2020-shelf/manufacture_next_gusset_l_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    },
+    {
+      "id": "gusset_t_bot",
+      "part": "gusset_t",
+      "source": "models/two-tier-2020-shelf/parts/gusset_t.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": 0.346,
+      "printability": {
+        "bed_contact_mm2": 3629.028,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 3629.028,
+        "min_width_mm": 65,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [
+        110,
+        65,
+        6
+      ],
+      "mesh": "models/two-tier-2020-shelf/manufacture_next_gusset_t_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    },
+    {
+      "id": "panel_left_top",
+      "part": "panel_left",
+      "source": "models/two-tier-2020-shelf/parts/panel_left.coscad",
+      "down": "top",
+      "orientation_mode": "declared",
+      "fff_score": 0.337,
+      "printability": {
+        "bed_contact_mm2": 38246.987,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 38246.987,
+        "min_width_mm": 199.6,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [
+        199.6,
+        199.6,
+        11
+      ],
+      "mesh": "models/two-tier-2020-shelf/manufacture_next_panel_left_top.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    },
+    {
+      "id": "panel_right_top",
+      "part": "panel_right",
+      "source": "models/two-tier-2020-shelf/parts/panel_right.coscad",
+      "down": "top",
+      "orientation_mode": "declared",
+      "fff_score": 0.337,
+      "printability": {
+        "bed_contact_mm2": 38246.987,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 38246.987,
+        "min_width_mm": 199.6,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [
+        199.6,
+        199.6,
+        11
+      ],
+      "mesh": "models/two-tier-2020-shelf/manufacture_next_panel_right_top.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "5"
+      }
+    }
+  ],
+  "beds": [
+    {
+      "index": 1,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed1.stl",
+      "placements": [
+        {
+          "instance": "panel_left_1",
+          "variant": "panel_left_top",
+          "x": 28.200000000000003,
+          "y": 28.200000000000003,
+          "w": 199.6,
+          "d": 199.6,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed2.stl",
+      "placements": [
+        {
+          "instance": "panel_left_2",
+          "variant": "panel_left_top",
+          "x": 28.200000000000003,
+          "y": 28.200000000000003,
+          "w": 199.6,
+          "d": 199.6,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed3.stl",
+      "placements": [
+        {
+          "instance": "panel_right_1",
+          "variant": "panel_right_top",
+          "x": 28.200000000000003,
+          "y": 28.200000000000003,
+          "w": 199.6,
+          "d": 199.6,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed4.stl",
+      "placements": [
+        {
+          "instance": "panel_right_2",
+          "variant": "panel_right_top",
+          "x": 28.200000000000003,
+          "y": 28.200000000000003,
+          "w": 199.6,
+          "d": 199.6,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed5.stl",
+      "placements": [
+        {
+          "instance": "rail_230_1",
+          "variant": "rail_230_bot",
+          "x": 13.0,
+          "y": 38.0,
+          "w": 230,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_230_2",
+          "variant": "rail_230_bot",
+          "x": 13.0,
+          "y": 70.0,
+          "w": 230,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_230_3",
+          "variant": "rail_230_bot",
+          "x": 13.0,
+          "y": 102.0,
+          "w": 230,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_230_4",
+          "variant": "rail_230_bot",
+          "x": 13.0,
+          "y": 134.0,
+          "w": 230,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_230_5",
+          "variant": "rail_230_bot",
+          "x": 13.0,
+          "y": 166.0,
+          "w": 230,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_230_6",
+          "variant": "rail_230_bot",
+          "x": 13.0,
+          "y": 198.0,
+          "w": 230,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed6.stl",
+      "placements": [
+        {
+          "instance": "rail_170_1",
+          "variant": "rail_170_bot",
+          "x": 43.0,
+          "y": 22.0,
+          "w": 170,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_170_2",
+          "variant": "rail_170_bot",
+          "x": 43.0,
+          "y": 54.0,
+          "w": 170,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_170_3",
+          "variant": "rail_170_bot",
+          "x": 43.0,
+          "y": 86.0,
+          "w": 170,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_170_4",
+          "variant": "rail_170_bot",
+          "x": 43.0,
+          "y": 118.0,
+          "w": 170,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_170_5",
+          "variant": "rail_170_bot",
+          "x": 43.0,
+          "y": 150.0,
+          "w": 170,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_170_6",
+          "variant": "rail_170_bot",
+          "x": 43.0,
+          "y": 182.0,
+          "w": 170,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_170_7",
+          "variant": "rail_170_bot",
+          "x": 43.0,
+          "y": 214.0,
+          "w": 170,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed7.stl",
+      "placements": [
+        {
+          "instance": "rail_170_8",
+          "variant": "rail_170_bot",
+          "x": 43.0,
+          "y": 22.0,
+          "w": 170,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_160_1",
+          "variant": "rail_160_bot",
+          "x": 48.0,
+          "y": 54.0,
+          "w": 160,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_160_2",
+          "variant": "rail_160_bot",
+          "x": 48.0,
+          "y": 86.0,
+          "w": 160,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_160_3",
+          "variant": "rail_160_bot",
+          "x": 48.0,
+          "y": 118.0,
+          "w": 160,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_160_4",
+          "variant": "rail_160_bot",
+          "x": 48.0,
+          "y": 150.0,
+          "w": 160,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_160_5",
+          "variant": "rail_160_bot",
+          "x": 48.0,
+          "y": 182.0,
+          "w": 160,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail_160_6",
+          "variant": "rail_160_bot",
+          "x": 48.0,
+          "y": 214.0,
+          "w": 160,
+          "d": 20,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed8.stl",
+      "placements": [
+        {
+          "instance": "gusset_l_1",
+          "variant": "gusset_l_bot",
+          "x": 57.0,
+          "y": 18.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_2",
+          "variant": "gusset_l_bot",
+          "x": 134.0,
+          "y": 18.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_3",
+          "variant": "gusset_l_bot",
+          "x": 57.0,
+          "y": 95.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_4",
+          "variant": "gusset_l_bot",
+          "x": 134.0,
+          "y": 95.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_5",
+          "variant": "gusset_l_bot",
+          "x": 57.0,
+          "y": 172.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_6",
+          "variant": "gusset_l_bot",
+          "x": 134.0,
+          "y": 172.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed9.stl",
+      "placements": [
+        {
+          "instance": "gusset_l_7",
+          "variant": "gusset_l_bot",
+          "x": 57.0,
+          "y": 18.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_8",
+          "variant": "gusset_l_bot",
+          "x": 134.0,
+          "y": 18.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_9",
+          "variant": "gusset_l_bot",
+          "x": 57.0,
+          "y": 95.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_10",
+          "variant": "gusset_l_bot",
+          "x": 134.0,
+          "y": 95.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_11",
+          "variant": "gusset_l_bot",
+          "x": 57.0,
+          "y": 172.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_12",
+          "variant": "gusset_l_bot",
+          "x": 134.0,
+          "y": 172.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed10.stl",
+      "placements": [
+        {
+          "instance": "gusset_l_13",
+          "variant": "gusset_l_bot",
+          "x": 57.0,
+          "y": 18.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_14",
+          "variant": "gusset_l_bot",
+          "x": 134.0,
+          "y": 18.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_15",
+          "variant": "gusset_l_bot",
+          "x": 57.0,
+          "y": 95.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_16",
+          "variant": "gusset_l_bot",
+          "x": 134.0,
+          "y": 95.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_17",
+          "variant": "gusset_l_bot",
+          "x": 57.0,
+          "y": 172.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_18",
+          "variant": "gusset_l_bot",
+          "x": 134.0,
+          "y": 172.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "stl": "models/two-tier-2020-shelf/manufacture_bed11.stl",
+      "placements": [
+        {
+          "instance": "gusset_l_19",
+          "variant": "gusset_l_bot",
+          "x": 57.0,
+          "y": 18.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_l_20",
+          "variant": "gusset_l_bot",
+          "x": 134.0,
+          "y": 18.5,
+          "w": 65,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_t_1",
+          "variant": "gusset_t_bot",
+          "x": 12.0,
+          "y": 95.5,
+          "w": 110,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_t_2",
+          "variant": "gusset_t_bot",
+          "x": 134.0,
+          "y": 95.5,
+          "w": 110,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_t_3",
+          "variant": "gusset_t_bot",
+          "x": 12.0,
+          "y": 172.5,
+          "w": 110,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        },
+        {
+          "instance": "gusset_t_4",
+          "variant": "gusset_t_bot",
+          "x": 134.0,
+          "y": 172.5,
+          "w": 110,
+          "d": 65,
+          "brim_mm": 5,
+          "rot_z": 0
+        }
+      ]
+    }
+  ],
+  "assembly_only": [],
+  "packing": {
+    "method": "explicit shelf rows",
+    "clearance_between_brims_mm": 2,
+    "front_left_keepout_mm": [
+      0,
+      0,
+      18,
+      28
+    ],
+    "script_sha256": "316643a42ce065f169520baf5856442d779b8fa6655a6ee2b411101990add338"
+  }
+}

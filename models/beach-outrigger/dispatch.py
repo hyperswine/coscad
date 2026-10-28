@@ -9,6 +9,11 @@ another invocation for that job.
 """
 from pathlib import Path
 import argparse, hashlib, importlib, json, os, sys, time
+
+# Every dispatch rechecks the actual package against independent thermal intent.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]/'scripts'))
+from bambu_preflight import preset_expectations, verify_package
+
 B = Path(__file__).resolve().parent; NAME = 'beach-outrigger'
 sys.path.insert(0, str(B)); context = importlib.import_module('printer-context')
 def write(path, record):
@@ -20,6 +25,9 @@ def main():
     assert not record_path.exists(), 'Existing dispatch record: inspect it and the printer instead of resending'
     package = folder/'slice'/f'{NAME}.gcode.3mf'; verified = json.loads((folder/'package-validation.json').read_text()); assert verified['passed']
     digest = hashlib.sha256(package.read_bytes()).hexdigest(); assert digest == verified['package_sha256'], 'Package changed since verification'
+    thermal_preflight = verify_package(package, preset_expectations(folder/'presets', plate='Textured PEI Plate'))
+    if thermal_preflight['package_sha256'] != digest:
+        raise ValueError('Package changed during preflight; refusing to print')
     run, p, tls = context.connect(device)
     try:
         assert p.state.get('gcode_state') in ['FINISH', 'IDLE'], 'Printer is busy'
@@ -29,7 +37,7 @@ def main():
         assert any(name == args.spool and mat.upper() == material.upper() for name, mat, colour, loaded in spools), f'Selected {material} spool is not reported: {spools}'
         if args.spool == 'external': assert any(name == 'external' and loaded for name, mat, colour, loaded in spools), 'External spool is not the active tray'
         remote = f'{NAME}-{args.job}-{time.strftime("%Y%m%d-%H%M%S")}.gcode.3mf'
-        record = {'job': args.job, 'printer': device, 'material': material, 'package_sha256': digest, 'remote_name': remote, 'spool': args.spool,
+        record = {'job': args.job, 'printer': device, 'material': material, 'package_sha256': digest, 'thermal_preflight': thermal_preflight, 'remote_name': remote, 'spool': args.spool,
                   'bed_clear_owner_confirmed': True, 'authorization_note': args.authorization_note, 'before': p.summary(), 'spools_before': spools,
                   'hms_before': p.state.get('hms'), 'phase': 'preflight', 'dispatch_attempted': False, 'events': [], 'created_at': time.strftime('%Y-%m-%dT%H:%M:%S%z')}
         with record_path.open('x') as f: f.write(json.dumps(record, indent=2, default=str)+'\n')
@@ -55,7 +63,9 @@ def main():
                     data = stream.recv(32768)
                     if not data: break
                     remote_hash.update(data); received += len(data)
-            ftp.voidresp(); assert remote_hash.hexdigest() == digest and received == package.stat().st_size, 'Remote content mismatch'
+            ftp.voidresp()
+            if remote_hash.hexdigest() != digest or received != package.stat().st_size:
+                raise ValueError('Remote content mismatch')
         finally: ftp.close()
         record.update(phase='uploaded-verified', remote_content_sha256=digest); write(record_path, record)
         assert p.state.get('gcode_state') in ['FINISH', 'IDLE'] and p.state.get('print_error') == 0 and not p.state.get('hms'), 'Printer changed during upload'

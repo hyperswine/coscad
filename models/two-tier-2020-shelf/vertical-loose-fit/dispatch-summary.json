@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-10-28T11:24:44+11:00",
+  "job": "two-tier-2020-shelf-loose-fit",
+  "printer": "x1c",
+  "authorization": "Owner requested the looser rail fit retry and confirmed the X1C bed clear on 2026-10-28.",
+  "bed_clear_owner_confirmed": true,
+  "package_sha256": "de095d6480ad7fc1c9786798bc3d3a4c9a811c3e866ad329ecf00bebe9d0f8e8",
+  "remote_content_sha256": "de095d6480ad7fc1c9786798bc3d3a4c9a811c3e866ad329ecf00bebe9d0f8e8",
+  "remote_name": "shelf-loose-fit-x1c-20261028-112444.gcode.3mf",
+  "expected_layers": 250,
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "147086991"
+  },
+  "first_layer_reached": true,
+  "needs_attention": null,
+  "latest_observation": {
+    "at": "2026-10-28T11:33:02+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 11,
+      "layer_num": 1,
+      "total_layer_num": 250,
+      "mc_remaining_time": 67,
+      "gcode_file": "/data/Metadata/plate_1.gcode",
+      "subtask_name": "shelf-loose-fit-x1c-20261028-112444.gcode",
+      "nozzle_temper": 220.0,
+      "bed_temper": 55.0,
+      "print_error": 0
+    },
+    "hms": []
+  }
+}

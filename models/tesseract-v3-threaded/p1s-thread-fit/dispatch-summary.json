@@ -1,0 +1,40 @@
+{
+  "created_at": "2026-10-28T06:39:17+11:00",
+  "job": "tesseract-v3-thread-fit",
+  "printer": "p1s",
+  "authorization": "Owner requested the tesseract v3 thread-fit test on P1S and confirmed the bed clear on 2026-10-28.",
+  "bed_clear_owner_confirmed": true,
+  "package": "thread-fit_bed1.gcode.3mf",
+  "package_sha256": "8397eb7dc5808655ff1c5723ad214a64b73c1599ca3ed7271d3130c8e0c10182",
+  "remote_name": "tesseract-v3-thread-fit-p1s-20261028-063917.gcode.3mf",
+  "spool": "external",
+  "material": "PLA",
+  "expected_layers": 55,
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "sequence_id": "129968793",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "129968793"
+  },
+  "first_layer_reached": null,
+  "needs_attention": null,
+  "latest_observation": {
+    "at": "2026-10-28T06:40:29+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 0,
+      "layer_num": 0,
+      "total_layer_num": 55,
+      "mc_remaining_time": 18,
+      "gcode_file": "tesseract-v3-thread-fit-p1s-20261028-063917.gcode.3mf",
+      "subtask_name": "tesseract-v3-thread-fit-p1s-20261028-063917.gcode",
+      "nozzle_temper": 75,
+      "bed_temper": 49.78125,
+      "print_error": 0
+    },
+    "hms": []
+  }
+}

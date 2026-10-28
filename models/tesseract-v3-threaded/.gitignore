@@ -1,0 +1,4 @@
+# Generated part translations; CoScad is the geometry source.
+*.scad
+!preview.scad
+*.log

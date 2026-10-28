@@ -1,0 +1,197 @@
+{
+  "created_at": "2026-10-28T11:36:18+11:00",
+  "job": "tesseract-v3-full",
+  "printer": "p1s",
+  "authorization": "Owner approved printing the full tesseract on P1S if it fits one bed; validated one-bed layout and confirmed both beds clear on 2026-10-28.",
+  "bed_clear_owner_confirmed": true,
+  "package": "tesseract-full-p1s.gcode.3mf",
+  "package_sha256": "d10f915d8dc9b25ef83093a83cf495b03769e7271412a4dfd519a7486fae0b1c",
+  "remote_name": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+  "spool": "external",
+  "material": "PLA",
+  "expected_layers": 496,
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 55,
+    "total_layer_num": 55,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-thread-fit-p1s-20261028-063917.gcode",
+    "nozzle_temper": 23.78125,
+    "bed_temper": 20.90625,
+    "print_error": 0
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-10-28T11:41:17+11:00",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 55,
+        "total_layer_num": 55,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "tesseract-v3-full-p1s-20261028-113618.gcode",
+        "nozzle_temper": 23.8125,
+        "bed_temper": 20.96875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-28T11:41:32+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 496,
+        "mc_remaining_time": 1189,
+        "gcode_file": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+        "subtask_name": "tesseract-v3-full-p1s-20261028-113618.gcode",
+        "nozzle_temper": 60.625,
+        "bed_temper": 20.9375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-28T11:41:47+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 496,
+        "mc_remaining_time": 1189,
+        "gcode_file": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+        "subtask_name": "tesseract-v3-full-p1s-20261028-113618.gcode",
+        "nozzle_temper": 80.1875,
+        "bed_temper": 21.53125,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-28T11:42:02+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 496,
+        "mc_remaining_time": 1189,
+        "gcode_file": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+        "subtask_name": "tesseract-v3-full-p1s-20261028-113618.gcode",
+        "nozzle_temper": 84.5625,
+        "bed_temper": 34.34375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-28T11:42:17+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 496,
+        "mc_remaining_time": 1188,
+        "gcode_file": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+        "subtask_name": "tesseract-v3-full-p1s-20261028-113618.gcode",
+        "nozzle_temper": 174.34375,
+        "bed_temper": 34.9375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-28T11:42:32+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 496,
+        "mc_remaining_time": 1188,
+        "gcode_file": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+        "subtask_name": "tesseract-v3-full-p1s-20261028-113618.gcode",
+        "nozzle_temper": 226.9375,
+        "bed_temper": 34.84375,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-28T11:42:47+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 496,
+        "mc_remaining_time": 1188,
+        "gcode_file": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+        "subtask_name": "tesseract-v3-full-p1s-20261028-113618.gcode",
+        "nozzle_temper": 247.46875,
+        "bed_temper": 34.875,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-28T11:43:02+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 496,
+        "mc_remaining_time": 1184,
+        "gcode_file": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+        "subtask_name": "tesseract-v3-full-p1s-20261028-113618.gcode",
+        "nozzle_temper": 234.21875,
+        "bed_temper": 34.90625,
+        "print_error": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-28T11:43:17+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 496,
+        "mc_remaining_time": 1184,
+        "gcode_file": "tesseract-v3-full-p1s-20261028-113618.gcode.3mf",
+        "subtask_name": "tesseract-v3-full-p1s-20261028-113618.gcode",
+        "nozzle_temper": 207.9375,
+        "bed_temper": 34.90625,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789336327
+        }
+      ]
+    }
+  ],
+  "remote_content_sha256": "d10f915d8dc9b25ef83093a83cf495b03769e7271412a4dfd519a7486fae0b1c",
+  "sequence_id": "148077478",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "148077478"
+  },
+  "needs_attention": true
+}

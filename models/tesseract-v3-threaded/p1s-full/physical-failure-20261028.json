@@ -1,0 +1,33 @@
+{
+  "reported_on": "2026-10-28",
+  "source": "owner report and supplied photograph",
+  "printer": "P1S",
+  "job_record": "full-print-run.json",
+  "outcome": "failed relatively early",
+  "observed": [
+    "several pieces lost bed adhesion",
+    "spaghetti/stringing in multiple locations",
+    "detached round piece visible on chamber floor"
+  ],
+  "first_failure_layer": "not established",
+  "cause": "unknown",
+  "unconfirmed_hypotheses": [
+    "build plate contamination or insufficient cleaning",
+    "Z belt friction or tension",
+    "lead-screw friction or motion issue"
+  ],
+  "maintenance_context": "Owner reports lead screws were cleaned and lubricated recently; this neither confirms nor excludes a motion issue.",
+  "photo": "failure-photo-20261028.jpg",
+  "photo_sha256": "ed03fc491077b0ef880fca037cc00680eb27c1e99a0324cce750235270019ac0",
+  "followup": "Same tesseract on A1 using physical AMS slot 1, avoiding yellow PLA in slot 3",
+  "comparison_limit": "Printer and filament change together; success or failure alone will not identify the P1S root cause.",
+  "last_printer_report": {
+    "gcode_state": "FAILED",
+    "layer_num": 5,
+    "total_layer_num": 496,
+    "print_error": 0,
+    "hms": []
+  },
+  "subsequent_confirmed_slicing_error": "../slicing-plate-mismatch-20261028.json",
+  "causality_update": "The exported job used Cool Plate at 35 C instead of intended Textured PEI at 55 C. This is a confirmed configuration error and plausible contributor; other causes are not excluded."
+}

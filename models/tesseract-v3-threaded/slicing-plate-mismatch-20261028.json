@@ -1,0 +1,61 @@
+{
+  "observed_on": "2026-10-28",
+  "finding": "Custom multipart project process presets did not set curr_bed_type. CLI --load-settings overrode the intended project plate with Cool Plate and emitted a 35 C target.",
+  "responsibility": "Agent custom slicing workflow and insufficient exported-temperature verification",
+  "confirmed_configuration_error": true,
+  "physical_failure_causality": "Plausible contributor/shared explanation, not proof that it was the only cause.",
+  "intended_plate": "Textured PEI Plate",
+  "intended_bed_target_c": 55,
+  "entries": [
+    {
+      "label": "failed_p1s_full",
+      "package": "models/tesseract-v3-threaded/p1s-full/slice-onebed/tesseract-full-p1s.gcode.3mf",
+      "sha256": "d10f915d8dc9b25ef83093a83cf495b03769e7271412a4dfd519a7486fae0b1c",
+      "exported_plate": "Cool Plate",
+      "last_startup_bed_target_c": 35.0,
+      "last_startup_bed_wait_c": 35.0
+    },
+    {
+      "label": "failed_a1_full",
+      "package": "models/tesseract-v3-threaded/a1-full-retry/slice/tesseract-full-a1.gcode.3mf",
+      "sha256": "67d9ffc1d20296e83f88a0088ef31604d61b47dc42c04c6cdc8944eb5fb46a30",
+      "exported_plate": "Cool Plate",
+      "last_startup_bed_target_c": 35.0,
+      "last_startup_bed_wait_c": 35.0
+    },
+    {
+      "label": "stopped_split_retry",
+      "package": "models/tesseract-v3-threaded/p1s-split-retry/bed1/incorrect-cool-plate/slice/tesseract-bed1-p1s.gcode.3mf",
+      "sha256": "70fe8fb87c6c3eed9d288e24b59b2ececd9d709c2df73aa1fd9484f961c87ee4",
+      "exported_plate": "Cool Plate",
+      "last_startup_bed_target_c": 35.0,
+      "last_startup_bed_wait_c": 35.0
+    },
+    {
+      "label": "corrected_split_retry",
+      "package": "models/tesseract-v3-threaded/p1s-split-retry/bed1/slice-corrected/tesseract-bed1-p1s.gcode.3mf",
+      "sha256": "db6ae97bf854dd5dfbe5f168c96158436504c7323c58968bd8b7af1db1e106a6",
+      "exported_plate": "Textured PEI Plate",
+      "last_startup_bed_target_c": 55.0,
+      "last_startup_bed_wait_c": 55.0
+    },
+    {
+      "label": "successful_thread_coupon",
+      "package": "models/tesseract-v3-threaded/p1s-thread-fit/thread-fit_bed1.gcode.3mf",
+      "sha256": "8397eb7dc5808655ff1c5723ad214a64b73c1599ca3ed7271d3130c8e0c10182",
+      "exported_plate": "Textured PEI Plate",
+      "last_startup_bed_target_c": 55.0,
+      "last_startup_bed_wait_c": 55.0
+    },
+    {
+      "label": "upright_rail_retry",
+      "package": "models/two-tier-2020-shelf/vertical-retry/fit_bed1.gcode.3mf",
+      "sha256": "6b238aafe1872682360cb51a9e08a8a998075aacaa6d8ba9f84e36873e248141",
+      "exported_plate": "Textured PEI Plate",
+      "last_startup_bed_target_c": 55.0,
+      "last_startup_bed_wait_c": 55.0
+    }
+  ],
+  "fix": "Set curr_bed_type in the CLI process preset, and require matching exported plate plus final M140/M190 temperature commands before dispatch.",
+  "print_state": "Stopped; owner explicitly requested keeping it stopped. Corrected package prepared but not dispatched."
+}

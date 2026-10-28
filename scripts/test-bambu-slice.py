@@ -12,6 +12,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
 from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location("bambu_slice", Path(__file__).with_name("bambu-slice.py"))
@@ -291,7 +292,7 @@ class MainTests(unittest.TestCase):
     """bambu-slice.py end to end with the presets and the slicer mocked."""
     CONTACT = PrintabilityGateTests.CONTACT
 
-    def run_main(self, m, *args, overrides=None):
+    def run_main(self, m, *args, overrides=None, slice_gcode=None):
         d = tempfile.mkdtemp()
         self.addCleanup(lambda: slicer.shutil.rmtree(d, ignore_errors=True))
         path = Path(d) / "a_manifest.json"
@@ -309,11 +310,20 @@ class MainTests(unittest.TestCase):
 
         def fake_slice(stl, out3mf, files, extra):
             seen["process"] = json.loads(Path(files["process"]).read_text())
+            settings = dict(json.loads(Path(files['filament']).read_text()),
+                            curr_bed_type=seen['process']['curr_bed_type'])
+            with zipfile.ZipFile(out3mf, 'w') as archive:
+                archive.writestr('Metadata/project_settings.config', json.dumps(settings))
+                archive.writestr('Metadata/plate_1.gcode', slice_gcode or
+                                 'M83\nM140 S55\nM190 S55\nM104 S220\n; CHANGE_LAYER\n'
+                                 'G1 X1 Y1 E1\n; MACHINE_END_GCODE_START\nM140 S0\nM104 S0\n')
             return {"3mf": out3mf}
 
         err = io.StringIO()
         with patch.object(sys, "argv", argv), patch.object(slicer.os.path, "exists", lambda p: True), \
-             patch.object(slicer, "flatten", side_effect=lambda kind, name: {"default_print_profile": "P", "brim_width": "5", "enable_support": "0"} if kind != "filament" else {}), \
+             patch.object(slicer, "flatten", side_effect=lambda kind, name: {"default_print_profile": "P", "brim_width": "5", "enable_support": "0"} if kind != "filament" else {
+                 'textured_plate_temp_initial_layer': ['55'], 'textured_plate_temp': ['55'],
+                 'nozzle_temperature_initial_layer': ['220'], 'nozzle_temperature': ['220']}), \
              patch.object(slicer, "machine_with_templates", return_value={}), \
              patch.object(slicer.tempfile, "mkdtemp", side_effect=fake_mkdtemp), \
              patch.object(slicer, "slice_bed", side_effect=fake_slice), \
@@ -342,6 +352,7 @@ class MainTests(unittest.TestCase):
         self.assertEqual(pr["unaddressed"], 1)
         self.assertEqual([w["warning"] for w in pr["warnings"]], [self.CONTACT])
         self.assertEqual(summary["beds"][0]["printability_warnings"], [self.CONTACT])
+        self.assertTrue(summary['beds'][0]['thermal_preflight']['checked'])
         self.assertFalse(presets.exists(), "the presets directory is removed after slicing")
 
     def test_reserved_brim_reaches_the_sliced_process(self):
@@ -351,6 +362,18 @@ class MainTests(unittest.TestCase):
         self.assertEqual(summary["printability"]["brim_from_manifest"], {"brim_type": "outer_only", "brim_width": "8"})
         self.assertEqual(summary["printability"]["warnings"][0]["addressed_by"], "brim")
         self.assertFalse(summary["printability"]["accept_printability"])
+
+    def test_accept_printability_cannot_bypass_actual_temperature_refusal(self):
+        code = ('M83\nM140 S35\nM190 S35\nM104 S220\n; CHANGE_LAYER\n'
+                'G1 X1 Y1 E1\n; MACHINE_END_GCODE_START\n')
+        with patch.object(slicer, 'lan_print') as dispatch:
+            result, _, summary, _, presets = self.run_main(
+                manifest([self.CONTACT], ['small_contact']), '--print', '1',
+                '--accept-printability', slice_gcode=code)
+            self.assertIn('Print preflight refused', str(result))
+            self.assertIsNone(summary)
+            self.assertFalse(presets.exists())
+            dispatch.assert_not_called()
 
     def test_explicit_supports_address_an_elevated_start(self):
         code, err, summary, _, _ = self.run_main(manifest([PrintabilityGateTests.START], ["elevated_start"]),
@@ -370,10 +393,13 @@ class MainTests(unittest.TestCase):
             return str(presets)
 
         with patch.object(sys, "argv", ["bambu-slice.py", str(path)]), patch.object(slicer.os.path, "exists", lambda p: True), \
-             patch.object(slicer, "flatten", return_value={}), patch.object(slicer, "machine_with_templates", return_value={}), \
+             patch.object(slicer, "flatten", side_effect=lambda kind, name: {
+                 'textured_plate_temp_initial_layer': ['55'], 'textured_plate_temp': ['55'],
+                 'nozzle_temperature_initial_layer': ['220'], 'nozzle_temperature': ['220']
+             } if kind == 'filament' else {}), patch.object(slicer, "machine_with_templates", return_value={}), \
              patch.object(slicer.tempfile, "mkdtemp", side_effect=fake_mkdtemp), \
              patch.object(slicer, "slice_bed", side_effect=SystemExit("slicing failed")), \
-             contextlib.redirect_stdout(io.StringIO()), self.assertRaises(SystemExit):
+             contextlib.redirect_stdout(io.StringIO()), self.assertRaisesRegex(SystemExit, 'slicing failed'):
             slicer.main()
         self.assertFalse(presets.exists())
 

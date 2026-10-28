@@ -1,0 +1,38 @@
+{
+  "created_at": "2026-10-28T14:45:22+11:00",
+  "job": "tesseract-v3-split-bed1",
+  "printer": "p1s",
+  "authorization": "Owner requested separated layouts and brims on all parts, and approved printing the revised first P1S plate when ready on a confirmed-clear bed on 2026-10-28.",
+  "bed_clear_owner_confirmed": true,
+  "package_sha256": "70fe8fb87c6c3eed9d288e24b59b2ececd9d709c2df73aa1fd9484f961c87ee4",
+  "remote_content_sha256": "70fe8fb87c6c3eed9d288e24b59b2ececd9d709c2df73aa1fd9484f961c87ee4",
+  "remote_name": "tesseract-v3-split-bed1-p1s-20261028-144522.gcode.3mf",
+  "expected_layers": 78,
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "159157535"
+  },
+  "first_layer_reached": null,
+  "needs_attention": false,
+  "startup_status_note": "First ACK packet carried old FAILED/496 fields; subsequent fresh report is this RUNNING/78 job. No new printer fault observed.",
+  "latest_observation": {
+    "at": "2026-10-28T14:46:36+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 0,
+      "layer_num": 0,
+      "total_layer_num": 78,
+      "mc_remaining_time": 182,
+      "gcode_file": "tesseract-v3-split-bed1-p1s-20261028-144522.gcode.3mf",
+      "subtask_name": "tesseract-v3-split-bed1-p1s-20261028-144522.gcode",
+      "nozzle_temper": 76.34375,
+      "bed_temper": 31.875,
+      "print_error": 0
+    },
+    "hms": []
+  }
+}

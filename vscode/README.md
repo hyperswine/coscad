@@ -44,7 +44,9 @@ assemblies or closed files recheck dependent open assemblies. Closing an unsaved
 part rechecks against disk. Superseded compiler processes are cancelled and
 stale results cannot publish. External dependencies are watched too.
 Older compilers retain root-buffer validation and show a warning when references
-come from disk. Parser diagnostics remain available without a compiler.
+come from disk. Parser diagnostics remain available without a compiler. A
+compiler that predates `support`, `load` and `stress` is reported once, and its
+errors on those lines are ignored: the extension's parser owns them.
 
 The status bar shows the selected backend (or the compiler default). Capability
 probes are invalidated by configuration and direct executable changes. A compiler

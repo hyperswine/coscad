@@ -1,0 +1,152 @@
+check: 48 parts, clearance = 0.0mm
+       geometry backend: native-experimental
+       48 placed instances: post_0_0, post_0_180, post_190_0, post_190_180, post_380_0, post_380_180, xrail_1_0_0, xrail_1_0_180, xrail_1_190_0, xrail_1_190_180, yrail_1_0, yrail_1_190, yrail_1_380, xgusset_1_0_0, ygusset_1_0_0, xgusset_1_0_180, ygusset_1_0_180, xgusset_1_190_0, ygusset_1_190_0, xgusset_1_190_180, ygusset_1_190_180, xgusset_1_380_0, ygusset_1_380_0, xgusset_1_380_180, ygusset_1_380_180, panel_1_left, panel_1_right, xrail_2_0_0, xrail_2_0_180, xrail_2_190_0, xrail_2_190_180, yrail_2_0, yrail_2_190, yrail_2_380, xgusset_2_0_0, ygusset_2_0_0, xgusset_2_0_180, ygusset_2_0_180, xgusset_2_190_0, ygusset_2_190_0, xgusset_2_190_180, ygusset_2_190_180, xgusset_2_380_0, ygusset_2_380_0, xgusset_2_380_180, ygusset_2_380_180, panel_2_left, panel_2_right
+contact  post_0_0 x xrail_1_0_0
+contact  post_0_0 x yrail_1_0
+contact  post_0_0 x xgusset_1_0_0
+contact  post_0_0 x ygusset_1_0_0
+ok       post_0_0 x panel_1_left  gap 0.3 mm
+contact  post_0_0 x xrail_2_0_0
+contact  post_0_0 x yrail_2_0
+contact  post_0_0 x xgusset_2_0_0
+contact  post_0_0 x ygusset_2_0_0
+ok       post_0_0 x panel_2_left  gap 0.3 mm
+contact  post_0_180 x xrail_1_0_180
+contact  post_0_180 x yrail_1_0
+contact  post_0_180 x xgusset_1_0_180
+contact  post_0_180 x ygusset_1_0_180
+ok       post_0_180 x panel_1_left  gap 0.3 mm
+contact  post_0_180 x xrail_2_0_180
+contact  post_0_180 x yrail_2_0
+contact  post_0_180 x xgusset_2_0_180
+contact  post_0_180 x ygusset_2_0_180
+ok       post_0_180 x panel_2_left  gap 0.3 mm
+contact  post_190_0 x xrail_1_0_0
+contact  post_190_0 x xrail_1_190_0
+contact  post_190_0 x yrail_1_190
+contact  post_190_0 x xgusset_1_190_0
+contact  post_190_0 x ygusset_1_190_0
+ok       post_190_0 x panel_1_left  gap 0.3 mm
+ok       post_190_0 x panel_1_right  gap 0.3 mm
+contact  post_190_0 x xrail_2_0_0
+contact  post_190_0 x xrail_2_190_0
+contact  post_190_0 x yrail_2_190
+contact  post_190_0 x xgusset_2_190_0
+contact  post_190_0 x ygusset_2_190_0
+ok       post_190_0 x panel_2_left  gap 0.3 mm
+ok       post_190_0 x panel_2_right  gap 0.3 mm
+contact  post_190_180 x xrail_1_0_180
+contact  post_190_180 x xrail_1_190_180
+contact  post_190_180 x yrail_1_190
+contact  post_190_180 x xgusset_1_190_180
+contact  post_190_180 x ygusset_1_190_180
+ok       post_190_180 x panel_1_left  gap 0.3 mm
+ok       post_190_180 x panel_1_right  gap 0.3 mm
+contact  post_190_180 x xrail_2_0_180
+contact  post_190_180 x xrail_2_190_180
+contact  post_190_180 x yrail_2_190
+contact  post_190_180 x xgusset_2_190_180
+contact  post_190_180 x ygusset_2_190_180
+ok       post_190_180 x panel_2_left  gap 0.3 mm
+ok       post_190_180 x panel_2_right  gap 0.3 mm
+contact  post_380_0 x xrail_1_190_0
+contact  post_380_0 x yrail_1_380
+contact  post_380_0 x xgusset_1_380_0
+contact  post_380_0 x ygusset_1_380_0
+ok       post_380_0 x panel_1_right  gap 0.3 mm
+contact  post_380_0 x xrail_2_190_0
+contact  post_380_0 x yrail_2_380
+contact  post_380_0 x xgusset_2_380_0
+contact  post_380_0 x ygusset_2_380_0
+ok       post_380_0 x panel_2_right  gap 0.3 mm
+contact  post_380_180 x xrail_1_190_180
+contact  post_380_180 x yrail_1_380
+contact  post_380_180 x xgusset_1_380_180
+contact  post_380_180 x ygusset_1_380_180
+ok       post_380_180 x panel_1_right  gap 0.3 mm
+contact  post_380_180 x xrail_2_190_180
+contact  post_380_180 x yrail_2_380
+contact  post_380_180 x xgusset_2_380_180
+contact  post_380_180 x ygusset_2_380_180
+ok       post_380_180 x panel_2_right  gap 0.3 mm
+contact  xrail_1_0_0 x yrail_1_0
+contact  xrail_1_0_0 x yrail_1_190
+contact  xrail_1_0_0 x xgusset_1_0_0
+contact  xrail_1_0_0 x xgusset_1_190_0
+contact  xrail_1_0_0 x panel_1_left
+contact  xrail_1_0_180 x yrail_1_0
+contact  xrail_1_0_180 x yrail_1_190
+contact  xrail_1_0_180 x xgusset_1_0_180
+contact  xrail_1_0_180 x xgusset_1_190_180
+contact  xrail_1_0_180 x panel_1_left
+contact  xrail_1_190_0 x yrail_1_190
+contact  xrail_1_190_0 x yrail_1_380
+contact  xrail_1_190_0 x xgusset_1_190_0
+ok       xrail_1_190_0 x ygusset_1_190_0  gap 0.2 mm
+contact  xrail_1_190_0 x xgusset_1_380_0
+contact  xrail_1_190_0 x panel_1_right
+contact  xrail_1_190_180 x yrail_1_190
+contact  xrail_1_190_180 x yrail_1_380
+contact  xrail_1_190_180 x xgusset_1_190_180
+ok       xrail_1_190_180 x ygusset_1_190_180  gap 0.2 mm
+contact  xrail_1_190_180 x xgusset_1_380_180
+contact  xrail_1_190_180 x panel_1_right
+contact  yrail_1_0 x ygusset_1_0_0
+contact  yrail_1_0 x ygusset_1_0_180
+contact  yrail_1_0 x panel_1_left
+contact  yrail_1_190 x ygusset_1_190_0
+contact  yrail_1_190 x ygusset_1_190_180
+contact  yrail_1_190 x panel_1_left
+contact  yrail_1_190 x panel_1_right
+contact  yrail_1_380 x ygusset_1_380_0
+contact  yrail_1_380 x ygusset_1_380_180
+contact  yrail_1_380 x panel_1_right
+contact  xgusset_1_0_0 x ygusset_1_0_0
+contact  xgusset_1_0_180 x ygusset_1_0_180
+contact  xgusset_1_190_0 x ygusset_1_190_0
+contact  ygusset_1_190_0 x panel_1_right
+contact  xgusset_1_190_180 x ygusset_1_190_180
+contact  ygusset_1_190_180 x panel_1_right
+contact  xgusset_1_380_0 x ygusset_1_380_0
+contact  xgusset_1_380_180 x ygusset_1_380_180
+contact  xrail_2_0_0 x yrail_2_0
+contact  xrail_2_0_0 x yrail_2_190
+contact  xrail_2_0_0 x xgusset_2_0_0
+contact  xrail_2_0_0 x xgusset_2_190_0
+contact  xrail_2_0_0 x panel_2_left
+contact  xrail_2_0_180 x yrail_2_0
+contact  xrail_2_0_180 x yrail_2_190
+contact  xrail_2_0_180 x xgusset_2_0_180
+contact  xrail_2_0_180 x xgusset_2_190_180
+contact  xrail_2_0_180 x panel_2_left
+contact  xrail_2_190_0 x yrail_2_190
+contact  xrail_2_190_0 x yrail_2_380
+contact  xrail_2_190_0 x xgusset_2_190_0
+ok       xrail_2_190_0 x ygusset_2_190_0  gap 0.2 mm
+contact  xrail_2_190_0 x xgusset_2_380_0
+contact  xrail_2_190_0 x panel_2_right
+contact  xrail_2_190_180 x yrail_2_190
+contact  xrail_2_190_180 x yrail_2_380
+contact  xrail_2_190_180 x xgusset_2_190_180
+ok       xrail_2_190_180 x ygusset_2_190_180  gap 0.2 mm
+contact  xrail_2_190_180 x xgusset_2_380_180
+contact  xrail_2_190_180 x panel_2_right
+contact  yrail_2_0 x ygusset_2_0_0
+contact  yrail_2_0 x ygusset_2_0_180
+contact  yrail_2_0 x panel_2_left
+contact  yrail_2_190 x ygusset_2_190_0
+contact  yrail_2_190 x ygusset_2_190_180
+contact  yrail_2_190 x panel_2_left
+contact  yrail_2_190 x panel_2_right
+contact  yrail_2_380 x ygusset_2_380_0
+contact  yrail_2_380 x ygusset_2_380_180
+contact  yrail_2_380 x panel_2_right
+contact  xgusset_2_0_0 x ygusset_2_0_0
+contact  xgusset_2_0_180 x ygusset_2_0_180
+contact  xgusset_2_190_0 x ygusset_2_190_0
+contact  ygusset_2_190_0 x panel_2_right
+contact  xgusset_2_190_180 x ygusset_2_190_180
+contact  ygusset_2_190_180 x panel_2_right
+contact  xgusset_2_380_0 x ygusset_2_380_0
+contact  xgusset_2_380_180 x ygusset_2_380_180
+check: 0 overlaps, 0 clearance warnings

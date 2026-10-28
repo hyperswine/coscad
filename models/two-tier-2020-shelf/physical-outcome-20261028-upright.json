@@ -1,0 +1,32 @@
+{
+  "reported_on": "2026-10-28",
+  "source": "owner report",
+  "job_record": "vertical-retry/fit_run.json",
+  "print_quality": "printed well upright",
+  "nut_fit": "very tight",
+  "next_test": "vertical-loose-fit/fit.assemble",
+  "changes_mm": {
+    "pocket_width": [
+      10,
+      11.2
+    ],
+    "pocket_depth": [
+      3,
+      4.2
+    ],
+    "opening": [
+      6.4,
+      7.4
+    ],
+    "tip_clearance": [
+      5.6,
+      5.6
+    ],
+    "lip_thickness": [
+      1.5,
+      1.5
+    ]
+  },
+  "physical_load_tested": false,
+  "pocket_profile": "11.2 mm upper width; 4.2 mm nominal central depth; chamfered lower corners preserve diagonal webs"
+}
