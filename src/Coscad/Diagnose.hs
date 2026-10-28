@@ -66,10 +66,10 @@ projectSources text = do
   where
     entry v = do
       path <- maybe (Left "buffer needs path") Right (lookupKey "path" v >>= asString)
-      text <- maybe (Left "buffer needs text") Right (lookupKey "text" v >>= asString)
+      body <- maybe (Left "buffer needs text") Right (lookupKey "text" v >>= asString)
       unless (isAbsolute path && takeExtension path `elem` [".coscad", ".assemble"] && '\0' `notElem` path)
         (Left "buffer path must be absolute and end in .coscad or .assemble")
-      return (path,text)
+      return (path,body)
 
 validateProject :: Emit -> FilePath -> [(FilePath,String)] -> IO (Either Failure String,[FilePath])
 validateProject emit file sources = do
