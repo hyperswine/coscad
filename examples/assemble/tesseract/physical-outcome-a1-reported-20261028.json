@@ -1,0 +1,12 @@
+{
+  "reported_on": "2026-10-28",
+  "source": "owner report",
+  "printer": "A1",
+  "design": "Previous tesseract with integral captured joints and no screws or nuts",
+  "observation": "The previous tesseract version without any fasteners printed well on the A1.",
+  "print_outcome": "printed_well",
+  "actual_print_date": null,
+  "exact_job_or_slice_identified": false,
+  "assembly_or_joint_fit_outcome": "not reported in this observation",
+  "comparison": "The newer threaded tesseract initially failed early when packed onto one bed, on both P1S and A1. Earlier-model success does not identify the cause of those newer-model failures."
+}

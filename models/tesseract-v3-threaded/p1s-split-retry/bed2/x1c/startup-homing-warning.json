@@ -1,0 +1,31 @@
+{
+  "code": "03000D0000020001",
+  "observed": [
+    {
+      "at": "2026-10-28T22:45:02+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 470,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tesseract-v3-split-bed2-pei-x1c-20261028-223912.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0
+      },
+      "hms": [
+        {
+          "attr": 50334976,
+          "code": 131073
+        }
+      ]
+    }
+  ],
+  "fresh_retry_cleared_at": "2026-10-28T22:47:24+11:00",
+  "status": "cleared on fresh read",
+  "control_commands_sent_for_warning": false,
+  "wiki_reference": "https://wiki.bambulab.com/en/x1/troubleshooting/hmscode/0300_0D00_0002_0001",
+  "cause": "not diagnosed"
+}

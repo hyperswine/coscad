@@ -1,0 +1,48 @@
+{
+  "created_at": "2026-10-28T22:39:12+11:00",
+  "job": "tesseract-v3-split-bed2",
+  "printer": "x1c",
+  "authorization": "Owner requested printing the new tesseract split Bed 2 on the X1C and confirmed its bed clear on 2026-10-28.",
+  "bed_clear_owner_confirmed": true,
+  "package": "tesseract-bed2-x1c.gcode.3mf",
+  "package_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f",
+  "remote_name": "tesseract-v3-split-bed2-pei-x1c-20261028-223912.gcode.3mf",
+  "remote_content_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f",
+  "sequence_id": "187571751",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "187571751"
+  },
+  "expected_layers": 282,
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "seen_running": true,
+  "first_layer_reached": null,
+  "needs_attention": false,
+  "startup_alert_cleared_at": "2026-10-28T22:47:24+11:00",
+  "latest_observation": {
+    "at": "2026-10-28T22:52:09+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 1,
+      "layer_num": 0,
+      "total_layer_num": 282,
+      "mc_remaining_time": 468,
+      "gcode_file": "/data/Metadata/plate_1.gcode",
+      "subtask_name": "tesseract-v3-split-bed2-pei-x1c-20261028-223912.gcode",
+      "nozzle_temper": 220.0,
+      "bed_temper": 55.0,
+      "print_error": 0
+    },
+    "targets": {
+      "bed_target_temper": 55.0,
+      "nozzle_target_temper": 220.0
+    },
+    "stage": 0,
+    "hms": []
+  },
+  "bounded_startup_observation_ended": true,
+  "completion_verified": false
+}

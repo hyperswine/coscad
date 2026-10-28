@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the actual one-plate P1S package, placement, brims and support paths."""
+"""Verify the actual one-plate selected-printer package, placement, brims and support paths."""
 from pathlib import Path
 import argparse,hashlib,json,math,re,sys,zipfile,xml.etree.ElementTree as E
 import numpy as np
@@ -8,7 +8,8 @@ from shapely import wkt,contains_xy
 from shapely.geometry import MultiPoint,box
 from shapely.ops import unary_union
 PROJECT=Path(__file__).resolve().parent;SOURCE=PROJECT.parent
-ap=argparse.ArgumentParser();ap.add_argument('--bed',type=int,choices=range(1,6),required=True);ap.add_argument('--slice-dir',default='slice');args=ap.parse_args();HERE=PROJECT/('bed'+str(args.bed));OUT=HERE/args.slice_dir
+ap=argparse.ArgumentParser();ap.add_argument('--bed',type=int,choices=range(1,6),required=True);ap.add_argument('--slice-dir',default='slice');ap.add_argument('--printer',choices=('p1s','x1c'),default='p1s');ap.add_argument('--variant',default='');args=ap.parse_args();HERE=PROJECT/('bed'+str(args.bed))/args.variant;OUT=HERE/args.slice_dir
+printer_model,model_id={'p1s':('Bambu Lab P1S','C12'),'x1c':('Bambu Lab X1 Carbon','BL-P001')}[args.printer]
 expected_count=len(json.loads((HERE/'packing.json').read_text())['items'])
 sys.path.insert(0,str(SOURCE.parent/'print-in-place-globe/v2-threaded'))
 from support_roots import SupportRoots
@@ -16,7 +17,7 @@ result=json.loads((OUT/'result.json').read_text());assert result['return_code']=
 assert len(result['sliced_plates'])==1
 plate=result['sliced_plates'][0];assert not plate.get('warning_message'),plate.get('warning_message')
 assert len(plate['objects'])==expected_count,len(plate['objects'])
-package=OUT/('tesseract-bed'+str(args.bed)+'-p1s.gcode.3mf')
+package=OUT/('tesseract-bed'+str(args.bed)+'-'+args.printer+'.gcode.3mf')
 packing=json.loads((HERE/'packing.json').read_text());parts=json.loads((HERE/'project-parts.json').read_text());assert len(packing['items'])==expected_count
 # Saved normal meshes are single solids, brims/envelopes and bed keep-out clear.
 normal={};allow=[]
@@ -54,7 +55,7 @@ with zipfile.ZipFile(package) as z:
  bed_commands=re.findall(rb'^M(?:140|190)\s+S([0-9.]+)',startup,re.M)
  bed_waits=re.findall(rb'^M190\s+S([0-9.]+)',startup,re.M)
  assert bed_commands and bed_waits and float(bed_commands[-1])==55 and float(bed_waits[-1])==55, 'Final startup bed target/wait must be 55 C'
- assert settings['printer_model']=='Bambu Lab P1S' and settings['nozzle_diameter']==['0.4'] and settings['filament_settings_id']==['Generic PLA']
+ assert settings['printer_model']==printer_model and settings['printer_settings_id']==printer_model+' 0.4 nozzle' and settings['nozzle_diameter']==['0.4'] and settings['filament_settings_id']==['Generic PLA']
  for k,v in json.loads((HERE/'process.json').read_text()).items():
   actual=settings[k];actual=actual[0] if isinstance(actual,list) and len(actual)==1 else actual
   assert actual==v,(k,actual,v)
@@ -65,8 +66,8 @@ with zipfile.ZipFile(package) as z:
   assert float(o.find("metadata[@key='brim_width']").get('value'))==item['brim_mm']
   assert o.find("metadata[@key='enable_support']").get('value')==('1' if item['enable_support'] else '0')
  xml=E.fromstring(z.read('Metadata/slice_info.config'));model=xml.find(".//metadata[@key='printer_model_id']")
- vendor=json.loads(Path('/Applications/BambuStudio.app/Contents/Resources/profiles/BBL/machine/Bambu Lab P1S.json').read_text());assert vendor['model_id']=='C12' and model.get('value') in ('','C12')
- model.set('value','C12');name='Metadata/slice_info.config';entries[name]=(entries[name][0],E.tostring(xml,encoding='utf-8',xml_declaration=True))
+ vendor=json.loads(Path('/Applications/BambuStudio.app/Contents/Resources/profiles/BBL/machine/'+printer_model+'.json').read_text());assert vendor['model_id']==model_id and model.get('value') in ('',model_id)
+ model.set('value',model_id);name='Metadata/slice_info.config';entries[name]=(entries[name][0],E.tostring(xml,encoding='utf-8',xml_declaration=True))
  (HERE/'plate-preview.png').write_bytes(z.read('Metadata/plate_1.png'))
 # Validate extracted geometry, including production-extension referenced models.
 ns={'m':'http://schemas.microsoft.com/3dmanufacturing/core/2015/02'}
@@ -109,6 +110,7 @@ offset=np.array([float(x) for x in json.loads((HERE/'presets/machine.json').read
 brim_masks={i['id']:MultiPoint(normal[i['id']].vertices[:,:2]).convex_hull.buffer(8.3) for i in packing['items']}
 brim_objects={i['id']:{'segments':0,'min_radius':999.,'max_radius':0.,'sectors':set()} for i in packing['items']}
 roots=SupportRoots();x=y=z=0.;e=0.;absolute=True;relative=True;active=False;feature='';width=.42;segments=0;support=0;brim=0;arc=0;intrusions=[];outside=[]
+bed_support_points=[];inner_contact_points=[];support_anchor_evidence={}
 for line in code.decode().splitlines():
  if line.startswith('; CHANGE_LAYER'):active=True
  if line.startswith('; Z_HEIGHT:'):roots.layer(float(line.split(':')[1]))
@@ -144,11 +146,13 @@ for line in code.decode().splitlines():
   assert not np.any((pts[:,0]>-.2)&(pts[:,0]<18.2)&(pts[:,1]>-.2)&(pts[:,1]<28.2)),(feature,'keepout')
   if feature.startswith('Support'):
    support+=1;roots.add(pts)
+   if nz<.3:bed_support_points.append(pts.copy())
    if support_area is None or not np.all(contains_xy(support_area,pts[:,0],pts[:,1])):outside.append([nz,pts.min(0).tolist(),pts.max(0).tolist()])
    p3=np.column_stack((pts,np.full(len(pts),nz)))
    for center,axis,radius,half in regions:
     rel=p3-center;axial=rel@axis;rad=np.linalg.norm(rel-axial[:,None]*axis,axis=1)
     if np.any((abs(axial)<half-.1)&(rad<radius-.1)):intrusions.append([nz,float(rad.min())])
+  if nz<.3 and not special and support_area is not None and np.all(contains_xy(support_area,pts[:,0],pts[:,1])):inner_contact_points.append(pts.copy())
   if feature in ['Skirt','Brim']:
    brim+=1;assert np.all(contains_xy(allowed,pts[:,0],pts[:,1])),('brim exceeds reserved footprint',pts.min(0),pts.max(0))
    if nz<.3:
@@ -164,7 +168,21 @@ for line in code.decode().splitlines():
 assert segments>10000 and brim>0,(segments,support,brim)
 assert (support>0) if inner_ids else (support==0),(inner_ids,support)
 for item in packing['items']:
- record=brim_objects[item['id']];assert record['segments']>0,(item['id'],'no actual brim')
+ record=brim_objects[item['id']]
+ if record['segments']==0 and item['name']=='inner':
+  # Bambu merges/suppresses the model brim where tree bases surround its tiny
+  # contact pads. Require explicit expanded support bases and actual adjacent
+  # first-layer paths; a saved brim setting alone is not anchoring evidence.
+  assert float(settings.get('raft_first_layer_expansion',-1))==8
+  assert bed_support_points and inner_contact_points
+  from scipy.spatial import cKDTree
+  anchors=np.concatenate(bed_support_points);contacts=np.concatenate(inner_contact_points)
+  pixels=np.unique(np.rint(anchors/.5).astype(int),axis=0)
+  quadrants=set(map(tuple,(anchors>np.array(item['center_xy_mm'])).astype(int)))
+  nearest=float(cKDTree(anchors).query(contacts)[0].min())
+  assert len(pixels)>200 and len(quadrants)==4 and nearest<.8,(len(pixels),quadrants,nearest)
+  support_anchor_evidence[item['id']]={'kind':'expanded tree-support base replacing suppressed model brim','expansion_mm':8,'first_layer_sampled_cells_0_5mm':len(pixels),'occupied_quadrants':len(quadrants),'nearest_model_path_mm':nearest,'limitation':'Sampled toolpaths, not physical adhesion proof'}
+ else:assert record['segments']>0,(item['id'],'no actual brim')
  if item['name']=='cap':assert record['max_radius']>26.5 and len(record['sectors'])==36,(item['id'],record)
  record['angular_sectors_covered']=len(record['sectors']);del record['sectors']
 assert not outside,('support outside reserved inner-frame area',outside[:5])
@@ -176,5 +194,6 @@ with zipfile.ZipFile(tmp,'w',zipfile.ZIP_DEFLATED) as out:
  for info,data in entries.values():out.writestr(info,data)
 with zipfile.ZipFile(tmp) as z:assert z.testzip() is None and z.read('Metadata/plate_1.gcode')==code
 tmp.replace(package)
-report={'package':str(package.relative_to(HERE)),'package_sha256':hashlib.sha256(package.read_bytes()).hexdigest(),'gcode_sha256':hashlib.sha256(code).hexdigest(),'printer_model_id':'C12','normal_objects':expected_count,'bed_index':args.bed,'per_object_brim_evidence':brim_objects,'single_plate':True,'max_geometry_bound_error_mm':max_bound_error,'deposition_segments':segments,'arc_segments':arc,'arc_sampling_mm':.25,'support_segments':support,'support_thread_intrusions':len(intrusions),'support_footprint_violations':len(outside),'brim_segments':brim,'support_roots':root_report,'total_estimated_seconds':plate['total_predication'],'filaments':plate['filaments'],'slicer_warnings':plate.get('warning_message'),'checked':True,'exported_bed_type':settings['curr_bed_type'],'final_startup_bed_target_c':float(bed_commands[-1]),'final_startup_bed_wait_c':float(bed_waits[-1])}
+report={'package':str(package.relative_to(HERE)),'package_sha256':hashlib.sha256(package.read_bytes()).hexdigest(),'gcode_sha256':hashlib.sha256(code).hexdigest(),'printer_model_id':model_id,'normal_objects':expected_count,'bed_index':args.bed,'per_object_brim_evidence':brim_objects,'single_plate':True,'max_geometry_bound_error_mm':max_bound_error,'deposition_segments':segments,'arc_segments':arc,'arc_sampling_mm':.25,'support_segments':support,'support_thread_intrusions':len(intrusions),'support_footprint_violations':len(outside),'brim_segments':brim,'support_roots':root_report,'total_estimated_seconds':plate['total_predication'],'filaments':plate['filaments'],'slicer_warnings':plate.get('warning_message'),'checked':True,'exported_bed_type':settings['curr_bed_type'],'final_startup_bed_target_c':float(bed_commands[-1]),'final_startup_bed_wait_c':float(bed_waits[-1])}
+report['support_base_anchor_evidence']=support_anchor_evidence
 (HERE/'package-validation.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))

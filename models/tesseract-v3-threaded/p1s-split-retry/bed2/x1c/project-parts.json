@@ -1,0 +1,117 @@
+{
+  "parts": [
+    {
+      "parent": 3,
+      "normal_part": 1,
+      "label": "1-inner",
+      "brim_mm": 8,
+      "enable_support": true,
+      "bounds": [
+        [
+          99.73741149902344,
+          99.73741149902344,
+          0.0
+        ],
+        [
+          156.26258850097656,
+          156.26258850097656,
+          56.50226974487305
+        ]
+      ]
+    },
+    {
+      "parent": 6,
+      "normal_part": 4,
+      "label": "2-hub",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          30.56624412536621,
+          30.56624412536621,
+          0.0
+        ],
+        [
+          89.43375396728516,
+          89.43375396728516,
+          24.0
+        ]
+      ]
+    },
+    {
+      "parent": 9,
+      "normal_part": 7,
+      "label": "3-hub",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          166.5662384033203,
+          30.56624412536621,
+          0.0
+        ],
+        [
+          225.4337615966797,
+          89.43375396728516,
+          24.0
+        ]
+      ]
+    },
+    {
+      "parent": 12,
+      "normal_part": 10,
+      "label": "4-hub",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          30.56624412536621,
+          166.5662384033203,
+          0.0
+        ],
+        [
+          89.43375396728516,
+          225.4337615966797,
+          24.0
+        ]
+      ]
+    },
+    {
+      "parent": 15,
+      "normal_part": 13,
+      "label": "5-hub",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          166.5662384033203,
+          166.5662384033203,
+          0.0
+        ],
+        [
+          225.4337615966797,
+          225.4337615966797,
+          24.0
+        ]
+      ]
+    }
+  ],
+  "thread_exclusions": [
+    "thread-exclusion-0.stl",
+    "thread-exclusion-1.stl",
+    "thread-exclusion-2.stl",
+    "thread-exclusion-3.stl",
+    "thread-exclusion-4.stl",
+    "thread-exclusion-5.stl",
+    "thread-exclusion-6.stl",
+    "thread-exclusion-7.stl",
+    "thread-exclusion-8.stl",
+    "thread-exclusion-9.stl",
+    "thread-exclusion-10.stl",
+    "thread-exclusion-11.stl",
+    "thread-exclusion-12.stl",
+    "thread-exclusion-13.stl",
+    "thread-exclusion-14.stl",
+    "thread-exclusion-15.stl"
+  ]
+}

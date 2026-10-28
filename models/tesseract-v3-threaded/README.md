@@ -15,6 +15,16 @@ parts**, with no purchased bolts, nuts, glue or press-fit pins:
 
 ![Assembled prototype](preview.png)
 
+## Latest owner observations — 28 October 2026
+
+The corrected **split Bed 1 is printing well on the P1S**, according to the
+owner. This is progress in the current print, with completion not yet reported;
+see [the progress record](p1s-split-retry/bed1/physical-progress-20261028.json).
+The owner also confirms that the [previous fastener-free tesseract](../../examples/assemble/tesseract/README.md)
+**printed well on the A1**. The initial one-bed failures of this newer design
+remain puzzling. The known 35°C slicing mistake may have contributed, but the
+successful progress after several simultaneous changes does not isolate a cause.
+
 ## P1S failure and A1 retry
 
 The full P1S attempt failed early: the owner reported loss of adhesion and
@@ -36,8 +46,8 @@ The corrected 55°C package was initially held at the owner’s request. The own
 later cleaned the P1S bed and requested a restart on 28 October 2026. Fresh
 preflight and upload checks passed; the P1S accepted the new first-plate job and
 reached layer 1/78 at 17:44:24 Sydney time with a 55°C bed target, 220°C nozzle
-target and no active faults. A transient startup fan warning cleared. Physical
-success remains unverified.
+target and no active faults. A transient startup fan warning cleared. The owner
+has since reported good printing progress; completion remains unreported.
 
 ## Latest: split plates after both full-plate failures
 

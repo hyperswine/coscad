@@ -254,6 +254,8 @@ class PreflightTests(unittest.TestCase):
                     package = job/'slice'/('beach-outrigger.gcode.3mf' if name == 'p1s-pla' else 'monohull.gcode.3mf')
                 elif source.name == 'print_fit.py':
                     package = folder/('thread-fit_bed1.gcode.3mf' if source.parent.name == 'p1s-thread-fit' else 'fit_bed1.gcode.3mf')
+                elif source.name == 'print_bed2_x1c.py':
+                    package = folder/'slice-expanded/tesseract-bed2-x1c.gcode.3mf'
                 elif source.parent.name == 'p1s-split-retry':
                     package = folder/'slice-corrected/tesseract-bed1-p1s.gcode.3mf'
                 elif source.parent.name == 'p1s-full':
@@ -268,6 +270,8 @@ class PreflightTests(unittest.TestCase):
                 digest = hashlib.sha256(wrong).hexdigest()
                 evidence = dict(passed=True, checked=True, single_plate=True, normal_objects=8 if 'split' in str(source) else 37,
                                 bed_index=1, package=str(package), file=package.name, sha256=digest, package_sha256=digest)
+                if source.name == 'print_bed2_x1c.py':
+                    evidence.update(normal_objects=5, bed_index=2, printer_model_id='BL-P001')
                 (job/'package-validation.json').write_text(json.dumps(evidence))
                 (folder/'evidence').mkdir(exist_ok=True)
                 (folder/'evidence/slices.json').write_text(json.dumps({'builds': {'fit': {'plates': [evidence]}}}))

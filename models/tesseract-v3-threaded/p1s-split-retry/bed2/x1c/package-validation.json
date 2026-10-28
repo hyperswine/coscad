@@ -1,0 +1,83 @@
+{
+  "package": "slice-expanded/tesseract-bed2-x1c.gcode.3mf",
+  "package_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f",
+  "gcode_sha256": "7e16168b086352d608f707cee79719ee7147f743330b669f84df8d9e00f385f6",
+  "printer_model_id": "BL-P001",
+  "normal_objects": 5,
+  "bed_index": 2,
+  "per_object_brim_evidence": {
+    "1": {
+      "segments": 0,
+      "min_radius": 999.0,
+      "max_radius": 0.0,
+      "angular_sectors_covered": 0
+    },
+    "2": {
+      "segments": 730,
+      "min_radius": 4.935605332682105,
+      "max_radius": 25.357922884179608,
+      "angular_sectors_covered": 0
+    },
+    "3": {
+      "segments": 731,
+      "min_radius": 4.935605332682109,
+      "max_radius": 25.357922884179608,
+      "angular_sectors_covered": 0
+    },
+    "4": {
+      "segments": 735,
+      "min_radius": 4.935605332682109,
+      "max_radius": 25.357922884179615,
+      "angular_sectors_covered": 0
+    },
+    "5": {
+      "segments": 731,
+      "min_radius": 4.9356053326821145,
+      "max_radius": 25.357922884179615,
+      "angular_sectors_covered": 0
+    }
+  },
+  "single_plate": true,
+  "max_geometry_bound_error_mm": 1.025366209717049e-06,
+  "deposition_segments": 539256,
+  "arc_segments": 131733,
+  "arc_sampling_mm": 0.25,
+  "support_segments": 26619,
+  "support_thread_intrusions": 0,
+  "support_footprint_violations": 0,
+  "brim_segments": 2927,
+  "support_roots": {
+    "raster_mm": 0.5,
+    "lateral_allowance_mm": 1,
+    "previous_layers_considered": 3,
+    "support_layers": 205,
+    "support_components_checked": 1413,
+    "bed_components": 1,
+    "components_without_prior_support": [],
+    "limitation": "Sampled continuity, not exact extrusion topology or physical support strength"
+  },
+  "total_estimated_seconds": 28577.080078125,
+  "filaments": [
+    {
+      "filament_id": "GFL99",
+      "id": 1,
+      "main_used_g": 118.36701965332031,
+      "total_used_g": 118.36701965332031
+    }
+  ],
+  "slicer_warnings": "",
+  "checked": true,
+  "exported_bed_type": "Textured PEI Plate",
+  "final_startup_bed_target_c": 55.0,
+  "final_startup_bed_wait_c": 55.0,
+  "support_base_anchor_evidence": {
+    "1": {
+      "kind": "expanded tree-support base replacing suppressed model brim",
+      "expansion_mm": 8,
+      "first_layer_sampled_cells_0_5mm": 13811,
+      "occupied_quadrants": 4,
+      "nearest_model_path_mm": 0.6505871325570585,
+      "limitation": "Sampled toolpaths, not physical adhesion proof"
+    }
+  }
+}

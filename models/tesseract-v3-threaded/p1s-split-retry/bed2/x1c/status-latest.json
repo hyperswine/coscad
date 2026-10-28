@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-28T22:52:09+11:00",
+  "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 1,
+    "layer_num": 0,
+    "total_layer_num": 282,
+    "mc_remaining_time": 468,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "tesseract-v3-split-bed2-pei-x1c-20261028-223912.gcode",
+    "nozzle_temper": 220.0,
+    "bed_temper": 55.0,
+    "print_error": 0
+  },
+  "targets": {
+    "bed_target_temper": 55.0,
+    "nozzle_target_temper": 220.0
+  },
+  "stage": 0,
+  "hms": []
+}

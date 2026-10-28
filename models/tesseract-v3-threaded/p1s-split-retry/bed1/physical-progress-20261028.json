@@ -1,0 +1,20 @@
+{
+  "reported_on": "2026-10-28",
+  "source": "owner report",
+  "printer": "P1S",
+  "job_record": "print-run-corrected.json",
+  "bed": 1,
+  "parts": "8 caps from the new threaded tesseract split layout",
+  "observation": "The new tesseract split Bed 1 is printing well.",
+  "status": "printing_well_in_progress",
+  "completion_reported": false,
+  "context": {
+    "bed_cleaned_before_retry": true,
+    "intended_plate": "Textured PEI Plate",
+    "verified_bed_target_c": 55,
+    "outer_brim_mm": 8,
+    "layout": "caps separated from the irregular and tall parts"
+  },
+  "comparison": "The owner also reports that the preceding fastener-free tesseract printed well on the A1. This makes the early one-bed failures of the newer design noteworthy, but does not establish their cause.",
+  "causality": "The initial new-design P1S and A1 slices were confirmed to use Cool Plate/35 C in error. Temperature, bed cleaning, part grouping, brim width and first-layer settings changed for this retry, so the improvement does not isolate a single cause."
+}

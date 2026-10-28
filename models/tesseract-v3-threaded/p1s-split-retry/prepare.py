@@ -1,24 +1,28 @@
 #!/usr/bin/env python3
-"""Compose the packed CoScad meshes and thread exclusions as a P1S project."""
+"""Compose the packed CoScad meshes and thread exclusions for a selected printer."""
 from pathlib import Path
 import argparse,importlib.util,json,zipfile,xml.etree.ElementTree as E
 import numpy as np
 import trimesh
 PROJECT=Path(__file__).resolve().parent;ROOT=PROJECT.parents[2];SOURCE=PROJECT.parent
-ap=argparse.ArgumentParser();ap.add_argument('--bed',type=int,choices=range(1,6),required=True);args=ap.parse_args();HERE=PROJECT/('bed'+str(args.bed))
+ap=argparse.ArgumentParser();ap.add_argument('--bed',type=int,choices=range(1,6),required=True);ap.add_argument('--printer',choices=('p1s','x1c'),default='p1s');ap.add_argument('--variant',default='');ap.add_argument('--support-base-brim',type=float);args=ap.parse_args();HERE=PROJECT/('bed'+str(args.bed))/args.variant
+printer={'p1s':'Bambu Lab P1S 0.4 nozzle','x1c':'Bambu Lab X1 Carbon 0.4 nozzle'}[args.printer]
 spec=importlib.util.spec_from_file_location('slicer',ROOT/'scripts/bambu-slice.py');s=importlib.util.module_from_spec(spec);spec.loader.exec_module(s)
 packing=json.loads((HERE/'packing.json').read_text());assert packing['count']==len(packing['items'])
-machine=s.machine_with_templates('Bambu Lab P1S 0.4 nozzle')
+machine=s.machine_with_templates(printer)
 process=s.flatten('process',machine['default_print_profile']);filament=s.flatten('filament','Generic PLA')
 overrides={'wall_loops':'6','sparse_infill_density':'20%','sparse_infill_pattern':'gyroid','top_shell_layers':'5','bottom_shell_layers':'5','layer_height':'0.2','outer_wall_speed':'40','inner_wall_speed':'70','default_acceleration':'2000','outer_wall_acceleration':'1000','inner_wall_acceleration':'2000','travel_acceleration':'3000','enable_support':'1','support_type':'tree(auto)','support_on_build_plate_only':'1','support_top_z_distance':'0.24','support_bottom_z_distance':'0.24','support_object_xy_distance':'0.4','support_interface_top_layers':'2','support_interface_spacing':'0.35','tree_support_wall_count':'1','brim_type':'outer_only','brim_width':'8','brim_object_gap':'0.1'}
 overrides.update(enable_support='1' if any(i['name']=='inner' for i in packing['items']) else '0',initial_layer_speed='20',initial_layer_infill_speed='25',initial_layer_acceleration='500')
-assert set(overrides)<=set(process)|{'brim_type'}
+if args.support_base_brim is not None:
+ if not 0<=args.support_base_brim<=8:raise ValueError('Support base expansion must fit the reserved 8 mm envelope')
+ overrides['raft_first_layer_expansion']=f'{args.support_base_brim:g}'
+assert set(overrides)<=set(process)|{'brim_type','raft_first_layer_expansion'}
 process.update(overrides)
 # The CLI --load-settings process preset overrides project metadata.
 process['curr_bed_type']='Textured PEI Plate'
 full={}
 for preset in [machine,process,filament]:full.update({k:v for k,v in preset.items() if k not in {'type','name','inherits','from','instantiation','setting_id'}})
-full.update(curr_bed_type='Textured PEI Plate',printer_settings_id='Bambu Lab P1S 0.4 nozzle',filament_settings_id=['Generic PLA'])
+full.update(curr_bed_type='Textured PEI Plate',printer_settings_id=printer,filament_settings_id=['Generic PLA'])
 (HERE/'process.json').write_text(json.dumps(overrides,indent=2)+'\n')
 for name,preset in [('machine',machine),('process',process),('filament',filament),('project',full)]:
  (HERE/'presets').mkdir(exist_ok=True);(HERE/'presets'/(name+'.json')).write_text(json.dumps(preset,indent=2)+'\n')

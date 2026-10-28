@@ -1,5 +1,33 @@
 # Split plates with substantial brims — 28 October 2026
 
+## Bed 2 on X1C
+
+On 28 October 2026 the owner requested Bed 2 on the X1C and confirmed its bed
+clear. The X1C-specific five-part slice (inner frame plus four hubs) passed
+geometry, support/thread clearance and full G-code thermal checks. The upload
+was read back with a matching SHA-256 and one start command was acknowledged
+successfully at about 22:39 Sydney time. Fresh telemetry confirmed the new
+282-layer job RUNNING, with bed 55 C and nozzle 220 C targets and no faults.
+A transient homing warning during levelling cleared on fresh reads without
+control commands. At 22:52:09 the job had passed levelling/extrusion calibration
+and reported stage 0, nozzle 220 C and bed 55 C, without faults. The layer counter
+was still 0; first-layer completion and adhesion remain unverified. See [the Bed 2 record and reproduction notes](bed2/x1c/README.md).
+This is dispatch/startup evidence; completed printing and fit remain unverified.
+
+## Owner update: Bed 1 printing well
+
+On 28 October 2026 the owner reports that the corrected **P1S split Bed 1 is
+printing well**. This is an in-progress physical observation; completion has
+not yet been reported. See [the progress record](bed1/physical-progress-20261028.json).
+
+The owner also confirms that the **previous fastener-free tesseract printed
+well on the A1**; see [that earlier-design outcome](../../../examples/assemble/tesseract/physical-outcome-a1-reported-20261028.json).
+The early failures of the newer, full one-bed layout therefore remain
+unexplained by the observations alone. The confirmed 35°C plate-profile error
+is a candidate contributor, while this retry also changes cleaning, grouping,
+brims and first-layer settings. This is not a controlled comparison that can
+separate those factors or rule out a new-design/layout issue.
+
 **Current state: corrected first plate restarted after bed cleaning.** On
 28 October 2026 the owner cleaned the P1S bed and requested the retry, superseding
 the earlier hold. The package under `bed1/slice-corrected/` passed fresh plate/
@@ -67,9 +95,10 @@ packet is preserved and distinguished from the subsequent fresh RUNNING/78
 report. It was not a failure of this retry.
 
 The earlier instruction to keep it stopped after the temperature correction was
-superseded by the owner’s cleaned-bed restart request. Only the corrected first
-plate was dispatched; the other four plates have packed meshes and editable
-projects with 8 mm brim settings, but **have not been sliced or dispatched**.
+superseded by the owner’s cleaned-bed restart request. The corrected first plate was dispatched on the P1S; Bed 2 has since been
+re-sliced and dispatched on the X1C as described above. Beds 3 through 5 have
+packed meshes and editable projects with 8 mm brim settings, but **have not
+been sliced or dispatched**.
 Check and slice each when its physical test is requested; do not reuse a prior
 G-code file. The inner frame retains thread-bore support blockers.
 
@@ -113,6 +142,6 @@ is explicitly invalidated. Both old full-plate reports are invalidated too.
 All active custom builders now set the plate in the CLI process preset. All
 validators and dispatch helpers require both the exported Textured PEI setting
 and final startup bed-target/wait commands at 55°C. The corrected first-plate
-package passed those checks and its existing brim/geometry checks; it remains
-stopped. The startup fan alert separately observed during calibration cleared
+package passed those checks and its existing brim/geometry checks. It was
+subsequently restarted after owner bed cleaning, as recorded above. The startup fan alert separately observed during calibration cleared
 on a fresh report; see `bed1/startup-fan-alert.json`.
