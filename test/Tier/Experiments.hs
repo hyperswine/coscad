@@ -20,6 +20,8 @@ import Coscad.Stress.Tetra
 import qualified Data.Map.Strict as Map
 import qualified Data.Array as A
 import Harness
+import Coscad.OpenScad (openscadVersion)
+import Data.Char (isDigit)
 import System.FilePath ((</>))
 import System.Directory (findExecutable, doesFileExist)
 import System.Exit (ExitCode (..))
@@ -246,6 +248,26 @@ closed tris = all (== (2,0)) (Map.elems edges)
 backendOracleTier :: T -> IO ()
 backendOracleTier t = do
   section "native backend compared with OpenSCAD"
+  -- The oracle values were measured against OpenSCAD 2025.05 (Manifold
+  -- backend). Older releases (e.g. Ubuntu's apt 2021.01) produce meshes that
+  -- differ, so skip loudly rather than fail or pass silently.
+  v <- openscadVersion
+  case v >>= versionParts of
+    Just parts | parts < [2025,5] ->
+      putStrLn ("SKIP native backend compared with OpenSCAD: needs OpenSCAD >= 2025.05, found "
+        ++ maybe "?" id v ++ " (set COSCAD_OPENSCAD to a newer build to run these)")
+    _ -> backendOracleChecks t
+
+versionParts :: String -> Maybe [Int]
+versionParts s = case [read d | d <- splitDots (takeWhile (\c -> isDigit c || c == '.') s), not (null d)] of
+  ps@(_:_:_) -> Just (take 2 ps)
+  _ -> Nothing
+  where splitDots str = case break (== '.') str of
+          (a, []) -> [a]
+          (a, _:rest) -> a : splitDots rest
+
+backendOracleChecks :: T -> IO ()
+backendOracleChecks t = do
   dir <- tempDir "backend-oracle"
   forM_ meshCases $ \(name,shape) -> do
     oracle <- renderShape OpenScadBackend (dir </> "part.scad") (dir </> "part.stl") shape
