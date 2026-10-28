@@ -100,7 +100,7 @@ def main():
             raise RuntimeError('manufacturing orientation/material differs from this analysis workflow')
         if manifest['geometry_backend'] != stress['geometry_backend']:
             raise RuntimeError('stress and manufacturing backend mismatch')
-        stage('plan', [binary, 'plan', assembly] + (['--png'] if args.images else []))
+        stage('plan', [binary, 'plan', assembly, backend] + (['--png'] if args.images else []))
         if args.slice:
             stage('slice', [sys.executable, ROOT / 'scripts/bambu-slice.py', output / 'shelf-bracket_manifest.json',
                            '--printer', 'Bambu Lab A1 0.4 nozzle', '--process-overrides', output / 'shelf-bracket-process.json'], timeout=600)

@@ -4,6 +4,7 @@ module Coscad.Plan.Render
   ( planJson
   , planMarkdown
   , stepScad
+  , stepScene
   )
 where
 
@@ -12,6 +13,8 @@ import Coscad.Plan.Search
 
 import Coscad.Codegen (gen, showD, usesBosl2)
 import Coscad.Geometry
+import Coscad.Image (Scene (..), SceneObject (..), defaultView)
+import Coscad.Shape (Shape (..))
 import Data.List (intercalate, nub)
 import qualified Data.Map as Map
 import Data.Maybe (mapMaybe)
@@ -143,16 +146,7 @@ stepScad m steps k =
     ++ "color(\"Gainsboro\") translate([" ++ showV (bx0 - 20, by0 - 20, bench - 2.5) ++ "]) cube([" ++ showV (bx1 - bx0 + 40, by1 - by0 + 40, 2) ++ "]);\n"
     ++ "$fn = 24;\n"
   where
-    s = steps !! (k - 1)
-    d = stRest s
-    rot = downMat d
-    before = concatMap stParts (take (k - 1) steps)
-    now = mapMaybe (`Map.lookup` mByName m) (stParts s ++ [h | h <- stNuts s, h `notElem` (before ++ stParts s)])
-    prev = mapMaybe (`Map.lookup` mByName m) before
-    nowF = [mFastById m Map.! i | i <- stFasts s]
-    prevF = [mFastById m Map.! i | i <- concatMap stFasts (take (k - 1) steps)]
-    world = if null (prev ++ now) then ((0, 0, 0), (1, 1, 1)) -- a step with only nuts to load
-            else fromCorners (concatMap (map (mApply rot) . bcorners . iBox) (prev ++ now))
+    (rot, world, prev, now, prevF, nowF) = stepContents m steps k
     ((bx0, by0, bench), (bx1, by1, _)) = world
     (lo, hi) = world
     c = bcenter world
@@ -166,3 +160,34 @@ stepScad m steps k =
     oneLine = unwords . words
     mat4 ((r1, r2, r3), (tx, ty, tz)) = "[" ++ row r1 tx ++ ", " ++ row r2 ty ++ ", " ++ row r3 tz ++ ", [0, 0, 0, 1]]"
     row (a, b, cc) t = "[" ++ showV (a, b, cc) ++ ", " ++ showD t ++ "]"
+
+-- | Both image paths share the placed parts, step colours, rest orientation,
+-- fastener head proxies and separated bench. Hardware proxies are explanatory
+-- markers, exactly as in the original SCAD scenes, not threaded screw meshes.
+stepScene :: Model -> [Step] -> Int -> Scene
+stepScene m steps k = Scene (parts ++ fasteners ++ [table]) defaultView
+  where
+    (rot, ((x0,y0,z0),(x1,y1,_)), prev, now, prevF, nowF) = stepContents m steps k
+    parts = [SceneObject (iName i) (iShape i) (rot `matMul` r, mApply rot p) color
+            | (i,color) <- [(i,(211,211,211)) | i <- prev] ++ [(i,(255,165,0)) | i <- now]
+            , let (r,p) = iAff i]
+    fasteners = [SceneObject ("fastener " ++ fSpec f)
+                  (Cylinder (headRadius (fHead f) (fDiam f)) (fDiam f*0.7))
+                  (rot `matMul` rodMat angle axis, mApply rot (fHeadPos f)) color
+                | (f,color) <- [(f,(139,0,0)) | f <- prevF] ++ [(f,(255,0,0)) | f <- nowF]
+                , not (isPegF f), let (angle,axis) = rotFromUp (fFace f)]
+    table = SceneObject "bench" (Rectangle (x1-x0+40) (y1-y0+40) 2)
+              (matIdentity,(x0-20,y0-20,z0-2.5)) (220,220,220)
+
+stepContents :: Model -> [Step] -> Int -> (M3, BBox, [Inst], [Inst], [Fast], [Fast])
+stepContents m steps k = (rot, world, prev, now, prevF, nowF)
+  where
+    s = steps !! (k-1)
+    rot = downMat (stRest s)
+    before = concatMap stParts (take (k-1) steps)
+    now = mapMaybe (`Map.lookup` mByName m) (stParts s ++ [h | h <- stNuts s, h `notElem` (before ++ stParts s)])
+    prev = mapMaybe (`Map.lookup` mByName m) before
+    nowF = [mFastById m Map.! i | i <- stFasts s]
+    prevF = [mFastById m Map.! i | i <- concatMap stFasts (take (k-1) steps)]
+    world = if null (prev ++ now) then ((0,0,0),(1,1,1))
+            else fromCorners (concatMap (map (mApply rot) . bcorners . iBox) (prev ++ now))

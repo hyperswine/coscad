@@ -3,8 +3,8 @@
 -- default, finds OpenSCAD and BOSL2 the same way the other commands do,
 -- asks both for their versions, and renders a small boolean part end to
 -- end through every available backend against a known volume. OpenSCAD
--- stays required even in a kernel build: planner step images (`plan
--- --png`, `site`) and `--backend=openscad` use it. Exit 1 if anything
+-- is checked even in a kernel build as an explicit alternative backend;
+-- native planner/site images do not need it. Exit 1 if any checked dependency
 -- is missing or a round trip disagrees.
 module Coscad.Doctor (runDoctor) where
 
@@ -32,7 +32,8 @@ runDoctor = do
   case manifoldKernelVersion of
     Just kernel -> putStrLn ("native      ok       Manifold " ++ kernel ++ " kernel linked statically (pinned by native-kernel.lock.json, with CrossSection)")
     Nothing -> putStrLn "native      absent   this binary was built without the pinned kernel (-f-manifold); --backend=native is refused. Build it with scripts/build-manifold.py"
-  putStrLn ("openscad    needed   " ++ (if manifoldAvailable then "for --backend=openscad and " else "for every render, and ") ++ "for plan --png and site step images")
+  putStrLn ("images      default  " ++ (if manifoldAvailable then "native CPU renderer (plan --png and site; no OpenSCAD needed)" else "OpenSCAD renderer (-f-manifold build)"))
+  putStrLn ("openscad    needed   " ++ (if manifoldAvailable then "only for --backend=openscad and this doctor's comparison probes" else "for every render, including plan --png and site"))
   -- OpenSCAD
   bin <- findOpenscad
   okScad <- case bin of

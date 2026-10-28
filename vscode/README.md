@@ -48,7 +48,11 @@ come from disk. Parser diagnostics remain available without a compiler. A
 compiler that predates `support`, `load` and `stress` is reported once, and its
 errors on those lines are ignored: the extension's parser owns them.
 
-The status bar shows the selected backend (or the compiler default). Capability
+The status bar shows the selected backend (or the compiler default). Planner
+images honor it too: current kernel builds render `plan --png` natively without
+OpenSCAD. Explicit image backend selection requires a compiler advertising
+`image-backends`; older compilers are refused rather than silently ignoring it.
+Capability
 probes are invalidated by configuration and direct executable changes. A compiler
 behind a wrapper such as `cabal run` should be refreshed by reloading the extension
 after a rebuild. OpenSCAD source output and plan images retain their own renderer;

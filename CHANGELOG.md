@@ -8,6 +8,29 @@ and this project adheres to the
 
 ## Unreleased
 
+## 1.5.0.0 - 2026-10-28
+
+- **Native planner and site images.** Kernel builds now render `plan --png`
+  and `site` through native meshes and a built-in CPU renderer, without
+  launching OpenSCAD or requiring a GPU/display. Cache meshes across steps;
+  retain highlights, rest orientation, screw-head markers and bench geometry.
+  Add orthographic framing, depth testing, lighting, antialiasing and PNG output.
+  `--backend=openscad` remains an explicit alternative. Failed image generation
+  fails the command instead of silently publishing missing images.
+- **Mandatory print preflight.** Check the actual sliced plate type and
+  bed/nozzle commands against intended presets before every Bambu dispatch.
+  Validate first/subsequent-layer temperatures and uploaded content hashes;
+  refuse mismatches, missing or ambiguous data and stale validation reports.
+- Add threaded tesseract and printed 2020 shelf prototypes, fit-test layouts,
+  revised brim/adhesion trials and owner-reported physical outcomes. Preserve
+  evidence of the incorrect 35°C slices and corrected 55°C P1S retry.
+- **VS Code 0.6.0.** Honor image backend selection and refuse unsupported
+  selection on older compilers. Avoid false analysis-directive errors from
+  stale compilers and explain how to update them.
+- Pin PNG dependencies and add renderer/CLI/site regression coverage. Validate
+  67 PNGs across six existing builds with OpenSCAD forbidden, including the
+  cube and bolted tesseract.
+
 ## 1.4.0.0 - 2026-10-28
 
 - Release the native geometry and stress workflows as prebuilt macOS ARM64

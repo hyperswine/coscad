@@ -1,7 +1,7 @@
 cabal-version: 2.2
 
 name:           coscad
-version:        1.4.0.0
+version:        1.5.0.0
 description:    Please see the README on GitHub at <https://github.com/hyperswine/coscad#readme>
 homepage:       https://github.com/hyperswine/coscad#readme
 bug-reports:    https://github.com/hyperswine/coscad/issues
@@ -55,6 +55,7 @@ library
       Coscad.Format
       Coscad.Geometry
       Coscad.IO
+      Coscad.Image
       Coscad.Json
       Coscad.Linalg
       Coscad.Loft
@@ -101,6 +102,7 @@ library
     , containers
     , directory
     , filepath
+    , JuicyPixels >=3.3 && <3.4
     , megaparsec
     , process
   default-language: Haskell2010
@@ -150,6 +152,7 @@ test-suite coscad-test
       Tier.Linalg
       Tier.Manufacturing
       Tier.Plan
+      Tier.Image
       Tier.Resolution
       Tier.Silence
       Tier.Stress
@@ -169,6 +172,7 @@ test-suite coscad-test
     , coscad
     , directory
     , filepath
+    , JuicyPixels >=3.3 && <3.4
     , megaparsec
     , process
     , time

@@ -1,0 +1,109 @@
+{
+  "command": "coscad site (default backend)",
+  "openscad_invoked": false,
+  "examples": [
+    {
+      "name": "corner_pair",
+      "steps": 3,
+      "parts": 3
+    },
+    {
+      "name": "ball",
+      "steps": 3,
+      "parts": 3
+    },
+    {
+      "name": "bow3",
+      "steps": 3,
+      "parts": 3
+    },
+    {
+      "name": "shelf-bracket",
+      "steps": 1,
+      "parts": 1
+    },
+    {
+      "name": "cube",
+      "steps": 29,
+      "parts": 29
+    },
+    {
+      "name": "tesseract",
+      "steps": 28,
+      "parts": 29
+    }
+  ],
+  "capabilities": {
+    "schema": "coscad.capabilities/1",
+    "version": "1.4.0.0",
+    "default_backend": "native-experimental",
+    "backends": [
+      "openscad",
+      "native-experimental"
+    ],
+    "features": [
+      "validate-json",
+      "project-buffers",
+      "stress",
+      "stl",
+      "check",
+      "next",
+      "plan",
+      "image-backends",
+      "native-images"
+    ],
+    "materials": [
+      {
+        "name": "pla",
+        "young_mpa": 3500
+      },
+      {
+        "name": "petg",
+        "young_mpa": 2100
+      },
+      {
+        "name": "abs",
+        "young_mpa": 2200
+      },
+      {
+        "name": "asa",
+        "young_mpa": 2300
+      },
+      {
+        "name": "pa",
+        "young_mpa": 1800
+      },
+      {
+        "name": "tpu",
+        "young_mpa": 30
+      },
+      {
+        "name": "aluminium",
+        "young_mpa": 69000
+      },
+      {
+        "name": "steel",
+        "young_mpa": 200000
+      }
+    ]
+  },
+  "checks_passed": 1336,
+  "haskell_examples_passed": true,
+  "editor_tests_passed": true,
+  "explicit_openscad_failure_exit": 1,
+  "geometry_comparison_tier": "not run: COSCAD_RENDER=0",
+  "images_decoded_with": "Pillow 12.3.0",
+  "source_sha256": {
+    "src/Coscad/Image.hs": "3a276fc20734856ff9ed579604f6878a6088d475f1d4cbb78a5cdb2af35106d5",
+    "src/Coscad/Plan.hs": "0ddc607f17ca68b847380932c0641f9d31588e3c9c4df67b2d86a0b0d5e316a7",
+    "src/Coscad/Plan/Render.hs": "d6860dc53446f0a6254db904f0b1a6f6674d1d0c27cce8bde773b3b8fc71c54d",
+    "src/Coscad/Site.hs": "402ed8d66b62f8495c896ab05106e275a30920d8eb9f73f0da5973deeaf03a8d",
+    "app/Main.hs": "d3e8768d6bf881fe9765387cae2e95e31a6d42d6951cf7dd2c6bd44dfe9eb1f0",
+    "cabal.project.freeze": "753004019c785d0394f11f2e87536df56ff57d0e5d50530fe2434bd6f5f14155"
+  },
+  "image_count": 67,
+  "example_notes": {
+    "cube": "scratch copy uses plan beam=10",
+    "tesseract": "existing plan beam=20 retained"
+  }
+}

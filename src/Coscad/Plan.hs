@@ -10,7 +10,7 @@
 -- driver accessible, nut can enter); a cost table picks among the
 -- remaining linear extensions via beam search; consecutive moves on
 -- one rest face merge into numbered steps.
-module Coscad.Plan (processPlan, processPlanSummary, planSummary, validateHardware, PlanSummary (..), StepSummary (..), FastenerSummary (..)) where
+module Coscad.Plan (processPlan, processPlanSummary, processPlanWithBackend, processPlanSummaryWithBackend, planSummary, validateHardware, PlanSummary (..), StepSummary (..), FastenerSummary (..)) where
 
 import Coscad.Plan.Model
 import Coscad.Plan.Render
@@ -18,6 +18,8 @@ import Coscad.Plan.Search
 
 import Control.Monad (forM_, unless, when)
 import Coscad.Assemble
+import Coscad.Backend (Backend (..), defaultBackend)
+import Coscad.Image (renderScenes)
 import Coscad.Codegen (showD)
 import Coscad.Geometry
 import Coscad.IO (writeFileUtf8)
@@ -90,12 +92,18 @@ summarise model errs st =
 processPlan :: Emit -> Bool -> FilePath -> IO (Either Failure ())
 processPlan emit png path = fmap (const ()) <$> processPlanSummary emit png path
 
+processPlanWithBackend :: Backend -> Emit -> Bool -> FilePath -> IO (Either Failure ())
+processPlanWithBackend backend emit png path = fmap (const ()) <$> processPlanSummaryWithBackend backend emit png path
+
 -- Also return the plan metadata so site counts use physical instances and
 -- actual steps, rather than declarations or stale image files.
 -- Design errors (colliding screws, too little reach, an unsolvable
 -- order) still write what can be written, then fail with exit 2.
 processPlanSummary :: Emit -> Bool -> FilePath -> IO (Either Failure PlanSummary)
-processPlanSummary emit png path = runCommand $ do
+processPlanSummary = processPlanSummaryWithBackend defaultBackend
+
+processPlanSummaryWithBackend :: Backend -> Emit -> Bool -> FilePath -> IO (Either Failure PlanSummary)
+processPlanSummaryWithBackend backend emit png path = runCommand $ do
   res <- loadAssembly emit [] path
   ar <- either (abort . asmFailure) return res
   (model, errs) <- either (abort . inputFailure) return (buildModel ar)
@@ -114,18 +122,21 @@ processPlanSummary emit png path = runCommand $ do
       writeFileUtf8 (base ++ "_plan.md") (planMarkdown title model steps errs)
       writeFileUtf8 (base ++ "_plan.json") (planJson path model steps errs)
       printf "Wrote %s_plan.md (%d steps, %d flips, cost %s)\n" base (length steps) (length (filter stFlip steps)) (showD (sCost st))
-      full <- if png then openscadFullRender else return False
-      when (png && not full) $
+      full <- if png && backend == OpenScadBackend then openscadFullRender else return False
+      when (png && backend == OpenScadBackend && not full) $
         emit $ Note "step images use the OpenSCAD preview (coincident faces may flicker); OpenSCAD 2025.05 or newer renders them fully at the same speed"
       forM_ (zip [1 :: Int ..] steps) $ \(k, _) -> do
         let f = base ++ "_step" ++ show k ++ ".scad"
         writeFileUtf8 f (stepScad model steps k)
-        when png $ do
+        when (png && backend == OpenScadBackend) $ do
           r <- runOpenscadRaw (openscadPngArgs full (base ++ "_step" ++ show k ++ ".png") f)
           case r of
             Right (ExitSuccess, _, _) -> return ()
-            Right (_, _, e) -> emit (Warning ("png for step " ++ show k ++ ": " ++ take 200 e))
-            Left e -> emit (Warning e)
+            Right (_, _, e) -> abort (inputFailure ("png for step " ++ show k ++ ": " ++ take 200 e))
+            Left e -> abort (inputFailure e)
+      when (png && backend == NativeExperimental) $ do
+        rendered <- renderScenes [(base ++ "_step" ++ show k ++ ".png", stepScene model steps k) | k <- [1..length steps]]
+        either (abort . inputFailure) return rendered
       putStrLn ("Wrote " ++ base ++ "_step1.." ++ show (length steps) ++ ".scad" ++ (if png then " and .png" else ""))
       unless (null errs) (abort (designFailures designLines))
       return (summarise model errs st)

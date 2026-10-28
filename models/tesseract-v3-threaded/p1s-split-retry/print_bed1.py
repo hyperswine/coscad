@@ -87,7 +87,7 @@ def main():
         ready(p)
         remote='tesseract-v3-split-bed1-pei-p1s-'+datetime.now(ZoneInfo('Australia/Sydney')).strftime('%Y%m%d-%H%M%S')+'.gcode.3mf'
         record=dict(created_at=now(),job='tesseract-v3-split-bed1',printer='p1s',
-            authorization='Owner requested separated layouts and brims on all parts, and approved printing the revised first P1S plate when ready on a confirmed-clear bed on 2026-10-28.',
+            authorization='Owner cleaned the P1S bed and explicitly requested restarting the corrected first-plate retry on 2026-10-28, superseding the earlier instruction to keep it stopped.',
             bed_clear_owner_confirmed=True,package=package.name,package_sha256=digest,thermal_preflight=thermal_preflight,
             remote_name=remote,spool='external',material='PLA',expected_layers=layers,
             before=p.summary(),spools_before=p.spools(),phase='preflight',dispatch_attempted=False,events=[])

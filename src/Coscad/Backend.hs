@@ -48,7 +48,7 @@ backendName OpenScadBackend = "openscad"
 backendName NativeExperimental = "native-experimental"
 
 -- | The caller owns output paths. OpenSCAD's warning/error policy is unchanged.
--- Used by single-part and manufacturing exports; images remain OpenSCAD.
+-- Used by single-part and manufacturing exports; Coscad.Image renders native PNGs.
 renderShape :: Backend -> FilePath -> FilePath -> Shape -> IO (Either String [Tri])
 renderShape OpenScadBackend scadF stlF shape = do
   writeFileUtf8 scadF (renderScad shape)

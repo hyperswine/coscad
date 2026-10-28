@@ -105,7 +105,10 @@ function registerFileCommand(context, id, allowedExtensions, makeArgs) {
       vscode.window.showErrorMessage('This compiler does not advertise stress analysis. Update the compiler.'); return
     }
     const backend = config().backend
-    if (['stl','stress','check','next'].includes(args[0]) && backend !== 'auto') {
+    if (['stl','stress','check','next','plan','site'].includes(args[0]) && backend !== 'auto') {
+      if (['plan','site'].includes(args[0]) && !info.capabilities?.features?.includes('image-backends')) {
+        vscode.window.showErrorMessage('This compiler cannot select the planner image backend. Update the compiler or use the auto backend.'); return
+      }
       if (!info.capabilities?.backends.includes(backend)) {
         vscode.window.showErrorMessage(`Backend ${backend} is unavailable in this compiler build.`); return
       }

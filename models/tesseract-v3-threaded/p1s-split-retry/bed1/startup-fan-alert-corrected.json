@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-28T17:41:39+11:00",
+  "job": "tesseract-v3-split-bed1-pei-p1s-20261028-173650.gcode.3mf",
+  "hms_observed": {
+    "attr": 50344192,
+    "code": 65537
+  },
+  "description": "Part cooling fan speed warning during startup; same reported code as earlier P1S trials. Cause not diagnosed.",
+  "first_observed_at": "2026-10-28T17:39:44+11:00",
+  "cleared_on_fresh_full_status_at": "2026-10-28T17:41:10+11:00",
+  "fresh_state": "RUNNING",
+  "fresh_hms": [],
+  "manual_clear_or_control_sent": false
+}

@@ -2,11 +2,12 @@
 -- site. One page per build (steps with images, preload sheet, BOM,
 -- step-through navigation, in-build search) and an index with search
 -- across builds. Plain HTML/CSS/JS, no server, host anywhere.
-module Coscad.Site (processSite, buildPageHtml, indexHtml) where
+module Coscad.Site (processSite, processSiteWithBackend, buildPageHtml, indexHtml) where
 
 import Control.Monad (forM, forM_, when)
 import Coscad.IO (readFileUtf8, writeFileUtf8)
-import Coscad.Plan (PlanSummary (..), StepSummary (..), processPlanSummary)
+import Coscad.Plan (PlanSummary (..), StepSummary (..), processPlanSummaryWithBackend)
+import Coscad.Backend (Backend, defaultBackend)
 import Data.Char (isSpace)
 import Data.List (isPrefixOf, sort)
 import System.Directory (copyFile, createDirectoryIfMissing, doesFileExist)
@@ -131,11 +132,14 @@ indexHtml builds = unlines
 -- | Plan every assembly (with PNG renders), collect the outputs under
 -- DIR/<name>/, and write the index.
 processSite :: Emit -> FilePath -> [FilePath] -> IO (Either Failure ())
-processSite emit outDir specs = runCommand $ do
+processSite = processSiteWithBackend defaultBackend
+
+processSiteWithBackend :: Backend -> Emit -> FilePath -> [FilePath] -> IO (Either Failure ())
+processSiteWithBackend backend emit outDir specs = runCommand $ do
   when (null specs) (abort (inputFailure "no assemblies given"))
   createDirectoryIfMissing True outDir
   builds <- forM specs $ \spec -> do
-    summary <- processPlanSummary emit True spec >>= either abort return
+    summary <- processPlanSummaryWithBackend backend emit True spec >>= either abort return
     let base = dropExtension spec
         name = takeFileName base
         srcDir = takeDirectory spec

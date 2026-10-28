@@ -9,13 +9,13 @@ import Coscad.Check (processCheckWithBackend)
 import Coscad.Doctor (runDoctor)
 import Coscad.Next (processNextWithBackend)
 import Coscad.Part (compilePart, renderPartWith)
-import Coscad.Plan (processPlan)
+import Coscad.Plan (processPlanWithBackend)
 import Coscad.Diagnose (validateProjectJson, validateProject, projectSources)
 import Coscad.Json
 import Coscad.Manifold (manifoldAvailable)
 import Coscad.Stress.Material (Material (..), materialTable)
 import Coscad.Report (Failure (..), collecting, stderrEmit)
-import Coscad.Site (processSite)
+import Coscad.Site (processSiteWithBackend)
 import Coscad.Stress.Command (processStress)
 import Data.List (isInfixOf, isPrefixOf)
 import Data.Version (showVersion)
@@ -51,7 +51,7 @@ runCLI = do
       [("schema",JString "coscad.capabilities/1"), ("version",JString (showVersion version))
       ,("default_backend",JString (backendName defaultBackend))
       ,("backends",JArray (map JString (["openscad"] ++ ["native-experimental" | manifoldAvailable])))
-      ,("features",JArray (map JString ["validate-json", "project-buffers", "stress", "stl", "check", "next", "plan"]))
+      ,("features",JArray (map JString (["validate-json", "project-buffers", "stress", "stl", "check", "next", "plan", "image-backends"] ++ ["native-images" | manifoldAvailable])))
       ,("materials",JArray [jobj [("name",JString (matName m)),("young_mpa",JNumber (matYoungMPa m))]
           | m <- materialTable])]))
     ["doctor"] -> runDoctor >>= finish
@@ -86,13 +86,16 @@ runCLI = do
       case filter (/= "--strict") remaining of
         [f] -> needExt ".assemble" f >> processNextWithBackend backend stderrEmit strict f >>= finish
         _ -> bad "next needs one .assemble file. Usage: coscad next [--strict] model.assemble"
-    ("site" : rest) -> case rest of
-      (dir : specs) | not (null specs) -> mapM_ (needExt ".assemble") specs >> processSite stderrEmit dir specs >>= finish
-      _ -> bad "site takes an output directory and one or more .assemble files"
+    ("site" : rest) -> do
+      (backend,remaining) <- backendArgs "site" rest
+      case remaining of
+        (dir : specs) | not (null specs) -> mapM_ (needExt ".assemble") specs >> processSiteWithBackend backend stderrEmit dir specs >>= finish
+        _ -> bad "site takes an output directory and one or more .assemble files"
     ("plan" : rest) -> do
-      let png = "--png" `elem` rest
-      case filter (/= "--png") rest of
-        [f] -> needExt ".assemble" f >> processPlan stderrEmit png f >>= finish
+      (backend,remaining) <- backendArgs "plan" rest
+      let png = "--png" `elem` remaining
+      case filter (/= "--png") remaining of
+        [f] -> needExt ".assemble" f >> processPlanWithBackend backend stderrEmit png f >>= finish
         _ -> bad "plan takes one .assemble file (and optionally --png)"
     ("stress" : rest) -> do
       (backend,remaining) <- backendArgs "stress" rest
@@ -174,6 +177,7 @@ usage h =
     , "                                          --strict exits 2 when any part has a printability warning"
     , "  coscad plan <spec.assemble> [--png]     build instructions: ordered steps, preload sheet, BOM"
     , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
+    , "    --backend=openscad|native            also applies to plan --png and site; native images need no OpenSCAD"
     , "  coscad stress <part.coscad> [-o part_stress.json] [--full]"
     , "                                          stress and deflection of a part under its support/load lines;"
     , "                                          exit 2 when the requested safety factor is not met; --full adds every node and cell"

@@ -2,7 +2,7 @@
   "name": "coscad-lsp",
   "displayName": "COSCAD Language Support",
   "description": "CoScad language support: highlighting, hover, completion, in-editor and compiler diagnostics, and commands for compile, validate, STL, check, next, plan stress, backend selection and doctor",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "publisher": "hyperswine",
   "license": "GPL-3.0-only",
   "repository": {

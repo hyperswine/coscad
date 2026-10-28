@@ -21,7 +21,7 @@
 -- Missing .scad snapshots are created on first run.
 module Main (main) where
 
-import Control.Monad (unless)
+import Control.Monad (unless, when)
 import Coscad.OpenScad (findOpenscad)
 import Data.IORef
 import GHC.IO.Encoding (setLocaleEncoding)
@@ -36,6 +36,7 @@ import Tier.Experiments
 import Tier.Geometry
 import Tier.Assembly
 import Tier.Plan
+import Tier.Image
 import Tier.Manufacturing
 import Tier.Cli
 import Tier.Linalg
@@ -52,19 +53,21 @@ main = do
   t <- T <$> newIORef 0 <*> newIORef []
   update <- (== Just "1") <$> lookupEnv "COSCAD_UPDATE_GOLDEN"
   args <- getArgs
-  unless (null args || args == ["--experiments-only"]) $ do
-    hPutStrLn stderr "usage: coscad-test [--experiments-only]"
+  unless (null args || args == ["--experiments-only"] || args == ["--images-only"]) $ do
+    hPutStrLn stderr "usage: coscad-test [--experiments-only|--images-only]"
     exitFailure
   let focused = args == ["--experiments-only"]
-  unless focused (coreTiers t update)
-  experimentsTier t
-  stressTier t
-  render <- lookupEnv "COSCAD_RENDER"
-  bin <- findOpenscad
-  case (render, bin) of
-    (Just "0", _) -> putStrLn "\n(geometry tier skipped: COSCAD_RENDER=0)"
-    (_, Nothing) -> putStrLn "\n(geometry tier skipped: OpenSCAD not found; set COSCAD_OPENSCAD)"
-    (_, Just b) -> unless focused (geometry t update b) >> backendOracleTier t
+  when (args == ["--images-only"]) (imageTier t)
+  unless (args == ["--images-only"]) $ do
+    unless focused (coreTiers t update)
+    experimentsTier t
+    stressTier t
+    render <- lookupEnv "COSCAD_RENDER"
+    bin <- findOpenscad
+    case (render, bin) of
+      (Just "0", _) -> putStrLn "\n(geometry tier skipped: COSCAD_RENDER=0)"
+      (_, Nothing) -> putStrLn "\n(geometry tier skipped: OpenSCAD not found; set COSCAD_OPENSCAD)"
+      (_, Just b) -> unless focused (geometry t update b) >> backendOracleTier t
   n <- readIORef (tPassed t)
   fails <- readIORef (tFailed t)
   putStrLn ""
@@ -91,6 +94,7 @@ coreTiers t update = do
   tesseractTier t
   examples t update
   planTier t
+  imageTier t
   framedFastenerTier t
   cliTier t
   silenceTier t

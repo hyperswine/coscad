@@ -25,15 +25,19 @@ The owner requested [an A1 retry](a1-full-retry/README.md), using white PLA in
 physical AMS slot 1 instead of yellow PLA in slot 3, and confirmed its bed clear.
 The successful screw/socket coupon does not establish full-plate reliability.
 
-## Confirmed slicing mistake; corrected retry kept stopped
+## Confirmed slicing mistake; corrected retry restarted after bed cleaning
 
 A shared error was found in the custom export workflow: the failed P1S and A1
 G-code selected Cool Plate and heated to 35°C despite the intended Textured PEI
 profile at 55°C. This could have contributed to both adhesion failures; it does
 not prove that it was the only cause. [Evidence and correction](slicing-plate-mismatch-20261028.json).
 The first split-plate retry was stopped at layer 1 to correct the same issue.
-The corrected 55°C package is verified and ready, and the owner explicitly asked
-to keep it stopped. No restart is scheduled.
+The corrected 55°C package was initially held at the owner’s request. The owner
+later cleaned the P1S bed and requested a restart on 28 October 2026. Fresh
+preflight and upload checks passed; the P1S accepted the new first-plate job and
+reached layer 1/78 at 17:44:24 Sydney time with a 55°C bed target, 220°C nozzle
+target and no active faults. A transient startup fan warning cleared. Physical
+success remains unverified.
 
 ## Latest: split plates after both full-plate failures
 
@@ -41,7 +45,8 @@ The owner reports that the A1 attempt also failed early. The cause remains
 unknown; recent unrelated prints worked well. The [revised five-plate setup](p1s-split-retry/README.md)
 separates irregular/tall parts, adds 8 mm brims to every object, keeps geometry
 away from the edges and slows the first layer. Plate 1 contains eight broad, flat caps; its first attempt was stopped to
-correct the plate-profile error above and is now held at the owner’s request. The other layouts are prepared
+correct the plate-profile error above; the corrected retry was subsequently
+restarted after the owner cleaned the bed. The other layouts are prepared
 for later tests. This does not establish a diagnosis or a physical fix yet.
 
 ## Why this can be assembled

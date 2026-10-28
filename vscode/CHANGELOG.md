@@ -1,5 +1,13 @@
 # Changelog for the CoScad VS Code extension
 
+## 0.6.0 - 2026-10-28
+
+- Planner image commands honor the selected backend; current CoScad kernel
+  builds generate PNGs without OpenSCAD. Refuse explicit image backend
+  selection when an older compiler does not advertise `image-backends`.
+- Recognize analysis directives when a stale compiler rejects their syntax,
+  suppress its false errors on those lines and explain how to update it.
+
 ## 0.5.0
 
 - Add stress syntax, force/unit hovers, material completion and datum navigation.

@@ -148,8 +148,11 @@ Unsupported native operations are errors; there is no automatic fallback.
 This flag also applies to
 .Cm check
 and
-.Cm next ;
-step images retain the OpenSCAD renderer.
+.Cm next ,
+.Cm stress ,
+.Cm plan --png
+and
+.Cm site .
 Manufacturing manifests record the selected geometry backend.
 .It Nm Ar spec.assemble
 Design stage.
@@ -232,9 +235,14 @@ and one
 scene per step
 .Pq this step orange, earlier parts grey, screw heads red, a grey bench slab ;
 .Fl -png
-also renders them through OpenSCAD: fully evaluated with the Manifold backend
-(OpenSCAD 2025.05 or newer; no preview artefacts on mated faces, same speed),
-or the preview on older builds, with a note.
+also renders them to 1200 by 900 PNGs. Kernel builds use a built-in CPU
+renderer with native meshes, cached across steps, orthographic framing,
+depth testing, lighting and antialiasing. No OpenSCAD, GPU or display is needed.
+The existing screw-head proxies, part highlights and rest-face bench are retained.
+.Fl -backend=openscad
+explicitly selects the previous image renderer (also the default without
+the native kernel). A failed render fails the command instead of publishing
+a successful plan with missing images.
 Design errors (colliding screws, too little thread reach, a clamp not on
 its host face) are reported and exit 2.
 See
@@ -286,7 +294,7 @@ failure (default 600), so a stuck render cannot hang
 .Cm next ,
 .Cm check ,
 .Cm plan --png
-or an unattended pipeline.
+or an unattended pipeline when the OpenSCAD backend is selected.
 .El
 .Sh LANGUAGE
 One definition per line,

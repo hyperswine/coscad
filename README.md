@@ -65,9 +65,14 @@ package coscad
 
 In a kernel build, `coscad stl`, `coscad check` and `coscad next` render
 natively by default (`--backend=openscad` opts out per command; the
-manufacturing manifest records the backend used). OpenSCAD is still
-needed: for that opt-out, for the planner's step images (`plan --png`,
-`site`), and for the test suite. Install
+manufacturing manifest records the backend used). `plan --png` and `site`
+also use native meshes and a built-in CPU PNG renderer by default, without
+OpenSCAD, a display server or a GPU. The renderer caches meshes across steps,
+fits an orthographic view, highlights new parts and uses a depth buffer with
+antialiasing. Existing `.scad` step scenes are still exported. Pass
+`--backend=openscad` to either command for the previous image path.
+OpenSCAD is needed only for that explicit alternative and the comparison tests
+(and `doctor`, which probes both backends). Install
 [OpenSCAD](https://openscad.org) 2021.01 or newer (2025.05 or newer
 renders STL through its own Manifold backend, which `coscad` requests
 when available) and a [BOSL2](https://github.com/BelfrySCAD/BOSL2)
@@ -219,6 +224,7 @@ src/Coscad/Plan.hs      `coscad plan` CLI and summaries, over:
   Plan/Model.hs         instances, fasteners, requires-before relation
   Plan/Search.hs        stability/access predicates, A*/beam search, steps
   Plan/Render.hs        plan Markdown, JSON, per-step scenes
+src/Coscad/Image.hs     cached native scene meshing, CPU depth-buffer rendering and PNG encoding
 src/Coscad/Site.hs      `coscad site` static build-instruction pages
 src/Coscad/Mesh.hs      ASCII STL in/out, volume, bounds
 src/Coscad/Json.hs      minimal JSON encode/decode for manifests

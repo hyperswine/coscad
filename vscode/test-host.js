@@ -21,7 +21,7 @@ const vscode={
  createStatusBarItem:()=>({show(){},dispose(){}}),showQuickPick:async()=>undefined,
  createTerminal:options=>({creationOptions:options,show(){},sendText:text=>terminals.push(text)})}
 }
-const capabilities={schema:'coscad.capabilities/1',version:'1.3.0.0',default_backend:'native-experimental',backends:['openscad','native-experimental'],features:['project-buffers','stress'],materials:[{name:'pla'}]}
+const capabilities={schema:'coscad.capabilities/1',version:'1.3.0.0',default_backend:'native-experimental',backends:['openscad','native-experimental'],features:['project-buffers','stress','image-backends','native-images'],materials:[{name:'pla'}]}
 Module._load=function(request,...rest){
  if(request==='vscode') return vscode
  if(request==='vscode-languageclient/node') return {TransportKind:{},LanguageClient:class{start(){return Promise.resolve()}isRunning(){return true}sendNotification(...args){notifications.push(args)}stop(){return Promise.resolve()}}}
@@ -56,6 +56,16 @@ async function run(){
   await commands.get('coscad.next')()
   assert(terminals.at(-1).includes('--backend=native-experimental'))
   assert(!part.isDirty)
+  await commands.get('coscad.planPng')()
+  assert(terminals.at(-1).includes('--backend=native-experimental'), 'image commands honor the selected backend')
+  capabilities.features=capabilities.features.filter(f=>f!=='image-backends')
+  settings.executableCommand='legacy-image-coscad';events.config({affectsConfiguration:()=>true})
+  const legacyTerminals=terminals.length
+  await commands.get('coscad.planPng')()
+  assert.equal(terminals.length,legacyTerminals,'old compilers cannot silently ignore image backend selection')
+  assert(errors.some(e=>e.includes('cannot select the planner image backend')))
+  capabilities.features.push('image-backends')
+  settings.executableCommand='test-coscad';events.config({affectsConfiguration:()=>true})
   vscode.window.activeTextEditor.document=part
   await commands.get('coscad.stress')()
   assert.match(terminals.at(-1),/stress .*--full --backend=native-experimental/)

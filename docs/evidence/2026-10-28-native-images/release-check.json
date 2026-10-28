@@ -1,0 +1,17 @@
+{
+  "compiler_version": "1.5.0.0",
+  "extension_version": "0.6.0",
+  "coscad_checks_passed": 1336,
+  "haskell_examples_passed": true,
+  "editor_tests_passed": true,
+  "print_preflight_tests_passed": 58,
+  "docs_check_passed": true,
+  "pin_policy_check_passed": true,
+  "changed_file_credential_scan_findings": 0,
+  "native_png_smoke_without_openscad": true,
+  "png_matches_pre_version_bump_validation": true,
+  "vsix_package_built": true,
+  "vsix_sha256": "097f744b55efe4adeba8553bd4429934e1c2f96f97ad9ee051058c9e2310dced",
+  "geometry_comparison_tier": "skipped: COSCAD_RENDER=0",
+  "scope": "local build and tests; publishing binaries is separate"
+}

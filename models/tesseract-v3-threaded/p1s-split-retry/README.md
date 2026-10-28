@@ -1,7 +1,15 @@
 # Split plates with substantial brims — 28 October 2026
 
-**Current state: stopped at the owner’s request.** The corrected first-plate
-package is ready under `bed1/slice-corrected/` but has not been dispatched.
+**Current state: corrected first plate restarted after bed cleaning.** On
+28 October 2026 the owner cleaned the P1S bed and requested the retry, superseding
+the earlier hold. The package under `bed1/slice-corrected/` passed fresh plate/
+thermal checks, was uploaded and read back with a matching SHA-256, and received
+a successful start acknowledgement. Fresh telemetry confirmed the new 78-layer
+job RUNNING. At 17:44:24 Sydney time it reached layer 1/78, with bed 55°C and
+nozzle 220°C targets and no active faults. A brief startup fan-speed warning
+cleared before the first layer. This is startup evidence, not a completed print
+or proof that adhesion is fixed. See `bed1/print-run-corrected.json` and
+`bed1/status-corrected-latest.json`.
 
 The owner reports that the A1 full-plate retry also failed early. The A1 had no
 known pre-existing issues comparable to the P1S, and unrelated recent prints
@@ -58,8 +66,9 @@ status packet still carried FAILED/496 from the preceding job; that cached
 packet is preserved and distinguished from the subsequent fresh RUNNING/78
 report. It was not a failure of this retry.
 
-No print is currently authorized to restart. The owner said to keep it stopped
-after the temperature correction. The other four plates have packed meshes and editable
+The earlier instruction to keep it stopped after the temperature correction was
+superseded by the owner’s cleaned-bed restart request. Only the corrected first
+plate was dispatched; the other four plates have packed meshes and editable
 projects with 8 mm brim settings, but **have not been sliced or dispatched**.
 Check and slice each when its physical test is requested; do not reuse a prior
 G-code file. The inner frame retains thread-bore support blockers.
