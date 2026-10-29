@@ -39,8 +39,8 @@ def main():
         clipper.mkdir()
         shutil.copy2(ROOT / '.native/clipper2/checkout/LICENSE', clipper / 'LICENSE')
         capabilities = json.loads(subprocess.check_output([binary, 'capabilities', '--json'], text=True))
-        if capabilities['default_backend'] != 'native-experimental':
-            raise SystemExit('Release must include the default pinned native kernel')
+        if capabilities['default_backend'] != 'native' or capabilities.get('backends') != ['native']:
+            raise SystemExit('Release must be the native-only build (pinned kernel linked)')
         metadata = {'name': 'coscad', 'version': version, 'system': system, 'arch': arch,
                     'revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
                     'minimum_macos': '15.0' if system == 'macos' else None}
