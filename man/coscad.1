@@ -33,6 +33,9 @@
 .Ar spec.assemble
 .Op Fl -png
 .Nm
+.Cm calibrate
+.Ar times.json
+.Nm
 .Cm site
 .Ar dir
 .Ar spec.assemble ...
@@ -211,12 +214,16 @@ From the
 .Ql asm
 placement, part hints, and
 .Ql fastener
-lines, derives the requires-before graph (T-nuts before the slot they
-need is covered, host and clamped part before each screw, slide-in nuts
-before anything sealing a slot end), checks every step for support,
-balance, driver access, and nut entry, and searches rest-face phases with
-a cost table so the build needs few flips, rails lie flat while nuts are
-started, and drivers stay vertical.
+and
+.Ql joint
+lines, meshes every part and measures how each can come in (swept
+against every other part), derives the requires-before graph (T-nuts
+before the slot they need is covered, host and clamped part before each
+screw, a part before anything that would block its every way in), checks
+every step for support and balance on the real contact patches, a clear
+path and finger room, driver access, nut entry and screw joints turning
+freely, counts the hands each step needs, and searches rest-face phases
+with weighted cost terms so the build needs few flips and few extra hands.
 Writes
 .Pa spec_plan.md
 (bill of materials, T-nut preload sheet, numbered steps with torque per
@@ -239,6 +246,18 @@ Design errors (colliding screws, too little thread reach, a clamp not on
 its host face) are reported and exit 2.
 See
 .Sx ASSEMBLIES .
+.It Nm Cm calibrate Ar times.json
+Fit the
+.Cm plan
+cost weights to timed builds.
+.Ar times.json
+lists plan JSON files and the seconds each step took
+.Pq Ql {"builds": [{"plan": "x_plan.json", "step_seconds": [40, null, ...]}]} ;
+the weights that best explain the times (non-negative least squares on each
+step's cost terms) are printed as a
+.Ql plan
+line, in seconds.
+Terms no timed step used keep their defaults.
 .It Nm Cm site Ar dir Ar spec.assemble ...
 Companion site: runs
 .Cm plan

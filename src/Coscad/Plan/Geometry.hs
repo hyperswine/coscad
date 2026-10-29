@@ -27,10 +27,6 @@ import Coscad.Mesh (triArea)
 import Coscad.Mesh.Indexed
 import Coscad.Solid
 import Data.IORef
-import GHC.Clock (getMonotonicTime)
-import System.IO.Unsafe (unsafePerformIO)
-import System.Environment (lookupEnv)
-import System.IO (hPutStrLn, stderr)
 import Data.Graph (SCC (..), stronglyConnComp)
 import Data.List (intercalate, nubBy)
 import qualified Data.Set as Set
@@ -108,24 +104,9 @@ measurePosed m cache byPart sets ctol sols = do
         | p <- pls', (k, a) <- zip [0 ..] (map fst (mAxes m)), let hi = maximum (map (dot3 a) (plVerts p)) ]
   result <- tryIO $ do
     contacts <- contactPatches sets (map fst (mAxes m)) pls'
-    dbg0 <- lookupEnv "COSCAD_PLAN_DEBUG"
     approaches <- parallel $ flip map pls' $ \p -> do
-      t0 <- getMonotonicTime
       as <- approachesOf m sets cache byName' p
-      t1 <- getMonotonicTime
-      (gq, oq, tg, to) <- readIORef queryCount
-      if dbg0 == Just "progress" then hPutStrLn stderr ("  approaches of " ++ iName (plInst p) ++ ": " ++ show (length as) ++ " ways, " ++ show (t1 - t0) ++ " s; so far " ++ show gq ++ " gaps " ++ show tg ++ " s, " ++ show oq ++ " overlaps " ++ show to ++ " s") else return ()
       return (iName (plInst p), as)
-    dbg <- lookupEnv "COSCAD_PLAN_DEBUG"
-    (gq, oq, tg, to) <- readIORef queryCount
-    -- COSCAD_PLAN_DEBUG=progress prints per-part timings and query counts;
-    -- COSCAD_PLAN_DEBUG=<instance> prints that instance's approach table
-    if dbg == Nothing then return () else
-      hPutStrLn stderr ("plan geometry: " ++ show gq ++ " gap queries (" ++ show tg ++ " s) and " ++ show oq ++ " overlap queries (" ++ show to ++ " s) for approaches")
-    case dbg of
-      Just who -> sequence_ [ hPutStrLn stderr (who ++ " out " ++ show (apDir a) ++ ": " ++ show [(q, swBlocked sw, swBits sw) | (q, sw) <- Map.toList (apObstacles a)] ++ " zone " ++ show (apZoneVol a, apZoneNeed a, Map.toList (apZone a)))
-                            | (n, as) <- approaches, n == who, a <- as ]
-      Nothing -> return ()
     twists <- twistsOf m sets byName'
     let approachMap = Map.fromList approaches
         jointBits = Map.fromList
@@ -251,26 +232,6 @@ identityPose = (matIdentity, (0, 0, 0))
 volTol :: Double
 volTol = 0.05
 
-{-# NOINLINE queryCount #-}
-queryCount :: IORef (Int, Int, Double, Double)
-queryCount = unsafePerformIO (newIORef (0, 0, 0, 0))
-
-timedGap :: IO a -> IO a
-timedGap act = do
-  t0 <- getMonotonicTime
-  r <- act
-  t1 <- getMonotonicTime
-  atomicModifyIORef' queryCount (\(g, o, tg, to) -> ((g + 1, o, tg + t1 - t0, to), ()))
-  return r
-
-timedOverlap :: IO a -> IO a
-timedOverlap act = do
-  t0 <- getMonotonicTime
-  r <- act
-  t1 <- getMonotonicTime
-  atomicModifyIORef' queryCount (\(g, o, tg, to) -> ((g, o + 1, tg, to + t1 - t0), ()))
-  return r
-
 -- | Advance the moving solid along a one-parameter motion from x = 0 to
 -- lim, against one obstacle. `scale` is the most distance any point moves
 -- per unit of x. Returns the last x that was clear (Nothing when the whole
@@ -282,7 +243,7 @@ advance sets mover poseAt scale lim obstacle opose near = do
   -- pushing in. A pair that already overlaps deeper than `contact` at the
   -- seat (a press fit) is judged by overlap volume instead.
   deep <- if g0 <= ctol then overlapping 0 else return False
-  v0 <- if deep then fst <$> timedOverlap (orFail (solidOverlap mover (poseAt 0) obstacle opose False)) else return 0
+  v0 <- if deep then fst <$> (orFail (solidOverlap mover (poseAt 0) obstacle opose False)) else return 0
   go deep 0 0 v0 (if g0 <= near then 0 else -1) (0 :: Int) g0 0
   where
     ctol = setContact sets
@@ -290,9 +251,9 @@ advance sets mover poseAt scale lim obstacle opose near = do
     search = max 2 (4 * h)
     -- best-first: the exact gap (it sets the next step), stopping early
     -- once the two are known to touch
-    gapAt x = timedGap (orFail (solidGap mover (poseAt x) obstacle opose search (min ctol near) 0))
+    gapAt x = (orFail (solidGap mover (poseAt x) obstacle opose search (min ctol near) 0))
     -- does the shrunken mover still overlap? (only a tiny radius to search)
-    overlapping x = (<= 1e-9) <$> timedGap (orFail (solidGap mover (poseAt x) obstacle opose (ctol / 2) 0 ctol))
+    overlapping x = (<= 1e-9) <$> (orFail (solidGap mover (poseAt x) obstacle opose (ctol / 2) 0 ctol))
     -- A gap of g allows a step of g. While the gap is not shrinking (the
     -- parts slide past each other) the step may grow, up to `sweep_step`.
     stepFor g gPrev prevStep
@@ -307,7 +268,7 @@ advance sets mover poseAt scale lim obstacle opose near = do
             then let st = stepFor g gPrev prevStep in go deep (x + st / scale) x v0 lastNear' (n + 1) g st
             else do
               pushing <- if x == 0 then return False
-                else if deep then (\(v, _) -> v > v0 + volTol) <$> timedOverlap (orFail (solidOverlap mover (poseAt x) obstacle opose False))
+                else if deep then (\(v, _) -> v > v0 + volTol) <$> (orFail (solidOverlap mover (poseAt x) obstacle opose False))
                 else overlapping x
               if pushing
                 then return (Just lastClear, max 0 lastNear')
@@ -322,7 +283,7 @@ engagedLength sets mover a lim obstacle near = go 0 0
     go x lastNear
       | x > lim = return lastNear
       | otherwise = do
-          g <- timedGap (orFail (solidGap mover (translated (scale3 x a) identityPose) obstacle identityPose (max 2 (4 * h)) near 0))
+          g <- (orFail (solidGap mover (translated (scale3 x a) identityPose) obstacle identityPose (max 2 (4 * h)) near 0))
           go (x + max h (g - near)) (if g <= near then x else lastNear)
 
 -- The cache key of a query between two instances: their parts, the pose of

@@ -162,6 +162,8 @@ migrationTier t = do
                   joints = sort . concatMap (map (\(spec,c,h,nut)->(spec,rename c,rename h,nut)) . ssFasteners) . psSteps
               assertT t (file ++ ": instruction joints preserved") (joints q == sort(concatMap ssFasteners(psSteps p)) && null(psDesignErrors p)) (show (psDesignErrors p))
               assertT t (file ++ ": all instances placed once") (sort(concatMap ssParts(psSteps p)) == sort(psParts p)) (show(psParts p))
+            -- both versions refused (the bolted tesseract: rigid parts cannot close it)
+            (Left ea,Left eb) -> assertT t (file ++ ": both versions refused alike") ("planner stuck" `isInfixOf` ea && "planner stuck" `isInfixOf` eb) (ea ++ "\n" ++ eb)
             _ -> failT t (file ++ ": instruction comparison") (show (pa,pb))
       _ -> failT t (file ++ ": migration loads") (either id (const "ok") a ++ " / " ++ either id (const "ok") b)
 

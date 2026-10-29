@@ -79,9 +79,9 @@ js = unlines
   [ "const $ = s => document.querySelector(s);"
   , "const esc = s => String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));"
   , "const steps = PLAN.steps;"
-  , "const isPeg = f => f.spec.toLowerCase() === 'peg';"
+  , "const isPeg = f => ['peg', 'push', 'drop', 'screw'].includes(f.joint || f.spec.toLowerCase());"
   , "const fasteners = steps.flatMap(s => s.fasteners), screws = fasteners.filter(f => !isPeg(f));"
-  , "$('#summary').textContent = `${new Set(steps.flatMap(s => s.parts)).size} parts · ${fasteners.filter(isPeg).length} peg joints · ${screws.length} screws · ${steps.length} steps · ${steps.filter(s => s.flip).length} flips`;"
+  , "$('#summary').textContent = `${new Set(steps.flatMap(s => s.parts)).size} parts · ${fasteners.filter(isPeg).length} joints · ${screws.length} screws · ${steps.length} steps · ${steps.filter(s => s.flip).length} flips`;"
   , "if (PLAN.design_errors.length) $('#errors').innerHTML = PLAN.design_errors.map(e => `<div class=err>Design error: ${esc(e)}</div>`).join('');"
   , "const nutWords = f => f.nut === 'hex' ? 'hex nut' : f.nut === 'dropin' ? 'drop-in T-nut' : 'slide-in T-nut';"
   , "const diameter = f => f.spec.replace(/^M(\\d+(?:\\.\\d+)?).*/i, '$1');"
@@ -96,7 +96,7 @@ js = unlines
   , "const pre = {}; for (const f of fasteners) if (!isPeg(f) && f.nut !== 'none') { const h = (f.pocket || '').startsWith('clamped.') ? f.clamped : f.host; (pre[h] = pre[h] || []).push(preloadWords(f)); }"
   , "$('#preload').innerHTML = '<b>Nut preload sheet</b>' + (Object.keys(pre).length ? '<ul>' + Object.entries(pre).map(([h, ps]) => `<li><b>${esc(h)}</b>: ${ps.map(esc).join('; ')}</li>`).join('') + '</ul>' : '<p>No nuts to preload.</p>');"
   , "const torqueWords = f => f.torque_nm < 1 ? `${f.torque_nm} Nm (printed lips: finger tight + ¼ turn, no power driver)` : `${f.torque_nm} Nm`;"
-  , "const jointWords = f => isPeg(f) ? `Fit <b>${esc(f.clamped)}</b> to <b>${esc(f.host)}</b> from the ${esc(f.face)} entry${f.inset_mm ? `, onto the seat ${f.inset_mm} mm below the face` : ''} until seated` : `Tighten <code>${esc(f.spec)}</code> ${esc(f.head)} head through <b>${esc(f.clamped)}</b> into <b>${esc(f.host)}</b> (${esc(holeLocation(f))}${f.nut === 'none' ? ', threads into the part' : f.nut === 'hex' ? ', captive hex nut' : ', slot @ ' + f.at_mm + ' mm'}) — <span class=torque>${esc(torqueWords(f))}</span>`;"
+  , "const jointWords = f => f.joint === 'drop' ? `Drop <b>${esc(f.clamped)}</b> into <b>${esc(f.host)}</b> (${esc(f.face)}); it rests in the socket until something captures it` : f.joint === 'screw' ? `Screw <b>${esc(f.clamped)}</b> into <b>${esc(f.host)}</b> (${esc(f.face)}), about ${Math.round((f.turns || 0) * 10) / 10} turns by hand` : isPeg(f) ? `Fit <b>${esc(f.clamped)}</b> to <b>${esc(f.host)}</b> from the ${esc(f.face)} entry${f.inset_mm ? `, onto the seat ${f.inset_mm} mm below the face` : ''} until seated` : `Tighten <code>${esc(f.spec)}</code> ${esc(f.head)} head through <b>${esc(f.clamped)}</b> into <b>${esc(f.host)}</b> (${esc(holeLocation(f))}${f.nut === 'none' ? ', threads into the part' : f.nut === 'hex' ? ', captive hex nut' : ', slot @ ' + f.at_mm + ' mm'}) — <span class=torque>${esc(torqueWords(f))}</span>`;"
   , "$('#steps').innerHTML = steps.map((s, i) => `<li class=step id=step-${i + 1} data-text=\"${esc([s.rest, ...s.parts, ...s.preload, ...s.fasteners.flatMap(f => [f.spec, f.clamped, f.host, f.face])].join(' ').toLowerCase())}\">"
   , "  <img loading=lazy width=1200 height=900 src=\"${IMG}${i + 1}.png\" alt=\"step ${i + 1}\" onerror=\"this.style.display='none'\">"
   , "  <div class=body><div class=title><b>Step ${i + 1}</b><span class=badge>${esc(s.rest)} down</span>${s.flip ? '<span class=\"badge flip\">flip the assembly</span>' : ''}</div><ul>"
@@ -156,7 +156,7 @@ processSiteWithBackend backend emit outDir specs = runCommand $ do
     writeFileUtf8 (dest </> "index.html") page
     spec' <- readFileUtf8 spec
     let tags = sort (uniq [w | l <- lines spec', let ws = words l, take 1 ws /= ["//"], w <- ws, any (`isPrefixOf` w) ["material=", "profile=", "M"], length w > 1])
-        screws = length [() | s <- psSteps summary, (specName, _, _, _) <- ssFasteners s, specName /= "peg"]
+        screws = length [() | s <- psSteps summary, (specName, _, _, _) <- ssFasteners s, specName `notElem` ["peg", "push", "drop", "screw"]]
     putStrLn ("Wrote " ++ dest </> "index.html")
     return (name, name, tags, length (psParts summary), screws, nSteps)
   writeFileUtf8 (outDir </> "index.html") (indexHtml builds)

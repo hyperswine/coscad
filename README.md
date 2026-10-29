@@ -105,6 +105,7 @@ coscad next frame.assemble   # -> frame_bed1.stl ... + frame_manifest.json
 coscad check frame.assemble  # interference / clearance check on real meshes
 coscad stress bracket.coscad # deflection, peak stress and safety factor from the part's support/load lines
 coscad plan frame.assemble   # numbered build steps, preload sheet, BOM, step scenes
+coscad calibrate times.json  # fit the plan's cost weights to timed builds (seconds per term)
 coscad site out/ *.assemble  # phone-first static site: step images, search across builds
 scripts/bambu-slice.py frame_manifest.json [--print 1]  # slice beds with Bambu Studio, optionally print over LAN
 scripts/bambu-print-run.py frame.assemble  # photo, model → slice → print, watch, photo, verdict
@@ -207,9 +208,12 @@ src/Coscad/Next.hs      manufacturing stage (orientation, beds, manifest)
 src/Coscad/Printability.hs  bed contact, overhang, slenderness, warnings
 src/Coscad/Check.hs     assembly interference / clearance checker
 src/Coscad/Plan.hs      `coscad plan` CLI and summaries, over:
-  Plan/Model.hs         instances, fasteners, requires-before relation
-  Plan/Search.hs        stability/access predicates, A*/beam search, steps
+  Plan/Model.hs         instances, fasteners and joints, requires-before relation, weights, settings
+  Plan/Geometry.hs      mesh mass, contacts, approach sweeps, joint alignment and turning, burial order
+  Plan/Search.hs        support/holding/access predicates, A*/beam search, steps
   Plan/Render.hs        plan Markdown, JSON, per-step scenes
+  Plan/Calibrate.hs     `coscad calibrate`: fit cost weights to timed builds
+src/Coscad/Solid.hs     kernel solids kept alive across queries: posed gap and overlap
 src/Coscad/Image.hs     cached native scene meshing, CPU depth-buffer rendering and PNG encoding
 src/Coscad/Site.hs      `coscad site` static build-instruction pages
 src/Coscad/Mesh.hs      ASCII STL in/out, volume, bounds

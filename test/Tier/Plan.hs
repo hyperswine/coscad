@@ -316,7 +316,7 @@ planEaseTier t = do
   r6 <- run "mass.assemble" [("cube20.coscad", "main = box 20 20 20\n")] "a ← cube20.coscad ×1\nb ← cube20.coscad ×1 mass=50\nasm = a ⊕ (b |> move 30 0 0)\n"
   _ <- processPlanSummary silent False (dir </> "mass.assemble")
   massJson <- jsonOf "mass_plan.json"
-  let shell = 2400 * 0.85; expected = 0.00125 * (shell + 0.15 * (8000 - shell))
+  let shell = 2400 * 0.85 :: Double; expected = 0.00125 * (shell + 0.15 * (8000 - shell))
   assertT t "mass: a printed cube weighs its perimeter shell plus infill; mass= wins"
     (either (const False) (const True) r6 && ("\"mass_g\": " ++ show3 expected) `isInfixOf` massJson && "\"mass_g\": 50" `isInfixOf` massJson) (take 900 massJson)
   -- settings and joint lines are validated
@@ -336,9 +336,9 @@ planEaseTier t = do
   -- calibration recovers the weights that generated the times
   let rows = [ (Map.fromList [("flip", f), ("insert", i), ("part", p)], 12 * f + 1.5 * i + 20 * p)
              | (f, i, p) <- [(1, 0, 1), (0, 5, 1), (0, 2, 2), (1, 3, 0), (0, 0, 1), (2, 1, 1)] ]
-      (fitted, _, r2, _) = fitWeights rows
+      (fitted, _, fitR2, _) = fitWeights rows
   assertT t "calibrate: non-negative least squares recovers the generating weights"
-    (all (\(k, w) -> abs (Map.findWithDefault (-1) k fitted - w) < 1e-6) [("flip", 12), ("insert", 1.5), ("part", 20)] && r2 > 0.999999) (show fitted)
+    (all (\(k, w) -> abs (Map.findWithDefault (-1) k fitted - w) < 1e-6) [("flip", 12), ("insert", 1.5), ("part", 20)] && fitR2 > 0.999999) (show fitted)
   assertT t "calibrate: weights never go negative" (all (>= 0) (nnls [[1, 1], [1, 2], [1, 3]] [3, 2, 1])) (show (nnls [[1, 1], [1, 2], [1, 3]] [3, 2, 1]))
   -- Tesseract III from its joints alone: no ordering hints
   t3 <- tempDir "plan-tesseract-iii"

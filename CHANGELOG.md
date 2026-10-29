@@ -8,6 +8,37 @@ and this project adheres to the
 
 ## Unreleased
 
+- **`coscad plan` works on the meshes.** Mass and centre of mass, bench
+  footprints and part-on-part contact patches come from the native meshes,
+  not bounding boxes. Every part's ways in (a 26-direction lattice plus its
+  joint, mate-frame and own axes) are swept against every other part, so a
+  path that is blocked, too tight for fingers, or comes up through the
+  bench is refused, and a part that would bury another's last way in is
+  ordered after it (cap `after=` hints are no longer needed). See
+  docs/2026-10-29-PLAN-EASE.md.
+- **`joint push|drop|screw moving host [pitch=] [axis=]`** declares how a
+  printed joint is made, its axis taken from the mate. Screw joints count
+  turns (engaged length over pitch) and must spin clear of placed parts and
+  leave room to grip; drop joints hold only by gravity or capture.
+- **Ease of assembly.** Joint alignment costs its Fitts index (engaged
+  length over play); the planner counts the hands each move and each flip
+  needs (a part is held by a made joint, a stable rest or capture; anything
+  else needs a hand) and charges per hand beyond two; finger room is
+  costed. New weights `insert turn hand finger part fastener nut`; the
+  thresholds behind the old weights are plan settings (`driver_angle`,
+  `standing_angle`, `slender`, `driver_length`, `driver_margin`,
+  `phase_tau`, `step_parts`, `finger_size`, `contact`, `settle`,
+  `sweep_step`, `shell`, `infill`).
+- **`coscad calibrate times.json`** fits the weights to timed builds
+  (non-negative least squares on each step's cost terms) and prints a
+  `plan` line in seconds. Plan JSON records each step's terms and cost, the
+  direction each part goes in, part masses, and joint kinds and turns.
+- Tesseract III's build instructions are generated with `joint` lines and
+  no ordering hints. The old bolted tesseract is now reported as
+  unbuildable from rigid parts (its box-based plan ended by placing the
+  inner cube inside the closed frame).
+- `capabilities --json` adds `plan-geometry`, `plan-joints` and `calibrate`.
+
 ## 1.6.0.0 - 2026-10-29
 
 1.5.0.0 was recorded here but never tagged or published, so this is the first
