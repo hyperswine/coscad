@@ -1,5 +1,5 @@
 .stack-work/
-.native/
+.native
 *~
 dist
 dist-*
