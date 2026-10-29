@@ -35,9 +35,11 @@ def main():
                                 ignore=shutil.ignore_patterns('dist', '__pycache__', '.DS_Store'))
             else:
                 shutil.copy2(source, stage / item)
-        clipper = stage / 'third-party' / 'clipper2'
-        clipper.mkdir()
-        shutil.copy2(ROOT / '.native/clipper2/checkout/LICENSE', clipper / 'LICENSE')
+        # third-party/ carries the Manifold and Clipper2 notices in the repository,
+        # so packaging does not depend on a kernel source checkout (CI restores
+        # only the kernel's install prefix from its cache).
+        if not (stage / 'third-party' / 'clipper2' / 'LICENSE').is_file():
+            raise SystemExit('third-party/clipper2/LICENSE is missing')
         capabilities = json.loads(subprocess.check_output([binary, 'capabilities', '--json'], text=True))
         if capabilities['default_backend'] != 'native' or capabilities.get('backends') != ['native']:
             raise SystemExit('Release must be the native-only build (pinned kernel linked)')

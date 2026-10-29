@@ -20,6 +20,8 @@ extra-source-files:
     native-kernel.lock.json
     third-party/manifold/LICENSE
     third-party/manifold/README.md
+    third-party/clipper2/LICENSE
+    third-party/clipper2/README.md
     third-party/bosl2/LICENSE
     third-party/bosl2/README.md
     scripts/build-manifold.py
