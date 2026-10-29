@@ -58,3 +58,4 @@ at the first three.
 | 2026-10-27 | [STRESS-COMMAND](2026-10-27-STRESS-COMMAND.md) | `coscad stress`: support/load/stress lines, Haskell voxel Hex20 solver, material table, checks |
 | 2026-10-27 | [NATIVE-DEFAULT](2026-10-27-NATIVE-DEFAULT.md) | the native kernel becomes the default backend for `stl`, `check` and `next`; offsets and lofts natively; timings, goldens and open items |
 | 2026-10-29 | [OPENSCAD-RETIRED](2026-10-29-OPENSCAD-RETIRED.md) | 1.6.0.0: native is the only geometry backend; OpenSCAD stays only as the test suite's oracle; design-stage PNGs; tooling migrated |
+| 2026-10-29 | [PLAN-REVIEW](2026-10-29-PLAN-REVIEW.md) | review of `coscad plan`: what it checks, where its idea of "easy" falls short, and five proposed steps |
