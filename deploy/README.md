@@ -13,6 +13,13 @@ rebuilds the compiler (`cabal install`), and rebuilds the site atomically.
 `bash scripts/manual-update.sh --force` rebuilds regardless. Logs:
 `~/srv/logs/manual-update.log`.
 
+**Host prerequisites** (Homebrew on the mini): `git-lfs` (print photos are LFS
+objects; without it the checkout fails and the job never updates), `cmake` and
+`pkg-config` (the pinned geometry kernel that every coscad build links), pandoc,
+and GHC 9.8 with cabal from ghcup. Run `git lfs install` once. After changing
+`cloud.cswine.manual-update.plist`, copy it to `~/Library/LaunchAgents/` and
+reload it (`launchctl unload` then `launchctl load` on that path).
+
 **Public host** (Linode): nginx terminates TLS for manual.cswine.cloud and
 proxies to the mini over Tailscale (`proxy_pass http://100.107.153.43:6210`).
 
