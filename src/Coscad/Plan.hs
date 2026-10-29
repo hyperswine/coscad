@@ -88,7 +88,7 @@ planSummary path = do
 summarise :: Model -> [String] -> St -> PlanSummary
 summarise model errs st =
   let steps = toSteps (setStepParts (mSettings model)) (reverse (sMoves st))
-      summ s = StepSummary (dirName (stRest s)) (stFlip s) (stParts s) (stNuts s)
+      summ s = StepSummary (restName model (stRest s)) (stFlip s) (stParts s) (stNuts s)
         [(fSpec f, fClamped f, fHost f, nutName (fNut f)) | i <- stFasts s, let f = mFastById model Map.! i] (stWarn s)
         (Map.toList (stTerms s)) (stEntry s)
       hardware f = FastenerSummary (fPos f) (fFace f) (fHeadPos f) (fPocketSeat f) (fPocketEntry f) (fReach f)

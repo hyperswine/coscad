@@ -102,12 +102,12 @@ measurePosed m cache byPart sets ctol sols = do
       insts' = map fst massed
       pls' = [p {plInst = i} | (p, (i, _)) <- zip pls massed]
       byName' = Map.fromList [(iName (plInst p), p) | p <- pls']
-      ext = Map.fromList [((iName (plInst p), k), (minimum ds, maximum ds)) | p <- pls', (k, a) <- zip [0 ..] axes6, let ds = map (dot3 a) (plVerts p)]
+      ext = Map.fromList [((iName (plInst p), k), (minimum ds, maximum ds)) | p <- pls', (k, a) <- zip [0 ..] (map fst (mAxes m)), let ds = map (dot3 a) (plVerts p)]
       foot = Map.fromList
         [ ((iName (plInst p), k), convexHull [project a v | v <- plVerts p, dot3 a v >= hi - ctol])
-        | p <- pls', (k, a) <- zip [0 ..] axes6, let hi = maximum (map (dot3 a) (plVerts p)) ]
+        | p <- pls', (k, a) <- zip [0 ..] (map fst (mAxes m)), let hi = maximum (map (dot3 a) (plVerts p)) ]
   result <- tryIO $ do
-    contacts <- contactPatches sets cache pls'
+    contacts <- contactPatches sets (map fst (mAxes m)) pls'
     dbg0 <- lookupEnv "COSCAD_PLAN_DEBUG"
     approaches <- parallel $ flip map pls' $ \p -> do
       t0 <- getMonotonicTime
@@ -187,9 +187,17 @@ inferOrder m = go (mPreds m) (0 :: Int)
           others = [iName q | q <- insts, iName q /= n, not (Set.member (iName q) earlier)]
           buries q = (not (null open) && all (`closedBy` q) open)
             || any (\tw -> q `elem` twBlockers tw || twZoneVol tw - Map.findWithDefault 0 q (twZone tw) < twZoneNeed tw) turning
-      if null approaches then Right []
-      else if null open then Left ("design: " ++ n ++ " cannot go in once " ++ intercalate ", " (Set.toList earlier) ++ " are in place: every way in is blocked")
-      else Right [(q, n) | q <- others, buries q]
+          stuckTurning = [why | (o, tw) <- turningWith, Just why <- [cannotTurn o tw]]
+          turningWith = [(o, tw) | (o, f) <- jointPartners m n, isScrewJoint f, fClamped f == n, Set.member o earlier, Just tw <- [Map.lookup (fId f, n) (gTwist (mGeo m))]]
+          cannotTurn o tw
+            | b : _ <- [b | b <- twBlockers tw, Set.member b earlier] = Just (n ++ " cannot be turned onto " ++ o ++ ": " ++ b ++ " is in the way of it turning")
+            | twZoneVol tw - sum [Map.findWithDefault 0 q (twZone tw) | q <- Set.toList earlier] < twZoneNeed tw = Just ("there is no room to grip " ++ n ++ " to turn it onto " ++ o ++ " (it sits too deep; give it something to hold)")
+            | otherwise = Nothing
+      case stuckTurning of
+        why : _ -> Left ("design: " ++ why)
+        [] | null approaches -> Right []
+           | null open -> Left ("design: " ++ n ++ " cannot go in once " ++ intercalate ", " (Set.toList earlier) ++ " are in place: every way in is blocked")
+           | otherwise -> Right [(q, n) | q <- others, buries q]
     reasons cyc = intercalate "; " [b ++ " would bury " ++ a | (a, b) <- zip cyc (drop 1 cyc ++ take 1 cyc)]
     cycleOf preds =
       let partEdges = [(x, x, [y | NPart y <- deps]) | (NPart x, deps) <- Map.toList (closeOver preds)]
@@ -275,7 +283,7 @@ advance sets mover poseAt scale lim obstacle opose near = do
   -- seat (a press fit) is judged by overlap volume instead.
   deep <- if g0 <= ctol then overlapping 0 else return False
   v0 <- if deep then fst <$> timedOverlap (orFail (solidOverlap mover (poseAt 0) obstacle opose False)) else return 0
-  go deep 0 0 v0 (if g0 <= near then 0 else -1) (0 :: Int)
+  go deep 0 0 v0 (if g0 <= near then 0 else -1) (0 :: Int) g0 0
   where
     ctol = setContact sets
     h = setSweepStep sets
@@ -285,20 +293,25 @@ advance sets mover poseAt scale lim obstacle opose near = do
     gapAt x = timedGap (orFail (solidGap mover (poseAt x) obstacle opose search (min ctol near) 0))
     -- does the shrunken mover still overlap? (only a tiny radius to search)
     overlapping x = (<= 1e-9) <$> timedGap (orFail (solidGap mover (poseAt x) obstacle opose (ctol / 2) 0 ctol))
-    go deep x lastClear v0 lastNear n
+    -- A gap of g allows a step of g. While the gap is not shrinking (the
+    -- parts slide past each other) the step may grow, up to `sweep_step`.
+    stepFor g gPrev prevStep
+      | g >= gPrev - ctol / 2 && prevStep > 0 = max g (min h (2 * prevStep))
+      | otherwise = g
+    go deep x lastClear v0 lastNear n gPrev prevStep
       | x > lim || n > 4000 = return (Nothing, max 0 lastNear)
       | otherwise = do
           g <- gapAt x
           let lastNear' = if g <= near then x else lastNear
           if g > ctol
-            then go deep (x + max g h / scale) x v0 lastNear' (n + 1)
+            then let st = stepFor g gPrev prevStep in go deep (x + st / scale) x v0 lastNear' (n + 1) g st
             else do
               pushing <- if x == 0 then return False
                 else if deep then (\(v, _) -> v > v0 + volTol) <$> timedOverlap (orFail (solidOverlap mover (poseAt x) obstacle opose False))
                 else overlapping x
               if pushing
                 then return (Just lastClear, max 0 lastNear')
-                else go deep (x + h / scale) x v0 lastNear' (n + 1)
+                else go deep (x + h / scale) x v0 lastNear' (n + 1) g h
 
 -- | The furthest distance along a, up to lim, at which the moved solid is
 -- still within `near` of the other (collisions are not judged).
@@ -378,12 +391,12 @@ boxesNear k ((a, b, c), (d, e, f)) ((p, q, r), (s, t, u)) =
 -- below the first, the patch where the first rests on the second: the
 -- overlap of the first, lowered by `settle` (it drops that far to come to
 -- rest in a seat with print clearance), with the second.
-contactPatches :: Settings -> Cache -> [Placed] -> IO (Map.Map (String, String, Int) [(Double, Double)])
-contactPatches sets _ pls = do
+contactPatches :: Settings -> [V3] -> [Placed] -> IO (Map.Map (String, String, Int) [(Double, Double)])
+contactPatches sets axes pls = do
   let ctol = setContact sets + setSettle sets
       pairs = [ (p, q, k, a)
               | p <- pls, q <- pls, iName (plInst p) /= iName (plInst q), boxesNear ctol (plBox p) (plBox q)
-              , (k, a) <- zip [0 :: Int ..] axes6
+              , (k, a) <- zip [0 :: Int ..] axes
               , let pLow = maximum (map (dot3 a) (plVerts p)) -- deepest point along "down"
                     qLow = maximum (map (dot3 a) (plVerts q))
                     qTop = minimum (map (dot3 a) (plVerts q))
@@ -418,7 +431,7 @@ approachesOf m sets cache byName p = do
       ownAxes = [vnormed (mApply rot e) | e <- [(1, 0, 0), (0, 1, 0), (0, 0, 1)], vlen (mApply rot e) > 1e-9]
       combos = [vnormed s' | k <- [2, 3 :: Int], c <- choose k outs, let s' = foldr vadd (0, 0, 0) c, vlen s' > 1e-6]
       both a = [a, vneg a]
-      dirs = nubBy close (axes6 ++ concatMap both (outs ++ Map.findWithDefault [] n (mMateAxes m) ++ ownAxes) ++ combos ++ lattice)
+      dirs = nubBy close (map fst (mAxes m) ++ concatMap both (outs ++ Map.findWithDefault [] n (mMateAxes m) ++ ownAxes) ++ combos ++ lattice)
       close a b = vlen (vsub a b) < 1e-6
       partners = map fst (jointPartners m n)
       screwPartners = [o | (o, f) <- jointPartners m n, isScrew f]
@@ -554,12 +567,14 @@ twistsOf m sets byName = do
       (r, _) <- advance sets (plSolid p) (\th -> rotatedAbout c a th (plPose p)) (max 1 rmax) (2 * pi) (plSolid o) (plPose o) (setContact sets)
       return [iName (plInst o) | r /= Nothing]
     -- grip room: a ring one fingertip wide around the part, over its length
+    -- (a part sunk flush in a socket cannot be turned by hand)
     let fsz = setFinger sets
         n = 48 :: Double
         ngon r = (n / 2) * r * r * sin (2 * pi / n)
         len = pa1 - pa0
         zoneVol = (ngon (rmax + fsz) - ngon rmax) * len
-        need = 2 * pi * (fsz / 2) ^ (2 :: Int) * fsz
+        -- two fingertips, each a finger wide and deep and as tall as the part allows
+        need = 2 * fsz * fsz * min fsz len
         ring = fromCorners [vadd c (vadd (scale3 z a) (vadd (scale3 x u) (scale3 y v))) | z <- [pa0, pa1], x <- [-(rmax + fsz), rmax + fsz], y <- [-(rmax + fsz), rmax + fsz]]
     outer <- prismSolid c a (rmax + fsz) (pa0, pa1)
     inner <- prismSolid c a rmax (pa0, pa1)

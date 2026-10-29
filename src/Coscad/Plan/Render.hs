@@ -69,7 +69,7 @@ planMarkdown title m steps errs = unlines $
       Nothing -> "lower"
     stepMd :: Int -> Step -> [String]
     stepMd k s =
-      [ printf "### Step %d — %s down%s" k (dirName (stRest s)) (if stFlip s then " (flip the assembly)" else "" :: String) ]
+      [ printf "### Step %d — %s down%s" k (restName m (stRest s)) (if stFlip s then " (flip the assembly)" else "" :: String) ]
       ++ [ "- Place: " ++ p ++ hostsNote p ++ maybe "" (\a -> ", " ++ entryWords (stRest s) a) (lookup p (stEntry s)) | p <- stParts s ]
       ++ [ "- Preload: " ++ h ++ " — " ++ nutsOn h | h <- stNuts s ]
       ++ [ if fKind f == Drop
@@ -134,7 +134,7 @@ planJson src m steps errs =
     stepJ k s =
       jobj
         [ ("step", JNumber (fromIntegral k))
-        , ("rest", JString (dirName (stRest s)))
+        , ("rest", JString (restName m (stRest s)))
         , ("flip", JBool (stFlip s))
         , ("parts", jlist (map JString (stParts s)))
         , ("preload", jlist (map JString (stNuts s)))

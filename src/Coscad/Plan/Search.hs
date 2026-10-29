@@ -44,7 +44,7 @@ ctolOf = setContact . mSettings
 -- | The instance's mesh extent along a rest direction (box before the
 -- geometry is measured).
 extent :: Model -> Inst -> V3 -> (Double, Double)
-extent m i d = fromMaybe (extentAlong d (iBox i)) (axisIndex d >>= \k -> Map.lookup (iName i, k) (gExt (mGeo m)))
+extent m i d = fromMaybe (extentAlong d (iBox i)) (axisIndex m d >>= \k -> Map.lookup (iName i, k) (gExt (mGeo m)))
 
 -- heights measured up, away from the bench under rest direction d
 heightMin, heightMax :: Model -> V3 -> Inst -> Double
@@ -55,12 +55,12 @@ benchLevel :: Model -> V3 -> [Inst] -> Double
 benchLevel m d is = minimum (map (heightMin m d) is)
 
 footprint :: Model -> V3 -> Inst -> [(Double, Double)]
-footprint m d i = fromMaybe boxFoot (axisIndex d >>= \k -> Map.lookup (iName i, k) (gFoot (mGeo m)))
+footprint m d i = fromMaybe boxFoot (axisIndex m d >>= \k -> Map.lookup (iName i, k) (gFoot (mGeo m)))
   where
     boxFoot = let lo = heightMin m d i in convexHull [project d c | c <- bcorners (iBox i), negate (dot3 c d) < lo + eps]
 
 contactPatch :: Model -> V3 -> Inst -> Inst -> Maybe [(Double, Double)]
-contactPatch m d p q = axisIndex d >>= \k -> Map.lookup (iName p, iName q, k) (gContact (mGeo m))
+contactPatch m d p q = axisIndex m d >>= \k -> Map.lookup (iName p, iName q, k) (gContact (mGeo m))
 
 polyArea :: [(Double, Double)] -> Double
 polyArea ps | length ps < 3 = 0
@@ -315,7 +315,11 @@ chooseApproach m d placedSet p = case Map.findWithDefault [] n (gApproach (mGeo 
 -- whose screw joint can no longer turn, never will: such a state is a dead
 -- end, whatever the rest face. (The bench is not counted: a flip moves it.)
 viable :: Model -> St -> Bool
-viable m st = all canStillGo [i | i <- mInsts m, not (Set.member (iName i) placedSet)]
+viable m st = null (deadParts m st)
+
+-- | The parts still to place that no longer have a way in (see 'viable').
+deadParts :: Model -> St -> [String]
+deadParts m st = [iName i | i <- mInsts m, not (Set.member (iName i) placedSet), not (canStillGo i)]
   where
     placedSet = placedNames st
     canStillGo p =
@@ -406,7 +410,12 @@ tryPlace m st node = case sRest st of
     let placedNodes' = Set.insert node (sPlaced st)
         placedI' = [i | NPart n <- Set.toList placedNodes', Just i <- [Map.lookup n (mByName m)]]
         before = sLoose st
-        after = loosePieces m d placedNodes' placedI'
+        -- a push, peg or screw joint is made by the act of placing the part:
+        -- it holds from this move on (settling records it next)
+        madeNow = case node of
+          NPart n -> [NFast (fId f) | (o, f) <- jointPartners m n, Set.member o placedSet, isJoint f]
+          _ -> []
+        after = loosePieces m d (foldr Set.insert placedNodes' madeNow) placedI'
         -- one hand does this move; every loose piece needs another
         extra = max 0 (1 + length before - 2)
         handWarn = [ "This needs another pair of hands (or a jig): hold " ++ intercalate ", " (map (intercalate "+") before) ++ " while doing it" | extra > 0 ]
@@ -607,10 +616,12 @@ beamSearch m width = go (0 :: Int) [St Set.empty Nothing 0 0 [] []] [] Nothing
       -- the first of the most-placed states, as sortOn would give
       let placedCount = Set.size . sPlaced
           s = foldl' (\a x -> if placedCount x > placedCount a then x else a) b0 rest
-       in ("planner stuck after placing " ++ show (Set.size (sPlaced s)) ++ " of " ++ show total ++ " nodes on the " ++ maybe "?" dirName (sRest s) ++ " (round " ++ show round' ++ ", beam " ++ show (length beam) ++ ")")
+       in ("planner stuck after placing " ++ show (Set.size (sPlaced s)) ++ " of " ++ show total ++ " nodes on the " ++ maybe "?" (restName m) (sRest s) ++ " (round " ++ show round' ++ ", beam " ++ show (length beam) ++ ")")
             : ("placed so far: " ++ intercalate ", " [n | MPlace (NPart n) _ _ _ <- reverse (sMoves s)])
             : [describe n ++ ": " ++ why | n <- available m s, Left why <- [tryPlace m s n]]
-            ++ ["flip to " ++ dirName d ++ ": " ++ maybe "not stable" (const "ok") (tryFlip m s d) | d <- mRestDirs m]
+            ++ [ describe n ++ ": then " ++ intercalate ", " dead ++ " would have no way in left"
+               | n@(NPart _) <- available m s, Right s1 <- [tryPlace m s n], let dead = deadParts m (settle m s1), not (null dead) ]
+            ++ ["flip to " ++ restName m d ++ ": " ++ maybe "not stable" (const "ok") (tryFlip m s d) | d <- mRestDirs m]
     describe n = case n of
       NPart p -> "place " ++ p
       NNuts h -> "preload " ++ h

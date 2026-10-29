@@ -54,12 +54,18 @@ main = do
   t <- T <$> newIORef 0 <*> newIORef []
   update <- (== Just "1") <$> lookupEnv "COSCAD_UPDATE_GOLDEN"
   args <- getArgs
-  unless (null args || args == ["--experiments-only"] || args == ["--images-only"]) $ do
-    hPutStrLn stderr "usage: coscad-test [--experiments-only|--images-only]"
+  unless (null args || args `elem` [["--experiments-only"], ["--images-only"], ["--plan-only"]]) $ do
+    hPutStrLn stderr "usage: coscad-test [--experiments-only|--images-only|--plan-only]"
     exitFailure
   let focused = args == ["--experiments-only"]
   when (args == ["--images-only"]) (imageTier t)
-  unless (args == ["--images-only"]) $ do
+  -- the build planner's tiers alone, for working on the planner
+  when (args == ["--plan-only"]) $ do
+    tesseractTier t
+    planTier t
+    framedFastenerTier t
+    planEaseTier t
+  unless (args == ["--images-only"] || args == ["--plan-only"]) $ do
     unless focused (coreTiers t update)
     experimentsTier t
     stressTier t
@@ -102,6 +108,7 @@ coreTiers t update = do
   planTier t
   imageTier t
   framedFastenerTier t
+  planEaseTier t
   cliTier t
   silenceTier t
   validateTier t

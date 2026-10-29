@@ -3,6 +3,7 @@ module Tier.Plan
   ( planTier
   , framedFastenerTier
   , checkInvariants
+  , planEaseTier
   )
 where
 
@@ -11,6 +12,10 @@ import Coscad.Geometry (mApply, vlen, vsub, vadd, rodMat)
 import Coscad.Plan (PlanSummary (..), StepSummary (..), FastenerSummary (..), planSummary, processPlanSummary)
 import Coscad.Site (buildPageHtml, indexHtml)
 import Coscad.Report (silent)
+import Coscad.Plan.Calibrate (fitWeights, nnls)
+import qualified Data.Map as Map
+import System.Exit (ExitCode (..))
+import System.Process (readProcessWithExitCode)
 import Data.List (isInfixOf, isPrefixOf, sort)
 import System.Directory
 import System.FilePath
@@ -84,19 +89,13 @@ planTier t = do
   writeFile (tmpB </> "bad.assemble") (ballSrc ++ "\nfastener M5x20 shell1 core rt pocket=top\n")
   rp <- planSummary (tmpB </> "bad.assemble")
   assertT t "plan: pocket= without nut=hex is an error" (either ("pocket= only applies to nut=hex" `isInfixOf`) (const False) rp) (either id show rp)
-  -- Preserve the old bolted tesseract regression alongside the new captive design.
+  -- The old bolted tesseract cannot be built from rigid parts: whichever
+  -- piece goes last, a bar must slide axially between two fixed sockets or
+  -- a corner block must take three perpendicular bars at once. Its earlier
+  -- plan (from bounding boxes) ended by placing the inner cube inside the
+  -- closed frame. The open-channel redesign exists because of this.
   rt <- planSummary "examples/assemble/tesseract/bolted/tesseract.assemble"
-  case rt of
-    Left e -> failT t "plan tesseract" e
-    Right ps -> do
-      assertT t "tesseract: 29 parts, 40 joints, no design errors" (length (psParts ps) == 29 && psFastenerCount ps == 40 && null (psDesignErrors ps)) (show (length (psParts ps), psFastenerCount ps, psDesignErrors ps))
-      checkInvariants t "tesseract" ps
-      assertT t "tesseract: every joint made, every block preloaded with its nuts" (sum (map (length . ssFasteners) (psSteps ps)) == 40 && sort (concatMap ssPreload (psSteps ps)) == sort ["corner" ++ show i | i <- [1 .. 8 :: Int]]) (show (psSteps ps))
-      assertT t "tesseract: starts with the corner blocks on the bench" (take 4 (concatMap ssParts (psSteps ps)) == ["corner1", "corner2", "corner3", "corner4"]) (show (take 6 (concatMap ssParts (psSteps ps))))
-      assertT t "tesseract: no screw is driven up through the bench" (all (\st -> ssRest st /= "bottom (-Z) face" || null [f | f@(_, _, _, _) <- ssFasteners st, False]) (psSteps ps)) "n/a"
-      assertT t "tesseract: at most 2 flips" (length (filter ssFlip (psSteps ps)) <= 2) (show (length (filter ssFlip (psSteps ps))))
-  tessMd <- generatedPlanMd "plan-tesseract-md" "examples/assemble/tesseract/bolted" "tesseract"
-  assertT t "tesseract: plan speaks of pegs and nut pockets in the blocks, no T-nuts" (all (`isInfixOf` tessMd) ["Push: strut1 into", "24 × M3 hex nut", "into the pocket on the top face"] && not ("T-nut" `isInfixOf` tessMd)) (take 500 tessMd)
+  expectErr t "bolted tesseract: no rigid order puts it together" rt ["planner stuck"] []
   -- A rotor must enter its recessed journal before the next axle captures it.
   ro <- planSummary "models/orbit-tower/orbit-tower.assemble"
   case ro of
@@ -262,3 +261,107 @@ checkInvariants t name ps = do
   assertT t (name ++ ": host and clamped part are placed before each screw") (null lateHost) (show lateHost)
   assertT t (name ++ ": every rail is preloaded before its first screw (nut-first)") (null lateNut) (show lateNut)
   assertT t (name ++ ": every part placed exactly once") (null placedTwice) (show placedTwice)
+
+-- | The planner on real geometry: approach sweeps, alignment work, order
+-- from burial, screw joints, mesh mass, hands, settings and calibration.
+-- Small synthetic assemblies with known answers, then Tesseract III.
+planEaseTier :: T -> IO ()
+planEaseTier t = do
+  section "build plans on meshes: joints, sweeps, burial order, calibration"
+  dir <- tempDir "plan-ease"
+  let run name files source = do
+        forM_ files $ \(f, body) -> writeFile (dir </> f) body
+        writeFile (dir </> name) source
+        planSummary (dir </> name)
+      jsonOf name = readFile (dir </> name)
+      hole = ("host.coscad", "main = box 30 30 20 ⊖ zcyl 3.2 30\n")
+      peg = ("peg.coscad", "main = zcyl 3 16\n")
+      base = "host ← host.coscad ×1\npeg ← peg.coscad ×1\n"
+      stepOf ps p = firstOr maxBound [k | (k, s) <- zip [1 :: Int ..] (psSteps ps), p `elem` ssParts s]
+      term k ps = sum [v | s <- psSteps ps, (k', v) <- ssTerms s, k' == k]
+  -- a 6 mm peg in a 6.4 mm hole, 16 mm engaged: log2(1 + 16/0.4) bits
+  r1 <- run "peg.assemble" [hole, peg] (base ++ "asm = host ⊕ (peg |> move 0 0 2)\njoint push peg host axis=top\n")
+  case r1 of
+    Left e -> failT t "peg in hole plans" e
+    Right ps -> do
+      assertT t "peg in hole: alignment work is the Fitts index of 16 mm over 0.4 mm play"
+        (abs (term "insert" ps - logBase 2 (1 + 16 / 0.4)) < 0.3) (show (term "insert" ps))
+      assertT t "peg in hole: upright, the peg lowered in from above"
+        (all ((== "bottom (-Z) face") . ssRest) (psSteps ps) && lookup "peg" (concatMap ssEntry (psSteps ps)) == Just (0, 0, 1)) (show (psSteps ps))
+  -- a lid over the hole buries it: the peg must go first, with no hint
+  r2 <- run "lid.assemble" [hole, peg, ("lid.coscad", "main = box 30 30 2\n")]
+    (base ++ "lid ← lid.coscad ×1\nasm = host ⊕ (peg |> move 0 0 2) ⊕ (lid |> move 0 0 11)\njoint push peg host axis=top\n")
+  assertT t "burial: a lid that closes the hole's only way in goes on after the peg"
+    (either (const False) (\ps -> stepOf ps "peg" < stepOf ps "lid") r2) (either id (show . psSteps) r2)
+  -- a peg sealed inside its host can never go in
+  r3 <- run "sealed.assemble" [("shut.coscad", "main = box 30 30 20 ⊖ box 10 10 10\n"), ("block.coscad", "main = box 6 6 6\n")]
+    "shut ← shut.coscad ×1\nblock ← block.coscad ×1\nasm = shut ⊕ block\njoint push block shut axis=top\n"
+  expectErr t "burial: a part sealed inside its host is a design error" r3 ["block cannot go in once shut"] []
+  -- a screw joint turns its engaged length over the pitch; a knob above
+  -- the hole gives the fingers something to turn, a flush screw does not
+  let knob = ("knob.coscad", "main = zcyl 3 16 ⊕ (zcyl 8 6 |> move 0 0 11)\n")
+      knobbed = "host ← host.coscad ×1\npeg ← knob.coscad ×1\nasm = host ⊕ (peg |> move 0 0 2)\njoint screw peg host axis=top pitch=2\n"
+  r4 <- run "screw.assemble" [hole, knob] knobbed
+  case r4 of
+    Left e -> failT t "screw joint plans" e
+    Right ps -> assertT t "screw joint: 16 mm engaged at 2 mm pitch is about 8 turns" (abs (term "turn" ps - 8) < 0.6) (show (term "turn" ps))
+  r4b <- run "flush.assemble" [hole, peg] (base ++ "asm = host ⊕ (peg |> move 0 0 2)\njoint screw peg host axis=top pitch=2\n")
+  expectErr t "screw joint: a screw sunk flush in its hole cannot be turned by hand" r4b ["no room to grip peg"] []
+  -- a T-handle screwed in would sweep into a post beside it: handle first
+  r5 <- run "handle.assemble" [hole, ("tee.coscad", "main = zcyl 3 16 ⊕ (box 24 4 4 |> move 0 0 10)\n"), ("post.coscad", "main = box 4 4 10\n")]
+    "host ← host.coscad ×1\ntee ← tee.coscad ×1\npost ← post.coscad ×1\nasm = host ⊕ (tee |> move 0 0 2) ⊕ (post |> move 8 8 15)\njoint screw tee host axis=top pitch=2\n"
+  assertT t "turning: a post in the way of a screw joint's rotation goes on after it"
+    (either (const False) (\ps -> stepOf ps "tee" < stepOf ps "post") r5) (either id (show . psSteps) r5)
+  -- mass from the mesh: a printed 20 mm cube is its shell plus 15% infill
+  r6 <- run "mass.assemble" [("cube20.coscad", "main = box 20 20 20\n")] "a ← cube20.coscad ×1\nb ← cube20.coscad ×1 mass=50\nasm = a ⊕ (b |> move 30 0 0)\n"
+  _ <- processPlanSummary silent False (dir </> "mass.assemble")
+  massJson <- jsonOf "mass_plan.json"
+  let shell = 2400 * 0.85; expected = 0.00125 * (shell + 0.15 * (8000 - shell))
+  assertT t "mass: a printed cube weighs its perimeter shell plus infill; mass= wins"
+    (either (const False) (const True) r6 && ("\"mass_g\": " ++ show3 expected) `isInfixOf` massJson && "\"mass_g\": 50" `isInfixOf` massJson) (take 900 massJson)
+  -- settings and joint lines are validated
+  forM_ [ ("plan infill=2\n", "expected a number from 0 to 1")
+        , ("plan bogus=1\n", "unknown plan option 'bogus'")
+        , ("plan finger_sise=3\n", "did you mean 'finger_size'") ] $ \(line, msg) -> do
+    r <- run "opt.assemble" [hole, peg] (base ++ "asm = host ⊕ (peg |> move 0 0 2)\njoint push peg host axis=top\n" ++ line)
+    expectErr t ("plan option: " ++ init line) r [msg] []
+  ok <- run "opt2.assemble" [hole, peg] (base ++ "asm = host ⊕ (peg |> move 0 0 2)\njoint push peg host axis=top\nplan insert=1 finger_size=12 settle=0.3 hand=30\n")
+  assertT t "plan options: new weights and settings are accepted" (either (const False) (const True) ok) (either id (const "") ok)
+  forM_ [ ("joint twist peg host axis=top\n", "unknown joint kind 'twist'")
+        , ("joint screw peg host axis=top\n", "needs pitch=mm")
+        , ("joint drop peg host axis=top pitch=2\n", "pitch= only applies to screw joints")
+        , ("joint push peg host\n", "no mate between peg and host") ] $ \(line, msg) -> do
+    r <- run "joint.assemble" [hole, peg] (base ++ "asm = host ⊕ (peg |> move 0 0 2)\n" ++ line)
+    expectErr t ("joint line: " ++ init line) r [msg] []
+  -- calibration recovers the weights that generated the times
+  let rows = [ (Map.fromList [("flip", f), ("insert", i), ("part", p)], 12 * f + 1.5 * i + 20 * p)
+             | (f, i, p) <- [(1, 0, 1), (0, 5, 1), (0, 2, 2), (1, 3, 0), (0, 0, 1), (2, 1, 1)] ]
+      (fitted, _, r2, _) = fitWeights rows
+  assertT t "calibrate: non-negative least squares recovers the generating weights"
+    (all (\(k, w) -> abs (Map.findWithDefault (-1) k fitted - w) < 1e-6) [("flip", 12), ("insert", 1.5), ("part", 20)] && r2 > 0.999999) (show fitted)
+  assertT t "calibrate: weights never go negative" (all (>= 0) (nnls [[1, 1], [1, 2], [1, 3]] [3, 2, 1])) (show (nnls [[1, 1], [1, 2], [1, 3]] [3, 2, 1]))
+  -- Tesseract III from its joints alone: no ordering hints
+  t3 <- tempDir "plan-tesseract-iii"
+  let src = "models/tesseract-v3-threaded"
+  fs <- listDirectory src
+  forM_ [f | f <- fs, takeExtension f == ".coscad"] $ \f -> copyFile (src </> f) (t3 </> f)
+  generator <- readProcessWithExitCode "python3" [src </> "instructions.py", src </> "tesseract.assemble", t3 </> "tesseract.assemble"] ""
+  generated <- readFile (t3 </> "tesseract.assemble")
+  assertT t "Tesseract III instructions declare joints and no ordering hints"
+    (case generator of (ExitSuccess, _, _) -> length (filter ("joint " `isPrefixOf`) (lines generated)) == 48 && not ("after=" `isInfixOf` generated); _ -> False) (show generator)
+  r7 <- planSummary (t3 </> "tesseract.assemble")
+  case r7 of
+    Left e -> failT t "Tesseract III plans from its joints" e
+    Right ps -> do
+      let joints = concatMap ssFasteners (psSteps ps)
+          hubOf b = [h | (_, c, h, _) <- joints, c == b, "hub" `isPrefixOf` h]
+          bars = ["bar" ++ show i | i <- [1 .. 12 :: Int]]
+      assertT t "Tesseract III: 37 parts once each, 24 screw and 24 drop joints, no design errors"
+        (sort (concatMap ssParts (psSteps ps)) == sort (psParts ps) && length (psParts ps) == 37
+         && length [() | ("screw", _, _, _) <- joints] == 24 && length [() | ("drop", _, _, _) <- joints] == 24 && null (psDesignErrors ps)) (show (length joints))
+      assertT t "Tesseract III: every bar after both its hubs, every cap after all three bars it captures"
+        (and [stepOf ps h < stepOf ps b | b <- bars, h <- hubOf b] && and [stepOf ps b < stepOf ps ("cap" ++ drop 3 h) | b <- bars, h <- hubOf b]) (show (map ssParts (psSteps ps)))
+      assertT t "Tesseract III: each threaded joint takes 2 to 3 turns (8 mm at 3 mm pitch)"
+        (let ts = [v | s <- psSteps ps, ("turn", v) <- ssTerms s] in abs (sum ts / 24 - 8 / 3) < 0.4) (show [v | s <- psSteps ps, ("turn", v) <- ssTerms s])
+  where
+    show3 x = let r = fromIntegral (round (x * 1000) :: Integer) / 1000 :: Double in show r

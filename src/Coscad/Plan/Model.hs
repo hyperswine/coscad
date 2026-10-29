@@ -20,6 +20,7 @@ module Coscad.Plan.Model
   , emptyGeo
   , axes6
   , axisIndex
+  , restName
   , weight
   , price
   , workTerms
@@ -245,12 +246,18 @@ settingsFrom opts = Settings (o "driver_angle" 30) (o "standing_angle" 17.5) (o 
   (o "sweep_step" 0.5) (o "shell" 0.85) (o "infill" 0.15)
   where o k d = fromMaybe d (lookup k opts >>= readD)
 
--- | The six rest directions, in a fixed order (index into the tables).
+-- | The six world faces, in a fixed order.
 axes6 :: [V3]
 axes6 = [(0, 0, -1), (0, 0, 1), (-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 1, 0)]
 
-axisIndex :: V3 -> Maybe Int
-axisIndex d = lookup True (zip [vlen (vsub d a) < 1e-9 | a <- axes6] [0 ..])
+-- | A rest direction's index in the model's tables.
+axisIndex :: Model -> V3 -> Maybe Int
+axisIndex m d = lookup True (zip [vlen (vsub d a) < 1e-9 | (a, _) <- mAxes m] [0 ..])
+
+-- | A rest direction in words: a world face, or a face of the base part
+-- when the assembly is not square to the world.
+restName :: Model -> V3 -> String
+restName m d = maybe (dirName d) id (lookup True [(vlen (vsub d a) < 1e-9, nm) | (a, nm) <- mAxes m])
 
 -- | One way a part can come in: it travels along -apDir to its seat (apDir
 -- is the way it would leave). Measured once against every other part.
@@ -282,9 +289,9 @@ data Twist = Twist
 -- | Mesh-derived tables, filled by Coscad.Plan.Geometry before the search.
 data Geo = Geo
   { gReady :: Bool
-  , gExt :: Map.Map (String, Int) (Double, Double) -- an instance's extent along axes6 !! k
-  , gFoot :: Map.Map (String, Int) [(Double, Double)] -- its lowest vertices with axes6 !! k down, projected
-  , gContact :: Map.Map (String, String, Int) [(Double, Double)] -- p resting on q, axes6 !! k down: the contact patch
+  , gExt :: Map.Map (String, Int) (Double, Double) -- an instance's extent along rest direction k (mAxes)
+  , gFoot :: Map.Map (String, Int) [(Double, Double)] -- its lowest vertices with rest direction k down, projected
+  , gContact :: Map.Map (String, String, Int) [(Double, Double)] -- p resting on q, rest direction k down: the contact patch
   , gApproach :: Map.Map String [Approach]
   , gTwist :: Map.Map (Int, String) Twist -- (screw joint, moving instance)
   , gJointBits :: Map.Map Int Double -- the least alignment work of each joint over its sides and approaches
@@ -799,6 +806,7 @@ data Model = Model
   , mGeo :: Geo
   , mMateAxes :: Map.Map String [V3] -- world normals of the frames each instance is mated by
   , mPartners :: Map.Map String [(String, Fast)] -- each instance's joints, with the other instance
+  , mAxes :: [(V3, String)] -- the rest directions the tables are measured for, with their names
   }
 
 -- design errors that are properties of the model, reported before planning
@@ -836,9 +844,23 @@ buildModel ar = do
   ordered <- partPreds ar insts
   let byName = Map.fromList [(iName i, i) | i <- insts]
       errs = designErrors insts fasts
+      -- the world faces, and the faces of the largest part when the
+      -- assembly is not square to the world (it rests on its own faces)
+      largest = case sortOn (\i -> negate (boxVolume (bbox (iShape i)))) insts of
+        i : _ -> Just i
+        [] -> Nothing
+      boxVolume ((x0, y0, z0), (x1, y1, z1)) = (x1 - x0) * (y1 - y0) * (z1 - z0)
+      worldAxes = [(a, dirName a) | a <- axes6]
+      ownAxes = case largest of
+        Just i -> [ (a, "the " ++ iName i ++ "'s " ++ face ++ " face")
+                  | (e, face) <- [((0, 0, -1), "bottom"), ((0, 0, 1), "top"), ((-1, 0, 0), "left"), ((1, 0, 0), "right"), ((0, -1, 0), "front"), ((0, 1, 0), "back")]
+                  , let v = mApply (fst (iAff i)) e, vlen v > 1e-9, let a = vnormed v
+                  , all (\(w, _) -> vlen (vsub a w) > 1e-6) worldAxes ]
+        Nothing -> []
+      allAxes = worldAxes ++ ownAxes
       restDirs = case lookup "rest" (arPlanOpts ar) of
         Just s -> mapMaybe anchorDir (splitOn ',' s)
-        Nothing -> [(0, 0, -1), (0, 0, 1), (-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 1, 0)]
+        Nothing -> map fst allAxes
       weights = Map.union (Map.fromList [(k, v) | (k, raw) <- arPlanOpts ar, Map.member k defaultWeights, Just v <- [readD raw]]) defaultWeights
       preds = Map.unionWith (++) (buildPreds insts fasts) ordered
       nodes = [NPart (iName i) | i <- insts] ++ [NNuts h | h <- nutHosts fasts] ++ [NFast (fId f) | f <- fasts]
@@ -851,4 +873,4 @@ buildModel ar = do
           ++ [(iName pi', [a]) | Just a <- [frameAxis pi' pf]] ++ [(iName pi', [a]) | Just a <- [frameAxis ci cf]]
         | Mate _ c cf pa pf _ _ <- arConstraints ar, Just ci <- [lookupInst c], Just pi' <- [lookupInst pa] ])
       partners = Map.fromListWith (flip (++)) (concat [[(fClamped f, [(fHost f, f)]), (fHost f, [(fClamped f, f)])] | f <- fasts])
-  Right (Model insts byName fasts (Map.fromList [(fId f, f) | f <- fasts]) preds nodes restDirs weights sets emptyGeo mateAxes partners, errs)
+  Right (Model insts byName fasts (Map.fromList [(fId f, f) | f <- fasts]) preds nodes restDirs weights sets emptyGeo mateAxes partners allAxes, errs)
