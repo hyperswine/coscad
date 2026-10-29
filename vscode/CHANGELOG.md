@@ -1,5 +1,17 @@
 # Changelog for the CoScad VS Code extension
 
+## 0.7.0 - 2026-10-29
+
+- CoScad 1.6 retires the OpenSCAD backend. On a compiler that advertises
+  `openscad-retired`, an `openscad` backend setting is refused with the
+  reason instead of an "unavailable" error, and `native-experimental` is
+  passed as `native`, the backend's new name. Settings descriptions say to
+  leave `coscad.backend` on `auto`.
+- "Compile to OpenSCAD" is now "Export OpenSCAD Source (.scad)" and the
+  Doctor command no longer mentions OpenSCAD or BOSL2.
+- The language-server integration test waits for the server to exit instead
+  of racing its closed pipe (an `EPIPE` that failed CI intermittently).
+
 ## 0.6.0 - 2026-10-28
 
 - Planner image commands honor the selected backend; current CoScad kernel

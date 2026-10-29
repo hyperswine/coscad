@@ -167,8 +167,8 @@ cabal build exe:coscad
 COSCAD=$(cabal list-bin exe:coscad)
 python3 models/tesseract-v3-threaded/export.py
 python3 models/tesseract-v3-threaded/verify.py --coscad "$COSCAD"
-"$COSCAD" check models/tesseract-v3-threaded/tesseract.assemble --backend=native
-"$COSCAD" next models/tesseract-v3-threaded/thread-fit.assemble --backend=native
+"$COSCAD" check models/tesseract-v3-threaded/tesseract.assemble
+"$COSCAD" next models/tesseract-v3-threaded/thread-fit.assemble
 python3 models/tesseract-v3-threaded/center_coupon.py
 python3 scripts/bambu-slice.py models/tesseract-v3-threaded/thread-fit_manifest.json --printer 'Bambu Lab X1 Carbon 0.4 nozzle' --filament 'Generic PLA' --process-overrides models/tesseract-v3-threaded/coupon-process.json
 ```

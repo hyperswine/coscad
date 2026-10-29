@@ -91,7 +91,7 @@ Stop finger-tight when the broad foot seats against the base.
 
 Use the Python environment from the parent project's README (trimesh, manifold3d,
 numpy, scipy, matplotlib). OpenSCAD 2025.05.16 with Manifold and Bambu Studio
-02.08.02.61 were used. Installed Bambu vendor machine/templates are refreshed;
+02.08.02.61 were used for the recorded meshes and packages. Installed Bambu vendor machine/templates are refreshed;
 the saved successful P1S project supplies the baseline print settings.
 
 From the CoScad repository root:
@@ -107,6 +107,19 @@ geometry in CoScad without a third-party thread library or external map data.
 and verifies the packages. Native macOS apps may need host access outside a
 sandbox. This build never dispatches a print. Saved presets, logs and checks
 remain alongside their respective artifacts.
+
+2026-10-29: `build.py` no longer uses OpenSCAD. It renders each part from
+`assembly.coscad` with the native compiler (`coscad stl`; `--coscad PATH`,
+`$COSCAD` or `cabal list-bin exe:coscad`), and `--render-only` stops after
+`verify.py`, before slicing. The recorded meshes were rendered by OpenSCAD at
+`$fn=96`, which `generate.py` writes into the `.scad` files; the native kernel
+always uses 50 circle segments (thread helices keep their own segments), so a
+rebuild is coarser and not identical. A native rebuild on 2026-10-29 passed
+every `verify.py` check. Volumes moved by up to 0.5% (rotor 137391 against
+138054 mm³, base 47048 against 47133, coupon-female 7173 against 7193), and the
+wrong-phase thread probe intersects 225.85 mm³ (224.83 at 96). The physically
+tested thread fit was printed from the 96-segment meshes; print a coupon again
+before relying on a native rebuild.
 
 ## Thread coupon dispatch, 2026-10-23
 

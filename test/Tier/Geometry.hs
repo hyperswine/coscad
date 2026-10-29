@@ -1,5 +1,8 @@
--- | Geometry tier (needs OpenSCAD): rendered volume and bounds against
--- test/golden/geometry.txt, and cross-checks.
+-- | Geometry tier: every example's native mesh against the volume and bounds
+-- in test/golden/geometry.txt (which COSCAD_UPDATE_GOLDEN=1 rewrites from the
+-- native renders), pipeline cross-checks, and, when OpenSCAD 2025.05 or newer
+-- is installed, independent OpenSCAD oracle checks of the same geometry.
+-- Without OpenSCAD the oracle checks are skipped and the skip is printed.
 module Tier.Geometry
   ( mergeGeometryGolden
   , geometry
@@ -12,9 +15,10 @@ import Coscad.Assemble (AsmResult (..), loadAssembleFile, processAssemble, resol
 import Coscad.Check (processCheckIn, processCheckWith, splitBodies)
 import Coscad.Codegen (gen, renderScad)
 import Coscad.Json (asArray, asString, decode, lookupKey)
-import Coscad.Mesh (meshBounds, meshVolume, parseStlAscii)
+import Coscad.Mesh (meshBounds, meshVolume)
 import Coscad.Next (processNext)
-import Coscad.OpenScad (bosl2Version, openscadFullRender, openscadPngArgs, openscadVersion, runOpenscadRaw)
+import Oracle.OpenScad (bosl2Version, openscadVersion)
+import Coscad.Backend (nativeCSGMesh)
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Part (renderPart)
 import Coscad.Report (Failure (..), silent)
@@ -25,9 +29,7 @@ import Data.Maybe (isJust, isNothing)
 import qualified Data.Map as Map
 import Data.Time.Clock (diffUTCTime, getCurrentTime)
 import System.Directory
-import System.Exit (ExitCode (..))
 import System.FilePath
-import System.IO
 import Text.Printf (printf)
 import Harness
 import Tier.Examples
@@ -46,9 +48,12 @@ mergeGeometryGolden update golden current = Map.union accepted golden
       Nothing -> True
       Just want -> update && not (geoClose want g)
 
-geometry :: T -> Bool -> FilePath -> IO ()
-geometry t update bin = do
-  section ("geometry via " ++ bin)
+geometry :: T -> Bool -> Maybe FilePath -> IO ()
+geometry t update oracleBin = do
+  section ("geometry: native meshes against the goldens" ++ maybe " (OpenSCAD oracle checks skipped: OpenSCAD not found; set COSCAD_OPENSCAD)" (" + OpenSCAD oracle via " ++) oracleBin)
+  let bin = maybe "" id oracleBin
+      oracle :: IO () -> IO ()
+      oracle check = maybe (return ()) (const check) oracleBin
   t0 <- getCurrentTime
   let goldenF = "test/golden/geometry.txt"
   haveG <- doesFileExist goldenF
@@ -60,7 +65,14 @@ geometry t update bin = do
     case parseProgramNamed f src of
       Left e -> failT t ("render " ++ f) e >> return Nothing
       Right (_, m) -> do
-        r <- renderMesh bin dir (renderScad m)
+        r <- nativeCSGMesh m
+        oracle $ do
+          o <- renderMesh bin dir (renderScad m)
+          case (o, Map.lookup f golden) of
+            (Left e, _) -> failT t ("OpenSCAD oracle " ++ f) e
+            (Right otris, Just want) -> assertT t ("OpenSCAD oracle " ++ f) (geoClose want (geoOf otris))
+              ("OpenSCAD's render differs from the native golden\n  golden:   " ++ showGeo want ++ "\n  OpenSCAD: " ++ showGeo (geoOf otris))
+            (Right _, Nothing) -> return ()
         case r of
           Left e -> failT t ("render " ++ f) e >> return Nothing
           Right tris -> do
@@ -81,8 +93,7 @@ geometry t update bin = do
     writeFile goldenF (unlines ["# path volume xmin ymin zmin xmax ymax zmax (regenerate: COSCAD_UPDATE_GOLDEN=1 cabal test)"] ++ unlines [f ++ " " ++ showGeo g | (f, g) <- Map.toList merged])
   -- Check actual bracket material, not the planner's axis-aligned boxes.
   -- Independent world-space probes cover all 16 corners and 32 rail bores.
-  cube <- loadAssembleFile [] "examples/assemble/plan/cube.assemble"
-  case cube of
+  oracle $ loadAssembleFile [] "examples/assemble/plan/cube.assemble" >>= \cube -> case cube of
     Left e -> failT t "cube bracket geometry" e
     Right ar -> do
       let parts = Map.fromList [(n, if "br_" `isPrefixOf` n then sh else Hidden sh) | (n, sh) <- arParts ar]
@@ -132,7 +143,7 @@ geometry t update bin = do
   -- Oblique rotations leave non-manifold zero-thickness slivers in CGAL
   -- subtraction. Their origins and all three axes are checked above instead;
   -- all individual printable parts still go through strict STL rendering.
-  forM_ [c | c@(file,_,_,_) <- migrationCases, not (any (`isInfixOf` file) ["tesseract","orbit-tower"])] $ \(file,ref,_,_) -> do
+  oracle $ forM_ [c | c@(file,_,_,_) <- migrationCases, not (any (`isInfixOf` file) ["tesseract","orbit-tower"])] $ \(file,ref,_,_) -> do
     a <- loadAssembleFile [] file
     b <- loadAssembleFile [] ref
     case (a >>= maybe (Left "no asm") Right . arAsm, b >>= maybe (Left "no reference asm") Right . arAsm) of
@@ -157,7 +168,7 @@ geometry t update bin = do
   case parseProgramNamed "loft.coscad" "main = loft 0 (⭘ 10) 30 (⭘ 5)\n" of
     Left e -> failT t "loft frustum volume" e
     Right (_, m) -> do
-      r <- renderMesh bin dir (renderScad m)
+      r <- nativeCSGMesh m
       case r of
         Left e -> failT t "loft frustum volume" e
         Right tris ->
@@ -229,7 +240,7 @@ geometry t update bin = do
   -- solids. A remote 1 mm3 marker makes an empty symmetric difference a
   -- successful STL export, without treating OpenSCAD failures as emptiness.
   cornerSrc <- readFile "examples/topological/mating-corner.coscad"
-  case parseProgramNamed "mating-corner.coscad" cornerSrc of
+  oracle $ case parseProgramNamed "mating-corner.coscad" cornerSrc of
     Left e -> failT t "oriented corner symmetric difference" e
     Right (_,s) -> do
       let reference = "union(){cube([20,20,4],center=true);translate([0,0,5]) cube([2,4,6],center=true);translate([13,0,0]) cube([6,2,4],center=true);}"
@@ -306,34 +317,12 @@ geometry t update bin = do
       tris <- readStl (st </> "p.stl")
       let v = meshVolume tris
       assertT t "coscad stl renders a part" (abs (v - 4 / 3 * pi * 125) < 0.03 * (4 / 3 * pi * 125)) (printf "sphere volume %.2f" v)
-  -- step scenes render fully (Manifold) where OpenSCAD supports it, with the bench in the mesh
-  full <- openscadFullRender
-  tmpBase <- getTemporaryDirectory
-  let sceneF = tmpBase </> "coscad-test" </> "cli" </> "corner_pair_step1.scad"
-      scenePng = dir </> "step1.png"
-      sceneStl = dir </> "step1.stl"
-  haveScene <- doesFileExist sceneF
-  if not haveScene
-    then failT t "step scene from the cli tier exists" sceneF
-    else do
-      rp <- runOpenscadRaw (openscadPngArgs full scenePng sceneF)
-      pngOk <- doesFileExist scenePng
-      pngSize <- if pngOk then fromIntegral <$> withFile scenePng ReadMode hFileSize else return (0 :: Int)
-      assertT t ("step scene renders to PNG (" ++ (if full then "full Manifold render" else "preview") ++ ")")
-        (either (const False) (\(c, out, err) -> c == ExitSuccess && not (any ("ERROR" `isPrefixOf`) (lines (out ++ err)))) rp && pngOk && pngSize > 5000)
-        (show rp ++ " size " ++ show pngSize)
-      when full $ do
-        rsFull <- runOpenscadRaw ["-o", sceneStl, "--export-format", "asciistl", "--backend=manifold", "--render=force", sceneF]
-        tris <- either (const []) id . parseStlAscii <$> readFile sceneStl
-        let ((_, _, z0), (_, _, z1)) = meshBounds tris
-        assertT t "full render keeps the bench slab under the parts (scene extends 2.5 mm below the rest face)"
-          (either (const False) (\(c, _, _) -> c == ExitSuccess) rsFull && not (null tris) && z0 < -2.4 && z1 > 0)
-          (show rsFull ++ " bounds z " ++ show (z0, z1))
-  -- toolchain probes used by `coscad doctor`
-  ov <- openscadVersion
-  assertT t "openscad --version is parsed" (maybe False (not . null) ov) (show ov)
-  bv <- bosl2Version dir
-  assertT t "BOSL2 answers the version probe" (either (const False) (not . null) bv) (show bv)
+  -- the oracle's own toolchain answers
+  oracle $ do
+    ov <- openscadVersion
+    assertT t "OpenSCAD oracle: openscad --version is parsed" (maybe False (not . null) ov) (show ov)
+    bv <- bosl2Version dir
+    assertT t "OpenSCAD oracle: BOSL2 answers the version probe" (either (const False) (not . null) bv) (show bv)
   t1 <- getCurrentTime
   printf "(geometry tier: %.1fs)\n" (realToFrac (diffUTCTime t1 t0) :: Double)
   where

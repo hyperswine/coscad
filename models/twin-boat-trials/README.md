@@ -22,6 +22,13 @@ plastic boundary. The outrigger also has two correctly oriented enclosed void
 boundaries for its air chambers. Meshes are watertight; this does not establish
 that printed layer seams will not leak.
 
+2026-10-29: render.py now renders with the native compiler (`coscad stl`), not
+OpenSCAD. The recorded meshes, `*-render.log` files and results above came from
+OpenSCAD Manifold. A native re-render matches all six meshes in volume (largest
+relative difference 3e-11) and bounds, with slightly more triangles (monohull
+1614 against 1608, outrigger 6124 against 6046), and verify.py on those meshes
+reproduces validation.json to within 1e-6 mm.
+
 verify.py computes static freshwater displacement and transverse righting arms
 for homogeneous solid PLA at 1.24 g/cm3. At sampled angles, the conventional
 hull retains an unflooded restoring tendency through 30 degrees; the outrigger
@@ -59,8 +66,9 @@ checks the ZIP and G-code MD5/SHA-256.
 
 Run these scripts in the listed order with an environment containing trimesh,
 manifold3d, numpy, scipy, matplotlib, Pillow and paho-mqtt. CoScad is resolved
-through cabal list-bin exe:coscad. Native OpenSCAD and Bambu Studio may need host
-access on macOS. No build/verify script dispatches a print.
+through cabal list-bin exe:coscad (render.py also takes `--coscad PATH` or
+`$COSCAD`, and `--out DIR`). Bambu Studio may need host access on macOS; since
+2026-10-29 no script here needs OpenSCAD. No build/verify script dispatches a print.
 
 ## Dispatch and owner gates
 

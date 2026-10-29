@@ -1,5 +1,8 @@
 # The native backend becomes the default
 
+> Since 1.6.0.0 the native backend is the only one: `--backend=openscad` and the
+> `-f-manifold` build are gone. See [OPENSCAD-RETIRED](2026-10-29-OPENSCAD-RETIRED.md).
+
 Kind: record of a change, with its measurements. Supersedes the "no default
 backend switch yet" status in
 [FEA-BACKEND-EXPERIMENTS](2026-10-26-FEA-BACKEND-EXPERIMENTS.md); the

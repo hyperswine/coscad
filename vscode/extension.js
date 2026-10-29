@@ -104,8 +104,14 @@ function registerFileCommand(context, id, allowedExtensions, makeArgs) {
     if (id === 'coscad.stress' && !info.capabilities?.features?.includes('stress')) {
       vscode.window.showErrorMessage('This compiler does not advertise stress analysis. Update the compiler.'); return
     }
-    const backend = config().backend
+    let backend = config().backend
+    const retired = info.capabilities?.features?.includes('openscad-retired')
+    // CoScad 1.6 renamed native-experimental to native; keep old settings working.
+    if (backend === 'native-experimental' && info.capabilities?.backends.includes('native')) backend = 'native'
     if (['stl','stress','check','next','plan','site'].includes(args[0]) && backend !== 'auto') {
+      if (backend === 'openscad' && retired) {
+        vscode.window.showErrorMessage('CoScad retired the OpenSCAD backend in 1.6.0.0; geometry is always native. Set coscad.backend to auto. To work in OpenSCAD, use COSCAD: Export OpenSCAD Source.'); return
+      }
       if (['plan','site'].includes(args[0]) && !info.capabilities?.features?.includes('image-backends')) {
         vscode.window.showErrorMessage('This compiler cannot select the planner image backend. Update the compiler or use the auto backend.'); return
       }
@@ -454,7 +460,7 @@ function activate(context) {
   context.subscriptions.push(backendStatus, vscode.commands.registerCommand('coscad.selectBackend', async () => {
     const doc=vscode.window.activeTextEditor?.document
     const info=await compilerUsable(config().cwd || (doc ? path.dirname(doc.fileName) : process.cwd()))
-    const choices=['auto',...(info.capabilities?.backends || ['openscad'])]
+    const choices=['auto',...(info.capabilities?.backends || [])]
     const selected=await vscode.window.showQuickPick(choices,{placeHolder:'Geometry backend (auto uses this compiler build’s default)'})
     if (selected) await vscode.workspace.getConfiguration('coscad').update('backend',selected,vscode.ConfigurationTarget.Workspace)
   }))

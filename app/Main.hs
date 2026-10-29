@@ -12,7 +12,6 @@ import Coscad.Part (compilePart, renderPartWith)
 import Coscad.Plan (processPlanWithBackend)
 import Coscad.Diagnose (validateProjectJson, validateProject, projectSources)
 import Coscad.Json
-import Coscad.Manifold (manifoldAvailable)
 import Coscad.Stress.Material (Material (..), materialTable)
 import Coscad.Report (Failure (..), collecting, stderrEmit)
 import Coscad.Site (processSiteWithBackend)
@@ -50,8 +49,8 @@ runCLI = do
     ["capabilities", "--json"] -> putStrLn (encode (jobj
       [("schema",JString "coscad.capabilities/1"), ("version",JString (showVersion version))
       ,("default_backend",JString (backendName defaultBackend))
-      ,("backends",JArray (map JString (["openscad"] ++ ["native-experimental" | manifoldAvailable])))
-      ,("features",JArray (map JString (["validate-json", "project-buffers", "stress", "stl", "check", "next", "plan", "image-backends"] ++ ["native-images" | manifoldAvailable])))
+      ,("backends",JArray [JString (backendName defaultBackend)])
+      ,("features",JArray (map JString ["validate-json", "project-buffers", "stress", "stl", "check", "next", "plan", "image-backends", "native-images", "openscad-retired"]))
       ,("materials",JArray [jobj [("name",JString (matName m)),("young_mpa",JNumber (matYoungMPa m))]
           | m <- materialTable])]))
     ["doctor"] -> runDoctor >>= finish
@@ -111,16 +110,16 @@ runCLI = do
     [f] | takeExtension f == ".assemble" -> processAssemble stderrEmit f >>= finish
     rest -> withInOut "compile" rest (\f o -> compilePart stderrEmit f o >>= finish)
 
--- | Backend flags are command-local; no silent global selection or fallback.
--- Without a flag the build's 'defaultBackend' applies (native in a kernel
--- build, otherwise OpenSCAD); `coscad doctor` and --help name it.
+-- | `--backend=` is still parsed so scripts that pass `--backend=native` (or
+-- the earlier `native-experimental`) keep working; `--backend=openscad`
+-- names the retired backend and is an error that says what to do instead.
 backendArgs :: String -> [String] -> IO (Backend,[String])
 backendArgs command args = do
   let prefix="--backend="
       choices=[drop (length prefix) a | a<-args, prefix `isPrefixOf` a]
   backend <- case choices of
     [] -> return defaultBackend
-    [name] -> either (\err -> bad err >> return defaultBackend) return (parseBackend name)
+    [name] -> either (\err -> bad (command ++ ": " ++ err) >> return defaultBackend) return (parseBackend name)
     _ -> bad (command ++ ": specify --backend only once") >> return defaultBackend
   return (backend,filter (not . isPrefixOf prefix) args)
 
@@ -154,7 +153,7 @@ needExt ext f
   | otherwise = bad ("expected a " ++ ext ++ " file, got " ++ f ++ " (see coscad --help)")
 
 -- | Exit 1: the command could not run (usage, missing file, syntax or
--- geometry error, OpenSCAD failure).
+-- geometry error, kernel failure).
 bad :: String -> IO ()
 bad msg = hPutStrLn stderr ("Error: " ++ msg) >> exitFailure
 
@@ -162,38 +161,32 @@ usage :: Handle -> IO ()
 usage h =
   mapM_
     (hPutStrLn h)
-    [ "coscad " ++ showVersion version ++ " - glyph/pipeline CAD language -> OpenSCAD -> STL"
+    [ "coscad " ++ showVersion version ++ " - glyph/pipeline CAD language -> native geometry -> STL, beds, plans, stress"
     , ""
     , "Usage:"
-    , "  coscad <part.coscad> [-o part.scad]     compile one part to OpenSCAD"
+    , "  coscad <part.coscad> [-o part.scad]     export one part as OpenSCAD source (for use in OpenSCAD; not needed by coscad)"
     , "  coscad capabilities --json               build features, backends and materials for tools"
     , "  coscad validate [--json] [--stdin|--project-stdin] <part.coscad|spec.assemble>"
     , "                                          validate source, mating constraints and hardware without writing artifacts;"
     , "                                          --json prints diagnostics as JSON, --stdin reads the file's text from stdin"
     , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"
-    , "    [--backend=openscad|native]            geometry backend; default in this build: " ++ backendName defaultBackend
     , "  coscad <spec.assemble>                  design stage: assembled view, packed plate(s), spec_design.json"
     , "  coscad next [--strict] <spec.assemble>  manufacturing: orient, pack beds, bedN.stl + spec_manifest.json;"
     , "                                          --strict exits 2 when any part has a printability warning"
     , "  coscad plan <spec.assemble> [--png]     build instructions: ordered steps, preload sheet, BOM"
     , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
-    , "    --backend=openscad|native            also applies to plan --png and site; native images need no OpenSCAD"
     , "  coscad stress <part.coscad> [-o part_stress.json] [--full]"
     , "                                          stress and deflection of a part under its support/load lines;"
     , "                                          exit 2 when the requested safety factor is not met; --full adds every node and cell"
     , "  coscad check <spec.assemble> [--keep-temp]"
     , "                                          interference / clearance check on real meshes"
-    , "    --backend=openscad|native also applies to next and check (native needs the kernel build;"
-    , "                                          native-experimental is accepted as an alias; see coscad doctor)"
-    , "  coscad doctor                           verify the geometry backends, OpenSCAD + BOSL2 and end-to-end renders"
+    , "  coscad doctor                           report the linked kernel and renderer and run a native round trip"
     , "  coscad --version | --help"
     , ""
-    , "Environment:"
-    , "  COSCAD_OPENSCAD          OpenSCAD binary or wrapper script (else PATH, then the app bundle)"
-    , "  COSCAD_BOSL2             BOSL2 checkout directory (else the OpenSCAD library folders)"
-    , "  COSCAD_OPENSCAD_TIMEOUT  seconds per OpenSCAD run before it is killed (default 600)"
+    , "Geometry is always native (CoScad tessellation + the pinned Manifold kernel); OpenSCAD and BOSL2"
+    , "are not used. --backend=native is accepted for older scripts; --backend=openscad is an error."
     , ""
-    , "Exit status: 0 ok; 1 could not run (usage, missing file, syntax/geometry error, OpenSCAD"
+    , "Exit status: 0 ok; 1 could not run (usage, missing file, syntax/geometry error, kernel"
     , "failure, unknown instance or frame); 2 the design has a problem (plan/validate design errors,"
     , "check overlaps, next --strict printability warnings, a part that does not fit the plate (design stage, next),"
     , "and for every command that loads an assembly: constraint loops that do not"
@@ -202,7 +195,7 @@ usage h =
     , ""
     , "Language (one definition per line; `main` is rendered; // comments):"
     , "  numbers      w = 20      t = w / 5 - 1      box w (w / 2) t      χ -r part"
-    , "  shapes       ■ s  ▬ x y z  ● r  ◎ r h  ▻ r h  ⎏ n r h            (OpenSCAD, corner/bottom anchored)"
+    , "  shapes       ■ s  ▬ x y z  ● r  ◎ r h  ▻ r h  ⎏ n r h            (corner/bottom anchored)"
     , "               ▣ x y z c  ◙ x y z r  ⌭ r h c  ⌽ r h r2  ⊚ or ir h  ⏢ x1 y1 x2 y2 h  ◉ R r  ⊿ x y z"
     , "               cube s  box x y z  sphere r  cyl r h  xcyl/ycyl/zcyl r l  tube or ir h  torus R r  wedge x y z"
     , "  2D           △ r  ⬠ r  ⭘ r  ✎ x y x y ... (bezier)     extrude: ⮕ h p  |> extrude h"

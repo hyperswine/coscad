@@ -70,13 +70,13 @@ jobs:
       - run: cabal update
       - name: Build
         run: cabal build --enable-tests all
-      # The pure tiers (diagnostics, examples, snapshots, CLI) and the native
-      # kernel checks guard every release; the geometry tier needs OpenSCAD
-      # and runs in ci.yml.
+      # Every tier guards a release, including native geometry against the
+      # goldens, on the exact binary that ships. OpenSCAD is only the test
+      # oracle; it is switched off here and its checks run in ci.yml.
       - name: Test
         run: cabal test --test-show-details=direct
         env:
-          COSCAD_RENDER: "0"
+          COSCAD_OPENSCAD: none
       - name: Tag matches package version
         shell: bash
         run: |

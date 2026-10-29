@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Build the CoScad manual site into OUTDIR (atomically): README and docs/*.md
 # as HTML, the man page, and the build-plan companion site for the example
-# assemblies under /builds. Needs: pandoc, mandoc, coscad (with OpenSCAD +
-# BOSL2 reachable, see `coscad doctor`).
+# assemblies under /builds. Needs: pandoc, mandoc and a native coscad build
+# (`coscad site` renders the step images itself; no OpenSCAD or BOSL2).
 #   scripts/build-manual.sh ~/srv/manual-www
 set -euo pipefail
 out=${1:?usage: build-manual.sh OUTDIR}

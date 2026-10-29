@@ -85,7 +85,8 @@ python3 scripts/shelf-bracket-workflow.py \
 ```
 
 Use a new output directory. `--slice` checks the existing slice pins and needs
-Bambu Studio plus its local BBL presets. `--images` needs OpenSCAD/BOSL2.
+Bambu Studio plus its local BBL presets. `--images` renders natively (since
+1.6.0.0 it needs nothing else; it needed OpenSCAD/BOSL2 when this was written).
 Without those options the workflow stops at the plan and manifests.
 
 The runner copies the example sources, validates the part and assembly, checks

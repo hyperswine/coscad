@@ -31,7 +31,7 @@
       "layout": 1,
       "repository": "BOSL2",
       "revision": "e173fa0ae45f9e2082e0d8c0382dae98621b7c20",
-      "scope": "source",
+      "scope": "test",
       "tree": "ee21bfcaa885b52ce2c815f71e0d15bb742f572d"
     },
     "cabal": {
@@ -141,13 +141,13 @@
       "sha256": "9bb994e319e16407ec99ca6c9691363d9e66a21de79b67cfd9bd7de358aba660"
     },
     "openscad": {
-      "scope": "render",
+      "scope": "test",
       "sha256": "40a82694be15c36306ca5e1e4e0167ced221bfb6341f37388c3352fa21e598d6",
       "version": "OpenSCAD version 2025.05.16"
     },
     "openscad_bundle": {
       "files": 369,
-      "scope": "render",
+      "scope": "test",
       "sha256": "67b12b5139ac89cb223b6eb7c215a3b6e96113ab9be7a1b13187ef4c178e3c69"
     },
     "openssl": {

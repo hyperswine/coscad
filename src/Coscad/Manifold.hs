@@ -1,26 +1,24 @@
-{-# LANGUAGE CPP #-}
 {-# LANGUAGE ForeignFunctionInterface #-}
--- | Optional direct Manifold bridge. No subprocess, implicit fallback or
--- unsafePerformIO. Empty results are valid intermediate CSG operands.
+-- | Direct bridge to the pinned Manifold kernel, which every build links. No
+-- subprocess, implicit fallback or unsafePerformIO. Empty results are valid intermediate CSG operands.
 module Coscad.Manifold (MeshOp (..), manifoldAvailable, manifoldKernelVersion, meshOperation, indexedOperation, indexedOperationWithLimit, extrudePolygon, extrudeOffsetPolygon) where
 
 import Coscad.Mesh (Tri)
 import Coscad.Mesh.Indexed
-#ifdef COSCAD_MANIFOLD
 import Control.Exception (finally, mask)
 import Foreign
 import Foreign.C
-#endif
 
 data MeshOp = MeshUnion | MeshDifference | MeshIntersection | MeshHull | MeshMinkowski
   deriving (Eq, Show, Enum)
 
+-- | Always True: the kernel is a required part of every build since 1.6.0.0.
+-- Kept so library callers written against earlier versions still compile.
 manifoldAvailable :: Bool
 -- | The linked kernel's version. It is a constant, not a probe: the Cabal
 -- pkg-config constraint and the static_assert in cbits/coscad_manifold.cpp
 -- both refuse any other version than the one native-kernel.lock.json pins.
 manifoldKernelVersion :: Maybe String
-#ifdef COSCAD_MANIFOLD
 manifoldAvailable = True
 manifoldKernelVersion = Just "3.5.2"
 
@@ -99,21 +97,6 @@ withMeshResult action = alloca $ \out -> alloca $ \count -> allocaBytes 256 $ \e
     triangles (a:b:c:d:e:f:g:h:i:xs)=((v a,v b,v c),(v d,v e,v f),(v g,v h,v i)):triangles xs
     triangles _=[] -- exactly nine doubles per triangle from the checked ABI
     v=realToFrac
-#else
-manifoldAvailable = False
-manifoldKernelVersion = Nothing
-
-indexedOperationWithLimit :: Int -> MeshOp -> IndexedMesh -> IndexedMesh -> IO (Either String IndexedMesh)
-indexedOperationWithLimit _ _ _ _ = return (Left "native CSG needs a build with the manifold flag (-fmanifold, the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
-#endif
-
-#ifndef COSCAD_MANIFOLD
-extrudePolygon :: Double -> [(Double,Double)] -> IO (Either String [Tri])
-extrudePolygon _ _ = return (Left "native extrusion needs a build with the manifold flag (-fmanifold, the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
-
-extrudeOffsetPolygon :: Double -> Int -> Double -> [(Double,Double)] -> IO (Either String [Tri])
-extrudeOffsetPolygon _ _ _ _ = return (Left "native 2D offset needs a build with the manifold flag (-fmanifold, the default; this binary was built with -f-manifold or without the pinned kernel); see scripts/build-manifold.py")
-#endif
 
 -- | Legacy triangle-soup boundary: import by exact-position welding. Native CSG
 -- uses 'indexedOperation' throughout, without this lossy round trip.

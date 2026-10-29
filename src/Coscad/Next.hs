@@ -171,7 +171,7 @@ processNext emit = processNextWith emit False
 -- makes the stage exit 2 (the design has a problem) after the beds and
 -- manifest are written, so they can still be inspected.
 processNextWith :: Emit -> Bool -> FilePath -> IO (Either Failure ())
-processNextWith = processNextWithBackend OpenScadBackend
+processNextWith = processNextWithBackend Native
 
 processNextWithBackend :: Backend -> Emit -> Bool -> FilePath -> IO (Either Failure ())
 processNextWithBackend backend emit strict inputFile = runCommand $ do

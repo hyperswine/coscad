@@ -6,11 +6,8 @@ set -euo pipefail
 REPO=${REPO:-$HOME/srv/coscad}
 WWW=${WWW:-$HOME/srv/manual-www}
 BIN=${BIN:-$HOME/srv/bin}
-export PATH="$BIN:/opt/homebrew/bin:$HOME/.ghcup/bin:$HOME/.cabal/bin:/Applications/OpenSCAD.app/Contents/MacOS:/usr/local/bin:$PATH"
 # SSH and launchd do not necessarily inherit the same shell environment.
-if [ -z "${COSCAD_BOSL2:-}" ] && [ -f "$HOME/srv/BOSL2/std.scad" ]; then
-  export COSCAD_BOSL2="$HOME/srv/BOSL2"
-fi
+export PATH="$BIN:/opt/homebrew/bin:$HOME/.ghcup/bin:$HOME/.cabal/bin:/usr/local/bin:$PATH"
 lock="$REPO/.update-lock"
 mkdir "$lock" 2>/dev/null || { echo "$(date -u +%FT%TZ) another update is running"; exit 0; }
 trap 'rmdir "$lock"' EXIT
@@ -22,6 +19,10 @@ echo "$(date -u +%FT%TZ) updating ${local_rev:0:7} -> ${remote_rev:0:7}"
 git reset -q --hard origin/main
 mkdir -p "$BIN"
 cabal update 2>&1 | tail -1
+# Every build links the pinned geometry kernel (needs cmake, pkg-config, a C++17
+# compiler); .native/ is git-ignored, so the reset above keeps the built kernel.
+python3 scripts/build-manifold.py 2>&1 | tail -2
+export PKG_CONFIG_PATH="$REPO/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 cabal install exe:coscad --install-method=copy --overwrite-policy=always --installdir="$BIN" 2>&1 | tail -3
 coscad doctor
 scripts/build-manual.sh "$WWW"

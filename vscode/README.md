@@ -31,7 +31,7 @@ and unsaved recursive project validation.
   design problem (exit 2) and a compile error (exit 1) both show inline
 - Document symbols (numbers as constants) and go to definition for
   variables, parts, and assembly source paths
-- Commands: **Compile to OpenSCAD**, **Validate**, **Render to STL**,
+- Commands: **Export OpenSCAD Source**, **Validate**, **Render to STL**,
   **Check Assembly**, **Manufacture (coscad next)**, **Build Plan** (with or
   without step images), **Run Stress Analysis**, **Select Geometry Backend** and
   **Doctor** (verify runtime dependencies); output commands save the active
@@ -48,15 +48,16 @@ come from disk. Parser diagnostics remain available without a compiler. A
 compiler that predates `support`, `load` and `stress` is reported once, and its
 errors on those lines are ignored: the extension's parser owns them.
 
-The status bar shows the selected backend (or the compiler default). Planner
-images honor it too: current kernel builds render `plan --png` natively without
-OpenSCAD. Explicit image backend selection requires a compiler advertising
-`image-backends`; older compilers are refused rather than silently ignoring it.
+The status bar shows the selected backend (or the compiler default). Since
+CoScad 1.6 geometry and planner images are always native and OpenSCAD is not
+needed; leave `coscad.backend` on `auto`. On a 1.6 compiler an `openscad`
+setting is refused with the reason, and `native-experimental` is passed as
+`native`. Older compilers keep their own backend list.
 Capability
 probes are invalidated by configuration and direct executable changes. A compiler
 behind a wrapper such as `cabal run` should be refreshed by reloading the extension
-after a rebuild. OpenSCAD source output and plan images retain their own renderer;
-the backend choice applies to STL, check, next and stress.
+after a rebuild. **Export OpenSCAD Source** writes `.scad` for people who
+continue in OpenSCAD; CoScad itself never reads it.
 
 ## Supported syntax
 
@@ -86,7 +87,7 @@ See COSCADLANG.md for examples and a compact syntax reference.
 |---|---|---|
 | `coscad.executableCommand` | `coscad` | command that runs the compiler: a binary on PATH, a full path, or `cabal run coscad --` inside a checkout |
 | `coscad.workingDirectory` | `""` | working directory for that command; empty = the file's folder (`coscad.executablePath` is the deprecated name) |
-| `coscad.backend` | `auto` | compiler default, `native-experimental`, or `openscad`; availability comes from the compiler |
+| `coscad.backend` | `auto` | leave on `auto` (native since CoScad 1.6); `native-experimental` and `openscad` only matter for older compilers |
 | `coscad.compilerDiagnostics` | `true` | validate parts and assemblies with the compiler and show its errors and warnings (as you type with `validate --json --stdin`, else on open/save); needs compiler 1.2.0.0 or newer |
 
 For a local checkout:
@@ -98,9 +99,9 @@ For a local checkout:
 }
 ```
 
-Native geometry commands need a compiler built with Manifold. OpenSCAD rendering
-and plan images need OpenSCAD and BOSL2. Run **COSCAD: Doctor** to verify the
-installed dependencies. Run **COSCAD: Run Stress Analysis** on
+Every command needs only the CoScad compiler: geometry, images and stress
+are native, with no OpenSCAD or BOSL2. Run **COSCAD: Doctor** to see the
+linked kernel and a native round trip. Run **COSCAD: Run Stress Analysis** on
 `examples/stress/shelf-bracket.coscad`; inspect the terminal summary and adjacent
 `_stress.json` (including full node/cell fields). See the repository
 [workflow guide](../docs/2026-10-27-EDITOR-WORKFLOW.md) for the remaining steps.

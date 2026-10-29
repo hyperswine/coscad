@@ -1,10 +1,10 @@
 .\" coscad(1) - CoScad compiler manual page (mdoc)
-.Dd September 11, 2026
+.Dd October 29, 2026
 .Dt COSCAD 1
 .Os
 .Sh NAME
 .Nm coscad
-.Nd glyph/pipeline CAD language compiler: .coscad and .assemble to OpenSCAD, STL, and print beds
+.Nd glyph/pipeline CAD language compiler: .coscad and .assemble to native STL, print beds, build plans and stress reports
 .Sh SYNOPSIS
 .Nm
 .Ar part.coscad
@@ -18,7 +18,6 @@
 .Cm stl
 .Ar part.coscad
 .Op Fl o Ar part.stl
-.Op Fl -backend=openscad|native
 .Nm
 .Ar spec.assemble
 .Nm
@@ -47,7 +46,6 @@
 .Ar part.coscad
 .Op Fl o Ar report.json
 .Op Fl -full
-.Op Fl -backend=openscad|native
 .Nm
 .Fl -version | Fl -help
 .Sh DESCRIPTION
@@ -81,9 +79,11 @@ buffer path are rejected. Neither input mode writes source files.
 .Pp
 .Cm capabilities --json
 reports schema coscad.capabilities/1, compiler version, build default and
-implemented geometry backends, feature names and material names/moduli.
-This describes compiled support, not external executable availability;
-use doctor for runtime dependency checks.
+geometry backend
+.Pq Ql native ,
+feature names (including
+.Ql openscad-retired )
+and material names/moduli.
 .Pp
 .Cm stress
 renders and analyses the part's support/load/stress directives. The full
@@ -91,8 +91,11 @@ report includes node and cell fields. Exit 2 means the requested safety
 factor was not met, 1 means analysis could not run. Validation checks
 analysis settings and datum identities without solving the part.
 .Nm
-compiles CoScad part files to OpenSCAD source and, with OpenSCAD and the
-BOSL2 library installed, renders them to STL.
+meshes CoScad parts itself (its own tessellation plus the pinned Manifold
+kernel) and writes STL, print beds, build plans with rendered step images, and
+stress reports.
+It does not use OpenSCAD or BOSL2; a part can be exported as
+OpenSCAD source for people who continue in OpenSCAD.
 A
 .Pa .coscad
 file is a list of definitions, one per line; the definition named
@@ -105,63 +108,52 @@ sit together; the manufacturing stage orients and packs them onto print
 beds.
 .Pp
 Anchors, attachments, bezier outlines, lofts, fit checks, print orientation,
-and bed packing are all computed in the compiler, so the emitted OpenSCAD
-stays plain
-.Pq translate , rotate , union , difference , BOSL2 primitives
-and any expression, including composites, can be attached to again.
+and bed packing are all computed in the compiler, and any expression,
+including composites, can be attached to again.
+The exported OpenSCAD source stays plain
+.Pq translate , rotate , union , difference , BOSL2 primitives .
 .Sh COMMANDS
 .Bl -tag -width Ds
 .It Nm Ar part.coscad Op Fl o Ar out.scad
-Compile one part to OpenSCAD.
+Export one part as OpenSCAD source, for use in OpenSCAD.
+Nothing in
+.Nm
+reads it.
 Writes
 .Pa part.scad
 next to the input unless
 .Fl o
 is given.
 .It Nm Cm stl Ar part.coscad Op Fl o Ar out.stl
-Compile and render to an ASCII STL through OpenSCAD, then print the triangle
+Mesh the part natively and write an ASCII STL, then print the triangle
 count, volume, and bounding box.
-The intermediate
-.Pa .scad
-is kept beside the STL.
+The part's OpenSCAD source is written beside the STL as an export.
+Geometry comes from
+.Nm Ns 's
+own tessellation and the pinned Manifold kernel: boxes, polygonal cylinders,
+spheres, cones, frusta, regular prisms, tubes, wedges, prismoids, chamfered and
+rounded cuboids and cylinders, ordinary tori, transforms, booleans, hulls,
+Minkowski sums, extrusions, round 2D offsets of a single outline, and lofts
+(triangulated the way BOSL2's skin does it).
+Unsupported operations are errors; there is no fallback.
 .Fl -backend=native
-(alias
+(or the earlier
 .Fl -backend=native-experimental )
-renders through the pinned native kernel (Haskell tessellation plus
-Manifold): boxes, polygonal cylinders, spheres, cones, frusta, regular
-prisms, tubes, wedges, prismoids, chamfered and rounded cuboids and
-cylinders, ordinary tori, transforms, booleans, hulls, Minkowski sums,
-simple-profile extrusions, round 2D offsets of a single outline, and lofts
-(as BOSL2's skin builds them).
+is accepted by every rendering command for older scripts;
 .Fl -backend=openscad
-renders through OpenSCAD and BOSL2 instead, using OpenSCAD's own Manifold
-backend when the installed OpenSCAD has one.
-Builds with the kernel (the Cabal
-.Ar manifold
-flag, on by default) default to native; a build made with
-.Fl f-manifold
-has only OpenSCAD and refuses
-.Fl -backend=native .
-.Cm coscad doctor
-names the default of the installed binary.
-Unsupported native operations are errors; there is no automatic fallback.
-This flag also applies to
-.Cm check
-and
-.Cm next ,
-.Cm stress ,
-.Cm plan --png
-and
-.Cm site .
-Manufacturing manifests record the selected geometry backend.
+names the backend retired in 1.6.0.0 and is an error.
+Manufacturing manifests record the geometry backend
+.Pq Ql native .
 .It Nm Ar spec.assemble
 Design stage.
-Emits the assembled view
-.Pq Pa spec_asm.scad ,
-one print-oriented
+Renders the assembled view
+.Pq Pa spec_asm.png
+and the packed plate(s)
+.Pq Pa spec_plate.png , or Pa spec_plate1.png , Pa spec_plate2.png ...
+natively, writes the same geometry and one print-oriented
 .Pa spec_part_<variant>.scad
-per unique (part, orientation), the packed plate(s)
-.Pq Pa spec_plate.scad , or Pa spec_plate1.scad , Pa spec_plate2.scad ... ,
+per unique (part, orientation) as OpenSCAD source exports
+.Pq Pa spec_asm.scad , Pa spec_plate.scad ... ,
 and the design manifest
 .Pa spec_design.json
 (schema
@@ -201,7 +193,7 @@ records
 Interference and clearance check on real meshes.
 Every part is rendered as placed by the
 .Ql asm
-expression; close pairs are intersected exactly by OpenSCAD.
+expression; close pairs are intersected exactly by the native kernel.
 Reports
 .Ql OVERLAP
 with its volume,
@@ -235,14 +227,14 @@ and one
 scene per step
 .Pq this step orange, earlier parts grey, screw heads red, a grey bench slab ;
 .Fl -png
-also renders them to 1200 by 900 PNGs. Kernel builds use a built-in CPU
-renderer with native meshes, cached across steps, orthographic framing,
-depth testing, lighting and antialiasing. No OpenSCAD, GPU or display is needed.
-The existing screw-head proxies, part highlights and rest-face bench are retained.
-.Fl -backend=openscad
-explicitly selects the previous image renderer (also the default without
-the native kernel). A failed render fails the command instead of publishing
-a successful plan with missing images.
+also renders them to 1200 by 900 PNGs with a built-in CPU renderer: native
+meshes, cached across steps, orthographic framing, depth testing, lighting and
+antialiasing.
+No GPU or display is needed.
+The screw-head proxies, part highlights and rest-face bench are drawn too.
+The step scenes are also written as OpenSCAD source exports.
+A failed render fails the command instead of publishing a successful plan
+with missing images.
 Design errors (colliding screws, too little thread reach, a clamp not on
 its host face) are reported and exit 2.
 See
@@ -261,41 +253,21 @@ Plain HTML, no server needed: open
 .Pa dir/index.html
 from a file or host the folder anywhere.
 .It Nm Cm doctor
-Report the OpenSCAD binary and BOSL2 checkout that will be used, their
-versions, and the result of an end-to-end test render against a known
-volume.
-Exit status 1 if anything is missing.
+Report the linked geometry kernel and the image renderer, and render a
+boolean test part natively against its known volume.
+Exit status 1 if the round trip disagrees.
 .It Fl -version , Fl -help
 Print the version, or the command list with a language cheat sheet.
 .El
 .Sh ENVIRONMENT
-.Bl -tag -width COSCAD_OPENSCAD
-.It Ev COSCAD_OPENSCAD
-The OpenSCAD binary, or a wrapper script such as
-.Ql xvfb-run -a openscad "$@"
-on a headless machine.
-Otherwise
-.Ql openscad
-on
-.Ev PATH
-is used, then the usual install locations
-.Pq the macOS app bundle, Homebrew, /usr/bin, /usr/local/bin, snap .
-.It Ev COSCAD_BOSL2
-A BOSL2 checkout outside the OpenSCAD library folders; its parent is
-prepended to
-.Ev OPENSCADPATH
-when OpenSCAD runs.
-Otherwise the library folders are searched
-.Pq Pa ~/Documents/OpenSCAD/libraries , Pa ~/.local/share/OpenSCAD/libraries , ... .
-.It Ev COSCAD_OPENSCAD_TIMEOUT
-Seconds a single OpenSCAD run may take before it is killed and reported as a
-failure (default 600), so a stuck render cannot hang
-.Cm stl ,
-.Cm next ,
-.Cm check ,
-.Cm plan --png
-or an unattended pipeline when the OpenSCAD backend is selected.
-.El
+.Nm
+reads no environment variables for rendering: geometry and images need
+nothing outside the binary.
+The test suite (not the installed command) uses
+.Ev COSCAD_OPENSCAD
+and
+.Ev COSCAD_BOSL2
+to find OpenSCAD and BOSL2 for its optional oracle checks.
 .Sh LANGUAGE
 One definition per line,
 .Ql name = expression .
@@ -373,8 +345,10 @@ error.
 (glyph
 .Ql ⟰ ,
 .Ql Loft
-in !simple) skins 2D profiles at ascending z into one solid through BOSL2
-.Fn skin .
+in !simple) skins 2D profiles at ascending z into one solid, triangulated
+the way BOSL2's
+.Fn skin
+does it.
 Profiles may differ in vertex count.
 .Ql p0 |> loft z1 p1
 starts a loft with
@@ -583,7 +557,7 @@ loads nuts after placement and checks access against the bench and other parts.
 .Sh EXIT STATUS
 .Nm
 exits 0 on success and 1 when a command could not run: a usage error, a
-missing file, a syntax or geometry error, or an OpenSCAD failure.
+missing file, a syntax or geometry error, or a kernel failure.
 It exits 2 when the input is well formed but the design has a problem, so a
 pipeline can tell "fix the model" from "fix the setup":
 .Cm validate
@@ -607,7 +581,7 @@ no fixed root, or when an instance is fixed twice.
 Unknown instances or frames, syntax errors and non-finite values in
 constraints still exit 1.
 .Cm doctor
-exits 1 when OpenSCAD, BOSL2, or the test render fails.
+exits 1 when the native round trip fails.
 .Pp
 Every diagnostic goes to standard error as
 .Ql Error: file:line:col: reason ,
@@ -668,12 +642,14 @@ contact  center x rarch
 check: 0 overlaps, 0 clearance warnings
 .Ed
 .Pp
-Verify the toolchain on a new machine:
+Check the binary on a new machine:
 .Bd -literal -offset indent
 $ coscad doctor
-OpenSCAD    ok       /opt/homebrew/bin/openscad (2025.05.16)
-BOSL2       ok       /Users/me/Documents/OpenSCAD/libraries/BOSL2 (2.0.754)
-round trip  ok       box 10 10 10 ⊖ zcyl 2 20 -> 874.67 mm^3 (expected 874.67)
+geometry    native   CoScad tessellation + Manifold 3.5.2 kernel, linked statically (pinned by native-kernel.lock.json, with CrossSection)
+images      native   built-in CPU renderer for plan --png and site (no display or GPU needed)
+external    none     OpenSCAD and BOSL2 are not used; `coscad part.coscad` still exports .scad for OpenSCAD users
+trip native ok       box 10 10 10 ⊖ zcyl 2 20 -> 874.67 mm^3 (expected 874.67), 216 triangles
+all good
 .Ed
 .Sh DIAGNOSTICS
 Errors carry
@@ -685,12 +661,9 @@ or a shape as a number, 2D/3D mismatches (extruding a solid, offsetting a
 solid, combining a profile with a solid, a 2D
 .Ql main ) ,
 and invalid loft profiles.
-OpenSCAD warnings during a render
-.Pq a missing include, a dropped child
-are treated as failures.
+A kernel failure or an unsupported operation is an error, never a silent
+fallback.
 .Sh SEE ALSO
-.Xr openscad 1
-.Pp
 The full language reference, the topological-modelling guide, and the
 manufacturing guide ship as
 .Pa LANGEXTENSION.md ,
@@ -699,7 +672,11 @@ and
 .Pa MANUFACTURING.md
 under the documentation directory
 .Pq Pa share/doc/coscad with Homebrew .
-BOSL2:
+The exported
+.Pa .scad
+files open in OpenSCAD with the BOSL2 library:
+.Lk https://openscad.org
+and
 .Lk https://github.com/BelfrySCAD/BOSL2 .
 .Sh AUTHORS
 .An Jasen Qin

@@ -75,6 +75,19 @@ async function run(){
   await commands.get('coscad.stress')()
   assert.equal(terminals.length,before,'unavailable backend is refused after configuration change')
   assert(errors.some(e=>e.includes('unavailable')))
+  // CoScad 1.6: one native backend; an openscad setting is refused with the reason,
+  // and the older native-experimental name is translated.
+  capabilities.version='1.6.0.0';capabilities.default_backend='native';capabilities.backends=['native']
+  capabilities.features=[...capabilities.features,'openscad-retired'];settings.executableCommand='retired-coscad'
+  events.config({affectsConfiguration:()=>true})
+  settings.backend='openscad'
+  const beforeRetired=terminals.length
+  await commands.get('coscad.stress')()
+  assert.equal(terminals.length,beforeRetired,'a retired OpenSCAD selection runs nothing')
+  assert(errors.some(e=>e.includes('retired the OpenSCAD backend')))
+  settings.backend='native-experimental'
+  await commands.get('coscad.stress')()
+  assert.match(terminals.at(-1),/--backend=native(\s|$)/,'native-experimental is mapped to native on a 1.6 compiler')
   const n=checks.length;settings.compilerDiagnostics=false;events.config({affectsConfiguration:()=>true})
   await new Promise(r=>setTimeout(r,30))
   assert.equal(checks.length,n,'disabled diagnostics launch no new validations')

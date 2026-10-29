@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 """Independent mesh, hardware-path and packing checks; make assembly previews.
 
-Requires numpy/scipy/trimesh/manifold3d. This does not operate printers.
+Requires numpy/scipy/trimesh/manifold3d. This does not operate printers or
+need OpenSCAD: parts render with `coscad stl`, booleans use manifold3d and the
+previews are drawn by a small depth-buffered rasterizer in this file.
 """
 import argparse
 import hashlib
 import json
 from pathlib import Path
+import struct
 import subprocess
+import zlib
 import numpy as np
 from scipy.spatial.transform import Rotation
 import trimesh
@@ -19,17 +23,22 @@ EVIDENCE = HERE / 'evidence'
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--coscad', required=True)
+    ap.add_argument('--evidence', type=Path, default=EVIDENCE,
+                    help='where part meshes and geometry.json go (default evidence/)')
+    ap.add_argument('--images', type=Path, default=HERE,
+                    help='where shelf-render.png and details.png go (default this folder)')
     args = ap.parse_args()
-    EVIDENCE.mkdir(exist_ok=True)
+    evidence = args.evidence
+    evidence.mkdir(parents=True, exist_ok=True)
     design = json.loads((HERE/'model.json').read_text())
     meshes, report = {}, {'parts': {}, 'hardware_paths': 0, 'physical_fit_verified': False,
                           'physical_load_tested': False, 'dispatched': False}
     for name in design['parts']:
         source = HERE/'parts'/f'{name}.coscad'
-        result = subprocess.run([args.coscad, 'stl', str(source), '--backend=native', '-o', str(EVIDENCE/f'{name}.stl')], capture_output=True, text=True)
+        result = subprocess.run([args.coscad, 'stl', str(source), '-o', str(evidence/f'{name}.stl')], capture_output=True, text=True)
         if result.returncode:
             raise RuntimeError(result.stdout+result.stderr)
-        mesh = trimesh.load_mesh(EVIDENCE/f'{name}.stl')
+        mesh = trimesh.load_mesh(evidence/f'{name}.stl')
         components = mesh.split()
         assert mesh.is_watertight and mesh.is_winding_consistent and mesh.volume > 0 and len(components) == 1, name
         meshes[name] = mesh
@@ -106,24 +115,85 @@ def main():
                 total += 1
         assert total == (48 if stem == 'manufacture' else 3), total
         report[stem] = dict(beds=len(manifest['beds']), parts=total, brim_included=True)
-    render(design, world, meshes)
-    (EVIDENCE/'geometry.json').write_text(json.dumps(report, indent=2)+'\n')
+    args.images.mkdir(parents=True, exist_ok=True)
+    render(design, world, meshes, args.images)
+    (evidence/'geometry.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps({k:v for k,v in report.items() if k!='parts'}, indent=2))
 
 
-def render(design, world, meshes):
-    # Export actual verified meshes for a depth-buffered OpenSCAD render.
+COLORS = {'rail': [.23, .34, .43], 'post': [.23, .34, .43],
+          'connector': [.28, .55, .51], 'panel': [.88, .71, .40]}
+
+
+def render(design, world, meshes, out):
+    # Depth-buffered pictures of the verified native meshes at their poses.
     # Matplotlib's painter ordering is unreliable for slotted, perforated solids.
-    colors = {'rail':[.23,.34,.43], 'post':[.23,.34,.43], 'connector':[.28,.55,.51], 'panel':[.88,.71,.40]}
-    lines = ['// Verified native meshes at their assembly poses. Hardware omitted.']
-    for item in design['instances']:
-        lines.append(f"color({colors[item['kind']]}) translate({item['position_mm']}) rotate({item['rotation_xyz_deg']}) import(\"evidence/{item['part']}.stl\");")
-    (HERE/'preview.scad').write_text('\n'.join(lines)+'\n')
-    (HERE/'details.scad').write_text('''// L plate, centre T plate and panel underside.
-color([.28,.55,.51]) translate([-240,0,0]) import("evidence/gusset_l.stl");
-color([.28,.55,.51]) translate([-110,0,0]) import("evidence/gusset_t.stl");
-color([.88,.71,.40]) translate([95,0,11]) rotate([180,0,0]) import("evidence/panel_left.stl");
-''')
+    # Hardware omitted.
+    rasterize([(world[item['id']], COLORS[item['kind']]) for item in design['instances']],
+              out/'shelf-render.png', (1400, 1000), azimuth=25, elevation=35)
+    # L plate, centre T plate and panel underside.
+    flip = np.eye(4)
+    flip[:3, :3] = Rotation.from_euler('xyz', [180, 0, 0], degrees=True).as_matrix()
+    flip[:3, 3] = [95, 0, 11]
+    details = [(meshes['gusset_l'].copy().apply_translation([-240, 0, 0]), COLORS['connector']),
+               (meshes['gusset_t'].copy().apply_translation([-110, 0, 0]), COLORS['connector']),
+               (meshes['panel_left'].copy().apply_transform(flip), COLORS['panel'])]
+    rasterize(details, out/'details.png', (1600, 700), azimuth=0, elevation=75, fill=0.55)
+
+
+def rasterize(items, path, size, azimuth, elevation, fill=0.7):
+    """Orthographic z-buffer render of (mesh, rgb) pairs to an RGB PNG."""
+    width, height = size
+    az, el = np.radians(azimuth), np.radians(elevation)
+    eye = np.array([np.cos(el)*np.sin(az), -np.cos(el)*np.cos(az), np.sin(el)])
+    right = np.cross(-eye, [0, 0, 1])
+    right /= np.linalg.norm(right)
+    up = np.cross(right, -eye)
+    light = eye + 0.6*right + 0.8*up
+    light /= np.linalg.norm(light)
+    tris = np.concatenate([m.triangles for m, _ in items])
+    normals = np.concatenate([m.face_normals for m, _ in items])
+    colors = np.concatenate([np.tile(c, (len(m.faces), 1)) for m, c in items])
+    front = normals @ eye > 1e-9
+    tris, normals, colors = tris[front], normals[front], colors[front]
+    shade = colors * (0.45 + 0.55*np.clip(normals @ light, 0, 1))[:, None]
+    screen = np.stack([tris @ right, tris @ up, tris @ eye], axis=-1)
+    lo, hi = screen[..., :2].reshape(-1, 2).min(0), screen[..., :2].reshape(-1, 2).max(0)
+    scale = fill * min(width/(hi[0]-lo[0]), height/(hi[1]-lo[1]))
+    centre = (lo+hi)/2
+    px = (screen[..., 0]-centre[0])*scale + width/2
+    py = height/2 - (screen[..., 1]-centre[1])*scale
+    depth = np.full((height, width), -np.inf)
+    image = np.full((height, width, 3), 0.973)
+    for k in range(len(tris)):
+        xs, ys, zs = px[k], py[k], screen[k, :, 2]
+        x0, x1 = max(int(np.floor(xs.min())), 0), min(int(np.ceil(xs.max())), width-1)
+        y0, y1 = max(int(np.floor(ys.min())), 0), min(int(np.ceil(ys.max())), height-1)
+        if x0 > x1 or y0 > y1:
+            continue
+        gx, gy = np.meshgrid(np.arange(x0, x1+1)+0.5, np.arange(y0, y1+1)+0.5)
+        area = (xs[1]-xs[0])*(ys[2]-ys[0]) - (xs[2]-xs[0])*(ys[1]-ys[0])
+        if abs(area) < 1e-12:
+            continue
+        w1 = ((gx-xs[0])*(ys[2]-ys[0]) - (xs[2]-xs[0])*(gy-ys[0])) / area
+        w2 = ((xs[1]-xs[0])*(gy-ys[0]) - (gx-xs[0])*(ys[1]-ys[0])) / area
+        w0 = 1-w1-w2
+        inside = (w0 >= -1e-6) & (w1 >= -1e-6) & (w2 >= -1e-6)
+        z = w0*zs[0] + w1*zs[1] + w2*zs[2]
+        block = depth[y0:y1+1, x0:x1+1]
+        nearer = inside & (z > block)
+        block[nearer] = z[nearer]
+        image[y0:y1+1, x0:x1+1][nearer] = shade[k]
+    write_png(path, (np.clip(image, 0, 1)*255).astype(np.uint8))
+
+
+def write_png(path, pixels):
+    height, width, _ = pixels.shape
+    raw = b''.join(b'\x00' + pixels[row].tobytes() for row in range(height))
+    def chunk(kind, data):
+        return struct.pack('>I', len(data)) + kind + data + struct.pack('>I', zlib.crc32(kind + data))
+    Path(path).write_bytes(b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', width, height, 8, 2, 0, 0, 0))
+                           + chunk(b'IDAT', zlib.compress(raw, 9)) + chunk(b'IEND', b''))
 
 
 if __name__ == '__main__':

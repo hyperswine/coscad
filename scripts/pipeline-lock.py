@@ -130,9 +130,13 @@ def capture(selected, resolved=None):
     def add(name,scope,value):
         if scope in selected: entries[name]={'scope':scope, **value}
     if 'source' in selected:
-        for name in ('fprisc','bambu_lan','bosl2'):
-            add(name,'source',repo(p[name],{'bambu_lan':'3d-models','bosl2':'BOSL2'}.get(name,name)))
+        for name in ('fprisc','bambu_lan'):
+            add(name,'source',repo(p[name],{'bambu_lan':'3d-models'}.get(name,name)))
         add('coscad_source','source',source(ROOT))
+    # OpenSCAD and BOSL2 are only the test suite's independent oracle since
+    # coscad 1.6.0.0 (the compiler never runs them), so they are test pins.
+    if 'test' in selected:
+        add('bosl2','test',repo(p['bosl2'],'BOSL2'))
     def file(name,scope,path):
         if scope in selected: add(name,scope,{'sha256':sha(path)})
     def directory(name,scope,path):
@@ -140,7 +144,7 @@ def capture(selected, resolved=None):
     probes={
         'ghc':('build',['--numeric-version']), 'cabal':('build',['--numeric-version']),
         'fpr_compiler':('build',['--version']),
-        'clang':('build',['--version']), 'openscad':('render',['--version']),
+        'clang':('build',['--version']), 'openscad':('test',['--version']),
         'node':('editor',['--version']), 'npm':('editor',['--version']),
         'python':('build',['--version']), 'test_python':('test',['--version']),
         'pandoc':('manual',['--version']), 'mandoc':('manual',['-V']),
@@ -160,7 +164,7 @@ def capture(selected, resolved=None):
         file('openssl_binary','build',p['openssl']/'bin/openssl')
         add('openssl','build',{'version':output([p['openssl']/'bin/openssl','version'])})
         file('cabal_freeze','build',ROOT/'cabal.project.freeze')
-    directory('openscad_bundle','render',p['openscad_bundle'])
+    directory('openscad_bundle','test',p['openscad_bundle'])
     directory('bambustudio_bundle','slice',p['bambustudio_bundle'])
     directory('bambu_profiles','slice',p['bambu_profiles'])
     if 'slice' in selected:
@@ -292,12 +296,13 @@ def main():
                 if not args.run: raise Refused('--run needs a named pinned tool')
                 name,*rest=args.run
                 allowed={'coscad':'coscad_binary','openscad':'openscad','bambustudio':'bambustudio','cabal':'cabal','node':'node','npm':'npm','python':'test_python'}
-                required={'coscad':{'source','render'},'openscad':{'source','render'},'bambustudio':{'slice'},'cabal':{'source','build'},'node':{'editor'},'npm':{'editor'},'python':{'source','test','slice'}}
+                required={'coscad':{'source','render'},'openscad':{'test'},'bambustudio':{'slice'},'cabal':{'source','build'},'node':{'editor'},'npm':{'editor'},'python':{'source','test','slice'}}
                 if name not in allowed: raise Refused('run supports only named pinned tools')
                 if not required[name]<=selected: raise Refused('selected scopes omit required tool dependencies')
                 env=os.environ.copy()
-                env.update({'COSCAD_OPENSCAD':str(p['openscad']),'COSCAD_BOSL2':str(p['bosl2']),
-                    'BAMBU_STUDIO':str(p['bambustudio']),'BAMBU_PROFILES':str(p['bambu_profiles']),
+                if name in ('openscad','cabal'):  # the oracle, and the test suite that drives it
+                    env.update({'COSCAD_OPENSCAD':str(p['openscad']),'COSCAD_BOSL2':str(p['bosl2'])})
+                env.update({'BAMBU_STUDIO':str(p['bambustudio']),'BAMBU_PROFILES':str(p['bambu_profiles']),
                     'BAMBU_LAN_DIR':str(p['bambu_lan']/'bambu-lan')})
                 env['PATH']=os.pathsep.join(dict.fromkeys([str(p[k].resolve().parent) for k in ('ghc','clang','node','cabal')]+[env.get('PATH','')]))
                 return subprocess.run([str(p[allowed[name]]),*rest],env=env).returncode

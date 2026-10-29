@@ -1,7 +1,8 @@
--- | Everything that talks to the OpenSCAD binary: locating it and the
--- BOSL2 library, running it with the right environment, and turning a
--- .scad file into a parsed mesh with warnings treated as errors.
-module Coscad.OpenScad
+-- | The OpenSCAD runner, kept only for the test suite's independent oracle
+-- (the compiler itself no longer launches OpenSCAD since 1.6.0.0). The oracle
+-- tiers compare native meshes against OpenSCAD renders of the emitted .scad;
+-- they are skipped, loudly, when OpenSCAD 2025.05 or newer is not installed.
+module Oracle.OpenScad
   ( findOpenscad
   , findBosl2
   , libraryDirs
@@ -41,6 +42,7 @@ findOpenscad :: IO (Maybe FilePath)
 findOpenscad = do
   override <- lookupEnv "COSCAD_OPENSCAD"
   case override of
+    Just "none" -> return Nothing -- run the suite as on a machine without OpenSCAD
     Just b | not (null b) -> return (Just b)
     _ -> do
       onPath <- findExecutable "openscad"

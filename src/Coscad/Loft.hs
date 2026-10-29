@@ -50,7 +50,7 @@ profilePath s = case s of
   Mirror (_, _, nz) _ | nz /= 0 -> Left "a loft profile must stay in the XY plane (mirror normal must be in XY or along Z)"
   Mirror (0, 0, 0) _ -> Left "a loft profile mirror needs a nonzero normal"
   Mirror (nx, ny, _) p -> map (mirror2 nx ny) <$> profilePath p
-  Offset _ _ -> Left "native: an offset inside a loft profile is not supported yet (BOSL2's round path offset); select --backend=openscad explicitly"
+  Offset _ _ -> Left "native: an offset inside a loft profile is not supported yet (BOSL2's round path offset); offset the solid or the profile outside the loft instead"
   Tz _ _ -> Left "a loft profile cannot be moved in Z (ζ); give the loft its z value instead"
   Rx _ _ -> Left "a loft profile must stay in the XY plane (no θ rotation)"
   Ry _ _ -> Left "a loft profile must stay in the XY plane (no ϕ rotation)"

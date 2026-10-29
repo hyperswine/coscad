@@ -1,7 +1,7 @@
--- | Geometry backends. A build with the pinned native kernel renders
--- natively by default; OpenSCAD is the explicit opt-out, and the only
--- renderer in a kernel-less build. Unsupported native operations are
--- errors, never an implicit backend switch.
+-- | Geometry: CoScad's own tessellation plus the pinned Manifold kernel for
+-- CSG, offsets and extrusions. Since 1.6.0.0 this is the only renderer; the
+-- OpenSCAD backend was retired (`.scad` remains an export format). Unsupported
+-- operations are explicit errors, never a fallback.
 module Coscad.Backend
   ( Backend (..)
   , defaultBackend
@@ -24,53 +24,47 @@ import Coscad.Loft (loftTriangles, profilePath)
 import Coscad.Mesh (Tri, meshMap, stlAscii, triArea)
 import Coscad.Manifold
 import Coscad.Mesh.Indexed
-import Coscad.OpenScad (renderStlFile)
 import Coscad.Shape
 import Coscad.Validate (finite, validateShape)
 
-data Backend = OpenScadBackend | NativeExperimental deriving (Eq, Show)
+-- | The single geometry backend. The type is kept so command-line and
+-- library signatures stay stable and a future backend has a place to go.
+data Backend = Native deriving (Eq, Show)
 
--- | Decided by the build, not by a runtime probe: a kernel build renders
--- natively unless @--backend=openscad@ is given; without the kernel there is
--- nothing to default to but OpenSCAD.
 defaultBackend :: Backend
-defaultBackend = if manifoldAvailable then NativeExperimental else OpenScadBackend
+defaultBackend = Native
 
--- | @native@ and its original spelling @native-experimental@ name the same backend.
+-- | @native@ and its earlier spelling @native-experimental@ are accepted;
+-- @openscad@ names the retired backend and says what to do instead.
 parseBackend :: String -> Either String Backend
-parseBackend "openscad" = Right OpenScadBackend
-parseBackend "native" = Right NativeExperimental
-parseBackend "native-experimental" = Right NativeExperimental
-parseBackend name = Left ("unknown backend '" ++ name ++ "'; use openscad or native (alias native-experimental)")
+parseBackend "native" = Right Native
+parseBackend "native-experimental" = Right Native
+parseBackend "openscad" = Left "the OpenSCAD backend was retired in coscad 1.6.0.0; geometry is always native. To work in OpenSCAD, export the part with `coscad part.coscad -o part.scad`"
+parseBackend name = Left ("unknown backend '" ++ name ++ "'; the only backend is native")
 
 backendName :: Backend -> String
-backendName OpenScadBackend = "openscad"
-backendName NativeExperimental = "native-experimental"
+backendName Native = "native"
 
--- | The caller owns output paths. OpenSCAD's warning/error policy is unchanged.
--- Used by single-part and manufacturing exports; Coscad.Image renders native PNGs.
+-- | Render natively, writing the STL and, as an export beside it, the part's
+-- OpenSCAD source. The caller owns the output paths.
 renderShape :: Backend -> FilePath -> FilePath -> Shape -> IO (Either String [Tri])
-renderShape OpenScadBackend scadF stlF shape = do
-  writeFileUtf8 scadF (renderScad shape)
-  renderStlFile scadF stlF
-renderShape NativeExperimental scadF stlF shape = do
+renderShape Native scadF stlF shape = do
   result <- nativeCSGMesh shape
   case result of
     Left err -> return (Left err)
     Right tris -> do
       writeFileUtf8 scadF (renderScad shape)
-      writeFileUtf8 stlF (stlAscii "coscad_native_experimental" tris)
+      writeFileUtf8 stlF (stlAscii "coscad" tris)
       return (Right tris)
 
--- | Resolve attachments, evaluate actual CSG through the optional native
--- kernel, and keep empty intermediate solids (e.g. a completely removed cutter).
+-- | Resolve attachments, evaluate actual CSG through the native kernel, and keep empty intermediate solids (e.g. a completely removed cutter).
 -- Transforming a boolean result never launches OpenSCAD.
 nativeCSGMesh :: Shape -> IO (Either String [Tri])
 nativeCSGMesh shape = do
   result <- nativeCSGMeshAllowEmpty shape
   return $ do
     tris <- result
-    unless (not (null tris)) (Left "native-experimental: empty mesh")
+    unless (not (null tris)) (Left "native: empty mesh")
     return tris
 
 -- | Assembly isolation may legitimately hide every instance of a part. Only
@@ -95,7 +89,7 @@ nativeIndexedCSGMesh shape = case structure shape >> validateShape shape of
         Loft [] -> invalid
         _ -> Right ()
       mapM_ structure (shapeChildren s)
-    invalid = Left "native-experimental: empty shape/profile sequence"
+    invalid = Left "native: empty shape/profile sequence"
     point (a,b,c) = [a,b,c]
     moved f s = fmap (>>= mapIndexed f) (go s)
     rotated r = moved (mApply r)
@@ -109,10 +103,10 @@ nativeIndexedCSGMesh shape = case structure shape >> validateShape shape of
         in go (Hull [Cuboid (x,iy,iz) 0 0,Cuboid (ix,y,iz) 0 0,Cuboid (ix,iy,z) 0 0])
       Union xs -> many MeshUnion emptyIndexed xs
       Diff a b -> two MeshDifference a b
-      Intersection [] -> return (Left "native-experimental: empty intersection")
+      Intersection [] -> return (Left "native: empty intersection")
       Intersection (x:xs) -> go x >>= \r -> case r of Left e -> return (Left e); Right mesh -> many MeshIntersection mesh xs
       Hull xs -> many MeshHull emptyIndexed xs
-      Minkowski [] -> return (Left "native-experimental: empty Minkowski sum")
+      Minkowski [] -> return (Left "native: empty Minkowski sum")
       Minkowski (x:xs) -> go x >>= \r -> case r of Left e -> return (Left e); Right mesh -> many MeshMinkowski mesh xs
       Tx d x -> moved (vadd (d,0,0)) x
       Ty d x -> moved (vadd (0,d,0)) x
@@ -121,7 +115,7 @@ nativeIndexedCSGMesh shape = case structure shape >> validateShape shape of
       Rx a x -> rotated (rodMat a (1,0,0)) x
       Ry a x -> rotated (rodMat a (0,1,0)) x
       Rz a x -> rotated (rodMat a (0,0,1)) x
-      RotAxis _ (0,0,0) _ -> return (Left "native-experimental: rotation needs a nonzero axis")
+      RotAxis _ (0,0,0) _ -> return (Left "native: rotation needs a nonzero axis")
       RotAxis a v x -> rotated (rodMat a v) x
       Transform3 r d x -> moved (vadd d . mApply r) x
       Scale v x -> fmap (if odd (length (filter (<0) (point v))) then flipWinding else id) <$> moved (vmul v) x
@@ -134,7 +128,7 @@ nativeIndexedCSGMesh shape = case structure shape >> validateShape shape of
     extruded h profile = case profile of
       Shape2D n r | n<=4096 -> extrudedSimple h (circleOutline n r)
       Poly (PD points []) -> extrudedSimple h (unclose points)
-      Poly _ -> return (Left "native-experimental: explicit polygon paths/holes are unsupported; use a 2D difference")
+      Poly _ -> return (Left "native: explicit polygon paths/holes are unsupported; use a 2D difference")
       -- OpenSCAD's offset(r=) is a round offset with $fn (50) arc segments;
       -- the kernel's Clipper2 CrossSection computes it from the same formula.
       Offset r p -> case outline2D p of
@@ -155,7 +149,7 @@ nativeIndexedCSGMesh shape = case structure shape >> validateShape shape of
       Tag _ p -> extruded h p
       Datum _ _ p -> extruded h p
       Frame _ _ _ p -> extruded h p
-      _ -> return (Left ("native-experimental: unsupported extrusion profile "++takeWhile (/=' ') (show profile)))
+      _ -> return (Left ("native: unsupported extrusion profile "++takeWhile (/=' ') (show profile)))
     -- A validated single simple extrusion has no separate coincident shells.
     -- Weld only this leaf; boolean results never pass through triangle soup.
     extrudedSimple h points = fmap (>>= weldTriangles) (extrudePolygon h points)
@@ -202,8 +196,8 @@ outline2D s = case s of
   Tag _ p -> outline2D p
   Datum _ _ p -> outline2D p
   Frame _ _ _ p -> outline2D p
-  Offset _ _ -> Left "native: nested 2D offsets are unsupported; select --backend=openscad explicitly"
-  _ -> Left ("native: offset of a composite or non-2D shape ("++takeWhile (/=' ') (show s)++") is unsupported; select --backend=openscad explicitly")
+  Offset _ _ -> Left "native: nested 2D offsets are unsupported"
+  _ -> Left ("native: offset of a composite or non-2D shape ("++takeWhile (/=' ') (show s)++") is unsupported")
   where
     mApply2 m (x,y) = let (x',y',_) = mApply m (x,y,0) in (x',y')
     unclosePoints []=[]
@@ -221,8 +215,8 @@ nativeMesh shape = do
   -- unsupported empty CSG/profile nodes have no meaningful native bounds.
   tris <- go shape
   validateShape shape
-  unless (not (null tris)) (Left "native-experimental: empty mesh")
-  unless (all valid tris) (Left "native-experimental: non-finite or degenerate triangle after transform")
+  unless (not (null tris)) (Left "native: empty mesh")
+  unless (all valid tris) (Left "native: non-finite or degenerate triangle after transform")
   return tris
   where
     valid t@(a,b,c) = all finite (vec a ++ vec b ++ vec c) && finite (triArea t) && triArea t > 0
@@ -241,7 +235,7 @@ nativeMesh shape = do
       Cyl r h c 0 | c>0 -> Right (profileMesh 50 (nub [(r-c,-h/2),(r,-h/2+c),(r,h/2-c),(r-c,h/2)]))
       Cyl r h 0 rounding | rounding>0 -> Right (profileMesh 50 (roundCylinderProfile r h rounding))
       Torus major minor | major>minor -> Right (torusMesh 50 50 major minor)
-      Torus _ _ -> Left "native-experimental: spindle/horn torus is unsupported"
+      Torus _ _ -> Left "native: spindle/horn torus is unsupported"
       Cyl r h 0 0 -> moved (vadd (0,0,-h/2)) (Cylinder r h)
       Tube ro ri h -> Right (tubeMesh 50 ro ri h)
       Prismoid a b h -> Right (prismoidMesh a b h)
@@ -256,7 +250,7 @@ nativeMesh shape = do
       Rx a x -> rotated (rodMat a (1,0,0)) x
       Ry a x -> rotated (rodMat a (0,1,0)) x
       Rz a x -> rotated (rodMat a (0,0,1)) x
-      RotAxis _ (0,0,0) _ -> Left "native-experimental: rotation needs a nonzero axis"
+      RotAxis _ (0,0,0) _ -> Left "native: rotation needs a nonzero axis"
       RotAxis a v x -> rotated (rodMat a v) x
       Transform3 r d x -> moved (vadd d . mApply r) x
       Scale v x -> orient (odd (length (filter (<0) (vec v)))) . meshMap (vmul v) <$> go x
@@ -267,8 +261,8 @@ nativeMesh shape = do
       Loft layers -> do
         paths <- mapM (\(z,p) -> (,) z <$> either (Left . ("native: in loft profile: "++)) Right (profilePath p)) layers
         loftTriangles (loftMethod (map snd layers)) paths
-      _ -> Left ("native-experimental: unsupported " ++ takeWhile (/= ' ') (show s)
-                 ++ "; select --backend=openscad explicitly")
+      _ -> Left ("native: unsupported " ++ takeWhile (/= ' ') (show s)
+                 ++ "")
     orient False = id
     orient True = map (\(a,b,c) -> (a,c,b))
 

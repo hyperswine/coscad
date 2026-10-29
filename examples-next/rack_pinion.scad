@@ -3,10 +3,10 @@
 // Parts: pinion (D-bore + setscrew hub), rack (with mounting base),
 //        motor bracket (NEMA17 face mount).
 //
+// A hand-written OpenSCAD file kept as a reference design (not CoScad
+// source; CoScad does not read it). In OpenSCAD with BOSL2:
 //   openscad rack_pinion.scad                          # plated preview
 //   openscad -D 'view="assembly"' rack_pinion.scad     # assembled preview
-//   scripts/openscad-stl.sh rack_pinion.scad pinion               # export one part
-//   scripts/openscad-stl.sh rack_pinion.scad --all                # export everything
 
 include <BOSL2/std.scad>
 include <BOSL2/gears.scad>

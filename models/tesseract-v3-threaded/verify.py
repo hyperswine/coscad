@@ -25,7 +25,7 @@ def main():
     names=['hub','cap','bar','strut','inner','coupon-socket','coupon-screw','male','female-tool']
     if not args.skip_build:
         subprocess.run(['python3',str(HERE/'export.py')],check=True)
-        for name in names:subprocess.run([tool,'stl',str(HERE/(name+'.coscad')),'--backend=native'],check=True,stdout=subprocess.DEVNULL)
+        for name in names:subprocess.run([tool,'stl',str(HERE/(name+'.coscad'))],check=True,stdout=subprocess.DEVNULL)
         subprocess.run([tool,'validate','--json',str(HERE/'tesseract.assemble')],check=True,stdout=subprocess.DEVNULL)
         subprocess.run([tool,str(HERE/'tesseract.assemble')],check=True,stdout=subprocess.DEVNULL)
     meshes={n:trimesh.load_mesh(HERE/(n+'.stl')) for n in names}

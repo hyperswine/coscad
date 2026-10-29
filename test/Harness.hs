@@ -14,6 +14,7 @@ module Harness
   , readStl
   , renderMesh
   , renderMeshExact
+  , oracleRender
   , Geo
   , geoOf
   , showGeo
@@ -25,7 +26,7 @@ where
 import Coscad.Codegen (renderScad)
 import Coscad.Json (JValue (..), decode)
 import Coscad.Mesh (Tri, meshBounds, meshVolume, parseStlAscii)
-import Coscad.OpenScad (renderStlFile, renderStlFileWith)
+import Oracle.OpenScad (renderStlFile, renderStlFileWith)
 import Coscad.Shape (Shape (..))
 import Data.IORef
 import Data.List (isInfixOf)
@@ -139,3 +140,10 @@ firstOr :: a -> [a] -> a
 firstOr d xs = case xs of
   x : _ -> x
   [] -> d
+
+-- | The OpenSCAD oracle's render of a shape: its emitted .scad, rendered by
+-- OpenSCAD with its Manifold backend. Only the oracle tiers call this.
+oracleRender :: FilePath -> FilePath -> Shape -> IO (Either String [Tri])
+oracleRender scadF stlF shape = do
+  writeFile scadF (renderScad shape)
+  renderStlFile scadF stlF

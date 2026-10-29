@@ -71,6 +71,13 @@ bed bounds, volume conservation, assembled interference, nominal joint
 clearance and deliberately shifted interference probes, and a conservative full-rotation
 swept-envelope check (excluding the intentional bearing contact face). See validation.json. No compiler code was changed.
 
+2026-10-29: verify.py now runs its interference probes with manifold3d (the
+Manifold kernel the native compiler links) instead of OpenSCAD, so it needs
+numpy and manifold3d but no OpenSCAD. validation.json was recorded with the
+OpenSCAD probes; re-running the new script on the same meshes gives the same
+results (shifted-probe volumes agree to within 0.0005%). `--output PATH`
+writes the report elsewhere.
+
 Print profile: A1, 0.4 mm nozzle, 0.20 mm Standard, three perimeter walls,
 PLA Basic, textured PEI, supports off. Print dispatch and observed startup
 are recorded in print-run.json; those alone do not prove completion.

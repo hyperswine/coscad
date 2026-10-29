@@ -27,6 +27,7 @@ import Control.Monad (unless, void, when)
 import Coscad.Codegen
 import Coscad.Constraint (AsmError (..), Constraint (..), Tolerance (..), defaultTolerance, errorText, solveConstraints)
 import Coscad.Geometry
+import Coscad.Image (Scene (..), SceneObject (..), defaultView, renderScenes)
 import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Coscad.Json
 import Coscad.Parser
@@ -64,9 +65,11 @@ import qualified Text.Megaparsec.Char.Lexer as L
 -- ▽anchor declares which face goes on the bed; orientation is
 -- resolved HERE (upstream), so the slicer never searches for it.
 -- Outputs for foo.assemble:
---   foo_asm.scad         assembled view (if asm defined)
---   foo_plate.scad       all printable instances packed on the bed
---   foo_part_<v>.scad    one per variant (part+orientation), print-ready
+--   foo_asm.png          assembled view, rendered natively (if asm defined)
+--   foo_plate.png        all printable instances packed on the bed, rendered natively
+--   foo_asm.scad, foo_plate.scad, foo_part_<v>.scad
+--                        the same geometry as OpenSCAD source: an export for
+--                        people who continue in OpenSCAD; coscad never reads it
 --   foo_design.json      design manifest: variants + plate placements
 --                        (schema coscad.design/1). foo_manifest.json is
 --                        written only by `coscad next` (schema coscad.next/1).
@@ -766,7 +769,8 @@ processAssemble emit inputFile = runCommand $ do
       case arAsm ar of
         Just s -> do
           writeScad s (base ++ "_asm.scad")
-          putStrLn ("Wrote " ++ base ++ "_asm.scad")
+          viewImage (base ++ "_asm.png") [("asm", s, (190, 160, 120))] defaultView
+          putStrLn ("Wrote " ++ base ++ "_asm.png (+ .scad export)")
         Nothing -> putStrLn "(no 'asm' defined; skipping assembled view)"
       let mkVariant (k, vname, fp) =
             let oriented = resolve (orientForBed (fpDown fp) (fpShape fp))
@@ -810,7 +814,9 @@ processAssemble emit inputFile = runCommand $ do
                     -- the same turn as 'turnZ': +90 about Z, then the original depth along +X
                     turned p s = if plRotZ p == 0 then s else Translate (fst (plSize p), 0, 0) (RotAxis 90 (0, 0, 1) s)
                 writeScad plateShape (plateFile i)
-                putStrLn ("Wrote " ++ plateFile i ++ " (" ++ show (length placed) ++ " parts)")
+                let png = dropExtension (plateFile i) ++ ".png"
+                viewImage png [("plate", Union [Translate (x, y, 0) (turned p (dvShape v)) | (p, v) <- placed, let (x, y) = plAt p], (190, 160, 120)), ("bed", slab, (70, 70, 78))] (0.15, -0.9, 1.6)
+                putStrLn ("Wrote " ++ png ++ " (" ++ show (length placed) ++ " parts; + .scad export)")
             )
             (zip [(1 :: Int) ..] plates)
           when (nPlates > 1) $
@@ -818,6 +824,11 @@ processAssemble emit inputFile = runCommand $ do
           writeFileUtf8 (designManifestPath base) (manifestJson inputFile baseName plate (arPlateMaxZ ar) variants plates asmOnly)
           putStrLn ("Wrote " ++ designManifestPath base)
           noteLegacyManifest emit base
+  where
+    viewImage path objects view = do
+      r <- renderScenes [(path, Scene [SceneObject name shape (matIdentity, (0, 0, 0)) colour | (name, shape, colour) <- objects] view)]
+      either (\e -> emit (Warning ("preview image not written: " ++ e))) return r
+
 
 -- | How a variant stands on the bed, for messages: its declared face, or
 -- as modelled.

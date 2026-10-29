@@ -3,6 +3,8 @@ import json,math
 from pathlib import Path
 import numpy as np,trimesh
 B=Path(__file__).resolve().parent
+# Circle segments of the meshes: 96 in the recorded OpenSCAD renders, 50 in native coscad stl renders.
+SEGMENTS=50
 stand=trimesh.load_mesh(B/'stand.stl');rotor=trimesh.load_mesh(B/'rotor.stl');whole=trimesh.load_mesh(B/'globe.stl')
 result={}
 for name,m,count in [('stand',stand,1),('rotor',rotor,1),('assembled',whole,2)]:
@@ -20,7 +22,7 @@ for zshift in [0,-0.6,0.6]:
   max_overlap=max(max_overlap,vol)
   assert vol<1e-5,(angle,zshift,vol)
 result['rotation_check']={'angles_degrees':angles,'axial_offsets_mm':[0,-0.6,0.6],'maximum_intersection_mm3':float(max_overlap)}
-result['clearance']={'nominal_radial_mm':0.6,'conservative_faceted_radial_mm':3.1*math.cos(math.pi/96)-2.5,'nominal_conical_bearing_axial_gap_mm':0.8,'lowest_rotor_z_mm':float(rotor.bounds[0,2]),'ring_vs_land_minimum_radial_mm':36-32.8,'bearing_support_blocker_radius_mm':5.5}
+result['clearance']={'nominal_radial_mm':0.6,'conservative_faceted_radial_mm':3.1*math.cos(math.pi/SEGMENTS)-2.5,'nominal_conical_bearing_axial_gap_mm':0.8,'lowest_rotor_z_mm':float(rotor.bounds[0,2]),'ring_vs_land_minimum_radial_mm':36-32.8,'bearing_support_blocker_radius_mm':5.5}
 assert whole.bounds[0,2]>=-1e-5
 assert max(whole.extents[:2])<100
 (B/'validation.json').write_text(json.dumps(result,indent=2)+'\n')

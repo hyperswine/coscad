@@ -1,7 +1,7 @@
 cabal-version: 2.2
 
 name:           coscad
-version:        1.5.0.0
+version:        1.6.0.0
 description:    Please see the README on GitHub at <https://github.com/hyperswine/coscad#readme>
 homepage:       https://github.com/hyperswine/coscad#readme
 bug-reports:    https://github.com/hyperswine/coscad/issues
@@ -30,12 +30,6 @@ extra-source-files:
     scripts/compare-tetra-fea-reference.py
     experiments/requirements-fea.txt
     test/native/bridge_smoke.cpp
-    test/golden/native-supported.txt
-
-flag manifold
-  description: Link the pinned native Manifold geometry kernel (the default geometry backend); -f-manifold gives the OpenSCAD-only build
-  default: True
-  manual: True
 
 source-repository head
   type: git
@@ -64,7 +58,6 @@ library
       Coscad.Mesh.Distance
       Coscad.Mesh.Indexed
       Coscad.Next
-      Coscad.OpenScad
       Coscad.Parser
       Coscad.Part
       Coscad.Plan
@@ -106,15 +99,13 @@ library
     , megaparsec
     , process
   default-language: Haskell2010
-  if flag(manifold)
-    cpp-options: -DCOSCAD_MANIFOLD
-    cxx-sources: cbits/coscad_manifold.cpp
-    cxx-options: -std=c++17
-    pkgconfig-depends: manifold ==3.5.2, Clipper2 ==2.0.1
-    if os(darwin)
-      extra-libraries: c++
-    else
-      extra-libraries: stdc++
+  cxx-sources: cbits/coscad_manifold.cpp
+  cxx-options: -std=c++17
+  pkgconfig-depends: manifold ==3.5.2, Clipper2 ==2.0.1
+  if os(darwin)
+    extra-libraries: c++
+  else
+    extra-libraries: stdc++
 
 executable coscad
   main-is: Main.hs
@@ -143,6 +134,7 @@ test-suite coscad-test
   other-modules:
       Harness
       MigrationCases
+      Oracle.OpenScad
       Tier.Assembly
       Tier.Cli
       Tier.Diagnostics

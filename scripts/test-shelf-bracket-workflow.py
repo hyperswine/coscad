@@ -40,5 +40,12 @@ class ExportedSettings(unittest.TestCase):
             self.assertEqual(workflow.verify_slice(archive, settings), settings)
 
 
+class BackendNames(unittest.TestCase):
+    def test_old_and_new_native_names_match(self):
+        self.assertEqual(workflow.geometry_backend('native-experimental'), 'native')
+        self.assertEqual(workflow.geometry_backend('native'), 'native')
+        self.assertEqual(workflow.geometry_backend('openscad'), 'openscad')
+
+
 if __name__ == '__main__':
     unittest.main()

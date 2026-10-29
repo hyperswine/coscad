@@ -81,8 +81,8 @@ Without `--geometry-report`, `verify.py` writes `verification.json` without
 its assembly section. The parent check takes about three minutes and needs
 `--compiler` pointed at a built `coscad` if `bin/coscad` does not exist.
 
-The verifier uses the dependencies in `../requirements.txt`. Rendering also
-needs OpenSCAD and BOSL2. Both override files are kept separately so
+The verifier uses the dependencies in `../requirements.txt`; rendering is
+native (it needed OpenSCAD and BOSL2 before CoScad 1.6.0.0). Both override files are kept separately so
 filament cooling cannot be accidentally overwritten by loading its preset.
 Do not add `--print` while preparing offline.
 

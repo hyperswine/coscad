@@ -21,6 +21,15 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+# Old manifests and stress reports name the native kernel native-experimental.
+NATIVE = {'native', 'native-experimental'}
+
+
+def geometry_backend(name):
+    """Normalize a recorded geometry backend name."""
+    return 'native' if name in NATIVE else name
+
+
 def verify_slice(archive, expected):
     """Read the exported settings, not merely the requested preset overrides."""
     with zipfile.ZipFile(archive) as package:
@@ -38,9 +47,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--coscad', default='coscad', help='executable path, not a shell command')
     parser.add_argument('--output', type=Path, required=True, help='new output directory')
-    parser.add_argument('--backend', choices=['native-experimental', 'openscad'], default='native-experimental')
     parser.add_argument('--slice', action='store_true', help='prepare A1 G-code with Bambu Studio; never dispatch')
-    parser.add_argument('--images', action='store_true', help='render instruction images with OpenSCAD')
+    parser.add_argument('--images', action='store_true', help='also render native instruction images (plan --png)')
     args = parser.parse_args()
     binary = shutil.which(args.coscad)
     if not binary:
@@ -52,7 +60,7 @@ def main():
         shutil.copy2(ROOT / 'examples/stress' / name, output / name)
     part = output / 'shelf-bracket.coscad'
     assembly = output / 'shelf-bracket.assemble'
-    record = {'schema': 'coscad.workflow/1', 'example': 'shelf-bracket', 'backend': args.backend,
+    record = {'schema': 'coscad.workflow/1', 'example': 'shelf-bracket', 'backend': 'native',
               'compiler': {'path': binary, 'sha256': digest(Path(binary))},
               'sources': {p.name: digest(p) for p in output.iterdir()}, 'stages': [],
               'tools': {name: digest(ROOT / name) for name in ['scripts/shelf-bracket-workflow.py', 'scripts/bambu-slice.py', 'pipeline.lock.json']},
@@ -85,22 +93,21 @@ def main():
         if args.slice:
             stage('slice-pins', [sys.executable, ROOT / 'scripts/pipeline-lock.py', '--scope', 'slice', '--check'])
         record['capabilities'] = json.loads(stage('capabilities', [binary, 'capabilities', '--json']))
-        if args.backend not in record['capabilities']['backends']:
-            raise RuntimeError('selected backend unavailable in this compiler')
+        if not NATIVE & set(record['capabilities']['backends']):
+            raise RuntimeError('this compiler has no native geometry kernel')
         for name, source in [('validate-part', part), ('validate-assembly', assembly)]:
             stage(name, [binary, 'validate', '--json', source])
-        backend = '--backend='+args.backend
-        stage('check', [binary, 'check', assembly, backend])
-        stage('stress', [binary, 'stress', part, '--full', backend], timeout=900)
+        stage('check', [binary, 'check', assembly])
+        stage('stress', [binary, 'stress', part, '--full'], timeout=900)
         stress = json.loads((output / 'shelf-bracket_stress.json').read_text())
-        stage('next', [binary, 'next', assembly, backend])
+        stage('next', [binary, 'next', assembly])
         manifest = json.loads((output / 'shelf-bracket_manifest.json').read_text())
         variants = manifest['variants']
         if len(variants) != 1 or variants[0]['down'] != 'bot' or variants[0]['hints'].get('material') != 'pla':
             raise RuntimeError('manufacturing orientation/material differs from this analysis workflow')
-        if manifest['geometry_backend'] != stress['geometry_backend']:
+        if not geometry_backend(manifest['geometry_backend']) == geometry_backend(stress['geometry_backend']) == 'native':
             raise RuntimeError('stress and manufacturing backend mismatch')
-        stage('plan', [binary, 'plan', assembly, backend] + (['--png'] if args.images else []))
+        stage('plan', [binary, 'plan', assembly] + (['--png'] if args.images else []))
         if args.slice:
             stage('slice', [sys.executable, ROOT / 'scripts/bambu-slice.py', output / 'shelf-bracket_manifest.json',
                            '--printer', 'Bambu Lab A1 0.4 nozzle', '--process-overrides', output / 'shelf-bracket-process.json'], timeout=600)

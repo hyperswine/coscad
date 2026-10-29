@@ -139,9 +139,9 @@ trimesh and manifold3d. All commands below run from the repository root. Set
 ```sh
 "$PYTHON" models/two-tier-2020-shelf/build_model.py
 "$COSCAD" validate --json models/two-tier-2020-shelf/shelf.assemble
-"$COSCAD" check models/two-tier-2020-shelf/shelf.assemble --backend=native
-"$COSCAD" next models/two-tier-2020-shelf/fit.assemble --backend=native
-"$COSCAD" next models/two-tier-2020-shelf/manufacture.assemble --backend=native
+"$COSCAD" check models/two-tier-2020-shelf/shelf.assemble
+"$COSCAD" next models/two-tier-2020-shelf/fit.assemble
+"$COSCAD" next models/two-tier-2020-shelf/manufacture.assemble
 "$PYTHON" models/two-tier-2020-shelf/pack_x1c.py
 "$PYTHON" models/two-tier-2020-shelf/verify.py --coscad "$COSCAD"
 python3 scripts/pipeline-lock.py --scope slice --check
@@ -158,3 +158,12 @@ toolpaths: re-slice and re-run verification before using them. Local STL and 3MF
 files are generated artifacts excluded from Git; sources, manifests and evidence
 are retained. `preview.scad` and `details.scad` import the verified local meshes
 and can be rendered with OpenSCAD's full renderer.
+
+2026-10-29: OpenSCAD is no longer needed. `verify.py` no longer passes
+`--backend` (native is the only backend) and draws `shelf-render.png` and
+`details.png` itself with a depth-buffered rasterizer over the same verified
+meshes; it stops writing `preview.scad` and `details.scad`, which remain as the
+inputs of the OpenSCAD renders recorded in `render.log` and
+`details-render.log`. `--evidence DIR` and `--images DIR` redirect its outputs.
+Re-run on 2026-10-29, every part volume, bound, hardware path, overlap and
+packing result matched `evidence/geometry.json` exactly.

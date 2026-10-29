@@ -1,7 +1,7 @@
 # CoScad Language Reference
 
 CoScad compiles `.coscad` part descriptions and `.assemble` manufacturing
-assemblies to OpenSCAD, STL, and print-bed artifacts. This is the editor's
+assemblies to native STL, print-bed artifacts, build plans and stress reports (and, as an export, OpenSCAD source). This is the editor's
 compact reference; the compiler's docs (docs/2025-07-14-LANGEXTENSION.md,
 docs/2026-07-24-TOPOLOGICAL.md, docs/2026-07-24-MANUFACTURING.md) are authoritative.
 
@@ -157,7 +157,7 @@ coscad frame.assemble                 # design stage: view, plate(s), frame_desi
 coscad next frame.assemble            # manufacturing: beds + frame_manifest.json
 coscad check frame.assemble           # interference / clearance on real meshes
 coscad plan frame.assemble [--png]    # numbered build steps, preload sheet, BOM, step scenes
-coscad doctor                         # verify OpenSCAD + BOSL2 + a test render
+coscad doctor                         # report the kernel and run a native round trip
 ```
 
 Errors carry `file:line:col` and quote the offending line.

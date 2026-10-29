@@ -64,6 +64,13 @@ surf, slamming or dynamic capsize are modeled.
 - design.py, render.py, verify.py: CoScad generation, Manifold render, thickness and
   hydrostatic checks. Run in this order with the environment used for the twin boats
   (trimesh, manifold3d, numpy, scipy, matplotlib; `/private/tmp/coscad-globe-venv`).
+  The recorded meshes and `*-render.log` files came from OpenSCAD's Manifold backend.
+  Since 2026-10-29 render.py renders with the native compiler instead
+  (`coscad stl`; compiler from `--coscad PATH`, `$COSCAD` or `cabal list-bin
+  exe:coscad`; `--out DIR` writes elsewhere), so no OpenSCAD is needed. A native
+  re-render matches both meshes in volume (body 343534.021 against 343533.904 mm³,
+  envelope identical) and bounds, with 5372 body triangles against 17368, and
+  verify.py on it reproduces validation.json to within 1e-6 mm.
 - beach-outrigger.coscad: the printable source. beach-outrigger-envelope.coscad is the
   displacement body for verify.py, not a part.
 - preview-and-stability.png, validation.json, design.json: results.

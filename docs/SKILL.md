@@ -1,6 +1,6 @@
 ---
 name: coscad
-description: Use this skill whenever the user wants to write, edit, or convert .coscad files, or mentions CoScad, CoScad glyphs, or the CoScad compiler. CoScad is a glyph-based Haskell DSL that compiles to OpenSCAD (optionally BOSL2), covering solid primitives, booleans, transforms, and a bounding-box-based attachment/joining system. Use this instead of writing raw OpenSCAD when the user's project already uses CoScad, when they ask for CoScad specifically, or when a .coscad file is present/referenced. Do NOT use this for plain OpenSCAD/BOSL2 requests with no CoScad mention — write .scad directly for those.
+description: Use this skill whenever the user wants to write, edit, or convert .coscad files, or mentions CoScad, CoScad glyphs, or the CoScad compiler. CoScad is a glyph-based Haskell DSL with its own native geometry (STL, print beds, build plans, stress; .scad only as an export), covering solid primitives, booleans, transforms, and a bounding-box-based attachment/joining system. Use this instead of writing raw OpenSCAD when the user's project already uses CoScad, when they ask for CoScad specifically, or when a .coscad file is present/referenced. Do NOT use this for plain OpenSCAD/BOSL2 requests with no CoScad mention — write .scad directly for those.
 license: N/A — project-internal tool, not third-party licensed software.
 ---
 
@@ -10,8 +10,10 @@ license: N/A — project-internal tool, not third-party licensed software.
 
 CoScad is a small glyph-syntax language, implemented as a Haskell compiler
 (`src/Coscad/*.hs`, CLI in `app/Main.hs`), that parses `.coscad` and
-`.assemble` files and emits `.scad`, packed-bed `.stl`, and manifests
-(OpenSCAD) source. One variable, `main`, is the rendered shape. Every other
+`.assemble` files and meshes them itself (its own tessellation plus the
+pinned Manifold kernel) into `.stl`, packed beds, manifests, plan images and
+stress reports; `.scad` is only an export. One variable, `main`, is the
+rendered shape. Every other
 variable is a named sub-expression you can reuse.
 
 The compiler is not a published package — it's a project-specific tool.
@@ -23,15 +25,15 @@ ever disagree; this file can drift, the compiler cannot.
 1. Get a `coscad` binary: a release download, or `cabal install
    exe:coscad --install-method=copy --installdir=bin` from the repo (GHC
    9.8 via ghcup; see the README's macOS linker note if linking fails
-   with a tapi "unknown architecture" error). Run `coscad doctor` first: it reports the OpenSCAD
-   and BOSL2 it will use and renders a test part; if BOSL2 lives
-   outside the OpenSCAD library folders set `COSCAD_BOSL2`.
-2. Generated files `include <BOSL2/std.scad>`, resolved through the
-   OpenSCAD library path (not relative to the .scad), so any folder
-   works once `doctor` is green.
-3. `coscad file.coscad` → `file.scad`; `coscad stl file.coscad` →
-   `file.stl` plus volume and bounds. Errors carry `file:line:col` and
-   quote the line; OpenSCAD warnings during a render are failures.
+   with a tapi "unknown architecture" error; a source build needs the
+   pinned kernel from `scripts/build-manifold.py`). Run `coscad doctor`
+   first: it reports the linked kernel and renders a test part. Since
+   1.6.0.0 OpenSCAD and BOSL2 are not needed.
+2. `coscad stl file.coscad` → `file.stl` plus volume and bounds (and a
+   `.scad` export beside it); `coscad file.coscad` → `file.scad` only, for
+   people who continue in OpenSCAD (it includes `<BOSL2/std.scad>`).
+   Errors carry `file:line:col` and quote the line; a kernel failure or an
+   unsupported operation is an error, never a fallback.
 
 ## Core syntax rules
 
@@ -174,7 +176,7 @@ unioning it into the composite, or nudge afterward with `χ`/`ψ`/`ζ`.
 
 - **`⊿` wedge orientation**: profile is in the YZ plane, not XZ — a
   bare `⊿ x y z` has its right-angle edge along Y at -Y,-Z. Confirmed
-  by rendering a solo wedge and checking its OpenSCAD-computed
+  by rendering a solo wedge and checking its computed
   centroid offset before trusting an assumed orientation in a
   composite. Get this wrong and volumes silently come out ~5-10% off
   with no error — always sanity-check volume/bounds after using `⊿`.
@@ -251,8 +253,8 @@ See `docs/2025-07-14-LANGEXTENSION.md` and `examples/assemble/constraints/`.
 `coscad foo.assemble` = design outputs; `coscad next foo.assemble` =
 per-bed STLs + slice-once/stamp-many manifest, with automatic FFF
 orientation search for undeclared parts. Details and limitations in
-docs/2026-07-24-MANUFACTURING.md. Set COSCAD_OPENSCAD to an xvfb wrapper when
-headless.
+docs/2026-07-24-MANUFACTURING.md. Everything runs headless; no display is
+needed for meshes or images.
 
 - **Anchoring class of traps.** BOSL2 defaults differ per shape:
   `prismoid` is bottom-anchored upstream (CoScad now forces
@@ -282,8 +284,7 @@ Rendered preview images of small/thin features are frequently
 ambiguous or fail to load in-session. The reliable verification loop:
 
 ```bash
-./coscad file.coscad                       # .coscad -> .scad
-xvfb-run -a openscad -o file.stl file.scad  # .scad -> .stl, headless
+coscad stl file.coscad -o file.stl         # native mesh; prints volume + bounds
 python3 -c "
 import trimesh
 m = trimesh.load('file.stl')

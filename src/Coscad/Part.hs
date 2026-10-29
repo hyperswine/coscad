@@ -44,7 +44,7 @@ compilePart emit input out = runCommand $ do
 
 -- | .coscad -> .scad -> .stl, printing triangle count, volume, and bounds.
 renderPart :: Emit -> FilePath -> Maybe FilePath -> IO (Either Failure ())
-renderPart = renderPartWith OpenScadBackend
+renderPart = renderPartWith Native
 
 renderPartWith :: Backend -> Emit -> FilePath -> Maybe FilePath -> IO (Either Failure ())
 renderPartWith backend emit input out = runCommand $ do

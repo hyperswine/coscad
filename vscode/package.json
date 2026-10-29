@@ -2,7 +2,7 @@
   "name": "coscad-lsp",
   "displayName": "COSCAD Language Support",
   "description": "CoScad language support: highlighting, hover, completion, in-editor and compiler diagnostics, and commands for compile, validate, STL, check, next, plan stress, backend selection and doctor",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "publisher": "hyperswine",
   "license": "GPL-3.0-only",
   "repository": {
@@ -52,7 +52,7 @@
     "commands": [
       {
         "command": "coscad.runmain",
-        "title": "COSCAD: Compile to OpenSCAD"
+        "title": "COSCAD: Export OpenSCAD Source (.scad)"
       },
       {
         "command": "coscad.validate",
@@ -80,7 +80,7 @@
       },
       {
         "command": "coscad.doctor",
-        "title": "COSCAD: Doctor (backends, OpenSCAD and BOSL2)"
+        "title": "COSCAD: Doctor (kernel, renderer and a native round trip)"
       },
       {
         "command": "coscad.openSettings",
@@ -182,11 +182,18 @@
           "type": "string",
           "enum": [
             "auto",
+            "native",
             "native-experimental",
             "openscad"
           ],
+          "enumDescriptions": [
+            "The compiler's default (native in CoScad 1.6 and later).",
+            "Native geometry (CoScad 1.6 and later).",
+            "Native geometry, the name used by CoScad 1.3 to 1.5; mapped to native on newer compilers.",
+            "OpenSCAD, for CoScad 1.5 and earlier only; CoScad 1.6 retired it and refuses this choice."
+          ],
           "default": "auto",
-          "description": "Geometry backend for STL, check, next and stress. Auto uses the compiler build default; unavailable backends are refused."
+          "description": "Geometry backend passed to STL, check, next, plan, site and stress. Leave it on auto: since CoScad 1.6 geometry is always native and OpenSCAD is not needed."
         }
       }
     }

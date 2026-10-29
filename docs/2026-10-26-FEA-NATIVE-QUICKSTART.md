@@ -1,5 +1,9 @@
 # Try FEA and native geometry
 
+> Since 1.6.0.0 every build links the kernel and `-fmanifold`, `--builddir=dist-native`
+> and `--backend=native-experimental` are unnecessary; plain `cabal build` after
+> `scripts/build-manifold.py` is enough. See [OPENSCAD-RETIRED](2026-10-29-OPENSCAD-RETIRED.md).
+
 Run the commands from the repository root. The
 [validation record](2026-10-26-FEA-BACKEND-EXPERIMENTS.md) documents numerical
 checks, accepted geometry, limits and the release gates as they stood on

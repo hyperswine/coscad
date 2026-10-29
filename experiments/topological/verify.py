@@ -1,19 +1,25 @@
 """Compare pilot solids to originals, then test anchor behaviour after resizing.
 
+Meshes come from the native compiler (`coscad stl`); booleans, containment and
+material probes use manifold3d (the Manifold kernel the compiler links). No
+OpenSCAD or BOSL2 is needed. Requires numpy and manifold3d.
 No printer, slicer, network, or original-source writes. Only the report persists.
 """
 import argparse
 from collections import Counter, defaultdict
 from contextlib import contextmanager
 import hashlib
+import importlib.metadata
 import json
 import math
-import os
 from pathlib import Path
 import re
 import shutil
 import subprocess
 import tempfile
+
+import manifold3d as md
+import numpy as np
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
@@ -87,61 +93,61 @@ def mesh(path):
                        [max(v[i] for v in vertices) for i in range(3)]]}
 
 
-def module_text(path, name):
-    source = '\n'.join(line for line in path.read_text().splitlines()
-                       if not line.startswith('include <'))
-    return f'module {name}(){{\n{source}\n}}\n'
+def solid(path):
+    """Load an STL as a Manifold, welding exactly coincident vertices."""
+    index, triangles = {}, []
+    vertices = [tuple(map(float, v)) for v in VERTEX.findall(path.read_text())]
+    for i in range(0, len(vertices), 3):
+        triangles.append([index.setdefault(v, len(index)) for v in vertices[i:i + 3]])
+    result = md.Manifold(md.Mesh64(vert_properties=np.array(list(index), dtype=np.float64),
+                                   tri_verts=np.array(triangles, dtype=np.uint32)))
+    assert result.status() == md.Error.NoError, (path.name, result.status())
+    return result
+
+
+def extent(shape):
+    lo_hi = shape.bounding_box()
+    return min(lo_hi[i + 3] - lo_hi[i] for i in range(3))
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--coscad', type=Path, required=True)
-    parser.add_argument('--openscad', default=os.environ.get('COSCAD_OPENSCAD') or
-                        shutil.which('openscad') or '/Applications/OpenSCAD.app/Contents/MacOS/openscad')
-    parser.add_argument('--output', type=Path, default=HERE / 'native-results.json')
+    # results.json and native-results.json are the OpenSCAD-era records; keep them.
+    parser.add_argument('--output', type=Path, default=HERE / 'manifold-results.json')
     parser.add_argument('--case', action='append', help='Run only these pilot names')
     args = parser.parse_args()
     binary = str(args.coscad.resolve(strict=True))
-    env = dict(os.environ)
-    bosl = env.get('COSCAD_BOSL2')
-    if bosl:
-        env['OPENSCADPATH'] = str(Path(bosl).parent) + os.pathsep + env.get('OPENSCADPATH', '')
 
-    def compile_source(path, output):
-        result = subprocess.run([binary, str(path), '-o', str(output), '+RTS', '-N1', '-RTS'],
-                                capture_output=True, text=True, timeout=15)
-        assert result.returncode == 0, result.stdout + result.stderr
-
-    def render(source, empty=False, numeric_residual=False):
-        output = source.with_suffix('.stl')
-        output.unlink(missing_ok=True)
-        result = subprocess.run([args.openscad, '-o', str(output), '--export-format',
-                                 'asciistl', str(source)], env=env,
+    def render(source, output):
+        """Render a .coscad source natively; return its mesh summary and solid."""
+        result = subprocess.run([binary, 'stl', str(source), '-o', str(output), '+RTS', '-N1', '-RTS'],
                                 capture_output=True, text=True, timeout=90)
-        assert not re.search(r'^(WARNING|ERROR)', result.stdout + result.stderr, re.M), result.stderr
-        if empty:
-            if 'Current top level object is empty' in result.stderr:
-                assert not output.exists(), f'non-empty residual: {source.name}'
-                return {'empty': True, 'residual_volume_mm3': 0}
-            # Anchor placement can change the numerical evaluation order of a
-            # hull. A residual is accepted only if both volume and thickness
-            # are negligible. Actual cavity probes still require empty output.
-            assert numeric_residual and result.returncode == 0 and output.exists(), (str(source), result.stderr)
-            data = mesh(output)
-            thickness = min(hi - lo for lo, hi in zip(*data['bounds']))
-            assert data['volume_mm3'] <= 0.001 and thickness <= 0.00001, data
-            return {'empty': False, 'residual_volume_mm3': data['volume_mm3'],
-                    'minimum_extent_mm': thickness, 'within_numeric_tolerance': True}
-        assert result.returncode == 0 and output.exists(), result.stderr
-        return mesh(output)
+        assert result.returncode == 0 and output.exists(), result.stdout + result.stderr
+        assert not re.search(r'^(WARNING|ERROR|Warning|Error)', result.stderr, re.M), result.stderr
+        return mesh(output), solid(output)
 
-    version = subprocess.run([args.openscad, '--version'], env=env,
-                             capture_output=True, text=True, check=True).stderr.strip()
+    def residual(shape, numeric_residual=False):
+        if shape.is_empty():
+            return {'empty': True, 'residual_volume_mm3': 0}
+        # Anchor placement can change the numerical evaluation order of a
+        # hull. A residual is accepted only if both volume and thickness
+        # are negligible. Actual cavity probes still require empty output.
+        # Thickness is the bounding-box minimum extent or, for slanted
+        # slivers, the mean thickness 2 * volume / surface area.
+        volume, thickness = abs(shape.volume()), extent(shape)
+        mean = 2 * volume / shape.surface_area()
+        assert numeric_residual and volume <= 0.001 and min(thickness, mean) <= 0.00001, (volume, thickness, mean)
+        return {'empty': False, 'residual_volume_mm3': round(volume, 6),
+                'minimum_extent_mm': thickness, 'mean_thickness_mm': mean,
+                'within_numeric_tolerance': True}
+
     report = {'source_head': subprocess.check_output(['git', 'rev-parse', 'HEAD'],
                cwd=ROOT, text=True).strip(),
               'source_worktree_dirty': bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT)),
               'coscad_binary_sha256': hashlib.sha256(Path(binary).read_bytes()).hexdigest(),
-              'openscad': version,
+              'geometry': {'meshes': 'coscad stl (native Manifold kernel)',
+                           'booleans': 'manifold3d ' + importlib.metadata.version('manifold3d')},
               'inventory': inventory(), 'equivalence': [], 'resizing': []}
     with scratch_directory() as scratch:
         for case in json.loads((HERE / 'cases.json').read_text()):
@@ -150,10 +156,8 @@ def main():
                 continue
             pilot = HERE / (name + '.coscad')
             assert not TRANSLATE.search(code(pilot.read_text())), name
-            old, new = scratch / (name + '-old.scad'), scratch / (name + '-new.scad')
-            compile_source(ROOT / case['original'], old)
-            compile_source(pilot, new)
-            before, after = render(old), render(new)
+            (before, old), (after, new) = (render(ROOT / case['original'], scratch / (name + '-old.stl')),
+                                           render(pilot, scratch / (name + '-new.stl')))
             assert before['components'] == after['components'] == 1, name
             assert all(math.isclose(a, b, abs_tol=1e-5) for x, y in
                        zip(before['bounds'], after['bounds']) for a, b in zip(x, y)), name
@@ -164,23 +168,16 @@ def main():
                 # must be genuinely empty and warning-free in BOTH directions.
                 epsilon = case['containment_tolerance_mm']
                 assert 0 < epsilon <= 0.00001
-                for a, b in [('old', 'new'), ('new', 'old')]:
-                    probe = scratch / f'{name}-contain-{a}-{b}.scad'
-                    probe.write_text('include <BOSL2/std.scad>\n$fn=50;\n' +
-                        module_text(old, 'old') + module_text(new, 'new') +
-                        f'difference(){{{a}();minkowski(){{{b}();cube({2*epsilon},center=true);}}}}\n')
-                    render(probe, empty=True)
+                grow = md.Manifold.cube([2 * epsilon] * 3, True)
+                for a, b in [(old, new), (new, old)]:
+                    assert (a - b.minkowski_sum(grow)).is_empty(), name
                 report['equivalence'].append({**case, 'original_mesh': before,
                     'pilot_mesh': after, 'bidirectional_containment': {
                         'tolerance_per_axis_mm': epsilon, 'both_residuals_empty': True}})
                 print(name + ': closed, one component, same bounds; bidirectional containment at ' +
                       str(epsilon) + ' mm', flush=True)
                 continue
-            residual = scratch / (name + '-difference.scad')
-            residual.write_text('include <BOSL2/std.scad>\n$fn=50;\n' +
-                module_text(old, 'old') + module_text(new, 'new') +
-                'union(){difference(){old();new();}difference(){new();old();}}\n')
-            diff = render(residual, empty=True, numeric_residual=True)
+            diff = residual((old - new) + (new - old), numeric_residual=True)
             report['equivalence'].append({**case, 'original_mesh': before,
                                           'pilot_mesh': after, 'symmetric_difference': diff})
             print(name + ': closed, one component, same bounds; residual ' +
@@ -224,20 +221,17 @@ def main():
                 assert n == 1, (name, key)
             changed = scratch / (name + '-resized.coscad')
             changed.write_text(source)
-            compiled = changed.with_suffix('.scad')
-            compile_source(changed, compiled)
-            data = render(compiled)
+            data, part = render(changed, changed.with_suffix('.stl'))
             assert data['components'] == 1, name
             for axis, lo, hi in bounds:
                 assert math.isclose(data['bounds'][0][axis], lo, abs_tol=1e-5), name
                 assert math.isclose(data['bounds'][1][axis], hi, abs_tol=1e-5), name
-            for i, (point, material) in enumerate(points):
-                probe = scratch / f'{name}-probe-{i}.scad'
-                probe.write_text('include <BOSL2/std.scad>\n$fn=50;\n' + module_text(compiled, 'part') +
-                    'intersection(){part();translate(' + json.dumps(point) + ')cube(0.1,center=true);}\n')
-                result = render(probe, empty=not material)
+            for point, material in points:
+                common = part ^ md.Manifold.cube([0.1] * 3, True).translate(list(point))
                 if material:
-                    assert result['volume_mm3'] >= 0.0009, (name, point, result)
+                    assert common.volume() >= 0.0009, (name, point, common.volume())
+                else:
+                    assert common.is_empty(), (name, point, common.volume())
             report['resizing'].append({'name': name, 'bindings': replacements,
                 'mesh': data, 'material_probes_passed': len(points)})
             print(name + ': resizing bounds and ' + str(len(points)) + ' material probes pass', flush=True)

@@ -8,6 +8,48 @@ and this project adheres to the
 
 ## Unreleased
 
+## 1.6.0.0 - 2026-10-29
+
+1.5.0.0 was recorded here but never tagged or published, so this is the first
+release to carry its changes (native planner and site images, mandatory print
+preflight, VS Code 0.6.0) as well as the ones below.
+
+- **OpenSCAD retired.** Geometry is always native: CoScad's tessellation plus
+  the pinned Manifold kernel, which every build now links (the Cabal
+  `manifold` flag and the OpenSCAD-only `-f-manifold` build are gone).
+  `--backend=openscad` is an error that points at the `.scad` export;
+  `--backend=native` and `--backend=native-experimental` are accepted as
+  no-ops. Manifests and stress reports record the backend as `native`
+  (previously `native-experimental`). `capabilities --json` lists only
+  `native` and adds the `openscad-retired` feature. See
+  docs/2026-10-29-OPENSCAD-RETIRED.md.
+- `coscad doctor` reports the linked kernel and the image renderer and runs a
+  native round trip; it no longer probes OpenSCAD or BOSL2. The compiler reads
+  no `COSCAD_OPENSCAD`, `COSCAD_BOSL2` or `COSCAD_OPENSCAD_TIMEOUT`.
+- The design stage (`coscad spec.assemble`) renders `spec_asm.png` and
+  `spec_plate.png` (or `spec_plateN.png`) natively, so its output is viewable
+  without OpenSCAD. The `.scad` files it writes remain as exports.
+- `check` intersects close pairs with the kernel only; the OpenSCAD polyhedron
+  export, far-away marker and CGAL operand-order retry are removed.
+- **OpenSCAD is the test suite's oracle only.** The runner moved to
+  `test/Oracle/OpenScad.hs`. The geometry tier renders every example natively
+  against `test/golden/geometry.txt` (goldens are now recorded from native
+  renders) and, when OpenSCAD 2025.05+ is installed, also checks OpenSCAD's
+  renders and the independent probes. Without OpenSCAD, or with
+  `COSCAD_OPENSCAD=none`, those checks are skipped and say so.
+  `test/golden/native-supported.txt` is removed: every golden must render
+  natively.
+- CI replaces the OpenSCAD-only job with a no-OpenSCAD job that runs the whole
+  suite with the oracle off; the release workflow runs every tier, geometry
+  included. `pipeline.lock.json` moves the OpenSCAD and BOSL2 pins to the
+  `test` scope with unchanged hashes.
+- Model build, render and verify scripts, the manual build and the pipeline
+  comparison script no longer call OpenSCAD.
+- VS Code 0.7.0: refuses an `openscad` backend setting on a 1.6 compiler with
+  the reason, maps `native-experimental` to `native`, renames "Compile to
+  OpenSCAD" to "Export OpenSCAD Source", and fixes an intermittent `EPIPE` in
+  its language-server test that turned CI red.
+
 ## 1.5.0.0 - 2026-10-28
 
 - **Native planner and site images.** Kernel builds now render `plan --png`

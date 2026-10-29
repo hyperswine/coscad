@@ -1,14 +1,17 @@
 # coscad
 
-A concise glyph/pipeline CAD language in Haskell that compiles to OpenSCAD
-(optionally BOSL2), with an assembly layer and a manufacturing stage that
-emits print-ready per-bed STLs. Intelligence lives upstream in the compiler
-— anchors, beziers, attachments, fit, orientation, and packing are all
-computed here so the emitted OpenSCAD (and the downstream slicer) stay dumb.
+A concise glyph/pipeline CAD language in Haskell with its own geometry: parts
+are tessellated by the compiler and combined by the pinned Manifold kernel, with
+an assembly layer, a manufacturing stage that emits print-ready per-bed STLs,
+build plans with rendered step images, and stress analysis. Intelligence lives
+in the compiler — anchors, beziers, attachments, fit, orientation, packing,
+meshing and images are all computed here, so nothing else is needed between a
+`.coscad` file and the slicer. OpenSCAD and BOSL2 are not used (since 1.6.0.0);
+a part can still be exported as `.scad` for people who continue in OpenSCAD.
 
 ```
-.coscad  ──compile──▶  .scad ──openscad──▶ .stl        (one part)
-.assemble ─coscad───▶  asm view + plate + _design.json  (design stage)
+.coscad  ──coscad stl──▶ .stl                          (one part)
+.assemble ─coscad───▶  asm + plate PNGs + _design.json  (design stage)
 .assemble ─coscad next▶ bedN.stl + _manifest.json       (manufacturing)
 manifest  ─bambu-slice▶ bedN.gcode.3mf → printer        (scripts/bambu-slice.py)
 ```
@@ -48,9 +51,7 @@ cabal update
 cabal install exe:coscad --install-method=copy --installdir=bin   # binary lands in bin/
 ```
 
-Without the kernel, `cabal install exe:coscad -f-manifold ...` builds the
-OpenSCAD-only binary: every render goes through OpenSCAD and
-`--backend=native` is refused. `coscad doctor` says which build you have.
+The kernel is required: there is no build without it, and no other renderer.
 
 macOS note: ghcup's GHC links against the Command Line Tools SDK. If a
 CLT update leaves that SDK newer than Xcode's linker, linking fails with
@@ -63,30 +64,20 @@ package coscad
   ghc-options: -pgml /Library/Developer/CommandLineTools/usr/bin/clang
 ```
 
-In a kernel build, `coscad stl`, `coscad check` and `coscad next` render
-natively by default (`--backend=openscad` opts out per command; the
-manufacturing manifest records the backend used). `plan --png` and `site`
-also use native meshes and a built-in CPU PNG renderer by default, without
-OpenSCAD, a display server or a GPU. The renderer caches meshes across steps,
-fits an orthographic view, highlights new parts and uses a depth buffer with
-antialiasing. Existing `.scad` step scenes are still exported. Pass
-`--backend=openscad` to either command for the previous image path.
-OpenSCAD is needed only for that explicit alternative and the comparison tests
-(and `doctor`, which probes both backends). Install
-[OpenSCAD](https://openscad.org) 2021.01 or newer (2025.05 or newer
-renders STL through its own Manifold backend, which `coscad` requests
-when available) and a [BOSL2](https://github.com/BelfrySCAD/BOSL2)
-checkout in an OpenSCAD library folder (`~/Documents/OpenSCAD/libraries`
-on macOS, `~/.local/share/OpenSCAD/libraries` on Linux) — or anywhere,
-with `COSCAD_BOSL2=/path/to/BOSL2`. Check the whole chain with:
+Every command renders natively: `stl`, `check`, `next` and `stress` mesh parts
+with the compiler and the kernel, and `plan --png`, `site` and the design stage
+draw images with a built-in CPU renderer, without a display server or a GPU.
+The renderer caches meshes across steps, fits an orthographic view, highlights
+new parts and uses a depth buffer with antialiasing. Nothing external is
+needed. `--backend=native` is accepted for older scripts; `--backend=openscad`
+is an error that points at the `.scad` export. Check the binary with:
 
 ```sh
 coscad doctor
 ```
 
-which reports the default backend and the linked kernel version, the
-OpenSCAD and BOSL2 versions it found, and renders a boolean test part
-through every available backend against a known volume.
+which reports the linked kernel and renderer and renders a boolean test part
+against its known volume.
 
 ## Quick start
 
@@ -102,14 +93,14 @@ the local printer profiles, so it only passes on the maintainer's machine. See
 [pins, deliberate upgrades and graceful recovery](docs/2026-10-15-PIPELINE-LOCK.md).
 
 ```sh
-coscad part.coscad           # -> part.scad
+coscad part.coscad           # -> part.scad (an export for OpenSCAD users)
 coscad validate part.coscad # source checks, no output files
 coscad validate model.assemble # source + rigid constraint checks
 coscad validate --json --stdin part.coscad < buffer  # JSON diagnostics for unsaved text
 coscad validate --json --project-stdin model.assemble < snapshot.json # recursive editor buffers
 coscad capabilities --json # build features, supported backends and materials
-coscad stl part.coscad       # -> part.scad + part.stl, prints volume + bounds
-coscad frame.assemble        # -> _asm view, packed _plate(N) scads, frame_design.json
+coscad stl part.coscad       # -> part.stl (+ part.scad export), prints volume + bounds
+coscad frame.assemble        # -> _asm.png view, packed _plate(N).png, frame_design.json (+ .scad exports)
 coscad next frame.assemble   # -> frame_bed1.stl ... + frame_manifest.json
 coscad check frame.assemble  # interference / clearance check on real meshes
 coscad stress bracket.coscad # deflection, peak stress and safety factor from the part's support/load lines
@@ -126,16 +117,12 @@ bambu-lan scripts (`BAMBU_LAN_DIR`). The VS Code extension lives in
 `vscode/` (`npm install && npm test && npm run package`, or take the
 `.vsix` attached to each release).
 
-`COSCAD_OPENSCAD` points at the OpenSCAD binary or a wrapper script
-(e.g. `xvfb-run -a openscad "$@"` on a headless machine); otherwise
-PATH and the usual install locations are searched.
-
 Errors carry `file:line:col` and quote the offending line — an unknown
 name, a stray glyph, a circular definition, a duplicate, or a 2D/3D
 mismatch (extruding a solid, offsetting a cube, unioning a profile with
 a box) all fail at compile time instead of rendering silently wrong.
-OpenSCAD warnings during a render (a missing include, a dropped child)
-are treated as failures too. Every diagnostic goes to stderr as
+A kernel failure or an unsupported operation is an error, never a silent
+fallback. Every diagnostic goes to stderr as
 `Error: file:line:col: reason`, optionally followed by an excerpt; exit 1
 means the command could not run, exit 2 means the input was fine but the
 design has a problem (`validate`/`plan` design errors, `check` overlaps,
@@ -144,8 +131,7 @@ in the design stage or `next`, and, from every command that loads an assembly, m
 contradict each other, parts no fixed root reaches, or an instance fixed
 twice). A constraint conflict is reported on the line that closed the loop,
 followed by one `  note: file:line:col: …` line per constraint on the loop.
-A single OpenSCAD run is killed after `COSCAD_OPENSCAD_TIMEOUT` seconds
-(default 600) instead of hanging a pipeline.
+Each kernel operation has a cooperative 60-second deadline.
 
 ## Two syntaxes, one language
 
@@ -165,14 +151,14 @@ A line starting with `|>` continues the previous definition.
 
 ## Feature map
 
-- **Shapes**: plain OpenSCAD glyphs (`■ ● ◎ ▻ ▬ ⎏`), BOSL2 family
+- **Shapes**: corner-anchored primitives with OpenSCAD's conventions (`■ ● ◎ ▻ ▬ ⎏`), centred primitives with BOSL2's conventions
   (`▣ ◙ ⌭ ⌽ ⊚ ⏢ ◉ ⊿`, `xcyl/ycyl/zcyl`), centered word shapes
   (`cube box sphere cyl tube torus wedge`), 2D profiles + `⮕`/`extrude`,
   and `✎` — compiler-evaluated piecewise cubic bezier outlines.
 - **Numbers**: `w = 20`, `t = w / 5 - 1`; use anywhere a number goes
   (`box w (w / 2) t`). Resolved before shapes, mistakes name the binding.
 - **Lofts**: `loft 0 (⭘ 10) 30 (△ 5)` / `p |> loft h q` skins 2D
-  profiles (any vertex counts) into a solid via BOSL2 `skin()`.
+  profiles (any vertex counts) into a solid, triangulated the way BOSL2's `skin()` does it.
 - **Booleans**: `⊕ ⊖ ∩ ⇓ ⊞ ↯` and pipeline stages `add cut isect hull mink`.
 - **Topological modelling**: bbox anchors (`top bot lft rt fwd bak ctr`,
   combos like `lft+fwd`), relational ops `⌖`/`at`, `⋈`/`on`, `cutat`
@@ -209,7 +195,7 @@ for editor diagnostics, backend selection and a reproducible stress-to-slice exa
 src/Coscad/Shape.hs     AST + bezier evaluation (pure data)
 src/Coscad/Linalg.hs    vectors, 3x3 matrices, rotations, bed orientation
 src/Coscad/Geometry.hs  bboxes, anchors, attachment resolve (re-exports Linalg)
-src/Coscad/Codegen.hs   OpenSCAD emission
+src/Coscad/Codegen.hs   .scad export (OpenSCAD source for people who continue in OpenSCAD)
 src/Coscad/Dsl.hs       Haskell-embedded glyph DSL
 src/Coscad/Parser.hs    .coscad parser (glyphs, words, pipelines)
 src/Coscad/Dim.hs       2D/3D dimensionality check
@@ -231,7 +217,6 @@ src/Coscad/Json.hs      minimal JSON encode/decode for manifests
 src/Coscad/IO.hs        UTF-8 file IO, scratch directories
 src/Coscad/Report.hs    command failures (exit status + lines) and warning emitters
 src/Coscad/Format.hs    number formatting (showD)
-src/Coscad/OpenScad.hs  finding + running OpenSCAD and BOSL2
 src/Coscad/Mesh/Distance.hs triangle/edge surface distance with bounding-volume pruning
 src/Coscad/Mesh/Indexed.hs  validated indexed mesh contract; connectivity independent of position
 src/Coscad/Backend.hs   STL/check/next backend boundary: build-time default, native meshing and CSG
@@ -271,15 +256,16 @@ each step. A separate [hand-written guide](https://manual.cswine.cloud/orbit-tow
 includes handling and print notes.
 
 `scripts/build-manual.sh DIR` renders this documentation, the man page,
-and the example build plans into a static site (needs pandoc, mandoc,
-OpenSCAD). manual.cswine.cloud rebuilds it from `main` automatically; see
+and the example build plans into a static site (needs pandoc and mandoc;
+plan images are rendered by coscad itself). manual.cswine.cloud rebuilds it from `main` automatically; see
 `deploy/README.md`.
 
 ## Releasing
 
 1. Bump `version` in `coscad.cabal` and the CHANGELOG, commit, tag
-   `v<version>`, push the tag: the release workflow runs the pure test
-   tiers, checks the tag against `coscad --version`, and attaches binaries.
+   `v<version>`, push the tag: the release workflow runs every test tier
+   (native geometry included, OpenSCAD oracle off), checks the tag against
+   `coscad --version`, and attaches binaries.
 2. After the release succeeds, run `scripts/update-release.py coscad v<version>`
    in the shared `homebrew-tap` repository. It downloads the archive and verifies
    the published checksum and build metadata before updating the binary formula.
@@ -306,21 +292,23 @@ Nothing in the build or the test suite reads them. Renders and diagrams
 - [Stress analysis and a native backend](docs/2026-10-17-FEA-AND-BACKEND.md): intent for `coscad stress` and a native geometry backend
 - [FEA/backend experiments](docs/2026-10-26-FEA-BACKEND-EXPERIMENTS.md): runnable CAD/beam FEA and pinned native CSG, validation results and promotion gates
 - [Native backend by default](docs/2026-10-27-NATIVE-DEFAULT.md): the native kernel becomes the default for `stl`, `check` and `next`; offsets and lofts; timings and affected goldens
+- [OpenSCAD retired](docs/2026-10-29-OPENSCAD-RETIRED.md): the native backend becomes the only one; OpenSCAD stays only as the test suite's oracle
 - [Try FEA and native geometry](docs/2026-10-26-FEA-NATIVE-QUICKSTART.md): build, mesh and analyze the existing bracket and strut examples
 
 ## Tests
 
 ```sh
-cabal test                          # all tiers; geometry tier needs OpenSCAD
-COSCAD_RENDER=0 cabal test          # pure tiers only (a few seconds)
-COSCAD_UPDATE_GOLDEN=1 cabal test   # accept changed .scad / geometry snapshots
+cabal test                          # all tiers; OpenSCAD oracle checks run if OpenSCAD is installed
+COSCAD_OPENSCAD=none cabal test     # as on a machine without OpenSCAD (oracle checks skipped, loudly)
+COSCAD_RENDER=0 cabal test          # skip the geometry tier
+COSCAD_UPDATE_GOLDEN=1 cabal test   # accept changed .scad / geometry snapshots (goldens come from native renders)
 ```
 
 The suite's entry point is `test/Spec.hs`; the tiers live in `test/Tier/*.hs` and share `test/Harness.hs`. The main tiers: diagnostics (error messages carry
 position and cause), examples (every example compiles, every
 `.assemble` loads, emitted `.scad` matches `test/golden/scad/`), and
-geometry (every example renders through OpenSCAD and its mesh volume +
-bounds match `test/golden/geometry.txt`, plus cross-checks: the
+geometry (every example renders natively and its mesh volume + bounds
+match `test/golden/geometry.txt`, plus cross-checks: the
 topological bracket equals the coordinate bracket, `coscad next`
 conserves volume across bed packing, `coscad check` passes on bow3), and cli (the built binary is spawned:
 exit codes, stdout/stderr split, `validate`, and the manifests parse as
@@ -329,8 +317,11 @@ When a snapshot fails, the message shows golden vs current; accept
 deliberate changes with `COSCAD_UPDATE_GOLDEN=1` and review the diff.
 Geometry entries still within tolerance keep their recorded values, so
 an update only rewrites the lines that drifted or were missing.
-OpenSCAD is found via `COSCAD_OPENSCAD`, then PATH, then the macOS app
-bundle.
+OpenSCAD is used only as an independent oracle: with OpenSCAD 2025.05 or newer
+installed (found via `COSCAD_OPENSCAD`, then PATH, then the usual install
+locations, with BOSL2 via `COSCAD_BOSL2`), the suite also compares every example
+and a set of primitives, lofts and offsets against OpenSCAD's renders of the
+emitted `.scad`. Without it those checks are skipped and the skip is printed.
 A second, small suite, `haskell-examples`, only compiles
 `examples/haskell/` and renders one shape from each sample.
 

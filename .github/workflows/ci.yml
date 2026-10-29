@@ -13,8 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         # Linux only: coscad targets macOS and Linux, and Windows is not a
-        # supported platform. OpenSCAD's Homebrew cask is disabled by
-        # Gatekeeper; restore macOS when a supported CI installation exists.
+        # supported platform. The release workflow builds and tests macOS.
         os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -34,8 +33,9 @@ jobs:
           key: ${{ runner.os }}-cabal-${{ hashFiles('cabal.project.freeze', 'coscad.cabal') }}
           restore-keys: ${{ runner.os }}-cabal-
 
-      # --- OpenSCAD + BOSL2 (the geometry tier renders every example) ---
-      - name: OpenSCAD + BOSL2 (Linux)
+      # --- OpenSCAD + BOSL2: the test suite's independent oracle only. The
+      # compiler never runs them; the no-openscad job below proves it. ---
+      - name: OpenSCAD + BOSL2 oracle (Linux)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
@@ -50,7 +50,7 @@ jobs:
           echo "COSCAD_BOSL2=$HOME/BOSL2" >> "$GITHUB_ENV"
 
       # --- pinned native kernel (native-kernel.lock.json: Manifold 3.5.2 +
-      # Clipper2), the default geometry backend. The static install is cached
+      # Clipper2), required by every build. The static install is cached
       # by the lock and the builder; a miss rebuilds it from the pinned sources.
       - name: Cache native kernel
         id: kernel
@@ -86,15 +86,14 @@ jobs:
       - run: cabal build --enable-tests all
       - name: coscad doctor
         run: cabal run coscad -- doctor
-      - name: tests (diagnostics, examples, snapshots, geometry, native oracles, cli)
+      - name: tests (diagnostics, examples, snapshots, native geometry, OpenSCAD oracle, cli)
         run: cabal test --test-show-details=direct
 
-  # The OpenSCAD-only build must keep working: no kernel, no pkg-config, the
-  # default backend is OpenSCAD. The pure tiers run here (the geometry tier is
-  # OpenSCAD code shared with the job above); the experiments tier checks the
-  # kernel-less defaults and refusals.
-  openscad-only:
-    name: ubuntu-latest (-f-manifold)
+  # Users need no OpenSCAD: the full suite runs with the oracle switched off
+  # (COSCAD_OPENSCAD=none) and no OpenSCAD installed. Every tier except the
+  # OpenSCAD oracle checks must pass, and those must announce their skip.
+  no-openscad:
+    name: ubuntu-latest (no OpenSCAD)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -109,17 +108,35 @@ jobs:
           path: |
             ${{ steps.hs.outputs.cabal-store }}
             dist-newstyle
-          key: ${{ runner.os }}-cabal-nomanifold-${{ hashFiles('cabal.project.freeze', 'coscad.cabal') }}
-          restore-keys: ${{ runner.os }}-cabal-nomanifold-
+          key: ${{ runner.os }}-cabal-${{ hashFiles('cabal.project.freeze', 'coscad.cabal') }}
+          restore-keys: ${{ runner.os }}-cabal-
+      - name: Cache native kernel
+        id: kernel
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .native/manifold-3.5.2/install
+          key: ${{ runner.os }}-native-kernel-${{ hashFiles('native-kernel.lock.json', 'scripts/build-manifold.py') }}
+      - name: Build native kernel
+        if: steps.kernel.outputs.cache-hit != 'true'
+        run: python3 scripts/build-manifold.py
+      - name: Native kernel pkg-config
+        run: echo "PKG_CONFIG_PATH=$PWD/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}" >> "$GITHUB_ENV"
       - name: Warnings are errors (CI only)
         run: |
           printf 'package coscad\n  ghc-options: -Werror\n' > cabal.project.local
       - run: cabal update
-      - run: cabal build --enable-tests -f-manifold all
-      - name: tests without the kernel (pure tiers, kernel-less experiments)
-        run: cabal test -f-manifold --test-show-details=direct
+      - run: cabal build --enable-tests all
+      - name: openscad is not installed
+        run: "! command -v openscad"
+      - name: coscad doctor
+        run: cabal run coscad -- doctor
+      - name: tests with the OpenSCAD oracle off
+        run: |
+          set -o pipefail
+          cabal test coscad-test --test-show-details=direct | tee suite.log
+          grep -q "OpenSCAD oracle checks skipped" suite.log
         env:
-          COSCAD_RENDER: "0"
+          COSCAD_OPENSCAD: none
 
   vscode:
     name: vscode extension

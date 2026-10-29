@@ -23,10 +23,8 @@ import Coscad.Image (renderScenes)
 import Coscad.Codegen (showD)
 import Coscad.Geometry
 import Coscad.IO (writeFileUtf8)
-import Coscad.OpenScad (openscadFullRender, openscadPngArgs, runOpenscadRaw)
 import Data.List (nub)
 import qualified Data.Map as Map
-import System.Exit (ExitCode (..))
 import Coscad.Report
 import System.FilePath (dropExtension, takeFileName)
 import Text.Printf (printf)
@@ -103,7 +101,7 @@ processPlanSummary :: Emit -> Bool -> FilePath -> IO (Either Failure PlanSummary
 processPlanSummary = processPlanSummaryWithBackend defaultBackend
 
 processPlanSummaryWithBackend :: Backend -> Emit -> Bool -> FilePath -> IO (Either Failure PlanSummary)
-processPlanSummaryWithBackend backend emit png path = runCommand $ do
+processPlanSummaryWithBackend _backend emit png path = runCommand $ do
   res <- loadAssembly emit [] path
   ar <- either (abort . asmFailure) return res
   (model, errs) <- either (abort . inputFailure) return (buildModel ar)
@@ -122,19 +120,10 @@ processPlanSummaryWithBackend backend emit png path = runCommand $ do
       writeFileUtf8 (base ++ "_plan.md") (planMarkdown title model steps errs)
       writeFileUtf8 (base ++ "_plan.json") (planJson path model steps errs)
       printf "Wrote %s_plan.md (%d steps, %d flips, cost %s)\n" base (length steps) (length (filter stFlip steps)) (showD (sCost st))
-      full <- if png && backend == OpenScadBackend then openscadFullRender else return False
-      when (png && backend == OpenScadBackend && not full) $
-        emit $ Note "step images use the OpenSCAD preview (coincident faces may flicker); OpenSCAD 2025.05 or newer renders them fully at the same speed"
       forM_ (zip [1 :: Int ..] steps) $ \(k, _) -> do
         let f = base ++ "_step" ++ show k ++ ".scad"
         writeFileUtf8 f (stepScad model steps k)
-        when (png && backend == OpenScadBackend) $ do
-          r <- runOpenscadRaw (openscadPngArgs full (base ++ "_step" ++ show k ++ ".png") f)
-          case r of
-            Right (ExitSuccess, _, _) -> return ()
-            Right (_, _, e) -> abort (inputFailure ("png for step " ++ show k ++ ": " ++ take 200 e))
-            Left e -> abort (inputFailure e)
-      when (png && backend == NativeExperimental) $ do
+      when png $ do
         rendered <- renderScenes [(base ++ "_step" ++ show k ++ ".png", stepScene model steps k) | k <- [1..length steps]]
         either (abort . inputFailure) return rendered
       putStrLn ("Wrote " ++ base ++ "_step1.." ++ show (length steps) ++ ".scad" ++ (if png then " and .png" else ""))

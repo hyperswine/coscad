@@ -17,4 +17,5 @@ rebuilds the compiler (`cabal install`), and rebuilds the site atomically.
 proxies to the mini over Tailscale (`proxy_pass http://100.107.153.43:6210`).
 
 Pushing to `main` updates https://manual.cswine.cloud within about five minutes plus
-build time (a minute or two: the plan renders go through OpenSCAD).
+build time (a minute or two for the compiler build and the native plan renders;
+since 2026-10-29 the site needs no OpenSCAD or BOSL2, only pandoc and mandoc).

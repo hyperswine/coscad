@@ -6,7 +6,6 @@ import Control.Exception (bracket)
 import Control.Monad (forM_, when)
 import Coscad.Backend (Backend (..))
 import Coscad.Image
-import Coscad.Manifold (manifoldAvailable)
 import Coscad.Linalg (matIdentity)
 import Coscad.Shape (Shape (..))
 import Coscad.Plan (PlanSummary (..), processPlanSummaryWithBackend)
@@ -48,7 +47,7 @@ imageTier t = do
         let colored = [(x,y) | x <- [0..79], y <- [0..59], pixelAt a x y /= PixelRGB8 250 249 246]
         assertT t "image: auto-fit keeps tall scene away from image edges"
           (not (null colored) && all (\(x,y)->x>0 && y>0 && x<79 && y<59) colored) "scene clipped or empty"
-  when manifoldAvailable $ do
+  do
     tmp <- tempDir "native-images"
     let marker = tmp </> "openscad-invocations"
         forbidden = tmp </> "forbidden-openscad"
@@ -80,7 +79,7 @@ imageTier t = do
         files <- listDirectory folder
         forM_ [f | f <- files, takeExtension f `elem` [".coscad",".assemble"]] $ \f ->
           copyFile (folder </> f) (dest </> f)
-        result <- processPlanSummaryWithBackend NativeExperimental silent True (dest </> name <.> "assemble")
+        result <- processPlanSummaryWithBackend Native silent True (dest </> name <.> "assemble")
         case result of
           Left e -> failT t ("native plan PNG " ++ tag) (show e)
           Right summary -> forM_ [1..length (psSteps summary)] $ \k -> do
@@ -94,7 +93,7 @@ imageTier t = do
                   (imageWidth a==1200 && imageHeight a==900 && ink>20) "invalid or blank PNG"
         -- Existing planner output is also consumed end to end by the site.
         when (tag=="corner") $ do
-          site <- processSiteWithBackend NativeExperimental silent (tmp </> "site") [dest </> name <.> "assemble"]
+          site <- processSiteWithBackend Native silent (tmp </> "site") [dest </> name <.> "assemble"]
           page <- doesFileExist (tmp </> "site" </> name </> "index.html")
           png <- doesFileExist (tmp </> "site" </> name </> name ++ "_step1.png")
           assertT t "native site publishes HTML and PNG with OpenSCAD forbidden"

@@ -42,8 +42,6 @@ def main():
     parser.add_argument('--report', type=Path)
     args = parser.parse_args()
     env = dict(os.environ, GHCRTS='-N1')
-    if (REPO.parent / 'BOSL2/std.scad').is_file():
-        env.setdefault('COSCAD_BOSL2', str(REPO.parent / 'BOSL2'))
     checker_dir = None
     try:
         with tempfile.TemporaryDirectory(prefix='tesseract-verify-') as temp:

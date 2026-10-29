@@ -15,6 +15,11 @@ Checks:
 - Assembled bow: zero overlaps and zero clearance warnings.
 - Boolean probes for M4 bolts, AF7 nuts, arm pockets and face recess:
   zero interference; see validation.json and verify.py.
+  validation.json was recorded with OpenSCAD boolean probes. Since
+  2026-10-29 verify.py runs the same probes with manifold3d (numpy and
+  manifold3d, no OpenSCAD) and gives the same report for bow-center.stl.
+  A fresh native `coscad stl bow-center.coscad` render has 1158 triangles
+  and passes all four probes (`verify.py --mesh PATH --output PATH`).
 - 190 non-rendering compiler tests passed. Full geometry suite not run;
   this part and its assembly were rendered and checked directly.
 - Example's SCAD and geometry regression expectations updated.

@@ -25,22 +25,35 @@ stack exec coscad -- experiments/topological/bow-center.coscad -o /tmp/bow-topol
 stack exec coscad -- plan experiments/topological/orbit-tower.assemble
 ```
 
-Run the comparisons from the repository root:
+Run the comparisons from the repository root, with a Python that has numpy
+and manifold3d:
 
 ```sh
-stack build
-python3 experiments/topological/verify.py \
-    --coscad "$(stack path --local-install-root)/bin/coscad"
+python3 experiments/topological/verify.py --coscad "$(cabal list-bin exe:coscad)"
 ```
 
-The standard-library Python runner compiles and renders originals and pilots
-in scratch directories, checks closed meshes, connected components and bounds,
-and compares their solids. It then changes eight sets of dimensions
+The runner renders originals and pilots with `coscad stl` in scratch
+directories, checks closed meshes, connected components and bounds, and
+compares their solids with manifold3d. It then changes eight sets of dimensions
 and checks bounds plus 28 small material/cavity probes. Finally it compares fresh
 Orbit Tower plans with the original parts, original pilots, and new native rotor,
-excluding the source path.
-OpenSCAD warnings fail the checks. `COSCAD_OPENSCAD`, `COSCAD_BOSL2`, and
-`OPENSCADPATH` configure local tools. No slicing, printing or network commands run.
+excluding the source path. Compiler warnings fail the checks. No OpenSCAD,
+slicing, printing or network commands run.
+
+Until 2026-10-29 the runner compiled to .scad and used OpenSCAD with BOSL2
+for rendering and every boolean probe (`COSCAD_OPENSCAD`, `COSCAD_BOSL2` and
+`OPENSCADPATH` configured it). The two result files below were produced that
+way and are kept unchanged as records. Since then it uses the native compiler
+and manifold3d, needs neither OpenSCAD nor BOSL2, and writes
+`manifold-results.json` by default (its `geometry` field replaces `openscad`).
+A residual that is not empty must still have at most 0.001 mm³ of volume, and
+its thickness, now either the minimum bounding extent or the mean thickness
+2 × volume / surface area, must be at most 0.00001 mm. A 2026-10-29 run passed
+every comparison, resize bound, probe and the plan comparison. Volumes agree
+with native-results.json to within 4e-7 relative. Differences from the
+OpenSCAD run: bow-center's residual is now empty (was 0.000173 mm³), while
+orbit-axle and orbit-rotor leave zero-volume slivers (under 2e-13 mm³, mean
+thickness under 4e-15 mm) where OpenSCAD reported empty output.
 
 In the initial nine pilots, eight comparisons have empty differences. The bow has a measured
 0.000173 mm³ difference at its grip floor, under 0.000001 mm thick, consistent
@@ -59,7 +72,8 @@ this is a tolerance comparison, not an exact empty symmetric difference.
 
 [native-results.json](native-results.json) records the current eleven
 comparisons, eight resize checks and instruction comparison, along with the
-source commit, dirty-worktree flag, compiler binary hash and OpenSCAD version.
+source commit, dirty-worktree flag, compiler binary hash and OpenSCAD version
+(the OpenSCAD-era run).
 [results.json](results.json) preserves the initial nine-pilot study.
 `--case NAME` limits a development run; use a separate `--output` path for such
 partial results. Scratch files are removed on success and retained on failure.

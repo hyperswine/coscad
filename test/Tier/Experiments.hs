@@ -20,7 +20,7 @@ import Coscad.Stress.Tetra
 import qualified Data.Map.Strict as Map
 import qualified Data.Array as A
 import Harness
-import Coscad.OpenScad (openscadVersion)
+import Oracle.OpenScad (openscadVersion)
 import Data.Char (isDigit)
 import System.FilePath ((</>))
 import System.Directory (findExecutable, doesFileExist)
@@ -85,10 +85,10 @@ experimentsTier t = do
     Right tris -> assertT t "reflection parity survives determinant underflow" (abs (signedVolume tris-1)<1e-9) (show (signedVolume tris))
     Left err -> failT t "extreme reflected scale" err
   expectErr t "unknown backend refused" (parseBackend "magic") ["unknown backend"] []
-  assertT t "default backend follows the build: native with the kernel, openscad without"
-    (defaultBackend == (if manifoldAvailable then NativeExperimental else OpenScadBackend)) (show (defaultBackend, manifoldAvailable))
-  assertT t "--backend=native is an alias of native-experimental"
-    (parseBackend "native" == Right NativeExperimental && parseBackend "native-experimental" == Right NativeExperimental && parseBackend "openscad" == Right OpenScadBackend) ""
+  assertT t "the only backend is native" (defaultBackend == Native && backendName defaultBackend == "native") (show defaultBackend)
+  assertT t "--backend=native and the earlier native-experimental are accepted"
+    (parseBackend "native" == Right Native && parseBackend "native-experimental" == Right Native) ""
+  expectErr t "--backend=openscad names the retirement and the .scad export" (parseBackend "openscad") ["retired", "coscad part.coscad -o part.scad"] []
   loftChecks t
   let axial = defaultBeam {beamCells=(4,2,2),poisson=0,tipForceN=(1,0,0)}
   case solveBeam axial of
@@ -135,7 +135,7 @@ experimentsTier t = do
       dir <- tempDir "native-cli"
       let src=dir </> "box.coscad"; dest=dir </> "native.stl"
       writeFile src "main = box 2 3 4\n"
-      (code,_,err) <- readProcessWithExitCode exe ["stl",src,"--backend=native-experimental","-o",dest] ""
+      (code,_,err) <- readProcessWithExitCode exe ["stl",src,"-o",dest] ""
       exists <- doesFileExist dest
       assertT t "native STL CLI" (code==ExitSuccess && exists) err
       if exists then do
@@ -146,22 +146,19 @@ experimentsTier t = do
       assertT t "native STL CLI accepts --backend=native" (aliasCode==ExitSuccess) aliasErr
       writeFile src "main = ◉ 2 5\n"
       writeFile dest "previous valid output"
-      (failed,_,why) <- readProcessWithExitCode exe ["stl",src,"--backend=native-experimental","-o",dest] ""
+      (failed,_,why) <- readProcessWithExitCode exe ["stl",src,"-o",dest] ""
       kept <- readFile dest
       assertT t "unsupported CLI keeps prior output" (failed==ExitFailure 1 && "spindle/horn torus is unsupported" `isInfixOf` why && kept=="previous valid output") why
-      -- the build's default: a kernel build never needs OpenSCAD for stl; a
-      -- kernel-less build must name OpenSCAD as the missing piece
+      -- no command may reach for OpenSCAD: point it somewhere that cannot run
       writeFile src "main = box 2 3 4\n"
       environment <- getEnvironment
-      (defaultCode,_,defaultErr) <- readCreateProcessWithExitCode ((proc exe ["stl",src,"-o",dest]) {env=Just (("COSCAD_OPENSCAD","/nonexistent/native-must-not-fallback"):filter ((/="COSCAD_OPENSCAD") . fst) environment)}) ""
-      if manifoldAvailable
-        then assertT t "default backend renders without OpenSCAD in a kernel build" (defaultCode==ExitSuccess) defaultErr
-        else assertT t "default backend is OpenSCAD in a kernel-less build" (defaultCode==ExitFailure 1 && "could not run /nonexistent/native-must-not-fallback" `isInfixOf` defaultErr) defaultErr
+      (defaultCode,_,defaultErr) <- readCreateProcessWithExitCode ((proc exe ["stl",src,"-o",dest]) {env=Just (("COSCAD_OPENSCAD","/nonexistent/native-must-not-fallback"):("PATH","/nonexistent"):filter ((`notElem` ["COSCAD_OPENSCAD","PATH"]) . fst) environment)}) ""
+      assertT t "stl renders with no OpenSCAD anywhere" (defaultCode==ExitSuccess) defaultErr
+      (retired,_,retiredWhy) <- readProcessWithExitCode exe ["stl",src,"--backend=openscad","-o",dest] ""
+      assertT t "CLI refuses --backend=openscad and points at the .scad export" (retired==ExitFailure 1 && "retired" `isInfixOf` retiredWhy && "part.scad" `isInfixOf` retiredWhy) retiredWhy
       (badBackend,_,message) <- readProcessWithExitCode exe ["stl",src,"--backend=magic"] ""
       assertT t "CLI rejects unknown backend" (badBackend==ExitFailure 1 && "unknown backend" `isInfixOf` message) message
-  if manifoldAvailable then manifoldTier t >> indexedKernelTier t >> extrusionTier t >> nativeCorpusTier t >> nativePipelineTier t else do
-    r <- meshOperation MeshUnion [] []
-    expectErr t "unlinked kernel is explicit" r ["-fmanifold"] []
+  manifoldTier t >> indexedKernelTier t >> extrusionTier t >> nativePipelineTier t
 
 manifoldTier :: T -> IO ()
 manifoldTier t = do
@@ -185,23 +182,6 @@ manifoldTier t = do
   expectErr t "final empty CSG is an error" removed ["empty mesh"] []
   invalid <- meshOperation MeshUnion [((0,0,0),(1,0,0),(0,1,0))] []
   expectErr t "open mesh refused at FFI boundary" invalid ["Manifold:"] []
-
-nativeCorpusTier :: T -> IO ()
-nativeCorpusTier t = do
-  section "accepted native example corpus"
-  baseline <- readFile "test/golden/geometry.txt"
-  accepted <- readFile "test/golden/native-supported.txt"
-  let goldens=Map.fromList [(f,g) | line <- lines baseline, f:values <- [words line], Just g <- [readGeo values]]
-      paths=[f | line <- lines accepted, [f] <- [words line], take 1 f /= "#"]
-  forM_ paths $ \file -> do
-    source <- readFile file
-    case (parseProgramNamed file source,Map.lookup file goldens) of
-      (Right (_,shape),Just expected) -> do
-        r <- nativeCSGMesh shape
-        case r of
-          Left err -> failT t ("native corpus "++file) err
-          Right tris -> assertT t ("native corpus "++file) (geoClose expected (geoOf tris)) (show (expected,geoOf tris))
-      _ -> failT t ("native corpus "++file) "source failed to parse or geometry baseline missing"
 
 elementTier :: T -> IO ()
 elementTier t = case elementMatrix (2,3,4) 2000 0.3 of
@@ -270,21 +250,21 @@ backendOracleChecks :: T -> IO ()
 backendOracleChecks t = do
   dir <- tempDir "backend-oracle"
   forM_ meshCases $ \(name,shape) -> do
-    oracle <- renderShape OpenScadBackend (dir </> "part.scad") (dir </> "part.stl") shape
+    oracle <- oracleRender (dir </> "part.scad") (dir </> "part.stl") shape
     case (nativeMesh shape,oracle) of
       (Right actual,Right expected) -> do
         assertT t ("native/OpenSCAD "++name) (geoClose (geoOf actual) (geoOf expected)) (show (geoOf actual,geoOf expected))
-        if manifoldAvailable then symmetricDifference t name actual expected else return ()
+        symmetricDifference t name actual expected
       results -> failT t name (show (fmap length (fst results),fmap length (snd results)))
-  if manifoldAvailable then do
+  do
     chamferActual<-nativeCSGMesh (Cuboid (4,6,8) 1 0)
-    chamferExpected<-renderShape OpenScadBackend (dir </> "chamfer.scad") (dir </> "chamfer.stl") (Cuboid (4,6,8) 1 0)
+    chamferExpected<-oracleRender (dir </> "chamfer.scad") (dir </> "chamfer.stl") (Cuboid (4,6,8) 1 0)
     case (chamferActual,chamferExpected) of
       (Right a,Right b) -> symmetricDifference t "chamfered cuboid" a b
       r -> failT t "chamfered cuboid" (show (fmap length (fst r),fmap length (snd r)))
     forM_ [("rounded box",Cuboid (4,6,8) 0 1),("max rounded box",Cuboid (2,3,4) 0 1),("thin rounded panel",Cuboid (200,200,2.5) 0 1),("wide rounded panel",Cuboid (210,200,2.5) 0 1)] $ \(name,shape) -> do
       actual<-nativeCSGMesh shape
-      expected<-renderShape OpenScadBackend (dir </> "rounded.scad") (dir </> "rounded.stl") shape
+      expected<-oracleRender (dir </> "rounded.scad") (dir </> "rounded.stl") shape
       case (actual,expected) of
         (Right a,Right b) -> do
           assertT t (name++" bounds and volume") (geoClose (geoOf a) (geoOf b)) (show (geoOf a,geoOf b))
@@ -296,7 +276,7 @@ backendOracleChecks t = do
         Left err -> failT t path err
         Right (_,shape) -> do
           actual<-nativeCSGMesh shape
-          expected<-renderShape OpenScadBackend (dir </> "corpus.scad") (dir </> "corpus.stl") shape
+          expected<-oracleRender (dir </> "corpus.scad") (dir </> "corpus.stl") shape
           case (actual,expected) of
             (Right a,Right b) -> symmetricDifference t path a b
             r -> failT t path (show (fmap length (fst r),fmap length (snd r)))
@@ -318,7 +298,7 @@ backendOracleChecks t = do
           , ("offset bezier",Extrude 6 (Offset 2 (bezPoly 8 [(0,0),(10,0),(10,10),(0,10),(-5,5),(-2,2),(0,0)])),1e-3)
           ] $ \(name,shape,relative) -> do
       actual<-nativeCSGMesh shape
-      expected<-renderShape OpenScadBackend (dir </> "loft.scad") (dir </> "loft.stl") shape
+      expected<-oracleRender (dir </> "loft.scad") (dir </> "loft.stl") shape
       case (actual,expected) of
         (Right a,Right b) -> do
           let (va,loA,hiA)=geoOf a; (vb,_,_)=geoOf b
@@ -332,27 +312,10 @@ backendOracleChecks t = do
         Left err -> failT t path err
         Right (_,shape) -> do
           actual<-nativeCSGMesh shape
-          expected<-renderShape OpenScadBackend (dir </> "corpus.scad") (dir </> "corpus.stl") shape
+          expected<-oracleRender (dir </> "corpus.scad") (dir </> "corpus.stl") shape
           case (actual,expected) of
             (Right a,Right b) -> assertT t ("native/OpenSCAD "++path++" bounds and volume") (geoClose (geoOf a) (geoOf b)) (show (geoOf a,geoOf b))
             r -> failT t path (show (fmap length (fst r),fmap length (snd r)))
-    -- OpenSCAD stays available as the explicit opt-out, and next records it
-    bin<-findExecutable "coscad"
-    case bin of
-      Nothing -> failT t "opt-out CLI available" "coscad not on PATH"
-      Just exe -> do
-        optDir<-tempDir "backend-opt-out"
-        writeFile (optDir </> "a.coscad") "main = box 20 20 20\n"
-        writeFile (optDir </> "b.coscad") "main = box 4 4 4\n"
-        writeFile (optDir </> "pair.assemble") "a ← a.coscad ×1\nb ← b.coscad ×1\nasm = a |> at top b\n"
-        (stlCode,stlOut,stlErr)<-readProcessWithExitCode exe ["stl",optDir </> "a.coscad","--backend=openscad","-o",optDir </> "a.stl"] ""
-        assertT t "--backend=openscad still renders stl" (stlCode==ExitSuccess && "volume 8000.000" `isInfixOf` stlOut) (stlOut++stlErr)
-        (nextCode,nextOut,nextErr)<-readProcessWithExitCode exe ["next",optDir </> "pair.assemble","--backend=openscad"] ""
-        manifest<-readJson (optDir </> "pair_manifest.json")
-        assertT t "next --backend=openscad records the openscad backend" (nextCode==ExitSuccess && either (const False) (\m -> lookupKey "geometry_backend" m==Just (JString "openscad")) manifest) (nextOut++nextErr++show manifest)
-        (checkCode,checkOut,checkErr)<-readProcessWithExitCode exe ["check",optDir </> "pair.assemble","--backend=openscad"] ""
-        assertT t "check --backend=openscad still runs" (checkCode==ExitSuccess && "geometry backend: openscad" `isInfixOf` checkOut) (checkOut++checkErr)
-  else return ()
 
 cadTier :: T -> IO ()
 cadTier t = do
@@ -525,31 +488,31 @@ nativePipelineTier t = do
             ,("unused alias","a",ExitSuccess,"1 placed instances")
             ,("transformed","(a |> at top b) |> z 30",ExitSuccess,"contact")] $ \(label,expr,expected,fragment) -> do
         writeFile source (refs++"clearance 0.3\nasm = "++expr++"\n")
-        (code,out,err)<-run ["check",source,"--backend=native-experimental"]
+        (code,out,err)<-run ["check",source]
         assertT t ("native check "++label) (code==expected && fragment `isInfixOf` out) (out++err)
       -- A completely enclosed cavity must not count as a second positive solid.
       writeFile (dir </> "a.coscad") "main = box 20 20 20 ⊖ box 12 12 12\n"
       writeFile source (refs++"asm = a ⊕ b\n")
-      (cavityCode,cavityOut,cavityErr)<-run ["check",source,"--backend=native-experimental"]
+      (cavityCode,cavityOut,cavityErr)<-run ["check",source]
       assertT t "native check enclosed cavity" (cavityCode==ExitSuccess && "0 overlaps" `isInfixOf` cavityOut && "2 placed instances" `isInfixOf` cavityOut) (cavityOut++cavityErr)
       writeFile (dir </> "a.coscad") "main = box 20 20 20\n"
       writeFile source (refs++"asm = a |> at top b\n")
-      (nextCode,nextOut,nextErr)<-run ["next",source,"--backend=native-experimental"]
+      (nextCode,nextOut,nextErr)<-run ["next",source]
       assertT t "native next without OpenSCAD" (nextCode==ExitSuccess) (nextOut++nextErr)
       if nextCode==ExitSuccess then do
         manifest<-readJson (dir </> "pair_manifest.json")
-        assertT t "next records backend provenance" (either (const False) (\m -> lookupKey "geometry_backend" m==Just (JString "native-experimental")) manifest) (show manifest)
+        assertT t "next records backend provenance" (either (const False) (\m -> lookupKey "geometry_backend" m==Just (JString "native")) manifest) (show manifest)
         mesh<-readStl (dir </> "pair_bed1.stl")
         assertT t "native next conserves packed part volume" (abs (meshVolume mesh-8064)<1e-6) (show (meshVolume mesh))
       else return ()
       writeFile (dir </> "a.coscad") "main = box 20 2 2\n"
       writeFile (dir </> "b.coscad") "main = box 2 20 2\n"
       writeFile source (refs++"clearance 0.3\nasm = a ⊕ (b |> move 0 0 2.1)\n")
-      (edgeCode,edgeOut,edgeErr)<-run ["check",source,"--backend=native-experimental"]
+      (edgeCode,edgeOut,edgeErr)<-run ["check",source]
       assertT t "native check crossed-bar edge clearance" (edgeCode==ExitSuccess && "WARN" `isInfixOf` edgeOut && "gap 0.1 mm" `isInfixOf` edgeOut) (edgeOut++edgeErr)
       writeFile (dir </> "a.coscad") "main = box 2 2 2\n"
       writeFile source "a ← a.coscad ×2\nb ← b.coscad ×1\nasm = a ⊕ (a |> move 2 2 0) ⊕ (b |> move 50 0 0)\n"
-      (touchCode,touchOut,touchErr)<-run ["check",source,"--backend=native-experimental"]
+      (touchCode,touchOut,touchErr)<-run ["check",source]
       assertT t "native check separates edge-touching instances" (touchCode==ExitSuccess && "3 placed instances" `isInfixOf` touchOut && "contact" `isInfixOf` touchOut) (touchOut++touchErr)
       -- the default backend of a kernel build is native: no flag, no OpenSCAD
       writeFile (dir </> "a.coscad") "main = box 20 20 20\n"
@@ -559,13 +522,13 @@ nativePipelineTier t = do
       assertT t "default next renders natively without OpenSCAD" (defaultCode==ExitSuccess) (defaultOut++defaultErr)
       if defaultCode==ExitSuccess then do
         manifest<-readJson (dir </> "pair_manifest.json")
-        assertT t "default next records the native backend in its manifest" (either (const False) (\m -> lookupKey "geometry_backend" m==Just (JString (backendName defaultBackend))) manifest && defaultBackend==NativeExperimental) (show manifest)
+        assertT t "default next records the native backend in its manifest" (either (const False) (\m -> lookupKey "geometry_backend" m==Just (JString (backendName defaultBackend))) manifest && defaultBackend==Native) (show manifest)
       else return ()
       (defaultCheck,defaultCheckOut,_)<-run ["check",source]
-      assertT t "default check runs natively without OpenSCAD" (defaultCheck==ExitSuccess && "geometry backend: native-experimental" `isInfixOf` defaultCheckOut) defaultCheckOut
+      assertT t "default check runs natively without OpenSCAD" (defaultCheck==ExitSuccess && "geometry backend: native" `isInfixOf` defaultCheckOut) defaultCheckOut
       writeFile (dir </> "a.coscad") "main = ◉ 2 5\n"
       forM_ ["next","check"] $ \command -> do
-        (code,_,err)<-run [command,source,"--backend=native-experimental"]
+        (code,_,err)<-run [command,source]
         assertT t ("native "++command++" refuses unsupported part") (code==ExitFailure 1 && "spindle/horn torus is unsupported" `isInfixOf` err) err
       -- lofts and offsets are native now; the whole example must render with OpenSCAD unreachable
       forM_ ["examples/loft.coscad","examples/offset_demo.coscad","examples/waterbottle_advanced.coscad"] $ \path -> do

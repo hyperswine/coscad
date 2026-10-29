@@ -9,9 +9,8 @@
 --   2. Split each render into connected bodies (instances).
 --   3. Pair up bodies across (and within) parts; prune by clearance-
 --      expanded AABB overlap.
---   4. For surviving pairs, both bodies are emitted as OpenSCAD
---      polyhedron() literals and intersected by OpenSCAD, or intersected
---      directly as indexed native meshes. Nonzero volume = OVERLAP.
+--   4. For surviving pairs, the two indexed meshes are intersected by the
+--      native kernel. Nonzero volume = OVERLAP.
 --   5. Non-overlapping close pairs are classified by vertex-to-triangle
 --      and edge-to-edge distance (BVH-accelerated): CONTACT (< 0.02mm) is informational
 --      (mating faces), a gap below the declared `clearance` is a WARNING.
@@ -34,14 +33,11 @@ import Coscad.Backend (Backend (..), backendName, nativeIndexedCSGMesh)
 import Coscad.Mesh.Distance (meshDistance)
 import Coscad.Mesh.Indexed
 import Coscad.Manifold (MeshOp (MeshIntersection), indexedOperation)
-import Coscad.Codegen
-import Coscad.IO (readFileLatin1, scratchDir)
+import Coscad.IO (scratchDir)
 import Coscad.Linalg (V3, cross, dot3, vlen, vsub)
-import Coscad.Mesh (Tri, meshVolume, parseStlAscii, stlAscii)
-import Coscad.OpenScad (openscadStlArgsIO, renderStlFile, runOpenscadRaw)
+import Coscad.Mesh (Tri, meshVolume, stlAscii)
 import Coscad.Shape
 import Coscad.Report
-import System.Exit (ExitCode (..))
 import Control.Monad (forM, forM_, unless, when)
 import Data.IORef
 import Data.List (foldl', intercalate, minimumBy)
@@ -113,10 +109,9 @@ groupSolidShells shells = do
   cavities<-mapM owner inward
   return (Map.elems (Map.fromListWith (++) ([(i,[payload]) | (i,(payload,_))<-outward]++cavities)))
 
-data CheckBody = NativeBody IndexedMesh | ScadBody [Tri]
+newtype CheckBody = NativeBody IndexedMesh
 bodyTriangles :: CheckBody -> [Tri]
 bodyTriangles (NativeBody mesh)=indexedTriangles mesh
-bodyTriangles (ScadBody tris)=tris
 
 triBounds :: [Tri] -> (V3, V3)
 triBounds ts =
@@ -135,43 +130,6 @@ aabbGap ((ax0, ay0, az0), (ax1, ay1, az1)) ((bx0, by0, bz0), (bx1, by1, bz1)) =
    in sqrt (gx * gx + gy * gy + gz * gz)
 
 -- ------------------------------------------------------------------
--- emit a body as an OpenSCAD polyhedron (STL winding is CCW-outward;
--- polyhedron wants CW from outside, so faces are reversed)
-polyScad :: [Tri] -> String
-polyScad ts =
-  let vkeys = Map.keys (Map.fromList [(v, ()) | (a, b, c) <- ts, v <- [a, b, c]])
-      idx = Map.fromList (zip vkeys [(0 :: Int) ..])
-      pts = vkeys
-      shw (x, y, z) = "[" ++ show x ++ "," ++ show y ++ "," ++ show z ++ "]"
-      face (a, b, c) = "[" ++ show (idx Map.! c) ++ "," ++ show (idx Map.! b) ++ "," ++ show (idx Map.! a) ++ "]"
-   in "polyhedron(points=["
-        ++ intercalate "," (map shw pts)
-        ++ "], faces=["
-        ++ intercalate "," (map face ts)
-        ++ "]);"
-
--- far-away marker: keeps OpenSCAD from failing on empty exports
-marker :: String
-marker = "translate([99999,99999,99999]) cube(0.001);"
-
--- | Like Next.runOpenscad but also reports CGAL trouble on stderr:
--- OpenSCAD exits 0 after a CGAL assertion and silently emits a
--- fallback (often the first operand), so the exit code alone lies.
-runOpenscadChecked :: FilePath -> FilePath -> IO (Either String Bool)
-runOpenscadChecked scadF stlF = do
-  r <- openscadStlArgsIO stlF scadF >>= runOpenscadRaw
-  return $ case r of
-    Left e -> Left e
-    Right (code, out, err) ->
-      let cgalBad = any (\l -> contains "CGAL error" l || contains "assertion" l) (lines err ++ lines out)
-       in case code of
-            ExitSuccess -> Right cgalBad
-            ExitFailure n -> Left ("openscad exit " ++ show n ++ ": " ++ take 300 err)
-  where
-    contains pat l = pat `isInfixOfS` l
-    isInfixOfS pat l = any (\i -> take (length pat) (drop i l) == pat) [0 .. length l - length pat]
-
--- ------------------------------------------------------------------
 processCheck :: Emit -> FilePath -> IO (Either Failure ())
 processCheck emit = processCheckWith emit False
 
@@ -179,7 +137,7 @@ processCheck emit = processCheckWith emit False
 -- (never shared with another running check) and are deleted afterwards
 -- unless `keepTemp` (--keep-temp), which names the folder.
 processCheckWith :: Emit -> Bool -> FilePath -> IO (Either Failure ())
-processCheckWith = processCheckWithBackend OpenScadBackend
+processCheckWith = processCheckWithBackend Native
 
 processCheckWithBackend :: Backend -> Emit -> Bool -> FilePath -> IO (Either Failure ())
 processCheckWithBackend backend emit keepTemp = processCheckInBackend backend emit keepTemp Nothing
@@ -187,7 +145,7 @@ processCheckWithBackend backend emit keepTemp = processCheckInBackend backend em
 -- | As 'processCheckWith', with an explicit scratch directory (tests).
 -- Overlaps are listed on stdout and fail with exit 2 and no further text.
 processCheckIn :: Emit -> Bool -> Maybe FilePath -> FilePath -> IO (Either Failure ())
-processCheckIn = processCheckInBackend OpenScadBackend
+processCheckIn = processCheckInBackend Native
 
 processCheckInBackend :: Backend -> Emit -> Bool -> Maybe FilePath -> FilePath -> IO (Either Failure ())
 processCheckInBackend backend emit keepTemp scratch path = runCommand $ do
@@ -211,20 +169,12 @@ processCheckInBackend backend emit keepTemp scratch path = runCommand $ do
             Right table -> case Map.lookup "asm" table of
               Nothing -> return (pn, [])
               Just asmS -> do
-                let scadF = dir </> ("chk_" ++ pn ++ ".scad")
-                    stlF = dir </> ("chk_" ++ pn ++ ".stl")
-                writeScad asmS scadF
-                r <- case backend of
-                  NativeExperimental -> do
-                    result <- nativeIndexedCSGMesh asmS
-                    case result of
-                      Right mesh -> writeFile stlF (stlAscii "isolated_part" (indexedTriangles mesh))
-                      Left _ -> return ()
-                    return (map NativeBody <$> (result >>= splitIndexedSolids))
-                  OpenScadBackend -> do
-                    appendFile scadF ("\n" ++ marker ++ "\n")
-                    result <- renderStlFile scadF stlF
-                    return (map ScadBody . filter farFromMarker <$> (result >>= splitSolidBodies))
+                let stlF = dir </> ("chk_" ++ pn ++ ".stl")
+                result <- nativeIndexedCSGMesh asmS
+                case result of
+                  Right mesh -> writeFile stlF (stlAscii "isolated_part" (indexedTriangles mesh))
+                  Left _ -> return ()
+                let r = map NativeBody <$> (result >>= splitIndexedSolids)
                 case r of
                   Left err -> abort (Failure 1 ["Error rendering/splitting " ++ pn ++ ": " ++ err])
                   Right bodies -> return (pn,bodies)
@@ -238,38 +188,19 @@ processCheckInBackend backend emit keepTemp scratch path = runCommand $ do
         overlapsR <- newIORef (0 :: Int)
         warnsR <- newIORef (0 :: Int)
         let pairs = [(x, y) | (x : rest) <- tails' insts, y <- rest]
-        forM_ (zip [(0 :: Int) ..] pairs) $ \(i, ((na, bodyA), (nb, bodyB))) -> do
+        forM_ pairs $ \((na, bodyA), (nb, bodyB)) -> do
           let ba=bodyTriangles bodyA; bb=bodyTriangles bodyB
               gap0 = aabbGap (triBounds ba) (triBounds bb)
           if gap0 > max clr contactEps
             then return ()
             else do
-              -- overlap through the selected backend
-              let scadF = dir </> ("chk_pair" ++ show i ++ ".scad")
-                  stlF = dir </> ("chk_pair" ++ show i ++ ".stl")
-              let writePair x y = writeFile scadF ("intersection() {\n union() { " ++ polyScad x ++ marker ++ " }\n union() { " ++ polyScad y ++ marker ++ " }\n}\n")
-                  measure = do
-                    tris <- either (const []) id . parseStlAscii <$> readFileLatin1 stlF
-                    return (sum (map meshVolume (filter farFromMarkerNot (splitBodies tris))))
-              volM <- case backend of
-                NativeExperimental -> do
-                  result <- case (bodyA,bodyB) of
-                    (NativeBody a,NativeBody b) -> indexedOperation MeshIntersection a b
-                    _ -> return (Left "internal backend/body mismatch")
-                  case result of
-                    Left err -> abort (Failure 1 ["Error intersecting " ++ na ++ " and " ++ nb ++ ": " ++ err])
-                    Right mesh -> return (Just (meshVolume (indexedTriangles mesh)))
-                OpenScadBackend -> do
-                  writePair ba bb
-                  r1 <- runOpenscadChecked scadF stlF
-                  case r1 of
-                    Right False -> Just <$> measure
-                    _ -> do
-                      writePair bb ba -- CGAL assertions are often operand-order dependent
-                      r2 <- runOpenscadChecked scadF stlF
-                      case r2 of
-                        Right False -> Just <$> measure
-                        _ -> return Nothing -- boolean unstable near coplanar faces
+              -- overlap volume from the kernel's exact intersection
+              volM <- do
+                let NativeBody a = bodyA; NativeBody b = bodyB
+                result <- indexedOperation MeshIntersection a b
+                case result of
+                  Left err -> abort (Failure 1 ["Error intersecting " ++ na ++ " and " ++ nb ++ ": " ++ err])
+                  Right mesh -> return (Just (meshVolume (indexedTriangles mesh)))
               let note = case volM of Nothing -> "  (boolean unstable; distance verdict)"; Just _ -> ""
               case volM of
                 Just vol | vol > volEps -> do
@@ -297,5 +228,3 @@ processCheckInBackend backend emit keepTemp scratch path = runCommand $ do
     rnd x = fromIntegral (round (x * 1000) :: Integer) / 1000 :: Double
     tails' [] = []
     tails' l@(_ : xs) = l : tails' xs
-    farFromMarker b = let ((x, _, _), _) = triBounds b in x < 90000
-    farFromMarkerNot = farFromMarker

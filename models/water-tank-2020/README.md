@@ -117,10 +117,8 @@ TANK_PY=/tmp/coscad-tank-venv/bin/python
 # Set PKG_CONFIG_PATH to the pinned Manifold installation first.
 COSCAD_BIN="$(cabal list-bin exe:coscad -fmanifold --builddir=dist-native)"
 "$TANK_PY" models/water-tank-2020/build_model.py
-"$COSCAD_BIN" stl models/water-tank-2020/parts/rail_180.coscad \
-  --backend=native-experimental -o /tmp/tank-rail.stl
-"$COSCAD_BIN" stl models/water-tank-2020/parts/seam_bracket.coscad \
-  --backend=native-experimental -o /tmp/tank-bracket.stl
+"$COSCAD_BIN" stl models/water-tank-2020/parts/rail_180.coscad -o /tmp/tank-rail.stl
+"$COSCAD_BIN" stl models/water-tank-2020/parts/seam_bracket.coscad -o /tmp/tank-bracket.stl
 "$TANK_PY" models/water-tank-2020/test_study.py
 "$TANK_PY" models/water-tank-2020/analyse.py --rail-stl /tmp/tank-rail.stl
 for size in 2 1.5; do
@@ -133,7 +131,7 @@ done
 "$COSCAD_BIN" models/water-tank-2020/tank-cutaway.coscad
 "$COSCAD_BIN" validate --json models/water-tank-2020/tank.assemble
 for fixture in unit-bay corner-joint floor-corner; do
-  "$COSCAD_BIN" check "models/water-tank-2020/$fixture.assemble" --backend=native-experimental
+  "$COSCAD_BIN" check "models/water-tank-2020/$fixture.assemble"
 done
 ```
 

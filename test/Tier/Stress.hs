@@ -108,11 +108,7 @@ stressTier t = do
     , "support lft"
     , "load @tip top 0 0 -1"
     , "stress material=pla safety=2 cell=1" ])
-  r <- processStress OpenScadBackend silent False part Nothing
-  -- the native primitive path renders a plain box without OpenSCAD or the kernel
-  r' <- case r of
-    Left _ -> processStress NativeExperimental silent False part Nothing
-    ok -> return ok
+  r' <- processStress Native silent False part Nothing
   case r' of
     Left (Failure code ls) -> failT t "stress command on a bar" (show code ++ " " ++ unlines ls)
     Right () -> do
@@ -130,12 +126,12 @@ stressTier t = do
           assertT t "deflection near the uniform-load beam formula" (maybe False (\d -> abs (d / uniform - 1) < 0.05) (num ["result","max_displacement_mm"])) (show (num ["result","max_displacement_mm"], uniform))
           assertT t "safety reported" (maybe False (> 1) (num ["safety","in_plane"])) ""
   writeFile part (unlines [ "main = ▬ 20 4 4", "support lft", "load rt 0 0 -500", "stress material=pla safety=2 cell=1" ])
-  r2 <- processStress NativeExperimental silent False part Nothing
+  r2 <- processStress Native silent False part Nothing
   case r2 of
     Left (Failure 2 ls) -> assertT t "exit 2 names the safety factor" (any ("safety factor" `isInfixOf`) ls) (unlines ls)
     other -> failT t "overloaded bar exits 2" (show (either failExit (const 0) other))
   writeFile part (unlines [ "main = ▬ 20 4 4", "load rt 0 0 -1" ])
-  r3 <- processStress NativeExperimental silent False part Nothing
+  r3 <- processStress Native silent False part Nothing
   case r3 of
     Left (Failure 1 ls) -> assertT t "missing support is an input error" (any ("no support" `isInfixOf`) ls) (unlines ls)
     other -> failT t "missing support exits 1" (show (either failExit (const 0) other))

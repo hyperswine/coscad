@@ -8,12 +8,13 @@
 --   2. examples      pure: every example compiles, every .assemble
 --                    loads, and the emitted .scad matches the snapshot
 --                    under test/golden/scad/
---   3. geometry      needs OpenSCAD: every example renders, and its
---                    mesh volume + bounds match test/golden/geometry.txt;
---                    plus a few cross-checks (tbracket == bracket,
---                    `coscad next` conserves volume, `coscad check`
---                    passes on bow3). Skipped when OpenSCAD is not
---                    found or COSCAD_RENDER=0.
+--   3. geometry      every example renders natively and its mesh volume
+--                    + bounds match test/golden/geometry.txt; plus pipeline
+--                    cross-checks (tbracket == bracket, `coscad next`
+--                    conserves volume, `coscad check` passes on bow3).
+--                    With OpenSCAD 2025.05+ installed it also runs the
+--                    independent OpenSCAD oracle checks; without it they
+--                    are skipped and say so. COSCAD_RENDER=0 skips the tier.
 --
 -- COSCAD_UPDATE_GOLDEN=1 rewrites the snapshots from the current output
 -- (review the diff before committing). Geometry entries within tolerance
@@ -22,7 +23,7 @@
 module Main (main) where
 
 import Control.Monad (unless, when)
-import Coscad.OpenScad (findOpenscad)
+import Oracle.OpenScad (findOpenscad)
 import Data.IORef
 import GHC.IO.Encoding (setLocaleEncoding)
 import System.Environment (getArgs, lookupEnv)
@@ -63,11 +64,16 @@ main = do
     experimentsTier t
     stressTier t
     render <- lookupEnv "COSCAD_RENDER"
+    -- OpenSCAD is only the test suite's independent oracle; the compiler
+    -- never uses it. Its checks are skipped, loudly, when it is absent.
     bin <- findOpenscad
-    case (render, bin) of
-      (Just "0", _) -> putStrLn "\n(geometry tier skipped: COSCAD_RENDER=0)"
-      (_, Nothing) -> putStrLn "\n(geometry tier skipped: OpenSCAD not found; set COSCAD_OPENSCAD)"
-      (_, Just b) -> unless focused (geometry t update b) >> backendOracleTier t
+    case render of
+      Just "0" -> putStrLn "\n(geometry tier skipped: COSCAD_RENDER=0)"
+      _ -> do
+        unless focused (geometry t update bin)
+        case bin of
+          Nothing -> putStrLn "\nSKIP native backend compared with OpenSCAD: OpenSCAD not found (it is only the test oracle; set COSCAD_OPENSCAD to run these)"
+          Just _ -> backendOracleTier t
   n <- readIORef (tPassed t)
   fails <- readIORef (tFailed t)
   putStrLn ""
