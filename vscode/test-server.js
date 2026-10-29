@@ -8,6 +8,7 @@ const {createMessageConnection, StreamMessageReader, StreamMessageWriter} = requ
 async function run() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'coscad-lsp-protocol-'))
   const child = spawn(process.execPath, [path.join(__dirname,'coscad-lsp-server.js'),'--stdio'], {stdio:['pipe','pipe','pipe']})
+  child.stdin.on('error', () => {}) // EPIPE after the server exits on `exit`
   let stderr = ''; child.stderr.on('data', chunk => stderr += chunk)
   const connection = createMessageConnection(new StreamMessageReader(child.stdout),new StreamMessageWriter(child.stdin))
   const timeout = setTimeout(() => { child.kill(); throw new Error('LSP protocol timeout: '+stderr) },15000)
@@ -94,7 +95,12 @@ async function run() {
     const datum=await connection.sendRequest('textDocument/definition',{textDocument:{uri},position:at(analysis,'@tip',2)})
     assert.equal(datum.uri,uri)
     await connection.sendRequest('shutdown',null)
-    connection.sendNotification('exit',null)
+    // The server may close its pipe as soon as it sees `exit`; a write that
+    // races that close is not a protocol failure, so wait for the process
+    // to end instead of leaving the notification's promise unhandled.
+    const exited=new Promise(resolve => child.once('exit', resolve))
+    await connection.sendNotification('exit',null).catch(() => {})
+    await Promise.race([exited, new Promise(resolve => setTimeout(resolve, 2000))])
     console.log('Stdio LSP integration passed (hover, definitions, completion edits, semantic tokens, unsaved frames, compiler-owned diagnostics)')
   } finally { clearTimeout(timeout); connection.dispose(); child.kill(); fs.rmSync(dir,{recursive:true,force:true}) }
 }
