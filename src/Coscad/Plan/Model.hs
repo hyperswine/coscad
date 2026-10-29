@@ -4,13 +4,33 @@
 module Coscad.Plan.Model
   ( Fast (..)
   , Inst (..)
+  , JointKind (..)
   , Material (..)
   , Model (..)
   , Move (..)
   , Node (..)
   , NutKind (..)
-  , Weights (..)
+  , Settings (..)
+  , Weights
+  , Terms
+  , Geo (..)
+  , Approach (..)
+  , Sweep (..)
+  , Twist (..)
+  , emptyGeo
+  , axes6
+  , axisIndex
+  , weight
+  , price
+  , workTerms
+  , defaultWeights
+  , isJoint
+  , retains
+  , jointPartners
   , affApply
+  , basis
+  , project
+  , convexHull
   , bExpand
   , bIntersects
   , buildModel
@@ -32,6 +52,7 @@ where
 
 import Control.Monad (unless, when)
 import Coscad.Assemble
+import Coscad.Constraint (Constraint (..))
 import Coscad.Codegen (showD)
 import Coscad.Geometry
 import Coscad.Validate (finite, readFinite, maxQuantity)
@@ -102,7 +123,9 @@ data Inst = Inst
   , iAxis :: V3 -- unit vector along the longest dimension (rails: slot direction)
   , iEnds :: (Bool, Bool) -- (min end open, max end open)
   , iTorque :: Maybe Double
-  , iMass :: Double -- grams
+  , iMass :: Double -- grams (from the mesh once the geometry is prepared)
+  , iMassHint :: Maybe Double -- `mass=` on the part, which the mesh never overrides
+  , iCom :: V3 -- centre of mass, world frame (box centre until the geometry is prepared)
   , iPreloadInHand :: Bool
   }
 
@@ -121,8 +144,17 @@ nutName k = case k of
   Hex -> "hex"
   NoNut -> "none"
 
+-- | How a joint is made. Bolt: a screw with a driver (`fastener M5x8`).
+-- Peg: `fastener peg`, a friction joint pushed home along its face normal.
+-- The rest come from `joint` lines and move along the mate's axis: Push
+-- (a press or snap fit that holds once seated), Drop (an open socket the
+-- part only rests in: gravity or capture keeps it), Screw (an integral
+-- thread, pitch in mm: the moving part turns as it goes in).
+data JointKind = Bolt | Peg | Push | Drop | Screw Double deriving (Eq, Show)
+
 data Fast = Fast
   { fId :: Int
+  , fKind :: JointKind
   , fSpec :: String -- "M5x8"
   , fDiam :: Double
   , fLen :: Double
@@ -149,15 +181,145 @@ data Fast = Fast
 
 data Node = NPart String | NNuts String | NFast Int deriving (Eq, Ord, Show)
 
-data Move = MPlace Node [String] | MFlip V3 [String] deriving (Show)
+-- | A placement carries its warnings, its cost terms and, for a part, the
+-- direction it leaves by (it comes in along the opposite).
+data Move = MPlace Node [String] Terms (Maybe V3) | MFlip V3 [String] Terms
 
-data Weights = Weights {wFlip, wVertical, wDriver, wShrink, wSibling, wLoose :: Double}
+-- | Cost weights by term name; a plan's cost is the sum of each term times
+-- its weight. Terms are counted per move (see 'Terms').
+type Weights = Map.Map String Double
+
+-- | What one move costs, before weighting: term name to amount.
+type Terms = Map.Map String Double
+
+-- | The defaults, with their units. They are guesses until calibrated
+-- against timed builds (`coscad calibrate`); after that they are seconds.
+--
+-- flip: per flip. vertical: per move with a host rail or slender part on end.
+-- driver: per screw driven off vertical. shrink: per move that shrinks the
+-- bench footprint. sibling: per screw that leaves another on the same part
+-- undone. loose: per loose piece after each move. insert: per bit of the
+-- Fitts index of a joint's alignment (log2 of engaged length over play).
+-- turn: per turn of a screw joint. hand: per hand needed beyond two.
+-- finger: per move, times the fraction of the finger room other parts take.
+-- part, fastener, nut: base handling per part, screw or joint, and nut batch
+-- (zero by default: every order pays them equally; calibration sets them).
+defaultWeights :: Weights
+defaultWeights = Map.fromList
+  [ ("flip", 10), ("vertical", 6), ("driver", 3), ("shrink", 2), ("sibling", 1), ("loose", 1)
+  , ("insert", 0.5), ("turn", 0.3), ("hand", 20), ("finger", 2)
+  , ("part", 0), ("fastener", 0), ("nut", 0) ]
+
+weight :: Weights -> String -> Double
+weight w k = Map.findWithDefault 0 k w
+
+price :: Weights -> Terms -> Double
+price w ts = sum [weight w k * v | (k, v) <- Map.toList ts]
+
+-- | Terms that every complete plan pays about equally: the work of the
+-- joints themselves. The phase search's "cheap move" test ignores them,
+-- and the completion heuristic estimates what is left of them.
+workTerms :: [String]
+workTerms = ["insert", "turn", "part", "fastener", "nut"]
+
+-- | Thresholds and the hand and print models, each a `plan` option.
+data Settings = Settings
+  { setDriverAngle :: Double -- degrees off vertical before a driver costs `driver`
+  , setStandingAngle :: Double -- degrees above horizontal at which a rail or bar counts as standing
+  , setSlender :: Double -- length over width at which a part is slender
+  , setDriverLength :: Double -- mm, the driver's reach above the screw head
+  , setDriverMargin :: Double -- mm added to the screw head radius for the driver
+  , setPhaseTau :: Double -- the phase search's "cheap move" threshold
+  , setStepParts :: Int -- parts placed together in one step at most
+  , setFinger :: Double -- mm, fingertip size (room to push or grip)
+  , setContact :: Double -- mm, distance that counts as touching
+  , setSettle :: Double -- mm a part may drop to come to rest in its seat (print clearance)
+  , setSweepStep :: Double -- mm, the finest step of an insertion sweep
+  , setShell :: Double -- mm of solid perimeter on a printed part
+  , setInfill :: Double -- infill fraction inside that shell
+  }
+
+settingsFrom :: [(String, String)] -> Settings
+settingsFrom opts = Settings (o "driver_angle" 30) (o "standing_angle" 17.5) (o "slender" 3) (o "driver_length" 45)
+  (o "driver_margin" 2) (o "phase_tau" 2.5) (round (o "step_parts" 4)) (o "finger_size" 16) (o "contact" 0.1) (o "settle" 0.5)
+  (o "sweep_step" 0.5) (o "shell" 0.85) (o "infill" 0.15)
+  where o k d = fromMaybe d (lookup k opts >>= readD)
+
+-- | The six rest directions, in a fixed order (index into the tables).
+axes6 :: [V3]
+axes6 = [(0, 0, -1), (0, 0, 1), (-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 1, 0)]
+
+axisIndex :: V3 -> Maybe Int
+axisIndex d = lookup True (zip [vlen (vsub d a) < 1e-9 | a <- axes6] [0 ..])
+
+-- | One way a part can come in: it travels along -apDir to its seat (apDir
+-- is the way it would leave). Measured once against every other part.
+data Approach = Approach
+  { apDir :: V3
+  , apObstacles :: Map.Map String Sweep -- instances this path comes near
+  , apZoneVol :: Double -- mm³ of finger room behind the part along apDir
+  , apZoneNeed :: Double -- mm³ a fingertip needs there
+  , apZone :: Map.Map String Double -- mm³ of that room each instance takes
+  , apBlockers :: [String] -- the instances in apObstacles that block it
+  }
+
+-- | The path against one other instance at its final pose.
+data Sweep = Sweep
+  { swBlocked :: Bool -- the part cannot pass it this way
+  , swBits :: Double -- for a joint partner: log2(1 + engaged length / play)
+  , swTravel :: Double -- mm the part stays in touch with it moving this way (to clear it)
+  }
+
+-- | The moving side of a screw joint.
+data Twist = Twist
+  { twTurns :: Double
+  , twBlockers :: [String] -- instances its rotation at the seat runs into
+  , twZoneVol :: Double -- mm³ of grip room around it
+  , twZoneNeed :: Double -- mm³ two fingertips need there
+  , twZone :: Map.Map String Double
+  }
+
+-- | Mesh-derived tables, filled by Coscad.Plan.Geometry before the search.
+data Geo = Geo
+  { gReady :: Bool
+  , gExt :: Map.Map (String, Int) (Double, Double) -- an instance's extent along axes6 !! k
+  , gFoot :: Map.Map (String, Int) [(Double, Double)] -- its lowest vertices with axes6 !! k down, projected
+  , gContact :: Map.Map (String, String, Int) [(Double, Double)] -- p resting on q, axes6 !! k down: the contact patch
+  , gApproach :: Map.Map String [Approach]
+  , gTwist :: Map.Map (Int, String) Twist -- (screw joint, moving instance)
+  , gJointBits :: Map.Map Int Double -- the least alignment work of each joint over its sides and approaches
+  }
+
+emptyGeo :: Geo
+emptyGeo = Geo False Map.empty Map.empty Map.empty Map.empty Map.empty Map.empty
 
 eps :: Double
 eps = 0.5
 
 -- ------------------------------------------------------------------
 -- small geometry
+
+-- 2D projection basis perpendicular to d
+basis :: V3 -> (V3, V3)
+basis d = let u = if abs (dot3 d (0, 0, 1)) > 0.9 then (1, 0, 0) else (0, 0, 1); u' = vnormed (vsub u (scale3 (dot3 u d) d)) in (u', cross d u')
+
+project :: V3 -> V3 -> (Double, Double)
+project d p = let (u, v) = basis d in (dot3 p u, dot3 p v)
+
+convexHull :: [(Double, Double)] -> [(Double, Double)]
+convexHull pts
+  | length ps < 3 = ps
+  | otherwise = init lower ++ init upper
+  where
+    ps = nub (sort pts)
+    crossZ (ox, oy) (ax, ay) (bx, by) = (ax - ox) * (by - oy) - (ay - oy) * (bx - ox)
+    build = foldl' (\acc p -> add acc p) []
+    add acc p = case acc of
+      (b : a : rest) | crossZ a b p <= 0 -> add (a : rest) p
+      _ -> p : acc
+    lower = reverse (build ps)
+    upper = reverse (build (reverse ps))
+
 
 bIntersects :: BBox -> BBox -> Bool
 bIntersects ((a, b, c), (d, e, f)) ((p, q, r), (s, t, u)) =
@@ -259,6 +421,7 @@ mkInstances ar asmShape = do
       Right Inst
         { iName = nm, iPart = part, iAff = aff, iShape = sh, iBox = bb, iMat = mat, iRail = isRail
         , iAxis = axis, iEnds = ends, iTorque = lookup "torque" hints >>= readD, iMass = mass
+        , iMassHint = lookup "mass" hints >>= readD, iCom = bcenter bb
         , iPreloadInHand = (map toLower <$> lookup "preload" hints) == Just "hand"
         }
 
@@ -291,8 +454,8 @@ parseSpec s = case map toLower s of
   where
     isDigitOrDot c = isDigit c || c == '.'
 
-mkFasteners :: FilePath -> [Inst] -> [FastDecl] -> Either String [Fast]
-mkFasteners srcFile insts decls = do
+mkFasteners :: Settings -> [Constraint] -> FilePath -> [Inst] -> [FastDecl] -> Either String [Fast]
+mkFasteners sets constraints srcFile insts decls = do
   fs <- concat <$> mapM one (zip [1 ..] decls)
   when (length fs > maxQuantity) $ Left ("total fastener count is too large; maximum is " ++ show maxQuantity)
   -- IDs must remain unique when one declaration expands to 100+ joints.
@@ -308,14 +471,18 @@ mkFasteners srcFile insts decls = do
         Nothing -> Left ("unknown part '" ++ who ++ "' (not placed in asm)")
     one (k, fd) = do
       let at = srcFile ++ ":" ++ show (fdLine fd) ++ ":1: fastener: "
-      mapM_ (either (Left . (at ++)) Right . validateFastenerHint) (fdOpts fd)
+          at' = srcFile ++ ":" ++ show (fdLine fd) ++ ":1: joint: "
+          isJointDecl = take 6 (fdSpec fd) == "joint:"
+      unless isJointDecl $ mapM_ (either (Left . (at ++)) Right . validateFastenerHint) (fdOpts fd)
       when (fdCount fd < 1 || fdCount fd > maxQuantity) $ Left (at ++ "fastener count must be from 1 to " ++ show maxQuantity)
-      (d, l) <- maybe (Left (at ++ "cannot read screw spec '" ++ fdSpec fd ++ "'; screw diameter and length must be positive (expected e.g. M5x8, or use peg for a peg joint)")) Right (parseSpec (fdSpec fd))
-      clamped <- either (Left . (at ++)) Right (find (fdClamped fd))
-      host <- either (Left . (at ++)) Right (find (fdHost fd))
+      (d, l) <- if isJointDecl then Right (0, 0) else maybe (Left (at ++ "cannot read screw spec '" ++ fdSpec fd ++ "'; screw diameter and length must be positive (expected e.g. M5x8, or use peg for a peg joint)")) Right (parseSpec (fdSpec fd))
+      clamped <- either (Left . ((if isJointDecl then at' else at) ++)) Right (find (fdClamped fd))
+      host <- either (Left . ((if isJointDecl then at' else at) ++)) Right (find (fdHost fd))
       when (iName clamped == iName host) $ Left (at ++ "clamped part and host must be different instances")
-      if take 1 (fdFace fd) == "@"
-        then either (Left . (at ++)) Right (framedFastener k fd d l clamped host)
+      if take 6 (fdSpec fd) == "joint:"
+        then either (Left . (at' ++)) Right (jointFastener constraints k fd clamped host)
+      else if take 1 (fdFace fd) == "@"
+        then either (Left . (at ++)) Right (framedFastener sets k fd d l clamped host)
         else legacy k fd at d l clamped host
     legacy k fd at d l clamped host = do
       when (lookup "seat" (fdOpts fd) /= Nothing) $ Left (at ++ "seat= requires a host @frame instead of a world face")
@@ -380,11 +547,11 @@ mkFasteners srcFile insts decls = do
           mkF (j, p) =
             let pos = vadd (scale3 p along) (vadd (scale3 otherPos other) (scale3 facePlane n))
              in Fast
-                  { fId = k * 100 + j, fSpec = fdSpec fd, fDiam = d, fLen = l, fHead = hd
+                  { fId = k * 100 + j, fKind = if isPeg then Peg else Bolt, fSpec = fdSpec fd, fDiam = d, fLen = l, fHead = hd
                   , fClamped = iName clamped, fHost = iName host, fFaceName = fdFace fd, fInset = inset, fFace = n
                   , fNut = nutKind, fPocket = pocket, fPocketInClamped = pocketInClamped, fPos = pos, fAlong = p - hostMin, fTorque = if isPeg then 0 else torque
                   , fHeadPos = vadd pos (scale3 (cMax - facePlane) n), fPocketSeat = Nothing, fPocketEntry = Nothing, fSeatName = Nothing
-                  , fDriverLen = if isPeg then 0 else 45, fDriverRad = if isPeg then 0 else headRadius hd d + 2
+                  , fDriverLen = if isPeg then 0 else setDriverLength sets, fDriverRad = if isPeg then 0 else headRadius hd d + setDriverMargin sets
                   , fReach = if isPeg then 0 else l - thickness
                   }
       when (length positions > maxQuantity) $ Left (at ++ "at= contains too many positions; maximum is " ++ show maxQuantity)
@@ -416,8 +583,8 @@ pocketEntry i ref = do
       distances = [(if a > 0 then h-x else l-x)/a | (x,a,l,h) <- zip4 (coords p) (coords n) (coords lo) (coords hi), abs a > 1e-12]
   Right (affApply (iAff i) (vadd p (scale3 (minimum distances) n)))
 
-framedFastener :: Int -> FastDecl -> Double -> Double -> Inst -> Inst -> Either String [Fast]
-framedFastener k fd d l clamped host = do
+framedFastener :: Settings -> Int -> FastDecl -> Double -> Double -> Inst -> Inst -> Either String [Fast]
+framedFastener sets k fd d l clamped host = do
   when (fdCount fd /= 1 || lookup "at" opts /= Nothing) $ Left "a host @frame locates one fastener; omit ×count/at= and declare each hole explicitly"
   when (lookup "inset" opts /= Nothing || lookup "through" opts /= Nothing) $ Left "a host @frame uses seat= and pocket= frames; omit inset=/through="
   when (l <= 0) $ Left "host @frames currently describe screws; use a face and inset= for peg joints"
@@ -475,13 +642,47 @@ framedFastener k fd d l clamped host = do
       (hostMin, _) = extentAlong (iAxis host) (iBox host)
       (localMin, _) = extentAlong localAxis localBox
       along = if iRail host then (dot3 localPos localAxis - localMin) * vlen(mApply (fst(iAff host)) localAxis) else dot3 pos (iAxis host) - hostMin
-  Right [Fast { fId = k, fSpec = fdSpec fd, fDiam = d, fLen = l, fHead = hd
+  Right [Fast { fId = k, fKind = Bolt, fSpec = fdSpec fd, fDiam = d, fLen = l, fHead = hd
     , fClamped = iName clamped, fHost = iName host, fFaceName = fdFace fd
     , fInset = 0, fFace = n, fNut = nutKind, fPocket = pocket, fPocketInClamped = inClamped
     , fPos = pos, fHeadPos = headPos, fPocketSeat = nutSeat, fPocketEntry = entry, fSeatName = Just seatRef
     , fAlong = along, fTorque = torque
-    , fDriverLen = 45, fDriverRad = headRadius hd d + 2, fReach = l - thickness }]
+    , fDriverLen = setDriverLength sets, fDriverRad = headRadius hd d + setDriverMargin sets, fReach = l - thickness }]
   where opts = fdOpts fd
+
+-- | A `joint` line: the axis is the host's outward frame normal at the
+-- mate between the two parts (the moving part leaves along it), or the
+-- named world face of the host with axis=.
+jointFastener :: [Constraint] -> Int -> FastDecl -> Inst -> Inst -> Either String [Fast]
+jointFastener constraints k fd moving host = do
+  let kindWord = drop 6 (fdSpec fd)
+      opts = fdOpts fd
+  kind <- case kindWord of
+    "push" -> Right Push
+    "drop" -> Right Drop
+    "screw" -> maybe (Left "a screw joint needs pitch=mm") (Right . Screw) (lookup "pitch" opts >>= readD)
+    _ -> Left ("unknown joint kind '" ++ kindWord ++ "'")
+  let names i = [iName i, iPart i]
+      mates = [(c, pa, pf, cf) | Mate _ c cf pa pf _ _ <- constraints]
+      between = [(pf, True) | (c, pa, pf, _) <- mates, c `elem` names moving, pa `elem` names host]
+             ++ [(pf, False) | (c, pa, pf, _) <- mates, c `elem` names host, pa `elem` names moving]
+  (pos, axis, label) <- case lookup "axis" opts of
+    Just face -> do
+      n <- maybe (Left ("unknown axis face '" ++ face ++ "'")) Right (anchorDir face)
+      let (_, hi) = extentAlong n (iBox host)
+          c = bcenter (iBox host)
+      Right (vadd c (scale3 (hi - dot3 c n) n), n, face)
+    Nothing -> case between of
+      (pf, hostIsParent) : _ -> do
+        fr <- instanceFrame (if hostIsParent then host else moving) ('@' : pf)
+        let z = mApply (frameBasis fr) (0, 0, 1)
+        Right (frameOrigin fr, if hostIsParent then z else vneg z, '@' : pf)
+      [] -> Left ("no mate between " ++ iName moving ++ " and " ++ iName host ++ " to take the joint axis from; add axis=face")
+  Right [Fast { fId = k, fKind = kind, fSpec = kindWord, fDiam = 0, fLen = 0, fHead = "peg"
+    , fClamped = iName moving, fHost = iName host, fFaceName = label, fInset = 0, fFace = vnormed axis
+    , fNut = NoNut, fPocket = Nothing, fPocketInClamped = False, fPos = pos, fHeadPos = pos
+    , fPocketSeat = Nothing, fPocketEntry = Nothing, fSeatName = Nothing, fAlong = 0, fTorque = 0
+    , fDriverLen = 0, fDriverRad = 0, fReach = 0 }]
 
 -- ------------------------------------------------------------------
 -- requires-before graph
@@ -513,7 +714,7 @@ partPreds ar insts = do
         ns -> Left ("after= for " ++ who ++ ": '" ++ name ++ "' has multiple instances; use " ++ intercalate ", " ns)
 
 buildPreds :: [Inst] -> [Fast] -> Preds
-buildPreds insts fasts = Map.fromListWith (++) (parts ++ nuts ++ screws ++ blockers)
+buildPreds insts fasts = Map.fromListWith (++) (parts ++ nuts ++ screws ++ blockers ++ hostsFirst)
   where
     byName = Map.fromList [(iName i, i) | i <- insts]
     hosts = nutHosts fasts
@@ -529,6 +730,9 @@ buildPreds insts fasts = Map.fromListWith (++) (parts ++ nuts ++ screws ++ block
           then [(NFast (fId f), [NPart (fClamped f), NPart (fHost f)])]
           else [(NFast (fId f), [NPart (fClamped f), NPart (fHost f), NNuts (nutHolder f)]), (NPart (fClamped f), [NNuts (nutHolder f)])]
       | f <- fasts ]
+    -- a `joint` line moves its first part onto the second: the host is there first
+    hostsFirst = [(NPart (fClamped f), [NPart (fHost f)]) | f <- fasts, fKind f `elem` [Push, Drop] || isScrewKind f]
+    isScrewKind f = case fKind f of Screw _ -> True; _ -> False
     -- slide-in nuts must go in before anything seals a slot end of that host
     blockers =
       [ (NPart (iName p), [NNuts h])
@@ -547,14 +751,27 @@ nutHosts fasts = nub [nutHolder f | f <- fasts, fNut f /= NoNut]
 isPegF :: Fast -> Bool
 isPegF f = fLen f <= 0
 
+-- | A joint made by moving one part onto another (no screw and no driver).
+isJoint :: Fast -> Bool
+isJoint = isPegF
+
+-- | Does the joint hold its parts together once made? A drop-in socket
+-- does not: gravity or a part that captures it must.
+retains :: Fast -> Bool
+retains f = fKind f /= Drop
+
+-- | The instances joined to this one, with the joint.
+jointPartners :: Model -> String -> [(String, Fast)]
+jointPartners m n = Map.findWithDefault [] n (mPartners m)
+
 -- | A part at least three times longer than it is wide (a bar, a strut):
 -- stood on end it is as unsteady as a rail.
-slender :: Inst -> Bool
-slender i =
+slender :: Double -> Inst -> Bool
+slender ratio i =
   let ((x0, y0, z0), (x1, y1, z1)) = bbox (iShape i)
       ds = reverse (sort [x1 - x0, y1 - y0, z1 - z0])
    in case ds of
-        (a : b : _) -> b > 0 && a / b >= 3
+        (a : b : _) -> b > 0 && a / b >= ratio
         _ -> False
 
 endCaps :: Inst -> [BBox]
@@ -578,7 +795,10 @@ data Model = Model
   , mNodes :: [Node]
   , mRestDirs :: [V3]
   , mWeights :: Weights
-  , mRest :: Maybe V3 -- the rest face of the state being evaluated (set by tryPlace)
+  , mSettings :: Settings
+  , mGeo :: Geo
+  , mMateAxes :: Map.Map String [V3] -- world normals of the frames each instance is mated by
+  , mPartners :: Map.Map String [(String, Fast)] -- each instance's joints, with the other instance
   }
 
 -- design errors that are properties of the model, reported before planning
@@ -611,15 +831,24 @@ buildModel ar = do
   table <- resolveAssembly ar table0
   asmS <- maybe (Left "no asm") Right (Map.lookup "asm" table)
   insts <- mkInstances ar asmS
-  fasts <- mkFasteners (arSource ar) insts (arFasteners ar)
+  let sets = settingsFrom (arPlanOpts ar)
+  fasts <- mkFasteners sets (arConstraints ar) (arSource ar) insts (arFasteners ar)
   ordered <- partPreds ar insts
   let byName = Map.fromList [(iName i, i) | i <- insts]
       errs = designErrors insts fasts
       restDirs = case lookup "rest" (arPlanOpts ar) of
         Just s -> mapMaybe anchorDir (splitOn ',' s)
         Nothing -> [(0, 0, -1), (0, 0, 1), (-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 1, 0)]
-      wOpt k def = fromMaybe def (lookup k (arPlanOpts ar) >>= readD)
-      weights = Weights (wOpt "flip" 10) (wOpt "vertical" 6) (wOpt "driver" 3) (wOpt "shrink" 2) (wOpt "sibling" 1) (wOpt "loose" 1)
+      weights = Map.union (Map.fromList [(k, v) | (k, raw) <- arPlanOpts ar, Map.member k defaultWeights, Just v <- [readD raw]]) defaultWeights
       preds = Map.unionWith (++) (buildPreds insts fasts) ordered
       nodes = [NPart (iName i) | i <- insts] ++ [NNuts h | h <- nutHosts fasts] ++ [NFast (fId f) | f <- fasts]
-  Right (Model insts byName fasts (Map.fromList [(fId f, f) | f <- fasts]) preds nodes restDirs weights Nothing, errs)
+      frameAxis i ref = either (const Nothing) (\fr -> Just (vnormed (mApply (frameBasis fr) (0, 0, 1)))) (instanceFrame i ('@' : ref))
+      lookupInst n = case [i | i <- insts, iName i == n] ++ [i | i <- insts, iPart i == n] of
+        i : _ -> Just i
+        [] -> Nothing
+      mateAxes = Map.fromListWith (++) (concat
+        [ [(iName ci, [a]) | Just a <- [frameAxis ci cf]] ++ [(iName ci, [a]) | Just a <- [frameAxis pi' pf]]
+          ++ [(iName pi', [a]) | Just a <- [frameAxis pi' pf]] ++ [(iName pi', [a]) | Just a <- [frameAxis ci cf]]
+        | Mate _ c cf pa pf _ _ <- arConstraints ar, Just ci <- [lookupInst c], Just pi' <- [lookupInst pa] ])
+      partners = Map.fromListWith (flip (++)) (concat [[(fClamped f, [(fHost f, f)]), (fHost f, [(fClamped f, f)])] | f <- fasts])
+  Right (Model insts byName fasts (Map.fromList [(fId f, f) | f <- fasts]) preds nodes restDirs weights sets emptyGeo mateAxes partners, errs)

@@ -10,6 +10,7 @@ import Coscad.Doctor (runDoctor)
 import Coscad.Next (processNextWithBackend)
 import Coscad.Part (compilePart, renderPartWith)
 import Coscad.Plan (processPlanWithBackend)
+import Coscad.Plan.Calibrate (runCalibrate)
 import Coscad.Diagnose (validateProjectJson, validateProject, projectSources)
 import Coscad.Json
 import Coscad.Stress.Material (Material (..), materialTable)
@@ -50,7 +51,7 @@ runCLI = do
       [("schema",JString "coscad.capabilities/1"), ("version",JString (showVersion version))
       ,("default_backend",JString (backendName defaultBackend))
       ,("backends",JArray [JString (backendName defaultBackend)])
-      ,("features",JArray (map JString ["validate-json", "project-buffers", "stress", "stl", "check", "next", "plan", "image-backends", "native-images", "openscad-retired"]))
+      ,("features",JArray (map JString ["validate-json", "project-buffers", "stress", "stl", "check", "next", "plan", "image-backends", "native-images", "openscad-retired", "plan-geometry", "plan-joints", "calibrate"]))
       ,("materials",JArray [jobj [("name",JString (matName m)),("young_mpa",JNumber (matYoungMPa m))]
           | m <- materialTable])]))
     ["doctor"] -> runDoctor >>= finish
@@ -96,6 +97,8 @@ runCLI = do
       case filter (/= "--png") remaining of
         [f] -> needExt ".assemble" f >> processPlanWithBackend backend stderrEmit png f >>= finish
         _ -> bad "plan takes one .assemble file (and optionally --png)"
+    ["calibrate", f] -> needExt ".json" f >> runCalibrate f >>= finish
+    ("calibrate" : _) -> bad "calibrate takes one JSON file of timed builds (see docs/2026-10-29-PLAN-EASE.md)"
     ("stress" : rest) -> do
       (backend,remaining) <- backendArgs "stress" rest
       let full = "--full" `elem` remaining
@@ -174,6 +177,7 @@ usage h =
     , "  coscad next [--strict] <spec.assemble>  manufacturing: orient, pack beds, bedN.stl + spec_manifest.json;"
     , "                                          --strict exits 2 when any part has a printability warning"
     , "  coscad plan <spec.assemble> [--png]     build instructions: ordered steps, preload sheet, BOM"
+    , "  coscad calibrate <times.json>           fit the plan cost weights to timed builds (seconds)"
     , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
     , "  coscad stress <part.coscad> [-o part_stress.json] [--full]"
     , "                                          stress and deflection of a part under its support/load lines;"

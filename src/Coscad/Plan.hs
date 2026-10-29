@@ -13,6 +13,7 @@
 module Coscad.Plan (processPlan, processPlanSummary, processPlanWithBackend, processPlanSummaryWithBackend, planSummary, validateHardware, PlanSummary (..), StepSummary (..), FastenerSummary (..)) where
 
 import Coscad.Plan.Model
+import Coscad.Plan.Geometry (prepareGeometry)
 import Coscad.Plan.Render
 import Coscad.Plan.Search
 
@@ -27,6 +28,7 @@ import Data.List (nub)
 import qualified Data.Map as Map
 import Coscad.Report
 import System.FilePath (dropExtension, takeFileName)
+import GHC.Clock (getMonotonicTime)
 import Text.Printf (printf)
 
 
@@ -37,6 +39,8 @@ data StepSummary = StepSummary
   , ssPreload :: [String]
   , ssFasteners :: [(String, String, String, String)] -- (spec, clamped, host, nut kind)
   , ssWarnings :: [String]
+  , ssTerms :: [(String, Double)] -- the step's cost terms, before weighting
+  , ssEntry :: [(String, V3)] -- each placed part and the direction it would leave by
   }
   deriving (Show)
 
@@ -72,17 +76,21 @@ validateHardware ar
 planSummary :: FilePath -> IO (Either String PlanSummary)
 planSummary path = do
   res <- loadAssembleFile [] path
-  return $ do
-    ar <- res
-    (model, errs) <- buildModel ar
-    st <- either (Left . unlines) Right (runSearch ar model)
-    Right (summarise model errs st)
+  case res >>= buildModel of
+    Left e -> return (Left e)
+    Right (model0, errs) -> do
+      geo <- prepareGeometry model0
+      return $ do
+        (ar, model) <- (,) <$> res <*> geo
+        st <- either (Left . unlines) Right (runSearch ar model)
+        Right (summarise model errs st)
 
 summarise :: Model -> [String] -> St -> PlanSummary
 summarise model errs st =
-  let steps = toSteps (reverse (sMoves st))
+  let steps = toSteps (setStepParts (mSettings model)) (reverse (sMoves st))
       summ s = StepSummary (dirName (stRest s)) (stFlip s) (stParts s) (stNuts s)
         [(fSpec f, fClamped f, fHost f, nutName (fNut f)) | i <- stFasts s, let f = mFastById model Map.! i] (stWarn s)
+        (Map.toList (stTerms s)) (stEntry s)
       hardware f = FastenerSummary (fPos f) (fFace f) (fHeadPos f) (fPocketSeat f) (fPocketEntry f) (fReach f)
    in PlanSummary (map iName (mInsts model)) (length (mFasts model)) errs (map summ steps) (sCost st) (map hardware (mFasts model))
 
@@ -104,7 +112,11 @@ processPlanSummaryWithBackend :: Backend -> Emit -> Bool -> FilePath -> IO (Eith
 processPlanSummaryWithBackend _backend emit png path = runCommand $ do
   res <- loadAssembly emit [] path
   ar <- either (abort . asmFailure) return res
-  (model, errs) <- either (abort . inputFailure) return (buildModel ar)
+  (model0, errs) <- either (abort . inputFailure) return (buildModel ar)
+  t0 <- getMonotonicTime
+  model <- prepareGeometry model0 >>= either (abort . inputFailure) return
+  t1 <- getMonotonicTime
+  printf "plan: measured the parts' meshes, contacts and approach paths in %.1f s\n" (t1 - t0)
   let insts = mInsts model
       fasts = mFasts model
       base = dropExtension path
@@ -116,7 +128,7 @@ processPlanSummaryWithBackend _backend emit png path = runCommand $ do
       writeFileUtf8 (base ++ "_plan.md") (planMarkdown title model [] (errs ++ why))
       abort (designFailures (designLines ++ map ((path ++ ": ") ++) why))
     Right st -> do
-      let steps = toSteps (reverse (sMoves st))
+      let steps = toSteps (setStepParts (mSettings model)) (reverse (sMoves st))
       writeFileUtf8 (base ++ "_plan.md") (planMarkdown title model steps errs)
       writeFileUtf8 (base ++ "_plan.json") (planJson path model steps errs)
       printf "Wrote %s_plan.md (%d steps, %d flips, cost %s)\n" base (length steps) (length (filter stFlip steps)) (showD (sCost st))

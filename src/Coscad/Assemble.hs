@@ -19,6 +19,8 @@ module Coscad.Assemble
   , roundTo3
   , validateFastenerHint
   , validatePartHint
+  , planWeightNames
+  , planSettingRanges
   , validFrameOption
   )
 where
@@ -195,6 +197,7 @@ asmStmt =
   plateStmt
     <|> clearanceStmt
     <|> fastenerStmt
+    <|> jointStmt
     <|> planStmt
     <|> toleranceStmt
     <|> fixedStmt
@@ -230,6 +233,38 @@ fastenerStmt = do
 
 planStmt :: Parser AsmStmt
 planStmt = statementKeyword "plan" *> onStatementLine planOptions
+
+-- | `joint screw cap1 hub1 pitch=3`: how MOVING goes onto HOST. The axis
+-- comes from the mate between the two (or `axis=face` of the host). Kept
+-- with the fastener declarations as spec `joint:KIND`; consumed by `coscad plan`.
+jointStmt :: Parser AsmStmt
+jointStmt = do
+  pos <- getSourcePos
+  statementKeyword "joint"
+  onStatementLine $ do
+    off <- getOffset
+    kind <- word <?> "joint kind (push, drop or screw)"
+    unless (map toLower kind `elem` jointKinds) $
+      setOffset off *> fail ("unknown joint kind '" ++ kind ++ "'" ++ suggestion jointKinds kind ++ "; choose push, drop or screw")
+    moving <- word <?> "moving part instance"
+    host <- word <?> "host part instance"
+    opts <- options "joint" $ \opt -> case opt of
+      OHint h -> validateJointHint h
+      _ -> Left "joints take key=value options (pitch=, axis=), not a count or a print orientation"
+    let hints = [h | OHint h <- opts]
+    when (map toLower kind == "screw" && lookup "pitch" hints == Nothing) $
+      setOffset off *> fail "a screw joint needs pitch=mm (the thread pitch, for the number of turns)"
+    when (map toLower kind /= "screw" && lookup "pitch" hints /= Nothing) $
+      setOffset off *> fail "pitch= only applies to screw joints"
+    return (AFastener (FastDecl ("joint:" ++ map toLower kind) moving host "" 1 hints (unPos (sourceLine pos))))
+  where
+    jointKinds = ["push", "drop", "screw"]
+
+validateJointHint :: (String, String) -> Either String ()
+validateJointHint (key, raw) = case key of
+  "pitch" -> numberHint key "thread pitch in mm" (> 0) "greater than zero" raw
+  "axis" -> validFace raw
+  _ -> Left ("unknown joint option '" ++ key ++ "'" ++ suggestion ["pitch", "axis"] key ++ "; choose pitch or axis")
 
 fixedStmt :: Parser AsmStmt
 fixedStmt = do
@@ -401,18 +436,22 @@ validFace s = case parse (anchorVec <* eof) "" s of
 -- Arbitrary manufacturing hints on parts remain an extension mechanism.
 validatePlanOpt :: (String, String) -> Either String ()
 validatePlanOpt (key, raw)
-  | key `elem` ["beam", "astar"] = case number of
+  | key `elem` ["beam", "astar", "step_parts"] = case number of
       Just n | n >= 1, n == fromInteger (truncate n) ->
         if (truncate n :: Integer) <= toInteger (maxBound :: Int)
           then Right ()
           else Left (at ++ "positive whole number exceeds the maximum " ++ show (maxBound :: Int))
       _ -> Left (at ++ "expected a positive whole number (e.g. " ++ key ++ "=30)")
-  | key `elem` ["flip", "vertical", "driver", "shrink", "sibling", "loose"] = case number of
+  | key `elem` planWeightNames = case number of
       Just n | n >= 0 -> Right ()
       _ -> Left (at ++ "expected a finite, non-negative cost weight (e.g. " ++ key ++ "=1)")
+  | Just (lo, hi) <- lookup key planSettingRanges = case number of
+      Just n | n >= lo, n <= hi -> Right ()
+      _ -> Left (at ++ "expected a number from " ++ showD lo ++ " to " ++ showD hi)
   | key == "rest" = mapM_ face (splitFaces raw)
-  | otherwise = Left ("unknown plan option '" ++ key ++ "'; expected beam, astar, rest, flip, vertical, driver, shrink, sibling, or loose")
+  | otherwise = Left ("unknown plan option '" ++ key ++ "'" ++ suggestion known key ++ "; expected " ++ intercalate ", " known)
   where
+    known = ["beam", "astar", "rest", "step_parts"] ++ planWeightNames ++ map fst planSettingRanges
     at = "plan " ++ key ++ "=" ++ raw ++ ": "
     number = case reads (if take 1 raw == "." then '0' : raw else raw) of
       [(n, "")] | not (isNaN n || isInfinite n) -> Just (n :: Double)
@@ -423,6 +462,18 @@ validatePlanOpt (key, raw)
     face s = case parse (anchorVec <* eof) "" s of
       Right (x, y, z) | abs x + abs y + abs z == 1 -> Right ()
       _ -> Left (at ++ "unknown rest face '" ++ s ++ "'; choose top, bot, lft, rt, fwd, or bak (aliases allowed)")
+
+-- | Cost weights `coscad plan` reads from a `plan` line (see Coscad.Plan.Model).
+planWeightNames :: [String]
+planWeightNames = ["flip", "vertical", "driver", "shrink", "sibling", "loose", "insert", "pass", "turn", "hand", "finger", "part", "fastener", "nut"]
+
+-- | Planner settings with their accepted ranges (defaults in Coscad.Plan.Model).
+planSettingRanges :: [(String, (Double, Double))]
+planSettingRanges =
+  [ ("driver_angle", (0, 90)), ("standing_angle", (0, 90)), ("slender", (1, 1000))
+  , ("driver_length", (1, 1000)), ("driver_margin", (0, 100)), ("phase_tau", (0, 1000))
+  , ("finger_size", (1, 100)), ("contact", (0.001, 5)), ("settle", (0, 20)), ("sweep_step", (0.01, 20))
+  , ("shell", (0, 20)), ("infill", (0, 1)) ]
 
 -- | `tolerance <mm> [<rotation>]`: how far a mating loop may miss and
 -- still close (defaults 1e-6 mm and 1e-8; see 'Tolerance').
