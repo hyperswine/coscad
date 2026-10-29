@@ -28,10 +28,19 @@ cp models/orbit-tower/assembled.png models/orbit-tower/bed.png "$tmp/assets/orbi
 foot="$tmp/foot.html"
 echo "<footer>coscad $commit · built $stamp · <a href=\"https://github.com/hyperswine/coscad\">source</a></footer>" > "$foot"
 
+# docs/ pages are dated (docs/YYYY-MM-DD-NAME.md); a page key names the newest.
+source_of() {
+  local f=$1 base dated
+  if [ -f "$f.md" ]; then echo "$f.md"; return; fi
+  base=$(basename "$f"); dated=$(ls "docs/"*-"$base.md" 2>/dev/null | sort | tail -1)
+  [ -n "$dated" ] || { echo "build-manual: no docs page for $f" >&2; exit 1; }
+  echo "$dated"
+}
 for p in "${pages[@]}"; do
   f=${p%%:*}; t=${p##*:}; n=$(basename "$f" | tr 'A-Z' 'a-z'); [ "$n" = readme ] && n=index
+  src=$(source_of "$f")
   pandoc -s -f gfm -t html5 --css manual.css --metadata title="${t//-/ } · CoScad" \
-    -B "$nav" -A "$foot" "$f.md" -o "$tmp/$n.html"
+    -B "$nav" -A "$foot" "$src" -o "$tmp/$n.html"
 done
 # man page, wrapped in the same chrome
 mandoc -T html -O fragment man/coscad.1 > "$tmp/man.body"
@@ -41,7 +50,12 @@ rm -f "$tmp/man.body" "$tmp/nav.html" "$tmp/foot.html"
 
 # build plans with renders, from a scratch copy of the example assemblies
 work=$(mktemp -d)
-cp -R examples/assemble/plan "$work/plan"; cp -R examples/assemble/bow3 "$work/bow3"; cp -R examples/assemble/ball "$work/ball"; cp -R examples/assemble/tesseract "$work/tesseract"
+cp -R examples/assemble/plan "$work/plan"; cp -R examples/assemble/bow3 "$work/bow3"; cp -R examples/assemble/ball "$work/ball"
+# The Tesseract build is the latest design, Tesseract III (directly threaded
+# joints); instructions.py adds the joint declarations the planner needs.
+mkdir -p "$work/tesseract"
+cp models/tesseract-v3-threaded/*.coscad "$work/tesseract/"
+python3 models/tesseract-v3-threaded/instructions.py models/tesseract-v3-threaded/tesseract.assemble "$work/tesseract/tesseract.assemble"
 mkdir -p "$work/corner"
 cp examples/assemble/*.coscad examples/assemble/corner.assemble "$work/corner/"
 mkdir -p "$work/orbit-tower"
