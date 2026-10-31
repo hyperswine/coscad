@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-30T02:18:05+11:00",
+  "gcode_state": "FINISH",
+  "mc_percent": 100,
+  "layer_num": 78,
+  "total_layer_num": 78,
+  "subtask_name": "tesseract-v3-split-bed1-pei-p1s-20261028-173650.gcode",
+  "print_error": 0,
+  "hms": [],
+  "spools": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "printer_controls_sent": [],
+  "bed_clear_owner_confirmed_for_bed3": false
+}

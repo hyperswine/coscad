@@ -1,0 +1,14 @@
+{
+  "schema": "coscad.thermal-preflight/1",
+  "checked": true,
+  "expected": {
+    "plate": "Textured PEI Plate",
+    "bed_initial_c": 55.0,
+    "bed_c": 55.0,
+    "nozzle_initial_c": 220.0,
+    "nozzle_c": 220.0
+  },
+  "layers_checked": 120,
+  "deposition_moves_checked": 325844,
+  "package_sha256": "2f2c3cc9a737f546bc69483635ab5e1f382a82e7daf2145271e5ea1ab113eef1"
+}

@@ -17,3 +17,8 @@ models/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
 models/**/*.JPG filter=lfs diff=lfs merge=lfs -text
 models/**/*.heic filter=lfs diff=lfs merge=lfs -text
 models/**/*.HEIC filter=lfs diff=lfs merge=lfs -text
+
+# Preserve printer startup evidence verbatim, including whitespace-only lines
+# and unified-diff context markers.
+models/tesseract-v3-threaded/p1s-split-retry/bed2/x1c/investigation-20261029/failed-startup.gcode.txt whitespace=-blank-at-eol
+models/tesseract-v3-threaded/p1s-split-retry/bed2/x1c/investigation-20261029/startup-comparison.diff whitespace=-blank-at-eol

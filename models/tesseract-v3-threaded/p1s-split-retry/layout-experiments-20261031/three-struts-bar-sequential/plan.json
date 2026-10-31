@@ -1,0 +1,38 @@
+{
+  "printer": "x1c",
+  "print_sequence": "by object",
+  "objects": [
+    "strut",
+    "strut",
+    "strut",
+    "bar-print"
+  ],
+  "unmodified_machine_clearance": {
+    "extruder_clearance_height_to_lid": 90.0,
+    "extruder_clearance_height_to_rod": 34.0,
+    "extruder_clearance_max_radius": 68.0,
+    "extruder_clearance_dist_to_rod": 33.0,
+    "extruder_clearance_radius": 57.0,
+    "printable_height": 250.0
+  },
+  "dispatched": false,
+  "centers_xy_mm": [
+    [
+      55,
+      40
+    ],
+    [
+      201,
+      97.5
+    ],
+    [
+      55,
+      155
+    ],
+    [
+      201,
+      212.5
+    ]
+  ],
+  "note": "Projected brim envelope overlap is permitted only in the compact by-layer experiment; actual sliced brim paths must be checked."
+}

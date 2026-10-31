@@ -1,0 +1,33 @@
+{
+  "/": {
+    "entry_count": 98,
+    "directories": [
+      "drwxr-xr-x    2 1002     1002        32768 Oct 14 08:47 cache",
+      "drwxr-xr-x    3 1002     1002        65536 Oct 29 01:57 ipcam",
+      "drwxr-xr-x    3 1002     1002        32768 Oct 14 10:39 timelapse"
+    ],
+    "related_prints": [
+      "-rw-r--r--    1 1002     1002       216024 Oct 28 00:24 shelf-loose-fit-x1c-20261028-112444.gcode.3mf",
+      "-rw-r--r--    1 1002     1002      7611084 Oct 28 11:39 tesseract-v3-split-bed2-pei-x1c-20261028-223912.gcode.3mf",
+      "-rw-r--r--    1 1002     1002      7611084 Oct 29 01:56 tesseract-v3-split-bed2-pei-x1c-20261029-125659.gcode.3mf"
+    ]
+  },
+  "/log": {
+    "error_type": "error_perm"
+  },
+  "/logs": {
+    "error_type": "error_perm"
+  },
+  "/logger": {
+    "error_type": "error_perm"
+  },
+  "/cache": {
+    "entry_count": 8,
+    "directories": [],
+    "related_prints": []
+  },
+  "/recorder": {
+    "error_type": "error_perm"
+  },
+  "failed_remote_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f"
+}

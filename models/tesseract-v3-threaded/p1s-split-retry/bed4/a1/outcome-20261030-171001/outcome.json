@@ -1,0 +1,106 @@
+{
+  "at": "2026-10-30T17:10:01+11:00",
+  "owner_report": "Bed 4 printed badly on A1; parts left on the plate for photography.",
+  "frames": [
+    {
+      "file": "a1-outcome-1.jpg",
+      "dimensions": [
+        1536,
+        1080
+      ],
+      "bytes": 169173,
+      "sha256": "3c36232664e9ed1c664322628539c0c966bf619806ad104d54a5f0331caeedee"
+    },
+    {
+      "file": "a1-outcome-2.jpg",
+      "dimensions": [
+        1536,
+        1080
+      ],
+      "bytes": 164710,
+      "sha256": "9e7231b4895e29fbdd2c436c738abab5b31566ba1bc874eb3d1a815ddb924b52"
+    },
+    {
+      "file": "a1-outcome-3.jpg",
+      "dimensions": [
+        1536,
+        1080
+      ],
+      "bytes": 162003,
+      "sha256": "cafdec0b5b6ac339e1948c060b75d1b4541f4945af23d64d22d4c36c9f6d5c88"
+    }
+  ],
+  "printer_controls_sent": [],
+  "status_before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 291,
+    "total_layer_num": 291,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-split-bed4-pei-a1-20261030-092025.gcode",
+    "nozzle_temper": 23.9375,
+    "bed_temper": 24.3125,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "hms_before": [],
+  "ams_tray_now": "255",
+  "status_after": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 291,
+    "total_layer_num": 291,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-split-bed4-pei-a1-20261030-092025.gcode",
+    "nozzle_temper": 23.9375,
+    "bed_temper": 24.3125,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "hms_after": [],
+  "physical_quality": "Failed - owner report and substantial visible spaghetti/displaced struts in fresh photos.",
+  "visual_review": {
+    "reviewed_frame": "a1-outcome-1.jpg",
+    "visible": "Large filament nests, fallen/displaced struts and some upright portions.",
+    "not_observable": "Exact first failing layer, initial point of detachment or cause.",
+    "previous_inspection_limit": "Earlier 10:23 images at layer 96 showed upright lower portions only; they did not establish full-height print success."
+  },
+  "gcode_review": {
+    "same_package_as_dispatched": true,
+    "thermal_recheck": "thermal-recheck.json",
+    "layer_and_feed_audit": "gcode-review.json",
+    "geometry_screen": "mesh-layer-screen.json",
+    "clear_malformed_gcode_defect_found": false,
+    "checks_passed": [
+      "Correct A1 model and sliced placement from previous package validator",
+      "Textured PEI 55 C and nozzle 220 C verified at deposition throughout 291 layers",
+      "Continuous 0.2 mm layer progression and deposition in every layer",
+      "Actual 8 mm brim toolpaths on all eight objects at 20 mm/s",
+      "Part fan commanded full from layer 2 until end; no obvious mid-print fan-off command",
+      "Upper-collar overhang walls are slowed to 10 mm/s"
+    ],
+    "printability_risks": [
+      {
+        "region": "upper shoulder",
+        "first_expansion_layer": 237,
+        "mid_layer_z_mm": 47.3,
+        "radial_expansion_mm": 1.6179692863389508,
+        "risk": "Unsupported annular growth on a slender upright shaft can sag/curl or be disturbed by the nozzle despite the slow overhang paths.",
+        "causality": "Plausible risk, not proof that this caused the observed failure."
+      },
+      {
+        "region": "tall struts / inter-object moves",
+        "risk": "Slender parts, long inter-object moves and moving-bed dynamics could contribute to vibration or later detachment; infill commands retain fast vendor defaults.",
+        "causality": "Not diagnosed from the retained end-state photo or G-code alone."
+      }
+    ],
+    "decision": "No clear malformed G-code or thermal/cooling-setting defect found. Proceed with the owner-requested P1S comparison using unchanged geometry/layout and selected process overrides, with its own machine/startup slice.",
+    "comparison_limit": "P1S has a different loaded PLA spool and different motion/cooling/machine profile; this will not isolate printer hardware alone."
+  }
+}

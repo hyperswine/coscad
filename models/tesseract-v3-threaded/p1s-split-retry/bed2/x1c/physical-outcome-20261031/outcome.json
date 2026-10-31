@@ -1,0 +1,40 @@
+{
+  "recorded_at": "2026-10-31T21:57:30+11:00",
+  "part": "inner frame / middle of tesseract",
+  "plate": "split Bed 2: inner frame plus four hubs",
+  "printer_in_existing_plate_records": "x1c",
+  "physical_result": "partial failure - lower diagonal female-threaded sockets printed poorly",
+  "owner_observations": {
+    "lower_diagonals": "The bottom diagonal sections intended to contain female threads did not print well.",
+    "supports": "Supports were present and printed properly, despite the poor supported model features.",
+    "upper_diagonals": "The top diagonal sections printed well."
+  },
+  "orientation_note": "Bottom/top refer to the original print orientation described by the owner, not the orientation of the hand-held assembly in the supplied photo.",
+  "photo": {
+    "file": "inner-frame-owner-photo.jpg",
+    "source": "owner-supplied Photo 1.jpg",
+    "dimensions": [
+      960,
+      1280
+    ],
+    "bytes": 184667,
+    "sha256": "604d4e78399f3cdb50812bcd0ba2554440c07941ab3c909d24a41bc2bc509da2"
+  },
+  "visual_review": {
+    "observation": "The hand-held central frame has visibly rough/incomplete socket mouths with loose strands around several bosses. Other visible frame/strut regions look more continuous. The photo does not show the original support structures in place or uniquely identify original build orientation.",
+    "supports_printed_properly_evidence": "Owner observation; not independently verifiable from this photo.",
+    "upper_diagonals_printed_well_evidence": "Owner observation; no measured thread-fit acceptance recorded."
+  },
+  "cause": "unknown",
+  "support_absence_or_support_print_failure_established": false,
+  "female_thread_fit_verified": false,
+  "other_four_hubs_quality": "not established by this report",
+  "existing_plate_run_reference": {
+    "file": "../print-run-after-calibration-20261029.json",
+    "remote_name": "tesseract-v3-split-bed2-pei-x1c-20261029-144051.gcode.3mf",
+    "package_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f",
+    "association": "Existing recorded Bed 2 run containing the inner frame; owner did not specify a distinct job identifier in this report."
+  },
+  "printer_controls_sent": [],
+  "model_or_slice_changed": false
+}

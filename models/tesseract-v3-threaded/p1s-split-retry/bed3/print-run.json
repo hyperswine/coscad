@@ -1,0 +1,617 @@
+{
+  "created_at": "2026-10-30T02:20:22+11:00",
+  "job": "tesseract-v3-split-bed3",
+  "printer": "p1s",
+  "authorization": "Owner confirmed the P1S plate clear and explicitly authorized starting the freshly validated Bed 3 now on 2026-10-30.",
+  "bed_clear_owner_confirmed": true,
+  "package": "tesseract-bed3-p1s.gcode.3mf",
+  "package_sha256": "2f2c3cc9a737f546bc69483635ab5e1f382a82e7daf2145271e5ea1ab113eef1",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 120,
+    "deposition_moves_checked": 325844,
+    "package_sha256": "2f2c3cc9a737f546bc69483635ab5e1f382a82e7daf2145271e5ea1ab113eef1"
+  },
+  "remote_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+  "spool": "external",
+  "material": "PLA",
+  "expected_layers": 120,
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 78,
+    "total_layer_num": 78,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-split-bed1-pei-p1s-20261028-173650.gcode",
+    "nozzle_temper": 25.71875,
+    "bed_temper": 22.21875,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-10-30T02:21:28+11:00",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 78,
+        "total_layer_num": 78,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 25.71875,
+        "bed_temper": 22.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-30T02:21:43+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 285,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 48.15625,
+        "bed_temper": 22.21875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-30T02:21:58+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 285,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 80.75,
+        "bed_temper": 22.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-30T02:22:13+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 285,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 75.375,
+        "bed_temper": 41.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-30T02:22:28+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 285,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 95.125,
+        "bed_temper": 54.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-30T02:22:43+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 285,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 166.9375,
+        "bed_temper": 54.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-30T02:22:58+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 285,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 225.59375,
+        "bed_temper": 54.65625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-30T02:23:13+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 284,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 247.25,
+        "bed_temper": 54.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-30T02:23:28+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 280,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 242.15625,
+        "bed_temper": 54.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-30T02:23:43+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 204.59375,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789475551
+        }
+      ]
+    }
+  ],
+  "remote_content_sha256": "2f2c3cc9a737f546bc69483635ab5e1f382a82e7daf2145271e5ea1ab113eef1",
+  "sequence_id": "287287838",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "287287838"
+  },
+  "needs_attention": false,
+  "attention_resolution": {
+    "at": "2026-10-30T02:25:39+11:00",
+    "reason": "Startup part-cooling fan warning absent on fresh status; print still RUNNING without errors.",
+    "evidence": "startup-fan-alert.json"
+  },
+  "first_layer_reached": true,
+  "first_layer_at": "2026-10-30T02:28:34+11:00",
+  "startup_followup": [
+    {
+      "at": "2026-10-30T02:25:39+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 140.0625,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:25:54+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:26:11+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 140.0625,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:26:26+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 140,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:26:43+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:26:58+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:27:15+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 139.90625,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:27:30+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 139.9375,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:27:47+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 140,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:28:02+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 194.65625,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:28:19+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 218.53125,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "10",
+        "heatbreak_fan_speed": "15"
+      }
+    },
+    {
+      "at": "2026-10-30T02:28:34+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 1,
+        "total_layer_num": 120,
+        "mc_remaining_time": 279,
+        "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+        "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+        "nozzle_temper": 219.96875,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": [],
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      },
+      "fans": {
+        "cooling_fan_speed": "0",
+        "big_fan1_speed": "6",
+        "big_fan2_speed": "9",
+        "heatbreak_fan_speed": "15"
+      }
+    }
+  ]
+}

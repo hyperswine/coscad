@@ -1,0 +1,51 @@
+{
+  "created_at": "2026-10-31T22:42:33+11:00",
+  "job": "tesseract-v3-center-trees-ears",
+  "printer": "a1",
+  "remote_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+  "phase": "first-layer",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "447002162"
+  },
+  "package_sha256": "023b5e11cbde9ff9f8f35de9af673c26aa90ff26eb58b61f3df5bd2f55666ede",
+  "remote_content_sha256": "023b5e11cbde9ff9f8f35de9af673c26aa90ff26eb58b61f3df5bd2f55666ede",
+  "expected_layers": 282,
+  "physical_ams_slot": 1,
+  "ams_mapping": [
+    0
+  ],
+  "first_layer_reached": true,
+  "selected_slot_verified": true,
+  "needs_attention": null,
+  "latest_observation": {
+    "at": "2026-10-31T22:51:22+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 3,
+      "layer_num": 1,
+      "total_layer_num": 282,
+      "mc_remaining_time": 211,
+      "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+      "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+      "nozzle_temper": 220.125,
+      "bed_temper": 55.375,
+      "print_error": 0,
+      "fail_reason": null,
+      "mc_print_error_code": null,
+      "stg_cur": 0
+    },
+    "hms": [],
+    "ams_tray_now": "0",
+    "targets": {
+      "bed_target_temper": 55,
+      "nozzle_target_temper": 220
+    }
+  },
+  "physical_quality_verified": false,
+  "full_brim": false,
+  "removable_mouse_ear_pads": 4,
+  "native_painted_brim_used": false
+}

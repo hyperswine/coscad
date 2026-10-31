@@ -1,0 +1,29 @@
+{
+  "printer": "x1c",
+  "layout": "mixed",
+  "trial_components": {
+    "strut": 1,
+    "bar-print": 1
+  },
+  "order": [
+    "strut",
+    "bar-print"
+  ],
+  "unmodified_machine_clearance": {
+    "extruder_clearance_height_to_lid": 90.0,
+    "extruder_clearance_height_to_rod": 34.0,
+    "extruder_clearance_max_radius": 68.0,
+    "extruder_clearance_dist_to_rod": 33.0,
+    "extruder_clearance_radius": 57.0,
+    "printable_height": 250.0
+  },
+  "owner_authorization": "Owner cleaned all three printers and requested printing the new sequential trial on X1C on 2026-10-31.",
+  "verified": true,
+  "dispatched": true,
+  "validation_report": "mixed/sequential-validation.json",
+  "dispatch_record": "mixed/print-run.json",
+  "remote_name": "tesseract-v3-sequential-mixed-x1c-20261031-084211.gcode.3mf",
+  "start_acknowledged": true,
+  "first_layer_reached": true,
+  "first_layer_at": "2026-10-31T08:52:05+11:00"
+}

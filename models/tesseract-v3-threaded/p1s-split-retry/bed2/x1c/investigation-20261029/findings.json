@@ -1,0 +1,96 @@
+{
+  "schema": "coscad.print-investigation/1",
+  "observed_at": "2026-10-29T14:21:46+11:00",
+  "printer": "x1c",
+  "job": "tesseract-v3-split-bed2-pei-x1c-20261029-125659.gcode",
+  "owner_screen_code": "0300-4002 100529",
+  "confirmed_failure": {
+    "state": "FAILED",
+    "layer": 0,
+    "active_print_error": 0,
+    "active_hms": [],
+    "retained_fail_reason_decimal": 50348034,
+    "retained_fail_reason_hex": "03004002",
+    "vendor_meaning": "Auto Bed Leveling failed; the task has been stopped.",
+    "classification": "startup auto bed leveling failure"
+  },
+  "integrity": {
+    "local_package_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f",
+    "printer_readback_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f",
+    "matches": true
+  },
+  "startup_comparison": {
+    "reference": "models/two-tier-2020-shelf/vertical-loose-fit/fit_bed1.gcode.3mf",
+    "reference_physical_outcome": "Owner reported upright extrusion printed well; terminal print status also recorded FINISH before the first Bed 2 dispatch.",
+    "embedded_start_template_identical": true,
+    "installed_vendor_template_identical": true,
+    "non_progress_executable_difference_count": 1,
+    "difference": "G29 probing rectangle only",
+    "failed_command": "G29 A X30.5662 Y30.5662 I194.868 J194.868",
+    "reference_command": "G29 A X113.329 Y113.329 I29.3414 J29.3414",
+    "failed_bounds_xy_mm": [
+      [
+        30.5662,
+        30.5662
+      ],
+      [
+        225.4342,
+        225.4342
+      ]
+    ],
+    "unresolved_placeholders": false,
+    "explicit_stop_or_user_pause": false
+  },
+  "thermal": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 282,
+    "deposition_moves_checked": 539272,
+    "package_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f"
+  },
+  "other_evidence": {
+    "same_package_previously_reached_layer": 2,
+    "earlier_attempt_ended": "Owner requested cancellation after a spool issue; stop acknowledged SUCCESS.",
+    "prior_startup_hms": "03000D0000020001",
+    "detailed_sensor_probe_logs_obtained": false,
+    "sd_log_probe_results": {
+      "/log": {
+        "error_type": "error_perm"
+      },
+      "/logs": {
+        "error_type": "error_perm"
+      },
+      "/logger": {
+        "error_type": "error_perm"
+      }
+    }
+  },
+  "interpretation": {
+    "confirmed": "Firmware stopped the retry because automatic bed leveling failed. The manufacturer template and file integrity checks did not reveal a malformed startup sequence.",
+    "hypothesis": "The wider probing footprint may expose a physical bed/nozzle/probing issue outside the small central region used by the successful rail.",
+    "not_diagnosed": [
+      "specific failed probe point",
+      "plate seating or debris",
+      "nozzle residue or mounting",
+      "bed shape/tramming",
+      "force-sensor or mechanical fault"
+    ],
+    "avoid": "Do not disable bed leveling to work around this failure."
+  },
+  "logging_fix": {
+    "file": "scripts/bambu-print-run.py",
+    "change": "Include fail_reason, mc_print_error_code and stg_cur in status summaries without treating historical fail_reason as an active fault.",
+    "focused_reproduction_passed": true,
+    "preflight_tests_passed": 25,
+    "slicer_tests_passed": 33,
+    "dashboard_note": "FP-RISC std/printertelemetry.fpr currently drops fail_reason. No dashboard code or deployment was changed in this investigation."
+  },
+  "printer_controls_sent": []
+}

@@ -80,3 +80,88 @@ with print error 50348044 after that cancellation. This terminal state records
 the intentional cancellation; it is not a new observed geometry failure.
 See `cancel-request-20261029.json`. The spool problem's exact cause was not
 diagnosed. No filament unload, resume or new print command was sent.
+
+## Restart after filament replacement - 29 October 2026
+
+The owner replaced the filament, cleared the X1C plate, and explicitly requested
+a new Bed 2 attempt. Fresh readiness showed the known cancelled job in terminal
+FAILED state, with error 0, no HMS faults, 0.4 mm nozzle, SD card available and
+external PLA loaded. The cancellation was checked against its successful stop
+acknowledgement before allowing that terminal state for this retry. An unrelated
+failure, active error, PAUSE or running job is still refused.
+
+The unchanged X1C package was rechecked against its geometry validation hash and
+a fresh thermal scan of all 282 layers and 539,272 deposition moves: textured
+PEI, bed 55 C and nozzle 220 C for initial and subsequent layers. The upload was
+read back with an identical SHA-256. The printer acknowledged one new start
+command successfully at about 12:57 Sydney time.
+
+The original cancelled attempt is preserved in `print-run.json`; this new
+attempt uses `print-run-retry-20261029.json` and a unique remote filename.
+`print_bed2_x1c.py --start --bed-clear --restart-after-cancel` refuses an
+existing retry record. Do not delete either record or resend an uncertain start.
+A bounded 120-second startup observation was used; no recurring monitor was
+created. Acknowledgement alone is not first-layer or completed-print evidence.
+
+Latest bounded observation at 2026-10-29T12:58:58+11:00: matching retry job RUNNING, layer 0/282, no active HMS or print error. Startup/heating is confirmed; physical adhesion and print completion remain unverified. The startup observer has ended.
+
+## Confirmed retry outcome: automatic bed levelling failure
+
+The owner reported screen code `0300-4002 100529`. Fresh status at 14:21:46
+Sydney time retained `fail_reason=50348034` (hex `03004002`) although active
+`print_error` was already 0. Bambu's catalog identifies this as automatic bed
+levelling failure. The retry stopped before layer 1. The file read back from
+the printer matches the verified local package; its vendor startup template
+matches the successful upright rail, differing only in the generated probing
+rectangle once progress annotations are removed. The exact physical cause of
+the levelling failure remains unknown. See [the investigation](investigation-20261029/README.md).
+
+## Full-bed calibration passed at room temperature
+
+On 29 October 2026 the owner requested a full-bed calibration. The X1C's built-in
+bed-levelling-only routine finished at 14:35:47 Sydney time with FINISH/100%,
+error 0, retained reason 0 and no HMS faults. It did not reproduce the failure.
+The bed stayed unheated at approximately 26 C, unlike the failed 55 C print, so
+this does not establish that the heated startup issue is fixed. Probe coordinates
+and camera frames were unavailable. See [the calibration record](calibration-20261029/README.md).
+
+## Owner-approved repeat after calibration - 29 October 2026
+
+The owner saw nothing wrong during the full-bed calibration and requested
+another print after reviewing the G-code, to see whether the earlier problem
+was intermittent. This does **not** establish that the failure was a fluke.
+A fresh review found no obvious startup defect: the embedded X1C vendor start
+template is unchanged, with the same generated probing rectangle, verified
+Textured PEI setting, 55 C bed and 220 C printing temperatures throughout all
+282 layers. No startup or model geometry was modified. See
+`review-before-calibration-retry-20261029.json`.
+
+The new attempt uses `print-run-after-calibration-20261029.json`, preserving
+all earlier records. Its dispatcher requires the recorded levelling failure
+and successful calibration, rechecks live readiness and actual G-code, refuses
+an existing attempt record, and never retries an uncertain start automatically.
+The owner-authorized request uses `--retry-after-calibration --start --bed-clear`.
+
+The new start command was acknowledged successfully and the uploaded file was
+read back with its matching validated SHA-256. On this attempt the X1C passed
+heated-bed levelling and advanced to extrusion calibration with no errors.
+At **14:51:58 Sydney time** it reached **RUNNING, layer 1/282**, nozzle **220 C**
+and bed **55 C**, active error 0, retained reason 0 and HMS empty. About
+467 minutes remained. See `heated-levelling-after-calibration-20261029.json`,
+`dispatch-summary-after-calibration-20261029.json` and the new run record.
+
+This is first-layer telemetry, not physical adhesion or completion proof.
+The bounded startup observer ended after that checkpoint; no recurring
+monitor was created. Passing the same file after calibration does not separate
+a transient fault from improvement caused by recalibration. The prior
+physical cause remains unknown.
+
+## Owner-reported partial physical failure - 31 October 2026
+
+The owner reports the middle/inner frame printed partially poorly: the lower
+diagonal female-threaded sections did not print well **despite their supports
+being present and printing properly**. The upper diagonals printed well.
+Lower/upper describe the original print orientation. The
+[owner photo and outcome record](physical-outcome-20261031/README.md) preserve the observation.
+The cause remains unknown; this report does not accept female-thread fit or
+assess the other four hubs on Bed 2.

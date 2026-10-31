@@ -1,0 +1,68 @@
+{
+  "package": "slice/tesseract-bed4-x1c.gcode.3mf",
+  "package_sha256": "2319693f939c172b94387cfe546191653e93fdba1d880c40d43501994af025c8",
+  "gcode_sha256": "fe8a26bd2eb1f2802475915981753927c91c3246d6229ad7645ecbdeca59c177",
+  "printer_model_id": "BL-P001",
+  "normal_objects": 4,
+  "bed_index": 4,
+  "per_object_brim_evidence": {
+    "1": {
+      "segments": 1161,
+      "min_radius": 4.068919911966813,
+      "max_radius": 10.930476750810094,
+      "angular_sectors_covered": 0
+    },
+    "2": {
+      "segments": 1153,
+      "min_radius": 4.069223052377453,
+      "max_radius": 10.930107044306563,
+      "angular_sectors_covered": 0
+    },
+    "3": {
+      "segments": 1158,
+      "min_radius": 4.0690559715983285,
+      "max_radius": 10.930476750810096,
+      "angular_sectors_covered": 0
+    },
+    "4": {
+      "segments": 1154,
+      "min_radius": 4.06875367895379,
+      "max_radius": 10.93047675081011,
+      "angular_sectors_covered": 0
+    }
+  },
+  "single_plate": true,
+  "max_geometry_bound_error_mm": 1.2939452176397026e-08,
+  "deposition_segments": 107124,
+  "arc_segments": 38756,
+  "arc_sampling_mm": 0.25,
+  "support_segments": 0,
+  "support_thread_intrusions": 0,
+  "support_footprint_violations": 0,
+  "brim_segments": 4626,
+  "support_roots": {
+    "raster_mm": 0.5,
+    "lateral_allowance_mm": 1,
+    "previous_layers_considered": 3,
+    "support_layers": 0,
+    "support_components_checked": 0,
+    "bed_components": 0,
+    "components_without_prior_support": [],
+    "limitation": "Sampled continuity, not exact extrusion topology or physical support strength"
+  },
+  "total_estimated_seconds": 15022.5400390625,
+  "filaments": [
+    {
+      "filament_id": "GFL99",
+      "id": 1,
+      "main_used_g": 14.773916244506836,
+      "total_used_g": 14.773916244506836
+    }
+  ],
+  "slicer_warnings": "",
+  "checked": true,
+  "exported_bed_type": "Textured PEI Plate",
+  "final_startup_bed_target_c": 55.0,
+  "final_startup_bed_wait_c": 55.0,
+  "support_base_anchor_evidence": {}
+}

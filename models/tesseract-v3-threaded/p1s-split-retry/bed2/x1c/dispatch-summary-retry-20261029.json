@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-10-29T12:56:59+11:00",
+  "authorization": "Owner replaced the filament, cleared the X1C bed and explicitly requested restarting Bed 2 on 2026-10-29.",
+  "previous_cancelled_job": "tesseract-v3-split-bed2-pei-x1c-20261028-223912.gcode.3mf",
+  "remote_name": "tesseract-v3-split-bed2-pei-x1c-20261029-125659.gcode.3mf",
+  "package_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f",
+  "remote_content_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f",
+  "phase": "acknowledged",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "239033324"
+  },
+  "expected_layers": 282,
+  "seen_running": true,
+  "first_layer_reached": null,
+  "needs_attention": null,
+  "latest_observation": {
+    "at": "2026-10-29T12:58:58+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 0,
+      "layer_num": 0,
+      "total_layer_num": 282,
+      "mc_remaining_time": 476,
+      "gcode_file": "/data/Metadata/plate_1.gcode",
+      "subtask_name": "tesseract-v3-split-bed2-pei-x1c-20261029-125659.gcode",
+      "nozzle_temper": 228.0,
+      "bed_temper": 54.0,
+      "print_error": 0
+    },
+    "hms": []
+  },
+  "bounded_startup_observation_seconds": 120,
+  "completion_verified": false
+}

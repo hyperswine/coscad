@@ -1,0 +1,11 @@
+{
+  "slow_down_layer_time": [
+    "12"
+  ],
+  "slow_down_min_speed": [
+    "5"
+  ],
+  "slow_down_for_layer_cooling": [
+    "1"
+  ]
+}

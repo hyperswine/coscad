@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-10-30T10:23:10+11:00",
+  "printer": "a1",
+  "job": "tesseract-v3-split-bed4",
+  "frames": [
+    {
+      "file": "a1-frame-1.jpg",
+      "at": "2026-10-30T10:23:14+11:00",
+      "bytes": 153110,
+      "dimensions": [
+        1536,
+        1080
+      ],
+      "sha256": "b865817cb8b27d66a824ce8b840b8baa4da155cf1b209c26392025a619d6b084"
+    },
+    {
+      "file": "a1-frame-2.jpg",
+      "at": "2026-10-30T10:23:23+11:00",
+      "bytes": 152431,
+      "dimensions": [
+        1536,
+        1080
+      ],
+      "sha256": "73eb8d731974008ec0317f8a41cef2e7b9c3d705ccb93a7169fd3b92ae9e5609"
+    },
+    {
+      "file": "a1-frame-3.jpg",
+      "at": "2026-10-30T10:23:32+11:00",
+      "bytes": 155053,
+      "dimensions": [
+        1536,
+        1080
+      ],
+      "sha256": "01d3022f0e7c241361e5d1b087ec8adea8da651584fa64e728f90c17f68bd2a9"
+    }
+  ],
+  "printer_controls_sent": [],
+  "status_before": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 40,
+    "layer_num": 95,
+    "total_layer_num": 291,
+    "mc_remaining_time": 94,
+    "gcode_file": "tesseract-v3-split-bed4-pei-a1-20261030-092025.gcode.3mf",
+    "subtask_name": "tesseract-v3-split-bed4-pei-a1-20261030-092025.gcode",
+    "nozzle_temper": 219.96875,
+    "bed_temper": 54.96875,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 0
+  },
+  "hms_before": [],
+  "ams_tray_now": "0",
+  "status_after": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 40,
+    "layer_num": 96,
+    "total_layer_num": 291,
+    "mc_remaining_time": 94,
+    "gcode_file": "tesseract-v3-split-bed4-pei-a1-20261030-092025.gcode.3mf",
+    "subtask_name": "tesseract-v3-split-bed4-pei-a1-20261030-092025.gcode",
+    "nozzle_temper": 219.9375,
+    "bed_temper": 54.96875,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 0
+  },
+  "hms_after": [],
+  "targets": {
+    "bed_target_temper": 55,
+    "nozzle_target_temper": 220
+  },
+  "visual_review": {
+    "frames_reviewed": 3,
+    "obvious_spaghetti_visible": false,
+    "obvious_detached_parts_visible": false,
+    "observation": "The eight struts appear upright on flat brims across the views. No visible filament nests or displaced parts. One image has motion blur and the toolhead partially occludes some parts.",
+    "decision": "Leave the A1 printing without control commands, as requested.",
+    "limitation": "Visual check of these three frames only; does not prove future adhesion or completed print quality."
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "case": "nan",
+    "rejected": true
+  },
+  {
+    "case": "negative",
+    "rejected": true
+  },
+  {
+    "case": "too-large",
+    "rejected": true
+  },
+  {
+    "case": "height-overrun",
+    "rejected": true
+  }
+]

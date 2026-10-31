@@ -1,0 +1,34 @@
+{
+  "prepared_on": "2026-10-30",
+  "printer": "P1S",
+  "physical_trial_started": false,
+  "owner_report_and_photos": "../bed4/outcome-20261030-202153/outcome.json",
+  "layouts": {
+    "mixed": {
+      "package": "mixed/slice/tesseract-bed4-p1s.gcode.3mf",
+      "sha256": "cbcdfbc58931856499ef1e18de3dc3d06fc5d82e9f0d8564080c52e9aac56d69",
+      "actual_order": [
+        "1-strut",
+        "2-bar-print"
+      ],
+      "estimated_seconds": 9088.5361328125
+    },
+    "bar-only": {
+      "package": "bar-only/slice/tesseract-bed4-p1s.gcode.3mf",
+      "sha256": "f085d025cf50976acb11a5bfda3d47a2fce7a916f7e6958de456392863828a1f",
+      "actual_order": [
+        "1-bar-print"
+      ],
+      "estimated_seconds": 5473.90380859375
+    }
+  },
+  "unsafe_cases_rejected": [
+    "PASS rejects wrong-sequence-setting",
+    "PASS rejects lowered-head-clearance",
+    "PASS rejects interleaved-object-order",
+    "PASS rejects return-through-finished-object"
+  ],
+  "full_set_manual_runs": 12,
+  "first_proposed_trial": "mixed once, inspect before repeating",
+  "physical_quality_verified": false
+}

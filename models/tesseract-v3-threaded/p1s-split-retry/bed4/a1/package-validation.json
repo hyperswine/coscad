@@ -1,0 +1,92 @@
+{
+  "package": "slice/tesseract-bed4-a1.gcode.3mf",
+  "package_sha256": "a544ba808ce111c17620c5d2337bc6854e083cfcd529a23199d1db6ad24afe64",
+  "gcode_sha256": "374b88be74b52b6de0c1f77bf9444add1f2d0156f4e640808a900d1c5e1a3a84",
+  "printer_model_id": "N2S",
+  "normal_objects": 8,
+  "bed_index": 4,
+  "per_object_brim_evidence": {
+    "1": {
+      "segments": 1162,
+      "min_radius": 4.068997419512582,
+      "max_radius": 10.930476750810092,
+      "angular_sectors_covered": 0
+    },
+    "2": {
+      "segments": 1155,
+      "min_radius": 4.068919911966813,
+      "max_radius": 10.930192358783078,
+      "angular_sectors_covered": 0
+    },
+    "3": {
+      "segments": 1160,
+      "min_radius": 4.069261057680567,
+      "max_radius": 10.929943183749865,
+      "angular_sectors_covered": 0
+    },
+    "4": {
+      "segments": 1154,
+      "min_radius": 4.069046724971351,
+      "max_radius": 10.930476750810092,
+      "angular_sectors_covered": 0
+    },
+    "5": {
+      "segments": 1164,
+      "min_radius": 4.0682405287789924,
+      "max_radius": 10.93010251553023,
+      "angular_sectors_covered": 0
+    },
+    "6": {
+      "segments": 1157,
+      "min_radius": 4.069261057680559,
+      "max_radius": 10.930102515530217,
+      "angular_sectors_covered": 0
+    },
+    "7": {
+      "segments": 1161,
+      "min_radius": 4.069261057680559,
+      "max_radius": 10.93010251553023,
+      "angular_sectors_covered": 0
+    },
+    "8": {
+      "segments": 1165,
+      "min_radius": 4.068769961548568,
+      "max_radius": 10.93010251553023,
+      "angular_sectors_covered": 0
+    }
+  },
+  "single_plate": true,
+  "max_geometry_bound_error_mm": 4.002207035114225e-06,
+  "deposition_segments": 214198,
+  "arc_segments": 77546,
+  "arc_sampling_mm": 0.25,
+  "support_segments": 0,
+  "support_thread_intrusions": 0,
+  "support_footprint_violations": 0,
+  "brim_segments": 9278,
+  "support_roots": {
+    "raster_mm": 0.5,
+    "lateral_allowance_mm": 1,
+    "previous_layers_considered": 3,
+    "support_layers": 0,
+    "support_components_checked": 0,
+    "bed_components": 0,
+    "components_without_prior_support": [],
+    "limitation": "Sampled continuity, not exact extrusion topology or physical support strength"
+  },
+  "total_estimated_seconds": 9497.166015625,
+  "filaments": [
+    {
+      "filament_id": "GFL99",
+      "id": 1,
+      "main_used_g": 28.96585464477539,
+      "total_used_g": 28.96585464477539
+    }
+  ],
+  "slicer_warnings": "",
+  "checked": true,
+  "exported_bed_type": "Textured PEI Plate",
+  "final_startup_bed_target_c": 55.0,
+  "final_startup_bed_wait_c": 55.0,
+  "support_base_anchor_evidence": {}
+}

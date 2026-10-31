@@ -1,0 +1,63 @@
+{
+  "created_at": "2026-10-30T09:20:25+11:00",
+  "job": "tesseract-v3-split-bed4",
+  "printer": "a1",
+  "package_sha256": "a544ba808ce111c17620c5d2337bc6854e083cfcd529a23199d1db6ad24afe64",
+  "remote_content_sha256": "a544ba808ce111c17620c5d2337bc6854e083cfcd529a23199d1db6ad24afe64",
+  "remote_name": "tesseract-v3-split-bed4-pei-a1-20261030-092025.gcode.3mf",
+  "expected_layers": 291,
+  "phase": "first-layer",
+  "first_layer_reached": true,
+  "selected_slot_verified": true,
+  "physical_ams_slot": 1,
+  "ams_mapping": [
+    0
+  ],
+  "first_layer_at": "2026-10-30T09:28:24+11:00",
+  "last_observation": {
+    "at": "2026-10-30T09:28:24+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 4,
+      "layer_num": 1,
+      "total_layer_num": 291,
+      "mc_remaining_time": 151,
+      "gcode_file": "tesseract-v3-split-bed4-pei-a1-20261030-092025.gcode.3mf",
+      "subtask_name": "tesseract-v3-split-bed4-pei-a1-20261030-092025.gcode",
+      "nozzle_temper": 219.90625,
+      "bed_temper": 55.34375,
+      "print_error": 0,
+      "fail_reason": null,
+      "mc_print_error_code": null,
+      "stg_cur": 0
+    },
+    "hms": [],
+    "ams_tray_now": "0",
+    "targets": {
+      "bed_target_temper": 55,
+      "nozzle_target_temper": 220
+    }
+  },
+  "start_acknowledgement": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "312453959"
+  },
+  "start_commands_sent": 1,
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 291,
+    "deposition_moves_checked": 214198,
+    "package_sha256": "a544ba808ce111c17620c5d2337bc6854e083cfcd529a23199d1db6ad24afe64"
+  },
+  "physical_completion_verified": false
+}

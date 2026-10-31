@@ -1,0 +1,6 @@
+{
+  "rejected_before_dispatch": true,
+  "package_sha256": "a8b12bdabef674c0846b09d2e8ed308afdd92de8285c3061532220dc5f2d819a",
+  "reason": "Native ear records survived export, but actual G-code had zero brim segments. Volume-relative ear coordinates were shifted above the plate when Studio recentred the mesh. Use object-space (volume_idx=-1) points; re-slice and require actual deposited ears.",
+  "printer_controls_sent": []
+}

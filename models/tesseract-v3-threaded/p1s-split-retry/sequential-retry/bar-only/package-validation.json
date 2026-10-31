@@ -1,0 +1,50 @@
+{
+  "package": "slice/tesseract-bed4-p1s.gcode.3mf",
+  "package_sha256": "f085d025cf50976acb11a5bfda3d47a2fce7a916f7e6958de456392863828a1f",
+  "gcode_sha256": "df91c465b25c55fd9de701684d96b03225e3f6cc768cd3fc59964c4bec17310c",
+  "printer_model_id": "C12",
+  "normal_objects": 1,
+  "bed_index": 4,
+  "per_object_brim_evidence": {
+    "1": {
+      "segments": 839,
+      "min_radius": 2.6118332854742157,
+      "max_radius": 9.485495980706544,
+      "angular_sectors_covered": 0
+    }
+  },
+  "single_plate": true,
+  "max_geometry_bound_error_mm": 4.00130859645742e-06,
+  "deposition_segments": 12527,
+  "arc_segments": 7821,
+  "arc_sampling_mm": 0.25,
+  "support_segments": 0,
+  "support_thread_intrusions": 0,
+  "support_footprint_violations": 0,
+  "brim_segments": 839,
+  "support_roots": {
+    "raster_mm": 0.5,
+    "lateral_allowance_mm": 1,
+    "previous_layers_considered": 3,
+    "support_layers": 0,
+    "support_components_checked": 0,
+    "bed_components": 0,
+    "components_without_prior_support": [],
+    "limitation": "Sampled continuity, not exact extrusion topology or physical support strength"
+  },
+  "total_estimated_seconds": 5473.90380859375,
+  "filaments": [
+    {
+      "filament_id": "GFL99",
+      "id": 1,
+      "main_used_g": 2.5795981884002686,
+      "total_used_g": 2.5795981884002686
+    }
+  ],
+  "slicer_warnings": "",
+  "checked": true,
+  "exported_bed_type": "Textured PEI Plate",
+  "final_startup_bed_target_c": 55.0,
+  "final_startup_bed_wait_c": 55.0,
+  "support_base_anchor_evidence": {}
+}

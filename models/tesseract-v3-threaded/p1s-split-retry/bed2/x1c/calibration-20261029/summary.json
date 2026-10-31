@@ -1,0 +1,52 @@
+{
+  "printer": "x1c",
+  "routine": "built-in full-bed levelling only",
+  "created_at": "2026-10-29T14:31:22+11:00",
+  "ended_at": "2026-10-29T14:35:47+11:00",
+  "phase": "finished",
+  "command": {
+    "print": {
+      "command": "calibration",
+      "option": 2,
+      "sequence_id": "244682035"
+    }
+  },
+  "acknowledgement": {
+    "command": "calibration",
+    "sequence_id": "244682035",
+    "result": "success",
+    "reason": null
+  },
+  "terminal_state": "FINISH",
+  "terminal_percent": 100,
+  "terminal_print_error": 0,
+  "terminal_fail_reason": "0",
+  "hms_after": [],
+  "bed_temperature_range_c": [
+    26.0,
+    27.0
+  ],
+  "nozzle_temperature_range_c": [
+    38.0,
+    38.0
+  ],
+  "bed_heater_target_c": 0.0,
+  "stages_observed": [
+    -1,
+    0,
+    1
+  ],
+  "failure_reproduced": false,
+  "probe_coordinates_available": false,
+  "camera_frames_saved": 0,
+  "owner_offered_visual_observation": true,
+  "limits": [
+    "Built-in calibration remained at room temperature, unlike the failed print at 55 C.",
+    "No camera frames or probe-coordinate telemetry were available.",
+    "No exact probe grid size or per-point height results were exposed by the API.",
+    "No print, manual movement, error clear or repeat calibration command was sent."
+  ],
+  "next_diagnostic": "A controlled calibration at print-bed temperature would distinguish thermal/setup conditions from a persistent levelling failure. It was not run automatically.",
+  "source": "https://github.com/bambulab/BambuStudio/blob/master/src/slic3r/GUI/DeviceManager.cpp#L1757-L1777",
+  "owner_visual_observation": "Owner did not notice anything wrong during calibration."
+}

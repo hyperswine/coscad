@@ -1,0 +1,14 @@
+{
+  "reported_at": "2026-10-31T12:28:38+11:00",
+  "printer": "x1c",
+  "job": "tesseract-v3-sequential-mixed-x1c-20261031-084211.gcode.3mf",
+  "package_sha256": "b11ee724a1cde168a28209cb841de69c1109e339d3b52fcf65b421be68759dbc",
+  "source": "owner physical observation",
+  "outcome": "worked perfectly",
+  "parts": [
+    "one strut",
+    "one bar"
+  ],
+  "print_sequence": "by object",
+  "note": "Owner reports the X1C mixed sequential bed worked perfectly. No measured strength or endurance claim."
+}

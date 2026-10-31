@@ -239,8 +239,10 @@ class PreflightTests(unittest.TestCase):
         dispatchers = [p for p in (root/'models').rglob('*.py')
                        if not p.name.startswith('test') and 'project_file' in p.read_text()]
         self.assertTrue(dispatchers)
-        for index, source in enumerate(sorted(dispatchers)):
-            with self.subTest(dispatcher=str(source.relative_to(root))):
+        cases = [(source, trial) for source in sorted(dispatchers)
+                 for trial in (('x1c-staggered', 'p1s-compact') if source.name == 'print_strut_trial.py' else (None,))]
+        for index, (source, trial) in enumerate(cases):
+            with self.subTest(dispatcher=str(source.relative_to(root)), trial=trial):
                 spec = importlib.util.spec_from_file_location(f'dispatch_refusal_{index}', source)
                 module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(module)
@@ -256,6 +258,20 @@ class PreflightTests(unittest.TestCase):
                     package = folder/('thread-fit_bed1.gcode.3mf' if source.parent.name == 'p1s-thread-fit' else 'fit_bed1.gcode.3mf')
                 elif source.name == 'print_bed2_x1c.py':
                     package = folder/'slice-expanded/tesseract-bed2-x1c.gcode.3mf'
+                elif source.name == 'print_bed3.py':
+                    package = folder/'slice/tesseract-bed3-p1s.gcode.3mf'
+                elif source.name in ('print_bed4_a1.py', 'print_bed4_p1s.py'):
+                    printer = 'a1' if source.name == 'print_bed4_a1.py' else 'p1s'
+                    package = folder/f'slice/tesseract-bed4-{printer}.gcode.3mf'
+                elif source.name == 'print_center_a1.py':
+                    package = folder/'slice/tesseract-bed2-a1.gcode.3mf'
+                elif source.name == 'print_sequential_x1c.py':
+                    package = folder/'slice/tesseract-bed4-x1c.gcode.3mf'
+                elif source.name == 'print_strut_trial.py':
+                    args.insert(0, trial)
+                    job = folder/('four-struts-sequential' if trial == 'x1c-staggered' else 'four-struts-compact/p1s')
+                    printer = 'x1c' if trial == 'x1c-staggered' else 'p1s'
+                    package = job/f'slice/tesseract-bed4-{printer}.gcode.3mf'
                 elif source.parent.name == 'p1s-split-retry':
                     package = folder/'slice-corrected/tesseract-bed1-p1s.gcode.3mf'
                 elif source.parent.name == 'p1s-full':
@@ -272,6 +288,10 @@ class PreflightTests(unittest.TestCase):
                                 bed_index=1, package=str(package), file=package.name, sha256=digest, package_sha256=digest)
                 if source.name == 'print_bed2_x1c.py':
                     evidence.update(normal_objects=5, bed_index=2, printer_model_id='BL-P001')
+                elif source.name == 'print_bed3.py':
+                    evidence.update(normal_objects=4, bed_index=3)
+                elif source.name in ('print_bed4_a1.py', 'print_bed4_p1s.py'):
+                    evidence.update(normal_objects=8, bed_index=4)
                 (job/'package-validation.json').write_text(json.dumps(evidence))
                 (folder/'evidence').mkdir(exist_ok=True)
                 (folder/'evidence/slices.json').write_text(json.dumps({'builds': {'fit': {'plates': [evidence]}}}))
@@ -280,6 +300,7 @@ class PreflightTests(unittest.TestCase):
                 (job/'presets/filament.json').write_text(json.dumps(SETTINGS))
                 connect = unittest.mock.Mock(side_effect=AssertionError('Network must not be reached'))
                 with patch.object(module, 'HERE', folder, create=True), patch.object(module, 'B', folder, create=True), \
+                     patch.object(module, 'EXPERIMENTS', folder, create=True), \
                      patch.object(module, 'RECORD', folder/'run.json', create=True), \
                      patch.object(module, 'context', SimpleNamespace(connect=connect)), \
                      patch.object(sys, 'argv', [str(source), *args]):

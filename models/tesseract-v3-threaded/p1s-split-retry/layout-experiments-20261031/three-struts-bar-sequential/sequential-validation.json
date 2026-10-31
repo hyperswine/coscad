@@ -1,0 +1,59 @@
+{
+  "checked": true,
+  "package_sha256": "c4ae04fc99f0d1c78879d0673a5380b83022ff6d1746d1aead2ca2edf26a1ba4",
+  "actual_print_sequence": "by object",
+  "object_order": [
+    "1-strut",
+    "2-strut",
+    "3-strut",
+    "4-bar-print"
+  ],
+  "per_object": {
+    "1-strut": {
+      "layers": 291,
+      "last_z_mm": 58.2
+    },
+    "2-strut": {
+      "layers": 291,
+      "last_z_mm": 58.2
+    },
+    "3-strut": {
+      "layers": 291,
+      "last_z_mm": 58.2
+    },
+    "4-bar-print": {
+      "layers": 496,
+      "last_z_mm": 99.2
+    }
+  },
+  "thermal": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 1369,
+    "deposition_moves_checked": 93654,
+    "package_sha256": "c4ae04fc99f0d1c78879d0673a5380b83022ff6d1746d1aead2ca2edf26a1ba4"
+  },
+  "transition_samples_0_5mm": 769597,
+  "conservative_return_collisions": [],
+  "legacy_input_only_clearance_keys": [
+    "extruder_clearance_radius"
+  ],
+  "slicer_warnings": "",
+  "estimated_seconds": 16469.828125,
+  "filaments": [
+    {
+      "filament_id": "GFL99",
+      "id": 1,
+      "main_used_g": 13.648277282714844,
+      "total_used_g": 13.648277282714844
+    }
+  ],
+  "limitation": "Preset limits, slicer validation and sampled conservative motion envelopes; not measured hardware clearance or a physical print-quality guarantee."
+}

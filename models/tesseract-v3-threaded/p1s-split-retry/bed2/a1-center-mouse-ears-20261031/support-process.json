@@ -1,0 +1,25 @@
+{
+  "brim_type": "no_brim",
+  "brim_width": "8",
+  "brim_object_gap": "0.1",
+  "tree_support_wall_count": "2",
+  "tree_support_branch_diameter": "3",
+  "tree_support_branch_angle": "35",
+  "support_top_z_distance": "0.16",
+  "support_bottom_z_distance": "0.16",
+  "support_object_xy_distance": "0.3",
+  "support_interface_top_layers": "3",
+  "support_interface_bottom_layers": "3",
+  "support_interface_spacing": "0.25",
+  "support_speed": [
+    "60",
+    "60"
+  ],
+  "support_interface_speed": [
+    "35",
+    "35"
+  ],
+  "raft_first_layer_expansion": "1",
+  "reduce_crossing_wall": "1",
+  "avoid_crossing_wall_includes_support": "1"
+}

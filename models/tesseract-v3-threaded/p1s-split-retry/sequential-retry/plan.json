@@ -1,0 +1,156 @@
+{
+  "printer": "p1s",
+  "print_sequence": "by object",
+  "components": {
+    "strut": 8,
+    "bar-print": 12
+  },
+  "physical_plate_runs": 12,
+  "layouts": {
+    "mixed": {
+      "objects": [
+        "strut",
+        "bar-print"
+      ],
+      "heights_mm": [
+        58.28203201293945,
+        99.19999694824219
+      ],
+      "brim_envelope_gap_mm": 101.13624326155028,
+      "centers_xy_mm": [
+        [
+          128,
+          64
+        ],
+        [
+          128,
+          192
+        ]
+      ]
+    },
+    "bar-only": {
+      "objects": [
+        "bar-print"
+      ],
+      "heights_mm": [
+        99.19999694824219
+      ],
+      "brim_envelope_gap_mm": null,
+      "centers_xy_mm": [
+        [
+          128,
+          128
+        ]
+      ]
+    }
+  },
+  "runs": [
+    {
+      "run": 1,
+      "layout": "mixed",
+      "components": [
+        "strut-01",
+        "bar-01"
+      ]
+    },
+    {
+      "run": 2,
+      "layout": "mixed",
+      "components": [
+        "strut-02",
+        "bar-02"
+      ]
+    },
+    {
+      "run": 3,
+      "layout": "mixed",
+      "components": [
+        "strut-03",
+        "bar-03"
+      ]
+    },
+    {
+      "run": 4,
+      "layout": "mixed",
+      "components": [
+        "strut-04",
+        "bar-04"
+      ]
+    },
+    {
+      "run": 5,
+      "layout": "mixed",
+      "components": [
+        "strut-05",
+        "bar-05"
+      ]
+    },
+    {
+      "run": 6,
+      "layout": "mixed",
+      "components": [
+        "strut-06",
+        "bar-06"
+      ]
+    },
+    {
+      "run": 7,
+      "layout": "mixed",
+      "components": [
+        "strut-07",
+        "bar-07"
+      ]
+    },
+    {
+      "run": 8,
+      "layout": "mixed",
+      "components": [
+        "strut-08",
+        "bar-08"
+      ]
+    },
+    {
+      "run": 9,
+      "layout": "bar-only",
+      "components": [
+        "bar-09"
+      ]
+    },
+    {
+      "run": 10,
+      "layout": "bar-only",
+      "components": [
+        "bar-10"
+      ]
+    },
+    {
+      "run": 11,
+      "layout": "bar-only",
+      "components": [
+        "bar-11"
+      ]
+    },
+    {
+      "run": 12,
+      "layout": "bar-only",
+      "components": [
+        "bar-12"
+      ]
+    }
+  ],
+  "unmodified_machine_clearance": {
+    "extruder_clearance_height_to_lid": 90.0,
+    "extruder_clearance_height_to_rod": 34.0,
+    "extruder_clearance_max_radius": 68.0,
+    "extruder_clearance_dist_to_rod": 33.0,
+    "extruder_clearance_radius": 57.0,
+    "printable_height": 250.0
+  },
+  "dispatched": false,
+  "limitation": "Slicer and sampled G-code clearance checks passed; physical clearance, adhesion and print quality remain untested.",
+  "verified": true,
+  "validation_reports": [
+    "mixed/sequential-validation.json",
+    "bar-only/sequential-validation.json"
+  ]
+}

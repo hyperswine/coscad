@@ -1,0 +1,143 @@
+{
+  "printer": "a1",
+  "parts": [
+    "inner"
+  ],
+  "source_mesh": "/Users/jasonqin/Documents/GitHub/coscad/models/tesseract-v3-threaded/p1s-split-retry/bed2/1-inner.stl",
+  "source_sha256": "a2a53de6d622e7dd476e9cf7416c10bb36f54f3d4146abb4cda6f1ba4e10035d",
+  "geometry_changed": false,
+  "source_orientation_retained": true,
+  "mouse_ear_pads": [
+    {
+      "name": "mouse-ear-1",
+      "file": "mouse-ear-1.stl",
+      "center_xy_mm": [
+        109.54020953973361,
+        109.54021988246804
+      ],
+      "radius_mm": 7.5,
+      "height_mm": 0.2,
+      "bounds": [
+        [
+          102.04020953973361,
+          102.055019419256,
+          0.0
+        ],
+        [
+          117.04020953973361,
+          117.02542034568008,
+          0.2
+        ]
+      ],
+      "volume_mm3": 35.24997193996058
+    },
+    {
+      "name": "mouse-ear-2",
+      "file": "mouse-ear-2.stl",
+      "center_xy_mm": [
+        109.54022137377224,
+        146.45979386516302
+      ],
+      "radius_mm": 7.5,
+      "height_mm": 0.2,
+      "bounds": [
+        [
+          102.04022137377224,
+          138.97459340195098,
+          0.0
+        ],
+        [
+          117.04022137377224,
+          153.94499432837506,
+          0.2
+        ]
+      ],
+      "volume_mm3": 35.24997193996056
+    },
+    {
+      "name": "mouse-ear-3",
+      "file": "mouse-ear-3.stl",
+      "center_xy_mm": [
+        146.459786992247,
+        109.54021306246253
+      ],
+      "radius_mm": 7.5,
+      "height_mm": 0.2,
+      "bounds": [
+        [
+          138.959786992247,
+          102.05501259925049,
+          0.0
+        ],
+        [
+          153.959786992247,
+          117.02541352567457,
+          0.2
+        ]
+      ],
+      "volume_mm3": 35.24997193996062
+    },
+    {
+      "name": "mouse-ear-4",
+      "file": "mouse-ear-4.stl",
+      "center_xy_mm": [
+        146.45979034246582,
+        146.45978550087406
+      ],
+      "radius_mm": 7.5,
+      "height_mm": 0.2,
+      "bounds": [
+        [
+          138.95979034246582,
+          138.97458503766202,
+          0.0
+        ],
+        [
+          153.95979034246582,
+          153.9449859640861,
+          0.2
+        ]
+      ],
+      "volume_mm3": 35.24997193996058
+    }
+  ],
+  "adhesion_method": "four explicit CoScad 0.2 mm removable mouse-ear pads; native painted-ear CLI produced no paths",
+  "contact_patch_areas_at_z_0_1_mm": [
+    0.4187741716500036,
+    0.41877848260000516,
+    0.41877473254999376,
+    0.4187790434999954
+  ],
+  "process_overrides": {
+    "brim_type": "no_brim",
+    "brim_width": "8",
+    "brim_object_gap": "0.1",
+    "tree_support_wall_count": "2",
+    "tree_support_branch_diameter": "3",
+    "tree_support_branch_angle": "35",
+    "support_top_z_distance": "0.16",
+    "support_bottom_z_distance": "0.16",
+    "support_object_xy_distance": "0.3",
+    "support_interface_top_layers": "3",
+    "support_interface_bottom_layers": "3",
+    "support_interface_spacing": "0.25",
+    "support_speed": [
+      "60",
+      "60"
+    ],
+    "support_interface_speed": [
+      "35",
+      "35"
+    ],
+    "raft_first_layer_expansion": "1",
+    "reduce_crossing_wall": "1",
+    "avoid_crossing_wall_includes_support": "1"
+  },
+  "thread_bore_blockers_retained": true,
+  "bed_clear_owner_confirmed": true,
+  "physical_ams_slot": 1,
+  "support_removal_note": "Closer and denser PLA interfaces may require more care to remove; lower diagonal quality is unproven until printed.",
+  "original_center_geometry_changed": false,
+  "additional_sacrificial_geometry": true,
+  "physical_quality_unverified": true
+}

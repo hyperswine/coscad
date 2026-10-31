@@ -1,0 +1,217 @@
+{
+  "gcode_sha256": "374b88be74b52b6de0c1f77bf9444add1f2d0156f4e640808a900d1c5e1a3a84",
+  "layer_count": 291,
+  "all_layers_have_deposition": true,
+  "layer_height_steps_mm": [
+    0.2
+  ],
+  "features_and_actual_feed_speeds": {
+    "Brim": {
+      "segments": 9278,
+      "min_mm_s": 20.0,
+      "max_mm_s": 20.0
+    },
+    "Outer wall": {
+      "segments": 24215,
+      "min_mm_s": 10.0,
+      "max_mm_s": 50.0
+    },
+    "Inner wall": {
+      "segments": 82817,
+      "min_mm_s": 10.0,
+      "max_mm_s": 70.0
+    },
+    "Bottom surface": {
+      "segments": 56,
+      "min_mm_s": 25.0,
+      "max_mm_s": 25.0
+    },
+    "Internal solid infill": {
+      "segments": 92320,
+      "min_mm_s": 104.1739,
+      "max_mm_s": 193.16206666666668
+    },
+    "Overhang wall": {
+      "segments": 262,
+      "min_mm_s": 10.0,
+      "max_mm_s": 10.0
+    },
+    "Gap infill": {
+      "segments": 878,
+      "min_mm_s": 174.2630166666667,
+      "max_mm_s": 250.0
+    },
+    "Sparse infill": {
+      "segments": 1448,
+      "min_mm_s": 147.39129999999997,
+      "max_mm_s": 147.39129999999997
+    },
+    "Floating vertical shell": {
+      "segments": 1730,
+      "min_mm_s": 96.27508333333334,
+      "max_mm_s": 193.75526666666667
+    },
+    "Bridge": {
+      "segments": 386,
+      "min_mm_s": 50.0,
+      "max_mm_s": 50.0
+    },
+    "Top surface": {
+      "segments": 808,
+      "min_mm_s": 159.11758333333333,
+      "max_mm_s": 159.11758333333333
+    }
+  },
+  "fan_changes_during_layers": [
+    {
+      "layer": 1,
+      "value": 0.0
+    },
+    {
+      "layer": 2,
+      "value": 255.0
+    },
+    {
+      "layer": 291,
+      "value": 0.0
+    }
+  ],
+  "upper_shoulder_layers": [
+    {
+      "layer": 234,
+      "segments": 322,
+      "features": {
+        "Inner wall": 80,
+        "Outer wall": 24,
+        "Internal solid infill": 218
+      },
+      "fan_p1": 255.0,
+      "retractions": 119,
+      "max_travel_mm": 136.80473534567435,
+      "z_mm": 46.8
+    },
+    {
+      "layer": 235,
+      "segments": 324,
+      "features": {
+        "Inner wall": 80,
+        "Outer wall": 24,
+        "Internal solid infill": 220
+      },
+      "fan_p1": 255.0,
+      "retractions": 119,
+      "max_travel_mm": 136.8050467636337,
+      "z_mm": 47.0
+    },
+    {
+      "layer": 236,
+      "segments": 369,
+      "features": {
+        "Inner wall": 132,
+        "Outer wall": 24,
+        "Internal solid infill": 213
+      },
+      "fan_p1": 255.0,
+      "retractions": 114,
+      "max_travel_mm": 136.97060679211435,
+      "z_mm": 47.2
+    },
+    {
+      "layer": 237,
+      "segments": 1104,
+      "features": {
+        "Inner wall": 88,
+        "Overhang wall": 72,
+        "Internal solid infill": 944
+      },
+      "fan_p1": 255.0,
+      "retractions": 103,
+      "max_travel_mm": 137.47211310298536,
+      "z_mm": 47.4
+    },
+    {
+      "layer": 238,
+      "segments": 1423,
+      "features": {
+        "Inner wall": 207,
+        "Outer wall": 40,
+        "Internal solid infill": 1176
+      },
+      "fan_p1": 255.0,
+      "retractions": 84,
+      "max_travel_mm": 132.59808252761425,
+      "z_mm": 47.6
+    },
+    {
+      "layer": 239,
+      "segments": 508,
+      "features": {
+        "Inner wall": 206,
+        "Outer wall": 52,
+        "Internal solid infill": 250
+      },
+      "fan_p1": 255.0,
+      "retractions": 73,
+      "max_travel_mm": 132.00041168496406,
+      "z_mm": 47.8
+    },
+    {
+      "layer": 240,
+      "segments": 528,
+      "features": {
+        "Inner wall": 216,
+        "Outer wall": 48,
+        "Internal solid infill": 264
+      },
+      "fan_p1": 255.0,
+      "retractions": 79,
+      "max_travel_mm": 134.65744971964975,
+      "z_mm": 48.0
+    },
+    {
+      "layer": 241,
+      "segments": 791,
+      "features": {
+        "Inner wall": 250,
+        "Outer wall": 53,
+        "Internal solid infill": 392,
+        "Sparse infill": 96
+      },
+      "fan_p1": 255.0,
+      "retractions": 80,
+      "max_travel_mm": 135.81055805790655,
+      "z_mm": 48.2
+    },
+    {
+      "layer": 242,
+      "segments": 821,
+      "features": {
+        "Inner wall": 266,
+        "Outer wall": 59,
+        "Sparse infill": 88,
+        "Internal solid infill": 408
+      },
+      "fan_p1": 255.0,
+      "retractions": 73,
+      "max_travel_mm": 135.15850850390441,
+      "z_mm": 48.4
+    },
+    {
+      "layer": 243,
+      "segments": 1144,
+      "features": {
+        "Inner wall": 216,
+        "Outer wall": 408,
+        "Internal solid infill": 400,
+        "Sparse infill": 120
+      },
+      "fan_p1": 255.0,
+      "retractions": 73,
+      "max_travel_mm": 132.40212536436113,
+      "z_mm": 48.6
+    }
+  ],
+  "max_layer_travel_mm": 288.1058833137567,
+  "scope": "Deposition layer integrity, actual feed commands, part fan and upper shoulder feature classification. Not a dynamic nozzle-collision or extrusion simulation.",
+  "negative_extrusion_moves": 32851
+}

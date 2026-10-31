@@ -1,0 +1,27 @@
+{
+  "outcome": "advanced from bed levelling to extrusion calibration without an active fault",
+  "probing_first_observed_at": "2026-10-29T14:45:28+11:00",
+  "extrusion_calibration_first_observed_at": "2026-10-29T14:49:13+11:00",
+  "transition_observation": {
+    "at": "2026-10-29T14:49:13+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 1,
+      "layer_num": 0,
+      "total_layer_num": 282,
+      "mc_remaining_time": 470,
+      "gcode_file": "/data/Metadata/plate_1.gcode",
+      "subtask_name": "tesseract-v3-split-bed2-pei-x1c-20261029-144051.gcode",
+      "nozzle_temper": 220.0,
+      "bed_temper": 55.0,
+      "print_error": 0,
+      "fail_reason": "0",
+      "mc_print_error_code": "0",
+      "stg_cur": 8
+    },
+    "hms": []
+  },
+  "gcode_changed": false,
+  "physical_cause_of_previous_failure": "unknown",
+  "comparison_limit": "Recalibration may have affected printer state. This result does not prove the previous failure was random or the print will complete."
+}

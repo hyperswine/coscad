@@ -1,0 +1,17 @@
+{
+  "reference": "Previous P1S eight-strut by-layer slice",
+  "reference_travel": {
+    "transitions": 2037,
+    "mean_mm": 41.97242491100038,
+    "max_mm": 55.59374328597251,
+    "total_mm": 85497.82954370776
+  },
+  "candidate": "New X1C four-strut compact by-layer slice",
+  "candidate_travel": {
+    "transitions": 873,
+    "mean_mm": 30.087190960211075,
+    "max_mm": 42.31543237261408,
+    "total_mm": 26266.117708264268
+  },
+  "limitation": "Different object count, arrangement, machine profile and crossing-wall setting. This compares actual toolpaths, not a controlled causal test of print failure."
+}

@@ -1,0 +1,20 @@
+[
+  "/Applications/BambuStudio.app/Contents/MacOS/BambuStudio",
+  "--debug",
+  "1",
+  "--load-settings",
+  "/Users/jasonqin/Documents/GitHub/coscad/models/tesseract-v3-threaded/p1s-split-retry/sequential-retry/x1c/mixed/presets/machine.json;/Users/jasonqin/Documents/GitHub/coscad/models/tesseract-v3-threaded/p1s-split-retry/sequential-retry/x1c/mixed/presets/process.json",
+  "--load-filaments",
+  "/Users/jasonqin/Documents/GitHub/coscad/models/tesseract-v3-threaded/p1s-split-retry/sequential-retry/x1c/mixed/presets/filament.json",
+  "--arrange",
+  "0",
+  "--orient",
+  "0",
+  "--slice",
+  "0",
+  "--export-3mf",
+  "tesseract-bed4-x1c.gcode.3mf",
+  "--outputdir",
+  "/Users/jasonqin/Documents/GitHub/coscad/models/tesseract-v3-threaded/p1s-split-retry/sequential-retry/x1c/mixed/slice",
+  "/Users/jasonqin/Documents/GitHub/coscad/models/tesseract-v3-threaded/p1s-split-retry/sequential-retry/x1c/mixed/full-project.3mf"
+]

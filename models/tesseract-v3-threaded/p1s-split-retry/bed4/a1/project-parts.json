@@ -1,0 +1,157 @@
+{
+  "parts": [
+    {
+      "parent": 2,
+      "normal_part": 1,
+      "label": "1-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          81.5,
+          81.51282501220703,
+          0.0
+        ],
+        [
+          94.5,
+          94.48717498779297,
+          58.28203201293945
+        ]
+      ]
+    },
+    {
+      "parent": 4,
+      "normal_part": 3,
+      "label": "2-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          121.5,
+          81.51282501220703,
+          0.0
+        ],
+        [
+          134.5,
+          94.48717498779297,
+          58.28203201293945
+        ]
+      ]
+    },
+    {
+      "parent": 6,
+      "normal_part": 5,
+      "label": "3-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          161.5,
+          81.51282501220703,
+          0.0
+        ],
+        [
+          174.5,
+          94.48717498779297,
+          58.28203201293945
+        ]
+      ]
+    },
+    {
+      "parent": 8,
+      "normal_part": 7,
+      "label": "4-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          81.5,
+          121.51282501220703,
+          0.0
+        ],
+        [
+          94.5,
+          134.48716735839844,
+          58.28203201293945
+        ]
+      ]
+    },
+    {
+      "parent": 10,
+      "normal_part": 9,
+      "label": "5-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          161.5,
+          121.51282501220703,
+          0.0
+        ],
+        [
+          174.5,
+          134.48716735839844,
+          58.28203201293945
+        ]
+      ]
+    },
+    {
+      "parent": 12,
+      "normal_part": 11,
+      "label": "6-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          81.5,
+          161.51283264160156,
+          0.0
+        ],
+        [
+          94.5,
+          174.48716735839844,
+          58.28203201293945
+        ]
+      ]
+    },
+    {
+      "parent": 14,
+      "normal_part": 13,
+      "label": "7-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          121.5,
+          161.51283264160156,
+          0.0
+        ],
+        [
+          134.5,
+          174.48716735839844,
+          58.28203201293945
+        ]
+      ]
+    },
+    {
+      "parent": 16,
+      "normal_part": 15,
+      "label": "8-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          161.5,
+          161.51283264160156,
+          0.0
+        ],
+        [
+          174.5,
+          174.48716735839844,
+          58.28203201293945
+        ]
+      ]
+    }
+  ],
+  "thread_exclusions": []
+}

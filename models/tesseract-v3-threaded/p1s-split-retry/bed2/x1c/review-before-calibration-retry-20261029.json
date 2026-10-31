@@ -1,0 +1,35 @@
+{
+  "reviewed_on": "2026-10-29",
+  "owner_calibration_observation": "Owner did not notice anything wrong during the full-bed calibration.",
+  "retry_interpretation": "Owner-approved repeat to test whether the prior levelling failure was intermittent; a fluke is not established.",
+  "package_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f",
+  "vendor_start_template_identical": true,
+  "successful_shelf_start_template_identical": true,
+  "normalized_startup_difference": {
+    "reference": [
+      "    G29 A X113.329 Y113.329 I29.3414 J29.3414"
+    ],
+    "bed2": [
+      "    G29 A X30.5662 Y30.5662 I194.868 J194.868"
+    ]
+  },
+  "explicit_stop_pause_or_unresolved_placeholders": false,
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 282,
+    "deposition_moves_checked": 539272,
+    "package_sha256": "b528a1a89dd6850d5675c416a6da22e17814326009e2c85517088f568289a88f"
+  },
+  "geometry_validation_hash_matches": true,
+  "geometry_changed": false,
+  "startup_changed": false,
+  "comparison_limit": "A successful post-calibration retry would not distinguish a transient failure from the effect of recalibration changing printer state."
+}

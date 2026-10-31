@@ -1,0 +1,7 @@
+{
+  "original_package_sha256": "95f761d41e2c73ac07e87c28fcb58d0f501c8873d37934cf1378a31cf4707dde",
+  "original_end_lift_mm": 0.5,
+  "reason": "Conservative motion audit required at least 0.5 mm above actual finished mesh tops. Native parking was Z58.7 vs mesh top58.282, leaving about0.418 mm. This was not a diagnosed physical collision.",
+  "correction": "Reslice with 5 mm end lift; keep all manufacturer head/rod/lid limits and geometry unchanged.",
+  "dispatched": false
+}

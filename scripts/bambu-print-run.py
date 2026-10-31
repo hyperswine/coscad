@@ -141,7 +141,8 @@ class Printer:
     def summary(self):
         s = self.state
         return {k: s.get(k) for k in ("gcode_state", "mc_percent", "layer_num", "total_layer_num", "mc_remaining_time",
-                                      "gcode_file", "subtask_name", "nozzle_temper", "bed_temper", "print_error")}
+                                      "gcode_file", "subtask_name", "nozzle_temper", "bed_temper", "print_error",
+                                      "fail_reason", "mc_print_error_code", "stg_cur")}
 
     def spools(self):
         """What filament the printer has: [(spool, type, colour, loaded)]."""

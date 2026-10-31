@@ -1,0 +1,170 @@
+{
+  "at": "2026-10-31T21:48:05+11:00",
+  "printer": "x1c",
+  "expected_job": "tesseract-v3-x1c-staggered-20261031-124500.gcode.3mf",
+  "package_sha256": "2319693f939c172b94387cfe546191653e93fdba1d880c40d43501994af025c8",
+  "print_sequence": "by object",
+  "frames": [
+    {
+      "file": "x1c-outcome-1.jpg",
+      "captured_at": "2026-10-31T21:49:03+11:00",
+      "source": "authenticated live dashboard camera stream",
+      "dimensions": [
+        1168,
+        720
+      ],
+      "bytes": 33582,
+      "sha256": "eb90510491f9c6387e166f025156544ed3783a1474e15598b8c995278fc3dd37"
+    },
+    {
+      "file": "x1c-outcome-2.jpg",
+      "captured_at": "2026-10-31T21:49:14+11:00",
+      "source": "authenticated live dashboard camera stream",
+      "dimensions": [
+        1168,
+        720
+      ],
+      "bytes": 35722,
+      "sha256": "7b107dfccaeb06c64d337a43b7da5b4c881aeb28e2843d26ccf9d77b5efac925"
+    },
+    {
+      "file": "x1c-outcome-3.jpg",
+      "captured_at": "2026-10-31T21:49:26+11:00",
+      "source": "authenticated live dashboard camera stream",
+      "dimensions": [
+        1168,
+        720
+      ],
+      "bytes": 35895,
+      "sha256": "2cfa7104f22d0ba41b57fcdeb3cccf61f47589d5589990df2a79eb89a7901517"
+    }
+  ],
+  "errors": [
+    {
+      "at": "2026-10-31T21:48:08+11:00",
+      "frame": 1,
+      "error_type": "ValueError",
+      "scope": "RTSPS capture failed; private connection details omitted"
+    },
+    {
+      "at": "2026-10-31T21:48:12+11:00",
+      "frame": 2,
+      "error_type": "ValueError",
+      "scope": "RTSPS capture failed; private connection details omitted"
+    },
+    {
+      "at": "2026-10-31T21:48:16+11:00",
+      "frame": 3,
+      "error_type": "ValueError",
+      "scope": "RTSPS capture failed; private connection details omitted"
+    },
+    {
+      "scope": "Mini keyframe capture",
+      "frame": 1,
+      "error_type": "ValueError"
+    },
+    {
+      "scope": "Mini keyframe capture",
+      "frame": 2,
+      "error_type": "ValueError"
+    },
+    {
+      "scope": "Mini keyframe capture",
+      "frame": 3,
+      "error_type": "ValueError"
+    },
+    {
+      "scope": "Mini settled-stream capture",
+      "frame": 1,
+      "error_type": "ValueError"
+    },
+    {
+      "scope": "Mini settled-stream capture",
+      "frame": 2,
+      "error_type": "ValueError"
+    },
+    {
+      "scope": "Mini settled-stream capture",
+      "frame": 3,
+      "error_type": "ValueError"
+    }
+  ],
+  "printer_controls_sent": [],
+  "owner_report": "The X1C printed each of the four struts perfectly using per-object mode.",
+  "physical_outcome_owner_reported": "success - all four struts printed perfectly",
+  "hypothesis_confirmed": false,
+  "exact_failure_layer_known": null,
+  "status_before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 1164,
+    "total_layer_num": 1164,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "tesseract-v3-x1c-staggered-20261031-124500.gcode",
+    "nozzle_temper": 30.0,
+    "bed_temper": 27.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "hms_before": [],
+  "spools": [
+    [
+      "external",
+      "PLA",
+      "BECF00FF",
+      true
+    ]
+  ],
+  "status_after": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 1164,
+    "total_layer_num": 1164,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "tesseract-v3-x1c-staggered-20261031-124500.gcode",
+    "nozzle_temper": 30.0,
+    "bed_temper": 27.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "hms_after": [],
+  "finished_at": "2026-10-31T21:49:26+11:00",
+  "dashboard_status": {
+    "connection": "ONLINE",
+    "state": "FINISH",
+    "job": "tesseract-v3-x1c-staggered-20261031-124500.gcode",
+    "progress": 100,
+    "layers": "Layer 1164 / 1164",
+    "camera_state": "OFF",
+    "camera_mode": "snapshot",
+    "camera_last_frame": 0,
+    "last_report_iso": "2026-10-31T10:48:48Z"
+  },
+  "dashboard_camera_capture_succeeded": true,
+  "keyframe_capture_count": 0,
+  "settled_capture_count": 0,
+  "job_matches_dispatch": true,
+  "visual_review": {
+    "reviewed_frames": [
+      "x1c-outcome-1.jpg",
+      "x1c-outcome-2.jpg",
+      "x1c-outcome-3.jpg"
+    ],
+    "observation": "All three dashboard JPEGs decode, but large vertical smears/corruption cover the lower image and build area. The print cannot be independently inspected from these frames. Direct local RTSPS and alternative Mini decoder captures failed; no service or printer configuration was changed.",
+    "usable_for_print_quality": false,
+    "physical_success_evidence": "Owner directly inspected and reports all four struts printed perfectly in per-object mode. FINISH/1164 and no faults corroborate job completion only."
+  },
+  "camera_capture_issue": {
+    "recorded": true,
+    "symptom": "X1C live dashboard captures have lower-image vertical smearing; direct and extended/filtered decode attempts returned no usable photo.",
+    "diagnosed_cause": null,
+    "print_result_separate": true,
+    "service_or_printer_changes": []
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "layers": 291,
+  "per_object_layers": {
+    "6": 291,
+    "8": 291,
+    "4": 291,
+    "2": 291
+  },
+  "minimum_actual_brim_gap_mm": 5.6470000000000065,
+  "actual_brim_bounds": [
+    [
+      102.82900061183109,
+      102.824,
+      125.171,
+      125.17699943171938
+    ],
+    [
+      130.8290006118311,
+      102.824,
+      153.1709993881689,
+      125.177
+    ],
+    [
+      102.82900061183109,
+      130.824,
+      125.17099938816891,
+      153.17699943171937
+    ],
+    [
+      130.8290006118311,
+      130.824,
+      153.1709993881689,
+      153.17699943171937
+    ]
+  ],
+  "within_layer_interobject_travel": {
+    "transitions": 873,
+    "mean_mm": 30.087190960211075,
+    "max_mm": 42.31543237261408,
+    "total_mm": 26266.117708264268
+  },
+  "checked": true,
+  "package_sha256": "9ecd66a053b6a5e411a0ddaa95e99b6d43b88d91e7946fb4a2b9b78dd704abd9",
+  "thermal": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 291,
+    "deposition_moves_checked": 107134,
+    "package_sha256": "9ecd66a053b6a5e411a0ddaa95e99b6d43b88d91e7946fb4a2b9b78dd704abd9"
+  },
+  "actual_print_sequence": "by layer",
+  "wall_crossing_avoidance_enabled": true,
+  "estimated_seconds": 5272.26123046875,
+  "filaments": [
+    {
+      "filament_id": "GFL99",
+      "id": 1,
+      "main_used_g": 14.540349006652832,
+      "total_used_g": 14.540349006652832
+    }
+  ],
+  "limitation": "Actual sliced paths/preset checks, not proof against curling, dynamic wobble or physical nozzle contact."
+}

@@ -1,0 +1,9 @@
+{
+  "probe": "Compact four-strut geometry with print_sequence changed to by object",
+  "process_return_code": 193,
+  "slicer_return_code": -63,
+  "slicer_message": "Object conflicts were detected when using print-by-object mode. Please verify the slicing of all plates in Bambu Studio before uploading.",
+  "rejected": true,
+  "printer_controls_sent": [],
+  "unsafe_project_and_outputs_retained": false
+}

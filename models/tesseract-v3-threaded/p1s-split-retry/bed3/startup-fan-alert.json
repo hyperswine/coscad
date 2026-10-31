@@ -1,0 +1,32 @@
+{
+  "observed_at": "2026-10-30T02:23:43+11:00",
+  "hms_observed": [
+    {
+      "attr": 50344192,
+      "code": 65537,
+      "action": 0,
+      "timestamp": 1789475551
+    }
+  ],
+  "vendor_code": "0300310000010001",
+  "description": "Part cooling fan reported low/stopped speed during startup. This does not establish a physical fan failure or its cause.",
+  "vendor_source": "Installed BambuStudio Resources/hms/hms_en_093.json",
+  "cleared_on_fresh_status_at": "2026-10-30T02:25:39+11:00",
+  "fresh_status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 1,
+    "layer_num": 0,
+    "total_layer_num": 120,
+    "mc_remaining_time": 279,
+    "gcode_file": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode.3mf",
+    "subtask_name": "tesseract-v3-split-bed3-pei-p1s-20261030-022022.gcode",
+    "nozzle_temper": 140.0625,
+    "bed_temper": 54.875,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 1
+  },
+  "fresh_hms": [],
+  "manual_clear_or_control_sent": false
+}

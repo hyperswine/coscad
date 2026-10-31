@@ -1,0 +1,98 @@
+{
+  "at": "2026-10-31T21:48:05+11:00",
+  "printer": "p1s",
+  "expected_job": "tesseract-v3-p1s-compact-20261031-124453.gcode.3mf",
+  "package_sha256": "9ecd66a053b6a5e411a0ddaa95e99b6d43b88d91e7946fb4a2b9b78dd704abd9",
+  "print_sequence": "by layer",
+  "frames": [
+    {
+      "file": "p1s-outcome-1.jpg",
+      "captured_at": "2026-10-31T21:48:09+11:00",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "bytes": 74310,
+      "sha256": "9f4a8de5e43861ebcc254d814b77260961a3d29228cf5248900c8c1f486bf328"
+    },
+    {
+      "file": "p1s-outcome-2.jpg",
+      "captured_at": "2026-10-31T21:48:11+11:00",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "bytes": 89243,
+      "sha256": "c31d47496ea923901f318ee373f56c94432b7b0eb45945340bbbc10210ab44e3"
+    },
+    {
+      "file": "p1s-outcome-3.jpg",
+      "captured_at": "2026-10-31T21:48:13+11:00",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "bytes": 89510,
+      "sha256": "f8ba6191ad461f0d1a0f3848cdfb1663d314223205b9d631d97550f4abe9690e"
+    }
+  ],
+  "errors": [],
+  "printer_controls_sent": [],
+  "owner_report": "The P1S printed almost perfectly before the threaded portions of the struts. Around the thread portions it may have hit the components and knocked them over while travelling from one thread to another. Nozzle contact and exact initiating layer are unconfirmed.",
+  "physical_outcome_owner_reported": "failed at/around upper threads after near-perfect lower sections",
+  "hypothesis_confirmed": false,
+  "exact_failure_layer_known": false,
+  "status_before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 291,
+    "total_layer_num": 291,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-p1s-compact-20261031-124453.gcode",
+    "nozzle_temper": 29.59375,
+    "bed_temper": 26.09375,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "hms_before": [],
+  "spools": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "status_after": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 291,
+    "total_layer_num": 291,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-p1s-compact-20261031-124453.gcode",
+    "nozzle_temper": 29.59375,
+    "bed_temper": 26.09375,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "hms_after": [],
+  "finished_at": "2026-10-31T21:48:14+11:00",
+  "visual_review": {
+    "reviewed_frames": [
+      "p1s-outcome-1.jpg",
+      "p1s-outcome-2.jpg",
+      "p1s-outcome-3.jpg"
+    ],
+    "observation": "Filament loops/spaghetti and displaced material are visible around the upper parts near the lower edge of all three frames. Glare on the light-coloured parts and camera framing obscure portions of the bed, lower sections and thread detail. These end-state frames cannot establish the first collision, exact failure layer or prove that all lower sections were sound.",
+    "owner_observation_separate": "Owner directly observed near-perfect printing before the thread region, followed by possible nozzle contact while travelling between threaded ends.",
+    "initiating_collision_observed": false,
+    "quality": "Failed completed print, consistent with owner report; exact mechanism unconfirmed."
+  },
+  "job_matches_dispatch": true
+}

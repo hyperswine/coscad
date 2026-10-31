@@ -1,0 +1,81 @@
+{
+  "mesh_bounds": [
+    [
+      81.5,
+      81.51282501220703,
+      0.0
+    ],
+    [
+      94.5,
+      94.48717498779297,
+      58.28203201293945
+    ]
+  ],
+  "largest_layer_radius_increases": [
+    {
+      "layer": 237,
+      "z_mid_mm": 47.3,
+      "area_mm2": 82.07319298580406,
+      "max_radius_mm": 5.117972410675333,
+      "radial_expansion_mm": 1.6179692863389508,
+      "outside_previous_layer_plus_0_2mm_mm2": 39.16923062929472
+    },
+    {
+      "layer": 4,
+      "z_mid_mm": 0.7,
+      "area_mm2": 61.682157402838996,
+      "max_radius_mm": 5.020041701624357,
+      "radial_expansion_mm": 0.9700386498665443,
+      "outside_previous_layer_plus_0_2mm_mm2": 6.908764882547774
+    },
+    {
+      "layer": 2,
+      "z_mid_mm": 0.3,
+      "area_mm2": 48.88778567341799,
+      "max_radius_mm": 3.9500026658177205,
+      "radial_expansion_mm": 0.20000069662733733,
+      "outside_previous_layer_plus_0_2mm_mm2": 0.00012379523497935138
+    },
+    {
+      "layer": 46,
+      "z_mid_mm": 9.1,
+      "area_mm2": 120.44525919689296,
+      "max_radius_mm": 6.200002813422543,
+      "radial_expansion_mm": 0.2000003559974486,
+      "outside_previous_layer_plus_0_2mm_mm2": 0.00012388778152326452
+    },
+    {
+      "layer": 45,
+      "z_mid_mm": 8.9,
+      "area_mm2": 112.79992423141798,
+      "max_radius_mm": 6.0000024574250945,
+      "radial_expansion_mm": 0.2000003559974477,
+      "outside_previous_layer_plus_0_2mm_mm2": 0.00012385408645464383
+    },
+    {
+      "layer": 47,
+      "z_mid_mm": 9.3,
+      "area_mm2": 128.341263058036,
+      "max_radius_mm": 6.40000316941998,
+      "radial_expansion_mm": 0.20000035599743704,
+      "outside_previous_layer_plus_0_2mm_mm2": 0.00012402647869339033
+    },
+    {
+      "layer": 44,
+      "z_mid_mm": 8.7,
+      "area_mm2": 105.40525711133205,
+      "max_radius_mm": 5.800002101427647,
+      "radial_expansion_mm": 0.20000031540230445,
+      "outside_previous_layer_plus_0_2mm_mm2": 0.0001237762497576356
+    },
+    {
+      "layer": 243,
+      "z_mid_mm": 48.5,
+      "area_mm2": 125.07224734015995,
+      "max_radius_mm": 6.317969351113761,
+      "radial_expansion_mm": 0.20000008351889154,
+      "outside_previous_layer_plus_0_2mm_mm2": 0.0001236683055600934
+    }
+  ],
+  "note": "Mid-layer cross sections; screening only, not a simulation of cooled extrusion or proof of failure."
+}

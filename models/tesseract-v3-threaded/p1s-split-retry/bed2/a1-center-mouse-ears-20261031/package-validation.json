@@ -1,0 +1,102 @@
+{
+  "package": "slice/tesseract-bed2-a1.gcode.3mf",
+  "package_sha256": "023b5e11cbde9ff9f8f35de9af673c26aa90ff26eb58b61f3df5bd2f55666ede",
+  "gcode_sha256": "98a5556f61b85da9cb4a51743fc8f824f2a9959714a0f0e40f41e9f663000d52",
+  "printer_model_id": "N2S",
+  "normal_objects": 1,
+  "bed_index": 2,
+  "per_object_brim_evidence": {
+    "1": {
+      "segments": 0,
+      "min_radius": 999.0,
+      "max_radius": 0.0,
+      "angular_sectors_covered": 0
+    }
+  },
+  "single_plate": true,
+  "max_geometry_bound_error_mm": 5.512695366860498e-08,
+  "deposition_segments": 223360,
+  "arc_segments": 44846,
+  "arc_sampling_mm": 0.25,
+  "support_segments": 35794,
+  "support_thread_intrusions": 0,
+  "support_footprint_violations": 0,
+  "brim_segments": 0,
+  "support_roots": {
+    "raster_mm": 0.5,
+    "lateral_allowance_mm": 1,
+    "previous_layers_considered": 3,
+    "support_layers": 205,
+    "support_components_checked": 1142,
+    "bed_components": 1,
+    "components_without_prior_support": [],
+    "limitation": "Sampled continuity, not exact extrusion topology or physical support strength"
+  },
+  "total_estimated_seconds": 13117.96875,
+  "filaments": [
+    {
+      "filament_id": "GFL99",
+      "id": 1,
+      "main_used_g": 38.93663787841797,
+      "total_used_g": 38.93663787841797
+    }
+  ],
+  "slicer_warnings": "",
+  "checked": true,
+  "exported_bed_type": "Textured PEI Plate",
+  "final_startup_bed_target_c": 55.0,
+  "final_startup_bed_wait_c": 55.0,
+  "support_base_anchor_evidence": {
+    "1": {
+      "kind": "four explicit removable first-layer CoScad mouse-ear pads",
+      "pads": [
+        {
+          "name": "mouse-ear-1",
+          "height_mm": 0.2,
+          "first_layer_sampled_cells_0_5mm": 121,
+          "deposited_xy_bounds": [
+            102.366,
+            102.38,
+            116.715,
+            116.7
+          ]
+        },
+        {
+          "name": "mouse-ear-2",
+          "height_mm": 0.2,
+          "first_layer_sampled_cells_0_5mm": 115,
+          "deposited_xy_bounds": [
+            102.366,
+            139.3,
+            116.715,
+            153.62
+          ]
+        },
+        {
+          "name": "mouse-ear-3",
+          "height_mm": 0.2,
+          "first_layer_sampled_cells_0_5mm": 118,
+          "deposited_xy_bounds": [
+            139.285,
+            102.38,
+            153.634,
+            116.7
+          ]
+        },
+        {
+          "name": "mouse-ear-4",
+          "height_mm": 0.2,
+          "first_layer_sampled_cells_0_5mm": 117,
+          "deposited_xy_bounds": [
+            139.285,
+            139.3,
+            153.634,
+            153.62
+          ]
+        }
+      ],
+      "full_brim_paths": 0,
+      "limitation": "Sampled deposited paths, not physical adhesion proof"
+    }
+  }
+}

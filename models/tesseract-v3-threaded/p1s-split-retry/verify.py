@@ -8,8 +8,8 @@ from shapely import wkt,contains_xy
 from shapely.geometry import MultiPoint,box
 from shapely.ops import unary_union
 PROJECT=Path(__file__).resolve().parent;SOURCE=PROJECT.parent
-ap=argparse.ArgumentParser();ap.add_argument('--bed',type=int,choices=range(1,6),required=True);ap.add_argument('--slice-dir',default='slice');ap.add_argument('--printer',choices=('p1s','x1c'),default='p1s');ap.add_argument('--variant',default='');args=ap.parse_args();HERE=PROJECT/('bed'+str(args.bed))/args.variant;OUT=HERE/args.slice_dir
-printer_model,model_id={'p1s':('Bambu Lab P1S','C12'),'x1c':('Bambu Lab X1 Carbon','BL-P001')}[args.printer]
+ap=argparse.ArgumentParser();ap.add_argument('--bed',type=int,choices=range(1,6),required=True);ap.add_argument('--slice-dir',default='slice');ap.add_argument('--printer',choices=('p1s','x1c','a1'),default='p1s');ap.add_argument('--variant',default='');ap.add_argument('--output-dir',type=Path);args=ap.parse_args();HERE=args.output_dir if args.output_dir else PROJECT/('bed'+str(args.bed))/args.variant;OUT=HERE/args.slice_dir
+printer_model,model_id={'p1s':('Bambu Lab P1S','C12'),'x1c':('Bambu Lab X1 Carbon','BL-P001'),'a1':('Bambu Lab A1','N2S')}[args.printer]
 expected_count=len(json.loads((HERE/'packing.json').read_text())['items'])
 sys.path.insert(0,str(SOURCE.parent/'print-in-place-globe/v2-threaded'))
 from support_roots import SupportRoots
@@ -19,6 +19,17 @@ plate=result['sliced_plates'][0];assert not plate.get('warning_message'),plate.g
 assert len(plate['objects'])==expected_count,len(plate['objects'])
 package=OUT/('tesseract-bed'+str(args.bed)+'-'+args.printer+'.gcode.3mf')
 packing=json.loads((HERE/'packing.json').read_text());parts=json.loads((HERE/'project-parts.json').read_text());assert len(packing['items'])==expected_count
+adhesion_pads=parts.get('adhesion_pads',[])
+pad_meshes=[];pad_masks=[];pad_samples=[]
+if adhesion_pads:
+ assert expected_count==1 and packing['items'][0]['name']=='inner' and packing['items'][0].get('brim_type')=='no_brim'
+ assert len(adhesion_pads)==4
+ for pad in adhesion_pads:
+  mesh=trimesh.load_mesh(HERE/pad['file']);assert mesh.is_watertight and len(mesh.split())==1
+  assert abs(mesh.bounds[0,2])<1e-6 and abs(mesh.bounds[1,2]-.2)<1e-6
+  assert abs(mesh.volume-pad['volume_mm3'])<.001 and 25<mesh.volume<40
+  assert np.max(abs(mesh.bounds-np.array(pad['bounds'])))<.001
+  pad_meshes.append(mesh);pad_masks.append(MultiPoint(mesh.vertices[:,:2]).convex_hull.buffer(.3));pad_samples.append([])
 # Saved normal meshes are single solids, brims/envelopes and bed keep-out clear.
 normal={};allow=[]
 for item in packing['items']:
@@ -64,7 +75,13 @@ with zipfile.ZipFile(package) as z:
  for item in parts['parts']:
   o=obj[item['label']]
   assert float(o.find("metadata[@key='brim_width']").get('value'))==item['brim_mm']
+  assert o.find("metadata[@key='brim_type']").get('value')==next(i.get('brim_type','outer_only') for i in packing['items'] if str(i['id'])+'-'+i['name']==item['label'])
   assert o.find("metadata[@key='enable_support']").get('value')==('1' if item['enable_support'] else '0')
+ if adhesion_pads:
+  o=next(iter(obj.values()));assert len(o.findall('part'))==6
+  for pad in adhesion_pads:
+   nodes=[p for p in o.findall('part') if p.find("metadata[@key='name']").get('value')==pad['name']]
+   assert len(nodes)==1 and nodes[0].get('subtype')=='normal_part'
  xml=E.fromstring(z.read('Metadata/slice_info.config'));model=xml.find(".//metadata[@key='printer_model_id']")
  vendor=json.loads(Path('/Applications/BambuStudio.app/Contents/Resources/profiles/BBL/machine/'+printer_model+'.json').read_text());assert vendor['model_id']==model_id and model.get('value') in ('',model_id)
  model.set('value',model_id);name='Metadata/slice_info.config';entries[name]=(entries[name][0],E.tostring(xml,encoding='utf-8',xml_declaration=True))
@@ -98,6 +115,11 @@ with zipfile.ZipFile(package) as z:
  for item in root.findall('m:build/m:item',ns):
   ref=next((v for k,v in item.attrib.items() if k.endswith('}path')),'3D/3dmodel.model').lstrip('/')
   meshes=geometry(ref,item.get('objectid'),matrix(item.get('transform')))
+  if adhesion_pads:
+   assert len(meshes)==6
+   for expected_pad in pad_meshes:
+    matched=[m for m in meshes if np.max(abs(m.bounds-expected_pad.bounds))<.001]
+    assert len(matched)==1 and abs(matched[0].volume-expected_pad.volume)<.02
   actual.append(max(meshes,key=lambda m:abs(m.volume)))
  assert len(actual)==expected_count
  unmatched=list(actual);max_bound_error=0
@@ -153,6 +175,10 @@ for line in code.decode().splitlines():
     rel=p3-center;axial=rel@axis;rad=np.linalg.norm(rel-axial[:,None]*axis,axis=1)
     if np.any((abs(axial)<half-.1)&(rad<radius-.1)):intrusions.append([nz,float(rad.min())])
   if nz<.3 and not special and support_area is not None and np.all(contains_xy(support_area,pts[:,0],pts[:,1])):inner_contact_points.append(pts.copy())
+  if nz<.3 and not special:
+   for mask,samples in zip(pad_masks,pad_samples):
+    selected=contains_xy(mask,pts[:,0],pts[:,1])
+    if np.any(selected):samples.append(pts[selected].copy())
   if feature in ['Skirt','Brim']:
    brim+=1;assert np.all(contains_xy(allowed,pts[:,0],pts[:,1])),('brim exceeds reserved footprint',pts.min(0),pts.max(0))
    if nz<.3:
@@ -165,10 +191,21 @@ for line in code.decode().splitlines():
       ring=rel[rad>26]
       record['sectors'].update((np.floor((np.arctan2(ring[:,1],ring[:,0])+math.pi)/(2*math.pi)*36).astype(int)%36).tolist())
  x,y,z=nx,ny,nz
-assert segments>10000 and brim>0,(segments,support,brim)
+assert segments>10000 and (brim>0 or adhesion_pads),(segments,support,brim)
 assert (support>0) if inner_ids else (support==0),(inner_ids,support)
 for item in packing['items']:
  record=brim_objects[item['id']]
+ if adhesion_pads:
+  assert settings['brim_type']=='no_brim' and brim==0
+  assert all(pad_samples)
+  evidence=[]
+  for pad,samples in zip(adhesion_pads,pad_samples):
+   sampled=np.concatenate(samples);pixels=np.unique(np.rint(sampled/.5).astype(int),axis=0)
+   assert len(pixels)>100,(pad['name'],'missing actual first-layer pad paths')
+   evidence.append({'name':pad['name'],'height_mm':.2,'first_layer_sampled_cells_0_5mm':len(pixels),'deposited_xy_bounds':sampled.min(0).tolist()+sampled.max(0).tolist()})
+  support_anchor_evidence[item['id']]={'kind':'four explicit removable first-layer CoScad mouse-ear pads','pads':evidence,'full_brim_paths':0,'limitation':'Sampled deposited paths, not physical adhesion proof'}
+  record['angular_sectors_covered']=0;del record['sectors']
+  continue
  if record['segments']==0 and item['name']=='inner':
   # Bambu merges/suppresses the model brim where tree bases surround its tiny
   # contact pads. Require explicit expanded support bases and actual adjacent

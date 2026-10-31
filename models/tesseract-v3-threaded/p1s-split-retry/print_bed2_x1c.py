@@ -23,6 +23,7 @@ from bambu_preflight import preset_expectations, verify_package
 
 HERE = Path(__file__).resolve().parent/'bed2/x1c'
 RECORD = HERE/'print-run.json'
+CANCELLED_JOB = None
 spec = importlib.util.spec_from_file_location('printer_context', HERE.parents[3]/'beach-outrigger/printer-context.py')
 context = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(context)
@@ -39,8 +40,11 @@ def save(record):
 
 
 def ready(p):
+    state = p.state.get('gcode_state')
+    known_cancel = (state == 'FAILED' and CANCELLED_JOB is not None and
+                   p.state.get('subtask_name') in (CANCELLED_JOB, CANCELLED_JOB.removesuffix('.3mf')))
     checks = (
-        (p.state.get('gcode_state') in ('IDLE','FINISH'), 'Printer is busy'),
+        (state in ('IDLE','FINISH') or known_cancel, 'Printer is busy or has an unrelated failure'),
         (p.state.get('print_error') == 0 and not p.state.get('hms'), 'Printer has an active fault'),
         (str(p.state.get('nozzle_diameter')) == '0.4', 'Nozzle differs from the slice'),
         (p.state.get('sdcard') is True, 'Printer SD card unavailable'),
@@ -53,10 +57,47 @@ def ready(p):
 
 
 def main():
+    global RECORD, CANCELLED_JOB
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--start',action='store_true')
     ap.add_argument('--bed-clear',action='store_true')
+    restart = ap.add_mutually_exclusive_group()
+    restart.add_argument('--restart-after-cancel',action='store_true',
+                    help='Owner-approved new attempt after the recorded spool-change cancellation')
+    restart.add_argument('--retry-after-calibration',action='store_true',
+                    help='Owner-approved new attempt after the recorded successful bed calibration')
+    ap.add_argument('--startup-seconds',type=int,default=900)
     args = ap.parse_args()
+    if not 30 <= args.startup_seconds <= 900:
+        raise ValueError('Startup observation must be between 30 and 900 seconds')
+    authorization = 'Owner requested printing the new tesseract split Bed 2 on the X1C and confirmed its bed clear on 2026-10-28.'
+    previous_failed_job = None
+    calibration_record = None
+    if args.restart_after_cancel:
+        previous = json.loads((HERE/'print-run.json').read_text())
+        cancellation = json.loads((HERE/'cancel-request-20261029.json').read_text())
+        if not (previous.get('phase') == 'cancelled-by-owner' and previous.get('cancellation_verified') is True
+                and cancellation.get('phase') == 'stopped'
+                and cancellation.get('expected_job') == previous.get('remote_name')
+                and str((cancellation.get('reply') or {}).get('result','')).lower() == 'success'):
+            raise ValueError('Previous job cancellation is not verified; refusing a new attempt')
+        CANCELLED_JOB = previous['remote_name']
+        RECORD = HERE/'print-run-retry-20261029.json'
+        authorization = 'Owner replaced the filament, cleared the X1C bed and explicitly requested restarting Bed 2 on 2026-10-29.'
+    elif args.retry_after_calibration:
+        previous = json.loads((HERE/'print-run-retry-20261029.json').read_text())
+        calibration_record = 'calibration-20261029/run.json'
+        calibration = json.loads((HERE/calibration_record).read_text())
+        after = calibration.get('after', {})
+        if not (previous.get('phase') == 'failed' and str(previous.get('retained_fail_reason')) == '50348034'
+                and calibration.get('phase') == 'finished' and after.get('gcode_state') == 'FINISH'
+                and after.get('print_error') == 0 and str(after.get('fail_reason')) == '0'
+                and not calibration.get('hms_after')
+                and str((calibration.get('reply') or {}).get('result', '')).lower() == 'success'):
+            raise ValueError('Expected failed job and successful calibration are not verified')
+        previous_failed_job = previous['remote_name']
+        RECORD = HERE/'print-run-after-calibration-20261029.json'
+        authorization = 'Owner observed no problem during calibration and explicitly requested another Bed 2 print after a fresh G-code review on 2026-10-29. Bed remained clear through the non-printing calibration.'
     record = None
     if args.start:
         if not (args.bed_clear):
@@ -101,7 +142,8 @@ def main():
         ready(p)
         remote='tesseract-v3-split-bed2-pei-x1c-'+datetime.now(ZoneInfo('Australia/Sydney')).strftime('%Y%m%d-%H%M%S')+'.gcode.3mf'
         record=dict(created_at=now(),job='tesseract-v3-split-bed2',printer='x1c',
-            authorization='Owner requested printing the new tesseract split Bed 2 on the X1C and confirmed its bed clear on 2026-10-28.',
+            authorization=authorization,previous_cancelled_job=CANCELLED_JOB,
+            previous_failed_job=previous_failed_job,calibration_record=calibration_record,
             bed_clear_owner_confirmed=True,package=package.name,package_sha256=digest,thermal_preflight=thermal_preflight,
             remote_name=remote,spool='external',material='PLA',expected_layers=layers,
             before=p.summary(),spools_before=p.spools(),phase='preflight',dispatch_attempted=False,events=[])
@@ -169,7 +211,7 @@ def main():
         print(json.dumps({'phase':record['phase'],'reply':record['reply'],'remote_name':remote}),flush=True)
         if record['phase']=='rejected':
             return
-        deadline=time.monotonic()+900
+        deadline=time.monotonic()+args.startup_seconds
         while time.monotonic()<deadline:
             state=p.summary()
             event={'at':now(),'status':state,'hms':p.state.get('hms')}
@@ -177,7 +219,9 @@ def main():
             same_job=state.get('subtask_name') in (remote,remote.removesuffix('.3mf'))
             if same_job and state.get('gcode_state')=='RUNNING' and state.get('total_layer_num')==layers:
                 record['seen_running']=True
-            if same_job and state.get('gcode_state')=='RUNNING' and state.get('total_layer_num')==layers and (state.get('layer_num') or 0)>=1:
+                if state.get('layer_num') == 0:
+                    record['seen_zero_layer']=True
+            if same_job and record.get('seen_zero_layer') and state.get('gcode_state')=='RUNNING' and state.get('total_layer_num')==layers and (state.get('layer_num') or 0)>=1:
                 record.update(phase='first-layer',first_layer_reached=True)
             if state.get('print_error') or p.state.get('hms') or (same_job and state.get('total_layer_num')==layers and record.get('seen_running') and state.get('gcode_state') in ('FAILED','PAUSE')):
                 record.update(needs_attention=True)

@@ -1,0 +1,43 @@
+{
+  "observed_at": "2026-10-30T17:19:32+11:00",
+  "hms_observed": [
+    {
+      "attr": 50344192,
+      "code": 65537,
+      "action": 0,
+      "timestamp": 1789529298
+    }
+  ],
+  "description": "Part cooling fan slow/stopped warning during startup; cause unproven.",
+  "cleared_at": "2026-10-30T17:21:27+11:00",
+  "fresh_status": {
+    "at": "2026-10-30T17:21:27+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 3,
+      "layer_num": 0,
+      "total_layer_num": 291,
+      "mc_remaining_time": 140,
+      "gcode_file": "tesseract-v3-split-bed4-pei-p1s-20261030-171637.gcode.3mf",
+      "subtask_name": "tesseract-v3-split-bed4-pei-p1s-20261030-171637.gcode",
+      "nozzle_temper": 140.25,
+      "bed_temper": 54.875,
+      "print_error": 0,
+      "fail_reason": null,
+      "mc_print_error_code": null,
+      "stg_cur": 1
+    },
+    "hms": [],
+    "targets": {
+      "bed_target_temper": 55,
+      "nozzle_target_temper": 140
+    },
+    "fans": {
+      "cooling_fan_speed": "0",
+      "big_fan1_speed": "6",
+      "big_fan2_speed": "10",
+      "heatbreak_fan_speed": "15"
+    }
+  },
+  "manual_clear_or_control_sent": false
+}

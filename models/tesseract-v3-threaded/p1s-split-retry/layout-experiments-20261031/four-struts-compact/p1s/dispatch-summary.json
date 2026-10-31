@@ -1,0 +1,47 @@
+{
+  "created_at": "2026-10-31T12:44:53+11:00",
+  "printer": "p1s",
+  "job": "tesseract-v3-p1s-compact",
+  "remote_name": "tesseract-v3-p1s-compact-20261031-124453.gcode.3mf",
+  "phase": "first-layer",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "411126426"
+  },
+  "package_sha256": "9ecd66a053b6a5e411a0ddaa95e99b6d43b88d91e7946fb4a2b9b78dd704abd9",
+  "remote_content_sha256": "9ecd66a053b6a5e411a0ddaa95e99b6d43b88d91e7946fb4a2b9b78dd704abd9",
+  "expected_layers": 291,
+  "first_object_layers": 291,
+  "print_sequence": "by layer",
+  "first_layer_reached": true,
+  "needs_attention": false,
+  "owner_confirmed_both_plates_clear": true,
+  "latest_observation": {
+    "at": "2026-10-31T12:52:45+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 7,
+      "layer_num": 1,
+      "total_layer_num": 291,
+      "mc_remaining_time": 81,
+      "gcode_file": "tesseract-v3-p1s-compact-20261031-124453.gcode.3mf",
+      "subtask_name": "tesseract-v3-p1s-compact-20261031-124453.gcode",
+      "nozzle_temper": 220.3125,
+      "bed_temper": 55,
+      "print_error": 0,
+      "fail_reason": null,
+      "mc_print_error_code": null,
+      "stg_cur": 0
+    },
+    "hms": [],
+    "targets": {
+      "bed_target_temper": 55,
+      "nozzle_target_temper": 220
+    }
+  },
+  "physical_quality_verified": false,
+  "startup_warning_cleared_on_fresh_status": true,
+  "original_dispatch_stopped_observing_on_warning": true
+}

@@ -1,0 +1,872 @@
+{
+  "created_at": "2026-10-31T22:42:33+11:00",
+  "job": "tesseract-v3-center-trees-ears",
+  "printer": "a1",
+  "authorization": "Owner requested printing just the center on A1 with adjusted tree supports and mouse ears, confirmed the A1 plate clear on 2026-10-31. Prior physical AMS slot 1 preference retained; live white PLA verified.",
+  "bed_clear_owner_confirmed": true,
+  "package": "tesseract-bed2-a1.gcode.3mf",
+  "package_sha256": "023b5e11cbde9ff9f8f35de9af673c26aa90ff26eb58b61f3df5bd2f55666ede",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 282,
+    "deposition_moves_checked": 223362,
+    "package_sha256": "023b5e11cbde9ff9f8f35de9af673c26aa90ff26eb58b61f3df5bd2f55666ede"
+  },
+  "remote_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+  "spool": "ams0",
+  "material": "PLA",
+  "physical_ams_slot": 1,
+  "ams_mapping": [
+    0
+  ],
+  "expected_layers": 282,
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 291,
+    "total_layer_num": 291,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-split-bed4-pei-a1-20261030-092025.gcode",
+    "nozzle_temper": 24.59375,
+    "bed_temper": 24.96875,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "ams0",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ],
+    [
+      "ams2",
+      "PLA",
+      "F4EE2AFF",
+      false
+    ],
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ]
+  ],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-10-31T22:43:22+11:00",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 291,
+        "total_layer_num": 291,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 24.59375,
+        "bed_temper": 25,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": [],
+      "ams_tray_now": "255",
+      "targets": {
+        "bed_target_temper": 0,
+        "nozzle_target_temper": 0
+      }
+    },
+    {
+      "at": "2026-10-31T22:43:37+11:00",
+      "status": {
+        "gcode_state": "PREPARE",
+        "mc_percent": 100,
+        "layer_num": 291,
+        "total_layer_num": 282,
+        "mc_remaining_time": 0,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 24.59375,
+        "bed_temper": 25,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": [],
+      "ams_tray_now": "255",
+      "targets": {
+        "bed_target_temper": 0,
+        "nozzle_target_temper": 0
+      }
+    },
+    {
+      "at": "2026-10-31T22:43:52+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 218,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 98.71875,
+        "bed_temper": 30.4375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": [],
+      "ams_tray_now": "255",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      }
+    },
+    {
+      "at": "2026-10-31T22:44:07+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 218,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 126.71875,
+        "bed_temper": 45.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": [],
+      "ams_tray_now": "255",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 119
+      }
+    },
+    {
+      "at": "2026-10-31T22:44:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 218,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 116.96875,
+        "bed_temper": 55.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": [],
+      "ams_tray_now": "255",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:44:37+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 218,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 138.84375,
+        "bed_temper": 55.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": [],
+      "ams_tray_now": "255",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:44:52+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 218,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 172.8125,
+        "bed_temper": 55.25,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": [],
+      "ams_tray_now": "255",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:45:07+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 218,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 201.09375,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": [],
+      "ams_tray_now": "255",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:45:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 218,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 219.375,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": [],
+      "ams_tray_now": "255",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:45:37+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 218,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 218,
+        "bed_temper": 55.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:45:52+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 218,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 219.1875,
+        "bed_temper": 55.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:46:07+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 217,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 219.96875,
+        "bed_temper": 55.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:46:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 217,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 221.96875,
+        "bed_temper": 55.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:46:37+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 217,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 220.21875,
+        "bed_temper": 55.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:46:52+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 217,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 220.25,
+        "bed_temper": 55.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:47:07+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 217,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 218.34375,
+        "bed_temper": 55.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:47:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 217,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 220.0625,
+        "bed_temper": 55.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:47:37+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 217,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 219.90625,
+        "bed_temper": 55.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:47:52+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 217,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 220.03125,
+        "bed_temper": 55.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:48:07+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 216,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 218.0625,
+        "bed_temper": 55.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 170
+      }
+    },
+    {
+      "at": "2026-10-31T22:48:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 216,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 199.125,
+        "bed_temper": 54.5,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 170
+      }
+    },
+    {
+      "at": "2026-10-31T22:48:37+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 216,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 181.1875,
+        "bed_temper": 54.3125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 170
+      }
+    },
+    {
+      "at": "2026-10-31T22:48:52+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 212,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 166.84375,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 170
+      }
+    },
+    {
+      "at": "2026-10-31T22:49:07+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 212,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 170.96875,
+        "bed_temper": 54.59375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      }
+    },
+    {
+      "at": "2026-10-31T22:49:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 212,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 159.8125,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      }
+    },
+    {
+      "at": "2026-10-31T22:49:37+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 212,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 145.34375,
+        "bed_temper": 55.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      }
+    },
+    {
+      "at": "2026-10-31T22:49:52+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 212,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 138.8125,
+        "bed_temper": 55.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      }
+    },
+    {
+      "at": "2026-10-31T22:50:07+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 212,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 140.46875,
+        "bed_temper": 55.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 140
+      }
+    },
+    {
+      "at": "2026-10-31T22:50:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 212,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 154.65625,
+        "bed_temper": 55.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:50:37+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 212,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 185.875,
+        "bed_temper": 55.40625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:50:52+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 212,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 215.4375,
+        "bed_temper": 55.5,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:51:07+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "mc_remaining_time": 212,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 219,
+        "bed_temper": 55.4375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-10-31T22:51:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 1,
+        "total_layer_num": 282,
+        "mc_remaining_time": 211,
+        "gcode_file": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+        "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+        "nozzle_temper": 220.125,
+        "bed_temper": 55.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    }
+  ],
+  "remote_content_sha256": "023b5e11cbde9ff9f8f35de9af673c26aa90ff26eb58b61f3df5bd2f55666ede",
+  "sequence_id": "447002162",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "447002162"
+  },
+  "first_layer_reached": true,
+  "selected_slot_verified": true
+}

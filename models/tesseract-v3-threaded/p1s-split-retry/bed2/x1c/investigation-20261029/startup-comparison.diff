@@ -1,0 +1,16 @@
+--- successful-shelf-loose-X1C
+
++++ failed-tesseract-X1C
+
+@@ -225,9 +225,9 @@
+
+ M1002 judge_flag g29_before_print_flag
+ M622 J1
+ 
+     M1002 gcode_claim_action : 1
+-    G29 A X113.329 Y113.329 I29.3414 J29.3414
++    G29 A X30.5662 Y30.5662 I194.868 J194.868
+     M400
+     M500 ; save cali data
+ 
+ M623

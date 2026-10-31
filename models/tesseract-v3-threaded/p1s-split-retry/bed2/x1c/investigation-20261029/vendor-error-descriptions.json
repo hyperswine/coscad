@@ -1,0 +1,14 @@
+{
+  "catalog": "/Applications/BambuStudio.app/Contents/Resources/hms/hms_en_093.json",
+  "sha256": "7801fd6c355854b62ecb62ee32727b4e5dcca908841dbcfd5e5de45b3dfd1c25",
+  "matches": [
+    {
+      "ecode": "03004002",
+      "intro": "Auto Bed Leveling failed; the task has been stopped."
+    },
+    {
+      "ecode": "0300400C",
+      "intro": "The task was canceled."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "rejected_before_dispatch": true,
+  "reason": "The CLI retained painted-ear settings and point records, but generated zero actual brim paths across coordinate/object-space/normalization probes. Root cause remains unconfirmed.",
+  "delivery_uses_native_painted_brim": false,
+  "delivery_adhesion": "Four explicit 0.2 mm CoScad mouse-ear volumes. Original center geometry unchanged.",
+  "unsafe_or_rejected_probe_dispatched": false
+}

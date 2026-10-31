@@ -15,6 +15,69 @@ parts**, with no purchased bolts, nuts, glue or press-fit pins:
 
 ![Assembled prototype](preview.png)
 
+## Inner-frame partial failure - owner report, 31 October 2026
+
+The owner reports the middle/inner frame printed partially poorly: the lower
+diagonal female-threaded sections did not print well **despite their supports
+being present and printing properly**. The upper diagonals printed well.
+Lower/upper describe the original print orientation. The
+[owner photo and outcome record](p1s-split-retry/bed2/x1c/physical-outcome-20261031/README.md) preserve the observation.
+The cause remains unknown; this report does not accept female-thread fit or
+assess the other four hubs on Bed 2.
+
+## Four-strut physical outcomes - 31 October 2026
+
+The owner reports that the **X1C printed all four staggered struts perfectly
+in per-object mode**. The P1S compact four-strut plate printed almost perfectly
+through the sections before the upper threads, then failed around the threaded
+portions. The owner suspects the head struck/knocked over components while
+travelling between their threads. The exact initiating layer and collision
+mechanism are unconfirmed. Both printers report FINISH for the correct jobs;
+that telemetry does not establish good parts on the P1S.
+
+The [comparison record](p1s-split-retry/layout-experiments-20261031/README.md)
+links photographs and separate owner/visual observations. The unchanged strut
+geometry can print successfully on X1C sequentially; compact by-layer packing
+was insufficient on this P1S trial. Printer, filament, spacing and scheduling
+also differ, so this does not isolate a single cause. Prefer the demonstrated
+X1C per-object layout for this strut geometry when preparing a subsequent run;
+no additional print is authorized or started by this outcome record.
+
+## Sequential mixed trial on X1C - 31 October 2026
+
+The owner cleaned all three printers and requested the new mixed sequential
+plate on X1C. It prints one strut completely, then one bar, with 128 mm centre
+spacing and 8 mm brims. The [native X1C variant](p1s-split-retry/sequential-retry/x1c/README.md)
+passed geometry, actual order/clearance and 55/220 C thermal checks. One start
+was accepted after verified upload read-back; fresh telemetry confirmed the
+new 787-layer job RUNNING without faults. It reached layer 1/787 at 08:52:05
+Sydney time, with measured 55/220 C and no active faults. See its run record
+for startup. The owner subsequently reported the mixed bed worked perfectly;
+[its physical outcome](p1s-split-retry/sequential-retry/x1c/mixed/physical-outcome-20261031.json)
+records that success. Strength/endurance and measured fit remain unverified.
+
+## P1S Bed 4 also failed; per-object retry staged - 30 October
+
+The owner observed deterioration after roughly halfway, followed by collapse
+and spaghetti. Wobble, uneven extrusion and a nozzle strike are hypotheses,
+not a diagnosis. [Fresh P1S photographs and the record](p1s-split-retry/bed4/outcome-20261030-202153/outcome.json)
+confirm the poor physical outcome despite FINISH telemetry. Both A1 and P1S
+Bed 4 trials have now failed physically. [Spaced per-object P1S layouts](p1s-split-retry/sequential-retry/README.md)
+are staged for the next trial with actual order/clearance and thermal checks;
+no new print was sent. Geometry remains unchanged, including the upper-collar risk.
+
+## Bed 4 physical failure and P1S comparison - 30 October 2026
+
+The owner reports that the A1 Bed 4 struts printed badly. Fresh photographs show
+substantial spaghetti and displaced parts, although printer telemetry reports
+FINISH with no faults. Earlier layer-96 photos only showed then-intact lower
+sections. The [outcome and G-code review](p1s-split-retry/bed4/a1/outcome-20261030-171001/outcome.json)
+found no clear temperature/layer-path defect, but identified an upper-shoulder
+overhang and slender-part motion/curling risks. Their causal role is unproven.
+A [fresh P1S comparison](p1s-split-retry/bed4/README.md) retains the geometry,
+layout and process overrides; the owner confirmed its bed clear and authorized
+starting when ready. Its run record captures actual dispatch and startup.
+
 ## Latest owner observations — 28 October 2026
 
 The corrected **split Bed 1 is printing well on the P1S**, according to the
@@ -178,3 +241,19 @@ modelling environment). After regenerating the coupon bed, center its two parts
 before slicing for X1C so the brim clears the front-left exclusion. The saved
 manifest describes the actual centered plate. `preview.scad` is visualization
 only: it imports the CoScad-compiled meshes using compiler-resolved poses.
+
+## Center-only A1 support experiment - 31 October
+
+The owner requested only the center frame on A1 and confirmed the plate clear.
+The [new A1 variant](p1s-split-retry/bed2/a1-center-mouse-ears-20261031/README.md) retains the center/thread mesh, reinforces
+bed-only trees and uses four 0.2 mm removable CoScad mouse-ear pads instead of
+a full brim. Native painted-ear attempts emitted no brim paths and were
+rejected before dispatch. Actual geometry/pads, support clearance/roots and
+55/220 C thermal checks pass; physical improvement remains unverified.
+The one-shot run record and dispatch summary contain current startup evidence.
+
+A1 center-only first-layer check: the uploaded file read back with a matching
+hash and one start was acknowledged. At 22:51:22 Sydney time, the correct
+282-layer job reached layer 1 with physical AMS slot 1 selected, targets
+55/220 C, and no active faults. Completed quality remains unverified; see
+the new variant's dispatch-summary.json.

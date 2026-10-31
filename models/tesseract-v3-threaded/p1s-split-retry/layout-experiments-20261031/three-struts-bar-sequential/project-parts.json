@@ -1,0 +1,81 @@
+{
+  "parts": [
+    {
+      "parent": 2,
+      "normal_part": 1,
+      "label": "1-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          48.5,
+          33.51282501220703,
+          0.0
+        ],
+        [
+          61.5,
+          46.48717498779297,
+          58.28203201293945
+        ]
+      ]
+    },
+    {
+      "parent": 4,
+      "normal_part": 3,
+      "label": "2-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          194.5,
+          91.01282501220703,
+          0.0
+        ],
+        [
+          207.5,
+          103.98717498779297,
+          58.28203201293945
+        ]
+      ]
+    },
+    {
+      "parent": 6,
+      "normal_part": 5,
+      "label": "3-strut",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          48.5,
+          148.5128173828125,
+          0.0
+        ],
+        [
+          61.5,
+          161.4871826171875,
+          58.28203201293945
+        ]
+      ]
+    },
+    {
+      "parent": 8,
+      "normal_part": 7,
+      "label": "4-bar-print",
+      "brim_mm": 8,
+      "enable_support": false,
+      "bounds": [
+        [
+          197.60671997070312,
+          209.10671997070312,
+          0.0
+        ],
+        [
+          204.39328002929688,
+          215.89328002929688,
+          99.19999694824219
+        ]
+      ]
+    }
+  ],
+  "thread_exclusions": []
+}

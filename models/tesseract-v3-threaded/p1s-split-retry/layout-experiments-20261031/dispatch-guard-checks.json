@@ -1,0 +1,14 @@
+{
+  "checked": true,
+  "offline_only": true,
+  "rejected_cases": [
+    "busy",
+    "fault",
+    "hms",
+    "wrong_nozzle",
+    "missing_sdcard",
+    "wrong_filament",
+    "missing_bed_clear"
+  ],
+  "no_printer_commands": true
+}

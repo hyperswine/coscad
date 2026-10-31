@@ -1,0 +1,1785 @@
+{
+  "created_at": "2026-10-29T14:31:22+11:00",
+  "authorization": "Owner explicitly requested full-bed calibration on the X1C and observation of where it fails.",
+  "before": {
+    "gcode_state": "FAILED",
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "tesseract-v3-split-bed2-pei-x1c-20261029-125659.gcode",
+    "mc_percent": 0,
+    "mc_remaining_time": 470,
+    "layer_num": 0,
+    "total_layer_num": 282,
+    "print_error": 0,
+    "fail_reason": "50348034",
+    "mc_print_error_code": "0",
+    "mc_print_stage": "1",
+    "mc_print_sub_stage": 0,
+    "stg_cur": -1,
+    "stg": [
+      54,
+      14,
+      1,
+      8
+    ],
+    "nozzle_temper": 38.0,
+    "nozzle_target_temper": 38.0,
+    "bed_temper": 27.0,
+    "bed_target_temper": 0.0,
+    "home_flag": -1067066088
+  },
+  "command": {
+    "print": {
+      "command": "calibration",
+      "option": 2,
+      "sequence_id": "244682035"
+    }
+  },
+  "source": "https://github.com/bambulab/BambuStudio/blob/master/src/slic3r/GUI/DeviceManager.cpp#L1757-L1777",
+  "selected_functions": {
+    "bed_leveling": true,
+    "vibration": false,
+    "camera": false,
+    "motor_noise": false
+  },
+  "phase": "finished",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-10-29T14:31:22+11:00",
+      "status": {
+        "gcode_state": "FAILED",
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tesseract-v3-split-bed2-pei-x1c-20261029-125659.gcode",
+        "mc_percent": 0,
+        "mc_remaining_time": 470,
+        "layer_num": 0,
+        "total_layer_num": 282,
+        "print_error": 0,
+        "fail_reason": "50348034",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "1",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          54,
+          14,
+          1,
+          8
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 27.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066088
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:24+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 0,
+        "mc_remaining_time": 8,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 27.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066056
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:30+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 1,
+        "mc_remaining_time": 8,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 27.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066056
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:34+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 2,
+        "mc_remaining_time": 8,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 27.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:36+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 2,
+        "mc_remaining_time": 8,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:38+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 2,
+        "mc_remaining_time": 8,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 27.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:40+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 3,
+        "mc_remaining_time": 8,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 27.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:42+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 3,
+        "mc_remaining_time": 8,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:44+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 4,
+        "mc_remaining_time": 8,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:48+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 4,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:50+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 5,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:54+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 6,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:31:58+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 6,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:00+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 7,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:04+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 8,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:08+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 9,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:14+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 10,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:18+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 11,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066050
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 11,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:26+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 12,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:30+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 13,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:36+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 14,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:42+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 15,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:46+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 16,
+        "mc_remaining_time": 7,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:48+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 16,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:52+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 17,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:32:56+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 18,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:00+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 19,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:06+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 20,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:10+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 21,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:16+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 22,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 23,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:26+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 24,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:30+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 25,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:36+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 26,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:42+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 27,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:46+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 28,
+        "mc_remaining_time": 6,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:48+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 28,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:52+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 29,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:33:56+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 30,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:02+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 31,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:06+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 32,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:12+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 33,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:16+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 34,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:22+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 35,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:29+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 36,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:33+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 37,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:39+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 38,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:43+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 39,
+        "mc_remaining_time": 5,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:49+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 40,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:53+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 41,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:34:57+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 42,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:05+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 43,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:09+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 44,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:15+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 45,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:19+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 46,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:23+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 47,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:29+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 48,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:33+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 49,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 1,
+        "stg_cur": 1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:39+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 50,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": 0,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:43+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 51,
+        "mc_remaining_time": 4,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "2",
+        "mc_print_sub_stage": 0,
+        "stg_cur": 0,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:45+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 100,
+        "mc_remaining_time": 0,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "1",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-10-29T14:35:47+11:00",
+      "status": {
+        "gcode_state": "FINISH",
+        "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+        "subtask_name": "auto_cali_for_user_param.gcode",
+        "mc_percent": 100,
+        "mc_remaining_time": 0,
+        "layer_num": 0,
+        "total_layer_num": 0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "mc_print_stage": "1",
+        "mc_print_sub_stage": 0,
+        "stg_cur": -1,
+        "stg": [
+          1
+        ],
+        "nozzle_temper": 38.0,
+        "nozzle_target_temper": 38.0,
+        "bed_temper": 26.0,
+        "bed_target_temper": 0.0,
+        "home_flag": -1067066049
+      },
+      "hms": []
+    }
+  ],
+  "reply": {
+    "command": "calibration",
+    "sequence_id": "244682035",
+    "result": "success",
+    "reason": null
+  },
+  "seen_active": true,
+  "seen_leveling": true,
+  "ended_at": "2026-10-29T14:35:47+11:00",
+  "after": {
+    "gcode_state": "FINISH",
+    "gcode_file": "/usr/etc/print/auto_cali_for_user_param.gcode",
+    "subtask_name": "auto_cali_for_user_param.gcode",
+    "mc_percent": 100,
+    "mc_remaining_time": 0,
+    "layer_num": 0,
+    "total_layer_num": 0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "mc_print_stage": "1",
+    "mc_print_sub_stage": 0,
+    "stg_cur": -1,
+    "stg": [
+      1
+    ],
+    "nozzle_temper": 38.0,
+    "nozzle_target_temper": 38.0,
+    "bed_temper": 26.0,
+    "bed_target_temper": 0.0,
+    "home_flag": -1067066049
+  },
+  "hms_after": []
+}
