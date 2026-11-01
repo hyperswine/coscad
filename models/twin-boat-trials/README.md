@@ -146,3 +146,29 @@ pontoons alone (58 g of buoyancy for a 51 g boat), and it also floated upside do
 observations only; see `physical-outcome-outrigger-20261025.json`. The owner's three photos
 are in the Photos library (2026-10-25 21:16) and could not be read from the shell; export
 them here to keep them with the record.
+
+## Beach outcome, reported 2026-11-01 (owner)
+
+At Monterey beach (high tide, 18 to 22 km/h winds, breaking waves) the monohull floated at
+first, then sank almost at once when thrown out into the waves. The beach-scale sealed
+outrigger (`../beach-outrigger`) did well in the same conditions.
+
+This fits the geometry; the sink test did not contradict it:
+
+| | Value |
+| --- | --- |
+| Plastic volume, mass | 36.3 cm3, 45.0 g (solid PLA, 1.24 g/cm3) |
+| Hull envelope to the rim | 108.9 cm3, so an open cavity of 72.6 cm3 |
+| Water it can hold and still float | about 64 g, 88% of the cavity |
+| Fully swamped | 8.7 g heavier than the water the plastic displaces |
+
+PLA is denser than water and this hull has no sealed air, so it floats only while its open
+cavity holds air. In the sink it stayed up with the compartment mostly full, as it should
+with up to about 64 g of water inside. A wave that carries it over the rim fills the last
+eighth, and then nothing keeps it up. Freeboard at rest is only 12.7 mm, smaller than the
+swash. The outriggers survive flooding because their pontoons are sealed.
+
+Rule for the next open hull: sealed buoyancy (chambers or foam) of at least the swamped
+net weight plus a margin. Record: `physical-outcome-monohull-beach-20261101.json`; the
+owner's photo of the water where it went down is
+`20261101-monohull-beach-sinking-spot-owner-photo.jpg`.

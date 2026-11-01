@@ -1,0 +1,20 @@
+{
+  "boat": "monohull",
+  "reported_by": "owner",
+  "reported_on": "2026-11-01",
+  "where": "Monterey beach, high tide, sea water with breaking waves, wind 18-22 km/h",
+  "summary": "Floated at first, then sank almost at once when thrown out into the waves.",
+  "earlier_sink_test": "In a bathroom sink it still floated with its compartment filled with water.",
+  "photo": "20261101-monohull-beach-sinking-spot-owner-photo.jpg",
+  "explanation": {
+    "plastic_volume_cm3": 36.26,
+    "mass_g": 44.96,
+    "pla_density_g_cm3": 1.24,
+    "envelope_volume_cm3": 108.9,
+    "open_cavity_cm3": 72.6,
+    "fully_swamped_net_weight_g": 8.7,
+    "water_it_can_hold_and_still_float_g": 63.9,
+    "reading": "Solid PLA is denser than water and the hull has no sealed air. It floats only while its open cavity holds air. It stays up with up to about 64 g of water inside (about 88% of the cavity), which matches the sink test. A wave that tops it over the rim fills the rest, and then the plastic alone is about 9 g heavier than the water it displaces, so it goes straight down."
+  },
+  "fix": "Give any open boat sealed buoyancy at least equal to the swamped net weight plus margin (sealed chambers as on the outriggers, or foam), or keep the plastic's volume above its mass in water."
+}

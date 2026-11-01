@@ -1,0 +1,18 @@
+{
+  "boat": "beach-outrigger",
+  "reported_by": "owner",
+  "reported_on": "2026-11-01",
+  "where": "Monterey beach, high tide, sea water with breaking waves",
+  "wind_kmh": [18, 22],
+  "floated": true,
+  "capsized": false,
+  "flipped_orientation": false,
+  "summary": "Worked quite well: floated and hardly rolled at all; no capsize or flip in the waves.",
+  "photos": ["20261101-beach-float-owner-photo-1.jpg", "20261101-beach-float-owner-photo-2.jpg"],
+  "predicted": {"draft_mm_sea": 20.0, "righting_arm_vanishes_deg": 87, "static_only": true},
+  "notes": [
+    "The owner calls it the large catamaran; it is this folder's three-hull sealed outrigger (yellow PLA in the photos).",
+    "First dynamic result: waves, surf and wind were never modelled, only static heel.",
+    "Not reported: leaks after the session, waterline height, drift or recovery."
+  ]
+}

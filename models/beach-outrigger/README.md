@@ -3,8 +3,8 @@
 A one-plate scale-up of `../twin-boat-trials/outrigger` for trying out at a beach.
 Same plan form, 2.1x the size, but built as three *sealed* thin-shell hulls instead of a
 solid open hull, so it cannot be swamped and still floats with any one chamber flooded.
-All geometry is CoScad written by design.py. Nothing here has been printed or
-float-tested yet, and no script in this folder talks to a printer.
+All geometry is CoScad written by design.py. No script in this folder talks to a
+printer. It was printed and tried at the beach; see "Beach outcome" below.
 
 | | Value |
 | --- | --- |
@@ -81,6 +81,20 @@ surf, slamming or dynamic capsize are modeled.
   0.2 mm layers with a 4 mm brim. PLA is Bambu PLA Basic; PETG is Bambu PETG HF for
   each printer (245 C on the P1S, 240 C on the A1, 70 C bed).
 - packages.json: the slice results. See the table below.
+
+## Beach outcome, reported 2026-11-01 (owner)
+
+Tried at Monterey beach at high tide in 18 to 22 km/h winds, among breaking waves. It
+worked quite well: it floated and hardly rolled at all, and it never capsized or flipped
+over. This is the first dynamic result for any of the boats; the checks above are static
+only, and the large righting arm (48 mm at 20 degrees, positive to about 87 degrees) held
+up in real waves. The owner calls it "the large catamaran".
+
+In the same session the bath-size monohull from `../twin-boat-trials` sank almost at once
+in the waves; that folder's README explains why (no sealed buoyancy).
+
+Record: `physical-outcome-20261101.json`. Photos: `20261101-beach-float-owner-photo-1.jpg`
+and `-2.jpg`. Not reported yet: leaks after the session, the waterline, drift.
 
 ## Before the beach
 
