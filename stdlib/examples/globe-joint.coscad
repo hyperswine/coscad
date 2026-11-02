@@ -1,0 +1,10 @@
+// Globe v2's successful 24 mm major / 6 mm pitch joint, not the rotor itself.
+root = 10
+major = 12
+pitch = 6
+length = 12
+stud = globe_stud root major pitch length
+socket_tool = globe_socket root major pitch length 0.4 0.25
+base_coupon = (cyl 18 2 |> anchor bot) ⊕ (stud |> z 2)
+female_coupon = (cyl 18 12 |> anchor bot) |> cut socket_tool
+main = (base_coupon |> x -22) ⊕ (female_coupon |> x 22)

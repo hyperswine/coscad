@@ -1,0 +1,29 @@
+{
+  "recorded_at": "2026-11-01T20:42:07+11:00",
+  "model": "tesseract III threaded center / inner frame",
+  "printer": "x1c",
+  "job": "tesseract-v3-x1c-center-20261101-125837.gcode.3mf",
+  "package_sha256": "b1ce3dc6fd5236f76f63cef3b7bba9763eb67dab419188621380b7255ad02ff1",
+  "evidence_source": "owner physical inspection",
+  "owner_report": "The X1C center piece with the new support configuration and brim ears printed better overall, but one lower diagonal had the same issue as the original X1C center. The issue recurred while printing the center alone. The A1 printed the corresponding center almost perfectly.",
+  "physical_result": "overall improvement with a recurring defect in one lower diagonal; partial success",
+  "affected_region": "one lower diagonal female-threaded section, in the original print orientation",
+  "comparison": {
+    "original_x1c": "same lower-diagonal failure mode reported previously",
+    "revised_a1": "almost perfect, owner reported",
+    "center_only_on_both": true,
+    "matching_explicit_settings_evidence": "comparison-to-a1.json",
+    "different_factors": [
+      "printer",
+      "loaded external PLA versus A1 white AMS PLA",
+      "native machine defaults, startup and calibration"
+    ]
+  },
+  "inference": "Recurrence on X1C with the center isolated shows isolation alone did not eliminate the defect. The near-perfect A1 comparison strengthens suspicion of an X1C-specific printing/setup difference.",
+  "cause_confirmed": false,
+  "hardware_fault_confirmed": false,
+  "exact_failure_layer_known": false,
+  "measured_thread_fit_verified": false,
+  "new_photo_supplied": false,
+  "printer_controls_sent": []
+}

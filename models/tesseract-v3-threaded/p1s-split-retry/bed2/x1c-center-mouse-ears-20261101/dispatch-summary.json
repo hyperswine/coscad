@@ -1,0 +1,48 @@
+{
+  "created_at": "2026-11-01T12:58:37+11:00",
+  "job": "tesseract-v3-x1c-center",
+  "printer": "x1c",
+  "remote_name": "tesseract-v3-x1c-center-20261101-125837.gcode.3mf",
+  "phase": "first-layer",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "498330004"
+  },
+  "package_sha256": "b1ce3dc6fd5236f76f63cef3b7bba9763eb67dab419188621380b7255ad02ff1",
+  "remote_content_sha256": "b1ce3dc6fd5236f76f63cef3b7bba9763eb67dab419188621380b7255ad02ff1",
+  "expected_layers": 282,
+  "first_object_layers": 282,
+  "spool": "external",
+  "print_sequence": "by layer",
+  "first_layer_reached": true,
+  "selected_slot_verified": null,
+  "needs_attention": null,
+  "latest_observation": {
+    "at": "2026-11-01T13:08:35+11:00",
+    "status": {
+      "gcode_state": "RUNNING",
+      "mc_percent": 3,
+      "layer_num": 1,
+      "total_layer_num": 282,
+      "mc_remaining_time": 202,
+      "gcode_file": "/data/Metadata/plate_1.gcode",
+      "subtask_name": "tesseract-v3-x1c-center-20261101-125837.gcode",
+      "nozzle_temper": 220.0,
+      "bed_temper": 55.0,
+      "print_error": 0,
+      "fail_reason": "0",
+      "mc_print_error_code": "0",
+      "stg_cur": 0
+    },
+    "hms": [],
+    "ams_tray_now": "254",
+    "targets": {
+      "bed_target_temper": 55.0,
+      "nozzle_target_temper": 220.0
+    }
+  },
+  "physical_quality_verified": false,
+  "owner_confirmed_all_beds_clean": true
+}

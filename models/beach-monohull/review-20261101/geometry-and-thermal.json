@@ -1,0 +1,171 @@
+{
+  "body": {
+    "sha256": "d23e66aa2ad6964fcbf8630ddcae5128aa906d11b31675ea3a231b3f1f8106ab",
+    "bounds": [
+      [
+        -118.0,
+        -62.000000000000014,
+        0.0
+      ],
+      [
+        118.0,
+        62.00000000000001,
+        64.02
+      ]
+    ],
+    "volume_cm3": 249.33236868764172,
+    "watertight": true,
+    "is_volume": true,
+    "winding_consistent": true,
+    "shells": [
+      440.38785,
+      -31.91884,
+      -13.39367,
+      -13.39957,
+      -31.91101,
+      -13.39367,
+      -13.39957,
+      -14.03917,
+      -22.78042,
+      -14.03917,
+      -22.78042
+    ],
+    "downward_nonbase_faces_gt45_area_mm2": 0.0
+  },
+  "-envelope": {
+    "sha256": "910c96602187487da6f7de8599d923dc3a40ffe2f492765d27aaf5b70e8f7ef5",
+    "bounds": [
+      [
+        -118.0,
+        -62.000000000000014,
+        0.0
+      ],
+      [
+        118.0,
+        62.00000000000001,
+        64.02
+      ]
+    ],
+    "volume_cm3": 1175.617106793923,
+    "watertight": true,
+    "is_volume": true,
+    "winding_consistent": true,
+    "shells": [
+      1175.61711
+    ],
+    "downward_nonbase_faces_gt45_area_mm2": 0.0
+  },
+  "-sealed": {
+    "sha256": "a51f1729a830579051de074f634b533c27f6543b5067dc86a5dbd7058d3df650",
+    "bounds": [
+      [
+        -118.0,
+        -62.000000000000014,
+        0.0
+      ],
+      [
+        118.0,
+        62.00000000000001,
+        64.02
+      ]
+    ],
+    "volume_cm3": 440.38785408389316,
+    "watertight": true,
+    "is_volume": true,
+    "winding_consistent": true,
+    "shells": [
+      440.38785
+    ],
+    "downward_nonbase_faces_gt45_area_mm2": 0.0
+  },
+  "p1s-pla": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 225.0,
+      "nozzle_c": 225.0
+    },
+    "layers_checked": 320,
+    "deposition_moves_checked": 470512,
+    "package_sha256": "9d30cdb1f23ceac3d2b13366a378504e9c1cf505bb86ed4a36da3443e9136133",
+    "matches_saved_hash": true,
+    "settings": {
+      "printer_model": "Bambu Lab P1S",
+      "filament_settings_id": [
+        "Bambu PLA Basic @BBL P1S 0.4 nozzle"
+      ],
+      "wall_loops": "8",
+      "sparse_infill_density": "100%",
+      "brim_type": "outer_only",
+      "brim_width": "5",
+      "brim_object_gap": "0.1",
+      "enable_support": "0",
+      "nozzle_diameter": [
+        "0.4"
+      ]
+    }
+  },
+  "a1-pla": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 65.0,
+      "bed_c": 65.0,
+      "nozzle_initial_c": 225.0,
+      "nozzle_c": 225.0
+    },
+    "layers_checked": 320,
+    "deposition_moves_checked": 470733,
+    "package_sha256": "4c4a74ab2d46b7c02f332665c8807c69e1a989d1deb910b0c4a09456cfcfacad",
+    "matches_saved_hash": true,
+    "settings": {
+      "printer_model": "Bambu Lab A1",
+      "filament_settings_id": [
+        "Bambu PLA Basic @BBL A1"
+      ],
+      "wall_loops": "8",
+      "sparse_infill_density": "100%",
+      "brim_type": "outer_only",
+      "brim_width": "5",
+      "brim_object_gap": "0.1",
+      "enable_support": "0",
+      "nozzle_diameter": [
+        "0.4"
+      ]
+    }
+  },
+  "x1c-pla": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 225.0,
+      "nozzle_c": 225.0
+    },
+    "layers_checked": 320,
+    "deposition_moves_checked": 470512,
+    "package_sha256": "8aa8065024298391ef67c7d4eb64b23f9d783ca3912178c6948f18656dae931a",
+    "matches_saved_hash": true,
+    "settings": {
+      "printer_model": "Bambu Lab X1 Carbon",
+      "filament_settings_id": [
+        "Bambu PLA Basic @BBL X1C"
+      ],
+      "wall_loops": "8",
+      "sparse_infill_density": "100%",
+      "brim_type": "outer_only",
+      "brim_width": "5",
+      "brim_object_gap": "0.1",
+      "enable_support": "0",
+      "nozzle_diameter": [
+        "0.4"
+      ]
+    }
+  }
+}

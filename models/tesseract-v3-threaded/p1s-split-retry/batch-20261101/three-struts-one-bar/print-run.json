@@ -1,0 +1,377 @@
+{
+  "created_at": "2026-11-01T12:58:43+11:00",
+  "job": "tesseract-v3-p1s-parts",
+  "printer": "p1s",
+  "authorization": "Owner reported the improved A1 center on 2026-11-01, requested the matching X1C comparison and the next A1/P1S batch, and explicitly confirmed all build plates clean.",
+  "bed_clear_owner_confirmed": true,
+  "package": "tesseract-bed4-p1s.gcode.3mf",
+  "package_sha256": "d58ca406848afb62d198bdca154e613defa931914c2a637b0ba396005babf37f",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 1369,
+    "deposition_moves_checked": 93654,
+    "package_sha256": "d58ca406848afb62d198bdca154e613defa931914c2a637b0ba396005babf37f"
+  },
+  "remote_name": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+  "spool": "external",
+  "material": "PLA",
+  "expected_layers": 1369,
+  "first_object_layers": 291,
+  "expected_order": [
+    "1-strut",
+    "2-strut",
+    "3-strut",
+    "4-bar-print"
+  ],
+  "print_sequence": "by object",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 291,
+    "total_layer_num": 291,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-p1s-compact-20261031-124453.gcode",
+    "nozzle_temper": 27.25,
+    "bed_temper": 23.75,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-01T12:59:09+11:00",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 291,
+        "total_layer_num": 291,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 27.25,
+        "bed_temper": 23.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": [],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 0,
+        "nozzle_target_temper": 0
+      }
+    },
+    {
+      "at": "2026-11-01T12:59:24+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 272,
+        "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 39.9375,
+        "bed_temper": 23.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": [],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 0,
+        "nozzle_target_temper": 75
+      }
+    },
+    {
+      "at": "2026-11-01T12:59:39+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 272,
+        "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 81.125,
+        "bed_temper": 23.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 75
+      }
+    },
+    {
+      "at": "2026-11-01T12:59:54+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 272,
+        "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 75.46875,
+        "bed_temper": 40.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 75
+      }
+    },
+    {
+      "at": "2026-11-01T13:00:09+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 272,
+        "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 80.96875,
+        "bed_temper": 53.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-11-01T13:00:24+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 271,
+        "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 166.84375,
+        "bed_temper": 54.3125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 250
+      }
+    },
+    {
+      "at": "2026-11-01T13:00:39+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 271,
+        "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 222.375,
+        "bed_temper": 54.625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 250
+      }
+    },
+    {
+      "at": "2026-11-01T13:00:54+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 271,
+        "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 248,
+        "bed_temper": 54.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 250
+      }
+    },
+    {
+      "at": "2026-11-01T13:01:09+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 267,
+        "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 234.15625,
+        "bed_temper": 54.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    {
+      "at": "2026-11-01T13:01:24+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 267,
+        "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 207.71875,
+        "bed_temper": 54.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789686609
+        }
+      ],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 200
+      }
+    }
+  ],
+  "remote_content_sha256": "d58ca406848afb62d198bdca154e613defa931914c2a637b0ba396005babf37f",
+  "sequence_id": "498349580",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "498349580"
+  },
+  "sequence_validation": {
+    "checked": true,
+    "package_sha256": "d58ca406848afb62d198bdca154e613defa931914c2a637b0ba396005babf37f",
+    "actual_print_sequence": "by object",
+    "object_order": [
+      "1-strut",
+      "2-strut",
+      "3-strut",
+      "4-bar-print"
+    ],
+    "per_object": {
+      "1-strut": {
+        "layers": 291,
+        "last_z_mm": 58.2
+      },
+      "2-strut": {
+        "layers": 291,
+        "last_z_mm": 58.2
+      },
+      "3-strut": {
+        "layers": 291,
+        "last_z_mm": 58.2
+      },
+      "4-bar-print": {
+        "layers": 496,
+        "last_z_mm": 99.2
+      }
+    },
+    "thermal": {
+      "schema": "coscad.thermal-preflight/1",
+      "checked": true,
+      "expected": {
+        "plate": "Textured PEI Plate",
+        "bed_initial_c": 55.0,
+        "bed_c": 55.0,
+        "nozzle_initial_c": 220.0,
+        "nozzle_c": 220.0
+      },
+      "layers_checked": 1369,
+      "deposition_moves_checked": 93654,
+      "package_sha256": "d58ca406848afb62d198bdca154e613defa931914c2a637b0ba396005babf37f"
+    },
+    "transition_samples_0_5mm": 769693,
+    "conservative_return_collisions": [],
+    "legacy_input_only_clearance_keys": [
+      "extruder_clearance_radius"
+    ],
+    "slicer_warnings": "",
+    "estimated_seconds": 16319.5087890625,
+    "filaments": [
+      {
+        "filament_id": "GFL99",
+        "id": 1,
+        "main_used_g": 13.414709091186523,
+        "total_used_g": 13.414709091186523
+      }
+    ],
+    "limitation": "Preset limits, slicer validation and sampled conservative motion envelopes; not measured hardware clearance or a physical print-quality guarantee."
+  },
+  "needs_attention": true
+}

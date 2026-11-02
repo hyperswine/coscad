@@ -1,0 +1,41 @@
+{
+  "printer": "A1",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL A1",
+  "nozzle_temperature": "225",
+  "bed_temperature": "65",
+  "model_id": "N2S",
+  "package": "a1-pla/slice/beach-monohull.gcode.3mf",
+  "package_sha256": "4c4a74ab2d46b7c02f332665c8807c69e1a989d1deb910b0c4a09456cfcfacad",
+  "gcode_sha256": "4a5986a2c7ad01f1fa3141f38595c15adc07ca25d658131a323b0e07e61d448f",
+  "layers": 320,
+  "model_path_segments": 469584,
+  "support_segments": 0,
+  "longest_bridge_segment_mm": 0.0,
+  "path_bounds_relative_to_model_mm": [
+    [
+      -117.76525386289492,
+      -61.761968381709494,
+      0.2
+    ],
+    [
+      117.757,
+      61.76634544401324,
+      64.0
+    ]
+  ],
+  "features": {
+    "Outer wall": 112323,
+    "Inner wall": 289835,
+    "Bottom surface": 595,
+    "Internal solid infill": 9733,
+    "Sparse infill": 6750,
+    "Top surface": 1485,
+    "Gap infill": 48863
+  },
+  "estimated_seconds": 59087.36328125,
+  "estimated_hours": 16.413156467013888,
+  "estimated_grams": 305.9558410644531,
+  "solid_geometry_grams": 309.1721371726758,
+  "passed": true
+}

@@ -341,3 +341,11 @@ visually: trimesh watertightness + volume/bounds cross-checks, boolean
 interference tests for fits and fastener paths (expect 0 mm³), and
 ASCII occupancy rasters for 2D outlines. docs/SKILL.md describes the
 loop; copy it for new parts.
+
+## Printable connection standard library
+
+Parameterized thread pairs, globe stand/socket joints, pin/bore fits and captive
+axle bearings are built into the native compiler and available in every syntax
+mode, with no runtime library lookup. See [stdlib/README.md](stdlib/README.md)
+for parameter units, coordinate conventions, tolerances and runnable coupons.
+Haskell users can import `Coscad.Stdlib` (also re-exported by `Lib`).

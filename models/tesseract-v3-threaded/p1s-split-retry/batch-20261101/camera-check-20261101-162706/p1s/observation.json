@@ -1,0 +1,99 @@
+{
+  "at": "2026-11-01T16:27:06+11:00",
+  "printer": "p1s",
+  "frames": [
+    {
+      "file": "p1s-1.jpg",
+      "captured_at": "2026-11-01T16:27:09+11:00",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "bytes": 74042,
+      "sha256": "33b5892837750865bfc0c008e57d9a5bb023498dc782a688f73073a065c2ea4e"
+    },
+    {
+      "file": "p1s-2.jpg",
+      "captured_at": "2026-11-01T16:27:12+11:00",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "bytes": 72437,
+      "sha256": "7d54a6a180fa902647e184bdc6f27f2ceca2b40a8aaf622cc22f44efb56c7307"
+    },
+    {
+      "file": "p1s-3.jpg",
+      "captured_at": "2026-11-01T16:27:15+11:00",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "bytes": 74891,
+      "sha256": "8bf7e87d4cc874b7d8784dbace2f019e4f4467b1cc85b9cfa62fd84448226ce9"
+    }
+  ],
+  "errors": [],
+  "printer_controls_sent": [],
+  "status_before": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 75,
+    "layer_num": 982,
+    "total_layer_num": 1369,
+    "mc_remaining_time": 65,
+    "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+    "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+    "nozzle_temper": 219.96875,
+    "bed_temper": 55,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 0
+  },
+  "hms_before": [
+    {
+      "attr": 50344192,
+      "code": 65537,
+      "action": 0,
+      "timestamp": 1789697843
+    }
+  ],
+  "status_after": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 75,
+    "layer_num": 983,
+    "total_layer_num": 1369,
+    "mc_remaining_time": 65,
+    "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+    "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+    "nozzle_temper": 219.96875,
+    "bed_temper": 55,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 0
+  },
+  "hms_after": [
+    {
+      "attr": 50344192,
+      "code": 65537,
+      "action": 0,
+      "timestamp": 1789697843
+    }
+  ],
+  "finished_at": "2026-11-01T16:27:15+11:00",
+  "visual_review": {
+    "outcome": "visible physical failure while printer still reports RUNNING",
+    "observations": [
+      "One part lies on its side on the plate.",
+      "Large loose-filament mass/spaghetti under the toolhead.",
+      "At least one other tall component remains standing."
+    ],
+    "cause": "Unknown; images do not establish the initiating collision, adhesion loss, or layer.",
+    "inspected_frames": [
+      "p1s-1.jpg",
+      "p1s-3.jpg"
+    ],
+    "physical_success": false
+  }
+}

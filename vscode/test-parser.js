@@ -12,6 +12,22 @@ function diagnostics(code, fileType = 'coscad') {
 }
 const messages = (code, fileType) => diagnostics(code, fileType).map(d => d.message)
 
+// Native connection constructors: arity and all shipped recipes.
+for (const [name,args] of [
+  ['thread_male','4.05 5 3 8 2.2 0.2 24'],
+  ['thread_female','4.05 5 3 8 2.2 0.2 24 0.35 0.18'],
+  ['globe_stud','10 12 6 12'], ['globe_socket','10 12 6 12 0.4 0.25'],
+  ['clearance_pin','2.5 12 4 2'], ['clearance_bore','2.5 12 0.6'],
+  ['captive_bearing','2.5 20 6 2 0.6 0.4 1.2']]) {
+  for (const pragma of ['', '!glyph\n', '!simple\n']) {
+    ok(messages(pragma+'main = '+name+' '+args+'\n').length === 0, name+' in '+pragma)
+  }
+  ok(messages('main = '+name+' '+args.split(' ').slice(0,-1).join(' ')+'\n').length > 0, name+' missing argument')
+}
+for (const file of fs.readdirSync(path.join(__dirname,'../stdlib/examples')).filter(f => f.endsWith('.coscad'))) {
+  ok(messages(fs.readFileSync(path.join(__dirname,'../stdlib/examples',file),'utf8')).length === 0, file)
+}
+
 // --- glyph / pipeline / attachment ---------------------------------
 const glyphCode = `!glyph
 base = ▣ 40 40 10 1

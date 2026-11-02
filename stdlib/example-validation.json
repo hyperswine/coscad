@@ -1,0 +1,96 @@
+{
+  "backend": "native",
+  "checks": [
+    {
+      "source": "stdlib/examples/captive-bearing.coscad",
+      "watertight": true,
+      "components": 2,
+      "volume_mm3": 1377.0863704644362,
+      "bounds_mm": [
+        [
+          -6.0,
+          -5.988160370569629,
+          0.0
+        ],
+        [
+          6.0,
+          5.988160370569629,
+          24.0
+        ]
+      ]
+    },
+    {
+      "source": "stdlib/examples/globe-joint.coscad",
+      "watertight": true,
+      "components": 2,
+      "volume_mm3": 13490.540967432753,
+      "bounds_mm": [
+        [
+          -40.0,
+          -17.96448111170889,
+          0.0
+        ],
+        [
+          40.0,
+          17.96448111170889,
+          14.0
+        ]
+      ]
+    },
+    {
+      "source": "stdlib/examples/pin-fit.coscad",
+      "watertight": true,
+      "components": 2,
+      "volume_mm3": 864.0943121549002,
+      "bounds_mm": [
+        [
+          -13.0,
+          -4.990133642141358,
+          0.0
+        ],
+        [
+          14.0,
+          4.990133642141358,
+          14.0
+        ]
+      ]
+    },
+    {
+      "source": "stdlib/examples/tesseract-iii.coscad",
+      "watertight": true,
+      "components": 1,
+      "volume_mm3": 24077.614111598497,
+      "bounds_mm": [
+        [
+          -20.0,
+          -20.0,
+          -20.0
+        ],
+        [
+          20.0,
+          20.0,
+          20.0
+        ]
+      ]
+    },
+    {
+      "source": "stdlib/examples/thread-fit.coscad",
+      "watertight": true,
+      "components": 2,
+      "volume_mm3": 2355.132189480829,
+      "bounds_mm": [
+        [
+          -21.0,
+          -7.984213827426173,
+          0.0
+        ],
+        [
+          21.0,
+          7.9842138274261725,
+          11.000000000000002
+        ]
+      ]
+    }
+  ],
+  "physical_testing": "Existing thread/globe defaults have owner fit reports; new coupons/bearing not physically printed."
+}

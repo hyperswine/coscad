@@ -1,0 +1,5 @@
+shaft_radius = 2.5
+radial_clearance = 0.35
+pin = clearance_pin shaft_radius 12 4 2
+socket = (cyl 5 10 |> anchor bot) |> cut (clearance_bore shaft_radius 10 radial_clearance)
+main = (pin |> x -9) ⊕ (socket |> x 9)

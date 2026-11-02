@@ -239,8 +239,10 @@ class PreflightTests(unittest.TestCase):
         dispatchers = [p for p in (root/'models').rglob('*.py')
                        if not p.name.startswith('test') and 'project_file' in p.read_text()]
         self.assertTrue(dispatchers)
+        trial_modes = {'print_strut_trial.py': ('x1c-staggered', 'p1s-compact'),
+                       'print_batch_20261101.py': ('x1c-center', 'p1s-parts', 'a1-bars')}
         cases = [(source, trial) for source in sorted(dispatchers)
-                 for trial in (('x1c-staggered', 'p1s-compact') if source.name == 'print_strut_trial.py' else (None,))]
+                 for trial in trial_modes.get(source.name, (None,))]
         for index, (source, trial) in enumerate(cases):
             with self.subTest(dispatcher=str(source.relative_to(root)), trial=trial):
                 spec = importlib.util.spec_from_file_location(f'dispatch_refusal_{index}', source)
@@ -250,10 +252,15 @@ class PreflightTests(unittest.TestCase):
                 args = ['--start', '--bed-clear']
                 job = folder
                 if source.name == 'dispatch.py':
-                    name = 'p1s-pla' if source.parent.name == 'beach-outrigger' else 'monohull'
+                    if source.parent.name in ('beach-outrigger', 'beach-monohull'):
+                        name = 'p1s-pla'
+                        filename = source.parent.name + '.gcode.3mf'
+                    else:
+                        name = 'monohull'
+                        filename = 'monohull.gcode.3mf'
                     args = [name, '--spool', 'external', '--confirm-bed-clear', '--authorization-note', 'Offline test']
                     job = folder/name
-                    package = job/'slice'/('beach-outrigger.gcode.3mf' if name == 'p1s-pla' else 'monohull.gcode.3mf')
+                    package = job/'slice'/filename
                 elif source.name == 'print_fit.py':
                     package = folder/('thread-fit_bed1.gcode.3mf' if source.parent.name == 'p1s-thread-fit' else 'fit_bed1.gcode.3mf')
                 elif source.name == 'print_bed2_x1c.py':
@@ -272,6 +279,15 @@ class PreflightTests(unittest.TestCase):
                     job = folder/('four-struts-sequential' if trial == 'x1c-staggered' else 'four-struts-compact/p1s')
                     printer = 'x1c' if trial == 'x1c-staggered' else 'p1s'
                     package = job/f'slice/tesseract-bed4-{printer}.gcode.3mf'
+                elif source.name == 'print_batch_20261101.py':
+                    args.insert(0, trial)
+                    printer, variant, bed = {
+                        'x1c-center': ('x1c', 'bed2/x1c-center-mouse-ears-20261101', 2),
+                        'p1s-parts': ('p1s', 'three-struts-one-bar', 4),
+                        'a1-bars': ('a1', 'three-bars', 4),
+                    }[trial]
+                    job = folder/variant
+                    package = job/f'slice/tesseract-bed{bed}-{printer}.gcode.3mf'
                 elif source.parent.name == 'p1s-split-retry':
                     package = folder/'slice-corrected/tesseract-bed1-p1s.gcode.3mf'
                 elif source.parent.name == 'p1s-full':
@@ -301,6 +317,7 @@ class PreflightTests(unittest.TestCase):
                 connect = unittest.mock.Mock(side_effect=AssertionError('Network must not be reached'))
                 with patch.object(module, 'HERE', folder, create=True), patch.object(module, 'B', folder, create=True), \
                      patch.object(module, 'EXPERIMENTS', folder, create=True), \
+                     patch.object(module, 'BASE', folder, create=True), patch.object(module, 'BATCH', folder, create=True), \
                      patch.object(module, 'RECORD', folder/'run.json', create=True), \
                      patch.object(module, 'context', SimpleNamespace(connect=connect)), \
                      patch.object(sys, 'argv', [str(source), *args]):

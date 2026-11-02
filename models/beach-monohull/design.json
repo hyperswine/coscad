@@ -1,0 +1,83 @@
+{
+  "units": "mm",
+  "name": "beach-monohull",
+  "hull_stations": [
+    [
+      0,
+      186,
+      44
+    ],
+    [
+      6,
+      195,
+      52
+    ],
+    [
+      34,
+      220,
+      106
+    ],
+    [
+      64.0,
+      236,
+      124
+    ]
+  ],
+  "inner_rings": [
+    [
+      4.0,
+      192.0,
+      49.333333333333336,
+      3.75
+    ],
+    [
+      6,
+      195,
+      52,
+      4.167567929737869
+    ],
+    [
+      34,
+      220,
+      106,
+      4.167567929737869
+    ],
+    [
+      64.0,
+      236,
+      124,
+      3.1320919526731648
+    ]
+  ],
+  "wall_mm": 3.0,
+  "cockpit_wall_mm": 2.4,
+  "floor_mm": 4.0,
+  "height_mm": 64.0,
+  "cockpit_lean_deg": 38.0,
+  "rim_mm": 3.0,
+  "cockpit_floor_mm": [
+    136.2457248191939,
+    24.245724819193896
+  ],
+  "cockpit_top_mm": [
+    230.0,
+    118.0
+  ],
+  "bulkheads_x": [
+    -60,
+    -20,
+    20,
+    60
+  ],
+  "bulkhead_mm": 2.4,
+  "hull_lean_deg": [
+    36.86989764584402,
+    43.958373323990024,
+    16.69924423399362
+  ],
+  "footprint_mm": [
+    236,
+    124
+  ],
+  "aim": "Beach try-out: open-cockpit monohull that floats upright when swamped; sealed tanks in separate chambers"
+}

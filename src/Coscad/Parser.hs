@@ -36,6 +36,7 @@ import Coscad.Dim (Dim (..), dimOf)
 import Coscad.Geometry (PointRef (..), MatingFrame (..), datumPoints, pointOf, makeFrame, frameOf, matingPose)
 import Coscad.Linalg (vadd, vneg, vsub)
 import Coscad.Shape
+import Coscad.Stdlib (standardNames, standardShape)
 import Coscad.Stress.Spec (Analysis (..), Where (..), emptyAnalysis, faceAnchor)
 import Coscad.Validate (maxQuantity, maxSides, suggestion, validateShape)
 import Data.Char (isAlphaNum, isLetter, isSpace)
@@ -1006,10 +1007,23 @@ primaryExpression ctx =
       r <- num ctx
       ZCyl r <$> num ctx
 
-    -- word-named shapes (all BOSL2-centered family) — available in every mode
+    -- Standard connection recipes and word shapes, available in every mode.
+    standardPrimitive = choice [do
+      _ <- keyword name
+      xs <- mapM (arg ctx name) labels
+      either fail pure (standardShape name xs)
+      | (name, labels) <-
+        [("thread_male", threadArgs), ("thread_female", threadArgs ++ ["radial clearance", "axial flank clearance"]),
+         ("globe_stud", ["root radius","major radius","pitch","length"]),
+         ("globe_socket", ["root radius","major radius","pitch","length","radial clearance","axial flank clearance"]),
+         ("clearance_pin", ["shaft radius","shaft length","flange radius","flange height"]),
+         ("clearance_bore", ["shaft radius","length","radial clearance"]),
+         ("captive_bearing", ["shaft radius","span","stop radius","stop height","radial gap","axial gap","sleeve wall"])]]
+    threadArgs = ["root radius","major radius","pitch","length","root width","crest width","facets per turn"]
     wordShape =
       choice
-        [ xcylShape
+        [ standardPrimitive
+        , xcylShape
         , ycylShape
         , zcylShape
         , keyword "cube" *> ((\s -> Cuboid (s, s, s) 0 0) <$> num ctx)
@@ -1179,7 +1193,7 @@ resolveVariables mode defs table0 = do
 -- | Keywords that take precedence over variable lookup in this mode.
 reservedNames :: SynMode -> [String]
 reservedNames mode =
-  ["cube", "box", "sphere", "cyl", "tube", "torus", "wedge", "xcyl", "ycyl", "zcyl", "loft"]
+  standardNames ++ ["cube", "box", "sphere", "cyl", "tube", "torus", "wedge", "xcyl", "ycyl", "zcyl", "loft"]
     ++ if mode == ModeGlyph then [] else
       [ "Sphere", "Cube", "Box", "Cylinder", "Cone", "Tube", "Torus", "Wedge"
       , "Prismoid", "Circle", "Triangle", "Pentagon", "Bezier"

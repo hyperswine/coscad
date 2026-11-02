@@ -1,0 +1,11 @@
+// Tesseract III's physically tested RH thread dimensions, mm.
+root = 4.05
+major = 5
+pitch = 3
+length = 8
+male = thread_male root major pitch length 2.2 0.2 24
+female_tool = thread_female root major pitch length 2.2 0.2 24 0.35 0.18
+// Heads down, threads up; open-through female coupon, as in the original trial.
+screw = ((zcyl 8 3 |> anchor bot) ⊕ male) |> rotx 180 |> anchor bot
+socket = (zcyl 8 10 |> anchor top) |> cut female_tool |> cut (zcyl (root + 0.35) 24) |> anchor bot
+main = (screw |> x -13) ⊕ (socket |> x 13)

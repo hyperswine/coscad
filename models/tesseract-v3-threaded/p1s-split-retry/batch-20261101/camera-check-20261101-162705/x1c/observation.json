@@ -1,0 +1,95 @@
+{
+  "at": "2026-11-01T16:27:05+11:00",
+  "printer": "x1c",
+  "frames": [],
+  "errors": [
+    {
+      "at": "2026-11-01T16:27:08+11:00",
+      "frame": 1,
+      "error_type": "ValueError",
+      "scope": "RTSPS capture failed; connection details omitted"
+    },
+    {
+      "at": "2026-11-01T16:27:11+11:00",
+      "frame": 2,
+      "error_type": "ValueError",
+      "scope": "RTSPS capture failed; connection details omitted"
+    },
+    {
+      "at": "2026-11-01T16:27:14+11:00",
+      "frame": 3,
+      "error_type": "ValueError",
+      "scope": "RTSPS capture failed; connection details omitted"
+    },
+    {
+      "at": "2026-11-01T16:28:02+11:00",
+      "error_type": "ValueError",
+      "scope": "Authenticated dashboard capture failed; login and private connection details omitted"
+    },
+    {
+      "scope": "Mini settled-stream capture",
+      "frame": 1,
+      "error_type": "ValueError"
+    },
+    {
+      "scope": "Mini settled-stream capture",
+      "frame": 2,
+      "error_type": "ValueError"
+    },
+    {
+      "scope": "Mini settled-stream capture",
+      "frame": 3,
+      "error_type": "ValueError"
+    }
+  ],
+  "printer_controls_sent": [],
+  "status_before": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 95,
+    "layer_num": 256,
+    "total_layer_num": 282,
+    "mc_remaining_time": 8,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "tesseract-v3-x1c-center-20261101-125837.gcode",
+    "nozzle_temper": 220.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": 0
+  },
+  "hms_before": [],
+  "status_after": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 95,
+    "layer_num": 256,
+    "total_layer_num": 282,
+    "mc_remaining_time": 8,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "tesseract-v3-x1c-center-20261101-125837.gcode",
+    "nozzle_temper": 220.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": 0
+  },
+  "hms_after": [],
+  "finished_at": "2026-11-01T16:28:02+11:00",
+  "dashboard_status": {
+    "connection": "ONLINE",
+    "state": "RUNNING",
+    "job": "tesseract-v3-x1c-center-20261101-125837.gcode",
+    "progress": 95,
+    "layers": "Layer 256 / 282",
+    "camera_state": "OFF",
+    "camera_mode": "snapshot",
+    "camera_last_frame": 0,
+    "last_report_iso": "2026-11-01T05:27:28Z"
+  },
+  "visual_review": {
+    "outcome": "Direct, authenticated dashboard, and Mini relay captures failed; no usable fresh frame",
+    "physical_success": "not established by fault-free telemetry"
+  },
+  "settled_capture_count": 0
+}

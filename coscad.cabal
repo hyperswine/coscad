@@ -14,6 +14,8 @@ build-type:     Simple
 extra-source-files:
     README.md
     CHANGELOG.md
+    stdlib/README.md
+    stdlib/examples/*.coscad
     experiments/beam.coscad
     experiments/cad/*.coscad
     experiments/cad/*.json
@@ -71,6 +73,7 @@ library
       Coscad.Printability
       Coscad.Report
       Coscad.Shape
+      Coscad.Stdlib
       Coscad.Solid
       Coscad.Site
       Coscad.Stress.Cad
@@ -153,6 +156,7 @@ test-suite coscad-test
       Tier.Resolution
       Tier.Silence
       Tier.Stress
+      Tier.Stdlib
       Tier.Validate
       Paths_coscad
   autogen-modules:

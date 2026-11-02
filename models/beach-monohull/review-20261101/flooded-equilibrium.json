@@ -1,0 +1,150 @@
+{
+  "method": "Review extension of existing hydrostatic functions: simultaneous heel/trim equilibrium, not an independent fluid solver. No original files rewritten.",
+  "dry": {
+    "fresh": {
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 25.446582925201948,
+      "righting_arm_mm": 0.005391412876567603,
+      "trim_arm_mm": 0.310283365308198,
+      "rim_clearance_mm": 38.55341707479805
+    },
+    "sea": {
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 25.005674685773243,
+      "righting_arm_mm": 0.005391412876569623,
+      "trim_arm_mm": 0.3210775906998684,
+      "rim_clearance_mm": 38.99432531422676
+    }
+  },
+  "swamped": {
+    "fresh": {
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 39.17233889622193,
+      "righting_arm_mm": 0.00488312766584576,
+      "trim_arm_mm": -0.10980155891948584,
+      "rim_clearance_mm": 24.82766110377807
+    },
+    "sea": {
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 38.2654590164218,
+      "righting_arm_mm": 0.004917547847359285,
+      "trim_arm_mm": -0.07559189622235252,
+      "rim_clearance_mm": 25.7345409835782
+    }
+  },
+  "one_chamber_flooded": [
+    {
+      "chamber": "stern starboard",
+      "converged": true,
+      "heel_deg": 4.698055463277561,
+      "pitch_bow_up_deg": 3.8586090197144727,
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 42.55947828478827,
+      "righting_arm_mm": 1.1311726400009547e-07,
+      "trim_arm_mm": 7.137846953497728e-07,
+      "rim_clearance_mm": 9.074196248029544
+    },
+    {
+      "chamber": "stern port",
+      "converged": true,
+      "heel_deg": -4.712637631581692,
+      "pitch_bow_up_deg": 3.8575442391432637,
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 42.55772318573933,
+      "righting_arm_mm": 1.1771292895979002e-06,
+      "trim_arm_mm": -1.2391391575050648e-06,
+      "rim_clearance_mm": 9.062677457661557
+    },
+    {
+      "chamber": "aft starboard",
+      "converged": true,
+      "heel_deg": 2.3429360114515316,
+      "pitch_bow_up_deg": 0.48344047265900614,
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 40.52139601750099,
+      "righting_arm_mm": 1.3585249170056102e-07,
+      "trim_arm_mm": 2.087297445996228e-08,
+      "rim_clearance_mm": 20.10498368478983
+    },
+    {
+      "chamber": "aft port",
+      "converged": true,
+      "heel_deg": -2.36065132702144,
+      "pitch_bow_up_deg": 0.4835044390129938,
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 40.52129148150611,
+      "righting_arm_mm": 8.556364887724044e-07,
+      "trim_arm_mm": 1.4391433289517863e-06,
+      "rim_clearance_mm": 20.08548798208929
+    },
+    {
+      "chamber": "mid starboard",
+      "converged": true,
+      "heel_deg": 2.329649241332645,
+      "pitch_bow_up_deg": -0.2265043937843162,
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 40.636539505485175,
+      "righting_arm_mm": -4.041321433057021e-08,
+      "trim_arm_mm": 8.11812933321221e-07,
+      "rim_clearance_mm": 20.646850674769198
+    },
+    {
+      "chamber": "mid port",
+      "converged": true,
+      "heel_deg": -2.3475177912539986,
+      "pitch_bow_up_deg": -0.22667729343665996,
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 40.636491124086234,
+      "righting_arm_mm": -2.4577599311292886e-07,
+      "trim_arm_mm": -4.942374580707565e-07,
+      "rim_clearance_mm": 20.626793975630036
+    },
+    {
+      "chamber": "fore starboard",
+      "converged": true,
+      "heel_deg": 2.379178335246303,
+      "pitch_bow_up_deg": -1.0166247415517538,
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 40.88737971217576,
+      "righting_arm_mm": -5.399667739602876e-07,
+      "trim_arm_mm": -3.3201378268898907e-07,
+      "rim_clearance_mm": 19.591331937141476
+    },
+    {
+      "chamber": "fore port",
+      "converged": true,
+      "heel_deg": -2.3970776289224944,
+      "pitch_bow_up_deg": -1.017029541298261,
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 40.88734292195393,
+      "righting_arm_mm": 4.464228680056692e-07,
+      "trim_arm_mm": -7.379763466985878e-09,
+      "rim_clearance_mm": 19.57308509642796
+    },
+    {
+      "chamber": "bow starboard",
+      "converged": true,
+      "heel_deg": 2.0329587246963596,
+      "pitch_bow_up_deg": -3.0502523071126912,
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 42.426555284445456,
+      "righting_arm_mm": -5.824795246134329e-07,
+      "trim_arm_mm": -1.4637382506066388e-07,
+      "rim_clearance_mm": 14.94143749010248
+    },
+    {
+      "chamber": "bow port",
+      "converged": true,
+      "heel_deg": -2.05057145117937,
+      "pitch_bow_up_deg": -3.0508337372125216,
+      "mass_g": 309.1721371726757,
+      "waterline_mm": 42.42659734947867,
+      "righting_arm_mm": 3.078371453302253e-07,
+      "trim_arm_mm": 4.434542466569269e-07,
+      "rim_clearance_mm": 14.933851936026485
+    }
+  ],
+  "min_wall_to_outside_mm": 2.7911459362011457,
+  "min_wall_to_cockpit_mm": 2.2726964331688433,
+  "chambers": 10
+}

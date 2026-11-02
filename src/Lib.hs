@@ -5,10 +5,12 @@ module Lib
   ( module Coscad.Shape
   , module Coscad.Geometry
   , module Coscad.Codegen
+  , module Coscad.Stdlib
   , module Coscad.Dsl
   ) where
 
 import Coscad.Codegen
 import Coscad.Dsl
 import Coscad.Geometry
+import Coscad.Stdlib
 import Coscad.Shape

@@ -1,0 +1,57 @@
+{
+  "checked": true,
+  "center_mesh_identical": true,
+  "four_pad_meshes_identical": true,
+  "explicit_process_keys_matched": [
+    "wall_loops",
+    "sparse_infill_density",
+    "sparse_infill_pattern",
+    "top_shell_layers",
+    "bottom_shell_layers",
+    "layer_height",
+    "outer_wall_speed",
+    "inner_wall_speed",
+    "default_acceleration",
+    "outer_wall_acceleration",
+    "inner_wall_acceleration",
+    "travel_acceleration",
+    "enable_support",
+    "support_type",
+    "support_on_build_plate_only",
+    "support_top_z_distance",
+    "support_bottom_z_distance",
+    "support_object_xy_distance",
+    "support_interface_top_layers",
+    "support_interface_spacing",
+    "tree_support_wall_count",
+    "brim_type",
+    "brim_width",
+    "brim_object_gap",
+    "initial_layer_speed",
+    "initial_layer_infill_speed",
+    "initial_layer_acceleration",
+    "tree_support_branch_diameter",
+    "tree_support_branch_angle",
+    "support_interface_bottom_layers",
+    "support_speed",
+    "support_interface_speed",
+    "raft_first_layer_expansion",
+    "reduce_crossing_wall",
+    "avoid_crossing_wall_includes_support"
+  ],
+  "cooling_keys_matched": [
+    "slow_down_layer_time",
+    "slow_down_min_speed",
+    "slow_down_for_layer_cooling"
+  ],
+  "plate_and_nozzle_targets_identical": [
+    55,
+    220
+  ],
+  "different_factors": [
+    "printer",
+    "loaded external PLA instead of A1 white AMS PLA",
+    "native startup/calibration and machine-specific defaults"
+  ],
+  "causality_limit": "Matches explicit settings and center-only isolation; cannot isolate printer hardware from filament and all machine defaults."
+}

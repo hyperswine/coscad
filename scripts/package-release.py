@@ -28,7 +28,7 @@ def main():
         stage = Path(tmp) / name
         stage.mkdir()
         shutil.copy2(binary, stage / 'coscad')
-        for item in ('README.md', 'LICENSE', 'CHANGELOG.md', 'examples', 'docs', 'man', 'third-party', 'native-kernel.lock.json'):
+        for item in ('README.md', 'LICENSE', 'CHANGELOG.md', 'examples', 'stdlib', 'docs', 'man', 'third-party', 'native-kernel.lock.json'):
             source = ROOT / item
             if source.is_dir():
                 shutil.copytree(source, stage / item,

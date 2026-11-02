@@ -1,0 +1,127 @@
+{
+  "parts": [
+    {
+      "parent": 3,
+      "normal_part": 1,
+      "label": "1-inner",
+      "brim_mm": 8,
+      "enable_support": true,
+      "bounds": [
+        [
+          99.73741149902344,
+          99.73741149902344,
+          0.0
+        ],
+        [
+          156.26258850097656,
+          156.26258850097656,
+          56.50226974487305
+        ]
+      ]
+    }
+  ],
+  "thread_exclusions": [
+    "thread-exclusion-0.stl",
+    "thread-exclusion-1.stl",
+    "thread-exclusion-2.stl",
+    "thread-exclusion-3.stl",
+    "thread-exclusion-4.stl",
+    "thread-exclusion-5.stl",
+    "thread-exclusion-6.stl",
+    "thread-exclusion-7.stl"
+  ],
+  "adhesion_pads": [
+    {
+      "name": "mouse-ear-1",
+      "file": "mouse-ear-1.stl",
+      "center_xy_mm": [
+        109.54020953973361,
+        109.54021988246804
+      ],
+      "radius_mm": 7.5,
+      "height_mm": 0.2,
+      "bounds": [
+        [
+          102.04020953973361,
+          102.055019419256,
+          0.0
+        ],
+        [
+          117.04020953973361,
+          117.02542034568008,
+          0.2
+        ]
+      ],
+      "volume_mm3": 35.24997193996058
+    },
+    {
+      "name": "mouse-ear-2",
+      "file": "mouse-ear-2.stl",
+      "center_xy_mm": [
+        109.54022137377224,
+        146.45979386516302
+      ],
+      "radius_mm": 7.5,
+      "height_mm": 0.2,
+      "bounds": [
+        [
+          102.04022137377224,
+          138.97459340195098,
+          0.0
+        ],
+        [
+          117.04022137377224,
+          153.94499432837506,
+          0.2
+        ]
+      ],
+      "volume_mm3": 35.24997193996056
+    },
+    {
+      "name": "mouse-ear-3",
+      "file": "mouse-ear-3.stl",
+      "center_xy_mm": [
+        146.459786992247,
+        109.54021306246253
+      ],
+      "radius_mm": 7.5,
+      "height_mm": 0.2,
+      "bounds": [
+        [
+          138.959786992247,
+          102.05501259925049,
+          0.0
+        ],
+        [
+          153.959786992247,
+          117.02541352567457,
+          0.2
+        ]
+      ],
+      "volume_mm3": 35.24997193996062
+    },
+    {
+      "name": "mouse-ear-4",
+      "file": "mouse-ear-4.stl",
+      "center_xy_mm": [
+        146.45979034246582,
+        146.45978550087406
+      ],
+      "radius_mm": 7.5,
+      "height_mm": 0.2,
+      "bounds": [
+        [
+          138.95979034246582,
+          138.97458503766202,
+          0.0
+        ],
+        [
+          153.95979034246582,
+          153.9449859640861,
+          0.2
+        ]
+      ],
+      "volume_mm3": 35.24997193996058
+    }
+  ]
+}

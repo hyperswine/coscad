@@ -1,0 +1,20 @@
+[
+  {
+    "model": "beach-monohull",
+    "returncode": 0,
+    "stderr": "",
+    "matches_original_stl": true
+  },
+  {
+    "model": "beach-monohull-envelope",
+    "returncode": 0,
+    "stderr": "",
+    "matches_original_stl": true
+  },
+  {
+    "model": "beach-monohull-sealed",
+    "returncode": 0,
+    "stderr": "",
+    "matches_original_stl": true
+  }
+]

@@ -1,0 +1,55 @@
+{
+  "recorded_at": "2026-11-01T12:55:43+11:00",
+  "job": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode.3mf",
+  "package_sha256": "023b5e11cbde9ff9f8f35de9af673c26aa90ff26eb58b61f3df5bd2f55666ede",
+  "owner_report": "The center piece printed a lot better with the new settings on the A1. Owner cannot tell whether the improvement came from new settings, isolating the center piece, or using A1.",
+  "physical_result": "substantial improvement, owner reported; not an explicit perfect or measured thread-fit acceptance",
+  "causal_attribution": "unresolved",
+  "changed_factors": [
+    "printer",
+    "center-only isolation",
+    "tree support parameters",
+    "first-layer mouse-ear pads",
+    "cooling and travel settings"
+  ],
+  "fresh_telemetry": {
+    "at": "2026-11-01T12:54:52+11:00",
+    "status": {
+      "gcode_state": "FINISH",
+      "mc_percent": 100,
+      "layer_num": 282,
+      "total_layer_num": 282,
+      "mc_remaining_time": 0,
+      "gcode_file": "",
+      "subtask_name": "tesseract-v3-center-trees-ears-a1-20261031-224233.gcode",
+      "nozzle_temper": 22.90625,
+      "bed_temper": 23.21875,
+      "print_error": 0,
+      "fail_reason": null,
+      "mc_print_error_code": null,
+      "stg_cur": 255
+    },
+    "hms": [],
+    "spools": [
+      [
+        "ams0",
+        "PLA",
+        "FFFFFFFF",
+        false
+      ],
+      [
+        "ams2",
+        "PLA",
+        "F4EE2AFF",
+        false
+      ],
+      [
+        "external",
+        "PLA",
+        "FFFFFFFF",
+        false
+      ]
+    ]
+  },
+  "next_comparison": "Re-slice the same center-only geometry, orientation, support overrides and mouse-ear pads for X1C; native machine defaults and loaded filament may differ."
+}

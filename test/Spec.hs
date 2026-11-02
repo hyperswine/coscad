@@ -44,6 +44,7 @@ import Tier.Linalg
 import Tier.Resolution
 import Tier.Silence
 import Tier.Stress
+import Tier.Stdlib
 import Tier.Validate
 
 main :: IO ()
@@ -54,10 +55,11 @@ main = do
   t <- T <$> newIORef 0 <*> newIORef []
   update <- (== Just "1") <$> lookupEnv "COSCAD_UPDATE_GOLDEN"
   args <- getArgs
-  unless (null args || args `elem` [["--experiments-only"], ["--images-only"], ["--plan-only"]]) $ do
-    hPutStrLn stderr "usage: coscad-test [--experiments-only|--images-only|--plan-only]"
+  unless (null args || args `elem` [["--experiments-only"], ["--images-only"], ["--plan-only"], ["--stdlib-only"]]) $ do
+    hPutStrLn stderr "usage: coscad-test [--experiments-only|--images-only|--plan-only|--stdlib-only]"
     exitFailure
   let focused = args == ["--experiments-only"]
+  when (args == ["--stdlib-only"]) (stdlibTier t)
   when (args == ["--images-only"]) (imageTier t)
   -- the build planner's tiers alone, for working on the planner
   when (args == ["--plan-only"]) $ do
@@ -65,7 +67,7 @@ main = do
     planTier t
     framedFastenerTier t
     planEaseTier t
-  unless (args == ["--images-only"] || args == ["--plan-only"]) $ do
+  unless (args == ["--images-only"] || args == ["--plan-only"] || args == ["--stdlib-only"]) $ do
     unless focused (coreTiers t update)
     experimentsTier t
     stressTier t
@@ -90,6 +92,7 @@ main = do
 
 coreTiers :: T -> Bool -> IO ()
 coreTiers t update = do
+  stdlibTier t
   diagnostics t
   remainingDiagnostics t
   resolutionTier t

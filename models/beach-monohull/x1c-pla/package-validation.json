@@ -1,0 +1,41 @@
+{
+  "printer": "X1C",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL X1C",
+  "nozzle_temperature": "225",
+  "bed_temperature": "55",
+  "model_id": "BL-P001",
+  "package": "x1c-pla/slice/beach-monohull.gcode.3mf",
+  "package_sha256": "8aa8065024298391ef67c7d4eb64b23f9d783ca3912178c6948f18656dae931a",
+  "gcode_sha256": "e6bea247fe62a2d4849efd9caca5b657abe6a3cc31a052884c359f240b6f8e4a",
+  "layers": 320,
+  "model_path_segments": 469363,
+  "support_segments": 0,
+  "longest_bridge_segment_mm": 0.0,
+  "path_bounds_relative_to_model_mm": [
+    [
+      -117.76525386289492,
+      -61.761968381709494,
+      0.2
+    ],
+    [
+      117.757,
+      61.76634544401324,
+      64.0
+    ]
+  ],
+  "features": {
+    "Outer wall": 112323,
+    "Inner wall": 289614,
+    "Bottom surface": 595,
+    "Internal solid infill": 9733,
+    "Sparse infill": 6750,
+    "Top surface": 1485,
+    "Gap infill": 48863
+  },
+  "estimated_seconds": 58302.1640625,
+  "estimated_hours": 16.195045572916666,
+  "estimated_grams": 306.2147216796875,
+  "solid_geometry_grams": 309.1721371726758,
+  "passed": true
+}

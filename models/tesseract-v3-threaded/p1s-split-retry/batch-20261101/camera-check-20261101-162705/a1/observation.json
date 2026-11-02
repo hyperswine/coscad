@@ -1,0 +1,84 @@
+{
+  "at": "2026-11-01T16:27:05+11:00",
+  "printer": "a1",
+  "frames": [
+    {
+      "file": "a1-1.jpg",
+      "captured_at": "2026-11-01T16:27:08+11:00",
+      "dimensions": [
+        1536,
+        1080
+      ],
+      "bytes": 116294,
+      "sha256": "881a268053f5555b6e8fe35bb76e888ea623001a3e286b646e55cd0afbe55edf"
+    },
+    {
+      "file": "a1-2.jpg",
+      "captured_at": "2026-11-01T16:27:11+11:00",
+      "dimensions": [
+        1536,
+        1080
+      ],
+      "bytes": 117673,
+      "sha256": "9b4aad5bc6fe2dd6d4398e6617c94321e705372159b84cd8b1e24ee2bb77a095"
+    },
+    {
+      "file": "a1-3.jpg",
+      "captured_at": "2026-11-01T16:27:14+11:00",
+      "dimensions": [
+        1536,
+        1080
+      ],
+      "bytes": 140195,
+      "sha256": "d2a32295ae40ce54269cdd7158d89f7d2a09904b5ed9ada68d49ccf8db3b2ffd"
+    }
+  ],
+  "errors": [],
+  "printer_controls_sent": [],
+  "status_before": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 78,
+    "layer_num": 1165,
+    "total_layer_num": 1488,
+    "mc_remaining_time": 54,
+    "gcode_file": "tesseract-v3-a1-bars-20261101-125842.gcode.3mf",
+    "subtask_name": "tesseract-v3-a1-bars-20261101-125842.gcode",
+    "nozzle_temper": 220,
+    "bed_temper": 54.9375,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 0
+  },
+  "hms_before": [],
+  "status_after": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 78,
+    "layer_num": 1166,
+    "total_layer_num": 1488,
+    "mc_remaining_time": 54,
+    "gcode_file": "tesseract-v3-a1-bars-20261101-125842.gcode.3mf",
+    "subtask_name": "tesseract-v3-a1-bars-20261101-125842.gcode",
+    "nozzle_temper": 220,
+    "bed_temper": 54.9375,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 0
+  },
+  "hms_after": [],
+  "finished_at": "2026-11-01T16:27:14+11:00",
+  "visual_review": {
+    "outcome": "No obvious visible failure in inspected views",
+    "observations": [
+      "Two completed-looking upright bars and the active third bar remain upright.",
+      "No obvious spaghetti or displaced parts visible.",
+      "Active toolhead obscures some detail."
+    ],
+    "inspected_frames": [
+      "a1-1.jpg",
+      "a1-3.jpg"
+    ],
+    "physical_success": "not yet established; still printing"
+  }
+}

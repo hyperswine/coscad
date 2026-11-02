@@ -1,0 +1,6 @@
+{
+  "rejected_before_dispatch": true,
+  "package_sha256": "f467c11b961a5759ab2b0128b9d6de07f0ff1bc707ec64dbf04ab62aec84c9ef",
+  "reason": "Native A1 end lift is 0.4 mm above maximum printed height; cross-bed AMS unload travel failed the conservative additional 0.5 mm head-return margin. Not a measured collision.",
+  "correction": "Raise only the first end-gcode lift to max_layer_z +5 mm; keep all manufacturer clearance limits unchanged; re-slice and repeat full motion audit."
+}

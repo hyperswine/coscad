@@ -22,3 +22,8 @@ models/**/*.HEIC filter=lfs diff=lfs merge=lfs -text
 # and unified-diff context markers.
 models/tesseract-v3-threaded/p1s-split-retry/bed2/x1c/investigation-20261029/failed-startup.gcode.txt whitespace=-blank-at-eol
 models/tesseract-v3-threaded/p1s-split-retry/bed2/x1c/investigation-20261029/startup-comparison.diff whitespace=-blank-at-eol
+
+# Preserve raw slicer diagnostics, including their trailing path whitespace.
+models/beach-monohull/a1-pla/slice/slicer.log whitespace=-blank-at-eol
+models/beach-monohull/p1s-pla/slice/slicer.log whitespace=-blank-at-eol
+models/beach-monohull/x1c-pla/slice/slicer.log whitespace=-blank-at-eol

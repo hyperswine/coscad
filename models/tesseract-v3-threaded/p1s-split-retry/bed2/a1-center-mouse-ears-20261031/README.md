@@ -96,3 +96,11 @@ or HMS, and **AMS tray 0 (physical slot 1)** selected. This confirms startup
 and selected filament; adhesion and lower female-thread quality still require
 physical inspection. The bounded observer ended after this checkpoint; no
 recurring monitor or additional start command was created.
+
+## Owner-reported improvement - 1 November 2026
+
+The owner reports the center printed **a lot better** with this A1 setup.
+They cannot distinguish the contributions of revised settings, center-only
+isolation and the A1. This is improvement, not a claim of perfection or measured
+female-thread fit. [Outcome record](physical-outcome-20261101.json) preserves
+that uncertainty. A matching center-only X1C comparison is requested next.

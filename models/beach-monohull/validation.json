@@ -1,0 +1,916 @@
+{
+  "assumptions": [
+    "Homogeneous solid PLA (sliced at 100% infill), 1.24 g/cm3; fresh water 1.000, sea water 1.025 g/cm3.",
+    "Static heel about the long axis and static pitch; no waves, surf, slamming, dynamic capsize or leakage rate.",
+    "Swamped: the cockpit is full of water, which weighs nothing in the water around it.",
+    "Payload is a point mass on the cockpit floor at midships."
+  ],
+  "plastic_cm3": 249.33236868764172,
+  "mass_g_PLA": 309.1721371726757,
+  "envelope_cm3": 1175.617106793923,
+  "sealed_body_cm3": 440.38785408389316,
+  "sealed_air_cm3": 191.05548539625138,
+  "bounds_mm": [
+    [
+      -118.0,
+      -62.000000000000014,
+      0.0
+    ],
+    [
+      118.0,
+      62.00000000000001,
+      64.02
+    ]
+  ],
+  "gravity_center_mm": [
+    -8.331933856952832,
+    0.005391412876569109,
+    30.026751574480464
+  ],
+  "chambers": [
+    {
+      "name": "stern starboard",
+      "air_cm3": 31.918836040765225,
+      "center_mm": [
+        -89.16475215045193,
+        -26.536224068111842,
+        28.391009561064763
+      ],
+      "min_wall_to_outside_mm": 2.7911459362011457,
+      "min_wall_to_cockpit_mm": 2.2726964331688433,
+      "min_wall_to_next_chamber_mm": 2.400000095367431
+    },
+    {
+      "name": "stern port",
+      "air_cm3": 31.91101360822932,
+      "center_mm": [
+        -89.1634052745721,
+        26.535958502772512,
+        28.39264376889921
+      ],
+      "min_wall_to_outside_mm": 2.7911459362011457,
+      "min_wall_to_cockpit_mm": 2.2726964331688433,
+      "min_wall_to_next_chamber_mm": 2.400000095367431
+    },
+    {
+      "name": "aft starboard",
+      "air_cm3": 13.39366571556721,
+      "center_mm": [
+        -39.99958841264121,
+        -37.28776625544468,
+        27.365211141085958
+      ],
+      "min_wall_to_outside_mm": 3.0875558757210597,
+      "min_wall_to_cockpit_mm": 2.38724486220432,
+      "min_wall_to_next_chamber_mm": 2.4000015258789062
+    },
+    {
+      "name": "aft port",
+      "air_cm3": 13.393665715567213,
+      "center_mm": [
+        -39.99958841264119,
+        37.28776625544465,
+        27.36521114108595
+      ],
+      "min_wall_to_outside_mm": 3.0875558757210597,
+      "min_wall_to_cockpit_mm": 2.399086330672135,
+      "min_wall_to_next_chamber_mm": 2.4000015258789062
+    },
+    {
+      "name": "mid starboard",
+      "air_cm3": 13.399565705227046,
+      "center_mm": [
+        0.002176494891060868,
+        -37.29084769424863,
+        27.36249538773037
+      ],
+      "min_wall_to_outside_mm": 3.081720767548064,
+      "min_wall_to_cockpit_mm": 2.3944103081614534,
+      "min_wall_to_next_chamber_mm": 2.4000015258789062
+    },
+    {
+      "name": "mid port",
+      "air_cm3": 13.39956570522705,
+      "center_mm": [
+        0.0021764948910576094,
+        37.29084769424865,
+        27.36249538773038
+      ],
+      "min_wall_to_outside_mm": 3.081720767548064,
+      "min_wall_to_cockpit_mm": 2.3996037799768533,
+      "min_wall_to_next_chamber_mm": 2.4000015258789062
+    },
+    {
+      "name": "fore starboard",
+      "air_cm3": 14.039166109975197,
+      "center_mm": [
+        40.656251952500256,
+        -35.29661156004391,
+        26.804783171551428
+      ],
+      "min_wall_to_outside_mm": 3.0742602001061328,
+      "min_wall_to_cockpit_mm": 2.399968452399564,
+      "min_wall_to_next_chamber_mm": 2.4000015258789062
+    },
+    {
+      "name": "fore port",
+      "air_cm3": 14.039166440461877,
+      "center_mm": [
+        40.65625204684725,
+        35.296611830814605,
+        26.804783533001096
+      ],
+      "min_wall_to_outside_mm": 3.0742602001061328,
+      "min_wall_to_cockpit_mm": 2.399968452399564,
+      "min_wall_to_next_chamber_mm": 2.4000015258789062
+    },
+    {
+      "name": "bow starboard",
+      "air_cm3": 22.780420173356212,
+      "center_mm": [
+        81.52222627417271,
+        -17.431550035094,
+        28.538720398899397
+      ],
+      "min_wall_to_outside_mm": 3.173348068459905,
+      "min_wall_to_cockpit_mm": 2.2946734549030934,
+      "min_wall_to_next_chamber_mm": 2.400000095367431
+    },
+    {
+      "name": "bow port",
+      "air_cm3": 22.78042018187503,
+      "center_mm": [
+        81.52222608324251,
+        17.431549911652855,
+        28.538720140764088
+      ],
+      "min_wall_to_outside_mm": 3.173348068459905,
+      "min_wall_to_cockpit_mm": 2.2946734549030934,
+      "min_wall_to_next_chamber_mm": 2.400000095367431
+    }
+  ],
+  "cases": {
+    "PLA-fresh": {
+      "dry": {
+        "draft_mm": 25.446582925201948,
+        "freeboard_to_gunwale_mm": 38.55341707479805,
+        "static_trim_deg_bow_up": 0.11056780815124512,
+        "downflooding_heel_deg": 40,
+        "max_righting_arm_mm": 19.873736949836523,
+        "heel_of_max_deg": 55,
+        "first_sampled_heel_with_no_righting_deg": null,
+        "righting_arm_inverted_180_mm": -0.005391415150598125,
+        "righting_curve": [
+          {
+            "heel_deg": 0,
+            "righting_arm_mm": 0.005391412876567603,
+            "rim_clearance_mm": 38.55341707479805
+          },
+          {
+            "heel_deg": 5,
+            "righting_arm_mm": 1.6463102548395416,
+            "rim_clearance_mm": 33.154213727092184
+          },
+          {
+            "heel_deg": 10,
+            "righting_arm_mm": 3.4083609739135152,
+            "rim_clearance_mm": 27.811576127891094
+          },
+          {
+            "heel_deg": 15,
+            "righting_arm_mm": 5.254906488421978,
+            "rim_clearance_mm": 22.5181985559641
+          },
+          {
+            "heel_deg": 20,
+            "righting_arm_mm": 7.116919260444089,
+            "rim_clearance_mm": 17.25492223002648
+          },
+          {
+            "heel_deg": 25,
+            "righting_arm_mm": 9.081792827071826,
+            "rim_clearance_mm": 12.065227192323466
+          },
+          {
+            "heel_deg": 30,
+            "righting_arm_mm": 11.260980748547821,
+            "rim_clearance_mm": 7.001277673385918
+          },
+          {
+            "heel_deg": 35,
+            "righting_arm_mm": 13.80578648069626,
+            "rim_clearance_mm": 2.123542970810462
+          },
+          {
+            "heel_deg": 40,
+            "righting_arm_mm": 16.65951999065844,
+            "rim_clearance_mm": -2.535290253214754
+          },
+          {
+            "heel_deg": 45,
+            "righting_arm_mm": 18.578676603340565,
+            "rim_clearance_mm": -7.1165652954343805
+          },
+          {
+            "heel_deg": 50,
+            "righting_arm_mm": 19.577618104093354,
+            "rim_clearance_mm": -11.623883653690665
+          },
+          {
+            "heel_deg": 55,
+            "righting_arm_mm": 19.873736949836523,
+            "rim_clearance_mm": -16.026509533281864
+          },
+          {
+            "heel_deg": 60,
+            "righting_arm_mm": 19.619904560289374,
+            "rim_clearance_mm": -20.289558394657142
+          },
+          {
+            "heel_deg": 65,
+            "righting_arm_mm": 18.926663260450074,
+            "rim_clearance_mm": -24.37896141591797
+          },
+          {
+            "heel_deg": 70,
+            "righting_arm_mm": 17.88065685378477,
+            "rim_clearance_mm": -28.264471913958186
+          },
+          {
+            "heel_deg": 75,
+            "righting_arm_mm": 16.54935887103023,
+            "rim_clearance_mm": -31.917255682335828
+          },
+          {
+            "heel_deg": 80,
+            "righting_arm_mm": 14.986946042768938,
+            "rim_clearance_mm": -35.309245344148486
+          },
+          {
+            "heel_deg": 85,
+            "righting_arm_mm": 13.238614179207403,
+            "rim_clearance_mm": -38.41280483475873
+          },
+          {
+            "heel_deg": 90,
+            "righting_arm_mm": 11.341651904838457,
+            "rim_clearance_mm": -41.19944095844404
+          },
+          {
+            "heel_deg": 100,
+            "righting_arm_mm": 7.082769752215523,
+            "rim_clearance_mm": -45.60465832484312
+          },
+          {
+            "heel_deg": 120,
+            "righting_arm_mm": -2.6430646416860633,
+            "rim_clearance_mm": -48.93933111149852
+          },
+          {
+            "heel_deg": 150,
+            "righting_arm_mm": -14.45302346031158,
+            "rim_clearance_mm": -39.82312537752221
+          },
+          {
+            "heel_deg": 180,
+            "righting_arm_mm": -0.005391415150598125,
+            "rim_clearance_mm": -12.358919435581896
+          }
+        ]
+      },
+      "swamped": {
+        "waterline_mm": 39.17233889622193,
+        "gunwale_above_water_mm": 24.82766110377807,
+        "static_trim_deg_bow_up": -0.05035042762756348,
+        "max_righting_arm_mm": 10.77822818623397,
+        "heel_of_max_deg": 25,
+        "first_sampled_heel_with_no_righting_deg": 80,
+        "righting_arm_inverted_180_mm": -0.001764417096810452,
+        "righting_curve": [
+          {
+            "heel_deg": 0,
+            "righting_arm_mm": 0.00488312766584576,
+            "rim_clearance_mm": 24.82766110377807
+          },
+          {
+            "heel_deg": 5,
+            "righting_arm_mm": 2.836665713968056,
+            "rim_clearance_mm": 19.29888559444496
+          },
+          {
+            "heel_deg": 10,
+            "righting_arm_mm": 5.544995679527599,
+            "rim_clearance_mm": 13.632846303377967
+          },
+          {
+            "heel_deg": 15,
+            "righting_arm_mm": 7.936395497815362,
+            "rim_clearance_mm": 7.961535996835963
+          },
+          {
+            "heel_deg": 20,
+            "righting_arm_mm": 9.946731247738192,
+            "rim_clearance_mm": 2.190715326185895
+          },
+          {
+            "heel_deg": 25,
+            "righting_arm_mm": 10.77822818623397,
+            "rim_clearance_mm": -4.349200948779512
+          },
+          {
+            "heel_deg": 30,
+            "righting_arm_mm": 10.476988904286772,
+            "rim_clearance_mm": -11.688154441818373
+          },
+          {
+            "heel_deg": 35,
+            "righting_arm_mm": 9.843942020265626,
+            "rim_clearance_mm": -19.195410847008887
+          },
+          {
+            "heel_deg": 40,
+            "righting_arm_mm": 9.001669395382955,
+            "rim_clearance_mm": -26.728487074165216
+          },
+          {
+            "heel_deg": 45,
+            "righting_arm_mm": 8.008087449279827,
+            "rim_clearance_mm": -34.190399922644
+          },
+          {
+            "heel_deg": 50,
+            "righting_arm_mm": 6.899520377115756,
+            "rim_clearance_mm": -41.50051978363162
+          },
+          {
+            "heel_deg": 55,
+            "righting_arm_mm": 5.70207282230724,
+            "rim_clearance_mm": -48.58807445004004
+          },
+          {
+            "heel_deg": 60,
+            "righting_arm_mm": 4.436450166301224,
+            "rim_clearance_mm": -55.38951953090908
+          },
+          {
+            "heel_deg": 65,
+            "righting_arm_mm": 3.1207514881934735,
+            "rim_clearance_mm": -61.846539475727894
+          },
+          {
+            "heel_deg": 70,
+            "righting_arm_mm": 1.7718563402551908,
+            "rim_clearance_mm": -67.90541207879522
+          },
+          {
+            "heel_deg": 75,
+            "righting_arm_mm": 0.4059074079237064,
+            "rim_clearance_mm": -73.517579434572
+          },
+          {
+            "heel_deg": 80,
+            "righting_arm_mm": -0.9611926294918298,
+            "rim_clearance_mm": -78.63989833546822
+          },
+          {
+            "heel_deg": 85,
+            "righting_arm_mm": -2.3132072945424724,
+            "rim_clearance_mm": -83.23486712676848
+          },
+          {
+            "heel_deg": 90,
+            "righting_arm_mm": -3.6329498333681407,
+            "rim_clearance_mm": -87.27107156952844
+          },
+          {
+            "heel_deg": 100,
+            "righting_arm_mm": -6.095509826116334,
+            "rim_clearance_mm": -93.57803981385933
+          },
+          {
+            "heel_deg": 120,
+            "righting_arm_mm": -9.837869070002615,
+            "rim_clearance_mm": -97.77488728931188
+          },
+          {
+            "heel_deg": 150,
+            "righting_arm_mm": -6.491381416074569,
+            "rim_clearance_mm": -76.87734738596788
+          },
+          {
+            "heel_deg": 180,
+            "righting_arm_mm": -0.001764417096810452,
+            "rim_clearance_mm": -45.589001317482555
+          }
+        ]
+      },
+      "swamped_and_worst_chamber_flooded": {
+        "chamber": "stern starboard",
+        "gunwale_above_water_mm": 21.418001577878897,
+        "max_righting_arm_mm": 6.7899252900199905,
+        "heel_of_max_deg": 20,
+        "first_sampled_heel_with_no_righting_deg": 70,
+        "righting_arm_inverted_180_mm": 2.4481940179595587,
+        "righting_curve": [
+          {
+            "heel_deg": 0,
+            "righting_arm_mm": -2.119169548829969,
+            "rim_clearance_mm": 21.418001577878897
+          },
+          {
+            "heel_deg": 5,
+            "righting_arm_mm": 0.48235489561776923,
+            "rim_clearance_mm": 15.610529044532285
+          },
+          {
+            "heel_deg": 10,
+            "righting_arm_mm": 3.068258972016096,
+            "rim_clearance_mm": 9.565494961180846
+          },
+          {
+            "heel_deg": 15,
+            "righting_arm_mm": 5.457605637908665,
+            "rim_clearance_mm": 3.3541803910290895
+          },
+          {
+            "heel_deg": 20,
+            "righting_arm_mm": 6.7899252900199905,
+            "rim_clearance_mm": -3.4851150132177935
+          },
+          {
+            "heel_deg": 25,
+            "righting_arm_mm": 6.732014810508822,
+            "rim_clearance_mm": -11.29263011509444
+          },
+          {
+            "heel_deg": 30,
+            "righting_arm_mm": 6.3444162727200375,
+            "rim_clearance_mm": -19.279910560081543
+          },
+          {
+            "heel_deg": 35,
+            "righting_arm_mm": 5.7738748296666245,
+            "rim_clearance_mm": -27.284568184603174
+          },
+          {
+            "heel_deg": 40,
+            "righting_arm_mm": 5.079696077121866,
+            "rim_clearance_mm": -35.20553687844757
+          },
+          {
+            "heel_deg": 45,
+            "righting_arm_mm": 4.294713217557415,
+            "rim_clearance_mm": -42.96102745780336
+          },
+          {
+            "heel_deg": 50,
+            "righting_arm_mm": 3.4422790182051415,
+            "rim_clearance_mm": -50.4748754801149
+          },
+          {
+            "heel_deg": 55,
+            "righting_arm_mm": 2.540259418582753,
+            "rim_clearance_mm": -57.6774014466735
+          },
+          {
+            "heel_deg": 60,
+            "righting_arm_mm": 1.6033295394951956,
+            "rim_clearance_mm": -64.50489610777109
+          },
+          {
+            "heel_deg": 65,
+            "righting_arm_mm": 0.6442318661883206,
+            "rim_clearance_mm": -70.89938850493266
+          },
+          {
+            "heel_deg": 70,
+            "righting_arm_mm": -0.3253854438300472,
+            "rim_clearance_mm": -76.80835889369831
+          },
+          {
+            "heel_deg": 75,
+            "righting_arm_mm": -1.2943835479756203,
+            "rim_clearance_mm": -82.18458946399113
+          },
+          {
+            "heel_deg": 80,
+            "righting_arm_mm": -2.251785694721054,
+            "rim_clearance_mm": -86.98631233557927
+          },
+          {
+            "heel_deg": 85,
+            "righting_arm_mm": -3.186355729016057,
+            "rim_clearance_mm": -91.17737037576347
+          },
+          {
+            "heel_deg": 90,
+            "righting_arm_mm": -4.08608267750671,
+            "rim_clearance_mm": -94.7274578609504
+          },
+          {
+            "heel_deg": 100,
+            "righting_arm_mm": -5.72233342634798,
+            "rim_clearance_mm": -99.81734022263186
+          },
+          {
+            "heel_deg": 120,
+            "righting_arm_mm": -7.427897142676709,
+            "rim_clearance_mm": -101.48681510588781
+          },
+          {
+            "heel_deg": 150,
+            "righting_arm_mm": -2.2320751096967637,
+            "rim_clearance_mm": -80.33735420544052
+          },
+          {
+            "heel_deg": 180,
+            "righting_arm_mm": 2.4481940179595587,
+            "rim_clearance_mm": -49.01993701905215
+          }
+        ]
+      },
+      "payload_g_dry_until_rim_10mm_above_water": 613.6618852615356
+    },
+    "PLA-sea": {
+      "dry": {
+        "draft_mm": 25.005674685773243,
+        "freeboard_to_gunwale_mm": 38.99432531422676,
+        "static_trim_deg_bow_up": 0.11330008506774902,
+        "downflooding_heel_deg": 40,
+        "max_righting_arm_mm": 20.02477440645924,
+        "heel_of_max_deg": 55,
+        "first_sampled_heel_with_no_righting_deg": null,
+        "righting_arm_inverted_180_mm": -0.005391414294379001,
+        "righting_curve": [
+          {
+            "heel_deg": 0,
+            "righting_arm_mm": 0.005391412876569623,
+            "rim_clearance_mm": 38.99432531422676
+          },
+          {
+            "heel_deg": 5,
+            "righting_arm_mm": 1.6113178320232753,
+            "rim_clearance_mm": 33.59208471379493
+          },
+          {
+            "heel_deg": 10,
+            "righting_arm_mm": 3.3383491024804464,
+            "rim_clearance_mm": 28.240378192376056
+          },
+          {
+            "heel_deg": 15,
+            "righting_arm_mm": 5.183438821725672,
+            "rim_clearance_mm": 22.94530360150023
+          },
+          {
+            "heel_deg": 20,
+            "righting_arm_mm": 7.048222914957961,
+            "rim_clearance_mm": 17.677500703260776
+          },
+          {
+            "heel_deg": 25,
+            "righting_arm_mm": 9.017919178270716,
+            "rim_clearance_mm": 12.479232201950364
+          },
+          {
+            "heel_deg": 30,
+            "righting_arm_mm": 11.204667108746781,
+            "rim_clearance_mm": 7.4025250833749645
+          },
+          {
+            "heel_deg": 35,
+            "righting_arm_mm": 13.76088971139703,
+            "rim_clearance_mm": 2.507799714530986
+          },
+          {
+            "heel_deg": 40,
+            "righting_arm_mm": 16.659175187033817,
+            "rim_clearance_mm": -2.147337044245077
+          },
+          {
+            "heel_deg": 45,
+            "righting_arm_mm": 18.645299345665894,
+            "rim_clearance_mm": -6.698813803505443
+          },
+          {
+            "heel_deg": 50,
+            "righting_arm_mm": 19.693706193036014,
+            "rim_clearance_mm": -11.176370901729644
+          },
+          {
+            "heel_deg": 55,
+            "righting_arm_mm": 20.02477440645924,
+            "rim_clearance_mm": -15.550622794855332
+          },
+          {
+            "heel_deg": 60,
+            "righting_arm_mm": 19.7940870182067,
+            "rim_clearance_mm": -19.78717046485101
+          },
+          {
+            "heel_deg": 65,
+            "righting_arm_mm": 19.115529586223825,
+            "rim_clearance_mm": -23.85294632027243
+          },
+          {
+            "heel_deg": 70,
+            "righting_arm_mm": 18.077898889609543,
+            "rim_clearance_mm": -27.718299841637933
+          },
+          {
+            "heel_deg": 75,
+            "righting_arm_mm": 16.74978119575008,
+            "rim_clearance_mm": -31.35451497323347
+          },
+          {
+            "heel_deg": 80,
+            "righting_arm_mm": 15.186156285173869,
+            "rim_clearance_mm": -34.73349031771954
+          },
+          {
+            "heel_deg": 85,
+            "righting_arm_mm": 13.432308100961627,
+            "rim_clearance_mm": -37.82729249226546
+          },
+          {
+            "heel_deg": 90,
+            "righting_arm_mm": 11.524865358281744,
+            "rim_clearance_mm": -40.606532248202726
+          },
+          {
+            "heel_deg": 100,
+            "righting_arm_mm": 7.192751306981091,
+            "rim_clearance_mm": -44.9775267946606
+          },
+          {
+            "heel_deg": 120,
+            "righting_arm_mm": -2.6967818665751544,
+            "rim_clearance_mm": -48.30263074106321
+          },
+          {
+            "heel_deg": 150,
+            "righting_arm_mm": -14.740404140960166,
+            "rim_clearance_mm": -39.33892206036825
+          },
+          {
+            "heel_deg": 180,
+            "righting_arm_mm": -0.005391414294379001,
+            "rim_clearance_mm": -12.04377542009496
+          }
+        ]
+      },
+      "swamped": {
+        "waterline_mm": 38.2654590164218,
+        "gunwale_above_water_mm": 25.7345409835782,
+        "static_trim_deg_bow_up": -0.03344893455505371,
+        "max_righting_arm_mm": 11.310354699128023,
+        "heel_of_max_deg": 25,
+        "first_sampled_heel_with_no_righting_deg": 80,
+        "righting_arm_inverted_180_mm": -0.0016793129276532013,
+        "righting_curve": [
+          {
+            "heel_deg": 0,
+            "righting_arm_mm": 0.004917547847359285,
+            "rim_clearance_mm": 25.7345409835782
+          },
+          {
+            "heel_deg": 5,
+            "righting_arm_mm": 2.9038164284202854,
+            "rim_clearance_mm": 20.21000628353729
+          },
+          {
+            "heel_deg": 10,
+            "righting_arm_mm": 5.6219249718325095,
+            "rim_clearance_mm": 14.602681379083286
+          },
+          {
+            "heel_deg": 15,
+            "righting_arm_mm": 8.035635868354095,
+            "rim_clearance_mm": 9.009350321213574
+          },
+          {
+            "heel_deg": 20,
+            "righting_arm_mm": 10.114311320405974,
+            "rim_clearance_mm": 3.3555829047981547
+          },
+          {
+            "heel_deg": 25,
+            "righting_arm_mm": 11.310354699128023,
+            "rim_clearance_mm": -2.8256930397835873
+          },
+          {
+            "heel_deg": 30,
+            "righting_arm_mm": 11.087862127466261,
+            "rim_clearance_mm": -10.000179990563662
+          },
+          {
+            "heel_deg": 35,
+            "righting_arm_mm": 10.477515784153145,
+            "rim_clearance_mm": -17.387633959252852
+          },
+          {
+            "heel_deg": 40,
+            "righting_arm_mm": 9.633468174033702,
+            "rim_clearance_mm": -24.826555487796327
+          },
+          {
+            "heel_deg": 45,
+            "righting_arm_mm": 8.622317883023566,
+            "rim_clearance_mm": -32.21627384061659
+          },
+          {
+            "heel_deg": 50,
+            "righting_arm_mm": 7.484587355930156,
+            "rim_clearance_mm": -39.47492778925451
+          },
+          {
+            "heel_deg": 55,
+            "righting_arm_mm": 6.249051946106913,
+            "rim_clearance_mm": -46.53105550261479
+          },
+          {
+            "heel_deg": 60,
+            "righting_arm_mm": 4.938329534512089,
+            "rim_clearance_mm": -53.320675492685524
+          },
+          {
+            "heel_deg": 65,
+            "righting_arm_mm": 3.5717501256998254,
+            "rim_clearance_mm": -59.78568744071251
+          },
+          {
+            "heel_deg": 70,
+            "righting_arm_mm": 2.1672876654308055,
+            "rim_clearance_mm": -65.87247716418972
+          },
+          {
+            "heel_deg": 75,
+            "righting_arm_mm": 0.7422700265586322,
+            "rim_clearance_mm": -71.53221240931927
+          },
+          {
+            "heel_deg": 80,
+            "righting_arm_mm": -0.6862396393676171,
+            "rim_clearance_mm": -76.72146083988183
+          },
+          {
+            "heel_deg": 85,
+            "righting_arm_mm": -2.1008084671815297,
+            "rim_clearance_mm": -81.40243638205719
+          },
+          {
+            "heel_deg": 90,
+            "righting_arm_mm": -3.482942514613889,
+            "rim_clearance_mm": -85.54349385062234
+          },
+          {
+            "heel_deg": 100,
+            "righting_arm_mm": -6.078696000506305,
+            "rim_clearance_mm": -92.0683660789235
+          },
+          {
+            "heel_deg": 120,
+            "righting_arm_mm": -10.174737660996547,
+            "rim_clearance_mm": -96.62895825011833
+          },
+          {
+            "heel_deg": 150,
+            "righting_arm_mm": -7.084898073926111,
+            "rim_clearance_mm": -76.05389743210816
+          },
+          {
+            "heel_deg": 180,
+            "righting_arm_mm": -0.0016793129276532013,
+            "rim_clearance_mm": -44.62140502167877
+          }
+        ]
+      },
+      "swamped_and_worst_chamber_flooded": {
+        "chamber": "stern starboard",
+        "gunwale_above_water_mm": 22.497663100263125,
+        "max_righting_arm_mm": 7.388533451840594,
+        "heel_of_max_deg": 25,
+        "first_sampled_heel_with_no_righting_deg": 70,
+        "righting_arm_inverted_180_mm": 2.465832321858199,
+        "righting_curve": [
+          {
+            "heel_deg": 0,
+            "righting_arm_mm": -2.0938116463518908,
+            "rim_clearance_mm": 22.497663100263125
+          },
+          {
+            "heel_deg": 5,
+            "righting_arm_mm": 0.5731815882245641,
+            "rim_clearance_mm": 16.69202749013958
+          },
+          {
+            "heel_deg": 10,
+            "righting_arm_mm": 3.2268990457404314,
+            "rim_clearance_mm": 10.66778964094712
+          },
+          {
+            "heel_deg": 15,
+            "righting_arm_mm": 5.660443238176367,
+            "rim_clearance_mm": 4.556866145926662
+          },
+          {
+            "heel_deg": 20,
+            "righting_arm_mm": 7.35960077371378,
+            "rim_clearance_mm": -1.9251303700835365
+          },
+          {
+            "heel_deg": 25,
+            "righting_arm_mm": 7.388533451840594,
+            "rim_clearance_mm": -9.548578954089109
+          },
+          {
+            "heel_deg": 30,
+            "righting_arm_mm": 7.015501177790744,
+            "rim_clearance_mm": -17.405204742328518
+          },
+          {
+            "heel_deg": 35,
+            "righting_arm_mm": 6.4328880035945915,
+            "rim_clearance_mm": -25.30444790227378
+          },
+          {
+            "heel_deg": 40,
+            "righting_arm_mm": 5.711386965257468,
+            "rim_clearance_mm": -33.13888534879169
+          },
+          {
+            "heel_deg": 45,
+            "righting_arm_mm": 4.887971553809766,
+            "rim_clearance_mm": -40.82699428634385
+          },
+          {
+            "heel_deg": 50,
+            "righting_arm_mm": 3.987530508875352,
+            "rim_clearance_mm": -48.295122767791014
+          },
+          {
+            "heel_deg": 55,
+            "righting_arm_mm": 3.0296879085131927,
+            "rim_clearance_mm": -55.47386324445088
+          },
+          {
+            "heel_deg": 60,
+            "righting_arm_mm": 2.030666036051688,
+            "rim_clearance_mm": -62.29931699283896
+          },
+          {
+            "heel_deg": 65,
+            "righting_arm_mm": 1.0045537842159113,
+            "rim_clearance_mm": -68.71316105511201
+          },
+          {
+            "heel_deg": 70,
+            "righting_arm_mm": -0.03583416947240892,
+            "rim_clearance_mm": -74.6625468645029
+          },
+          {
+            "heel_deg": 75,
+            "righting_arm_mm": -1.0782819575907006,
+            "rim_clearance_mm": -80.0999152416552
+          },
+          {
+            "heel_deg": 80,
+            "righting_arm_mm": -2.110770534522185,
+            "rim_clearance_mm": -84.98314162397753
+          },
+          {
+            "heel_deg": 85,
+            "righting_arm_mm": -3.121019667204294,
+            "rim_clearance_mm": -89.27571954101239
+          },
+          {
+            "heel_deg": 90,
+            "righting_arm_mm": -4.095953809192274,
+            "rim_clearance_mm": -92.94705787627028
+          },
+          {
+            "heel_deg": 100,
+            "righting_arm_mm": -5.876546028972896,
+            "rim_clearance_mm": -98.33789347318648
+          },
+          {
+            "heel_deg": 120,
+            "righting_arm_mm": -7.9152315206472466,
+            "rim_clearance_mm": -100.71620974531987
+          },
+          {
+            "heel_deg": 150,
+            "righting_arm_mm": -2.7347225262133037,
+            "rim_clearance_mm": -79.51028946523566
+          },
+          {
+            "heel_deg": 180,
+            "righting_arm_mm": 2.465832321858199,
+            "rim_clearance_mm": -47.90517302795879
+          }
+        ]
+      },
+      "payload_g_dry_until_rim_10mm_above_water": 636.7327272891998
+    }
+  }
+}

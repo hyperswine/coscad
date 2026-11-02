@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-11-02T13:26:56+11:00",
+  "reported_on": "2026-11-02",
+  "evidence_source": "owner physical observation",
+  "printer": "X1C",
+  "job": "beach-monohull-x1c-pla-20261101-184819.gcode.3mf",
+  "package_sha256": "8aa8065024298391ef67c7d4eb64b23f9d783ca3912178c6948f18656dae931a",
+  "print_result": "Printed very well, no problems reported",
+  "flotation_result": "Floated in the sink at the expected waterline, owner reported; no measured draft supplied",
+  "stability_observation": "Seemed stable and did not start listing in relatively calm sink water with some waves",
+  "turbulence_tested": false,
+  "limits": [
+    "No substantial turbulence or surf test yet",
+    "No measured payload, draft, righting curve, prolonged leak test or damaged-chamber test supplied"
+  ]
+}

@@ -13,8 +13,9 @@ machine=s.machine_with_templates(printer)
 if args.end_clearance_mm is not None:
  if not np.isfinite(args.end_clearance_mm) or not .5<=args.end_clearance_mm<=10:raise ValueError('End clearance must be 0.5 to 10 mm')
  if max(i['bounds'][1][2] for i in packing['items'])+args.end_clearance_mm>float(machine['printable_height'])-2:raise ValueError('End lift exceeds printable height margin')
- marker='{max_layer_z + 0.5}'
- if machine['machine_end_gcode'].count(marker)!=1:raise ValueError('Unknown native end-lift template')
+ markers=[m for m in ('{max_layer_z + 0.5}','{max_layer_z + 0.4}') if m in machine['machine_end_gcode']]
+ if len(markers)!=1 or machine['machine_end_gcode'].count(markers[0])!=1:raise ValueError('Unknown native end-lift template')
+ marker=markers[0]
  machine['machine_end_gcode']=machine['machine_end_gcode'].replace(marker,'{max_layer_z + '+f'{args.end_clearance_mm:g}'+'}')
 process=s.flatten('process',machine['default_print_profile']);filament=s.flatten('filament','Generic PLA')
 overrides={'wall_loops':'6','sparse_infill_density':'20%','sparse_infill_pattern':'gyroid','top_shell_layers':'5','bottom_shell_layers':'5','layer_height':'0.2','outer_wall_speed':'40','inner_wall_speed':'70','default_acceleration':'2000','outer_wall_acceleration':'1000','inner_wall_acceleration':'2000','travel_acceleration':'3000','enable_support':'1','support_type':'tree(auto)','support_on_build_plate_only':'1','support_top_z_distance':'0.24','support_bottom_z_distance':'0.24','support_object_xy_distance':'0.4','support_interface_top_layers':'2','support_interface_spacing':'0.35','tree_support_wall_count':'1','brim_type':'outer_only','brim_width':'8','brim_object_gap':'0.1'}

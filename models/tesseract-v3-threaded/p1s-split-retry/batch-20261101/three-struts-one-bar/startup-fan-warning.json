@@ -1,0 +1,37 @@
+{
+  "job": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+  "warning_events": [
+    {
+      "at": "2026-11-01T13:01:24+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 267,
+        "gcode_file": "tesseract-v3-p1s-parts-20261101-125843.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+        "nozzle_temper": 207.71875,
+        "bed_temper": 54.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789686609
+        }
+      ],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 200
+      }
+    }
+  ],
+  "note": "Known recurring startup fan-speed warning. Follow-up is read-only; no alert clearing or new start."
+}

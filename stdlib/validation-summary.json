@@ -1,0 +1,18 @@
+{
+  "checks": {
+    "main_regression_suite": {
+      "passed": 1321,
+      "failed": 0,
+      "geometry_tier": "disabled with COSCAD_RENDER=0; explicit native stdlib geometry and planner/site image checks ran"
+    },
+    "final_focused_stdlib_suite": {
+      "passed": 47,
+      "failed": 0,
+      "note": "After final globe radial-clearance envelope generalization; includes enlarged globe parameters"
+    },
+    "editor": "npm test passed; 133 parser checks plus extension, hover, LSP, project and host tests",
+    "native_examples": "All five passed: watertight, consistent winding, expected component counts; tesseract hub volume/bounds matched original"
+  },
+  "physical_status": "Boat success is owner reported. Existing thread/globe defaults have prior owner fit reports. New library coupons and captive bearing have not been printed.",
+  "implementation": "Native constructors compiled into executable; no external runtime standard-library files or OpenSCAD dependency."
+}

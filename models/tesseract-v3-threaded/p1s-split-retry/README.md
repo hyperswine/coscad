@@ -267,3 +267,25 @@ hash and one start was acknowledged. At 22:51:22 Sydney time, the correct
 282-layer job reached layer 1 with physical AMS slot 1 selected, targets
 55/220 C, and no active faults. Completed quality remains unverified; see
 the new variant's dispatch-summary.json.
+
+## A1 center improved; next comparison/batch - 1 November 2026
+
+The owner reports the center printed a lot better with the revised A1 setup.
+Cause remains unresolved between settings, center-only isolation and printer;
+this does not assert perfect female-thread fit. The requested
+[next batch](batch-20261101/README.md) repeats the same explicit center settings on X1C,
+with P1S sequential struts/bar and A1 sequential bars. All beds were confirmed
+clean. New physical outcomes remain unverified; per-plate run records preserve
+startup evidence separately from the prior owner-reported improvement.
+
+## Center-only X1C physical comparison - 1 November 2026
+
+The owner reports overall improvement from the revised X1C center-only setup,
+but one lower diagonal still had the original X1C defect. The A1 comparison
+printed almost perfectly. This shows isolation alone did not eliminate the
+issue on X1C and strengthens suspicion of an X1C-specific printing/setup
+difference. It does not isolate a hardware fault from filament, native profile
+defaults or calibration. The
+[physical outcome record](bed2/x1c-center-mouse-ears-20261101/physical-outcome-20261101.json)
+preserves the owner observation and causal limits separately from startup
+telemetry; exact cause and failing layer remain unknown.

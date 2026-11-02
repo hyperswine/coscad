@@ -1,0 +1,3 @@
+// Two separated solids: stationary flanged axle and freely rotating sleeve.
+// Prototype: inspect support intrusion, overhangs and first-layer adhesion.
+main = captive_bearing 2.5 20 6 2 0.6 0.4 1.2

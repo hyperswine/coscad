@@ -1,0 +1,65 @@
+{
+  "p1s-pla": [
+    {
+      "file": "3D/Objects/object_1.model",
+      "bounds": [
+        [
+          -118.0,
+          -62.0,
+          -32.0099983
+        ],
+        [
+          118.0,
+          62.0,
+          32.0099983
+        ]
+      ],
+      "volume_cm3": 249.33233719424192,
+      "watertight": true,
+      "shells": 11,
+      "relative_volume_error": 1.2631091575419883e-07
+    }
+  ],
+  "a1-pla": [
+    {
+      "file": "3D/Objects/object_1.model",
+      "bounds": [
+        [
+          -118.0,
+          -62.0,
+          -32.0099983
+        ],
+        [
+          118.0,
+          62.0,
+          32.0099983
+        ]
+      ],
+      "volume_cm3": 249.33233719424192,
+      "watertight": true,
+      "shells": 11,
+      "relative_volume_error": 1.2631091575419883e-07
+    }
+  ],
+  "x1c-pla": [
+    {
+      "file": "3D/Objects/object_1.model",
+      "bounds": [
+        [
+          -118.0,
+          -62.0,
+          -32.0099983
+        ],
+        [
+          118.0,
+          62.0,
+          32.0099983
+        ]
+      ],
+      "volume_cm3": 249.33233719424192,
+      "watertight": true,
+      "shells": 11,
+      "relative_volume_error": 1.2631091575419883e-07
+    }
+  ]
+}

@@ -35,7 +35,8 @@ def verify(folder, *, plan_path=None, printer='p1s'):
         code = z.read('Metadata/plate_1.gcode').decode()
     assert settings['print_sequence'] == 'by object', 'Per-object mode not exported'
     preset, model_id = {'p1s': ('Bambu Lab P1S 0.4 nozzle', 'C12'),
-                        'x1c': ('Bambu Lab X1 Carbon 0.4 nozzle', 'BL-P001')}[printer]
+                        'x1c': ('Bambu Lab X1 Carbon 0.4 nozzle', 'BL-P001'),
+                        'a1': ('Bambu Lab A1 0.4 nozzle', 'N2S')}[printer]
     assert settings['printer_settings_id'] == preset and geometry['printer_model_id'] == model_id
     machine = json.loads((folder/'presets/machine.json').read_text())
     nozzle_offset = np.array([float(v) for v in machine['extruder_offset'][0].split('x')])

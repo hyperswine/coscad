@@ -1,0 +1,955 @@
+{
+  "job": "x1c-pla",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "8aa8065024298391ef67c7d4eb64b23f9d783ca3912178c6948f18656dae931a",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 225.0,
+      "nozzle_c": 225.0
+    },
+    "layers_checked": 320,
+    "deposition_moves_checked": 470512,
+    "package_sha256": "8aa8065024298391ef67c7d4eb64b23f9d783ca3912178c6948f18656dae931a"
+  },
+  "remote_name": "beach-monohull-x1c-pla-20261101-184819.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "authorization_note": "Owner requested the enlarged monohull on X1C and confirmed the center piece was removed and the X1C plate is clear on 2026-11-01; use the currently active external PLA spool.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 282,
+    "total_layer_num": 282,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "tesseract-v3-x1c-center-20261101-125837.gcode",
+    "nozzle_temper": 31.0,
+    "bed_temper": 27.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "BECF00FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-01T18:48:38+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 282,
+        "total_layer_num": 282,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 31.0,
+        "bed_temper": 27.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:48:53+1100",
+      "status": {
+        "gcode_state": "PREPARE",
+        "mc_percent": 0,
+        "layer_num": 282,
+        "total_layer_num": 282,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 31.0,
+        "bed_temper": 27.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:49:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 971,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 34.0,
+        "bed_temper": 27.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:49:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 971,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 28.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:49:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 971,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 43.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:49:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 971,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 102.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:50:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 971,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 187.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:50:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 971,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 245.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:50:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 248.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:50:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:51:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 206.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:51:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 205.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:51:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 205.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:51:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 204.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:52:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 176.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:52:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 152.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:52:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:52:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:53:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:53:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:53:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:53:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:54:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:54:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:54:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:54:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:55:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:55:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 145.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:55:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 212.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:55:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 208.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:56:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 180.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:56:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 966,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 159.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:56:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 965,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 183.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:56:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 965,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 224.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:57:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 965,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:57:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 965,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:57:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 965,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 226.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:57:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 965,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:58:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 965,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:58:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 964,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:58:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 964,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 219.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:58:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 964,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 218.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:59:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 964,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 226.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:59:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 964,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:59:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 964,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T18:59:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 320,
+        "mc_remaining_time": 964,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-01T19:00:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 1,
+        "total_layer_num": 320,
+        "mc_remaining_time": 962,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-01T18:48:19+1100",
+  "remote_content_sha256": "8aa8065024298391ef67c7d4eb64b23f9d783ca3912178c6948f18656dae931a",
+  "sequence_id": "519318212",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "519318212"
+  },
+  "first_layer_reached": true
+}

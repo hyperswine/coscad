@@ -1,0 +1,103 @@
+{
+  "location": "Mac",
+  "printer_controls_sent": [],
+  "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 10,
+    "layer_num": 20,
+    "total_layer_num": 320,
+    "mc_remaining_time": 867,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "beach-monohull-x1c-pla-20261101-184819.gcode",
+    "nozzle_temper": 225.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": 0
+  },
+  "hms": [
+    {
+      "attr": 201327360,
+      "code": 131073
+    }
+  ],
+  "ipcam_keys": [
+    "agora_service",
+    "brtc_service",
+    "bs_state",
+    "cfg",
+    "ipcam_dev",
+    "ipcam_record",
+    "laser_preview_res",
+    "mode_bits",
+    "resolution",
+    "rtsp_url",
+    "timelapse",
+    "tl_store_hpd_type",
+    "tl_store_path_type",
+    "tutk_server"
+  ],
+  "ipcam": {
+    "ipcam_dev": "1",
+    "ipcam_record": "enable",
+    "mode_bits": 2,
+    "resolution": "720p",
+    "timelapse": "disable"
+  },
+  "rtsp_advertisement": "present",
+  "rtsp_advertised_endpoint": {
+    "scheme": "rtsps",
+    "port": 322,
+    "path": "/streaming/live/1"
+  },
+  "tls": {
+    "verified": true,
+    "version": "TLSv1.3",
+    "cipher": "TLS_AES_256_GCM_SHA384",
+    "certificate": {
+      "subject": [
+        [
+          [
+            "commonName",
+            "00M09D550701167"
+          ]
+        ]
+      ],
+      "issuer": [
+        [
+          [
+            "countryName",
+            "CN"
+          ]
+        ],
+        [
+          [
+            "organizationName",
+            "BBL Technologies Co., Ltd"
+          ]
+        ],
+        [
+          [
+            "commonName",
+            "BBL CA"
+          ]
+        ]
+      ],
+      "version": 1,
+      "serialNumber": "50CC9303977E9133021E42E1DB18F762F150B43D",
+      "notBefore": "May  9 12:38:12 2025 GMT",
+      "notAfter": "May  7 12:38:12 2035 GMT"
+    }
+  },
+  "decode": {
+    "success": false,
+    "error_type": "ValueError",
+    "message": "decoder unavailable",
+    "elapsed_s": 1.29,
+    "exit_codes": [
+      251
+    ]
+  },
+  "decoder_diagnostics": "[tls @ 0x759b044000] error:0A000086:SSL routines::certificate verify failed\n[in#0 @ 0x759b020000] Impossible to open '[camera-url]'\n[in#0 @ 0x759ac10000] Error opening input: Input/output error\nError opening input file pipe:0.\nError opening input files: Input/output error\n"
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "coscad.thermal-preflight/1",
+  "checked": true,
+  "expected": {
+    "plate": "Textured PEI Plate",
+    "bed_initial_c": 55.0,
+    "bed_c": 55.0,
+    "nozzle_initial_c": 225.0,
+    "nozzle_c": 225.0
+  },
+  "layers_checked": 320,
+  "deposition_moves_checked": 470512,
+  "package_sha256": "8aa8065024298391ef67c7d4eb64b23f9d783ca3912178c6948f18656dae931a",
+  "machine": "Bambu Lab X1 Carbon",
+  "nozzle_mm": 0.4,
+  "material": "PLA",
+  "spool_intent": "currently active external PLA",
+  "walls": 8,
+  "infill": "100%",
+  "brim_mm": 5,
+  "supports": false,
+  "estimated_hours": 16.195045572916666,
+  "estimated_grams": 306.2147216796875,
+  "gcode_sha256": "e6bea247fe62a2d4849efd9caca5b657abe6a3cc31a052884c359f240b6f8e4a",
+  "existing_dispatch": false
+}

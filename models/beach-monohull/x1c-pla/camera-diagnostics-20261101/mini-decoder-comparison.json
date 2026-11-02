@@ -1,0 +1,24 @@
+[
+  {
+    "mode": "baseline",
+    "success": true,
+    "bytes": 20737,
+    "elapsed_s": 8.8,
+    "exit_codes": [
+      0
+    ],
+    "decoder_diagnostics": "[tls @ 0x77fb05c000] IO error: Operation timed out\n[h264 @ 0x77fa828380] error while decoding MB 17 40, bytestream -5\n[tls @ 0x77fb05c000] Unknown error\n[rtsp @ 0x77fac20280] Failed reading RTSP data: Input/output error\n[h264 @ 0x77fa828a80] error while decoding MB 17 40, bytestream -5\n[tls @ 0x77fb05c000] Unknown error\n[rtsp @ 0x77fac20280] Failed reading RTSP data: Input/output error\n[tls @ 0x77fb05c000] Unknown error\n[rtsp @ 0x77fac20280] Failed reading RTSP data: Input/output error\n[in#0/concat @ 0x77fac18000] Error during demuxing: Input/output error\n[h264 @ 0x77fa829880] error while decoding MB 17 40, bytestream -5\n[vist#0:0/h264 @ 0x77fb010300] [dec:h264 @ 0x77fac183c0] corrupt decoded frame\n[tls @ 0x77fb05c000] Unknown error\n",
+    "image_path": "x1c-mini-baseline-20261101.jpg"
+  },
+  {
+    "mode": "strict-keyframe",
+    "success": true,
+    "bytes": 19727,
+    "elapsed_s": 10.53,
+    "exit_codes": [
+      0
+    ],
+    "decoder_diagnostics": "[tls @ 0x7be505c000] IO error: Operation timed out\n[tls @ 0x7be505c000] Unknown error\n[rtsp @ 0x7be4c20280] Failed reading RTSP data: Input/output error\n[tls @ 0x7be505c000] Unknown error\n[rtsp @ 0x7be4c20280] Failed reading RTSP data: Input/output error\n[tls @ 0x7be505c000] Unknown error\n[rtsp @ 0x7be4c20280] Failed reading RTSP data: Input/output error\n[in#0/concat @ 0x7be4c18000] Error during demuxing: Input/output error\n[tls @ 0x7be505c000] Unknown error\n",
+    "image_path": "x1c-mini-strict-keyframe-20261101.jpg"
+  }
+]
