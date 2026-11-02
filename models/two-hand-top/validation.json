@@ -1,0 +1,60 @@
+{
+  "assumptions": [
+    "Solid PLA 1.24 g/cm3 (printed at 100% infill); M8 nuts 5.2 g each as point masses.",
+    "Sleeping speed is the classic rigid-top threshold on a sharp point; a rounded tip and floor friction shift it a little.",
+    "Palm speeds are a rough range for a firm two-hand rub, not a measurement."
+  ],
+  "body_g": 321.3425225289533,
+  "stem_g": 23.66944160255412,
+  "without_nuts": {
+    "mass_g": 345.0119641315074,
+    "cog_above_tip_mm": 37.79242820030436,
+    "cog_offset_from_axis_mm": 4.600349905591192e-15,
+    "spin_inertia_kg_m2": 0.0013357006015302804,
+    "tilt_inertia_about_tip_kg_m2": 0.0012515407117431438,
+    "inertia_ratio_spin_to_tilt": 1.067245027666674,
+    "sleeping_speed_rad_s": 18.94511930902802,
+    "sleeping_speed_rpm": 180.91256312985132
+  },
+  "with_12_m8_nuts": {
+    "mass_g": 407.41196413150726,
+    "cog_above_tip_mm": 35.56508192775827,
+    "cog_offset_from_axis_mm": 4.314516522310938e-15,
+    "spin_inertia_kg_m2": 0.0016414606015302806,
+    "tilt_inertia_about_tip_kg_m2": 0.0014381518117431442,
+    "inertia_ratio_spin_to_tilt": 1.1413681004515868,
+    "sleeping_speed_rad_s": 17.420683817203027,
+    "sleeping_speed_rpm": 166.35527649293098
+  },
+  "palm_spin_estimate": {
+    "1.0 m/s": {
+      "rad_s": 129.40952255126038,
+      "rpm": 1235.7699118317116
+    },
+    "1.5 m/s": {
+      "rad_s": 194.11428382689056,
+      "rpm": 1853.654867747567
+    },
+    "2.0 m/s": {
+      "rad_s": 258.81904510252076,
+      "rpm": 2471.5398236634232
+    }
+  },
+  "tilt_before_rim_touches_deg": 14.560275619356876,
+  "printability": [
+    {
+      "part": "body, upside down",
+      "area_mm2_beyond_45deg": 0.2819997755196845,
+      "max_z_of_steep_faces_mm": 22.216900000000006
+    },
+    {
+      "part": "stem, grip end down",
+      "area_mm2_beyond_45deg": 0.0,
+      "max_z_of_steep_faces_mm": null
+    }
+  ],
+  "pocket_walls": {
+    "nut_pocket_to_rim_outside_mm": 2.2635063928590142,
+    "nut_pocket_to_rim_inside_mm": 2.2635063928590142
+  }
+}

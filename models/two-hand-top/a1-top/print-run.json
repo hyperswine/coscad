@@ -1,0 +1,721 @@
+{
+  "job": "a1-top",
+  "printer": "a1",
+  "material": "pla",
+  "package_sha256": "bd39e6b6dc8df10284c014522d44325dcbeb61029d5173fc15f1e123772d3b62",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 65.0,
+      "bed_c": 65.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 522,
+    "deposition_moves_checked": 358755,
+    "package_sha256": "bd39e6b6dc8df10284c014522d44325dcbeb61029d5173fc15f1e123772d3b62"
+  },
+  "remote_name": "top-a1-top-20261102-195307.gcode.3mf",
+  "spool": "ams0",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "authorization_note": "Owner confirmed 2026-11-02 in chat: A1 bed clear, use the first spool (AMS slot 1, ams0, white PLA) for the two-hand top",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 1488,
+    "total_layer_num": 1488,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-a1-bars-20261101-125842.gcode",
+    "nozzle_temper": 24.71875,
+    "bed_temper": 25.0625,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "ams0",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ],
+    [
+      "ams2",
+      "PLA",
+      "F4EE2AFF",
+      false
+    ],
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-02T19:53:47+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 1488,
+        "total_layer_num": 1488,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 24.71875,
+        "bed_temper": 25.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:54:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 34.5625,
+        "bed_temper": 25.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 2
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:54:17+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 93.90625,
+        "bed_temper": 40.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:54:32+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 100.53125,
+        "bed_temper": 57.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:54:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 90.84375,
+        "bed_temper": 65.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:55:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 129.125,
+        "bed_temper": 65.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:55:17+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 162.34375,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:55:32+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 195.375,
+        "bed_temper": 64.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:55:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 217.71875,
+        "bed_temper": 64.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:56:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 219.34375,
+        "bed_temper": 64.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:56:17+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 219.03125,
+        "bed_temper": 64.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:56:32+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 425,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 220.46875,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:56:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 424,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 220.625,
+        "bed_temper": 64.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:57:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 424,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 218.75,
+        "bed_temper": 64.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:57:17+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 424,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 220.03125,
+        "bed_temper": 64.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:57:32+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 423,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 220.71875,
+        "bed_temper": 64.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:57:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 423,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 218.1875,
+        "bed_temper": 64.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:58:03+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 423,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 220.34375,
+        "bed_temper": 64.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:58:18+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 423,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 220.0625,
+        "bed_temper": 64.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:58:33+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 423,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 201.03125,
+        "bed_temper": 64.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:58:48+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 423,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 182.6875,
+        "bed_temper": 63.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:59:03+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 167.375,
+        "bed_temper": 64.59375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:59:18+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 170.875,
+        "bed_temper": 64.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:59:33+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 163.09375,
+        "bed_temper": 64.59375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T19:59:48+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 146.5,
+        "bed_temper": 65.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T20:00:03+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 138.65625,
+        "bed_temper": 65.25,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T20:00:18+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 140.59375,
+        "bed_temper": 65.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T20:00:33+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 65.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T20:00:48+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 139.9375,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T20:01:03+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 140.03125,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T20:01:18+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 145.9375,
+        "bed_temper": 65.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T20:01:33+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 179.28125,
+        "bed_temper": 65.3125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T20:01:48+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 212.84375,
+        "bed_temper": 65.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T20:02:03+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 1,
+        "total_layer_num": 522,
+        "mc_remaining_time": 419,
+        "gcode_file": "top-a1-top-20261102-195307.gcode.3mf",
+        "subtask_name": "top-a1-top-20261102-195307.gcode",
+        "nozzle_temper": 219.03125,
+        "bed_temper": 65.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-02T19:53:07+1100",
+  "remote_content_sha256": "bd39e6b6dc8df10284c014522d44325dcbeb61029d5173fc15f1e123772d3b62",
+  "sequence_id": "609627694",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "609627694"
+  },
+  "first_layer_reached": true
+}

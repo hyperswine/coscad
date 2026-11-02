@@ -71,6 +71,16 @@ upload, the printer's acknowledgement and status up to the first layer.
 
 - **x1c-bed1.** Sent 2026-11-02 15:09 after the owner removed the finished beach monohull.
   The X1C acknowledged the job and reached layer 1 of 25 at 15:18.
+  - **Result (owner report, 2026-11-02).** It printed well, with no problems.
+  - **Calibration lines.** The X1C prints a flow calibration pattern along the front of
+    the plate before each job (`flow_cali` in the start command). A layout that reaches
+    the front of the plate, as this one does (brackets from y = 7 mm), prints on top of
+    those lines. For such layouts, either start without flow calibration or keep parts
+    back from the front edge.
+  - **Dark filament.** The X1C has had trouble with very dark filament such as black,
+    which is loaded now (it was yellow for this job). Its lidar-based flow calibration and
+    first-layer inspection rely on seeing the extruded line, which black makes hard. With
+    dark filament, start without flow calibration and check the first layer by eye.
 - **p1s-bed2.** Sent 2026-11-02 15:33 after the owner removed the other session's failed
   Tesseract parts print (FAILED at layer 1004/1369, no fault); external yellow PLA.
   - **Start.** The P1S acknowledged the job but kept reporting the old FAILED state for

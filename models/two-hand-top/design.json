@@ -1,0 +1,25 @@
+{
+  "units": "mm",
+  "rim_radius": 80.0,
+  "rim_inner_radius": 60.0,
+  "rim_underside_z": 20.0,
+  "top_z": 44.0,
+  "web": 5.0,
+  "post_radius": 14.0,
+  "tip_radius": 2.5,
+  "hex_af": 12.0,
+  "socket_depth": 15.0,
+  "nut_pockets": {
+    "count": 12,
+    "radius": 70.0,
+    "across_flats": 13.0,
+    "depth": 6.5
+  },
+  "stem": {
+    "grip_circumradius": 8.0,
+    "grip_length": 90.0,
+    "facets": 12,
+    "peg_length": 14.5
+  },
+  "tilt_before_rim_touches_deg": 14.560275619356876
+}

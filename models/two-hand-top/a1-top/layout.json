@@ -1,0 +1,16 @@
+[
+ {
+  "part": "body_print",
+  "centre_mm": [
+   105,
+   128
+  ]
+ },
+ {
+  "part": "stem_print",
+  "centre_mm": [
+   215,
+   128
+  ]
+ }
+]
