@@ -1,0 +1,45 @@
+{
+  "x1c-props": {
+    "printer": "X1C",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL X1C",
+    "process": "0.12mm Fine @BBL X1C",
+    "nozzle_temperature": "220",
+    "bed_temperature": "55",
+    "model_id": "BL-P001",
+    "package": "x1c-props/slice/props.gcode.3mf",
+    "package_sha256": "567cff8a0dca782d75142c33cd67397432fe34692b3ffeeb26ffc1f8ec846988",
+    "gcode_sha256": "3333f2f5b08c02330a94b8dac5adc0993999d60e854596ddcb0db719f890bc00",
+    "objects": 5,
+    "layers": 158,
+    "model_path_segments": 217663,
+    "support_segments": 8791,
+    "segments_in_exclusion_corner": 0,
+    "extrusion_bounds_xy_mm": [
+      [
+        32.576,
+        82.261
+      ],
+      [
+        218.362,
+        204.815
+      ]
+    ],
+    "features": {
+      "Support": 8791,
+      "Brim": 2367,
+      "Outer wall": 47195,
+      "Inner wall": 76946,
+      "Bottom surface": 138,
+      "Gap infill": 19079,
+      "Internal solid infill": 53099,
+      "Sparse infill": 7190,
+      "Floating vertical shell": 2551,
+      "Top surface": 307
+    },
+    "estimated_hours": 1.6618073187934028,
+    "estimated_grams": 19.718990325927734,
+    "solid_parts_grams": 18.5541432573097,
+    "passed": true
+  }
+}

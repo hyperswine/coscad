@@ -1,0 +1,2 @@
+// TT shaft fit coupon: double-D bore at 0.10, 0.15, 0.25 mm clearance (1, 2, 3 notches).
+main = (χ 0 ((((zcyl 6 10 |> move 0 0 5)) ⊖ (ζ 5 ((zcyl 2.8 14) ∩ (box 3.9 7.6 14)))) ⊖ ((box 1.2 2 4 |> move 6 -2.5 8)))) ⊕ (χ 16 ((((zcyl 6 10 |> move 0 0 5)) ⊖ (ζ 5 ((zcyl 2.85 14) ∩ (box 4 7.7 14)))) ⊖ ((box 1.2 2 4 |> move 6 -2.5 8) ⊕ (box 1.2 2 4 |> move 6 0 8)))) ⊕ (χ 32 ((((zcyl 6 10 |> move 0 0 5)) ⊖ (ζ 5 ((zcyl 2.95 14) ∩ (box 4.2 7.9 14)))) ⊖ ((box 1.2 2 4 |> move 6 -2.5 8) ⊕ (box 1.2 2 4 |> move 6 0 8) ⊕ (box 1.2 2 4 |> move 6 2.5 8))))

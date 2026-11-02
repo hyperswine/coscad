@@ -1,0 +1,101 @@
+{
+  "assumptions": [
+    "Thrust and torque come from blade-element momentum theory at zero boat speed (bollard\npull): each annulus balances blade lift and drag against the momentum it gives the water,\nwith Prandtl's tip loss. Sections are thin printed plates at low Reynolds number\n(about 5,000 to 20,000), so lift is capped at CL 0.8 and drag is CD 0.06 + 0.8 alpha^2:\ntreat the numbers as a ranking, good to perhaps a factor of 1.5.",
+    "The motor: a TT 1:48 gearmotor, taken as a straight torque-speed line from no-load speed to\nstall torque. Typical figures (they vary by maker): 6 V about 230 rpm and 0.08 N m stall;\n3 V about 110 rpm and 0.04 N m. The operating point is where the propeller's torque meets\nthat line."
+  ],
+  "designs": {
+    "P2-50": {
+      "blades": 2,
+      "diameter_mm": 50,
+      "pitch_mm": 75,
+      "pitch_over_diameter": 1.5,
+      "hub_length_mm": 17,
+      "mass_g": 3.4998503831046555,
+      "downward_area_beyond_45deg_mm2": 351.5794253165709,
+      "at_6V": {
+        "rpm": 229.21893574538444,
+        "thrust_gf": 3.2187474679858696,
+        "torque_N_m": 0.00027167452327712374,
+        "motor_load_fraction_of_stall": 0.0033959315409640466
+      },
+      "at_3V": {
+        "rpm": 109.82848171414571,
+        "thrust_gf": 0.738951784590808,
+        "torque_N_m": 6.237028573231348e-05,
+        "motor_load_fraction_of_stall": 0.0015592571433078368
+      }
+    },
+    "P3-50": {
+      "blades": 3,
+      "diameter_mm": 50,
+      "pitch_mm": 60,
+      "pitch_over_diameter": 1.2,
+      "hub_length_mm": 14,
+      "mass_g": 3.370425127418963,
+      "downward_area_beyond_45deg_mm2": 536.1679979465947,
+      "at_6V": {
+        "rpm": 229.1323978375749,
+        "thrust_gf": 4.055477208753464,
+        "torque_N_m": 0.00030177466514062404,
+        "motor_load_fraction_of_stall": 0.0037721833142578005
+      },
+      "at_3V": {
+        "rpm": 109.80940089015348,
+        "thrust_gf": 0.9314253567155817,
+        "torque_N_m": 6.930876718953897e-05,
+        "motor_load_fraction_of_stall": 0.0017327191797384743
+      }
+    },
+    "P3-60": {
+      "blades": 3,
+      "diameter_mm": 60,
+      "pitch_mm": 90,
+      "pitch_over_diameter": 1.5,
+      "hub_length_mm": 19,
+      "mass_g": 5.6741412139401355,
+      "downward_area_beyond_45deg_mm2": 729.0777622408151,
+      "at_6V": {
+        "rpm": 227.26498130585242,
+        "thrust_gf": 9.136892407152908,
+        "torque_N_m": 0.0009513108500928803,
+        "motor_load_fraction_of_stall": 0.011891385626161004
+      },
+      "at_3V": {
+        "rpm": 109.39385704178403,
+        "thrust_gf": 2.1169921747192793,
+        "torque_N_m": 0.00022041562115524823,
+        "motor_load_fraction_of_stall": 0.005510390528881206
+      }
+    },
+    "P4-40": {
+      "blades": 4,
+      "diameter_mm": 40,
+      "pitch_mm": 60,
+      "pitch_over_diameter": 1.5,
+      "hub_length_mm": 12,
+      "mass_g": 2.6115290638098236,
+      "downward_area_beyond_45deg_mm2": 443.85499804860757,
+      "at_6V": {
+        "rpm": 229.54257895597857,
+        "thrust_gf": 2.2382805300127178,
+        "torque_N_m": 0.00015910297180942053,
+        "motor_load_fraction_of_stall": 0.0019887871476177567
+      },
+      "at_3V": {
+        "rpm": 109.89970547500434,
+        "thrust_gf": 0.5130755067670477,
+        "torque_N_m": 3.647073634444015e-05,
+        "motor_load_fraction_of_stall": 0.0009117684086110037
+      }
+    }
+  },
+  "coupon": {
+    "rings": 3,
+    "mass_g": 3.3981974690361247,
+    "clearances_mm": [
+      0.1,
+      0.15,
+      0.25
+    ]
+  }
+}
