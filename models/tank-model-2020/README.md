@@ -31,16 +31,18 @@ and `plan` (33 steps, 4 flips) all pass.
 - **Screws.** M5 x 8: through the 4 mm bracket and 4 mm into the T-nut, clear of the slot
   floor.
 
-## Printing (X1C, sliced 2026-11-02)
+## Printing (X1C and P1S, sliced 2026-11-02)
 
-Two Bambu Studio 02.08.02.61 CLI jobs. Each part is a separate object at a fixed position
-(`layout.json`), clear of the X1C's 18 x 28 mm front-left exclusion. Both use Bambu PLA
-Basic (220 C, bed 55 C, textured PEI) on Bambu's stock 0.20mm Standard process.
+Bambu Studio 02.08.02.61 CLI jobs. Each part is a separate object at a fixed position
+(`layout.json`), clear of the 18 x 28 mm front-left exclusion that the X1C and P1S share.
+All use Bambu PLA Basic (220 C, bed 55 C, textured PEI) on Bambu's stock 0.20mm Standard
+process, which is also the P1S's.
 
 | Job | Holds | Settings | Estimate |
 | --- | --- | --- | --- |
 | `x1c-bed1` | 5 panels, 12 brackets | 4 walls, 100% infill, 5 top and bottom layers, no brim | 3.8 h, 220 g, 25 layers |
 | `x1c-bed2` | 12 rails standing on end, 4 brackets | 3 walls, 25% gyroid, 4 top and bottom layers, 5 mm brim | 15.4 h, 217 g, 500 layers |
+| `p1s-bed2` | bed 2 for the P1S, same layout and settings | as `x1c-bed2` | 15.3 h, 216 g, 500 layers |
 
 - **Bed 2's time.** Bed 2 is slow because the T-slot profile has about 60 corners per wall
   loop and the printer decelerates at every one. At full speed it would be about 3.6 h.
@@ -53,12 +55,24 @@ Basic (220 C, bed 55 C, textured PEI) on Bambu's stock 0.20mm Standard process.
   - the weight against the parts;
   - the printer model id, filled in without touching the G-code.
 
-  Both passed, as did the thermal preflight that `dispatch.py` repeats.
+  All three passed, as did the thermal preflight that `dispatch.py` repeats.
 - **Rebuilding.** Run `prepare_slice.py`, `slice.py`, then `verify_packages.py`. The parts
   in `stl/` render with `coscad stl NAME.coscad -o stl/NAME.stl`.
 - **Printing.** `dispatch.py x1c-bed1 --spool external --confirm-bed-clear
   --authorization-note '...'` sends exactly one verified job. It refuses unless the
   printer is idle with no faults and the named PLA spool is loaded.
+  `--accept-failed-state` also accepts a printer left FAILED by a stopped job, still
+  with no error code or warnings. Use it only when the owner has cleared the plate.
+
+## Print runs
+
+Records are in `<job>/print-run.json`: the owner's confirmation, the spool, the verified
+upload, the printer's acknowledgement and status up to the first layer.
+
+- **x1c-bed1.** Sent 2026-11-02 15:09 after the owner removed the finished beach monohull.
+  The X1C acknowledged the job and reached layer 1 of 25 at 15:18.
+- **p1s-bed2.** Sent 2026-11-02 after the owner removed the other session's failed
+  Tesseract parts print (FAILED at layer 1004/1369, no fault); external yellow PLA.
 
 `coscad next tank.assemble` also packs two plates (`tank_bed1.stl`, `tank_bed2.stl`).
 Its packer starts at the plate corner, so its beds are not used for the X1C.

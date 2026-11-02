@@ -20,7 +20,10 @@ def write(path, record):
     tmp = path.with_suffix('.tmp'); tmp.write_text(json.dumps(record, indent=2, default=str)+'\n'); tmp.replace(path)
 def main():
     ap = argparse.ArgumentParser(description=__doc__); ap.add_argument('job'); ap.add_argument('--spool', required=True)
-    ap.add_argument('--confirm-bed-clear', action='store_true', required=True); ap.add_argument('--authorization-note', required=True); args = ap.parse_args()
+    ap.add_argument('--confirm-bed-clear', action='store_true', required=True); ap.add_argument('--authorization-note', required=True)
+    # A stopped job leaves the printer FAILED; accept that only when the owner says the bed is clear.
+    ap.add_argument('--accept-failed-state', action='store_true'); args = ap.parse_args()
+    ready = ['FINISH', 'IDLE'] + (['FAILED'] if args.accept_failed_state else [])
     device = args.job.split('-')[0]; material = 'pla'; folder = B/args.job; record_path = folder/'print-run.json'
     assert not record_path.exists(), 'Existing dispatch record: inspect it and the printer instead of resending'
     package = folder/'slice'/f'{NAME}.gcode.3mf'; verified = json.loads((folder/'package-validation.json').read_text()); assert verified['passed']
@@ -30,7 +33,7 @@ def main():
         raise ValueError('Package changed during preflight; refusing to print')
     run, p, tls = context.connect(device)
     try:
-        assert p.state.get('gcode_state') in ['FINISH', 'IDLE'], 'Printer is busy'
+        assert p.state.get('gcode_state') in ready, 'Printer is busy'
         assert p.state.get('print_error') == 0 and not p.state.get('hms'), 'Printer has an active fault'
         assert str(p.state.get('nozzle_diameter')) == '0.4'
         spools = p.spools()
@@ -38,7 +41,7 @@ def main():
         if args.spool == 'external': assert any(name == 'external' and loaded for name, mat, colour, loaded in spools), 'External spool is not the active tray'
         remote = f'{NAME}-{args.job}-{time.strftime("%Y%m%d-%H%M%S")}.gcode.3mf'
         record = {'job': args.job, 'printer': device, 'material': material, 'package_sha256': digest, 'thermal_preflight': thermal_preflight, 'remote_name': remote, 'spool': args.spool,
-                  'bed_clear_owner_confirmed': True, 'authorization_note': args.authorization_note, 'before': p.summary(), 'spools_before': spools,
+                  'bed_clear_owner_confirmed': True, 'accepted_failed_state': args.accept_failed_state, 'authorization_note': args.authorization_note, 'before': p.summary(), 'spools_before': spools,
                   'hms_before': p.state.get('hms'), 'phase': 'preflight', 'dispatch_attempted': False, 'events': [], 'created_at': time.strftime('%Y-%m-%dT%H:%M:%S%z')}
         with record_path.open('x') as f: f.write(json.dumps(record, indent=2, default=str)+'\n')
         sys.path.insert(0, str(context.ROOT/'3d-models/bambu-lan')); import ftp as lanftp
@@ -68,7 +71,7 @@ def main():
                 raise ValueError('Remote content mismatch')
         finally: ftp.close()
         record.update(phase='uploaded-verified', remote_content_sha256=digest); write(record_path, record)
-        assert p.state.get('gcode_state') in ['FINISH', 'IDLE'] and p.state.get('print_error') == 0 and not p.state.get('hms'), 'Printer changed during upload'
+        assert p.state.get('gcode_state') in ready and p.state.get('print_error') == 0 and not p.state.get('hms'), 'Printer changed during upload'
         seq = str(int(time.time()*1000) % 1000000000); use_ams = args.spool != 'external'
         command = {'print': {'sequence_id': seq, 'command': 'project_file', 'param': 'Metadata/plate_1.gcode', 'project_id': '0', 'profile_id': '0', 'task_id': '0', 'subtask_id': '0',
                              'subtask_name': remote.removesuffix('.3mf'), 'url': 'file:///sdcard/'+remote, 'md5': '', 'timelapse': False, 'bed_type': 'auto', 'bed_levelling': True,

@@ -1,0 +1,114 @@
+[
+ {
+  "part": "rail100",
+  "centre_mm": [
+   70,
+   90
+  ]
+ },
+ {
+  "part": "rail100",
+  "centre_mm": [
+   105,
+   90
+  ]
+ },
+ {
+  "part": "rail100",
+  "centre_mm": [
+   140,
+   90
+  ]
+ },
+ {
+  "part": "rail100",
+  "centre_mm": [
+   175,
+   90
+  ]
+ },
+ {
+  "part": "rail60",
+  "centre_mm": [
+   70,
+   125
+  ]
+ },
+ {
+  "part": "rail60",
+  "centre_mm": [
+   105,
+   125
+  ]
+ },
+ {
+  "part": "rail60",
+  "centre_mm": [
+   140,
+   125
+  ]
+ },
+ {
+  "part": "rail60",
+  "centre_mm": [
+   175,
+   125
+  ]
+ },
+ {
+  "part": "rail60",
+  "centre_mm": [
+   70,
+   160
+  ]
+ },
+ {
+  "part": "rail60",
+  "centre_mm": [
+   105,
+   160
+  ]
+ },
+ {
+  "part": "rail60",
+  "centre_mm": [
+   140,
+   160
+  ]
+ },
+ {
+  "part": "rail60",
+  "centre_mm": [
+   175,
+   160
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   40,
+   215
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   95,
+   215
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   150,
+   215
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   205,
+   215
+  ]
+ }
+]

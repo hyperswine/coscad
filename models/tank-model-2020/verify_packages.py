@@ -1,4 +1,4 @@
-"""Check each sliced X1C package before it can be dispatched: slicer success with no
+"""Check each sliced package (X1C or P1S) before it can be dispatched: slicer success with no
 warnings, the intended settings, no support paths, every extrusion inside the plate and
 clear of the 18 x 28 mm front-left exclusion, filament weight consistent with the parts,
 and the printer model id filled in without touching the G-code. Writes
@@ -7,10 +7,12 @@ from pathlib import Path
 import hashlib, json, math, re, sys, zipfile, xml.etree.ElementTree as E
 import trimesh
 B = Path(__file__).resolve().parent
-MODEL_ID = 'BL-P001'; DENSITY = 1.24
-EXPECT = {'x1c-bed1': {'wall_loops': '4', 'sparse_infill_density': '100%'}, 'x1c-bed2': {'wall_loops': '3', 'sparse_infill_density': '25%'}}
+PRINTERS = {'x1c': ('X1C', 'Bambu Lab X1 Carbon', 'BL-P001'), 'p1s': ('P1S', 'Bambu Lab P1S', 'C12')}; DENSITY = 1.24
+EXPECT = {'x1c-bed1': {'wall_loops': '4', 'sparse_infill_density': '100%'}, 'x1c-bed2': {'wall_loops': '3', 'sparse_infill_density': '25%'},
+          'p1s-bed2': {'wall_loops': '3', 'sparse_infill_density': '25%'}}
 reports = json.loads((B/'packages.json').read_text()) if (B/'packages.json').exists() else {}
 for job in sys.argv[1:] or list(EXPECT):
+    PRINTER, MODEL, MODEL_ID = PRINTERS[job.split('-')[0]]
     folder = B/job; path = folder/'slice'/'tank.gcode.3mf'
     code = (folder/'slice/plate_1.gcode').read_bytes(); result = json.loads((folder/'slice/result.json').read_text())
     assert result['return_code'] == 0 and result['error_string'] == 'Success.' and len(result['sliced_plates']) == 1, result
@@ -48,7 +50,7 @@ for job in sys.argv[1:] or list(EXPECT):
         assert source.testzip() is None; entries = {i.filename: (i, source.read(i)) for i in source.infolist()}
         assert source.read('Metadata/plate_1.gcode') == code
         cfg = json.loads(source.read('Metadata/project_settings.config'))
-        assert cfg['printer_model'] == 'Bambu Lab X1 Carbon' and cfg['enable_support'] == '0' and cfg['curr_bed_type'] == 'Textured PEI Plate', (cfg['printer_model'], cfg['curr_bed_type'])
+        assert cfg['printer_model'] == MODEL and cfg['enable_support'] == '0' and cfg['curr_bed_type'] == 'Textured PEI Plate', (cfg['printer_model'], cfg['curr_bed_type'])
         assert cfg['filament_type'][0].upper() == 'PLA', cfg['filament_type']
         assert source.read('Metadata/plate_1.gcode.md5').decode().strip().lower() == hashlib.md5(code).hexdigest()
         info = E.fromstring(source.read('Metadata/slice_info.config')); identity = info.find(".//metadata[@key='printer_model_id']")
@@ -59,7 +61,7 @@ for job in sys.argv[1:] or list(EXPECT):
         for info_, data in entries.values(): out.writestr(info_, data)
     with zipfile.ZipFile(tmp) as check: assert check.testzip() is None and check.read('Metadata/plate_1.gcode') == code
     tmp.replace(path)
-    reports[job] = {'printer': 'X1C', 'material': 'PLA', 'filament': cfg['filament_settings_id'][0], 'process': settings.get('print_settings_id', ''),
+    reports[job] = {'printer': PRINTER, 'material': 'PLA', 'filament': cfg['filament_settings_id'][0], 'process': settings.get('print_settings_id', ''),
                     'nozzle_temperature': cfg['nozzle_temperature'][0], 'bed_temperature': cfg.get('textured_plate_temp', [''])[0], 'model_id': MODEL_ID,
                     'package': str(path.relative_to(B)), 'package_sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'gcode_sha256': hashlib.sha256(code).hexdigest(),
                     'objects': len(layout), 'layers': len(layers), 'model_path_segments': count, 'support_segments': support, 'segments_in_exclusion_corner': in_corner,

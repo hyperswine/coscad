@@ -1,7 +1,7 @@
-"""Two X1C PLA projects for the 2020 tank model, one per bed, every part a separate object.
+"""PLA projects for the 2020 tank model (X1C beds 1 and 2, P1S bed 2), every part a separate object.
 
 Positions are fixed here (not Bambu's arrange) and keep clear of the X1C's 18 x 28 mm
-front-left exclusion. Bed 1 holds the five panels and twelve brackets, printed solid so
+front-left exclusion (the P1S has the same one). Bed 1 holds the five panels and twelve brackets, printed solid so
 the panels do not seep. Bed 2 holds the twelve rails standing on end, with a 5 mm brim,
 and the last four brackets. The process is Bambu's stock 0.20mm Standard for the X1C;
 the project file template comes from the print-in-place globe."""
@@ -12,7 +12,9 @@ B = Path(__file__).resolve().parent; ROOT = B.parents[1]
 spec = importlib.util.spec_from_file_location('bambu_slice', ROOT/'scripts/bambu-slice.py'); s = importlib.util.module_from_spec(spec); spec.loader.exec_module(s)
 ns = 'http://schemas.microsoft.com/3dmanufacturing/core/2015/02'; E.register_namespace('', ns)
 def q(t): return '{'+ns+'}'+t
-MACHINE = 'Bambu Lab X1 Carbon 0.4 nozzle'; FILAMENT = 'Bambu PLA Basic @BBL X1C'; PROCESS = '0.20mm Standard @BBL X1C'
+PROCESS = '0.20mm Standard @BBL X1C'   # Bambu's stock process for both the X1C and the P1S
+PRINTER = {'x1c': ('Bambu Lab X1 Carbon 0.4 nozzle', 'Bambu PLA Basic @BBL X1C', 'Bambu Lab X1 Carbon'),
+           'p1s': ('Bambu Lab P1S 0.4 nozzle', 'Bambu PLA Basic @BBL P1S 0.4 nozzle', 'Bambu Lab P1S')}
 
 def grid(xs, ys): return [(x, y) for y in ys for x in xs]
 # Part centres on the plate (mm). Panels 70 x 70, brackets 40 x 40, rails 20 x 20.
@@ -25,6 +27,7 @@ COMMON = {'enable_support': '0', 'support_on_build_plate_only': '1', 'only_one_w
           'sparse_infill_pattern': 'zig-zag', 'brim_object_gap': '0.1'}
 JOBS = {'x1c-bed1': (BED1, {'wall_loops': '4', 'sparse_infill_density': '100%', 'top_shell_layers': '5', 'bottom_shell_layers': '5', 'brim_type': 'no_brim', 'brim_width': '0'}),
         'x1c-bed2': (BED2, {'wall_loops': '3', 'sparse_infill_density': '25%', 'sparse_infill_pattern': 'gyroid', 'top_shell_layers': '4', 'bottom_shell_layers': '4', 'brim_type': 'outer_only', 'brim_width': '5'})}
+JOBS['p1s-bed2'] = JOBS['x1c-bed2']   # same layout: the P1S has the same front-left exclusion
 EXCLUDE = (18, 28)
 
 def mesh(name):
@@ -46,6 +49,7 @@ def main(jobs):
         for i, a in enumerate(boxes):
             for b in boxes[i+1:]:
                 assert a[1] + gap <= b[0] or b[1] + gap <= a[0] or a[3] + gap <= b[2] or b[3] + gap <= a[2], ('parts too close', job, a, b)
+        MACHINE, FILAMENT, MODEL = PRINTER[job.split('-')[0]]
         folder = B/job; presets = folder/'presets'; presets.mkdir(parents=True, exist_ok=True)
         baseline = ROOT/'models/print-in-place-globe/p1s'
         machine = s.machine_with_templates(MACHINE)
@@ -56,7 +60,7 @@ def main(jobs):
             (presets/(kind+'.json')).write_text(json.dumps(data, indent=2)+'\n')
             project.update({k: v for k, v in data.items() if k not in {'type', 'name', 'inherits', 'from', 'instantiation', 'setting_id'}})
         project.update(overrides); project['filament_settings_id'] = [FILAMENT]; project['printer_settings_id'] = MACHINE
-        assert project['printer_model'] == 'Bambu Lab X1 Carbon', project['printer_model']
+        assert project['printer_model'] == MODEL, project['printer_model']
         (presets/'project.json').write_text(json.dumps(project, indent=2)+'\n')
         model = E.Element(q('model'), {'unit': 'millimeter'})
         E.SubElement(model, q('metadata'), {'name': 'Application'}).text = 'BambuStudio-02.08.02.61'

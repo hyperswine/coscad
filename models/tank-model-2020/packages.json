@@ -81,5 +81,48 @@
     "estimated_grams": 216.72210693359375,
     "solid_parts_grams": 228.99762448449377,
     "passed": true
+  },
+  "p1s-bed2": {
+    "printer": "P1S",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL P1S 0.4 nozzle",
+    "process": "0.20mm Standard @BBL X1C",
+    "nozzle_temperature": "220",
+    "bed_temperature": "55",
+    "model_id": "C12",
+    "package": "p1s-bed2/slice/tank.gcode.3mf",
+    "package_sha256": "626cd056fdfe7ed4140bc4027767047394115909998d09740ef0454271951a15",
+    "gcode_sha256": "85131829be6a03a19552839f102d601571b61facd653c0f4b477d8b8c2307a80",
+    "objects": 16,
+    "layers": 500,
+    "model_path_segments": 1310533,
+    "support_segments": 0,
+    "segments_in_exclusion_corner": 0,
+    "extrusion_bounds_xy_mm": [
+      [
+        15.558,
+        75.558
+      ],
+      [
+        229.442,
+        239.442
+      ]
+    ],
+    "features": {
+      "Brim": 24753,
+      "Outer wall": 315600,
+      "Inner wall": 504968,
+      "Gap infill": 272324,
+      "Bottom surface": 1380,
+      "Internal solid infill": 166060,
+      "Sparse infill": 21692,
+      "Floating vertical shell": 96,
+      "Bridge": 1128,
+      "Top surface": 2532
+    },
+    "estimated_hours": 15.334267578125,
+    "estimated_grams": 216.48477172851562,
+    "solid_parts_grams": 228.99762448449377,
+    "passed": true
   }
 }
