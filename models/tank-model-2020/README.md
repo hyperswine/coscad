@@ -1,0 +1,100 @@
+# 2020 water-tank model, 100 mm, 2026-11-02
+
+A small test of the full-size tank idea: a 2020 extrusion cube frame with panels in
+the slots. Twelve rails, five panels, sixteen flat L brackets, all printable, with
+standard M5 hardware. Outside 100 x 100 x 100 mm, open top, about 0.35 L to just
+under the top rails.
+
+Not printed yet. `coscad validate`, `check` (0 overlaps, 0.6 mm play on every panel)
+and `plan` (33 steps, 4 flips) all pass.
+
+## Parts
+
+| Part | Count | Size | File |
+| --- | --- | --- | --- |
+| Upright | 4 | 2020 x 100 mm | rail100.coscad |
+| Rail between uprights | 8 | 2020 x 60 mm | rail60.coscad |
+| Wall panel | 4 | 70 x 70 x 5 mm | panel_wall.coscad |
+| Floor panel, corners notched 5.3 mm | 1 | 70 x 70 x 5 mm | panel_floor.coscad |
+| Flat L bracket | 16 | 40 x 40 x 4 mm, 20 mm legs | bracket.coscad |
+| M5 x 8 button head screw | 32 | | |
+| M5 drop-in T-nut (2020, slot 6) | 32 | | |
+
+- **Rails.** Real 2020 slot-6 profile: a 6.2 mm opening behind 1.8 mm lips, and a pocket
+  tapering in three steps to 6.1 mm deep. The steps leave diagonal webs, as on real
+  extrusion, so stock T-nuts and brackets fit. You can swap in aluminium 2020 cut to
+  4 × 100 mm and 8 × 60 mm.
+- **Panels.** Each fills its 60 x 60 mm opening and sits 5 mm deep in the slots on all
+  four sides. The uprights run all the way to the bench, which is why the floor panel
+  has notched corners.
+- **Brackets.** Only on the outside faces, so the inward slots stay free for the panels.
+- **Screws.** M5 x 8: through the 4 mm bracket and 4 mm into the T-nut, clear of the slot
+  floor.
+
+## Printing (X1C, sliced 2026-11-02)
+
+Two Bambu Studio 02.08.02.61 CLI jobs. Each part is a separate object at a fixed position
+(`layout.json`), clear of the X1C's 18 x 28 mm front-left exclusion. Both use Bambu PLA
+Basic (220 C, bed 55 C, textured PEI) on Bambu's stock 0.20mm Standard process.
+
+| Job | Holds | Settings | Estimate |
+| --- | --- | --- | --- |
+| `x1c-bed1` | 5 panels, 12 brackets | 4 walls, 100% infill, 5 top and bottom layers, no brim | 3.8 h, 220 g, 25 layers |
+| `x1c-bed2` | 12 rails standing on end, 4 brackets | 3 walls, 25% gyroid, 4 top and bottom layers, 5 mm brim | 15.4 h, 217 g, 500 layers |
+
+- **Bed 2's time.** Bed 2 is slow because the T-slot profile has about 60 corners per wall
+  loop and the printer decelerates at every one. At full speed it would be about 3.6 h.
+  Cut aluminium 2020 (4 × 100 mm, 8 × 60 mm) skips that bed, apart from 4 brackets.
+- **Checks.** `verify_packages.py` checks:
+  - slicer success with no warnings, and the intended walls and infill;
+  - no supports;
+  - every extrusion on the plate and outside the exclusion corner (accounting for the
+    X1C's 2 mm G-code Y offset);
+  - the weight against the parts;
+  - the printer model id, filled in without touching the G-code.
+
+  Both passed, as did the thermal preflight that `dispatch.py` repeats.
+- **Rebuilding.** Run `prepare_slice.py`, `slice.py`, then `verify_packages.py`. The parts
+  in `stl/` render with `coscad stl NAME.coscad -o stl/NAME.stl`.
+- **Printing.** `dispatch.py x1c-bed1 --spool external --confirm-bed-clear
+  --authorization-note '...'` sends exactly one verified job. It refuses unless the
+  printer is idle with no faults and the named PLA spool is loaded.
+
+`coscad next tank.assemble` also packs two plates (`tank_bed1.stl`, `tank_bed2.stl`).
+Its packer starts at the plate corner, so its beds are not used for the X1C.
+
+## Build
+
+Follow `tank_plan.md` and the step images `tank_stepN.png`. They're generated and not
+committed; `coscad plan tank.assemble --png` writes them.
+1. **Front frame.** Build it lying flat (two uprights, bottom rail, brackets), drop the
+   front wall into the bottom rail's slot, then close it with the top rail.
+2. **Floor.** Stand the frame up and slide the floor into the bottom rail's inward slot.
+3. **Sides and back.** Add each side and the back the same way: bottom rail, wall dropped
+   in from above, then top rail.
+
+Each top rail must go on after its wall, because the wall drops in from above onto its
+bottom rail. The file says so with `after=wall_*`. Without it the planner put a top rail
+on first and got stuck: its look-ahead for parts that would get blocked misses a part
+that also needs another part placed first. That's a planner gap worth fixing.
+
+Preload all T-nuts as the plan's preload sheet lists, before each rail goes in. Tighten
+screws to finger tight plus a quarter turn; they're going into printed parts.
+
+## Making it hold water
+
+Panels in slots leak at every seam. Two ways to test:
+
+1. **Liner.** Line it with a freezer bag. This is what the full-size tank needs, so the
+   model tests the real plan.
+2. **Silicone.** Run aquarium silicone along all inside seams and around the floor
+   notches.
+
+## Files
+
+| File | What it is |
+| --- | --- |
+| `tank.assemble` | Placements, screws, panel joints and order hints |
+| `*.coscad` | The five parts; `stl/` has them rendered |
+| `tank_plan.md`, `tank_plan.json`, `tank_stepN.png` | The build plan (generated by `coscad plan tank.assemble --png`) |
+| `tank_bed1.stl`, `tank_bed2.stl`, `tank_manifest.json` | Print beds |

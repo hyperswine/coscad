@@ -1,0 +1,470 @@
+{
+  "schema": "coscad.next/1",
+  "geometry_backend": "native",
+  "source": "tank.assemble",
+  "bed": {
+    "w": 256,
+    "d": 256,
+    "margin": 6,
+    "max_z": 250
+  },
+  "variants": [
+    {
+      "id": "up_fl_bot",
+      "part": "up_fl",
+      "source": "./rail100.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.59,
+      "printability": {
+        "bed_contact_mm2": 188.902,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 188.902,
+        "min_width_mm": 20,
+        "warnings": ["only 188.902011 mm^2 of flat bed contact (188.902011 mm^2 of first layer); check the first layer and use a brim or a broader print face", "tall, narrow print (height/width 5 over its narrowest 20 mm); use a brim and conservative acceleration"],
+        "warning_codes": ["small_contact", "tall_narrow"]
+      },
+      "footprint": [20, 20, 100],
+      "mesh": "tank_next_up_fl_bot.stl",
+      "hints": {
+        "profile": "2020",
+        "material": "pla"
+      }
+    },
+    {
+      "id": "bottom_front_bot",
+      "part": "bottom_front",
+      "source": "./rail60.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.383,
+      "printability": {
+        "bed_contact_mm2": 188.902,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 188.902,
+        "min_width_mm": 20,
+        "warnings": ["tall, narrow print (height/width 3 over its narrowest 20 mm); use a brim and conservative acceleration"],
+        "warning_codes": ["tall_narrow"]
+      },
+      "footprint": [20, 20, 60],
+      "mesh": "tank_next_bottom_front_bot.stl",
+      "hints": {
+        "profile": "2020",
+        "material": "pla"
+      }
+    },
+    {
+      "id": "wall_front_bot",
+      "part": "wall_front",
+      "source": "./panel_wall.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": 0.416,
+      "printability": {
+        "bed_contact_mm2": 4900,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 4900,
+        "min_width_mm": 70,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [70, 70, 5],
+      "mesh": "tank_next_wall_front_bot.stl",
+      "hints": {
+        "material": "pla"
+      }
+    },
+    {
+      "id": "floor_bot",
+      "part": "floor",
+      "source": "./panel_floor.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": 0.415,
+      "printability": {
+        "bed_contact_mm2": 4787.64,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 4787.64,
+        "min_width_mm": 70,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [70, 70, 5],
+      "mesh": "tank_next_floor_bot.stl",
+      "hints": {
+        "material": "pla"
+      }
+    },
+    {
+      "id": "br_bot",
+      "part": "br",
+      "source": "./bracket.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": 0.344,
+      "printability": {
+        "bed_contact_mm2": 1152.608,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 1152.608,
+        "min_width_mm": 40,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [40, 40, 4],
+      "mesh": "tank_next_br_bot.stl",
+      "hints": {
+        "material": "pla"
+      }
+    }
+  ],
+  "beds": [
+    {
+      "index": 1,
+      "stl": "tank_bed1.stl",
+      "placements": [
+        {
+          "instance": "wall_front_1",
+          "variant": "wall_front_bot",
+          "x": 6,
+          "y": 6,
+          "w": 70,
+          "d": 70,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "wall_back_1",
+          "variant": "wall_front_bot",
+          "x": 82,
+          "y": 6,
+          "w": 70,
+          "d": 70,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "wall_left_1",
+          "variant": "wall_front_bot",
+          "x": 158,
+          "y": 6,
+          "w": 70,
+          "d": 70,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "wall_right_1",
+          "variant": "wall_front_bot",
+          "x": 6,
+          "y": 82,
+          "w": 70,
+          "d": 70,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "floor_1",
+          "variant": "floor_bot",
+          "x": 82,
+          "y": 82,
+          "w": 70,
+          "d": 70,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_1",
+          "variant": "br_bot",
+          "x": 158,
+          "y": 82,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_2",
+          "variant": "br_bot",
+          "x": 204,
+          "y": 82,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_3",
+          "variant": "br_bot",
+          "x": 6,
+          "y": 158,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_4",
+          "variant": "br_bot",
+          "x": 52,
+          "y": 158,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_5",
+          "variant": "br_bot",
+          "x": 98,
+          "y": 158,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_6",
+          "variant": "br_bot",
+          "x": 144,
+          "y": 158,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_7",
+          "variant": "br_bot",
+          "x": 190,
+          "y": 158,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_8",
+          "variant": "br_bot",
+          "x": 6,
+          "y": 204,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_9",
+          "variant": "br_bot",
+          "x": 52,
+          "y": 204,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_10",
+          "variant": "br_bot",
+          "x": 98,
+          "y": 204,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_11",
+          "variant": "br_bot",
+          "x": 144,
+          "y": 204,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_12",
+          "variant": "br_bot",
+          "x": 190,
+          "y": 204,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "stl": "tank_bed2.stl",
+      "placements": [
+        {
+          "instance": "br_13",
+          "variant": "br_bot",
+          "x": 6,
+          "y": 6,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_14",
+          "variant": "br_bot",
+          "x": 52,
+          "y": 6,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_15",
+          "variant": "br_bot",
+          "x": 98,
+          "y": 6,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "br_16",
+          "variant": "br_bot",
+          "x": 144,
+          "y": 6,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "up_fl_1",
+          "variant": "up_fl_bot",
+          "x": 190,
+          "y": 6,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "up_fr_1",
+          "variant": "up_fl_bot",
+          "x": 216,
+          "y": 6,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "up_bl_1",
+          "variant": "up_fl_bot",
+          "x": 6,
+          "y": 52,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "up_br_1",
+          "variant": "up_fl_bot",
+          "x": 32,
+          "y": 52,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bottom_front_1",
+          "variant": "bottom_front_bot",
+          "x": 58,
+          "y": 52,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bottom_back_1",
+          "variant": "bottom_front_bot",
+          "x": 84,
+          "y": 52,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bottom_left_1",
+          "variant": "bottom_front_bot",
+          "x": 110,
+          "y": 52,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bottom_right_1",
+          "variant": "bottom_front_bot",
+          "x": 136,
+          "y": 52,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "top_front_1",
+          "variant": "bottom_front_bot",
+          "x": 162,
+          "y": 52,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "top_back_1",
+          "variant": "bottom_front_bot",
+          "x": 188,
+          "y": 52,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "top_left_1",
+          "variant": "bottom_front_bot",
+          "x": 214,
+          "y": 52,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "top_right_1",
+          "variant": "bottom_front_bot",
+          "x": 6,
+          "y": 78,
+          "w": 20,
+          "d": 20,
+          "brim_mm": 0,
+          "rot_z": 0
+        }
+      ]
+    }
+  ],
+  "assembly_only": []
+}

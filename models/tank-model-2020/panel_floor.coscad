@@ -1,0 +1,7 @@
+// Floor panel, 70 x 70 x 5, in the bottom rails' inward slots. Its corners
+// are notched 5.3 mm so they clear the uprights, which run to the bench.
+main = box 70 70 5
+  |> cut (box 10.6 10.6 7 |> move 35 35 0)
+  |> cut (box 10.6 10.6 7 |> move -35 35 0)
+  |> cut (box 10.6 10.6 7 |> move 35 -35 0)
+  |> cut (box 10.6 10.6 7 |> move -35 -35 0)

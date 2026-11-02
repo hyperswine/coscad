@@ -1,0 +1,121 @@
+[
+ {
+  "part": "panel_wall",
+  "centre_mm": [
+   45,
+   85
+  ]
+ },
+ {
+  "part": "panel_wall",
+  "centre_mm": [
+   125,
+   85
+  ]
+ },
+ {
+  "part": "panel_wall",
+  "centre_mm": [
+   205,
+   85
+  ]
+ },
+ {
+  "part": "panel_wall",
+  "centre_mm": [
+   45,
+   165
+  ]
+ },
+ {
+  "part": "panel_floor",
+  "centre_mm": [
+   125,
+   165
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   45,
+   27
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   90,
+   27
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   135,
+   27
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   180,
+   27
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   225,
+   27
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   185,
+   150
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   230,
+   150
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   30,
+   225
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   75,
+   225
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   120,
+   225
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   165,
+   225
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   210,
+   225
+  ]
+ }
+]

@@ -1,0 +1,104 @@
+// 100 mm 2020 water-tank model: twelve rails, five slotted panels, sixteen
+// flat L brackets on the outside faces. Outside 0..100 on every axis.
+// Uprights run floor to top; the eight 60 mm rails sit between them.
+// Each top rail waits for its wall (after=): a wall drops in from above onto
+// its bottom rail, so the top rail must not be on first.
+// Panels slide into the slots: walls drop in from above between two
+// uprights, the floor slides into the bottom rails' inward slots.
+!glyph
+plate 256 256 6
+up_fl ← rail100.coscad ×1 ▽bot profile=2020 material=pla
+up_fr ← rail100.coscad ×1 ▽bot profile=2020 material=pla
+up_bl ← rail100.coscad ×1 ▽bot profile=2020 material=pla
+up_br ← rail100.coscad ×1 ▽bot profile=2020 material=pla
+bottom_front ← rail60.coscad ×1 ▽bot profile=2020 material=pla
+bottom_back ← rail60.coscad ×1 ▽bot profile=2020 material=pla
+bottom_left ← rail60.coscad ×1 ▽bot profile=2020 material=pla
+bottom_right ← rail60.coscad ×1 ▽bot profile=2020 material=pla
+top_front ← rail60.coscad ×1 ▽bot profile=2020 material=pla after=wall_front
+top_back ← rail60.coscad ×1 ▽bot profile=2020 material=pla after=wall_back
+top_left ← rail60.coscad ×1 ▽bot profile=2020 material=pla after=wall_left
+top_right ← rail60.coscad ×1 ▽bot profile=2020 material=pla after=wall_right
+wall_front ← panel_wall.coscad ×1 ▽bot material=pla
+wall_back ← panel_wall.coscad ×1 ▽bot material=pla
+wall_left ← panel_wall.coscad ×1 ▽bot material=pla
+wall_right ← panel_wall.coscad ×1 ▽bot material=pla
+floor ← panel_floor.coscad ×1 ▽bot material=pla
+br ← bracket.coscad ×16 ▽bot material=pla
+asm = (up_fl |> move 10 10 50)
+  ⊕ (up_fr |> move 90 10 50)
+  ⊕ (up_bl |> move 10 90 50)
+  ⊕ (up_br |> move 90 90 50)
+  ⊕ (bottom_front |> roty 90 |> move 50 10 10)
+  ⊕ (bottom_back |> roty 90 |> move 50 90 10)
+  ⊕ (bottom_left |> rotx 90 |> move 10 50 10)
+  ⊕ (bottom_right |> rotx 90 |> move 90 50 10)
+  ⊕ (top_front |> roty 90 |> move 50 10 90)
+  ⊕ (top_back |> roty 90 |> move 50 90 90)
+  ⊕ (top_left |> rotx 90 |> move 10 50 90)
+  ⊕ (top_right |> rotx 90 |> move 90 50 90)
+  ⊕ (wall_front |> rotx 90 |> move 50 10 50)
+  ⊕ (wall_back |> rotx 90 |> move 50 90 50)
+  ⊕ (wall_left |> roty 90 |> move 10 50 50)
+  ⊕ (wall_right |> roty 90 |> move 90 50 50)
+  ⊕ (floor |> move 50 50 10)
+  ⊕ (br |> rotx 90 |> move 20 -2 20)
+  ⊕ (br |> rotz 90 |> rotx 90 |> move 80 -2 20)
+  ⊕ (br |> rotx 90 |> move 20 102 20)
+  ⊕ (br |> rotz 90 |> rotx 90 |> move 80 102 20)
+  ⊕ (br |> rotx 90 |> rotz 90 |> move -2 20 20)
+  ⊕ (br |> rotz 90 |> rotx 90 |> rotz 90 |> move -2 80 20)
+  ⊕ (br |> rotx 90 |> rotz 90 |> move 102 20 20)
+  ⊕ (br |> rotz 90 |> rotx 90 |> rotz 90 |> move 102 80 20)
+  ⊕ (br |> rotz -90 |> rotx 90 |> move 20 -2 80)
+  ⊕ (br |> rotz 180 |> rotx 90 |> move 80 -2 80)
+  ⊕ (br |> rotz -90 |> rotx 90 |> move 20 102 80)
+  ⊕ (br |> rotz 180 |> rotx 90 |> move 80 102 80)
+  ⊕ (br |> rotz -90 |> rotx 90 |> rotz 90 |> move -2 20 80)
+  ⊕ (br |> rotz 180 |> rotx 90 |> rotz 90 |> move -2 80 80)
+  ⊕ (br |> rotz -90 |> rotx 90 |> rotz 90 |> move 102 20 80)
+  ⊕ (br |> rotz 180 |> rotx 90 |> rotz 90 |> move 102 80 80)
+
+// Each bracket: one screw into the upright, one into the rail (outer face).
+// M5x8: through the 4 mm bracket, 4 mm into a drop-in T-nut, clear of the
+// 6.1 mm deep slot floor.
+fastener M5x8 br#1 up_fl fwd at=30
+fastener M5x8 br#1 bottom_front fwd at=10
+fastener M5x8 br#2 up_fr fwd at=30
+fastener M5x8 br#2 bottom_front fwd at=50
+fastener M5x8 br#3 up_bl bak at=30
+fastener M5x8 br#3 bottom_back bak at=10
+fastener M5x8 br#4 up_br bak at=30
+fastener M5x8 br#4 bottom_back bak at=50
+fastener M5x8 br#5 up_fl lft at=30
+fastener M5x8 br#5 bottom_left lft at=10
+fastener M5x8 br#6 up_bl lft at=30
+fastener M5x8 br#6 bottom_left lft at=50
+fastener M5x8 br#7 up_fr rt at=30
+fastener M5x8 br#7 bottom_right rt at=10
+fastener M5x8 br#8 up_br rt at=30
+fastener M5x8 br#8 bottom_right rt at=50
+fastener M5x8 br#9 up_fl fwd at=70
+fastener M5x8 br#9 top_front fwd at=10
+fastener M5x8 br#10 up_fr fwd at=70
+fastener M5x8 br#10 top_front fwd at=50
+fastener M5x8 br#11 up_bl bak at=70
+fastener M5x8 br#11 top_back bak at=10
+fastener M5x8 br#12 up_br bak at=70
+fastener M5x8 br#12 top_back bak at=50
+fastener M5x8 br#13 up_fl lft at=70
+fastener M5x8 br#13 top_left lft at=10
+fastener M5x8 br#14 up_bl lft at=70
+fastener M5x8 br#14 top_left lft at=50
+fastener M5x8 br#15 up_fr rt at=70
+fastener M5x8 br#15 top_right rt at=10
+fastener M5x8 br#16 up_br rt at=70
+fastener M5x8 br#16 top_right rt at=50
+
+// Walls drop into the bottom rails' top slots between two uprights;
+// the top rails then capture them. The floor slides in horizontally.
+joint drop wall_front bottom_front axis=top
+joint drop wall_back bottom_back axis=top
+joint drop wall_left bottom_left axis=top
+joint drop wall_right bottom_right axis=top
+joint drop floor bottom_front axis=bak
