@@ -87,13 +87,16 @@ def main():
         else: record['phase'] = 'start-unknown'; record['acknowledgement_uncertain'] = True
         write(record_path, record); print(json.dumps({'printer': device, 'job': args.job, 'phase': record['phase'], 'spool': args.spool, 'remote': remote}), flush=True)
         if record['phase'] == 'rejected': return
-        until = time.monotonic() + 900
+        until = time.monotonic() + 900; started = False
         while time.monotonic() < until:
             state = p.summary(); event = {'at': time.strftime('%Y-%m-%dT%H:%M:%S%z'), 'status': state, 'hms': p.state.get('hms')}; record['events'].append(event); write(record_path, record); print(json.dumps(event), flush=True)
             is_job = state.get('subtask_name') in [remote, remote.removesuffix('.3mf')] or state.get('gcode_file') == remote
             if is_job and state.get('gcode_state') == 'RUNNING' and state.get('total_layer_num') == verified['layers'] and 1 <= (state.get('layer_num') or 0) <= verified['layers']:
                 record['phase'] = 'first-layer'; record['first_layer_reached'] = True; write(record_path, record); break
-            if state.get('print_error') or state.get('gcode_state') in ['FAILED', 'PAUSE']:
+            started = started or (is_job and state.get('gcode_state') == 'RUNNING')
+            # A printer left FAILED keeps reporting FAILED for a minute or two after it accepts
+            # the job; only a FAILED or PAUSE after this job has started needs attention.
+            if state.get('print_error') or (state.get('gcode_state') in ['FAILED', 'PAUSE'] and (started or not args.accept_failed_state)):
                 record['needs_attention'] = True; write(record_path, record); break
             time.sleep(15)
     finally: p.close()

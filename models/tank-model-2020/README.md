@@ -71,8 +71,13 @@ upload, the printer's acknowledgement and status up to the first layer.
 
 - **x1c-bed1.** Sent 2026-11-02 15:09 after the owner removed the finished beach monohull.
   The X1C acknowledged the job and reached layer 1 of 25 at 15:18.
-- **p1s-bed2.** Sent 2026-11-02 after the owner removed the other session's failed
+- **p1s-bed2.** Sent 2026-11-02 15:33 after the owner removed the other session's failed
   Tesseract parts print (FAILED at layer 1004/1369, no fault); external yellow PLA.
+  - **Start.** The P1S acknowledged the job but kept reporting the old FAILED state for
+    about two minutes, so the dispatch monitor stopped early. That is fixed now: a FAILED
+    state counts only after this job has started running. A read-only follow-up watched
+    the job start; it reached layer 1 of 500 at 15:43, with about 15 h 13 min left.
+  - **Record.** The follow-up's readings are in `followup_events` in the record.
 
 `coscad next tank.assemble` also packs two plates (`tank_bed1.stl`, `tank_bed2.stl`).
 Its packer starts at the plate corner, so its beds are not used for the X1C.

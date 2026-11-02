@@ -1,0 +1,462 @@
+{
+  "job": "p1s-bed2",
+  "printer": "p1s",
+  "material": "pla",
+  "package_sha256": "626cd056fdfe7ed4140bc4027767047394115909998d09740ef0454271951a15",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 500,
+    "deposition_moves_checked": 1310545,
+    "package_sha256": "626cd056fdfe7ed4140bc4027767047394115909998d09740ef0454271951a15"
+  },
+  "remote_name": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": true,
+  "authorization_note": "Owner confirmed 2026-11-02 in chat: failed tesseract-v3-p1s-parts print removed, P1S plate clear, use loaded external yellow PLA (FFF144FF) for tank bed 2; accept FAILED state",
+  "before": {
+    "gcode_state": "FAILED",
+    "mc_percent": 0,
+    "layer_num": 1004,
+    "total_layer_num": 1369,
+    "mc_remaining_time": 61,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-p1s-parts-20261101-125843.gcode",
+    "nozzle_temper": 29.21875,
+    "bed_temper": 25.53125,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 0
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-02T15:36:13+1100",
+      "status": {
+        "gcode_state": "FAILED",
+        "mc_percent": 0,
+        "layer_num": 1004,
+        "total_layer_num": 1369,
+        "mc_remaining_time": 61,
+        "gcode_file": "",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 29.21875,
+        "bed_temper": 25.5625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-02T15:33:42+1100",
+  "remote_content_sha256": "626cd056fdfe7ed4140bc4027767047394115909998d09740ef0454271951a15",
+  "sequence_id": "594173750",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "594173750"
+  },
+  "monitor_note": "The dispatch monitor stopped on the stale FAILED state left by the previous job; a read-only follow-up watched the job start.",
+  "followup_events": [
+    {
+      "at": "2026-11-02T15:37:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 920,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 205.78125,
+        "bed_temper": 54.53125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:37:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 920,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 247.84375,
+        "bed_temper": 54.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:38:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 915,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 228.21875,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:38:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 202.875,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789782429
+        }
+      ]
+    },
+    {
+      "at": "2026-11-02T15:38:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 200.28125,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789782442
+        }
+      ]
+    },
+    {
+      "at": "2026-11-02T15:39:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 199.96875,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789782442
+        }
+      ]
+    },
+    {
+      "at": "2026-11-02T15:39:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 190.625,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789782442
+        }
+      ]
+    },
+    {
+      "at": "2026-11-02T15:39:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 163.6875,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789782442
+        }
+      ]
+    },
+    {
+      "at": "2026-11-02T15:40:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 142.53125,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:40:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 140.1875,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:40:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:41:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 140,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:41:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:41:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 139.90625,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:42:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 139.9375,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:42:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 140.3125,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:42:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 500,
+        "mc_remaining_time": 914,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 217.40625,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-02T15:43:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 1,
+        "total_layer_num": 500,
+        "mc_remaining_time": 913,
+        "gcode_file": "tank-p1s-bed2-20261102-153342.gcode.3mf",
+        "subtask_name": "tank-p1s-bed2-20261102-153342.gcode",
+        "nozzle_temper": 220.03125,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "first_layer_reached": true
+}
