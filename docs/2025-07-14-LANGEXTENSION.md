@@ -38,7 +38,9 @@ Word shapes (centered, pipeline-friendly): `cube s`, `box x y z`,
 2D + curves: `△ ⬠ ⭘` profiles; `✎ x0 y0 x1 y1 ...` — piecewise cubic
 bezier outline, 3k+1 control points as bare pairs, evaluated in the
 compiler to a plain closed polygon (24 samples/segment). Extrude with
-`⮕ h shape` or `|> extrude h`.
+`⮕ h shape` or `|> extrude h`; revolve about Y with `⟲ deg shape`,
+`⟲ deg segs shape`, or `|> revolve deg [segs]` (profile y becomes
+height, only the +X half is kept).
 
 ## Numbers
 
@@ -103,7 +105,8 @@ compose inner translates or verify numerically) · `⬈ sx sy sz` scale ·
 `expr |> stage |> stage ...` — binds loosest. Stages:
 
 - `x d`, `y d`, `z d`, `move dx dy dz`, `rotx/roty/rotz a`,
-  `scale sx sy sz`, `mirror nx ny nz`, `extrude h`, `anchor v`
+  `scale sx sy sz`, `mirror nx ny nz`, `extrude h`, `revolve deg [segs]`,
+  `anchor v`
 - `add s`, `cut s`, `isect s`, `hull s`, `mink s`
 - `at v [dx dy dz] s` · `on v [dx dy dz] s` · `cutat v [dx dy dz] s`
   (see docs/2026-07-24-TOPOLOGICAL.md — `at`/`on` mate the child's opposite
