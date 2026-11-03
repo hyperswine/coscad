@@ -8,7 +8,7 @@ Build a small desktop sculpture with six arms that spin independently. The
 20 printed pieces fit together by hand with loose peg-and-socket connections;
 no tools, glue or extra hardware are needed.
 
-![The assembled Orbit Tower, with its six arms fanned into a spiral.](assets/orbit-tower/assembled.png)
+![The assembled Orbit Tower, with its six arms fanned into a spiral.](../models/orbit-tower/assembled.png)
 
 The finished tower is **107 mm tall**, with a **58 mm diameter base**. Leave
 at least **61 mm of space across** for the arms to turn.
@@ -24,7 +24,7 @@ at least **61 mm of space across** for the arms to turn.
 | Top cap | 1 | Tapered tip with a square socket underneath |
 | **Total** | **20** | |
 
-![All 20 pieces laid out on a single print bed.](assets/orbit-tower/bed.png)
+![All 20 pieces laid out on a single print bed.](../models/orbit-tower/bed.png)
 
 Let the plate cool before removing the parts. Remove any loose strands or
 brim material from the pegs, sockets and holes before assembly.
