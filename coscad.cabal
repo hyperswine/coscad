@@ -63,6 +63,9 @@ library
       Coscad.Mesh.Indexed
       Coscad.Next
       Coscad.Parser
+      Coscad.Parser.Core
+      Coscad.Parser.Grammar
+      Coscad.Parser.Program
       Coscad.Part
       Coscad.Plan
       Coscad.Plan.Model
