@@ -1,0 +1,173 @@
+{
+  "x1c": {
+    "created_at": "2026-11-03T16:57:00+11:00",
+    "job": "tesseract-v3-x1c-struts",
+    "printer": "x1c",
+    "authorization": "Owner requested four per-object diagonal struts on X1C and P1S, then changed A1 to three per-object long bars; explicitly confirmed all three plates clear on 2026-11-03.",
+    "remote_name": "tesseract-v3-x1c-struts-20261103-165700.gcode.3mf",
+    "package_sha256": "6f6f481f2a552b413daab53a0940161808669c8672e54caceaf7ad4a70268292",
+    "remote_content_sha256": "6f6f481f2a552b413daab53a0940161808669c8672e54caceaf7ad4a70268292",
+    "expected_layers": 1164,
+    "first_object_layers": 291,
+    "spool": "external",
+    "expected_order": [
+      "1-strut",
+      "2-strut",
+      "3-strut",
+      "4-strut"
+    ],
+    "print_sequence": "by object",
+    "bed_clear_owner_confirmed": true,
+    "material": "PLA",
+    "reply": {
+      "result": "SUCCESS",
+      "reason": "SUCCESS",
+      "command": "project_file",
+      "sequence_id": "685430448"
+    },
+    "selected_slot_verified": null,
+    "start_commands_sent": 1,
+    "phase": "first-layer",
+    "first_layer_reached": true,
+    "latest_observation": {
+      "at": "2026-11-03T17:06:40+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 1,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 241,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tesseract-v3-x1c-struts-20261103-165700.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": [],
+      "ams_tray_now": "254",
+      "targets": {
+        "bed_target_temper": 55.0,
+        "nozzle_target_temper": 220.0
+      }
+    },
+    "physical_quality_verified": false,
+    "recurring_monitor_created": false,
+    "needs_attention": false
+  },
+  "p1s": {
+    "created_at": "2026-11-03T16:57:00+11:00",
+    "job": "tesseract-v3-p1s-struts",
+    "printer": "p1s",
+    "authorization": "Owner requested four per-object diagonal struts on X1C and P1S, then changed A1 to three per-object long bars; explicitly confirmed all three plates clear on 2026-11-03.",
+    "remote_name": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+    "package_sha256": "2ba2e47f76fa7aae0ff6e417a6714714800e4fc226e61ba963a01fa802f27d4b",
+    "remote_content_sha256": "2ba2e47f76fa7aae0ff6e417a6714714800e4fc226e61ba963a01fa802f27d4b",
+    "expected_layers": 1164,
+    "first_object_layers": 291,
+    "spool": "external",
+    "expected_order": [
+      "1-strut",
+      "2-strut",
+      "3-strut",
+      "4-strut"
+    ],
+    "print_sequence": "by object",
+    "bed_clear_owner_confirmed": true,
+    "material": "PLA",
+    "reply": {
+      "result": "success",
+      "reason": "success",
+      "command": "project_file",
+      "sequence_id": "685453760"
+    },
+    "selected_slot_verified": null,
+    "start_commands_sent": 1,
+    "phase": "first-layer",
+    "first_layer_reached": true,
+    "latest_observation": {
+      "at": "2026-11-03T17:05:19+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 1,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 241,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 220.3125,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    "physical_quality_verified": false,
+    "recurring_monitor_created": false,
+    "initial_observer_flagged_warning": true,
+    "startup_warning_cleared": true,
+    "needs_attention": false
+  },
+  "a1": {
+    "created_at": "2026-11-03T16:56:56+11:00",
+    "job": "tesseract-v3-a1-bars",
+    "printer": "a1",
+    "authorization": "Owner requested four per-object diagonal struts on X1C and P1S, then changed A1 to three per-object long bars; explicitly confirmed all three plates clear on 2026-11-03.",
+    "remote_name": "tesseract-v3-a1-bars-20261103-165656.gcode.3mf",
+    "package_sha256": "9a34d4067e59ba83498c6075ca09c29462c88a18edccfa6b8552f7b3d045e5e5",
+    "remote_content_sha256": "9a34d4067e59ba83498c6075ca09c29462c88a18edccfa6b8552f7b3d045e5e5",
+    "expected_layers": 1488,
+    "first_object_layers": 496,
+    "spool": "ams0",
+    "expected_order": [
+      "1-bar-print",
+      "2-bar-print",
+      "3-bar-print"
+    ],
+    "print_sequence": "by object",
+    "bed_clear_owner_confirmed": true,
+    "material": "PLA",
+    "reply": {
+      "result": "success",
+      "reason": "success",
+      "command": "project_file",
+      "sequence_id": "685430945"
+    },
+    "selected_slot_verified": true,
+    "start_commands_sent": 1,
+    "phase": "first-layer",
+    "first_layer_reached": true,
+    "latest_observation": {
+      "at": "2026-11-03T17:06:11+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 1,
+        "total_layer_num": 1488,
+        "mc_remaining_time": 253,
+        "gcode_file": "tesseract-v3-a1-bars-20261103-165656.gcode.3mf",
+        "subtask_name": "tesseract-v3-a1-bars-20261103-165656.gcode",
+        "nozzle_temper": 220.65625,
+        "bed_temper": 55.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": [],
+      "ams_tray_now": "0",
+      "targets": {
+        "bed_target_temper": 55,
+        "nozzle_target_temper": 220
+      }
+    },
+    "physical_quality_verified": false,
+    "recurring_monitor_created": false,
+    "needs_attention": false
+  }
+}

@@ -240,7 +240,8 @@ class PreflightTests(unittest.TestCase):
                        if not p.name.startswith('test') and 'project_file' in p.read_text()]
         self.assertTrue(dispatchers)
         trial_modes = {'print_strut_trial.py': ('x1c-staggered', 'p1s-compact'),
-                       'print_batch_20261101.py': ('x1c-center', 'p1s-parts', 'a1-bars')}
+                       'print_batch_20261101.py': ('x1c-center', 'p1s-parts', 'a1-bars'),
+                       'print_parts_20261103.py': ('x1c-struts', 'p1s-struts', 'a1-bars')}
         cases = [(source, trial) for source in sorted(dispatchers)
                  for trial in trial_modes.get(source.name, (None,))]
         for index, (source, trial) in enumerate(cases):
@@ -252,9 +253,9 @@ class PreflightTests(unittest.TestCase):
                 args = ['--start', '--bed-clear']
                 job = folder
                 if source.name == 'dispatch.py':
-                    if source.parent.name in ('beach-outrigger', 'beach-monohull'):
+                    if hasattr(module, 'NAME'):
                         name = 'p1s-pla'
-                        filename = source.parent.name + '.gcode.3mf'
+                        filename = module.NAME + '.gcode.3mf'
                     else:
                         name = 'monohull'
                         filename = 'monohull.gcode.3mf'
@@ -288,6 +289,11 @@ class PreflightTests(unittest.TestCase):
                     }[trial]
                     job = folder/variant
                     package = job/f'slice/tesseract-bed{bed}-{printer}.gcode.3mf'
+                elif source.name == 'print_parts_20261103.py':
+                    args.insert(0, trial)
+                    printer = trial.split('-')[0]
+                    job = folder/printer
+                    package = job/f'slice/tesseract-bed4-{printer}.gcode.3mf'
                 elif source.parent.name == 'p1s-split-retry':
                     package = folder/'slice-corrected/tesseract-bed1-p1s.gcode.3mf'
                 elif source.parent.name == 'p1s-full':

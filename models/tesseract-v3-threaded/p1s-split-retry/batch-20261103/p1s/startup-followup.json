@@ -1,0 +1,399 @@
+{
+  "printer": "p1s",
+  "remote_name": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+  "printer_controls_sent": [],
+  "events": [
+    {
+      "at": "2026-11-03T17:01:03+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 199.46875,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789873708
+        }
+      ],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:01:18+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 185.0625,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789873708
+        }
+      ],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:01:33+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 166.75,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789873708
+        }
+      ],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:01:48+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 150.25,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1789873708
+        }
+      ],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:02:03+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 140.84375,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:02:18+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 140.21875,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:02:33+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 140,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:02:48+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 140.0625,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:03:03+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 140,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:03:18+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:03:33+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:03:49+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 139.90625,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:04:04+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 139.9375,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:04:19+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 139.9375,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:04:34+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 176.75,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:04:49+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 218.84375,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:05:04+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 242,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 220.25,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    },
+    {
+      "at": "2026-11-03T17:05:19+11:00",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 1,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 241,
+        "gcode_file": "tesseract-v3-p1s-struts-20261103-165700.gcode.3mf",
+        "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+        "nozzle_temper": 220.3125,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": [],
+      "ams_tray_now": "254"
+    }
+  ],
+  "original_startup_warning_preserved": true,
+  "first_layer_reached": true,
+  "phase": "first-layer",
+  "startup_warning_cleared": true
+}

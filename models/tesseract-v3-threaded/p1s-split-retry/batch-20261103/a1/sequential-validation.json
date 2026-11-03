@@ -1,0 +1,54 @@
+{
+  "checked": true,
+  "package_sha256": "9a34d4067e59ba83498c6075ca09c29462c88a18edccfa6b8552f7b3d045e5e5",
+  "actual_print_sequence": "by object",
+  "object_order": [
+    "1-bar-print",
+    "2-bar-print",
+    "3-bar-print"
+  ],
+  "per_object": {
+    "1-bar-print": {
+      "layers": 496,
+      "last_z_mm": 99.2
+    },
+    "2-bar-print": {
+      "layers": 496,
+      "last_z_mm": 99.2
+    },
+    "3-bar-print": {
+      "layers": 496,
+      "last_z_mm": 99.2
+    }
+  },
+  "thermal": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 1488,
+    "deposition_moves_checked": 38236,
+    "package_sha256": "9a34d4067e59ba83498c6075ca09c29462c88a18edccfa6b8552f7b3d045e5e5"
+  },
+  "transition_samples_0_5mm": 325065,
+  "conservative_return_collisions": [],
+  "legacy_input_only_clearance_keys": [
+    "extruder_clearance_radius"
+  ],
+  "slicer_warnings": "",
+  "estimated_seconds": 15648.3466796875,
+  "filaments": [
+    {
+      "filament_id": "GFL99",
+      "id": 1,
+      "main_used_g": 7.52360725402832,
+      "total_used_g": 7.52360725402832
+    }
+  ],
+  "limitation": "Preset limits, slicer validation and sampled conservative motion envelopes; not measured hardware clearance or a physical print-quality guarantee."
+}
