@@ -2,9 +2,12 @@
 
 Four water propellers and a shaft fit coupon for the yellow TT hobby gearmotor (1:48), as a
 first step toward motorised versions of the beach outrigger and the beach monohull. All
-geometry is CoScad written by design.py. Sliced for the X1C and printing since 2026-11-02 20:20 (black PLA, external spool; the
-owner confirmed the plate clear). Flow calibration and first-layer inspection were off;
-the job reached layer 1 of 158 at 20:26. Record: `x1c-props/print-run.json`.
+geometry is CoScad written by design.py. Printed on the X1C on 2026-11-02 (black PLA, external spool, sent 20:20, layer 1 of
+158 at 20:26) with flow calibration and first-layer inspection off. Record:
+`x1c-props/print-run.json`.
+
+**Result (owner report, 2026-11-03):** printed well, no issues. Not tested on a motor yet:
+shaft fit and thrust are still unmeasured.
 
 | Design | Blades | Diameter | Pitch | Hub | Mass | 6 V: rpm, static thrust | 3 V |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -52,6 +55,8 @@ baseline. Hang the motor over a bucket on a kitchen scale and read the thrust.
 clear of the X1C's flow calibration lines at the front.
 - **Settings.** Bambu's stock 0.12mm Fine process, PLA at 220 C, 3 walls, 100% infill,
   3 mm brim, and tree supports from the plate under the blades.
+- **Brim.** Next time use mouse-ear brim pads instead of a full brim (see the tank model
+  README).
 - **Estimate.** 1.7 h, 20 g, 158 layers.
 - **Checks.** `verify_packages.py` passed: slicer success, no warnings, supports present,
   paths clear of the exclusion corner, weight, printer model id. The thermal preflight

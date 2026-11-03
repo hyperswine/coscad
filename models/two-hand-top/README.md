@@ -1,8 +1,8 @@
 # Two-hand spinning top, 2026-11-02
 
 A large top you spin like a fire drill: rub the stem between both palms, then let it go
-onto a hard floor. All geometry is CoScad written by design.py. Sliced for the A1 in PLA. Printing on the A1 since 2026-11-02 19:53 (white PLA,
-AMS slot 1, the owner confirmed the plate clear); layer 1 of 522 at 20:02. Not spun yet.
+onto a hard floor. All geometry is CoScad written by design.py. Sliced for the A1 in PLA. Printed on the A1 on 2026-11-02 (white PLA, AMS slot 1, sent
+19:53, first layer 20:02); see "Results" below.
 
 | | Value |
 | --- | --- |
@@ -34,6 +34,8 @@ AMS slot 1, the owner confirmed the plate clear); layer 1 of 522 at 20:02. Not s
 - **Optional ballast.** 12 hex pockets on the rim's underside take M8 nuts (13 mm across
   flats, 6.5 mm deep, 2.3 mm walls). Glue them in with CA or epoxy. They add 62 g on the
   rim: spin inertia +23%, centre of gravity 2 mm lower.
+- **Brim.** This job used a full 3 mm brim. Future jobs should use mouse-ear brim pads
+  instead (see the tank model README).
 
 ## What the numbers say (verify.py)
 
@@ -68,6 +70,24 @@ the tip and the floor. These are static, rigid-body numbers, not measurements.
 `dispatch.py a1-top --spool <name> --confirm-bed-clear --authorization-note '...'` sends
 it. Use the spool's AMS slot name (`ams0`...) or `external`. It refuses unless the A1 is
 idle with no faults and the named PLA spool is loaded.
+
+## Results (owner report, 2026-11-03)
+
+- **Print.** Printed well, no issues.
+- **Without the stem.** Spun quite well and for a long time.
+- **With the stem.** Harder to spin well; it kept spinning poorly. The hex peg dropped into
+  the socket too easily, so the fit is probably too loose.
+
+Likely causes (not yet tested):
+- **Loose hex.** 0.25 mm clearance per flat is 0.5 mm across flats. Over the 14.5 mm of
+  engagement the 90 mm stem can lean about 2°, so its top end can sit about 3 mm off the
+  axis and wobble. That puts the stem's 24 g off-centre and the palms push the whole top
+  sideways while rubbing.
+- **Mass up high.** The stem adds 24 g well above the body, which raises the centre of
+  gravity and the tilt inertia; the body alone is the more stable top.
+
+Next version to try: clearance 0.10 mm per flat (or a print-in coupon at 0.05/0.10/0.15),
+a deeper socket, and a shorter or lighter stem.
 
 ## Using it
 

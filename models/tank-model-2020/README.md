@@ -92,6 +92,15 @@ upload, the printer's acknowledgement and status up to the first layer.
 `coscad next tank.assemble` also packs two plates (`tank_bed1.stl`, `tank_bed2.stl`).
 Its packer starts at the plate corner, so its beds are not used for the X1C.
 
+## Brims: use mouse ears (owner preference, 2026-11-03)
+
+Use mouse-ear brim pads (small discs at the corners that tend to lift) instead of full
+brims. They come off more easily and only cover the places that need them. In Bambu
+Studio this is `brim_type = brim_ears`. The slicer places ears at sharp corners, or uses
+ear points saved in the 3MF (`Metadata/brim_ear_points.txt`, the brim-ears tool in the
+GUI). Round parts with no sharp corners, such as the top's body or the propeller hubs,
+may get no ears at all, so check the sliced preview and fall back to manual brim pads or a narrow brim if needed.
+
 ## Build
 
 Follow `tank_plan.md` and the step images `tank_stepN.png`. They're generated and not
