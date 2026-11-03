@@ -8,6 +8,15 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Surfaces of revolution.** `⟲ angle profile` (pipeline `|> revolve angle`,
+  `Revolve` in `!simple`) revolves a 2D profile about the Y axis through the
+  pinned Manifold kernel; profile y becomes height and only the +X half is
+  kept, matching OpenSCAD's `rotate_extrude`. An optional second number sets
+  the segment count (`⟲ 360 64 p`, `|> revolve 90 64`); without it the kernel
+  default applies. Union, difference and intersection distribute over the
+  revolve; hull and minkowski under a revolve are refused with a fix. The
+  `.scad` export emits `rotate_extrude`, intersecting crossing profiles
+  with their +X square first (OpenSCAD refuses crossing profiles).
 - **`coscad plan` works on the meshes.** Mass and centre of mass, bench
   footprints and part-on-part contact patches come from the native meshes,
   not bounding boxes. Every part's ways in (a 26-direction lattice plus its

@@ -1,7 +1,7 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 -- | Direct bridge to the pinned Manifold kernel, which every build links. No
 -- subprocess, implicit fallback or unsafePerformIO. Empty results are valid intermediate CSG operands.
-module Coscad.Manifold (MeshOp (..), manifoldAvailable, manifoldKernelVersion, meshOperation, indexedOperation, indexedOperationWithLimit, extrudePolygon, extrudeOffsetPolygon) where
+module Coscad.Manifold (MeshOp (..), manifoldAvailable, manifoldKernelVersion, meshOperation, indexedOperation, indexedOperationWithLimit, extrudePolygon, extrudeOffsetPolygon, revolvePolygon, revolveOffsetPolygon) where
 
 import Coscad.Mesh (Tri)
 import Coscad.Mesh.Indexed
@@ -35,6 +35,10 @@ foreign import ccall unsafe "coscad_mesh_free"
   c_free :: Ptr CDouble -> IO ()
 foreign import ccall safe "coscad_mesh_extrude_offset"
   c_extrude_offset :: Ptr CDouble -> CSize -> CDouble -> CInt -> CDouble -> Ptr (Ptr CDouble) -> Ptr CSize -> Ptr CChar -> CSize -> IO CInt
+foreign import ccall safe "coscad_mesh_revolve"
+  c_revolve :: Ptr CDouble -> CSize -> CDouble -> CInt -> Ptr (Ptr CDouble) -> Ptr CSize -> Ptr CChar -> CSize -> IO CInt
+foreign import ccall safe "coscad_mesh_revolve_offset"
+  c_revolve_offset :: Ptr CDouble -> CSize -> CDouble -> CInt -> CDouble -> CInt -> Ptr (Ptr CDouble) -> Ptr CSize -> Ptr CChar -> CSize -> IO CInt
 
 -- | The limit is cooperative: a large Boolean phase may overrun it. A timed
 -- out operation is never accepted, and every call gets a fresh kernel context.
@@ -80,6 +84,23 @@ extrudeOffsetPolygon height segments delta points
   | length points>4096 = return (Left "Manifold: offset profile exceeds 4096 vertices")
   | otherwise = withArray (concatMap (\(x,y) -> map realToFrac [x,y]) points) $ \ptr ->
       withMeshResult (c_extrude_offset ptr (fromIntegral (length points)) (realToFrac delta) (fromIntegral segments) (realToFrac height))
+
+-- | Surface of revolution of one simple outline about its Y axis
+-- (profile y becomes height), through Manifold::Revolve, which keeps
+-- only the +X half. Segments 0 selects the kernel default.
+revolvePolygon :: Double -> Int -> [(Double,Double)] -> IO (Either String [Tri])
+revolvePolygon angle segments points
+  | length points>4096 = return (Left "Manifold: revolve exceeds 4096 profile vertices")
+  | otherwise = withArray (concatMap (\(x,y) -> map realToFrac [x,y]) points) $ \ptr ->
+      withMeshResult (c_revolve ptr (fromIntegral (length points)) (realToFrac angle) (fromIntegral segments))
+
+-- | OpenSCAD's @offset(r = delta)@ of one simple outline followed by
+-- a surface of revolution. Arc steps match the offset extrusion (50).
+revolveOffsetPolygon :: Double -> Int -> Double -> [(Double,Double)] -> IO (Either String [Tri])
+revolveOffsetPolygon angle segments delta points
+  | length points>4096 = return (Left "Manifold: revolve profile exceeds 4096 vertices")
+  | otherwise = withArray (concatMap (\(x,y) -> map realToFrac [x,y]) points) $ \ptr ->
+      withMeshResult (c_revolve_offset ptr (fromIntegral (length points)) (realToFrac delta) 50 (realToFrac angle) (fromIntegral segments))
 
 withMeshResult :: (Ptr (Ptr CDouble) -> Ptr CSize -> Ptr CChar -> CSize -> IO CInt) -> IO (Either String [Tri])
 withMeshResult action = alloca $ \out -> alloca $ \count -> allocaBytes 256 $ \err -> mask $ \restore -> do

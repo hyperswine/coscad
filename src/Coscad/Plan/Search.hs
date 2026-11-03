@@ -47,9 +47,8 @@ extent :: Model -> Inst -> V3 -> (Double, Double)
 extent m i d = fromMaybe (extentAlong d (iBox i)) (axisIndex m d >>= \k -> Map.lookup (iName i, k) (gExt (mGeo m)))
 
 -- heights measured up, away from the bench under rest direction d
-heightMin, heightMax :: Model -> V3 -> Inst -> Double
+heightMin :: Model -> V3 -> Inst -> Double
 heightMin m d i = negate (snd (extent m i d))
-heightMax m d i = negate (fst (extent m i d))
 
 benchLevel :: Model -> V3 -> [Inst] -> Double
 benchLevel m d is = minimum (map (heightMin m d) is)

@@ -105,6 +105,8 @@ instancesOf = go (matIdentity, (0, 0, 0))
       Hull xs -> concatMap (go aff) xs
       Minkowski xs -> concatMap (go aff) xs
       Extrude _ x -> go aff x
+      Revolve _ x -> go aff x
+      RevolveSeg _ _ x -> go aff x
       Offset _ x -> go aff x
       _ -> []
 

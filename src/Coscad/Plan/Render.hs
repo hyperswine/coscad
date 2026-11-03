@@ -85,7 +85,7 @@ planMarkdown title m steps errs = unlines $
              then printf "- Tighten: %s %s head through %s into the hex nut in %s (%s) — %s" (fSpec f) (fHead f) (fClamped f) (fHost f) (interfaceName f) (torqueWords (hostMat f) (fTorque f))
              else printf "- Tighten: %s %s head into %s T-nut on %s %s slot at %s mm — %s" (fSpec f) (fHead f) (nutWord f) (fHost f) (fFaceName f) (fmtMm (fAlong f)) (torqueWords (hostMat f) (fTorque f))
          | i <- stFasts s, let f = byId Map.! i ]
-      ++ [ "- Note: " ++ w | w <- nub (stWarn s) ]
+      ++ [ "- Note: " ++ note | note <- nub (stWarn s) ]
       ++ [""]
     hostsNote p = let hs = nub [fHost f | f <- mFasts m, fClamped f == p] in if null hs then "" else " (on " ++ intercalate ", " hs ++ ")"
     turnsOf f = fromIntegral (round (10 * maybe 0 twTurns (Map.lookup (fId f, fClamped f) (gTwist (mGeo m)))) :: Integer) / 10 :: Double
@@ -115,7 +115,7 @@ entryWords rest out
     commas xs = case reverse xs of
       [] -> "side"
       [x] -> x
-      (x : rest) -> intercalate ", " (reverse rest) ++ " and " ++ x
+      (x : rs) -> intercalate ", " (reverse rs) ++ " and " ++ x
 
 planJson :: String -> Model -> [Step] -> [String] -> String
 planJson src m steps errs =
@@ -141,7 +141,7 @@ planJson src m steps errs =
         , ("fasteners", jlist [fj (mFastById m Map.! i) | i <- stFasts s])
         , ("warnings", jlist (map JString (nub (stWarn s))))
         , ("entries", jlist [jobj [("part", JString p), ("leaves_along", v3 a)] | (p, a) <- stEntry s])
-        , ("terms", jobj [(k, jnum3 v) | (k, v) <- Map.toList (stTerms s)])
+        , ("terms", jobj [(key, jnum3 v) | (key, v) <- Map.toList (stTerms s)])
         , ("cost", jnum3 (price (mWeights m) (stTerms s)))
         ]
     fj f =

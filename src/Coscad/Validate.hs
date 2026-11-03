@@ -49,6 +49,10 @@ validateShape s = do
     edge name limit value = do
       nonneg name [value]
       when (value > limit) (Left (name ++ " is too large; maximum for these dimensions is " ++ show limit ++ " mm"))
+    revolveCheck a x = do
+      unless (finite a && a > 0 && a <= 360) (Left "revolve angle must be finite, greater than 0 and at most 360 degrees")
+      let ((x0, _, _), (x1, _, _)) = bbox x
+      when (finite x0 && finite x1 && x1 <= 0) (Left "revolve profile must reach x > 0: the +X half is revolved about the Y axis and the -X half is clipped")
     check sh = case sh of
       Empty -> Right ()
       Hidden x -> check x
@@ -114,6 +118,11 @@ validateShape s = do
       CutAt _ v off a b -> nums "cutat" (vec v ++ vec off) >> check a >> check b
       Diff a b -> check a >> check b
       Extrude h x -> pos "extrusion height" [h] >> check x
+      Revolve a x -> revolveCheck a x >> check x
+      RevolveSeg a n x -> do
+        unless (n >= 3 && n <= maxSides) (Left ("revolve segment count must be a whole number from 3 to " ++ show maxSides))
+        revolveCheck a x
+        check x
       Offset r x -> nums "offset" [r] >> check x
       Union xs -> mapM_ check xs
       Intersection xs -> mapM_ check xs

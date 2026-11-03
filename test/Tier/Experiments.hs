@@ -4,7 +4,7 @@ import Control.Monad (forM_)
 import Coscad.Backend
 import Coscad.Check (splitSolidBodies, splitIndexedSolids)
 import Coscad.Json (JValue (..), lookupKey)
-import Coscad.Geometry (V3, cross, dot3, vadd, vlen)
+import Coscad.Geometry (V3, bbox, cross, dot3, vadd, vlen)
 import Coscad.Mesh
 import Coscad.Mesh.Distance
 import Coscad.Linalg (mApply, rodMat)
@@ -158,7 +158,7 @@ experimentsTier t = do
       assertT t "CLI refuses --backend=openscad and points at the .scad export" (retired==ExitFailure 1 && "retired" `isInfixOf` retiredWhy && "part.scad" `isInfixOf` retiredWhy) retiredWhy
       (badBackend,_,message) <- readProcessWithExitCode exe ["stl",src,"--backend=magic"] ""
       assertT t "CLI rejects unknown backend" (badBackend==ExitFailure 1 && "unknown backend" `isInfixOf` message) message
-  manifoldTier t >> indexedKernelTier t >> extrusionTier t >> nativePipelineTier t
+  manifoldTier t >> indexedKernelTier t >> extrusionTier t >> revolveTier t >> nativePipelineTier t
 
 manifoldTier :: T -> IO ()
 manifoldTier t = do
@@ -407,6 +407,54 @@ extrusionTier t = do
         ,("zero area",[(0,0),(1,0),(2,0)])] $ \(name,pts) -> do
     result<-extrudePolygon 2 pts
     expectErr t name result ["Manifold:"] []
+
+revolveTier :: T -> IO ()
+revolveTier t = do
+  let rect=Poly (PD [(2,0),(4,0),(4,10),(2,10)] [])
+      ring r=Tx 6 (Shape2D 64 r)
+      boxesClose ((a,b,c),(d,e,f)) ((p,q,r),(s2,t2,u)) =
+        all (<1e-6) [abs (a-p),abs (b-q),abs (c-r),abs (d-s2),abs (e-t2),abs (f-u)]
+  -- analytic volumes: exact for polyhedral sections, smooth otherwise
+  forM_ [ ("square section",RevolveSeg 360 4 rect,240,1e-6)
+        , ("tube",RevolveSeg 360 128 rect,120*pi,1e-3)
+        , ("auto segments",Revolve 360 rect,120*pi,2e-2)
+        , ("auto segments partial",Revolve 90 rect,30*pi,2e-2)
+        , ("quarter tube",RevolveSeg 90 32 rect,30*pi,1e-3)
+        , ("torus",RevolveSeg 360 64 (ring 2),48*pi*pi,1e-2)
+        , ("ball",RevolveSeg 360 64 (Shape2D 64 4),256*pi/3,1e-2)
+        , ("2D hole via difference",RevolveSeg 360 64 (Diff (ring 3) (ring 1)),96*pi*pi,1e-2)
+        , ("transform above union",RevolveSeg 360 64 (Tx 2 (Union [Tx 3 (Shape2D 64 1),Tx 6 (Shape2D 64 1)])),26*pi*pi,1e-2)
+        , ("offset disc",RevolveSeg 360 64 (Offset 1 (Shape2D 32 3)),256*pi/3,2e-2)
+        , ("translated pair",Union [Tx (-14) (RevolveSeg 360 64 (Shape2D 64 4)),Tx 14 (RevolveSeg 360 64 (Shape2D 64 4))],512*pi/3,1e-2)
+        ] $ \(name,s,volume,relative) -> do
+    result<-nativeCSGMesh s
+    case result of
+      Left err -> failT t ("revolve "++name) err
+      Right mesh -> do
+        assertT t ("revolve "++name++" closed oriented surface") (closed mesh && signedVolume mesh>0) "non-manifold edge or reversed face"
+        assertT t ("revolve "++name++" volume") (abs (meshVolume mesh-volume)<=relative*volume) (show (meshVolume mesh,volume))
+  -- the compiler box matches the mesh box on exact sections
+  forM_ [ ("full",RevolveSeg 360 4 rect,((-4,-4,0),(4,4,10)))
+        , ("quarter",RevolveSeg 90 32 rect,((0,0,0),(4,4,10)))
+        ] $ \(name,s,box) -> do
+    result<-nativeCSGMesh s
+    case result of
+      Left err -> failT t ("revolve "++name++" bounds") err
+      Right mesh -> do
+        assertT t ("revolve "++name++" mesh bounds") (boxesClose (meshBounds mesh) box) (show (meshBounds mesh,box))
+        assertT t ("revolve "++name++" compiler bounds") (boxesClose (bbox s) box) (show (bbox s,box))
+  -- refusals name the rule
+  forM_ [ ("zero angle",Revolve 0 rect,["revolve angle"])
+        , ("over-360 angle",Revolve 400 rect,["revolve angle"])
+        , ("segment count",RevolveSeg 360 2 rect,["revolve segment"])
+        , ("3D profile",Revolve 360 (Rectangle 1 2 3),["non-2D"])
+        , ("2D hull",Revolve 360 (Hull [Shape2D 32 3,Tx 5 (Shape2D 32 3)]),["revolve of a 2D hull"])
+        , ("2D minkowski",Revolve 360 (Minkowski [Shape2D 32 3,Tx 5 (Shape2D 32 3)]),["revolve of a 2D minkowski"])
+        , ("tilted profile",Revolve 360 (Rx 30 (Shape2D 32 3)),["XY plane"])
+        , ("-X profile",Revolve 360 (Tx (-10) (Shape2D 32 2)),["must reach x > 0"])
+        ] $ \(name,s,frags) -> do
+    result<-nativeCSGMesh s
+    expectErr t ("revolve "++name++" refused") result frags []
 
 tetraTier :: T -> IO ()
 tetraTier t = do

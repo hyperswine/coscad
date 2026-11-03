@@ -296,9 +296,9 @@ namespace {
 // A single simple outline, validated (finite, bounded, no repeated vertex,
 // nonzero area, no touching/crossing non-neighbour edges) and oriented
 // counter-clockwise. Shared by plain and offset extrusions.
-manifold::SimplePolygon read_polygon(const double *xy, size_t n) {
+manifold::SimplePolygon read_polygon(const double *xy, size_t n, const char *op) {
     if (!xy || n<3 || n>4096)
-      throw std::runtime_error("extrusion requires 3..4096 vertices");
+      throw std::runtime_error(std::string(op)+" requires 3..4096 vertices");
     manifold::SimplePolygon polygon;
     double scale=1, area=0;
     std::map<std::array<double,2>,bool> unique;
@@ -347,7 +347,7 @@ extern "C" int coscad_mesh_extrude_offset(const double *xy, size_t n, double del
       throw std::runtime_error("offset radius must be finite and at most 1e9 mm");
     if (segments<3 || segments>4096)
       throw std::runtime_error("offset arc segments must be 3..4096");
-    const auto polygon=read_polygon(xy,n);
+    const auto polygon=read_polygon(xy,n,"extrusion");
     manifold::CrossSection section(polygon);
     if (section.IsEmpty()) throw std::runtime_error("offset profile is empty after import");
     auto inflated=section;
@@ -422,6 +422,80 @@ extern "C" int coscad_mesh_extrude(const double *xy, size_t n, double height,
     if (error_size) std::snprintf(error,error_size,"%s",e.what());
   } catch (...) {
     if (error_size) std::snprintf(error,error_size,"unknown C++ extrusion failure");
+  }
+  return 1;
+}
+
+// Surface of revolution of a single simple outline about its Y axis
+// (profile y becomes height), through Manifold::Revolve, which keeps
+// only the +X half. Segments 0 selects the kernel default; otherwise
+// 3..4096. Composite 2D operations are distributed over the revolve
+// by Haskell. Same ownership rules as the others.
+extern "C" int coscad_mesh_revolve(const double *xy, size_t n, double angle, int segments,
+    double **output, size_t *count, char *error, size_t error_size) noexcept {
+  if (!output || !count || (error_size && !error)) return 1;
+  *output=nullptr; *count=0;
+  if (error_size) error[0]='\0';
+  try {
+    if (!std::isfinite(angle) || angle<=0 || angle>360)
+      throw std::runtime_error("revolve requires an angle within 0..360 degrees");
+    if (segments!=0 && (segments<3 || segments>4096))
+      throw std::runtime_error("revolve segments must be 0 (automatic) or 3..4096");
+    const auto polygon=read_polygon(xy,n,"revolve");
+    auto result=Manifold::Revolve({polygon},segments,angle);
+    if (result.Status()!=Manifold::Error::NoError)
+      throw std::runtime_error(std::string("revolve: ")+status_name(result.Status()));
+    if (result.IsEmpty()) throw std::runtime_error("revolve produced an empty solid (the profile must reach x > 0)");
+    write_mesh(result,output,count);
+    return 0;
+  } catch (const std::exception &e) {
+    if (error_size) std::snprintf(error,error_size,"%s",e.what());
+  } catch (...) {
+    if (error_size) std::snprintf(error,error_size,"unknown C++ revolve failure");
+  }
+  return 1;
+}
+
+// Round 2D offset (OpenSCAD `offset(r = delta)`) of a single simple outline,
+// then a surface of revolution. Same Clipper2 CrossSection offset as the
+// offset extrusion, revolved instead of extruded.
+extern "C" int coscad_mesh_revolve_offset(const double *xy, size_t n, double delta, int arcSegments,
+    double angle, int segments, double **output, size_t *count, char *error, size_t error_size) noexcept {
+  if (!output || !count || (error_size && !error)) return 1;
+  *output=nullptr; *count=0;
+  if (error_size) error[0]='\0';
+  try {
+    if (!std::isfinite(angle) || angle<=0 || angle>360)
+      throw std::runtime_error("revolve requires an angle within 0..360 degrees");
+    if (segments!=0 && (segments<3 || segments>4096))
+      throw std::runtime_error("revolve segments must be 0 (automatic) or 3..4096");
+    if (!std::isfinite(delta) || std::abs(delta)>1e9)
+      throw std::runtime_error("offset radius must be finite and at most 1e9 mm");
+    if (arcSegments<3 || arcSegments>4096)
+      throw std::runtime_error("offset arc segments must be 3..4096");
+    const auto polygon=read_polygon(xy,n,"revolve");
+    manifold::CrossSection section(polygon);
+    if (section.IsEmpty()) throw std::runtime_error("offset profile is empty after import");
+    auto inflated=section;
+    if (delta!=0) inflated=section.Offset(delta,manifold::CrossSection::JoinType::Round,2.0,arcSegments);
+    if (inflated.IsEmpty()) throw std::runtime_error("offset removed the whole profile (negative radius larger than the shape)");
+    const auto polygons=inflated.ToPolygons();
+    size_t total=0;
+    for (const auto &contour : polygons) total+=contour.size();
+    if (polygons.empty() || total<3 || total>65536)
+      throw std::runtime_error("offset produced an unusable outline (empty or more than 65536 vertices)");
+    for (const auto &contour : polygons) for (const auto &p : contour)
+      if (!std::isfinite(p.x) || !std::isfinite(p.y)) throw std::runtime_error("offset produced a non-finite vertex");
+    auto result=Manifold::Revolve(polygons,segments,angle);
+    if (result.Status()!=Manifold::Error::NoError)
+      throw std::runtime_error(std::string("offset revolve: ")+status_name(result.Status()));
+    if (result.IsEmpty()) throw std::runtime_error("offset revolve produced an empty solid");
+    write_mesh(result,output,count);
+    return 0;
+  } catch (const std::exception &e) {
+    if (error_size) std::snprintf(error,error_size,"%s",e.what());
+  } catch (...) {
+    if (error_size) std::snprintf(error,error_size,"unknown C++ offset revolve failure");
   }
   return 1;
 }

@@ -210,6 +210,9 @@ ok(messages('p = ζ 3 (⭘ 3)\nmain = loft 0 p 10 (⭘ 5)\n').some(m => m.includ
 checks += 5
 
 // --- dimensionality -------------------------------------------------
+ok(messages('main = ⟲ 360 (● 1)\n').some(m => m.startsWith('cannot revolve a 3D solid')), 'revolve solid')
+ok(messages('main = ⭘ 4 |> revolve 90\n').length === 0, 'pipeline revolve clean')
+ok(messages('main = ⟲ 360 64 (⭘ 4)\n').length === 0, 'revolve segments clean')
 ok(messages('main = ⮕ 2 (● 1)\n').some(m => m.startsWith('cannot extrude a 3D solid')), 'extrude solid')
 ok(messages('hole = ⮕ 2 (● 1)\nmain = ■ 10 ⊖ hole\n').some(m => m.startsWith('cannot extrude a 3D solid')), 'extrude solid in helper')
 ok(messages('main = ■ 10 ↯ ● 2\n').some(m => m.startsWith('offset (↯ / Offset) needs a 2D profile')), 'offset solid')
@@ -217,7 +220,7 @@ ok(messages('main = ⭘ 3 ⊕ ■ 2\n').some(m => m.includes('2D profile with a 
 ok(messages('main = △ 8\n').some(m => m.includes("'main' is a 2D profile")), '2D main')
 ok(messages('main = box 2 2 2 |> add (⭘ 1)\n').some(m => m.includes('cannot union a 2D profile')), 'mixed pipeline add')
 assert.deepEqual(messages('main = ⮕ 5 (△ 8 ↯ ⭘ 2)\n'), [])
-checks += 7
+checks += 10
 
 // --- optional: every example in a compiler checkout is clean ---------
 const examplesRoot = process.env.COSCAD_EXAMPLES

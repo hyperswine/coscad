@@ -32,6 +32,7 @@ module Coscad.Dsl
   , (◙)
   , (✎)
   , (⟁)
+  , (⟲)
   , (⬈)
   , (⬠)
   , (⭘)
@@ -53,6 +54,8 @@ module Coscad.Dsl
   , posAt
   , prism
   , rect
+  , revolve
+  , revolveSeg
   , rt
   , sph
   , top
@@ -290,6 +293,18 @@ wedge x y z = Wedge (x, y, z)
 -- | Linear extrusion (2‑D → 3‑D)
 (⮕) :: D -> Shape -> Shape
 (⮕) = Extrude
+
+-- | Surface of revolution about the Y axis (2‑D → 3‑D): profile y
+-- becomes height, and only the +X half is kept
+(⟲) :: D -> Shape -> Shape
+(⟲) = Revolve
+
+-- | '⟲' with an explicit segment count (OpenSCAD $fn)
+revolve :: D -> Shape -> Shape
+revolve = Revolve
+
+revolveSeg :: D -> I -> Shape -> Shape
+revolveSeg = RevolveSeg
 
 infixl 0 ⊞
 

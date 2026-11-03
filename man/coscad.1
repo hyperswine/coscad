@@ -355,7 +355,18 @@ Extrude with
 .Ql ⮕ h profile
 or
 .Ql |> extrude h ;
-offset with
+revolve with
+.Ql ⟲ deg profile
+or
+.Ql |> revolve deg ,
+with an optional segment count
+.Ql ⟲ deg segs profile ;
+the profile's y becomes height and only the +X half is kept.
+The
+.Ql .scad
+export intersects a crossing profile with its +X square first, since
+OpenSCAD refuses crossing profiles.
+Offset with
 .Ql profile ↯ ● r .
 A profile used where a solid is expected, or the reverse, is a compile
 error.
@@ -415,6 +426,7 @@ applies postfix stages:
 .Ql scale ,
 .Ql mirror ,
 .Ql extrude h ,
+.Ql revolve deg [segs] ,
 .Ql loft z p ,
 .Ql anchor v ,
 .Ql add cut isect hull mink shape ,

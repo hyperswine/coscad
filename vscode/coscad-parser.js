@@ -198,6 +198,10 @@ class ExpressionParser {
     const node = this.node('pipeline_operation', stage, { name: stage.value, input, params: [] })
     if (['x', 'y', 'z', 'rotx', 'roty', 'rotz', 'extrude'].includes(stage.value)) {
       node.params.push(this.numArg())
+    } else if (stage.value === 'revolve') {
+      node.params.push(this.numArg())
+      const segs = this.tryNumArg()
+      if (segs) node.params.push(segs)
     } else if (['move', 'scale', 'mirror'].includes(stage.value)) {
       node.params.push(this.numArg(), this.numArg(), this.numArg())
     } else if (stage.value === 'anchor') {
@@ -319,6 +323,13 @@ class ExpressionParser {
     if (info.form === 'binary') {
       node.left = this.primary()
       node.right = this.shapeArg()
+      return node
+    }
+    if (info.form === 'revolve') {
+      node.params.push(this.numArg())
+      const segs = this.tryNumArg()
+      if (segs) node.params.push(segs)
+      node.target = this.shapeArg()
       return node
     }
     for (let count = 0; count < info.arity; count++) node.params.push(this.numArg())
@@ -465,12 +476,14 @@ class COSCADParser {
       'ζ': { name: 'Tz', arity: 1, modes: glyph }, 'θ': { name: 'Rx', arity: 1, modes: glyph },
       'ϕ': { name: 'Ry', arity: 1, modes: glyph }, 'ω': { name: 'Rz', arity: 1, modes: glyph },
       '⬈': { name: 'Scale', arity: 3, modes: glyph }, '⇋': { name: 'Mirror', arity: 3, modes: glyph },
-      '⮕': { name: 'Extrude', arity: 1, modes: glyph }, '⚓': { name: 'Anchor', form: 'anchor', modes: glyph },
+      '⮕': { name: 'Extrude', arity: 1, modes: glyph }, '⟲': { name: 'Revolve', form: 'revolve', modes: glyph },
+      '⚓': { name: 'Anchor', form: 'anchor', modes: glyph },
       '⟰': { name: 'Loft', form: 'loft', modes: glyph },
       loft: { name: 'Loft', form: 'loft' },
       Translate: { name: 'Translate', form: 'vector', modes: simple }, Rotate: { name: 'Rotate', form: 'vector', modes: simple },
       Scale: { name: 'Scale', form: 'vector', modes: simple }, Mirror: { name: 'Mirror', form: 'vector', modes: simple },
-      Extrude: { name: 'Extrude', arity: 1, modes: simple }, Anchor: { name: 'Anchor', form: 'anchor', modes: simple },
+      Extrude: { name: 'Extrude', arity: 1, modes: simple }, Revolve: { name: 'Revolve', form: 'revolve', modes: simple },
+      Anchor: { name: 'Anchor', form: 'anchor', modes: simple },
       Loft: { name: 'Loft', form: 'loft', modes: simple },
       Hull: { name: 'Hull', form: 'binary', modes: simple }, Union: { name: 'Union', form: 'binary', modes: simple },
       Intersect: { name: 'Intersect', form: 'binary', modes: simple }, Minkowski: { name: 'Minkowski', form: 'binary', modes: simple },
@@ -487,7 +500,7 @@ class COSCADParser {
     this.attachmentOps = { '⌖': { name: 'Position', modes: glyph }, '⋈': { name: 'AttachTo', modes: glyph } }
     this.composition = { '|>': { name: 'pipe' } }
     this.pipelineStages = Object.fromEntries(
-      ['x', 'y', 'z', 'rotx', 'roty', 'rotz', 'move', 'scale', 'mirror', 'extrude', 'loft', 'anchor', 'at', 'on', 'cutat', 'add', 'cut', 'isect', 'hull', 'mink', 'datum', 'frame', 'place', 'mate', 'grid']
+      ['x', 'y', 'z', 'rotx', 'roty', 'rotz', 'move', 'scale', 'mirror', 'extrude', 'revolve', 'loft', 'anchor', 'at', 'on', 'cutat', 'add', 'cut', 'isect', 'hull', 'mink', 'datum', 'frame', 'place', 'mate', 'grid']
         .map(name => [name, { name }])
     )
     this.anchors = new Set(['top', 'up', 'bot', 'dn', 'down', 'rt', 'right', 'lft', 'left', 'fwd', 'front', 'bak', 'back', 'ctr', 'center'])
@@ -1058,6 +1071,7 @@ class COSCADParser {
         }
         case 'transformation': {
           if (node.name === 'Extrude') return this.extrudeDim(dimOf(node.target, stack), node, diagnostics)
+          if (node.name === 'Revolve') return this.revolveDim(dimOf(node.target, stack), node, diagnostics)
           if (node.name === 'Offset') return this.offsetDim(dimOf(node.target, stack), node, diagnostics)
           if (['Hull', 'Union', 'Intersect', 'Minkowski'].includes(node.name)) return this.sameDim(node.name.toLowerCase(), [dimOf(node.left, stack), dimOf(node.right, stack)], node, diagnostics)
           return dimOf(node.target, stack)
@@ -1072,6 +1086,7 @@ class COSCADParser {
         case 'pipeline_operation': {
           const input = dimOf(node.input, stack)
           if (node.name === 'extrude') return this.extrudeDim(input, node, diagnostics)
+          if (node.name === 'revolve') return this.revolveDim(input, node, diagnostics)
           if (node.name === 'loft') {
             // `p |> loft z q` starts a loft from profile p; when p is already a
             // loft (directly or through a variable) the stage extends it.
@@ -1134,6 +1149,11 @@ class COSCADParser {
 
   extrudeDim(inner, node, diagnostics) {
     if (inner === 3) diagnostics.push(this.diagnostic('cannot extrude a 3D solid: ⮕ / extrude needs a 2D profile (△ ⬠ ⭘ ✎, or Circle/Triangle/Pentagon/Bezier)', node))
+    return 3
+  }
+
+  revolveDim(inner, node, diagnostics) {
+    if (inner === 3) diagnostics.push(this.diagnostic('cannot revolve a 3D solid: ⟲ / revolve needs a 2D profile (△ ⬠ ⭘ ✎, or Circle/Triangle/Pentagon/Bezier)', node))
     return 3
   }
 

@@ -62,6 +62,8 @@ data Shape
   | CutAt SrcPos (D, D, D) (D, D, D) Shape Shape -- anchor, offset, parent, cutter: SUBTRACT cutter centered there
   | Diff Shape Shape
   | Extrude D Shape
+  | Revolve D Shape -- angle deg, 2D profile revolved around Y (Manifold: +X half kept)
+  | RevolveSeg D I Shape -- angle deg, circularSegments, profile
   | Loft [(D, Shape)] -- (z, 2D profile) pairs, skinned bottom to top (BOSL2 skin)
   | Tag String Shape -- named subtree (an assembly part instance); identity for geometry
   | Datum String (D, D, D) Shape -- named construction point in this subtree's coordinates
@@ -94,6 +96,8 @@ shapeChildren s = case s of
   CutAt _ _ _ a b -> [a, b]
   Diff a b -> [a, b]
   Extrude _ x -> [x]
+  Revolve _ x -> [x]
+  RevolveSeg _ _ x -> [x]
   Loft ps -> map snd ps
   Tag _ x -> [x]
   Datum _ _ x -> [x]
@@ -125,4 +129,3 @@ bezPoly samples cps = Poly (PD pts [])
       let u = 1 - t
           f a b c d = u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d
        in (f x0 x1 x2 x3, f y0 y1 y2 y3)
-

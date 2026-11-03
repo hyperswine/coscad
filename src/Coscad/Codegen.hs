@@ -121,6 +121,8 @@ gen (Datum _ _ s) = gen s
 gen (Frame _ _ _ s) = gen s
 gen (Extrude h s) =
   "linear_extrude(height = " ++ showD h ++ ") {\n" ++ indent (gen s) ++ "}"
+gen (Revolve a s) = rotateExtrude ("angle = " ++ showD a) s
+gen (RevolveSeg a n s) = rotateExtrude ("angle = " ++ showD a ++ ", $fn = " ++ show n) s
 gen (Loft ps) =
   "skin([" ++ intercalate ", " (map (either error id . pathOf . snd) ps) ++ "], z = ["
     ++ intercalate ", " (map (showD . fst) ps) ++ "], slices = 0, method = \"" ++ loftMethod (map snd ps) ++ "\");"
@@ -136,6 +138,27 @@ gen (Minkowski shapes) =
   "minkowski() {\n" ++ concatMap (indent . gen) shapes ++ "}"
 gen (Offset r s) =
   "offset(r = " ++ showD r ++ ") {\n" ++ indent (gen s) ++ "}"
+
+-- | rotate_extrude with automatic +X clipping when the profile crosses
+-- the axis: native keeps the +X half, while OpenSCAD refuses crossing
+-- profiles, so the export intersects with the profile's +X square
+-- first (2D intersection is exact, so the cut matches the kernel's).
+rotateExtrude :: String -> Shape -> String
+rotateExtrude args s
+  | x0 < 0 && x1 > 0 =
+      "rotate_extrude(" ++ args ++ ") {\n"
+        ++ indent ("intersection() {\n" ++ indent (gen s) ++ indent clip ++ "}")
+        ++ "}"
+  | otherwise =
+      "rotate_extrude(" ++ args ++ ") {\n" ++ indent (gen s) ++ "}"
+  where
+    ((x0, y0, _), (x1, y1, _)) = bbox s
+    clip =
+      "translate([0, " ++ showD y0 ++ "]) square(["
+        ++ showD x1
+        ++ ", "
+        ++ showD (y1 - y0)
+        ++ "]);"
 
 -- | A 2D profile as a BOSL2 *path expression* (a list of points), for
 -- use inside skin(). Only single closed outlines qualify: the 2D
@@ -231,6 +254,8 @@ loftErrors s = case s of
   AttachTo _ _ _ a b -> loftErrors a >> loftErrors b
   CutAt _ _ _ a b -> loftErrors a >> loftErrors b
   Extrude _ x -> loftErrors x
+  Revolve _ x -> loftErrors x
+  RevolveSeg _ _ x -> loftErrors x
   Offset _ x -> loftErrors x
   Diff a b -> loftErrors a >> loftErrors b
   Union xs -> mapM_ loftErrors xs
@@ -270,6 +295,8 @@ usesBosl2 s = case s of
   AttachTo _ _ _ a b -> usesBosl2 a || usesBosl2 b
   CutAt _ _ _ a b -> usesBosl2 a || usesBosl2 b
   Extrude _ x -> usesBosl2 x
+  Revolve _ x -> usesBosl2 x
+  RevolveSeg _ _ x -> usesBosl2 x
   Loft _ -> True
   Offset _ x -> usesBosl2 x
   Diff a b -> usesBosl2 a || usesBosl2 b

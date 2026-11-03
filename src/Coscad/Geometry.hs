@@ -61,7 +61,8 @@ pointOf (NamedPoint name) s = case Map.lookup name points of
 -- CSG retains construction points from all operands, even when material is
 -- removed. Repeated names deliberately remain ambiguous, rather than picking
 -- an arbitrary copy. Extrusion retains the profile's plane; loft lifts each
--- profile's points to its specified layer.
+-- profile's points to its specified layer; revolve keeps them on the
+-- angle-zero radial face (profile y becomes height).
 datumPoints :: Shape -> Map.Map String [V3]
 datumPoints = Map.fromListWith (++) . map (\(n, p) -> (n, [p])) . go . resolve
   where
@@ -81,6 +82,9 @@ datumPoints = Map.fromListWith (++) . map (\(n, p) -> (n, [p])) . go . resolve
       Scale v x -> moved (vmul v) (go x)
       Mirror n x -> moved (mApply (mirrorMat n)) (go x)
       Loft ps -> concat [moved (\(a, b, _) -> (a, b, z)) (go p) | (z, p) <- ps]
+      -- Revolve keeps the profile's datums on the angle-zero radial face.
+      Revolve _ x -> moved (\(a, b, _) -> (a, 0, b)) (go x)
+      RevolveSeg _ _ x -> moved (\(a, b, _) -> (a, 0, b)) (go x)
       _ -> concatMap go (shapeChildren s)
 
 -- | A frame's +Z points out of the mating face. +Y is its in-plane up
@@ -239,6 +243,8 @@ bbox s = case s of
   Mirror n x -> xformBBox (mirrorMat n) (bbox x)
   Diff a _ -> bbox a
   Extrude h x -> let ((x0, y0, _), (x1, y1, _)) = bbox x in ((x0, y0, 0), (x1, y1, h))
+  Revolve a x -> revolveBBox a (bbox x)
+  RevolveSeg a _ x -> revolveBBox a (bbox x)
   Loft ps -> fromCorners [(px, py, z) | (z, p) <- ps, (px, py, _) <- bcorners (bbox p)]
   Tag _ x -> bbox x
   Datum _ _ x -> bbox x
@@ -254,6 +260,17 @@ bbox s = case s of
   CutAt {} -> bbox (resolve s)
   where
     bshift v (lo, hi) = (vadd v lo, vadd v hi)
+    -- Exact box of a profile revolved about the Y axis: the profile's
+    -- x extent (clipped to +X, as the kernel clips it) sweeps radii
+    -- [r0, rMax] over angles [0, a], and profile y becomes z. Every
+    -- x/y extremum of the sweep is at a corner or a crossed cardinal.
+    revolveBBox a ((x0, y0, _), (x1, y1, _)) =
+      fromCorners [(r * cos phi, r * sin phi, z) | r <- [r0, rMax], phi <- phis, z <- [y0, y1]]
+      where
+        r0 = max 0 (min x0 x1)
+        rMax = max 0 (max x0 x1)
+        arc = max 0 (min 360 a)
+        phis = map (\d -> d * pi / 180) ([0, arc] ++ [c | c <- [90, 180, 270], c < arc])
 
 -- | Desugar attachment operations into plain transforms (bottom-up)
 resolve :: Shape -> Shape
@@ -304,6 +321,8 @@ resolve s = case s of
   Scale v x -> Scale v (resolve x)
   Mirror n x -> Mirror n (resolve x)
   Extrude h x -> Extrude h (resolve x)
+  Revolve a x -> Revolve a (resolve x)
+  RevolveSeg a n x -> RevolveSeg a n (resolve x)
   Loft ps -> Loft [(z, resolve p) | (z, p) <- ps]
   Tag n x -> Tag n (resolve x)
   Datum n p x -> Datum n p (resolve x)

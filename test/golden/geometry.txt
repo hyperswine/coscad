@@ -61,6 +61,7 @@ examples/loft.coscad 8252.719 -20.000 -20.000 0.000 25.464 20.000 52.000
 examples/math_zigzag_spring.coscad 187.442 0.000 0.000 0.000 20.000 5.000 2.000
 examples/offset_demo.coscad 8465.956 -32.500 -15.984 0.000 42.997 15.990 10.000
 examples/panel.coscad 99356.566 -100.000 -100.000 -1.250 100.000 100.000 1.250
+examples/revolve.coscad 1092.594 -32.000 -8.000 -4.000 21.000 8.000 4.000
 examples/simple_transform.coscad 1000.000 5.000 0.000 0.000 15.000 10.000 10.000
 examples/sphere.coscad 14044.425 -15.000 -14.970 -14.970 15.000 14.970 14.970
 examples/stress/shelf-bracket.coscad 41040.000 0.000 0.000 0.000 60.000 40.000 50.000

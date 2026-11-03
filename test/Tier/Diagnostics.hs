@@ -39,6 +39,23 @@ diagnostics t = do
     (p "a = ● 5\n") ["no 'main'"] ["Error: Error"]
   expectErr t "dimension: extrude a solid"
     (p "main = ⮕ 2 (● 1)") ["t.coscad:1:8", "in 'main'", "extrude", "3D"] []
+  expectErr t "dimension: revolve a solid"
+    (p "main = ⟲ 360 (● 1)") ["t.coscad:1:8", "in 'main'", "revolve", "3D"] []
+  expectErr t "revolve angle range"
+    (p "main = ⟲ 0 (⭘ 4)") ["t.coscad:1:8", "in 'main'", "revolve angle", "360"] []
+  expectErr t "revolve segment count"
+    (p "main = ⟲ 360 2 (⭘ 4)") ["t.coscad:1:14", "revolve segments", "3 to 4096"] []
+  expectErr t "revolve profile must reach +X"
+    (p "main = ⟲ 360 (χ -10 (⭘ 2))") ["t.coscad:1:8", "in 'main'", "must reach x > 0"] []
+  expectGen t "glyph revolve emits rotate_extrude" (p "main = ⟲ 360 (⭘ 4)\n") "rotate_extrude(angle = 360)"
+  case p "main = ⟲ 360 (⭘ 4)\n" of
+    Left e -> failT t "crossing revolve export clips to +X" e
+    Right (_, m) -> assertT t "crossing revolve export clips to +X" ("intersection()" `isInfixOf` renderScad m) (renderScad m)
+  case p "main = ⟲ 360 (χ 6 (⭘ 2))\n" of
+    Left e -> failT t "clean revolve export has no clip" e
+    Right (_, m) -> assertT t "clean revolve export has no clip" (not ("intersection()" `isInfixOf` renderScad m)) (renderScad m)
+  expectGen t "revolve segments emit $fn" (p "main = ⭘ 4 |> revolve 90 64\n") "rotate_extrude(angle = 90, $fn = 64)"
+  expectGen t "simple Revolve" (p "!simple\nmain = Revolve 360 Circle 4\n") "rotate_extrude(angle = 360)"
   expectErr t "dimension: offset a solid"
     (p "main = ■ 10 ↯ ● 2") ["offset", "3D"] []
   expectErr t "dimension: union of profile and solid"

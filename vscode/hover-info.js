@@ -70,7 +70,7 @@ function walk(node, fn) {
 function shapeType(node, declarations, seen = new Set()) {
   if (!node) return 'Shape (unresolved)'
   if (node.type === 'shape') return node.dim === 2 ? 'Profile2D' : 'Solid3D'
-  if (node.type === 'loft' || node.name === 'extrude' || node.name === 'Extrude') return 'Solid3D'
+  if (node.type === 'loft' || node.name === 'extrude' || node.name === 'Extrude' || node.name === 'revolve' || node.name === 'Revolve') return 'Solid3D'
   if (node.type === 'variable_reference') {
     if (seen.has(node.name)) return 'Shape (cyclic reference)'
     seen.add(node.name)

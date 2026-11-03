@@ -96,6 +96,8 @@ nativeIndexedCSGMesh shape = case structure shape >> validateShape shape of
     flipWinding = reverseIndexed
     go s = case s of
       Extrude h profile -> extruded h profile
+      Revolve angle profile -> revolved angle 0 (Revolve angle) profile
+      RevolveSeg angle segments profile -> revolved angle segments (RevolveSeg angle segments) profile
       Empty -> return (Right emptyIndexed)
       Hidden _ -> return (Right emptyIndexed)
       Cuboid (x,y,z) c 0 | c>0 ->
@@ -123,7 +125,7 @@ nativeIndexedCSGMesh shape = case structure shape >> validateShape shape of
       Tag _ x -> go x
       Datum _ _ x -> go x
       Frame _ _ _ x -> go x
-      Offset _ _ -> return (Left "native: a 2D offset (↯) must be extruded (⮕) before it is a solid; OpenSCAD renders nothing for it either")
+      Offset _ _ -> return (Left "native: a 2D offset (↯) must be extruded (⮕) or revolved (⟲) before it is a solid; OpenSCAD renders nothing for it either")
       _ -> return (nativeMesh s >>= weldTriangles)
     extruded h profile = case profile of
       Shape2D n r | n<=4096 -> extrudedSimple h (circleOutline n r)
@@ -153,6 +155,69 @@ nativeIndexedCSGMesh shape = case structure shape >> validateShape shape of
     -- A validated single simple extrusion has no separate coincident shells.
     -- Weld only this leaf; boolean results never pass through triangle soup.
     extrudedSimple h points = fmap (>>= weldTriangles) (extrudePolygon h points)
+    -- Surface of revolution about the Y axis (profile y becomes height).
+    -- Rotation distributes over union, difference and intersection, so
+    -- composite profiles are revolved per operand and combined in 3D;
+    -- hull and minkowski do not distribute over rotation and are refused
+    -- explicitly. In-plane transforms do not commute with the sweep the
+    -- way they do with an extrusion, so they are folded into the 2D
+    -- outline instead of pushed onto the result.
+    revolved angle segments revive profile = case inlineRevolve profile of
+      Shape2D n r | n<=4096 -> revolvedSimple angle segments (circleOutline n r)
+      Shape2D _ _ -> return (Left "native: a 2D profile may have at most 4096 sides")
+      Poly (PD points []) -> revolvedSimple angle segments (unclose points)
+      Poly _ -> return (Left "native: explicit polygon paths/holes are unsupported; use a 2D difference")
+      Offset r p -> case outlineFor ForRevolve p of
+        Left err -> return (Left err)
+        Right points -> fmap (>>= weldTriangles) (revolveOffsetPolygon angle segments r (snapRevolveAxis points))
+      Union xs -> go (Union (map revive xs))
+      Diff a b -> go (Diff (revive a) (revive b))
+      Intersection xs -> go (Intersection (map revive xs))
+      Hull _ -> return (Left "native: revolve of a 2D hull is unsupported; revolve the parts first, then hull in 3D")
+      Minkowski _ -> return (Left "native: revolve of a 2D minkowski is unsupported; revolve the parts first, then minkowski in 3D")
+      Rx _ _ -> return (Left "native: a revolve profile must stay in the XY plane (no θ rotation)")
+      Ry _ _ -> return (Left "native: a revolve profile must stay in the XY plane (no ϕ rotation)")
+      RotAxis a (0,0,az) p | az/=0 -> revolved angle segments revive (Rz (if az>0 then a else -a) p)
+      RotAxis {} -> return (Left "native: a revolve profile must stay in the XY plane (rotate only about Z)")
+      Transform3 {} -> return (Left "native: a revolve profile must stay in the XY plane (no 3D mate transforms)")
+      Tz z _ | z/=0 -> return (Left "native: a revolve profile cannot be moved in Z (ζ); profile y becomes height, so move in Y instead")
+      Mirror (0,0,nz) p | nz/=0 -> revolved angle segments revive p -- reflection in the profile plane is identity on the outline
+      Tz 0 p -> revolved angle segments revive p
+      Tag _ p -> revolved angle segments revive p
+      Datum _ _ p -> revolved angle segments revive p
+      Frame _ _ _ p -> revolved angle segments revive p
+      t -> case outlineFor ForRevolve t of
+        Left err -> return (Left err)
+        Right points -> revolvedSimple angle segments points
+    revolvedSimple angle' segments' points = fmap (>>= weldTriangles) (revolvePolygon angle' segments' (snapRevolveAxis points))
+    -- Distribute in-plane transforms over 2D booleans so each sits above
+    -- a simple outline (exact: affine maps distribute over union,
+    -- difference and intersection). Metadata wrappers are transparent;
+    -- transforms stop above offsets, hulls and minkowskis, which the
+    -- revolve then accepts or refuses on their own terms.
+    inlineRevolve s = case s of
+      Tx d p -> pushT (Tx d) (inlineRevolve p)
+      Ty d p -> pushT (Ty d) (inlineRevolve p)
+      Translate v p -> pushT (Translate v) (inlineRevolve p)
+      Rz a p -> pushT (Rz a) (inlineRevolve p)
+      Scale v p -> pushT (Scale v) (inlineRevolve p)
+      Mirror v p -> pushT (Mirror v) (inlineRevolve p)
+      Tag n p -> Tag n (inlineRevolve p)
+      Datum n q p -> Datum n q (inlineRevolve p)
+      Frame n q b p -> Frame n q b (inlineRevolve p)
+      Union xs -> Union (map inlineRevolve xs)
+      Diff a b -> Diff (inlineRevolve a) (inlineRevolve b)
+      Intersection xs -> Intersection (map inlineRevolve xs)
+      Offset r p -> Offset r (inlineRevolve p)
+      _ -> s
+      where
+        pushT t (Union xs) = Union (map (pushT t) xs)
+        pushT t (Diff a b) = Diff (pushT t a) (pushT t b)
+        pushT t (Intersection xs) = Intersection (map (pushT t) xs)
+        pushT t (Tag n p) = Tag n (pushT t p)
+        pushT t (Datum n q p) = Datum n q (pushT t p)
+        pushT t (Frame n q b p) = Frame n q b (pushT t p)
+        pushT t p = t p
     unclose []=[]
     unclose points@(x:_)=case reverse points of
       y:rest | x==y && not (null rest) -> reverse rest
@@ -182,28 +247,59 @@ circleOutline n r = [(r*cos a,r*sin a) | j<-[0..n-1],let a=2*pi*fromIntegral j/f
 -- their in-plane transforms, as points. Composite 2D shapes under an offset
 -- would need 2D booleans and are refused explicitly.
 outline2D :: Shape -> Either String [(Double,Double)]
-outline2D s = case s of
+outline2D = outlineFor ForOffset
+
+-- | Which 3D operation the outline is folded for. Only the wording of
+-- refusals differs; the offset messages are byte-identical to before.
+data OutlineFor = ForOffset | ForRevolve
+
+outlineFor :: OutlineFor -> Shape -> Either String [(Double,Double)]
+outlineFor ctx s = case s of
   Shape2D n r | n<=4096 -> Right (circleOutline n r)
   Shape2D _ _ -> Left "native: a 2D profile may have at most 4096 sides"
   Poly (PD points []) -> Right (unclosePoints points)
-  Poly _ -> Left "native: explicit polygon paths/holes are unsupported under an offset"
-  Tx d p -> map (\(x,y) -> (x+d,y)) <$> outline2D p
-  Ty d p -> map (\(x,y) -> (x,y+d)) <$> outline2D p
-  Translate (dx,dy,0) p -> map (\(x,y) -> (x+dx,y+dy)) <$> outline2D p
-  Rz a p -> map (mApply2 (rodMat a (0,0,1))) <$> outline2D p
-  Scale (sx,sy,_) p -> map (\(x,y) -> (x*sx,y*sy)) <$> outline2D p
-  Mirror (nx,ny,0) p -> map (mApply2 (mirrorMat (nx,ny,0))) <$> outline2D p
-  Tag _ p -> outline2D p
-  Datum _ _ p -> outline2D p
-  Frame _ _ _ p -> outline2D p
-  Offset _ _ -> Left "native: nested 2D offsets are unsupported"
-  _ -> Left ("native: offset of a composite or non-2D shape ("++takeWhile (/=' ') (show s)++") is unsupported")
+  Poly _ -> Left ("native: explicit polygon paths/holes are unsupported under " ++ under)
+  Tx d p -> map (\(x,y) -> (x+d,y)) <$> outlineFor ctx p
+  Ty d p -> map (\(x,y) -> (x,y+d)) <$> outlineFor ctx p
+  Translate (dx,dy,0) p -> map (\(x,y) -> (x+dx,y+dy)) <$> outlineFor ctx p
+  Rz a p -> map (mApply2 (rodMat a (0,0,1))) <$> outlineFor ctx p
+  Scale (sx,sy,_) p -> map (\(x,y) -> (x*sx,y*sy)) <$> outlineFor ctx p
+  Mirror (nx,ny,0) p -> map (mApply2 (mirrorMat (nx,ny,0))) <$> outlineFor ctx p
+  Tag _ p -> outlineFor ctx p
+  Datum _ _ p -> outlineFor ctx p
+  Frame _ _ _ p -> outlineFor ctx p
+  Offset _ _ -> Left nested
+  _ -> Left ("native: " ++ op ++ " of a composite or non-2D shape ("++takeWhile (/=' ') (show s)++") is unsupported")
   where
+    (under, op, nested) = case ctx of
+      ForOffset -> ("an offset", "offset", "native: nested 2D offsets are unsupported")
+      ForRevolve -> ("a revolve", "revolve", "native: a 2D offset (↯) under transforms cannot be revolved; make the offset the direct child of the revolve")
     mApply2 m (x,y) = let (x',y',_) = mApply m (x,y,0) in (x',y')
     unclosePoints []=[]
     unclosePoints points@(x:_)=case reverse points of
       y:rest | x==y && not (null rest) -> reverse rest
       _ -> points
+
+-- | Snap revolve-profile vertices within float dust of the axis to
+-- exactly zero, so the kernel shares one axis vertex instead of
+-- triangulating a sliver ring (a centered n-gon's axis vertices carry
+-- trig dust, e.g. 4*cos 90° = 2.4e-16, which revolves into ~1e-32
+-- slivers that fail validation once translated). Relative to the
+-- profile radius, so tiny profiles are unaffected. Consecutive
+-- duplicates created by the snap are dropped; pre-existing ones still
+-- fail in the kernel with the repeated-vertex error.
+snapRevolveAxis :: [(Double,Double)] -> [(Double,Double)]
+snapRevolveAxis pts = case cleanup [(if abs x<eps then 0 else x,y,x/=0) | (x,y)<-pts] of
+  h:t | not (null t) && last (h:t)==h -> init (h:t)
+  done -> done
+  where
+    eps = 1e-9 * maximum (0 : map (abs . fst) pts)
+    cleanup [] = []
+    cleanup ((x,y,s):rest) = (x,y) : go (x,y,s) rest
+    go _ [] = []
+    go (px,py,ps) ((x,y,s):rest)
+      | x==px && y==py && (ps || s) = go (px,py,True) rest
+      | otherwise = (x,y) : go (x,y,s) rest
 
 -- | Deliberately small surface: boxes, polygonal cylinders/cones/frusta,
 -- unrounded centered variants, affine transforms, and lofts (tessellated

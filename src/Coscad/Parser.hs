@@ -454,6 +454,16 @@ arg ctx form param = do
     Left e@FancyError {} -> parseError e
     Left _ -> setOffset off *> fail (form ++ " is missing or has an invalid " ++ param ++ " argument")
 
+-- | A revolve segment count: a whole number from 3 to maxSides.
+-- Positioned here so the error points at the count, not the profile.
+revolveSegs :: Ctx -> Parser Int
+revolveSegs ctx = do
+  off <- getOffset
+  n <- num ctx
+  if n >= 3 && n <= fromIntegral maxSides && n == fromInteger (truncate n)
+    then return (round n)
+    else setOffset off *> fail ("revolve segments must be a whole number from 3 to " ++ show maxSides)
+
 -- Parse an expression (pipelines bind loosest)
 expression :: Ctx -> Parser Shape
 expression = pipeExpression
@@ -505,6 +515,11 @@ pipeStage ctx = choice
       , num1 "roty" Ry
       , num1 "rotz" Rz
       , num1 "extrude" Extrude
+      , do
+          _ <- keyword "revolve"
+          a <- num ctx
+          mSegs <- optional (lookAhead (try (num ctx)) *> revolveSegs ctx)
+          return (\p -> case mSegs of Nothing -> Revolve a p; Just n -> RevolveSeg a n p)
       , num3 "move" Translate
       , num3 "scale" Scale
       , num3 "mirror" Mirror
@@ -525,7 +540,7 @@ pipeStage ctx = choice
           name <- identifier
           setOffset off *> fail ("unknown pipeline stage '" ++ name ++ "'" ++ suggestion stages name ++ "; use e.g. |> move x y z")
       ]
-    stages = ["x", "y", "z", "rotx", "roty", "rotz", "extrude", "move", "scale", "mirror", "anchor", "datum", "frame", "mate", "place", "grid", "loft", "at", "on", "cutat", "add", "cut", "isect", "hull", "mink"]
+    stages = ["x", "y", "z", "rotx", "roty", "rotz", "extrude", "revolve", "move", "scale", "mirror", "anchor", "datum", "frame", "mate", "place", "grid", "loft", "at", "on", "cutat", "add", "cut", "isect", "hull", "mink"]
     anchorStage = do
       at <- srcPos
       _ <- keyword "anchor"
@@ -739,9 +754,9 @@ transformExpression :: Ctx -> Parser Shape
 transformExpression ctx = (transformation ctx <?> tLabel) <|> primaryExpression ctx
   where
     tLabel = case cMode ctx of
-      ModeGlyph -> "a transform (χ ψ ζ θ ϕ ω ⬈ ⇋ ⮕ ⟰ ⚓ loft)"
-      ModeSimple -> "a transform (Translate Rotate Scale Mirror Extrude Loft Anchor Hull Union Intersect Minkowski Offset)"
-      ModeLegacy -> "a transform (χ ψ ζ θ ϕ ω ⬈ ⇋ ⮕ ⟰ ⚓ loft, or Translate/Rotate/Scale/...)"
+      ModeGlyph -> "a transform (χ ψ ζ θ ϕ ω ⬈ ⇋ ⮕ ⟲ ⟰ ⚓ loft)"
+      ModeSimple -> "a transform (Translate Rotate Scale Mirror Extrude Revolve Loft Anchor Hull Union Intersect Minkowski Offset)"
+      ModeLegacy -> "a transform (χ ψ ζ θ ϕ ω ⬈ ⇋ ⮕ ⟲ ⟰ ⚓ loft, or Translate/Rotate/Scale/...)"
 
 -- | A comma tuple: (x, y, z)
 tuple3 :: Ctx -> Parser (Double, Double, Double)
@@ -771,6 +786,15 @@ transformation ctx =
           , g1 "θ" Rx, g1 "ϕ" Ry, g1 "ω" Rz
           , g3 "⬈" Scale, g3 "⇋" Mirror
           , g1 "⮕" Extrude
+          , do
+              _ <- symbol "⟲"
+              a <- num ctx
+              -- a second number is the segment count; otherwise the
+              -- next primary is the profile (numbers are never shapes)
+              isNum <- optional (lookAhead (try (num ctx)))
+              case isNum of
+                Nothing -> Revolve a <$> shapeArg ctx
+                Just _ -> RevolveSeg a <$> revolveSegs ctx <*> shapeArg ctx
           , symbol "⟰" *> loftPairs
           , do
               at <- srcPos
@@ -794,7 +818,7 @@ transformation ctx =
     --   Translate (x, y, z) obj      Translate.x n obj
     --   Rotate (x, y, z) obj         Rotate.z n obj    (rotate order: x, y, z)
     --   Scale (x, y, z) / Scale.x n  Mirror (x, y, z) / Mirror.x
-    --   Extrude h obj   Anchor top obj
+    --   Extrude h obj   Revolve deg obj   Revolve deg segs obj   Anchor top obj
     --   Hull a b   Union a b   Intersect a b   Minkowski a b   Offset n a
     simpleTs
       | simpleOK ctx =
@@ -803,6 +827,13 @@ transformation ctx =
           , ns "Scale" Scale [("x", \n -> Scale (n, 1, 1)), ("y", \n -> Scale (1, n, 1)), ("z", \n -> Scale (1, 1, n))]
           , nsMirror
           , keyword "Extrude" *> (Extrude <$> num ctx <*> shapeArg ctx)
+          , do
+              _ <- keyword "Revolve"
+              a <- num ctx
+              isNum <- optional (lookAhead (try (num ctx)))
+              case isNum of
+                Nothing -> Revolve a <$> shapeArg ctx
+                Just _ -> RevolveSeg a <$> revolveSegs ctx <*> shapeArg ctx
           , keyword "Loft" *> loftPairs
           , srcPos >>= \at -> keyword "Anchor" *> (Anchor at <$> anchorVec <*> shapeArg ctx)
           , bin2 "Hull" (\a b -> Hull [a, b])
@@ -1197,7 +1228,7 @@ reservedNames mode =
     ++ if mode == ModeGlyph then [] else
       [ "Sphere", "Cube", "Box", "Cylinder", "Cone", "Tube", "Torus", "Wedge"
       , "Prismoid", "Circle", "Triangle", "Pentagon", "Bezier"
-      , "Translate", "Rotate", "Scale", "Mirror", "Extrude", "Loft", "Anchor"
+      , "Translate", "Rotate", "Scale", "Mirror", "Extrude", "Revolve", "Loft", "Anchor"
       , "Hull", "Union", "Intersect", "Minkowski", "Offset"
       ]
 

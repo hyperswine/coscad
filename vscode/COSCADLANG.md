@@ -56,7 +56,7 @@ where a shape is expected (or the reverse) is an error naming the binding.
 ### Transforms and operations
 
 - Translate `χ ψ ζ`, rotate `θ ϕ ω`, scale `⬈`, mirror `⇋`, extrude `⮕`,
-  anchor `⚓`
+  revolve `⟲`, anchor `⚓`
 - Union `⊕`/`⊛`, difference `⊖`/`⊝`, intersection `∩`, hull `⇓`,
   Minkowski `⊞`, 2D offset `↯`
 - Position `⌖` and attach `⋈`
@@ -113,8 +113,8 @@ main = box 40 40 8
   |> move 10 0 0
 ```
 
-Stages: `x y z rotx roty rotz move scale mirror extrude loft anchor add cut
-isect hull mink at on cutat`. Anchors: `top bot lft rt fwd bak ctr`, long
+Stages: `x y z rotx roty rotz move scale mirror extrude revolve loft anchor
+add cut isect hull mink at on cutat`. Anchors: `top bot lft rt fwd bak ctr`, long
 aliases, and `+` combinations such as `top+rt`. `at`/`on` mate the child's
 opposite anchor; `cutat` centers the cutter.
 

@@ -238,6 +238,7 @@ src/Coscad/Stress/Voxel.hs   mesh voxelization and connectivity
 src/Coscad/Stress/Part.hs    part regions, solve and safety report
 src/Coscad/Stress/Command.hs stress CLI and report output
 src/Coscad/Part.hs      single-part compile / stl commands
+src/Coscad/Stdlib.hs    printable connection recipes (threads, globe joints, captive hardware)
 src/Coscad/Diagnose.hs  `coscad validate`, structured diagnostics, --json output
 src/Coscad/Doctor.hs    `coscad doctor`
 src/Lib.hs              re-export shim for the embedded Haskell DSL

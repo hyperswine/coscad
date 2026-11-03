@@ -54,14 +54,14 @@
     },
     "transformations": {
       "patterns": [
-        { "name": "keyword.control.transformation.coscad", "match": "[χψζθϕω⬈⇋⮕⟰⚓]" },
-        { "name": "keyword.control.transformation.coscad", "match": "\\b(?:Translate|Rotate|Scale|Mirror|Extrude|Loft|loft|Anchor|Hull|Union|Intersect|Minkowski|Offset)(?:\\.[xyz])?\\b" }
+        { "name": "keyword.control.transformation.coscad", "match": "[χψζθϕω⬈⇋⮕⟲⟰⚓]" },
+        { "name": "keyword.control.transformation.coscad", "match": "\\b(?:Translate|Rotate|Scale|Mirror|Extrude|Revolve|Loft|loft|Anchor|Hull|Union|Intersect|Minkowski|Offset)(?:\\.[xyz])?\\b" }
       ]
     },
     "pipeline": {
       "patterns": [
         { "name": "keyword.operator.composition.coscad", "match": "\\|>" },
-        { "name": "keyword.control.pipeline.coscad", "match": "\\b(?:x|y|z|rotx|roty|rotz|move|scale|mirror|extrude|loft|anchor|at|on|cutat|add|cut|isect|hull|mink|datum|frame|place|mate|grid)\\b" }
+        { "name": "keyword.control.pipeline.coscad", "match": "\\b(?:x|y|z|rotx|roty|rotz|move|scale|mirror|extrude|revolve|loft|anchor|at|on|cutat|add|cut|isect|hull|mink|datum|frame|place|mate|grid)\\b" }
       ]
     },
     "anchors": {

@@ -202,7 +202,7 @@ usage h =
     , "  shapes       ■ s  ▬ x y z  ● r  ◎ r h  ▻ r h  ⎏ n r h            (corner/bottom anchored)"
     , "               ▣ x y z c  ◙ x y z r  ⌭ r h c  ⌽ r h r2  ⊚ or ir h  ⏢ x1 y1 x2 y2 h  ◉ R r  ⊿ x y z"
     , "               cube s  box x y z  sphere r  cyl r h  xcyl/ycyl/zcyl r l  tube or ir h  torus R r  wedge x y z"
-    , "  2D           △ r  ⬠ r  ⭘ r  ✎ x y x y ... (bezier)     extrude: ⮕ h p  |> extrude h"
+    , "  2D           △ r  ⬠ r  ⭘ r  ✎ x y x y ... (bezier)     extrude: ⮕ h p  |> extrude h  revolve: ⟲ d p [s]"
     , "  loft         loft z0 p0 z1 p1 ...   ⟰ ...   p0 |> loft z1 p1      (2D profiles -> solid)"
     , "  booleans     ⊕ union  ⊖ difference  ∩ intersection  ⇓ hull  ⊞ minkowski  ↯ offset(2D)"
     , "  transforms   χ ψ ζ d (translate)  θ ϕ ω deg (rotate)  ⬈ sx sy sz  ⇋ nx ny nz (mirror)  ⚓ anchor"

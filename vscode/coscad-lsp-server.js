@@ -72,6 +72,8 @@ const documentation = {
     '⬈': { name: 'Scale', description: 'Non-uniform scale', usage: '⬈ sx sy sz shape', example: '⬈ 2 1.5 0.5 (● 5)' },
     '⇋': { name: 'Mirror', description: 'Mirror across the plane through the origin with this normal', usage: '⇋ nx ny nz shape', example: '⇋ 1 0 0 (● 5)' },
     '⮕': { name: 'Extrude', description: 'Linear extrusion of a 2D profile (2D → 3D)', usage: '⮕ height profile', example: '⮕ 10 (⭘ 5)' },
+    '⟲': { name: 'Revolve', description: 'Surface of revolution about the Y axis: profile y becomes height, only the +X half is kept (2D → 3D)', usage: '⟲ degrees profile / ⟲ degrees segments profile', example: '⟲ 360 (χ 6 (⭘ 2))' },
+    Revolve: { name: 'Revolve', description: 'Surface of revolution about the Y axis (simple mode)', usage: 'Revolve degrees profile / Revolve degrees segments profile', example: 'Revolve 360 (Circle 5)' },
     '⟰': { name: 'Loft', description: 'Loft: skin 2D profiles at ascending z into one solid (BOSL2 skin; profiles may differ in vertex count)', usage: '⟰ z0 profile0 z1 profile1 [z2 profile2 ...]', example: '⟰ 0 (⭘ 10) 30 (△ 5)' },
     loft: { name: 'loft', description: 'Loft: skin 2D profiles at ascending z into one solid. Profiles must be single closed outlines (△ ⬠ ⭘ ✎ and their in-plane transforms/offset), no booleans, no ζ/θ/ϕ', usage: 'loft z0 profile0 z1 profile1 [...]', example: 'loft 0 (⭘ 10) 30 (⭘ 5)' },
     Loft: { name: 'Loft', description: 'Loft (simple mode): skin 2D profiles at ascending z into one solid', usage: 'Loft z0 profile0 z1 profile1 [...]', example: 'Loft 0 (Circle 10) 30 (Triangle 5)' },
@@ -127,6 +129,7 @@ const documentation = {
     scale: { name: 'scale', description: 'Non-uniform scale', usage: '|> scale sx sy sz', example: 'ball |> scale 2 1 0.5' },
     mirror: { name: 'mirror', description: 'Mirror across the plane with this normal', usage: '|> mirror nx ny nz', example: 'arch |> mirror 1 0 0' },
     extrude: { name: 'extrude', description: 'Linear extrusion of a 2D profile', usage: '|> extrude h', example: 'limb2d |> extrude 14' },
+    revolve: { name: 'revolve', description: 'Surface of revolution about the Y axis: profile y becomes height, only the +X half is kept', usage: '|> revolve deg [segs]', example: 'χ 6 (⭘ 2) |> revolve 360' },
     loft: { name: 'loft', description: 'Loft stage: start a loft from the 2D shape so far (at z = 0), or extend an existing loft with another profile', usage: '|> loft z profile', example: '⭘ 10 |> loft 20 (△ 5) |> loft 35 (⬠ 3)' },
     anchor: { name: 'anchor', description: 'Re-origin at one of the shape’s own anchors', usage: '|> anchor v', example: 'cyl 5 20 |> anchor bot' },
     at: { name: 'at', description: 'Position: union the child with its opposite anchor mated to this anchor, plus an optional offset', usage: '|> at anchor [dx dy dz] child', example: 'plate |> at top 5.5 0 -5 flange' },
@@ -213,7 +216,7 @@ connection.onInitialize((params) => {
       },
       completionProvider: {
         resolveProvider: false, // Changed to false since we provide full completion info upfront
-        triggerCharacters: ['■', '●', '◎', '▻', '▬', '⎏', '△', '⬠', '⭘', '✎', 'χ', 'ψ', 'ζ', 'θ', 'ϕ', 'ω', '⬈', '⇋', '⮕', '⚓', '⊖', '⊝', '⊛', '⊕', '∩', '⇓', '⊞', '↯', '⌖', '⋈', '▣', '◙', '⌭', '⌽', '⊚', '⏢', '◉', '⊿', '⟰', '|', '@']
+        triggerCharacters: ['■', '●', '◎', '▻', '▬', '⎏', '△', '⬠', '⭘', '✎', 'χ', 'ψ', 'ζ', 'θ', 'ϕ', 'ω', '⬈', '⇋', '⮕', '⟲', '⚓', '⊖', '⊝', '⊛', '⊕', '∩', '⇓', '⊞', '↯', '⌖', '⋈', '▣', '◙', '⌭', '⌽', '⊚', '⏢', '◉', '⊿', '⟰', '|', '@']
       }
     }
   }

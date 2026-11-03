@@ -21,6 +21,8 @@ dimOf s = case s of
     case d of
       D3 -> Left "cannot extrude a 3D solid: ⮕ / extrude needs a 2D profile (△ ⬠ ⭘ ✎, or Circle/Triangle/Pentagon/Bezier)"
       _ -> Right D3
+  Revolve _ x -> revolveDim x
+  RevolveSeg _ _ x -> revolveDim x
   Loft ps -> do
     ds <- mapM (dimOf . snd) ps
     if length ps < 2
@@ -59,6 +61,11 @@ dimOf s = case s of
   Minkowski xs -> same "minkowski" xs
   _ -> Right D3
   where
+    revolveDim x = do
+      d <- dimOf x
+      case d of
+        D3 -> Left "cannot revolve a 3D solid: ⟲ / revolve needs a 2D profile (△ ⬠ ⭘ ✎, or Circle/Triangle/Pentagon/Bezier)"
+        _ -> Right D3
     solid op x = do
       d <- dimOf x
       if d == D3 then Right D3 else Left (op ++ " needs a 3D solid; extrude a 2D profile first")

@@ -1,0 +1,19 @@
+// Surface-of-revolution examples: ⟲ / |> revolve
+// Profile y becomes height; only the +X half is kept (the -X half is
+// clipped). The .scad export clips crossing profiles automatically,
+// since OpenSCAD's rotate_extrude wants +X-only profiles.
+
+// A ball from a centered circle: the +X half-disc is revolved
+ball = ⟲ 360 64 (⭘ 4)
+
+// A pointed cap: triangle in +X, revolved fully
+cap = ⟲ 360 64 (χ 4 (△ 3))
+
+// A torus: circle pushed out to radius 6, explicit 64 segments
+ring = ⟲ 360 64 (χ 6 (⭘ 2))
+
+// Pipeline form: a quarter-turn foot
+foot = χ 3 (⭘ 2) |> revolve 90 64
+
+// Combine, spaced apart (ball r4, cap r7, ring r8, foot to x5)
+main = (χ -28 ball) ⊕ (χ -16 cap) ⊕ ring ⊕ (χ 16 foot)
