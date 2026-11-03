@@ -1,0 +1,664 @@
+{
+  "job": "a1-stems",
+  "printer": "a1",
+  "material": "pla",
+  "package_sha256": "1770510af6f659429ee99f64727cb85b02ae38b70a174b77f4e4e61590eb1150",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 65.0,
+      "bed_c": 65.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 558,
+    "deposition_moves_checked": 138341,
+    "package_sha256": "1770510af6f659429ee99f64727cb85b02ae38b70a174b77f4e4e61590eb1150"
+  },
+  "remote_name": "top-a1-stems-20261103-121926.gcode.3mf",
+  "spool": "ams0",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "authorization_note": "Owner confirmed 2026-11-03 in chat: A1 bed clear, use the first spool (AMS slot 1, ams0) for the three tighter top stems",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 522,
+    "total_layer_num": 522,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "top-a1-top-20261102-195307.gcode",
+    "nozzle_temper": 23.6875,
+    "bed_temper": 24.125,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "ams0",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ],
+    [
+      "ams2",
+      "PLA",
+      "F4EE2AFF",
+      false
+    ],
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-03T12:19:40+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 522,
+        "total_layer_num": 522,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 23.6875,
+        "bed_temper": 24.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:19:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 31.15625,
+        "bed_temper": 24.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 2
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:20:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 87.21875,
+        "bed_temper": 35.46875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:20:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 100.71875,
+        "bed_temper": 57.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:20:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 91.875,
+        "bed_temper": 65.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:20:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 129.53125,
+        "bed_temper": 65.21875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:21:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 157.90625,
+        "bed_temper": 64.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:21:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 193.6875,
+        "bed_temper": 64.53125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:21:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 217,
+        "bed_temper": 64.625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:21:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 218.34375,
+        "bed_temper": 64.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:22:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 218.84375,
+        "bed_temper": 64.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:22:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 123,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 220.46875,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:22:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 122,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 220.75,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:22:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 122,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 218.625,
+        "bed_temper": 64.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:23:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 122,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 220.03125,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:23:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 121,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 220.8125,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:23:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 121,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 217.90625,
+        "bed_temper": 64.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:23:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 121,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 220.25,
+        "bed_temper": 64.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:24:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 121,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 219.71875,
+        "bed_temper": 64.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:24:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 121,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 201.71875,
+        "bed_temper": 64.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:24:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 121,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 184.46875,
+        "bed_temper": 63.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:24:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 117,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 168.25,
+        "bed_temper": 64.53125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:25:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 117,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 170.90625,
+        "bed_temper": 64.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:25:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 117,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 161.34375,
+        "bed_temper": 64.65625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:25:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 117,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 146.5,
+        "bed_temper": 65,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:25:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 117,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 138.65625,
+        "bed_temper": 65.03125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:26:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 117,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 140.4375,
+        "bed_temper": 65.0625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:26:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 117,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 140.46875,
+        "bed_temper": 65.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:26:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 117,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 173.59375,
+        "bed_temper": 65.3125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:26:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 558,
+        "mc_remaining_time": 117,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 204.75,
+        "bed_temper": 65.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-03T12:27:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 1,
+        "total_layer_num": 558,
+        "mc_remaining_time": 117,
+        "gcode_file": "top-a1-stems-20261103-121926.gcode.3mf",
+        "subtask_name": "top-a1-stems-20261103-121926.gcode",
+        "nozzle_temper": 219.4375,
+        "bed_temper": 65.3125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-03T12:19:26+1100",
+  "remote_content_sha256": "1770510af6f659429ee99f64727cb85b02ae38b70a174b77f4e4e61590eb1150",
+  "sequence_id": "668779876",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "668779876"
+  },
+  "first_layer_reached": true
+}

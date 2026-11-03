@@ -14,8 +14,13 @@ COMMON = {'enable_support': '0', 'support_on_build_plate_only': '1', 'only_one_w
           'sparse_infill_pattern': 'zig-zag', 'brim_object_gap': '0.1'}
 # Part centres on the plate (mm): body 160 mm across, stem 16 mm across.
 TOP = [('body_print', (105, 128)), ('stem_print', (215, 128))]
+STEMS = [('stem-fit15_print', (88, 128)), ('stem-fit10_print', (128, 128)), ('stem-fit05_print', (168, 128))]
 JOBS = {'a1-top': (TOP, {'wall_loops': '4', 'sparse_infill_density': '100%', 'top_shell_layers': '5', 'bottom_shell_layers': '5',
-                         'brim_type': 'outer_only', 'brim_width': '3'})}
+                         'brim_type': 'outer_only', 'brim_width': '3'}),
+        # Tighter stems (stems.py), standing on their grip ends with modelled mouse-ear pads (no slicer brim);
+        # light infill keeps mass off the top's upper end.
+        'a1-stems': (STEMS, {'wall_loops': '4', 'sparse_infill_density': '15%', 'sparse_infill_pattern': 'gyroid',
+                             'top_shell_layers': '5', 'bottom_shell_layers': '5', 'brim_type': 'no_brim', 'brim_width': '0'})}
 EXCLUDE = (0, 0)   # the A1 has no excluded corner
 
 def mesh(name):

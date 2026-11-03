@@ -86,8 +86,44 @@ Likely causes (not yet tested):
 - **Mass up high.** The stem adds 24 g well above the body, which raises the centre of
   gravity and the tilt inertia; the body alone is the more stable top.
 
-Next version to try: clearance 0.10 mm per flat (or a print-in coupon at 0.05/0.10/0.15),
-a deeper socket, and a shorter or lighter stem.
+## Tighter stems (2026-11-03)
+
+Three new stems that fit the body already printed (`stems.py`; the body is unchanged):
+
+| Stem | Grooves at the grip top | Peg across flats | Clearance per flat | Lean allowed | Grip top off the axis |
+| --- | --- | --- | --- | --- | --- |
+| first stem | none | 12.0 mm | 0.25 mm | 2.0° | 3.1 mm |
+| `stem-fit15` | 1 | 12.2 mm | 0.15 mm | 0.8° | 1.3 mm |
+| `stem-fit10` | 2 | 12.3 mm | 0.10 mm | 0.5° | 0.9 mm |
+| `stem-fit05` | 3 | 12.4 mm | 0.05 mm | 0.3° | 0.4 mm |
+
+- **Seat.** The socket ends in a pointed hex roof. The new pegs continue into it and
+  their ends are the roof's own shape, so each stem rests on the roof faces and centres
+  itself at the bottom as well as at the socket mouth. Engagement is 21 mm instead of
+  14.5. The last 1 mm of the point is cut off so it can't bottom out, and the shoulder
+  stays 0.3 mm above the body. The lean figures above ignore this seat, so they're the
+  worst case.
+- **Mass.** The body alone sleeps above 154 rpm; with a solid stem, 181 rpm. These stems
+  print at 15% gyroid (37 g for all three, about 12 g each), which brings the fitted top
+  closer to the body alone.
+- **Which to use.** Start with `stem-fit10` (2 grooves). If it won't go in, use
+  `stem-fit15`; if it still rocks, try `stem-fit05`, which may need pressing in or a light
+  sanding of the peg.
+- **Checks (`verify_stems.py`).** For each stem: no overlap with the body, the peg's
+  measured width, that lowering it 0.05 mm would hit the roof (so it rests there), the
+  shoulder gap, and the mass properties fitted. Results in `stems-validation.json`.
+
+### Printing (`a1-stems`)
+
+All three standing on their grip ends on the A1, 4 walls, 15% gyroid, 0.20mm Standard,
+2.1 h, 37 g. Mouse-ear pads instead of a brim: four 0.2 mm discs, 12 mm across, around
+each stem's foot (`stem-ears.coscad`), joined to the print meshes. They're modelled
+because Bambu's CLI keeps its native brim-ear setting but slices no ears (seen on the
+tesseract A1 retry, and again here on the 12-sided grip). `verify_packages.py a1-stems`
+passed.
+
+Printing on the A1 since 2026-11-03 12:19 (AMS slot 1, the owner confirmed the plate
+clear); layer 1 of 558 at 12:27. Record: `a1-stems/print-run.json`.
 
 ## Using it
 

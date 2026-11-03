@@ -1,0 +1,92 @@
+{
+  "body_alone": {
+    "mass_g": 321.3425225289533,
+    "cog_above_tip_mm": 34.38516825234839,
+    "cog_offset_from_axis_mm": 4.9392023941593526e-15,
+    "spin_inertia_kg_m2": 0.0013350007071450396,
+    "tilt_inertia_about_tip_kg_m2": 0.0010639349799847625,
+    "sleeping_speed_rpm": 153.63197220235332
+  },
+  "stems": {
+    "stem-fit15": {
+      "clearance_per_flat": 0.1499768633635492,
+      "peg_af_mm": 12.200046273272902,
+      "engagement_mm": 21.216878364870322,
+      "overlap_mm3": 7.054711784018737e-06,
+      "rests_on_roof": true,
+      "shoulder_gap_mm": 0.29999999999999716,
+      "lean_deg": 0.8099654173326342,
+      "grip_top_offset_mm": 1.27661671324393,
+      "groove_area_removed_mm2": 0.9600079323751061,
+      "grooves": 1,
+      "stem_g": 24.28392309746473,
+      "print_area_beyond_45deg_mm2": 0.9600078561919929,
+      "with_body": {
+        "mass_g": 345.626445626418,
+        "cog_above_tip_mm": 37.7941800148986,
+        "cog_offset_from_axis_mm": 0.0002016445167801871,
+        "spin_inertia_kg_m2": 0.0013357112874351291,
+        "tilt_inertia_about_tip_kg_m2": 0.001253106147357674,
+        "sleeping_speed_rpm": 181.18955645480585
+      }
+    },
+    "stem-fit10": {
+      "clearance_per_flat": 0.10000719756518706,
+      "peg_af_mm": 12.299985604869626,
+      "engagement_mm": 21.216878364870322,
+      "overlap_mm3": 7.627486318336422e-06,
+      "rests_on_roof": true,
+      "shoulder_gap_mm": 0.29999999999999716,
+      "lean_deg": 0.5401190984663105,
+      "grip_top_offset_mm": 0.8512703692630693,
+      "groove_area_removed_mm2": 1.9200158647501837,
+      "grooves": 2,
+      "stem_g": 24.315039991290845,
+      "print_area_beyond_45deg_mm2": 1.9200159694777597,
+      "with_body": {
+        "mass_g": 345.65756252024414,
+        "cog_above_tip_mm": 37.791491021966664,
+        "cog_offset_from_axis_mm": 0.0003895122250216869,
+        "spin_inertia_kg_m2": 0.0013357124686862148,
+        "tilt_inertia_about_tip_kg_m2": 0.0012530003456602814,
+        "sleeping_speed_rpm": 181.18345696176675
+      }
+    },
+    "stem-fit05": {
+      "clearance_per_flat": 0.050037531766825794,
+      "peg_af_mm": 12.399924936466348,
+      "engagement_mm": 21.216878364870322,
+      "overlap_mm3": 7.913662843137939e-06,
+      "rests_on_roof": true,
+      "shoulder_gap_mm": 0.29999999999999716,
+      "lean_deg": 0.2702488158113583,
+      "grip_top_offset_mm": 0.4259240252822165,
+      "groove_area_removed_mm2": 2.8800237971251477,
+      "grooves": 3,
+      "stem_g": 24.346327685215055,
+      "print_area_beyond_45deg_mm2": 2.8800238256697526,
+      "with_body": {
+        "mass_g": 345.6888502141683,
+        "cog_above_tip_mm": 37.788805489455534,
+        "cog_offset_from_axis_mm": 0.0005508036145481367,
+        "spin_inertia_kg_m2": 0.0013357136849193475,
+        "tilt_inertia_about_tip_kg_m2": 0.0012528948774449137,
+        "sleeping_speed_rpm": 181.17742825655984
+      }
+    }
+  },
+  "old_stem": {
+    "clearance_per_flat": 0.25,
+    "engagement_mm": 14.5,
+    "lean_deg": 1.9749340108819766,
+    "grip_top_offset_mm": 3.103448275862069,
+    "with_body": {
+      "mass_g": 345.0119641315074,
+      "cog_above_tip_mm": 37.79242820030436,
+      "cog_offset_from_axis_mm": 4.600349905591192e-15,
+      "spin_inertia_kg_m2": 0.0013357006015302804,
+      "tilt_inertia_about_tip_kg_m2": 0.0012515407117431438,
+      "sleeping_speed_rpm": 180.91256312985132
+    }
+  }
+}

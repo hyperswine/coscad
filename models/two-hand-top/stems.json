@@ -1,0 +1,41 @@
+{
+  "socket_af": 12.5,
+  "socket_roof_apex_z": 21.783121635129678,
+  "shoulder_gap": 0.3,
+  "tip_cut": 1.0,
+  "ears": {
+    "radius": 6.0,
+    "height": 0.2,
+    "centre_radius": 10.0,
+    "count": 4
+  },
+  "stems": {
+    "stem-fit15": {
+      "clearance_per_flat": 0.15,
+      "peg_af": 12.2,
+      "grooves": 1,
+      "peg_bottom_z": 22.783121635129678,
+      "shoulder_z": 44.3,
+      "engagement_mm": 21.216878364870322,
+      "grip_top_z": 134.3
+    },
+    "stem-fit10": {
+      "clearance_per_flat": 0.1,
+      "peg_af": 12.3,
+      "grooves": 2,
+      "peg_bottom_z": 22.783121635129678,
+      "shoulder_z": 44.3,
+      "engagement_mm": 21.216878364870322,
+      "grip_top_z": 134.3
+    },
+    "stem-fit05": {
+      "clearance_per_flat": 0.05,
+      "peg_af": 12.4,
+      "grooves": 3,
+      "peg_bottom_z": 22.783121635129678,
+      "shoulder_z": 44.3,
+      "engagement_mm": 21.216878364870322,
+      "grip_top_z": 134.3
+    }
+  }
+}

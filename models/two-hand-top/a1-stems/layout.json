@@ -1,0 +1,23 @@
+[
+ {
+  "part": "stem-fit15_print",
+  "centre_mm": [
+   88,
+   128
+  ]
+ },
+ {
+  "part": "stem-fit10_print",
+  "centre_mm": [
+   128,
+   128
+  ]
+ },
+ {
+  "part": "stem-fit05_print",
+  "centre_mm": [
+   168,
+   128
+  ]
+ }
+]

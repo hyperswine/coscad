@@ -8,7 +8,8 @@ import hashlib, json, math, re, sys, zipfile, xml.etree.ElementTree as E
 import trimesh
 B = Path(__file__).resolve().parent
 PRINTERS = {'a1': ('A1', 'Bambu Lab A1', 'N2S')}; DENSITY = 1.24
-EXPECT = {'a1-top': {'wall_loops': '4', 'sparse_infill_density': '100%'}}
+EXPECT = {'a1-top': {'wall_loops': '4', 'sparse_infill_density': '100%'},
+          'a1-stems': {'wall_loops': '4', 'sparse_infill_density': '15%', 'brim_type': 'no_brim'}}
 reports = json.loads((B/'packages.json').read_text()) if (B/'packages.json').exists() else {}
 for job in sys.argv[1:] or list(EXPECT):
     PRINTER, MODEL, MODEL_ID = PRINTERS[job.split('-')[0]]

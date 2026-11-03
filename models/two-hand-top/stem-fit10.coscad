@@ -1,0 +1,2 @@
+// Two-hand top stem, 0.10 mm per hex flat, seats on the socket roof; 2 groove(s). mm, tip at z = 0.
+main = (((ζ 22.7831 (⎏ 6 7.1014 21.5169)) ∩ ((ζ 29 (⎏ 6 7.2169 16)) ⇓ (ζ 21.7831 (◎ 0.3 0.02)))) ⊕ (ζ 44.3 (⎏ 12 8 90))) ⊖ ((ω 15 (box 1.6 1.2 8 |> move 7.7274 0 130.31)) ⊕ (ω 45 (box 1.6 1.2 8 |> move 7.7274 0 130.31)))

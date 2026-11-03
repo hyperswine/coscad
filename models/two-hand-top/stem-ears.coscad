@@ -1,0 +1,2 @@
+// Four sacrificial 0.2 mm mouse-ear pads for a stem standing on its grip end (print frame).
+main = (ω 0 (χ 10 (⚓ bot (◎ 6 0.2)))) ⊕ (ω 90 (χ 10 (⚓ bot (◎ 6 0.2)))) ⊕ (ω 180 (χ 10 (⚓ bot (◎ 6 0.2)))) ⊕ (ω 270 (χ 10 (⚓ bot (◎ 6 0.2))))

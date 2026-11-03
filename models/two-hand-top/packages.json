@@ -41,5 +41,48 @@
     "estimated_grams": 344.4604797363281,
     "solid_parts_grams": 345.01196141810783,
     "passed": true
+  },
+  "a1-stems": {
+    "printer": "A1",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL A1",
+    "process": "0.20mm Standard @BBL A1",
+    "nozzle_temperature": "220",
+    "bed_temperature": "65",
+    "model_id": "N2S",
+    "package": "a1-stems/slice/top.gcode.3mf",
+    "package_sha256": "1770510af6f659429ee99f64727cb85b02ae38b70a174b77f4e4e61590eb1150",
+    "gcode_sha256": "d8aff51c1715342b39d9132f9a7cbf0320d950d442bcde59003d4c7cdbde1693",
+    "objects": 3,
+    "layers": 558,
+    "model_path_segments": 138341,
+    "support_segments": 0,
+    "segments_in_exclusion_corner": 0,
+    "extrusion_bounds_xy_mm": [
+      [
+        72.731,
+        112.348
+      ],
+      [
+        183.269,
+        143.269
+      ]
+    ],
+    "features": {
+      "Inner wall": 60151,
+      "Outer wall": 21074,
+      "Bottom surface": 822,
+      "Gap infill": 315,
+      "Internal solid infill": 1796,
+      "Sparse infill": 50546,
+      "Overhang wall": 6,
+      "Floating vertical shell": 3161,
+      "Bridge": 260,
+      "Top surface": 210
+    },
+    "estimated_hours": 2.0578257921006946,
+    "estimated_grams": 37.19492721557617,
+    "solid_parts_grams": 73.2082227189296,
+    "passed": true
   }
 }
