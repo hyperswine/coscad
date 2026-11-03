@@ -4,13 +4,14 @@
     "repository": "https://github.com/elalish/manifold.git",
     "revision": "11235e6b8ebea2dbed8aec4285685aafd3d95667",
     "tag": "v3.5.2",
-    "layout": ".native/manifold-3.5.2/source"
+    "layout": "third-party/manifold",
+    "note": "Sources vendored at this revision (include/manifold and src/) and compiled into the coscad library by cxx-sources; cabal needs no CMake, pkg-config or download. include/manifold/version.h is the CMake-generated header, checked in."
   },
   "clipper2": {
     "repository": "https://github.com/AngusJohnson/Clipper2.git",
     "revision": "46f639177fe418f9689e8ddb74f08a870c71f5b4",
-    "layout": ".native/clipper2/checkout",
-    "note": "Manifold 3.5.2's own CrossSection dependency pin, built in tree from this checkout; the kernel build itself never downloads"
+    "layout": "third-party/clipper2/CPP/Clipper2Lib",
+    "note": "Manifold 3.5.2's own CrossSection dependency pin, vendored (include and src/) and compiled by cxx-sources alongside the kernel; nothing is downloaded."
   },
   "configuration": {
     "CMAKE_BUILD_TYPE": "Release",

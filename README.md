@@ -37,16 +37,13 @@ and examples; put `coscad` on your PATH and, if you want `man coscad`,
 copy `man/coscad.1` into a `man1` directory on your MANPATH. Or build
 from source with [cabal](https://www.haskell.org/cabal/) and GHC 9.8
 (both installable with [ghcup](https://www.haskell.org/ghcup/); the
-dependency set is pinned in `cabal.project.freeze`). The default build
-links the pinned native geometry kernel (Manifold 3.5.2 plus Clipper2,
-`native-kernel.lock.json`), which needs CMake, pkg-config and a C++17
-compiler; `scripts/build-manifold.py` fetches the two pinned checkouts,
-builds them statically under `.native/` and never downloads during the
-kernel build itself:
+dependency set is pinned in `cabal.project.freeze`). That is the whole
+toolchain: the pinned native geometry kernel (Manifold 3.5.2 plus
+Clipper2, `native-kernel.lock.json`) is vendored under `third-party/`
+and compiled into the `coscad` library, so `cabal build` needs no CMake,
+pkg-config or download:
 
 ```sh
-python3 scripts/build-manifold.py
-export PKG_CONFIG_PATH="$PWD/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 cabal update
 cabal install exe:coscad --install-method=copy --installdir=bin   # binary lands in bin/
 ```
@@ -198,7 +195,10 @@ src/Coscad/Linalg.hs    vectors, 3x3 matrices, rotations, bed orientation
 src/Coscad/Geometry.hs  bboxes, anchors, attachment resolve (re-exports Linalg)
 src/Coscad/Codegen.hs   .scad export (OpenSCAD source for people who continue in OpenSCAD)
 src/Coscad/Dsl.hs       Haskell-embedded glyph DSL
-src/Coscad/Parser.hs    .coscad parser (glyphs, words, pipelines)
+src/Coscad/Parser.hs    .coscad parser facade (glyphs, words, pipelines), over:
+  Parser/Core.hs        lexer, numbers, contexts, anchor/frame references, reserved words
+  Parser/Grammar.hs     expression grammar: pipelines, booleans, transforms, shapes
+  Parser/Program.hs     definitions, variable resolution, program entry points
 src/Coscad/Dim.hs       2D/3D dimensionality check
 src/Coscad/Validate.hs  shared numeric/quantity checks and suggestions
 src/Coscad/Constraint.hs  mate/fixed constraint solver, conflicts, tolerance

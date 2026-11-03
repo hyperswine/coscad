@@ -8,6 +8,19 @@ and this project adheres to the
 
 ## Unreleased
 
+- **`cabal build` is the whole build.** The pinned geometry kernel
+  (Manifold 3.5.2 and its CrossSection dependency Clipper2 2.0.1,
+  `native-kernel.lock.json`) is now vendored under `third-party/` and
+  compiled into the `coscad` library by `cxx-sources`, so `scripts/build-manifold.py`,
+  CMake, pkg-config, `PKG_CONFIG_PATH` and the `.native/` prefix are gone
+  and nothing is downloaded during a build. The `-D` flags in `coscad.cabal`
+  mirror the lock's old CMake configuration (`MANIFOLD_CROSS_SECTION`,
+  `MANIFOLD_PAR=-1`, `CLIPPER2_MAX_DECIMAL_PRECISION=8`),
+  `third-party/manifold/include/manifold/version.h` is the generated header
+  checked in instead, and `cabal-version` rises to 2.4 so the vendored trees
+  can be described with file globs (older glob syntax silently dropped dotted
+  names such as `clipper.core.h` from `sdist`). Upgrading needs GHC 9.8 and a
+  C++17 compiler.
 - **Surfaces of revolution.** `⟲ angle profile` (pipeline `|> revolve angle`,
   `Revolve` in `!simple`) revolves a 2D profile about the Y axis through the
   pinned Manifold kernel; profile y becomes height and only the +X half is

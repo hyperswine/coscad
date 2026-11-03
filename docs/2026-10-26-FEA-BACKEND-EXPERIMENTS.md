@@ -164,7 +164,8 @@ assembly checks and manufacturing are opt-in. Planner images still use OpenSCAD.
 ### Native kernel
 
 `native-kernel.lock.json` pins Manifold 3.5.2 to commit
-`11235e6b8ebea2dbed8aec4285685aafd3d95667`. Build it explicitly:
+`11235e6b8ebea2dbed8aec4285685aafd3d95667`. It is now vendored under
+`third-party/` and built by cabal, so the recipe this record used was:
 
 ```sh
 python3 scripts/build-manifold.py
@@ -174,6 +175,9 @@ PKG_CONFIG_PATH="$PWD/.native/manifold-3.5.2/install/lib/pkgconfig" \
   cabal run --builddir=dist-native -fmanifold coscad -- \
   stl examples/bracket.coscad --backend=native-experimental -o /tmp/bracket.stl
 ```
+
+(`scripts/build-manifold.py`, the `manifold` flag and `--backend=native-experimental`
+are gone; `cabal build` alone links the kernel from `third-party/`.)
 
 The builder refuses a dirty or wrong-revision checkout, disables dependency
 network downloads, builds a static library, and records configuration and library

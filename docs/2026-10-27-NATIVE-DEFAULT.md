@@ -78,6 +78,9 @@ numerical FEA work there is untouched and remains an opt-in experiment.
   keeps an `openscad-only` job that builds and tests with `-f-manifold`.
   The Homebrew formula is unchanged and will need the kernel build step (or
   `-f-manifold`) before the next tagged release; the changelog says so.
+  (Superseded: the kernel is now vendored under `third-party/` and built by
+  cabal itself, so there is no kernel step, cache or pkg-config probe left in
+  either workflow — see the changelog and `third-party/manifold/README.md`.)
 
 ## Measurements (this Mac, Apple silicon, OpenSCAD 2025.05.16, BOSL2 2.0.775)
 

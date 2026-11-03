@@ -30,7 +30,9 @@ jobs:
           path: |
             ${{ steps.hs.outputs.cabal-store }}
             dist-newstyle
-          key: ${{ runner.os }}-cabal-${{ hashFiles('cabal.project.freeze', 'coscad.cabal') }}
+          key: ${{ runner.os }}-cabal-${{ hashFiles('cabal.project.freeze', 'coscad.cabal',
+                'third-party/manifold/include/**', 'third-party/manifold/src/**',
+                'third-party/clipper2/CPP/**') }}
           restore-keys: ${{ runner.os }}-cabal-
 
       # --- OpenSCAD + BOSL2: the test suite's independent oracle only. The
@@ -50,21 +52,8 @@ jobs:
           echo "COSCAD_BOSL2=$HOME/BOSL2" >> "$GITHUB_ENV"
 
       # --- pinned native kernel (native-kernel.lock.json: Manifold 3.5.2 +
-      # Clipper2), required by every build. The static install is cached
-      # by the lock and the builder; a miss rebuilds it from the pinned sources.
-      - name: Cache native kernel
-        id: kernel
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        with:
-          path: .native/manifold-3.5.2/install
-          key: ${{ runner.os }}-native-kernel-${{ hashFiles('native-kernel.lock.json', 'scripts/build-manifold.py') }}
-      - name: Build native kernel
-        if: steps.kernel.outputs.cache-hit != 'true'
-        run: python3 scripts/build-manifold.py
-      - name: Native kernel pkg-config
-        run: |
-          echo "PKG_CONFIG_PATH=$PWD/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}" >> "$GITHUB_ENV"
-          PKG_CONFIG_PATH="$PWD/.native/manifold-3.5.2/install/lib/pkgconfig" pkg-config --modversion manifold Clipper2
+      # Clipper2) is vendored under third-party/ and built by cabal itself, so
+      # there is no kernel step, cache or pkg-config probe to run here. ---
 
       - name: Pin policy and refusal checks
         run: |
@@ -108,19 +97,10 @@ jobs:
           path: |
             ${{ steps.hs.outputs.cabal-store }}
             dist-newstyle
-          key: ${{ runner.os }}-cabal-${{ hashFiles('cabal.project.freeze', 'coscad.cabal') }}
+          key: ${{ runner.os }}-cabal-${{ hashFiles('cabal.project.freeze', 'coscad.cabal',
+                'third-party/manifold/include/**', 'third-party/manifold/src/**',
+                'third-party/clipper2/CPP/**') }}
           restore-keys: ${{ runner.os }}-cabal-
-      - name: Cache native kernel
-        id: kernel
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
-        with:
-          path: .native/manifold-3.5.2/install
-          key: ${{ runner.os }}-native-kernel-${{ hashFiles('native-kernel.lock.json', 'scripts/build-manifold.py') }}
-      - name: Build native kernel
-        if: steps.kernel.outputs.cache-hit != 'true'
-        run: python3 scripts/build-manifold.py
-      - name: Native kernel pkg-config
-        run: echo "PKG_CONFIG_PATH=$PWD/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}" >> "$GITHUB_ENV"
       - name: Warnings are errors (CI only)
         run: |
           printf 'package coscad\n  ghc-options: -Werror\n' > cabal.project.local

@@ -87,7 +87,6 @@ validated recipes later, rather than labelling untested mechanisms as proven.
 ## Run the examples
 
 ```sh
-export PKG_CONFIG_PATH="$PWD/.native/manifold-3.5.2/install/lib/pkgconfig"
 cabal build exe:coscad
 COSCAD=$(cabal list-bin exe:coscad)
 "$COSCAD" stl stdlib/examples/thread-fit.coscad -o /tmp/thread-fit.stl

@@ -114,8 +114,7 @@ These commands write only local artifacts; they never contact a printer.
 python3.12 -m venv /tmp/coscad-tank-venv
 /tmp/coscad-tank-venv/bin/python -m pip install -r models/water-tank-2020/requirements.txt
 TANK_PY=/tmp/coscad-tank-venv/bin/python
-# Set PKG_CONFIG_PATH to the pinned Manifold installation first.
-COSCAD_BIN="$(cabal list-bin exe:coscad -fmanifold --builddir=dist-native)"
+COSCAD_BIN="$(cabal list-bin exe:coscad)"
 "$TANK_PY" models/water-tank-2020/build_model.py
 "$COSCAD_BIN" stl models/water-tank-2020/parts/rail_180.coscad -o /tmp/tank-rail.stl
 "$COSCAD_BIN" stl models/water-tank-2020/parts/seam_bracket.coscad -o /tmp/tank-bracket.stl

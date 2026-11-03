@@ -19,10 +19,8 @@ echo "$(date -u +%FT%TZ) updating ${local_rev:0:7} -> ${remote_rev:0:7}"
 git reset -q --hard origin/main
 mkdir -p "$BIN"
 cabal update 2>&1 | tail -1
-# Every build links the pinned geometry kernel (needs cmake, pkg-config, a C++17
-# compiler); .native/ is git-ignored, so the reset above keeps the built kernel.
-python3 scripts/build-manifold.py 2>&1 | tail -2
-export PKG_CONFIG_PATH="$REPO/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+# Every build compiles the pinned geometry kernel (Manifold + Clipper2) from
+# third-party/ into the library; cabal needs only GHC and a C++17 compiler.
 cabal install exe:coscad --install-method=copy --overwrite-policy=always --installdir="$BIN" 2>&1 | tail -3
 coscad doctor
 scripts/build-manual.sh "$WWW"

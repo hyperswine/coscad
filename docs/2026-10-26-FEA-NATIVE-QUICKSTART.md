@@ -1,8 +1,10 @@
 # Try FEA and native geometry
 
 > Since 1.6.0.0 every build links the kernel and `-fmanifold`, `--builddir=dist-native`
-> and `--backend=native-experimental` are unnecessary; plain `cabal build` after
-> `scripts/build-manifold.py` is enough. See [OPENSCAD-RETIRED](2026-10-29-OPENSCAD-RETIRED.md).
+> and `--backend=native-experimental` are unnecessary; plain `cabal build` is enough.
+> The kernel is now vendored under `third-party/` and compiled by cabal, so the
+> `scripts/build-manifold.py` and `PKG_CONFIG_PATH` steps below no longer exist.
+> See [OPENSCAD-RETIRED](2026-10-29-OPENSCAD-RETIRED.md) and the README.
 
 Run the commands from the repository root. The
 [validation record](2026-10-26-FEA-BACKEND-EXPERIMENTS.md) documents numerical
@@ -36,15 +38,12 @@ is refined. A feature that the declared grid cannot resolve is an error.
 
 ## Native STL, assembly checks and manufacturing
 
-The native CSG backend needs a C++17 compiler, CMake and pkg-config as well as
-Cabal/GHC. The builder fetches and verifies the pinned Manifold and Clipper2
-checkouts (`native-kernel.lock.json`) and builds them statically; the Cabal
-`manifold` flag is on by default, so an ordinary build links the kernel once
-pkg-config can see it:
+The native CSG backend needs a C++17 compiler as well as Cabal/GHC; the pinned
+Manifold and Clipper2 sources (`native-kernel.lock.json`) are vendored under
+`third-party/` and compiled into the library, so an ordinary build links the
+kernel with no extra tools:
 
 ```sh
-python3 scripts/build-manifold.py
-export PKG_CONFIG_PATH="$PWD/.native/manifold-3.5.2/install/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 cabal build all
 COSCAD_BIN="$(cabal list-bin exe:coscad)"
 FEA_BIN="$(cabal list-bin exe:coscad-experiments)"

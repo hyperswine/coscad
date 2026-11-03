@@ -24,9 +24,10 @@ ever disagree; this file can drift, the compiler cannot.
 
 1. Get a `coscad` binary: a release download, or `cabal install
    exe:coscad --install-method=copy --installdir=bin` from the repo (GHC
-   9.8 via ghcup; see the README's macOS linker note if linking fails
-   with a tapi "unknown architecture" error; a source build needs the
-   pinned kernel from `scripts/build-manifold.py`). Run `coscad doctor`
+   9.8 via ghcup; the pinned kernel is vendored under `third-party/` and
+   cabal compiles it, so no other build tools are needed; see the README's
+   macOS linker note if linking fails with a tapi "unknown architecture"
+   error). Run `coscad doctor`
    first: it reports the linked kernel and renders a test part. Since
    1.6.0.0 OpenSCAD and BOSL2 are not needed.
 2. `coscad stl file.coscad` → `file.stl` plus volume and bounds (and a

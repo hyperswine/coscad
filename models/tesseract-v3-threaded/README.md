@@ -222,10 +222,10 @@ thread fit worked; the complete assembly remains unverified.
 
 ## Reproduce
 
-From the repository root, with the pinned native kernel available:
+From the repository root, with the pinned native kernel vendored under
+`third-party/` (cabal compiles it; no CMake or pkg-config needed):
 
 ```sh
-export PKG_CONFIG_PATH="$PWD/.native/manifold-3.5.2/install/lib/pkgconfig"
 cabal build exe:coscad
 COSCAD=$(cabal list-bin exe:coscad)
 python3 models/tesseract-v3-threaded/export.py
