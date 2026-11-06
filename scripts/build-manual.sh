@@ -60,9 +60,11 @@ mkdir -p "$work/corner"
 cp examples/assemble/*.coscad examples/assemble/corner.assemble "$work/corner/"
 mkdir -p "$work/orbit-tower"
 cp models/orbit-tower/*.coscad models/orbit-tower/orbit-tower.assemble "$work/orbit-tower/"
+mkdir -p "$work/tank"
+cp models/tank-model-2020/*.coscad models/tank-model-2020/tank.assemble "$work/tank/"
 # Never let a failed render silently reuse a checked-in preview.
 find "$work" -name '*.png' -delete
-coscad site "$tmp/builds" "$work/plan/corner_pair.assemble" "$work/corner/corner.assemble" "$work/plan/cube.assemble" "$work/bow3/bow3.assemble" "$work/ball/ball.assemble" "$work/tesseract/tesseract.assemble" "$work/orbit-tower/orbit-tower.assemble"
+coscad site "$tmp/builds" "$work/plan/corner_pair.assemble" "$work/corner/corner.assemble" "$work/plan/cube.assemble" "$work/bow3/bow3.assemble" "$work/ball/ball.assemble" "$work/tesseract/tesseract.assemble" "$work/orbit-tower/orbit-tower.assemble" "$work/tank/tank.assemble"
 rm -rf "$work"
 python3 scripts/finish-manual.py "$tmp"
 echo "{\"commit\": \"$commit\", \"built\": \"$stamp\"}" > "$tmp/version.json"

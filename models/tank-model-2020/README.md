@@ -105,6 +105,9 @@ may get no ears at all, so check the sliced preview and fall back to manual brim
 
 Follow `tank_plan.md` and the step images `tank_stepN.png`. They're generated and not
 committed; `coscad plan tank.assemble --png` writes them.
+The [interactive build instructions](https://manual.cswine.cloud/builds/tank/index.html)
+are regenerated with native renders whenever the manual site is rebuilt.
+
 1. **Front frame.** Build it lying flat (two uprights, bottom rail, brackets), drop the
    front wall into the bottom rail's slot, then close it with the top rail.
 2. **Floor.** Stand the frame up and slide the floor into the bottom rail's inward slot.
