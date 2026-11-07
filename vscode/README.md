@@ -6,6 +6,20 @@ and unsaved recursive project validation.
 
 ## Features
 
+- Small shaded 3D illustrations beside primitive calls, including distinct X/Y/Z
+  cylinder orientations. Hover adds a larger illustration alongside the LSP docs.
+  Set `coscad.shapeVisuals` to `inline` (default), `gutter`, `both` or `off`;
+  `coscad.shapeHoverPreviews` independently controls hover images. Gutter mode
+  shows the first primitive per line. Try `examples/shape_visuals.coscad`.
+  Inline SVGs have intrinsic dimensions capped at `editor.fontSize` (and a smaller
+  configured line height), including CoScad-specific font overrides. Font changes
+  refresh the icons automatically. **COSCAD: Toggle Shape Icons** in the command
+  palette switches them off/on; `"coscad.shapeVisuals": "off"` also hides them.
+  These are primitive illustrations, not previews of current dimensions or outer
+  transforms. Bundled native-mesh SVGs need no compiler/render process while
+  editing and never alter copied source. Only parsed shape calls get symbols,
+  not comments, identifiers or assembly filenames. To bound editor work, files
+  above 256 KiB have no symbols and smaller files show at most 1,000.
 - Syntax and semantic highlighting for glyph, simple, pipeline, anchor, and
   assembly syntax; numeric bindings are highlighted as read-only variables
 - Contextual hover for every recognized non-comment token, including `=`,
@@ -37,6 +51,12 @@ and unsaved recursive project validation.
   **Doctor** (verify runtime dependencies); output commands save the active
   source and its dirty dependencies, then run in a
   COSCAD terminal opened in the file's folder
+
+The image decorations live in the VS Code client because standard LSP inlay hints
+have text labels. Other LSP clients retain their existing text hovers. The image
+catalog is `shape-icons.json`; `scripts/render-editor-icons.py --coscad /path/to/coscad`
+(run from the repository root with numpy/trimesh installed) regenerates the bundled
+SVGs from the native geometry backend. Editing never invokes this generator.
 
 With a compiler advertising `project-buffers`, validation sends a bounded
 snapshot of the root and all reachable open buffers. Changes to parts, nested

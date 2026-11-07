@@ -1,0 +1,956 @@
+{
+  "job": "x1c-panel-fit-20261107",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "150cfd8370632cb0e508d018569c38927a3cc48657703e0716a371646366964e",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 81,
+    "deposition_moves_checked": 38993,
+    "package_sha256": "150cfd8370632cb0e508d018569c38927a3cc48657703e0716a371646366964e"
+  },
+  "remote_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "authorization_note": "Owner requested exactly three panel fit samples on X1C and confirmed its bed clear, 2026-11-07. Use the currently loaded external PLA.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 1164,
+    "total_layer_num": 1164,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "tesseract-v3-x1c-struts-20261103-165700.gcode",
+    "nozzle_temper": 28.0,
+    "bed_temper": 25.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "BECF00FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-07T14:31:12+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 1164,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 28.0,
+        "bed_temper": 25.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:31:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 71.0,
+        "bed_temper": 25.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:31:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 35.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:31:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 50.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:32:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 139.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:32:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 218.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:32:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 39,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 248.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:32:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 12,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 35,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 234.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:33:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 206.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:33:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:33:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:33:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:34:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 192.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:34:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 163.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:34:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 142.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:34:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:35:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:35:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:35:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:35:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:36:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:36:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:36:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:36:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:37:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:37:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:37:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 185.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:37:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 215.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:38:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:38:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:38:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:38:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:39:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:39:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 15,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:39:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 15,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:39:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 16,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 33,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:40:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 17,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 33,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:40:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 18,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 32,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:40:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 19,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 32,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:40:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 19,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 32,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 218.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:41:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 19,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 32,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 210.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:41:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 19,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 32,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 221.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:41:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 32,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:41:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 31,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:42:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 31,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:42:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 81,
+        "mc_remaining_time": 31,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-07T14:42:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 1,
+        "total_layer_num": 81,
+        "mc_remaining_time": 31,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-panel-fit-20261107-20261107-143111.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-07T14:31:11+1100",
+  "remote_content_sha256": "150cfd8370632cb0e508d018569c38927a3cc48657703e0716a371646366964e",
+  "sequence_id": "22272788",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "22272788"
+  },
+  "first_layer_reached": true
+}

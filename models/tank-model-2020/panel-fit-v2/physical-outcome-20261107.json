@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-07",
+  "evidence": "owner_report",
+  "printer": "X1C",
+  "job": "x1c-panel-fit-20261107",
+  "samples": [
+    {"holes": 1, "clearance_per_face_mm": 0.20, "reported_fit": "works"},
+    {"holes": 2, "clearance_per_face_mm": 0.25, "reported_fit": "works"},
+    {"holes": 3, "clearance_per_face_mm": 0.30, "reported_fit": "works"}
+  ],
+  "owner_statement": "Each of the tests for the new panels work.",
+  "preferred_clearance": null,
+  "measured_force_or_play": false,
+  "scope": "One-sided flange fit samples only; not a full panel, bilateral flange, or waterproofing test."
+}

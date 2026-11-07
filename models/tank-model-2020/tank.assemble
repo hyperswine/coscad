@@ -3,18 +3,19 @@
 // Uprights run floor to top; the eight 60 mm rails sit between them.
 // Each top rail waits for its wall (after=): a wall drops in from above onto
 // its bottom rail, so the top rail must not be on first.
-// Panels slide into the slots: walls drop in from above between two
-// uprights, the floor slides into the bottom rails' inward slots.
+// Walls slide their keyed X edges down the upright slots; Y edges remain
+// narrow to enter bottom/top mouths. Floor first, then side bottom rails
+// axially over its keys, then rear uprights: never force keys through lips.
 !glyph
 plate 256 256 6
 up_fl ← rail100.coscad ×1 ▽bot profile=2020 material=pla
 up_fr ← rail100.coscad ×1 ▽bot profile=2020 material=pla
-up_bl ← rail100.coscad ×1 ▽bot profile=2020 material=pla
-up_br ← rail100.coscad ×1 ▽bot profile=2020 material=pla
+up_bl ← rail100.coscad ×1 ▽bot profile=2020 material=pla after=bottom_left
+up_br ← rail100.coscad ×1 ▽bot profile=2020 material=pla after=bottom_right
 bottom_front ← rail60.coscad ×1 ▽bot profile=2020 material=pla
 bottom_back ← rail60.coscad ×1 ▽bot profile=2020 material=pla
-bottom_left ← rail60.coscad ×1 ▽bot profile=2020 material=pla
-bottom_right ← rail60.coscad ×1 ▽bot profile=2020 material=pla
+bottom_left ← rail60.coscad ×1 ▽bot profile=2020 material=pla after=floor
+bottom_right ← rail60.coscad ×1 ▽bot profile=2020 material=pla after=floor
 top_front ← rail60.coscad ×1 ▽bot profile=2020 material=pla after=wall_front
 top_back ← rail60.coscad ×1 ▽bot profile=2020 material=pla after=wall_back
 top_left ← rail60.coscad ×1 ▽bot profile=2020 material=pla after=wall_left
@@ -39,8 +40,8 @@ asm = (up_fl |> move 10 10 50)
   ⊕ (top_right |> rotx 90 |> move 90 50 90)
   ⊕ (wall_front |> rotx 90 |> move 50 10 50)
   ⊕ (wall_back |> rotx 90 |> move 50 90 50)
-  ⊕ (wall_left |> roty 90 |> move 10 50 50)
-  ⊕ (wall_right |> roty 90 |> move 90 50 50)
+  ⊕ (wall_left |> rotz 90 |> roty 90 |> move 10 50 50)
+  ⊕ (wall_right |> rotz 90 |> roty 90 |> move 90 50 50)
   ⊕ (floor |> move 50 50 10)
   ⊕ (br |> rotx 90 |> move 20 -2 20)
   ⊕ (br |> rotz 90 |> rotx 90 |> move 80 -2 20)
@@ -102,3 +103,6 @@ joint drop wall_back bottom_back axis=top
 joint drop wall_left bottom_left axis=top
 joint drop wall_right bottom_right axis=top
 joint drop floor bottom_front axis=bak
+// The floor keys engage the side rails longitudinally, not through mouths.
+joint drop bottom_left floor axis=bak
+joint drop bottom_right floor axis=bak

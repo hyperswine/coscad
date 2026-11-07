@@ -5,6 +5,7 @@ const fs = require('fs')
 const { identity, snapshot, ValidationQueue } = require('./project-state')
 const { execFile } = require('child_process')
 const { LanguageClient, TransportKind } = require('vscode-languageclient/node')
+const { createShapeVisuals } = require('./shape-visuals')
 
 // The first compiler release whose `validate` command, `file:line:col: reason`
 // diagnostics and exit codes (1 = could not run, 2 = design problem) this
@@ -392,6 +393,8 @@ async function compileForDiagnostics(document, project, signal, current) {
 }
 
 function activate(context) {
+  const shapeVisuals = createShapeVisuals(vscode, context)
+  context.subscriptions.push(shapeVisuals)
   const serverModule = context.asAbsolutePath(path.join('coscad-lsp-server.js'))
   const serverOptions = {
     run: { module: serverModule, transport: TransportKind.ipc },
@@ -400,7 +403,8 @@ function activate(context) {
   const clientOptions = {
     documentSelector: [{ scheme: 'file', language: 'coscad' }],
     synchronize: { fileEvents: vscode.workspace.createFileSystemWatcher('**/*.{coscad,assemble}') },
-    outputChannelName: 'COSCAD Language Server'
+    outputChannelName: 'COSCAD Language Server',
+    middleware: { provideHover: shapeVisuals.provideHover }
   }
   client = new LanguageClient('coscadLanguageServer', 'COSCAD Language Server', serverOptions, clientOptions)
 

@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "clearance_per_face_mm": 0.25,
+  "panel_size_mm": [
+    70,
+    70
+  ],
+  "neck_mm": 5.7,
+  "head_width_mm": 10.5,
+  "key_length_mm": 59.4,
+  "ramp_mm": 3,
+  "source_sha256": "a451d8e9163a01f697605cfb44b5e8bb3db3987440d2d8f4bb81712c6ddf898a",
+  "stl_sha256": "429d762ccdb9ff981261ec0c2394e3c9baaf220a5aaac2eab5677a4ed6477f75",
+  "compiler": "coscad 1.4.0.0",
+  "compiler_sha256": "42a0d72f87489a253c4f903cf6fee25ab6ee8fe25aeb928385b465211d073897",
+  "source_rail_sha256": "c9f9eadc9b550f730ce7b0ce1240cd54fc9ec1cebd6e5eab0d9ac74197f7ad4b",
+  "source_one_sided_wall_sha256": "57864df466093ec18b4e71e39b2338aebdb8702fcb03593702b1f02567da0dfd",
+  "bounds_mm": [
+    [
+      -35.0,
+      -7.992106913713086,
+      0.0
+    ],
+    [
+      35.0,
+      7.992106913713086,
+      70.0
+    ]
+  ],
+  "volume_mm3": 28859.701132354006,
+  "watertight_single_component": true,
+  "unsupported_downward_faces_over_45deg": 0,
+  "sliding_sweep_samples": 401,
+  "sliding_sweep_max_overlap_mm3": 0.0,
+  "assembled_four_rail_overlap_mm3": 0.0,
+  "normal_overtravel_collision_mm3": [
+    49.10418305433673,
+    49.10418305433673
+  ],
+  "full_panel_physical_fit_tested": false,
+  "waterproofing_tested": false
+}

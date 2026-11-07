@@ -1,0 +1,177 @@
+{
+  "physical_fit_tested": false,
+  "clearance_per_face_mm": 0.25,
+  "analysis_packages": {
+    "numpy": "2.5.4",
+    "trimesh": "5.2.0",
+    "scipy": "1.18.1",
+    "manifold3d": "3.5.4"
+  },
+  "source_sha256": {
+    "bracket.coscad": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+    "rail100.coscad": "c9f9eadc9b550f730ce7b0ce1240cd54fc9ec1cebd6e5eab0d9ac74197f7ad4b",
+    "panel_floor.coscad": "d59b8fb80d8469bf7942fa07685b2c937f44f9877949b673287b4cfb7baea397",
+    "rail60.coscad": "804ab680db724f712b3aee98ce064b2febe914d2447aae6d3e400f41b4575a6f",
+    "panel_wall.coscad": "57864df466093ec18b4e71e39b2338aebdb8702fcb03593702b1f02567da0dfd",
+    "tank.assemble": "b6ae86d372da64ff3b121e854c8fbd4d9f391e53eb320a05f9fde143b0df2e98"
+  },
+  "compiler": "coscad 1.6.0.0",
+  "compiler_sha256": "3aa32c472db2cc2cd3ce81c681c409bc593bd86bb54de40a5da91c0afe008c26",
+  "assembly_check": "check: 0 overlaps, 0 clearance warnings",
+  "plan": {
+    "steps": 33,
+    "flips": 6,
+    "design_errors": [],
+    "prerequisites_checked": [
+      [
+        "floor",
+        "bottom_left"
+      ],
+      [
+        "floor",
+        "bottom_right"
+      ],
+      [
+        "bottom_left",
+        "up_bl"
+      ],
+      [
+        "bottom_right",
+        "up_br"
+      ],
+      [
+        "wall_front",
+        "top_front"
+      ],
+      [
+        "wall_back",
+        "top_back"
+      ],
+      [
+        "wall_left",
+        "top_left"
+      ],
+      [
+        "wall_right",
+        "top_right"
+      ]
+    ]
+  },
+  "variants": [
+    {
+      "clearance_per_face_mm": 0.2,
+      "neck_mm": 5.8,
+      "seated_intersection_max_mm3": 0.0,
+      "sweep_step_mm": 0.5,
+      "swept_pair_checks": 1326,
+      "swept_intersection_max_mm3": 0.0,
+      "normal_overtravel_collision_mm3": 13.30002603531003,
+      "radial_pullout_collision_mm3": 176.27891164071744,
+      "wall_volume_mm3": 28919.380000000005,
+      "floor_volume_mm3": 28267.692,
+      "non_bed_downward_faces": 0
+    },
+    {
+      "clearance_per_face_mm": 0.25,
+      "neck_mm": 5.7,
+      "seated_intersection_max_mm3": 0.0,
+      "sweep_step_mm": 0.5,
+      "swept_pair_checks": 1326,
+      "swept_intersection_max_mm3": 0.0,
+      "normal_overtravel_collision_mm3": 13.300000667572062,
+      "radial_pullout_collision_mm3": 159.850625899161,
+      "wall_volume_mm3": 28389.2,
+      "floor_volume_mm3": 27748.748000000003,
+      "non_bed_downward_faces": 0
+    },
+    {
+      "clearance_per_face_mm": 0.3,
+      "neck_mm": 5.6,
+      "seated_intersection_max_mm3": 0.0,
+      "sweep_step_mm": 0.5,
+      "swept_pair_checks": 1326,
+      "swept_intersection_max_mm3": 0.0,
+      "normal_overtravel_collision_mm3": 13.300007009506578,
+      "radial_pullout_collision_mm3": 144.01808893167774,
+      "wall_volume_mm3": 27859.020000000004,
+      "floor_volume_mm3": 27229.804000000004,
+      "non_bed_downward_faces": 0
+    }
+  ],
+  "oversize_negative_control_collision_mm3": 71.26618647954142,
+  "fit_samples": [
+    {
+      "source": "panel-c020-1holes.coscad",
+      "sha256": "1127dbb7d898c257b6c7db323a5bacc94a1a0e98e0832b19c71c977c20946b3f",
+      "watertight_single_component": true,
+      "bounds_mm": [
+        [
+          -4.5,
+          -15.0,
+          0.0
+        ],
+        [
+          3.5,
+          15.0,
+          8.2
+        ]
+      ],
+      "volume_mm3": 1513.5950737552569
+    },
+    {
+      "source": "panel-c025-2holes.coscad",
+      "sha256": "48495c9ad3512eeeac8f6f7f25cf99875cdd1f50516ad931e57e4a137bd91aa1",
+      "watertight_single_component": true,
+      "bounds_mm": [
+        [
+          -4.5,
+          -15.0,
+          0.0
+        ],
+        [
+          3.5,
+          15.0,
+          8.1
+        ]
+      ],
+      "volume_mm3": 1470.4972139327444
+    },
+    {
+      "source": "panel-c030-3holes.coscad",
+      "sha256": "0160001dfb31273df3c7df23fe8ac0f79a7d7706e6171a84bd3d00d9ded143d7",
+      "watertight_single_component": true,
+      "bounds_mm": [
+        [
+          -4.5,
+          -15.0,
+          0.0
+        ],
+        [
+          3.5,
+          15.0,
+          8.0
+        ]
+      ],
+      "volume_mm3": 1427.7064205324666
+    },
+    {
+      "source": "rail35.coscad",
+      "sha256": "5308f3d42de2d77f8c07adf099786a6154ed2a5199ece5ffd33c3e85ac6496a3",
+      "watertight_single_component": true,
+      "bounds_mm": [
+        [
+          -10.0,
+          -10.0,
+          0.0
+        ],
+        [
+          10.0,
+          10.0,
+          35.0
+        ]
+      ],
+      "volume_mm3": 6611.570384983741
+    }
+  ],
+  "passed": true
+}

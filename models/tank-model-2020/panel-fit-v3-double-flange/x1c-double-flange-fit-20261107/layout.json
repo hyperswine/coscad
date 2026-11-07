@@ -1,0 +1,23 @@
+[
+ {
+  "part": "double-c020-1holes",
+  "centre_mm": [
+   100,
+   128
+  ]
+ },
+ {
+  "part": "double-c025-2holes",
+  "centre_mm": [
+   128,
+   128
+  ]
+ },
+ {
+  "part": "double-c030-3holes",
+  "centre_mm": [
+   156,
+   128
+  ]
+ }
+]

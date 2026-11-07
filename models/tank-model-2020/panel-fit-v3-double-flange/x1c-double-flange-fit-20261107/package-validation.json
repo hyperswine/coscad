@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "package_sha256": "ddc564f024efcdcbf6cca37aa8dae361237a34152c925bf592a2425008861438",
+  "layers": 299,
+  "objects": 3,
+  "layer_height_mm": 0.1,
+  "path_segments": 41921,
+  "export_vertex_error_max_mm": 8.038858448020153e-07,
+  "thermal": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 299,
+    "deposition_moves_checked": 41921,
+    "package_sha256": "ddc564f024efcdcbf6cca37aa8dae361237a34152c925bf592a2425008861438"
+  },
+  "estimated_minutes": 55.43988850911458,
+  "estimated_grams": 5.986047744750977
+}

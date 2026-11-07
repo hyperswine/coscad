@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img"><title>Cube</title>
+<polygon points="19.45,40.12 108.55,32.66 56.57,14.00" fill="#e3a83a" stroke="#e3a83a" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="71.43,114.00 108.55,87.88 108.55,32.66" fill="#846222" stroke="#846222" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="19.45,95.34 71.43,114.00 71.43,58.78" fill="#c08e31" stroke="#c08e31" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="19.45,95.34 71.43,58.78 19.45,40.12" fill="#c08e31" stroke="#c08e31" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="71.43,114.00 108.55,32.66 71.43,58.78" fill="#846222" stroke="#846222" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="19.45,40.12 71.43,58.78 108.55,32.66" fill="#e3a83a" stroke="#e3a83a" stroke-width="0.35" stroke-linejoin="round"/>
+</svg>

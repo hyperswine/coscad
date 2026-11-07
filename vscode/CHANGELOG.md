@@ -1,5 +1,14 @@
 # Changelog for the CoScad VS Code extension
 
+## Unreleased
+
+- Fix oversized inline SVGs by sizing the image itself to the editor font instead
+  of only its decoration box. Refresh on font/line-height changes and add
+  **COSCAD: Toggle Shape Icons** for quick disabling.
+- Add native-mesh primitive illustrations inline, in the gutter, and in hovers.
+  Axis cylinders have distinct X/Y/Z orientations. Decorations are configurable,
+  update on edits, preserve source text, and require no renderer while editing.
+
 ## 0.7.0 - 2026-10-29
 
 - CoScad 1.6 retires the OpenSCAD backend. On a compiler that advertises

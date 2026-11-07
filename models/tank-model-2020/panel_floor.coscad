@@ -1,7 +1,20 @@
-// Floor panel, 70 x 70 x 5, in the bottom rails' inward slots. Its corners
-// are notched 5.3 mm so they clear the uprights, which run to the bench.
-main = box 70 70 5
-  |> cut (box 10.6 10.6 7 |> move 35 35 0)
-  |> cut (box 10.6 10.6 7 |> move -35 35 0)
-  |> cut (box 10.6 10.6 7 |> move 35 -35 0)
-  |> cut (box 10.6 10.6 7 |> move -35 -35 0)
+// Floor: the same snug neck and one-sided stepped X-edge keys as the wall.
+// The side bottom rails slide onto these keys from the rear before the
+// rear uprights are fitted. Front/back edges remain plain sliding tongues.
+// Keep the 5.3 mm corner notches to clear the full-height uprights.
+clearance = 0.25
+neck = 6.2 - 2 * clearance
+key_length = 59.4
+lead = 2
+wide_height = 5.5 - clearance + neck / 2
+deep_height = 4.2 - clearance + neck / 2
+wide = (box (1.8 - 2 * clearance) (key_length - 2 * lead) wide_height |> move 32.7 0 ((wide_height - neck) / 2))
+  |> hull (box (1.8 - 2 * clearance) key_length neck |> move 32.7 0 0)
+deep = (box (1.3 - 2 * clearance) (key_length - 2 * lead) deep_height |> move 34.25 0 ((deep_height - neck) / 2))
+  |> hull (box (1.3 - 2 * clearance) key_length neck |> move 34.25 0 0)
+edge = wide |> add deep
+main = box 70 70 neck |> add edge |> add (⇋ 1 0 0 edge)
+  |> cut (box 10.6 10.6 13 |> move 35 35 0)
+  |> cut (box 10.6 10.6 13 |> move -35 35 0)
+  |> cut (box 10.6 10.6 13 |> move 35 -35 0)
+  |> cut (box 10.6 10.6 13 |> move -35 -35 0)

@@ -1,0 +1,39 @@
+{
+  "printer": "Bambu Lab X1 Carbon 0.4 nozzle",
+  "plate": "Textured PEI Plate",
+  "bed_c": 55,
+  "nozzle_c": 220,
+  "layer_height_mm": 0.1,
+  "parts": [
+    {
+      "name": "double-c020-1holes",
+      "holes": 1,
+      "centre_mm": [
+        100,
+        128
+      ],
+      "source_sha256": "29627a1df56ed82ebd94b70085cdfdb4c6e64f803502de1c30df505b19ff6e40",
+      "stl_sha256": "73ea08c904cf7e8a180fa6e51bf55e73887f0b42ce44305b8b81fc097b059830"
+    },
+    {
+      "name": "double-c025-2holes",
+      "holes": 2,
+      "centre_mm": [
+        128,
+        128
+      ],
+      "source_sha256": "3440296b677516aea788a6174b121e12cfac904a6d36dac4ff40137129e33c1a",
+      "stl_sha256": "f19134cc0d36ddb92bd0a190efa02fbbe4e7f9ed89438760084ff9f52a7dcf2f"
+    },
+    {
+      "name": "double-c030-3holes",
+      "holes": 3,
+      "centre_mm": [
+        156,
+        128
+      ],
+      "source_sha256": "e4799c1842a050d1ef844bb56392804e7b0c338f76126e4fd76e20713e888faa",
+      "stl_sha256": "09b608bebb7ccd2b49094aa616802e96ee3dbc0225c3d13bc62be72136f1ffcf"
+    }
+  ]
+}

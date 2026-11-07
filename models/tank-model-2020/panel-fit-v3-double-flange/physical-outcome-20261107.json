@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-07",
+  "evidence": "owner_report",
+  "printer": "X1C",
+  "job": "x1c-double-flange-fit-20261107",
+  "owner_statement": "All 3 clearances worked.",
+  "samples": [
+    {"holes": 1, "clearance_per_face_mm": 0.20, "reported_fit": "works"},
+    {"holes": 2, "clearance_per_face_mm": 0.25, "reported_fit": "works"},
+    {"holes": 3, "clearance_per_face_mm": 0.30, "reported_fit": "works"}
+  ],
+  "preferred_clearance": null,
+  "full_panel_trial_clearance_per_face_mm": 0.25,
+  "trial_selection": "Middle tested clearance, selected for the next full-panel trial; not an owner-ranked winner.",
+  "measured_force_or_play": false,
+  "scope": "Bilateral flange samples only; full-panel sliding, assembled rigidity and waterproofing remain untested."
+}

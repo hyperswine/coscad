@@ -2,7 +2,7 @@
   "name": "coscad-lsp",
   "displayName": "COSCAD Language Support",
   "description": "CoScad language support: highlighting, hover, completion, in-editor and compiler diagnostics, and commands for compile, validate, STL, check, next, plan stress, backend selection and doctor",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "publisher": "hyperswine",
   "license": "GPL-3.0-only",
   "repository": {
@@ -93,6 +93,10 @@
       {
         "command": "coscad.selectBackend",
         "title": "COSCAD: Select Geometry Backend"
+      },
+      {
+        "command": "coscad.toggleShapeVisuals",
+        "title": "COSCAD: Toggle Shape Icons"
       }
     ],
     "menus": {
@@ -194,13 +198,35 @@
           ],
           "default": "auto",
           "description": "Geometry backend passed to STL, check, next, plan, site and stress. Leave it on auto: since CoScad 1.6 geometry is always native and OpenSCAD is not needed."
+        },
+        "coscad.shapeVisuals": {
+          "type": "string",
+          "enum": [
+            "inline",
+            "gutter",
+            "both",
+            "off"
+          ],
+          "enumDescriptions": [
+            "Show a small 3D symbol before each primitive.",
+            "Show the first primitive's symbol in each line's gutter.",
+            "Show both inline and gutter symbols.",
+            "Hide shape decorations."
+          ],
+          "default": "inline",
+          "description": "Show font-sized primitive icons in part files. Set to off to hide inline and gutter icons, or use COSCAD: Toggle Shape Icons. Inline icons follow editor.fontSize, including language overrides, and never exceed that configured size. Hover illustrations have their own setting."
+        },
+        "coscad.shapeHoverPreviews": {
+          "type": "boolean",
+          "default": true,
+          "description": "Add a larger primitive illustration to shape-token hovers, alongside the language server's documentation."
         }
       }
     }
   },
   "scripts": {
     "package": "vsce package --allow-missing-repository",
-    "test": "node test-parser.js && node test-extension.js && node test-hover.js && node test-server.js && node test-project.js && node test-host.js"
+    "test": "node test-parser.js && node test-extension.js && node test-hover.js && node test-server.js && node test-project.js && node test-host.js && node test-shape-visuals.js"
   },
   "dependencies": {
     "vscode-languageclient": "^9.0.1",

@@ -1,0 +1,135 @@
+{
+  "revision": "v3-double-flange",
+  "physical_fit_tested": false,
+  "compiler": "coscad 1.6.0.0",
+  "compiler_sha256": "3aa32c472db2cc2cd3ce81c681c409bc593bd86bb54de40a5da91c0afe008c26",
+  "source_wall_sha256": "57864df466093ec18b4e71e39b2338aebdb8702fcb03593702b1f02567da0dfd",
+  "source_rail_sha256": "c9f9eadc9b550f730ce7b0ce1240cd54fc9ec1cebd6e5eab0d9ac74197f7ad4b",
+  "analysis_packages": {
+    "numpy": "2.5.4",
+    "trimesh": "5.2.0",
+    "scipy": "1.18.1",
+    "manifold3d": "3.5.4"
+  },
+  "samples": [
+    {
+      "source": "double-c020-1holes.coscad",
+      "source_sha256": "29627a1df56ed82ebd94b70085cdfdb4c6e64f803502de1c30df505b19ff6e40",
+      "clearance_per_face_mm": 0.2,
+      "holes": 1,
+      "neck_mm": 5.8,
+      "full_head_width_mm": 10.6,
+      "bounds_mm": [
+        [
+          -8.0,
+          -5.894080185284814,
+          0.0
+        ],
+        [
+          3.5,
+          5.894080185284814,
+          30.0
+        ]
+      ],
+      "volume_mm3": 1595.3206578226952,
+      "watertight_single_component": true,
+      "unsupported_downward_faces_over_45deg": 0,
+      "bilateral_symmetry_error_mm3": 0.0,
+      "flange_probe_volumes_mm3": [
+        0.09999999999999964,
+        0.039999999999999925,
+        0.09999999999999964,
+        0.03999999999999989
+      ],
+      "sweep_step_mm": 0.25,
+      "sweep_samples": 145,
+      "swept_intersection_max_mm3": 0.0,
+      "normal_overtravel_collision_mm3": [
+        10.342065693517018,
+        10.342065693517021
+      ],
+      "radial_pullout_collision_mm3": 140.14002236178473,
+      "slot_bottoming_collision_mm3": 101.11147839733619
+    },
+    {
+      "source": "double-c025-2holes.coscad",
+      "source_sha256": "3440296b677516aea788a6174b121e12cfac904a6d36dac4ff40137129e33c1a",
+      "clearance_per_face_mm": 0.25,
+      "holes": 2,
+      "neck_mm": 5.7,
+      "full_head_width_mm": 10.5,
+      "bounds_mm": [
+        [
+          -8.0,
+          -5.844080185284815,
+          0.0
+        ],
+        [
+          3.5,
+          5.844080185284815,
+          30.0
+        ]
+      ],
+      "volume_mm3": 1549.5938200335695,
+      "watertight_single_component": true,
+      "unsupported_downward_faces_over_45deg": 0,
+      "bilateral_symmetry_error_mm3": 0.0,
+      "flange_probe_volumes_mm3": [
+        0.09999999999999964,
+        0.039999999999999925,
+        0.09999999999999964,
+        0.03999999999999989
+      ],
+      "sweep_step_mm": 0.25,
+      "sweep_samples": 145,
+      "swept_intersection_max_mm3": 0.0,
+      "normal_overtravel_collision_mm3": [
+        9.938072793835335,
+        9.938072793835339
+      ],
+      "radial_pullout_collision_mm3": 126.82313185786214,
+      "slot_bottoming_collision_mm3": 90.26755800028238
+    },
+    {
+      "source": "double-c030-3holes.coscad",
+      "source_sha256": "e4799c1842a050d1ef844bb56392804e7b0c338f76126e4fd76e20713e888faa",
+      "clearance_per_face_mm": 0.3,
+      "holes": 3,
+      "neck_mm": 5.6,
+      "full_head_width_mm": 10.4,
+      "bounds_mm": [
+        [
+          -8.0,
+          -5.794080185284814,
+          0.0
+        ],
+        [
+          3.5,
+          5.794080185284814,
+          30.0
+        ]
+      ],
+      "volume_mm3": 1504.0638560507298,
+      "watertight_single_component": true,
+      "unsupported_downward_faces_over_45deg": 0,
+      "bilateral_symmetry_error_mm3": 0.0,
+      "flange_probe_volumes_mm3": [
+        0.09999999999999964,
+        0.039999999999999925,
+        0.09999999999999964,
+        0.03999999999999989
+      ],
+      "sweep_step_mm": 0.25,
+      "sweep_samples": 145,
+      "swept_intersection_max_mm3": 0.0,
+      "normal_overtravel_collision_mm3": [
+        9.53409286077308,
+        9.534092860773077
+      ],
+      "radial_pullout_collision_mm3": 114.02998821258575,
+      "slot_bottoming_collision_mm3": 80.1763513569293
+    }
+  ],
+  "oversized_negative_control_collision_mm3": 45.700507410843464,
+  "passed": true
+}

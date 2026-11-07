@@ -3,7 +3,8 @@ const assert=require('assert/strict'), Module=require('module'), fs=require('fs'
 const original=Module._load, commands=new Map(), errors=[], terminals=[], notifications=[], checks=[]
 const events={}, settings={executableCommand:'test-coscad',backend:'auto',compilerDiagnostics:true}
 const disposable=()=>({dispose(){}})
-const on=name=>fn=>{events[name]=fn;return disposable()}
+const listeners={}
+const on=name=>fn=>{(listeners[name]??=[]).push(fn);events[name]=(...args)=>listeners[name].forEach(callback=>callback(...args));return disposable()}
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'coscad-host-'))
 const doc=(name,text)=>({uri:{scheme:'file',fsPath:path.join(dir,name)},fileName:path.join(dir,name),languageId:'coscad',isClosed:false,isDirty:true,getText:()=>text,save:async function(){this.isDirty=false;return true}})
 const root=doc('root.assemble','part ← part.coscad ×1\nasm = part\n'),part=doc('part.coscad','main = box 1 2 3\n')
@@ -17,7 +18,7 @@ const vscode={
  workspace:{textDocuments:[root,part],getConfiguration:()=>({get:(key,def)=>settings[key]??def,update:async(k,v)=>{settings[k]=v}}),getWorkspaceFolder:()=>({}),
  createFileSystemWatcher:()=>({onDidCreate:()=>disposable(),onDidChange:()=>disposable(),onDidDelete:()=>disposable(),dispose(){}}),
  onDidOpenTextDocument:on('open'),onDidSaveTextDocument:on('save'),onDidCloseTextDocument:on('close'),onDidChangeTextDocument:on('change'),onDidChangeConfiguration:on('config')},
- window:{activeTextEditor:{document:root},terminals:[],showErrorMessage:async text=>errors.push(text),showWarningMessage:async text=>errors.push(text),
+ window:{activeTextEditor:{document:root},visibleTextEditors:[],onDidChangeVisibleTextEditors:on('visible'),terminals:[],showErrorMessage:async text=>errors.push(text),showWarningMessage:async text=>errors.push(text),
  createStatusBarItem:()=>({show(){},dispose(){}}),showQuickPick:async()=>undefined,
  createTerminal:options=>({creationOptions:options,show(){},sendText:text=>terminals.push(text)})}
 }
@@ -43,6 +44,10 @@ async function run(){
  const context={subscriptions:[],asAbsolutePath:f=>path.join(__dirname,f)}
  try{
   extension.activate(context)
+  await commands.get('coscad.toggleShapeVisuals')()
+  assert.equal(settings.shapeVisuals, 'off')
+  await commands.get('coscad.toggleShapeVisuals')()
+  assert.equal(settings.shapeVisuals, 'inline')
   await waitUntil(()=>checks.length>=2)
   const check=checks.find(c=>c.args.at(-1)===root.fileName)
   assert(check.args.includes('--project-stdin'))

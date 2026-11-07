@@ -1,0 +1,32 @@
+// V3: the one-sided panel below is only an intermediate.
+// The final sample reflects its flanges, crops one edge and prints upright.
+// Sliding wall panel, 70 x 70. clearance is per contacting face, in mm.
+// The 6.2 mm throat gets a 5.7 mm tongue, not an interference fit.
+// Local X edges slide axially down the upright slots; local Y edges stay
+// narrow so they can drop through the bottom rail mouth and accept a cap.
+clearance = 0.2
+neck = 6.2 - 2 * clearance
+key_length = 26
+lead = 3
+// One-sided keys follow the 11 and 8.4 mm pockets, with clearance from
+// every shoulder. The -Z face stays flat on the print bed: no underside
+// T-heads, supports or trapped support material in these sliding faces.
+wide_height = 5.5 - clearance + neck / 2
+deep_height = 4.2 - clearance + neck / 2
+wide = (box (1.8 - 2 * clearance) (key_length - 2 * lead) wide_height |> move 32.7 0 ((wide_height - neck) / 2))
+  |> hull (box (1.8 - 2 * clearance) key_length neck |> move 32.7 0 0)
+deep = (box (1.3 - 2 * clearance) (key_length - 2 * lead) deep_height |> move 34.25 0 ((deep_height - neck) / 2))
+  |> hull (box (1.3 - 2 * clearance) key_length neck |> move 34.25 0 0)
+edge = wide |> add deep
+panel = box 70 70 neck |> add edge |> add (⇋ 1 0 0 edge)
+
+// Complete stepped T-head: matching flanges on BOTH faces of the neck.
+// 2 mm plain noses, then 3 mm ramps to the full profile at either end.
+bilateral = panel |> add (⇋ 0 0 1 panel)
+coupon = bilateral |> isect (box 9 30 16 |> move 31.5 0 0) |> x -31.5
+upright = coupon |> rotx 90 |> z 15
+// Removable first-layer ears stay 0.5 mm outside the rail face (X=-1.5).
+ears = (zcyl 3 0.2 |> move -5 (neck / 2) 0.1)
+  |> add (zcyl 3 0.2 |> move -5 (-neck / 2) 0.1)
+main = upright |> add ears
+  |> cut (box 1 16 1 |> roty 45 |> move -3 0 15)

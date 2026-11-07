@@ -1,0 +1,19 @@
+{
+  "printer": "Bambu Lab X1 Carbon 0.4 nozzle",
+  "plate": "Textured PEI Plate",
+  "bed_c": 55,
+  "nozzle_c": 220,
+  "layer_height_mm": 0.1,
+  "parts": [
+    {
+      "name": "panel-wall-double-c025-upright",
+      "holes": 0,
+      "centre_mm": [
+        128,
+        128
+      ],
+      "source_sha256": "a451d8e9163a01f697605cfb44b5e8bb3db3987440d2d8f4bb81712c6ddf898a",
+      "stl_sha256": "429d762ccdb9ff981261ec0c2394e3c9baaf220a5aaac2eab5677a4ed6477f75"
+    }
+  ]
+}

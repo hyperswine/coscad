@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img"><title>Rectangular box</title>
+<polygon points="14.00,43.27 114.00,45.73 45.47,21.13" fill="#e3a83a" stroke="#e3a83a" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="82.53,106.87 114.00,84.73 114.00,45.73" fill="#846222" stroke="#846222" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="14.00,82.27 82.53,67.87 14.00,43.27" fill="#c08e31" stroke="#c08e31" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="14.00,82.27 82.53,106.87 82.53,67.87" fill="#c08e31" stroke="#c08e31" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="14.00,43.27 82.53,67.87 114.00,45.73" fill="#e3a83a" stroke="#e3a83a" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="82.53,106.87 114.00,45.73 82.53,67.87" fill="#846222" stroke="#846222" stroke-width="0.35" stroke-linejoin="round"/>
+</svg>

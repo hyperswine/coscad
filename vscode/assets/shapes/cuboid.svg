@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img"><title>Chamfered box</title>
+<polygon points="14.00,82.68 15.61,87.55 14.00,43.70" fill="#c89433" stroke="#c89433" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="19.65,39.73 108.35,37.29 51.90,17.03" fill="#e3a83a" stroke="#e3a83a" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="15.61,87.55 19.65,90.71 72.06,107.81" fill="#846222" stroke="#846222" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="14.00,43.70 15.61,87.55 15.61,48.56" fill="#c89433" stroke="#c89433" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="108.35,37.29 114.00,45.32 112.39,40.45" fill="#846222" stroke="#846222" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="114.00,45.32 81.74,107.00 114.00,84.30" fill="#846222" stroke="#846222" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="72.06,107.81 19.65,90.71 76.10,110.97" fill="#846222" stroke="#846222" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="19.65,39.73 14.00,43.70 15.61,48.56" fill="#f2b33e" stroke="#f2b33e" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="15.61,87.55 72.06,68.82 15.61,48.56" fill="#c08e31" stroke="#c08e31" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="108.35,37.29 76.10,59.99 114.00,45.32" fill="#ae812d" stroke="#ae812d" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="72.06,68.82 15.61,87.55 72.06,107.81" fill="#c08e31" stroke="#c08e31" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="108.35,37.29 19.65,39.73 76.10,59.99" fill="#e3a83a" stroke="#e3a83a" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="81.74,107.00 72.06,107.81 76.10,110.97" fill="#846222" stroke="#846222" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="15.61,48.56 72.06,68.82 19.65,39.73" fill="#f2b33e" stroke="#f2b33e" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="81.74,107.00 114.00,45.32 81.74,68.01" fill="#846222" stroke="#846222" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="81.74,107.00 72.06,68.82 72.06,107.81" fill="#956e26" stroke="#956e26" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="76.10,59.99 81.74,68.01 114.00,45.32" fill="#ae812d" stroke="#ae812d" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="76.10,59.99 19.65,39.73 72.06,68.82" fill="#f2b33e" stroke="#f2b33e" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="72.06,68.82 81.74,107.00 81.74,68.01" fill="#956e26" stroke="#956e26" stroke-width="0.35" stroke-linejoin="round"/>
+<polygon points="76.10,59.99 72.06,68.82 81.74,68.01" fill="#c99533" stroke="#c99533" stroke-width="0.35" stroke-linejoin="round"/>
+</svg>

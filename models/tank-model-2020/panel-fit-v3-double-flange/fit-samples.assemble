@@ -1,0 +1,9 @@
+// Three upright bilateral-flange fit samples; printer slicing is a separate step.
+!glyph
+plate 256 256 6
+tight ← double-c020-1holes.coscad ×1 ▽bot material=pla
+middle ← double-c025-2holes.coscad ×1 ▽bot material=pla
+loose ← double-c030-3holes.coscad ×1 ▽bot material=pla
+asm = (tight |> move 80 128 0)
+  ⊕ (middle |> move 128 128 0)
+  ⊕ (loose |> move 176 128 0)

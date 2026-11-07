@@ -1,0 +1,23 @@
+// Shape illustrations: inline by default, larger on hover.
+// Comments mentioning xcyl, sphere or box do not get symbols.
+radius = 4
+along_x = xcyl radius 20
+along_y = ycyl radius 20
+along_z = zcyl radius 20
+
+ball = sphere 7
+block = box 16 12 8
+rounded = ◙ 16 12 8 1
+beveled = ▣ 16 12 8 1
+ring = torus 8 2
+pipe = tube 6 4 16
+tip = ▻ 6 16
+hexagon = ⎏ 6 6 16
+ramp = wedge 16 12 8
+taper = ⏢ 16 12 10 8 12
+soft_cylinder = ⌽ 6 16 1
+beveled_cylinder = ⌭ 6 16 1
+cube_part = cube 10
+
+// Nested primitives each get an inline symbol; the gutter shows the first.
+main = along_x |> add (sphere 5 |> move 0 0 10)
