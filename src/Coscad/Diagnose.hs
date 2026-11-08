@@ -22,7 +22,7 @@ import Coscad.IO (readFileUtf8)
 import Coscad.Json
 import Coscad.Parser (parseProgramFull)
 import Coscad.Stress.Part (setupFrom)
-import Coscad.Stress.Spec (Analysis (..), Where (..))
+import Coscad.Directive (Analysis (..), Where (..))
 import Coscad.Plan (validateHardware)
 import Coscad.Report
 import Data.Char (isDigit, isSpace)

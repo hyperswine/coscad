@@ -6,10 +6,7 @@ module Coscad.Codegen
   , fn50
   , gen
   , indent
-  , loftErrors
-  , loftMethod
   , pathOf
-  , profileVerts
   , renderScad
   , showD
   , showPaths
@@ -22,6 +19,7 @@ where
 import Coscad.Format (showD)
 import Coscad.Geometry
 import Coscad.IO (writeFileUtf8)
+import Coscad.Loft (loftMethod)
 import Coscad.Shape
 import Data.List (intercalate)
 
@@ -187,6 +185,7 @@ pathOf s = case s of
   RotAxis {} -> Left "a loft profile must stay in the XY plane (rotate only about Z)"
   Tag _ p -> pathOf p
   Datum _ _ p -> pathOf p
+  Frame _ _ _ p -> pathOf p
   Anchor {} -> pathOf (resolve s)
   Position {} -> pathOf (resolve s)
   AttachTo {} -> pathOf (resolve s)
@@ -201,68 +200,6 @@ pathOf s = case s of
   where
     wrap pre p = (\q -> pre ++ q ++ ")") <$> pathOf p
     boolErr = Left "a loft profile must be a single closed outline: booleans (⊕ ⊖ ∩ ⇓ ⊞) between profiles are not supported"
-
--- | Vertex count of a profile path when it is known at compile time
--- (offset may add vertices, so it is unknown).
-profileVerts :: Shape -> Maybe Int
-profileVerts s = case s of
-  Shape2D n _ -> Just n
-  Poly (PD pts _) -> Just (length pts)
-  Tx _ p -> profileVerts p
-  Ty _ p -> profileVerts p
-  Translate _ p -> profileVerts p
-  Rz _ p -> profileVerts p
-  RotAxis _ _ p -> profileVerts p
-  Scale _ p -> profileVerts p
-  Mirror _ p -> profileVerts p
-  Tag _ p -> profileVerts p
-  Datum _ _ p -> profileVerts p
-  Anchor {} -> profileVerts (resolve s)
-  Position {} -> profileVerts (resolve s)
-  _ -> Nothing
-
--- | BOSL2 skin() method: "reindex" when every profile has the same
--- known vertex count (cheap, exact correspondence), otherwise
--- "distance", which handles mismatched counts but runs an O(n*m)
--- dynamic program per profile pair in the OpenSCAD interpreter
--- (two 100-gons: ~30 s; a 100-gon and a triangle: instant).
-loftMethod :: [Shape] -> String
-loftMethod ps = case mapM profileVerts ps of
-  Just (n : ns) | all (== n) ns -> "reindex"
-  _ -> "distance"
-
--- | First reason (if any) that a shape tree's lofts cannot be emitted.
-loftErrors :: Shape -> Either String ()
-loftErrors s = case s of
-  Loft ps -> mapM_ (\(_, p) -> either (\e -> Left ("in loft profile: " ++ e)) (const (Right ())) (pathOf p)) ps
-  Tx _ x -> loftErrors x
-  Ty _ x -> loftErrors x
-  Tz _ x -> loftErrors x
-  Rx _ x -> loftErrors x
-  Ry _ x -> loftErrors x
-  Rz _ x -> loftErrors x
-  Scale _ x -> loftErrors x
-  Mirror _ x -> loftErrors x
-  Translate _ x -> loftErrors x
-  RotAxis _ _ x -> loftErrors x
-  Transform3 _ _ x -> loftErrors x
-  Anchor _ _ x -> loftErrors x
-  Tag _ x -> loftErrors x
-  Datum _ _ x -> loftErrors x
-  Frame _ _ _ x -> loftErrors x
-  Position _ _ _ a b -> loftErrors a >> loftErrors b
-  AttachTo _ _ _ a b -> loftErrors a >> loftErrors b
-  CutAt _ _ _ a b -> loftErrors a >> loftErrors b
-  Extrude _ x -> loftErrors x
-  Revolve _ x -> loftErrors x
-  RevolveSeg _ _ x -> loftErrors x
-  Offset _ x -> loftErrors x
-  Diff a b -> loftErrors a >> loftErrors b
-  Union xs -> mapM_ loftErrors xs
-  Intersection xs -> mapM_ loftErrors xs
-  Hull xs -> mapM_ loftErrors xs
-  Minkowski xs -> mapM_ loftErrors xs
-  _ -> Right ()
 
 -- | Does the shape tree use any BOSL2 primitives?
 usesBosl2 :: Shape -> Bool

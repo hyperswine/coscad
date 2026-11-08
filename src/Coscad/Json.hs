@@ -1,7 +1,7 @@
 -- | A small JSON value type with a correct encoder and decoder, so the
 -- manifests, plans and site data CoScad emits are real JSON whatever the
 -- part names, paths and hint values contain, and so tests and tools can
--- read them back. No dependency beyond base.
+-- read them back. No dependency beyond base and Coscad.Format.
 module Coscad.Json
   ( JValue (..)
   , encode
@@ -16,6 +16,7 @@ module Coscad.Json
   , asArray
   ) where
 
+import Coscad.Format (roundTo3)
 import Data.Char (isDigit, isHexDigit, isSpace, ord, chr)
 import Data.List (intercalate)
 import Numeric (showHex, readHex)
@@ -35,7 +36,7 @@ data JValue
 jnum3 :: Double -> JValue
 jnum3 x
   | isNaN x || isInfinite x = JNull
-  | otherwise = JNumber (fromIntegral (round (x * 1000) :: Integer) / 1000)
+  | otherwise = JNumber (roundTo3 x)
 
 jobj :: [(String, JValue)] -> JValue
 jobj = JObject

@@ -15,12 +15,12 @@ module Coscad.Parser.Program
   , variableDefinition
   ) where
 
-import Coscad.Codegen (loftErrors)
+import Coscad.Loft (loftErrors)
 import Coscad.Dim (Dim (D2), dimOf)
 import Coscad.Parser.Core
 import Coscad.Parser.Grammar (expression)
 import Coscad.Shape
-import Coscad.Stress.Spec (Analysis (..), Where (..), emptyAnalysis, faceAnchor)
+import Coscad.Directive (Analysis (..), Where (..), emptyAnalysis, faceAnchor)
 import Coscad.Validate (validateShape)
 import Control.Monad (void, when)
 import Data.Char (isAlphaNum, isLetter, isSpace)
@@ -190,7 +190,7 @@ program file mode = do
 
 -- ANALYSIS DIRECTIVES -------------------------------------------
 -- `support WHERE`, `load WHERE fx fy fz`, `stress key=value ...` lines; see
--- Coscad.Stress.Spec. A definition named support/load/stress still parses
+-- Coscad.Directive. A definition named support/load/stress still parses
 -- because a directive is never followed by '='.
 data Directive = DSupport Where | DLoad Where (Double, Double, Double) | DSettings [(String, String)]
 

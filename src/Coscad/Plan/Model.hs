@@ -53,6 +53,7 @@ where
 
 import Control.Monad (unless, when)
 import Coscad.Assemble
+import Coscad.Plan.Options
 import Coscad.Constraint (Constraint (..))
 import Coscad.Codegen (showD)
 import Coscad.Geometry
@@ -99,7 +100,12 @@ instancesOf = go (matIdentity, (0, 0, 0))
       Transform3 m t x -> go (affCompose aff (m,t)) x
       Scale v x -> go (affCompose aff (diag v, (0, 0, 0))) x
       Mirror n x -> go (affCompose aff (mirrorMat n, (0, 0, 0))) x
-      Diff a b -> go aff a ++ go aff b
+      -- Union keeps physical instances on both sides; a difference's
+      -- cutter is negative space and is never a placed part (it is
+      -- consumed by the cut). What hull, intersection and minkowski do
+      -- to tagged subtrees is still an open question (see
+      -- docs/2026-11-08-ARCHITECTURE-REVIEW.md).
+      Diff a _ -> go aff a
       Union xs -> concatMap (go aff) xs
       Intersection xs -> concatMap (go aff) xs
       Hull xs -> concatMap (go aff) xs

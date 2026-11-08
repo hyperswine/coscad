@@ -8,6 +8,30 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Loft validation speaks the kernel's truth.** An offset inside a loft
+  profile is refused at parse time (`in loft profile: ... offset the solid
+  or the profile outside the loft instead`) instead of validating,
+  exporting a `.scad` that uses it, and failing natively at render time.
+  Loft profile checking (`loftErrors`, `loftMethod`, `profileVerts`) moved
+  from the `.scad` emitter into `Coscad.Loft`, so the parser no longer
+  depends on the emitter, and what the front end accepts is exactly what
+  the kernel accepts. See docs/2026-11-08-ARCHITECTURE-REVIEW.md.
+- **`↯` offsets have no silent default.** The offset amount is the right
+  operand's one characteristic radius. Radius carriers now include
+  cyl/zcyl/xcyl/ycyl/tube/cone/prism, so `↯ (cyl 4 2)` offsets by 4
+  instead of silently by 1 (the frontend-review finding); any other right
+  operand, such as a cube, is a parse error naming the fix.
+- **The planner no longer treats difference cutters as placed parts.**
+  `instancesOf` walked both sides of a difference, so a tagged cutter
+  could become a step in the build plan; only the positive side keeps
+  physical instances (the other open frontend-review finding).
+- Internal layering from the architecture review: the analysis directives
+  (`support`/`load`/`stress`) moved from `Coscad.Stress.Spec` to the
+  neutral leaf `Coscad.Directive`, so the parser no longer depends on the
+  stress feature; the part, fastener and joint hint validators and the
+  plan weight and setting names moved to `Coscad.Plan.Options`, one home
+  shared by the `.assemble` grammar and the planner; `roundTo3` lives in
+  `Coscad.Format` and `Json.jnum3` uses it.
 - **`cabal build` is the whole build.** The pinned geometry kernel
   (Manifold 3.5.2 and its CrossSection dependency Clipper2 2.0.1,
   `native-kernel.lock.json`) is now vendored under `third-party/` and

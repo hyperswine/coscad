@@ -7,7 +7,7 @@ module Coscad.Parser.Grammar
   ) where
 
 import Control.Monad (foldM, void, when)
-import Coscad.Codegen (loftErrors)
+import Coscad.Loft (loftErrors)
 import Coscad.Dim (Dim (..), dimOf)
 import Coscad.Geometry (MatingFrame (..), PointRef (..), datumPoints, frameOf, makeFrame, matingPose, pointOf)
 import Coscad.Linalg (vadd, vneg, vsub)
@@ -222,7 +222,7 @@ booleanExpression ctx = do
     op <- choice (gOps ++ sOps) <?> opLabel
     right <- attachExpression ctx
     return (op, right)
-  return $ foldl applyBooleanOp left rest
+  foldM applyBooleanOp left rest
   where
     gOps = if glyphOK ctx then map symbol ["⊖", "⊝", "⊕", "⊛", "∩", "⇓", "⊞", "↯"] else []
     sOps = if simpleOK ctx then map symbol ["*", "-"] else []
@@ -230,17 +230,36 @@ booleanExpression ctx = do
       ModeGlyph -> "an operator (⊕ ⊖ ∩ ⇓ ⊞ ↯ ⌖ ⋈ |>)"
       ModeSimple -> "an operator (* - |>)"
       ModeLegacy -> "an operator (⊕ ⊖ ∩ ⇓ ⊞ ↯ ⌖ ⋈ * - |>)"
-    applyBooleanOp left ("⊖", right) = Diff left right
-    applyBooleanOp left ("⊝", right) = Diff left right
-    applyBooleanOp left ("-", right) = Diff left right
-    applyBooleanOp left ("⊕", right) = Union [left, right]
-    applyBooleanOp left ("⊛", right) = Union [left, right]
-    applyBooleanOp left ("*", right) = Union [left, right]
-    applyBooleanOp left ("∩", right) = Intersection [left, right]
-    applyBooleanOp left ("⇓", right) = Hull [left, right]
-    applyBooleanOp left ("⊞", right) = Minkowski [left, right]
-    applyBooleanOp left ("↯", right) = Offset (getOffsetValue right) left
+    applyBooleanOp left ("⊖", right) = pure (Diff left right)
+    applyBooleanOp left ("⊝", right) = pure (Diff left right)
+    applyBooleanOp left ("-", right) = pure (Diff left right)
+    applyBooleanOp left ("⊕", right) = pure (Union [left, right])
+    applyBooleanOp left ("⊛", right) = pure (Union [left, right])
+    applyBooleanOp left ("*", right) = pure (Union [left, right])
+    applyBooleanOp left ("∩", right) = pure (Intersection [left, right])
+    applyBooleanOp left ("⇓", right) = pure (Hull [left, right])
+    applyBooleanOp left ("⊞", right) = pure (Minkowski [left, right])
+    applyBooleanOp left ("↯", right) = case offsetValue right of
+      Just r -> pure (Offset r left)
+      Nothing -> fail "↯ offsets by the radius of its right operand: use a shape with one radius (● ⭘ △ ⬠, sphere/cyl/zcyl/xcyl/ycyl/tube/cone/prism), not a solid without one"
     applyBooleanOp _ (op, _) = error $ "Unknown boolean operator: " ++ op
+
+-- | The offset amount a `↯` right operand donates: its one characteristic
+-- radius. There is no silent default -- anything else is a parse error
+-- naming the fix.
+offsetValue :: Shape -> Maybe Double
+offsetValue s = case s of
+  Sphere r -> Just r
+  Cylinder r _ -> Just r
+  Cone r _ -> Just r
+  Prism _ r _ -> Just r
+  Cyl r _ _ _ -> Just r
+  XCyl r _ -> Just r
+  YCyl r _ -> Just r
+  ZCyl r _ -> Just r
+  Tube ro _ _ -> Just ro
+  Shape2D _ r -> Just r
+  _ -> Nothing
 
 -- Parse attachment expressions: bind tighter than boolean ops.
 --   a ⌖ top b   -- position: b's bottom snapped to a's top (translate only)

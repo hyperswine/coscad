@@ -17,7 +17,7 @@ import Coscad.Mesh (Tri, meshBounds, meshVolume, triArea, triNormal)
 import Coscad.Shape (Shape)
 import Coscad.Stress.Hex20
 import Coscad.Stress.Material
-import Coscad.Stress.Spec
+import Coscad.Directive
 import Coscad.Stress.Voxel
 import Coscad.Validate (finite)
 import Text.Read (readMaybe)

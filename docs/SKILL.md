@@ -196,12 +196,13 @@ unioning it into the composite, or nudge afterward with `χ`/`ψ`/`ζ`.
   edges uniformly; there's no way to chamfer just one edge in the
   current language. If a design needs that, either accept the
   uniform version or drop to raw BOSL2 in the emitted `.scad` by hand.
-- **`↯` offset value** comes from `getOffsetValue` on the *right*
-  operand: it reads a sphere or cylinder's radius, or a 2D profile's
-  radius, defaulting to `1.0` for anything else — so `shape ↯ (● 2)`
-  offsets by 2, but `shape ↯ (■ 2)` silently offsets by the 1.0
-  default, not 2, since cube isn't handled. Use a sphere/cylinder/2D
-  profile as the right operand of `↯`, never a cube/rectangle.
+- **`↯` offset value** comes from the *right* operand's one
+  characteristic radius: a sphere or cylinder's radius, a 2D profile's
+  radius, also `cyl`/`zcyl`/`xcyl`/`ycyl`/`tube`/`cone`/`prism`.
+  Anything else is a parse error naming the fix (there is no default) —
+  so `shape ↯ (● 2)` offsets by 2, and `shape ↯ (■ 2)` is rejected
+  instead of silently offsetting by 1. Use a radius carrier as the
+  right operand of `↯`, never a cube/rectangle.
 
 ## Pipelines and topological modelling
 

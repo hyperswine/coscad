@@ -7,8 +7,10 @@
 -- > load @tip top 0 0 -20       spread over the +z faces coplanar with datum tip
 -- > stress material=pla safety=2 cell=1
 --
--- They are data only; the OpenSCAD and native geometry paths ignore them.
-module Coscad.Stress.Spec
+-- Data only: the front end parses them into an 'Analysis' and hands it to
+-- the stress command; the geometry paths ignore them. They live in this
+-- neutral leaf so the parser does not depend on the stress feature.
+module Coscad.Directive
   ( Where (..), Analysis (..), emptyAnalysis, faceAnchor, faceAnchorName, describeWhere ) where
 
 import Coscad.Linalg (V3)

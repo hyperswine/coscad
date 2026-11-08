@@ -28,7 +28,6 @@ module Coscad.Parser.Core
   , pointRef
   , frameRef
   , tuple3
-  , getOffsetValue
   , undefPfx
   , reservedNames
   ) where
@@ -44,12 +43,6 @@ import Data.Void (Void)
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
-
-getOffsetValue :: Shape -> Double
-getOffsetValue (Sphere r) = r
-getOffsetValue (Cylinder r _) = r
-getOffsetValue (Shape2D _ r) = r
-getOffsetValue _ = 1.0 -- Default offset value
 
 -- | Syntax mode, chosen by a pragma on the first code line of a file:
 --   !glyph  — glyph operators/shapes (plus legacy lowercase words)

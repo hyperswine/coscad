@@ -13,6 +13,7 @@ where
 
 import Coscad.Assemble
 import Coscad.Codegen
+import Coscad.Format (roundTo3)
 import Coscad.Backend (Backend (..), backendName, renderShape)
 import Coscad.Geometry
 import Coscad.IO (writeFileUtf8)
@@ -29,9 +30,8 @@ import System.FilePath (dropExtension)
 -- COSCAD NEXT — manufacturing stage (`coscad next foo.assemble`)
 -- ============================================================
 -- Consumes an assembly spec and produces per-bed print artifacts:
---   1. Each variant is compiled to a mesh once (via OpenSCAD;
---      override the binary with COSCAD_OPENSCAD, e.g. an xvfb
---      wrapper on headless machines).
+--   1. Each variant is compiled to a mesh once, natively
+--      (Backend.renderShape against the pinned Manifold kernel).
 --   2. Print orientation: a declared ▽ always wins; otherwise the
 --      six axis faces are scored on the REAL mesh with FFF
 --      heuristics — reward bed-contact area, punish overhang area

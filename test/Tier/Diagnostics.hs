@@ -132,12 +132,16 @@ diagnostics t = do
   expectGen t "loft pipeline form starts at z = 0 and chains"
     (p "main = ⭘ 10 |> loft 20 (△ 5) |> loft 35 (⬠ 3)\n") "z = [0, 20, 35]"
   expectGen t "loft profile transforms become path functions"
-    (p "main = loft 0 (χ 2 (ω 30 (⬈ 1 0.5 1 (⭘ 6)))) 10 (△ 4 ↯ ⭘ 1)\n")
-    "move([2, 0], p = zrot(30, p = scale([1, 0.5], p = circle(r = 6, $fn = 100)))), offset(circle(r = 4, $fn = 3), r = 1, closed = true)"
+    (p "main = loft 0 (χ 2 (ω 30 (⬈ 1 0.5 1 (⭘ 6)))) 10 (ψ 2 (△ 4))\n")
+    "move([2, 0], p = zrot(30, p = scale([1, 0.5], p = circle(r = 6, $fn = 100)))), move([0, 2], p = circle(r = 4, $fn = 3))"
   expectGen t "loft with mismatched vertex counts uses method distance"
     (p "main = loft 0 (⭘ 10) 30 (△ 5)\n") "method = \"distance\""
-  expectGen t "loft with an offset profile (unknown count) uses method distance"
-    (p "main = loft 0 (⭘ 10) 30 (⭘ 10 ↯ ⭘ 1)\n") "method = \"distance\""
+  expectErr t "loft with an offset profile is refused where the kernel refuses it"
+    (p "main = loft 0 (⭘ 10) 30 (χ 5 (⭘ 10 ↯ ⭘ 1))\n") ["in loft profile", "not supported yet", "offset the solid or the profile outside the loft"] []
+  expectErr t "offset donor needs one radius"
+    (p "main = △ 4 ↯ ■ 2\n") ["↯ offsets by the radius", "not a solid without one"] []
+  expectGen t "offset donor takes the cylinder word radius too"
+    (p "main = (△ 4 ↯ cyl 2 8) |> extrude 5\n") "offset(r = 2"
   expectGen t "loft emits the BOSL2 include" (p "main = ⟰ 0 (⭘ 1) 1 (⭘ 2)\n") "include <BOSL2/std.scad>"
   expectErr t "loft of a solid"
     (p "main = loft 0 (● 3) 10 (⭘ 5)\n") ["in 'main'", "loft profiles must be 2D"] []

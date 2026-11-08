@@ -12,7 +12,7 @@ import Coscad.Stress.Command (processStress)
 import Coscad.Stress.Hex20
 import Coscad.Stress.Material (materialNamed, materialTable, matName)
 import Coscad.Stress.Part
-import Coscad.Stress.Spec
+import Coscad.Directive
 import Coscad.Stress.Voxel
 import Data.Array.Unboxed ((!))
 import Data.List (isInfixOf)

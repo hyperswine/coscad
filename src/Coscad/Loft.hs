@@ -7,6 +7,9 @@
 module Coscad.Loft
   ( Path2
   , profilePath
+  , profileVerts
+  , loftMethod
+  , loftErrors
   , loftTriangles
   , reindexPolygon
   , distanceMatch
@@ -50,7 +53,7 @@ profilePath s = case s of
   Mirror (_, _, nz) _ | nz /= 0 -> Left "a loft profile must stay in the XY plane (mirror normal must be in XY or along Z)"
   Mirror (0, 0, 0) _ -> Left "a loft profile mirror needs a nonzero normal"
   Mirror (nx, ny, _) p -> map (mirror2 nx ny) <$> profilePath p
-  Offset _ _ -> Left "native: an offset inside a loft profile is not supported yet (BOSL2's round path offset); offset the solid or the profile outside the loft instead"
+  Offset _ _ -> Left "an offset inside a loft profile is not supported yet (BOSL2's round path offset); offset the solid or the profile outside the loft instead"
   Tz _ _ -> Left "a loft profile cannot be moved in Z (ζ); give the loft its z value instead"
   Rx _ _ -> Left "a loft profile must stay in the XY plane (no θ rotation)"
   Ry _ _ -> Left "a loft profile must stay in the XY plane (no ϕ rotation)"
@@ -77,6 +80,71 @@ profilePath s = case s of
           ux = nx / l; uy = ny / l
           d = 2 * (x * ux + y * uy)
        in (x - d * ux, y - d * uy)
+
+-- | Vertex count of a profile path when it is known at compile time
+-- (offset may add vertices, so it is unknown).
+profileVerts :: Shape -> Maybe Int
+profileVerts s = case s of
+  Shape2D n _ -> Just n
+  Poly (PD pts _) -> Just (length pts)
+  Tx _ p -> profileVerts p
+  Ty _ p -> profileVerts p
+  Translate _ p -> profileVerts p
+  Rz _ p -> profileVerts p
+  RotAxis _ _ p -> profileVerts p
+  Scale _ p -> profileVerts p
+  Mirror _ p -> profileVerts p
+  Tag _ p -> profileVerts p
+  Datum _ _ p -> profileVerts p
+  Anchor {} -> profileVerts (resolve s)
+  Position {} -> profileVerts (resolve s)
+  _ -> Nothing
+
+-- | BOSL2 skin() method: "reindex" when every profile has the same
+-- known vertex count (cheap, exact correspondence), otherwise
+-- "distance", which handles mismatched counts but runs an O(n*m)
+-- dynamic program per profile pair in the OpenSCAD interpreter
+-- (two 100-gons: ~30 s; a 100-gon and a triangle: instant).
+loftMethod :: [Shape] -> String
+loftMethod ps = case mapM profileVerts ps of
+  Just (n : ns) | all (== n) ns -> "reindex"
+  _ -> "distance"
+
+-- | First reason (if any) that a shape tree's lofts cannot be built
+-- natively: every loft profile is checked with 'profilePath', the same
+-- walk the renderer will make, so what the front end accepts here is
+-- exactly what the kernel accepts later.
+loftErrors :: Shape -> Either String ()
+loftErrors s = case s of
+  Loft ps -> mapM_ (\(_, p) -> either (\e -> Left ("in loft profile: " ++ e)) (const (Right ())) (profilePath p)) ps
+  Tx _ x -> loftErrors x
+  Ty _ x -> loftErrors x
+  Tz _ x -> loftErrors x
+  Rx _ x -> loftErrors x
+  Ry _ x -> loftErrors x
+  Rz _ x -> loftErrors x
+  Scale _ x -> loftErrors x
+  Mirror _ x -> loftErrors x
+  Translate _ x -> loftErrors x
+  RotAxis _ _ x -> loftErrors x
+  Transform3 _ _ x -> loftErrors x
+  Anchor _ _ x -> loftErrors x
+  Tag _ x -> loftErrors x
+  Datum _ _ x -> loftErrors x
+  Frame _ _ _ x -> loftErrors x
+  Position _ _ _ a b -> loftErrors a >> loftErrors b
+  AttachTo _ _ _ a b -> loftErrors a >> loftErrors b
+  CutAt _ _ _ a b -> loftErrors a >> loftErrors b
+  Extrude _ x -> loftErrors x
+  Revolve _ x -> loftErrors x
+  RevolveSeg _ _ x -> loftErrors x
+  Offset _ x -> loftErrors x
+  Diff a b -> loftErrors a >> loftErrors b
+  Union xs -> mapM_ loftErrors xs
+  Intersection xs -> mapM_ loftErrors xs
+  Hull xs -> mapM_ loftErrors xs
+  Minkowski xs -> mapM_ loftErrors xs
+  _ -> Right ()
 
 -- | Degree trigonometry with OpenSCAD's exact quarter-turn values, so a
 -- vertex at 90 degrees lands on the axis exactly, as it does in OpenSCAD.
@@ -215,7 +283,7 @@ dp smallA s bigA b =
       | otherwise = (up0, u)
 
 -- | Triangles of a loft over its profiles (z, outline), each already in BOSL2
--- order, using @method@ as 'Coscad.Codegen.loftMethod' chose it (@reindex@
+-- order, using @method@ as 'loftMethod' chose it (@reindex@
 -- for equal vertex counts, @distance@ otherwise), with @slices = 0@, caps,
 -- and the @min_edge@ style. The result is a closed, consistently oriented
 -- triangle soup whose signed volume is positive.

@@ -9,8 +9,7 @@ import Coscad.Mesh
 import Coscad.Mesh.Distance
 import Coscad.Linalg (mApply, rodMat)
 import Coscad.Mesh.Indexed
-import Coscad.Loft (loftTriangles, profilePath, triangulatePolygon)
-import Coscad.Codegen (loftMethod)
+import Coscad.Loft (loftMethod, loftTriangles, profilePath, triangulatePolygon)
 import Coscad.Manifold
 import Coscad.Parser (parseProgramNamed)
 import Coscad.Shape

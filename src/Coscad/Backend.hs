@@ -16,11 +16,11 @@ module Coscad.Backend
 
 import Control.Monad (unless)
 import Data.List (nub)
-import Coscad.Codegen (loftMethod, renderScad)
+import Coscad.Codegen (renderScad)
 import Coscad.Geometry (resolve)
 import Coscad.IO (writeFileUtf8)
 import Coscad.Linalg
-import Coscad.Loft (loftTriangles, profilePath)
+import Coscad.Loft (loftMethod, loftTriangles, profilePath)
 import Coscad.Mesh (Tri, meshMap, stlAscii, triArea)
 import Coscad.Manifold
 import Coscad.Mesh.Indexed

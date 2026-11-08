@@ -51,6 +51,7 @@ library
       Coscad.Codegen
       Coscad.Constraint
       Coscad.Diagnose
+      Coscad.Directive
       Coscad.Dim
       Coscad.Doctor
       Coscad.Dsl
@@ -73,6 +74,7 @@ library
       Coscad.Part
       Coscad.Plan
       Coscad.Plan.Model
+      Coscad.Plan.Options
       Coscad.Plan.Geometry
       Coscad.Plan.Calibrate
       Coscad.Plan.Render
@@ -89,7 +91,6 @@ library
       Coscad.Stress.Sparse
       Coscad.Stress.Voxel
       Coscad.Stress.Hex20
-      Coscad.Stress.Spec
       Coscad.Stress.Material
       Coscad.Stress.Part
       Coscad.Stress.Command
