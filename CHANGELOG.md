@@ -8,6 +8,15 @@ and this project adheres to the
 
 ## Unreleased
 
+- **`frustum r1 r2 h` joins the language.** The truncated cone is now a
+  word shape in every mode, sitting on the XY plane like `◎` and `▻`
+  (`r2 = 0` is a cone, `r1 = r2` a cylinder, `r1 = 0` an inverted cone).
+  It replaces the cone-intersect-cylinder idiom the orbit-tower models
+  hand-roll four times, and the constructor was realigned to the family's
+  radii-first-height-last order (`tube ro ri h` precedent), so the
+  Haskell DSL's `Frustum` now takes `r1 r2 h` too. Documented in the man
+  page, SKILL.md, README, the syntax doc and the editor; the architecture
+  review's promote-or-drop question is resolved in favour of promotion.
 - **Loft validation speaks the kernel's truth.** An offset inside a loft
   profile is refused at parse time (`in loft profile: ... offset the solid
   or the profile outside the loft instead`) instead of validating,

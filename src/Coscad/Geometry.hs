@@ -213,7 +213,7 @@ bbox s = case s of
   Sphere r -> ((-r, -r, -r), (r, r, r))
   Cylinder r h -> ((-r, -r, 0), (r, r, h))
   Cone r h -> ((-r, -r, 0), (r, r, h))
-  Frustum h r1 r2 -> let r = max r1 r2 in ((-r, -r, 0), (r, r, h))
+  Frustum r1 r2 h -> let r = max r1 r2 in ((-r, -r, 0), (r, r, h))
   Prism _ r h -> ((-r, -r, 0), (r, r, h))
   Poly (PD pts _) ->
     let (xs, ys) = unzip pts

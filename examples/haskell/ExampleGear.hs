@@ -193,7 +193,7 @@ submarine =
       towerTopRadius = 0.7
 
       -- Position the tower at the middle-front of the submarine
-      tower = Tx (subLength * 0.4) (Ty 0 (Tz 0.5 (Frustum towerHeight towerBottomRadius towerTopRadius)))
+      tower = Tx (subLength * 0.4) (Ty 0 (Tz 0.5 (Frustum towerBottomRadius towerTopRadius towerHeight)))
 
       -- Create additional details
       -- Propeller shaft (small cylinder at the back)
@@ -243,7 +243,7 @@ submarineStreamlined =
                   0.5
                   ( Union
                       [ -- Main tower body
-                        Frustum 1.2 0.9 0.6
+                        Frustum 0.9 0.6 1.2
                         -- Tower top platform
                         -- Tz 1.2 (Cylinder 0.8 0.3)
                       ]
@@ -314,7 +314,7 @@ submarine' =
                   0.75 -- Raised higher due to thicker hull
                   ( Union
                       [ -- Main tower body - taller
-                        Frustum 2.0 1.2 0.8, -- Increased height from 1.2 to 2.0
+                        Frustum 1.2 0.8 2.0, -- Increased height from 1.2 to 2.0
                         -- Tower top platform
                         Tz 2.0 (Cylinder 1.0 0.4) -- Adjusted position and size
                       ]

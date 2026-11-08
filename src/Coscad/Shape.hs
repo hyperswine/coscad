@@ -29,7 +29,7 @@ data Shape
   | Sphere D
   | Cylinder D D
   | Cone D D
-  | Frustum D D D
+  | Frustum D D D -- bottom radius, top radius, height (sits on the XY plane)
   | Prism I D D
   | Poly PD
   | Shape2D I D

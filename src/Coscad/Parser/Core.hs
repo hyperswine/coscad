@@ -248,7 +248,7 @@ tuple3 ctx = between (symbol "(") (symbol ")") $ do
 -- | Keywords that take precedence over variable lookup in this mode.
 reservedNames :: SynMode -> [String]
 reservedNames mode =
-  standardNames ++ ["cube", "box", "sphere", "cyl", "tube", "torus", "wedge", "xcyl", "ycyl", "zcyl", "loft"]
+  standardNames ++ ["cube", "box", "sphere", "cyl", "tube", "torus", "wedge", "xcyl", "ycyl", "zcyl", "frustum", "loft"]
     ++ if mode == ModeGlyph then [] else
       [ "Sphere", "Cube", "Box", "Cylinder", "Cone", "Tube", "Torus", "Wedge"
       , "Prismoid", "Circle", "Triangle", "Pentagon", "Bezier"

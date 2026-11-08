@@ -94,6 +94,7 @@ const documentation = {
     clearance_bore: { name: 'clearance_bore', description: 'Positive pin bore cutter; clearance is radial, not diametral', usage: 'clearance_bore radius length radialClearance', example: 'clearance_bore 2.5 12 0.6' },
     captive_bearing: { name: 'captive_bearing', description: 'Stationary axle with two stops and separate captive sleeve; support requirements must be checked', usage: 'captive_bearing shaftRadius span stopRadius stopHeight radialGap axialGap sleeveWall', example: 'captive_bearing 2.5 20 6 2 0.6 0.4 1.2' },
     zcyl: { name: 'zcyl', description: 'Cylinder along the Z axis (centered)', usage: 'zcyl r l', example: 'zcyl 2.15 30' },
+    frustum: { name: 'frustum', description: 'Truncated cone on the XY plane; r2 = 0 is a cone, r1 = r2 a cylinder', usage: 'frustum r1 r2 h', example: 'frustum 29 23 2' },
     '⊚': { name: 'tube', description: 'BOSL2 tube (centered)', usage: '⊚ outer_r inner_r h', example: '⊚ 10 6 25' },
     '⏢': { name: 'prismoid', description: 'BOSL2 prismoid: rectangle-to-rectangle taper (centered)', usage: '⏢ x1 y1 x2 y2 h', example: '⏢ 20 20 10 10 15' },
     '◉': { name: 'torus', description: 'BOSL2 torus', usage: '◉ r_major r_minor', example: '◉ 20 5' },

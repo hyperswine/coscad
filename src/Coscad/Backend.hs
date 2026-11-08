@@ -326,7 +326,7 @@ nativeMesh shape = do
       Sphere r -> Right (sphereMesh 50 r)
       Cylinder r h -> Right (radialMesh 50 r r h)
       Cone r h -> Right (radialMesh 50 r 0 h)
-      Frustum h a b -> Right (radialMesh 50 a b h)
+      Frustum a b h -> Right (radialMesh 50 a b h)
       Prism n r h -> Right (radialMesh n r r h)
       Cyl r h c 0 | c>0 -> Right (profileMesh 50 (nub [(r-c,-h/2),(r,-h/2+c),(r,h/2-c),(r-c,h/2)]))
       Cyl r h 0 rounding | rounding>0 -> Right (profileMesh 50 (roundCylinderProfile r h rounding))

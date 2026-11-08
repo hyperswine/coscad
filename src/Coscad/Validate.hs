@@ -60,7 +60,7 @@ validateShape s = do
       Sphere r -> pos "sphere radius" [r]
       Cylinder r h -> pos "cylinder radius and height" [r, h]
       Cone r h -> pos "cone radius and height" [r, h]
-      Frustum h r1 r2 -> pos "frustum height" [h] >> nonneg "frustum radii" [r1, r2] >> pos "at least one frustum radius" [max r1 r2]
+      Frustum r1 r2 h -> pos "frustum height" [h] >> nonneg "frustum radii" [r1, r2] >> pos "at least one frustum radius" [max r1 r2]
       Prism n r h -> sides n >> pos "prism radius and height" [r, h]
       Shape2D n r -> sides n >> pos "profile radius" [r]
       Poly (PD points paths) -> nums "polygon coordinates/paths" (concatMap (\(x, y) -> [x, y]) points ++ concat paths)

@@ -82,6 +82,15 @@ diagnostics t = do
     (p "a = b * 2 + 1\nb = 3\nmain = χ -a (● 1)\n") "translate([-7, 0, 0])"
   expectGen t "numeric offset in a pipeline stage (identity translate elided)"
     (p "t = 4\nmain = box 20 20 t |> cutat top 0 0 (-t / 2) (zcyl 1 50)\n") "difference() {\n  cuboid([20, 20, 4]);\n  zcyl(r = 1, l = 50);"
+  -- frustum: the general member of the cylinder/cone family, promoted 2026-11-08
+  expectGen t "frustum word emits a two-radius cylinder"
+    (p "main = frustum 3 1 7\n") "cylinder(h = 7, r1 = 3, r2 = 1);"
+  expectGen t "frustum works in simple mode and as a cone or cylinder"
+    (p "!simple\nmain = frustum 0 2 5\n") "cylinder(h = 5, r1 = 0, r2 = 2);"
+  expectErr t "frustum needs at least one radius"
+    (p "main = frustum 0 0 7\n") ["at least one frustum radius"] []
+  expectErr t "frustum is a reserved word"
+    (p "!glyph\nfrustum = 2\nmain = ● 1\n") ["reserved word 'frustum'"] []
   -- front-end review: reject silent reinterpretation without changing arithmetic
   expectErr t "spaced minus in primitive arguments"
     (p "w = 10\nmain = box w - 2 3\n") ["t.coscad:2:14:", "negative argument", "(w - 2)"] ["circular"]

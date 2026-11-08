@@ -458,7 +458,7 @@ class COSCADParser {
       captive_bearing: { name: 'captive_bearing', arity: 7 },
       xcyl: { name: 'xcyl', arity: 2 }, ycyl: { name: 'ycyl', arity: 2 }, zcyl: { name: 'zcyl', arity: 2 },
       cube: { name: 'cube', arity: 1 }, box: { name: 'box', arity: 3 }, sphere: { name: 'sphere', arity: 1 },
-      cyl: { name: 'cyl', arity: 2 }, tube: { name: 'tube', arity: 3 }, torus: { name: 'torus', arity: 2 }, wedge: { name: 'wedge', arity: 3 },
+      cyl: { name: 'cyl', arity: 2 }, tube: { name: 'tube', arity: 3 }, frustum: { name: 'frustum', arity: 3 }, torus: { name: 'torus', arity: 2 }, wedge: { name: 'wedge', arity: 3 },
       Sphere: { name: 'sphere', arity: 1, modes: simple }, Cube: { name: 'cube', arity: 1, modes: simple },
       Box: { name: 'box', arity: 3, modes: simple }, Cylinder: { name: 'cylinder', arity: 2, modes: simple },
       Cone: { name: 'cone', arity: 2, modes: simple }, Tube: { name: 'tube', arity: 3, modes: simple },

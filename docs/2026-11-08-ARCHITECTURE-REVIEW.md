@@ -141,3 +141,17 @@ attempted and reverted: it has a legitimate DSL consumer
 (examples/haskell/ExampleGear.hs), so the promote-or-drop decision of
 item 4 stays open. Also folded `roundTo3` into `Coscad.Format` and made
 `Json.jnum3` use it, removing one of the three rounding conventions.
+
+## Frustum promoted, 8 November 2026
+
+The promote-or-drop question resolved to promotion, and the same day the
+word `frustum r1 r2 h` joined the language in every mode (the
+`xcyl`/`ycyl`/`zcyl`/`tube` route: a family word, no new glyph), sitting
+on the XY plane like `◎` and `▻`. The DSL constructor was realigned to
+the family's radii-first-height-last order. The deciding evidence was in
+the project's own models: orbit-tower spells a truncated cone four times
+as `(▻ r h1) ∩ (◎ r h2)` with per-site arithmetic, and no other
+primitive in the language carries two radii while its compiler cases
+(bbox, validation, mesh, emission) were already written and swept.
+`loft` of two circles remains the general taper for arbitrary profiles;
+a taper parameter on `extrude` stays on the ideas list.

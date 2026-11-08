@@ -47,6 +47,7 @@ module Coscad.Dsl
   , cuboid
   , cutAt
   , cyl
+  , frustum
   , fwd
   , lft
   , loft
@@ -172,6 +173,10 @@ cyl = (◎)
 
 cone :: D -> D -> Shape
 cone = (▻)
+
+-- | frustum bottom radius, top radius, height (sits on the XY plane)
+frustum :: D -> D -> D -> Shape
+frustum = Frustum
 
 -- | prism n radius height
 prism :: I -> D -> D -> Shape

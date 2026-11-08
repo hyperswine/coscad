@@ -590,6 +590,7 @@ primaryExpression ctx =
         , keyword "sphere" *> (Sphere <$> num ctx)
         , keyword "cyl" *> ((\r h -> Cyl r h 0 0) <$> num ctx <*> num ctx)
         , keyword "tube" *> (Tube <$> num ctx <*> num ctx <*> num ctx)
+        , keyword "frustum" *> (Frustum <$> num ctx <*> num ctx <*> num ctx)
         , keyword "torus" *> (Torus <$> num ctx <*> num ctx)
         , keyword "wedge" *> ((\a b c -> Wedge (a, b, c)) <$> num ctx <*> num ctx <*> num ctx)
         ]

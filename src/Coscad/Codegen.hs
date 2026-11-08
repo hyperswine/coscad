@@ -55,7 +55,7 @@ gen (Cylinder r h) =
   "cylinder(h = " ++ showD h ++ ", r = " ++ showD r ++ ");"
 gen (Cone r h) =
   "cylinder(h = " ++ showD h ++ ", r1 = " ++ showD r ++ ", r2 = 0);"
-gen (Frustum h r1 r2) =
+gen (Frustum r1 r2 h) =
   "cylinder(h = " ++ showD h ++ ", r1 = " ++ showD r1 ++ ", r2 = " ++ showD r2 ++ ");"
 gen (Prism n r h) =
   "cylinder(h = " ++ showD h ++ ", r = " ++ showD r ++ ", $fn = " ++ show n ++ ");"
