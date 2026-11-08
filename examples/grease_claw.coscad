@@ -41,12 +41,12 @@
 //   block centered on its own thickness -> χ 7.4
 //   bore length (Y) = 22 + 2 clearance = 24
 //   opencut dims (X,Y,Z) = 16.8, 24, 50 -- same swap as the block
-//   taper: hull the ACTUAL block (not an approximating disk) against
+//   taper: hull the ACTUAL claw block (not an approximating disk) against
 //   a thin handle-radius disk, so it smoothly closes the gap between
 //   the block's true 22x14.8 end-face and the round 14mm handle
 //   taper end at x = 14.8 + 12 = 26.8; handle center at 126.8
 
-block = χ 7.4 (◙ 14.8 22 14.8 1.5)
+claw_block = χ 7.4 (◙ 14.8 22 14.8 1.5)
 bore  = χ 7.4 (ycyl 4.4 24)
 // slice away everything above the bore centerline -> open trough
 opencut = χ 7.4 (ζ 25.3 (▣ 16.8 24 50 0))
@@ -66,5 +66,5 @@ taper = tapA ⇓ tapB
 
 handle = χ 126.8 (xcyl 7 200)
 
-claw  = (block ⊖ bore) ⊖ opencut
+claw  = (claw_block ⊖ bore) ⊖ opencut
 main  = claw ⊕ taper ⊕ handle

@@ -46,11 +46,13 @@ module Coscad.Dsl
   , cube
   , cuboid
   , cutAt
+  , block
   , cyl
   , frustum
   , fwd
   , lft
   , loft
+  , pillar
   , poly
   , posAt
   , prism
@@ -58,6 +60,7 @@ module Coscad.Dsl
   , revolve
   , revolveSeg
   , rt
+  , spike
   , sph
   , top
   , torus
@@ -177,6 +180,18 @@ cone = (▻)
 -- | frustum bottom radius, top radius, height (sits on the XY plane)
 frustum :: D -> D -> D -> Shape
 frustum = Frustum
+
+-- | bed-anchored box, corner at the origin (the block word)
+block :: D -> D -> D -> Shape
+block = Rectangle
+
+-- | bed-anchored cylinder, z from 0 to h (the pillar word)
+pillar :: D -> D -> Shape
+pillar = Cylinder
+
+-- | bed-anchored cone, point up (the spike word)
+spike :: D -> D -> Shape
+spike = Cone
 
 -- | prism n radius height
 prism :: I -> D -> D -> Shape

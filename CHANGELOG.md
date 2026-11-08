@@ -8,6 +8,23 @@ and this project adheres to the
 
 ## Unreleased
 
+- **`coscad words` renders a file back as the word vocabulary**, and the
+  bed-anchored family gets its words: `block x y z` (■ ▬), `pillar r h` (◎),
+  `spike r h` (▻), `prism n r h` (⎏) and `poly x0 y0 ...` join `frustum` in
+  every mode, reserved like their siblings. The renderer keeps each
+  definition on its line, turns transforms into pipeline stages, and
+  refuses, naming the construct, what words cannot spell yet (chamfered
+  or rounded ▣ ◙ ⌭ ⌽, arbitrary-axis rotations and matrix transforms,
+  mating frames, tags, profiles beyond Triangle/Pentagon/Circle); the
+  round-trip suite reparses and meshes every case. First step of the
+  words-over-glyphs pivot (docs/2026-11-08-WORDS-OVER-GLYPHS.md).
+- **Found by that suite, fix pending:** a partial revolve (under 360°) of
+  a profile with an edge lying on the axis — the half-plane cut of a
+  circle centred on the axis, as in `⭘ 4 |> revolve 90` — fails with
+  `indexed mesh has invalid triangle indices`. The same profile revolves
+  fully, single-point axis contact revolves partially, and offset
+  profiles revolve partially; only the on-axis chord under a partial
+  angle breaks the kernel bridge's mesh.
 - **`frustum r1 r2 h` joins the language.** The truncated cone is now a
   word shape in every mode, sitting on the XY plane like `◎` and `▻`
   (`r2 = 0` is a cone, `r1 = r2` a cylinder, `r1 = 0` an inverted cone).

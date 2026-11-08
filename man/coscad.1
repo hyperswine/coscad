@@ -334,6 +334,11 @@ main = box w (w / 2) t |> cutat top 0 0 (-t / 2) (zcyl 1 50)
 .It xcyl r l / ycyl / zcyl Ta axis-aligned centered cylinders
 .It tube or ir h Ta centered tube
 .It frustum r1 r2 h Ta truncated cone, z from 0 to h; r2 = 0 is a cone, r1 = r2 a cylinder
+.It pillar r h Ta cylinder, z from 0 to h (the \&◎ glyph)
+.It spike r h Ta cone, point up (the \&▻ glyph)
+.It prism n r h Ta n-sided prism (the \&⎏ glyph)
+.It block x y z Ta box, corner at the origin (the \&■ and \&▬ glyphs)
+.It poly x0 y0 ... Ta plain closed polygon from point pairs
 .It torus R r Ta torus
 .It wedge x y z Ta right-triangular prism, profile in the YZ plane
 .It ▣ x y z c Ta cuboid, chamfer c

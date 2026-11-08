@@ -140,11 +140,11 @@ framedFastenerTier t = do
   dir <- tempDir "framed-fasteners"
   let host = "main = box 20 20 10 |> frame hole top top bak -4 -4 0 |> frame nut bot bot bak -4 -4 3\n"
       clamp = "main = box 20 20 4 |> frame head top top bak -4 -4 0\n"
-      joint = "fastener M4x16 lid block @hole seat=@head head=socket nut=hex pocket=@nut\n"
-      src = "block ← block.coscad ×1 preload=hand\nlid ← lid.coscad ×1\nasm = block ⊕ (lid |> move 0 0 7)\n" ++ joint
+      joint = "fastener M4x16 lid base @hole seat=@head head=socket nut=hex pocket=@nut\n"
+      src = "base ← base.coscad ×1 preload=hand\nlid ← lid.coscad ×1\nasm = base ⊕ (lid |> move 0 0 7)\n" ++ joint
       run source = writeFile (dir </> "test.assemble") source >> planSummary (dir </> "test.assemble")
       near a b = vlen (vsub a b) < 1e-6
-      writeParts h c = writeFile (dir </> "block.coscad") h >> writeFile (dir </> "lid.coscad") c
+      writeParts h c = writeFile (dir </> "base.coscad") h >> writeFile (dir </> "lid.coscad") c
   writeParts host clamp
   good <- run src
   case good of
@@ -154,25 +154,25 @@ framedFastenerTier t = do
       assertT t "framed joint: measured grip and nut reach"
         (case psFasteners ps of [f] -> near (fsPosition f) (-4,-4,5) && near (fsHeadPosition f) (-4,-4,9) && maybe False (`near` (-4,-4,-2)) (fsNutSeat f) && abs(fsThreadReach f - 5) < 1e-7; _ -> False) (show ps)
       assertT t "framed joint: in-hand preload precedes the host placement"
-        (take 1 (concatMap ssPreload (psSteps ps)) == ["block"] && all (null . ssParts) (take 1 (psSteps ps))) (show (psSteps ps))
+        (take 1 (concatMap ssPreload (psSteps ps)) == ["base"] && all (null . ssParts) (take 1 (psSteps ps))) (show (psSteps ps))
       assertT t "framed joint: preload preparation warning survives step grouping"
         (any ("in hand" `isInfixOf`) (concatMap ssWarnings (psSteps ps))) (show(psSteps ps))
   let transform = " |> rotx 23 |> rotz 37 |> move 31 -17 9"
-      rotated = "block ← block.coscad ×1 preload=hand\nlid ← lid.coscad ×1\nasm = (block ⊕ (lid |> move 0 0 7))" ++ transform ++ "\n" ++ joint
+      rotated = "base ← base.coscad ×1 preload=hand\nlid ← lid.coscad ×1\nasm = (base ⊕ (lid |> move 0 0 7))" ++ transform ++ "\n" ++ joint
       move p = vadd (31,-17,9) (mApply (rodMat 37 (0,0,1)) (mApply (rodMat 23 (1,0,0)) p))
       axis = mApply (rodMat 37 (0,0,1)) (mApply (rodMat 23 (1,0,0)) (0,0,1))
   tilted <- run rotated
   assertT t "framed joint: arbitrary rotations carry hole, head, nut and axis"
     (either (const False) (\ps -> case psFasteners ps of [f] -> near (fsPosition f) (move (-4,-4,5)) && near (fsHeadPosition f) (move (-4,-4,9)) && near (fsAxis f) axis && maybe False (`near` move (-4,-4,-2)) (fsNutSeat f) && maybe False (`near` move (-4,-4,-5)) (fsNutEntry f) && abs(fsThreadReach f-5) < 1e-7; _ -> False) tilted) (either id show tilted)
-  renamed <- run "core ← block.coscad ×1 preload=hand\ncover ← lid.coscad ×1\nasm = core ⊕ (cover |> move 0 0 7)\nfastener M4x16 cover core @hole seat=@head head=socket nut=hex pocket=@nut\n"
+  renamed <- run "core ← base.coscad ×1 preload=hand\ncover ← lid.coscad ×1\nasm = core ⊕ (cover |> move 0 0 7)\nfastener M4x16 cover core @hole seat=@head head=socket nut=hex pocket=@nut\n"
   assertT t "framed joint: aliases do not affect hardware placement"
     (either (const False) (\ps -> case psFasteners ps of [f] -> near (fsPosition f) (-4,-4,5) && abs(fsThreadReach f-5) < 1e-7; _ -> False) renamed) (either id show renamed)
   writeParts "main = box 20 20 16 |> frame hole top top bak -4 -4 0 |> frame nut bot bot bak -4 -4 3\n" clamp
-  resized <- run "block ← block.coscad ×1 preload=hand\nlid ← lid.coscad ×1\nasm = block ⊕ (lid |> move 0 0 10)\nfastener M4x22 lid block @hole seat=@head head=socket nut=hex pocket=@nut\n"
+  resized <- run "base ← base.coscad ×1 preload=hand\nlid ← lid.coscad ×1\nasm = base ⊕ (lid |> move 0 0 10)\nfastener M4x22 lid base @hole seat=@head head=socket nut=hex pocket=@nut\n"
   assertT t "framed joint: resized host updates both bearing planes and grip"
     (either (const False) (\ps -> case psFasteners ps of [f] -> near (fsPosition f) (-4,-4,8) && near (fsHeadPosition f) (-4,-4,12) && maybe False (`near` (-4,-4,-5)) (fsNutSeat f) && abs(fsThreadReach f-5) < 1e-7; _ -> False) resized) (either id show resized)
   writeParts "main = box 60 20 10 |> frame hole top top bak -4 0 0\n" "main = box 20 20 4 |> frame head top top bak -4 0 0\n"
-  let railSrc = "block ← block.coscad ×0 profile=2020 preload=hand\nlid ← lid.coscad ×1\nasm = (block ⊕ (lid |> move 0 0 7))" ++ transform ++ "\nfastener M4x10 lid block @hole seat=@head\n"
+  let railSrc = "base ← base.coscad ×0 profile=2020 preload=hand\nlid ← lid.coscad ×1\nasm = (base ⊕ (lid |> move 0 0 7))" ++ transform ++ "\nfastener M4x10 lid base @hole seat=@head\n"
   rail <- run railSrc
   assertT t "framed rail: slot checks use part coordinates under arbitrary rotation"
     (either (const False) (\ps -> case psFasteners ps of [f] -> near (fsPosition f) (move (-4,0,5)) && near (fsAxis f) axis && null(psDesignErrors ps); _ -> False) rail) (either id show rail)
@@ -189,14 +189,14 @@ framedFastenerTier t = do
     (either (const False) (\ps -> case psFasteners ps of [f] -> near (fsHeadPosition f) (-4,-4,7) && abs(fsThreadReach f-7) < 1e-7; _ -> False) recess) (either id show recess)
   writeParts host clamp
   let invalid =
-        [ ("missing head seat", "fastener M4x16 lid block @hole nut=hex pocket=@nut\n", "needs seat=@frame")
-        , ("unknown hole", "fastener M4x16 lid block @missing seat=@head nut=hex pocket=@nut\n", "unknown frame '@missing'")
-        , ("missing nut seat", "fastener M4x16 lid block @hole seat=@head nut=hex\n", "needs pocket=@frame")
-        , ("mixed offset conventions", "fastener M4x16 lid block @hole seat=@head at=4 nut=hex pocket=@nut\n", "omit ×count/at=")
-        , ("group at one hole", "fastener M4x16 lid block @hole ×2 seat=@head nut=hex pocket=@nut\n", "locates one fastener")
-        , ("mixed grip conventions", "fastener M4x16 lid block @hole seat=@head through=4 nut=hex pocket=@nut\n", "omit inset=/through=")
-        , ("frame option with old face", "fastener M4x16 lid block top seat=@head nut=hex pocket=@nut\n", "requires a host @frame")
-        , ("frame peg", "fastener peg lid block @hole seat=@head\n", "currently describe screws")
+        [ ("missing head seat", "fastener M4x16 lid base @hole nut=hex pocket=@nut\n", "needs seat=@frame")
+        , ("unknown hole", "fastener M4x16 lid base @missing seat=@head nut=hex pocket=@nut\n", "unknown frame '@missing'")
+        , ("missing nut seat", "fastener M4x16 lid base @hole seat=@head nut=hex\n", "needs pocket=@frame")
+        , ("mixed offset conventions", "fastener M4x16 lid base @hole seat=@head at=4 nut=hex pocket=@nut\n", "omit ×count/at=")
+        , ("group at one hole", "fastener M4x16 lid base @hole ×2 seat=@head nut=hex pocket=@nut\n", "locates one fastener")
+        , ("mixed grip conventions", "fastener M4x16 lid base @hole seat=@head through=4 nut=hex pocket=@nut\n", "omit inset=/through=")
+        , ("frame option with old face", "fastener M4x16 lid base top seat=@head nut=hex pocket=@nut\n", "requires a host @frame")
+        , ("frame peg", "fastener peg lid base @hole seat=@head\n", "currently describe screws")
         ]
       base = unlines (take 3 (lines src))
   forM_ invalid $ \(name,line,msg) -> do
@@ -215,7 +215,7 @@ framedFastenerTier t = do
   wrongNut <- run src
   expectErr t "framed joint: nut bearing normal must oppose the head" wrongNut ["opposing outward normals"] []
   writeParts host clamp
-  short <- run (base ++ "fastener M4x12 lid block @hole seat=@head nut=hex pocket=@nut\n")
+  short <- run (base ++ "fastener M4x12 lid base @hole seat=@head nut=hex pocket=@nut\n")
   assertT t "framed joint: short screw checks actual distance to the nut seat"
     (either (const False) (any ("only 1 mm" `isInfixOf`) . psDesignErrors) short) (either id show short)
   duplicate <- run (src ++ joint)
@@ -224,7 +224,7 @@ framedFastenerTier t = do
   -- A driver obstruction must remain an error, even though a frame can
   -- locate a recessed seat independently of the clamped part's outside box.
   writeFile (dir </> "obstacle.coscad") "main = box 2 2 30 |> move -4 -4 10\n"
-  blocked <- run ("block ← block.coscad ×1 preload=hand\nlid ← lid.coscad ×1 after=obstacle\nobstacle ← obstacle.coscad ×1\nasm = block ⊕ (lid |> move 0 0 7) ⊕ obstacle\n" ++ joint)
+  blocked <- run ("base ← base.coscad ×1 preload=hand\nlid ← lid.coscad ×1 after=obstacle\nobstacle ← obstacle.coscad ×1\nasm = base ⊕ (lid |> move 0 0 7) ⊕ obstacle\n" ++ joint)
   expectErr t "framed joint: another part can block the actual driver path" blocked ["blocked by obstacle"] []
   originalCorner <- readFile "examples/assemble/corner.assemble"
   forM_ ["rail200.coscad","rail120.coscad","inner90.coscad","bracket90.coscad"] $ \file -> copyFile ("examples/assemble" </> file) (dir </> file)
@@ -294,9 +294,9 @@ planEaseTier t = do
   assertT t "burial: a lid that closes the hole's only way in goes on after the peg"
     (either (const False) (\ps -> stepOf ps "peg" < stepOf ps "lid") r2) (either id (show . psSteps) r2)
   -- a peg sealed inside its host can never go in
-  r3 <- run "sealed.assemble" [("shut.coscad", "main = box 30 30 20 ⊖ box 10 10 10\n"), ("block.coscad", "main = box 6 6 6\n")]
-    "shut ← shut.coscad ×1\nblock ← block.coscad ×1\nasm = shut ⊕ block\njoint push block shut axis=top\n"
-  expectErr t "burial: a part sealed inside its host is a design error" r3 ["block cannot go in once shut"] []
+  r3 <- run "sealed.assemble" [("shut.coscad", "main = box 30 30 20 ⊖ box 10 10 10\n"), ("base.coscad", "main = box 6 6 6\n")]
+    "shut ← shut.coscad ×1\nbase ← base.coscad ×1\nasm = shut ⊕ base\njoint push base shut axis=top\n"
+  expectErr t "burial: a part sealed inside its host is a design error" r3 ["base cannot go in once shut"] []
   -- a screw joint turns its engaged length over the pitch; a knob above
   -- the hole gives the fingers something to turn, a flush screw does not
   let knob = ("knob.coscad", "main = zcyl 3 16 ⊕ (zcyl 8 6 |> move 0 0 11)\n")

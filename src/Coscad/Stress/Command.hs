@@ -22,7 +22,7 @@ processStress backend emit full input out = runCommand $ do
   src <- readFileUtf8 input
   (shape, analysis) <- case parseProgramFull input src of
     Left err -> die' err
-    Right (_, shape, analysis) -> return (shape, analysis)
+    Right (_, shape, analysis, _) -> return (shape, analysis)
   mapM_ (emit . Warning . formatAnchorWarning input) (anchorWarnings shape)
   setup <- either die' return (setupFrom analysis)
   let jsonF = maybe (dropExtension input ++ "_stress.json") id out

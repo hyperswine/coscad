@@ -323,7 +323,7 @@ resolveWithConstraints mode tol defs meta positions constraints table0 = do
   case [n | (n,(printCount,_)) <- meta, printCount > 1, not (null constraints)] of
     n : _ -> Left (InputError (declared n ++ ": constrained part '" ++ n ++ "' needs distinct instance names: use separate declarations for each copy (each with ×0 or ×1), not ×2 or larger"))
     [] -> return ()
-  table <- either (Left . InputError) Right (resolveVariables mode defs table0)
+  table <- fst <$> either (Left . InputError) Right (resolveVariables mode defs table0)
   if null constraints then return table else do
     parts <- mapM (\(n,_) -> maybe (Left (InputError (declared n ++ ": missing constrained instance '" ++ n ++ "'"))) (\s -> Right (n, declared n, s)) (Map.lookup n table0)) meta
     asm <- solveConstraints tol parts constraints

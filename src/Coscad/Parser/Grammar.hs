@@ -591,6 +591,11 @@ primaryExpression ctx =
         , keyword "cyl" *> ((\r h -> Cyl r h 0 0) <$> num ctx <*> num ctx)
         , keyword "tube" *> (Tube <$> num ctx <*> num ctx <*> num ctx)
         , keyword "frustum" *> (Frustum <$> num ctx <*> num ctx <*> num ctx)
+        , keyword "pillar" *> (Cylinder <$> num ctx <*> num ctx)
+        , keyword "spike" *> (Cone <$> num ctx <*> num ctx)
+        , keyword "prism" *> prismWord ctx
+        , keyword "block" *> (Rectangle <$> num ctx <*> num ctx <*> num ctx)
+        , keyword "poly" *> polyBody ctx
         , keyword "torus" *> (Torus <$> num ctx <*> num ctx)
         , keyword "wedge" *> ((\a b c -> Wedge (a, b, c)) <$> num ctx <*> num ctx <*> num ctx)
         ]
@@ -614,6 +619,31 @@ primaryExpression ctx =
       Shape2D 100 <$> num ctx
 
 -- | Shared body for ✎ / Bezier: 3k+1 control points as x y pairs
+-- | Word prism: the bed-anchored n-sided prism, the same side-count
+-- rules as the glyph.
+prismWord :: Ctx -> Parser Shape
+prismWord ctx = do
+  off <- getOffset
+  n <- num ctx
+  if n >= 3 && n <= fromIntegral maxSides && n == fromInteger (truncate n)
+    then return ()
+    else setOffset off *> fail ("prism side count must be a whole number from 3 to " ++ show maxSides)
+  r <- num ctx
+  Prism (round n) r <$> num ctx
+
+-- | Shared body for the poly word: x y pairs, at least three points, a
+-- plain closed polygon (holes have no word spelling).
+polyBody :: Ctx -> Parser Shape
+polyBody ctx = do
+  ns <- some (num ctx)
+  let n = length ns
+  if odd n || n < 6
+    then fail ("poly needs at least three points as x y pairs (got " ++ show n ++ " numbers" ++ (if odd n then ", one is unpaired" else "") ++ ")")
+    else return (Poly (PD (pairUp ns) []))
+  where
+    pairUp (a : b : r) = (a, b) : pairUp r
+    pairUp _ = []
+
 bezierBody :: Ctx -> Parser Shape
 bezierBody ctx = do
   ns <- some (num ctx)

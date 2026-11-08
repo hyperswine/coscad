@@ -208,3 +208,19 @@ is the same sentence with a searchable headword.
    primitives are words only, `frustum` as the precedent).
 5. Optional, only if missed: `&` as the ASCII intersection operator,
    sugar over `Intersect`/`isect`, which already exist.
+
+## Bed-anchored words and the renderer, 8 November 2026
+
+The naming question resolved to the semantic scheme, and the words landed
+with the tool that forced them: `coscad words`. `block x y z` (■ ▬),
+`pillar r h` (◎), `spike r h` (▻), `prism n r h` (⎏) and `poly x0 y0 ...`
+join `frustum` in the all-modes word list, each reserved like its
+siblings and documented everywhere the family is. The renderer
+(`coscad words file [-o out]`, `Coscad.Words`) turns a whole file back
+as word syntax: definitions keep their lines, numbers stay numbers,
+transforms become pipeline stages, and the round-trip suite reparses and
+meshes every case. What cannot be spelled in words yet is an honest
+error naming the construct: chamfered or rounded BOSL2 primitives,
+arbitrary-axis rotations and matrix transforms, mating frames, tags, and
+profiles beyond Triangle/Pentagon/Circle. Those are the spellings to add
+as the corpus asks for them, one table entry each.

@@ -17,6 +17,8 @@ import Coscad.Stress.Material (Material (..), materialTable)
 import Coscad.Report (Failure (..), collecting, stderrEmit)
 import Coscad.Site (processSiteWithBackend)
 import Coscad.Stress.Command (processStress)
+import Coscad.Words (renderWords)
+import Coscad.IO (readFileUtf8, writeFileUtf8)
 import Data.List (isInfixOf, isPrefixOf)
 import Data.Version (showVersion)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
@@ -80,6 +82,13 @@ runCLI = do
       (backend,remaining) <- backendArgs "stl" rest
       withInOut "stl" remaining
         (\f o -> renderPartWith backend stderrEmit f o >>= finish)
+    ("words" : rest) -> withInOut "words" rest $ \f o -> do
+      src <- readFileUtf8 f
+      case renderWords f src of
+        Left err -> bad err
+        Right txt -> case o of
+          Just out -> writeFileUtf8 out txt
+          Nothing -> putStr txt
     ("next" : rest) -> do
       (backend,remaining) <- backendArgs "next" rest
       let strict = "--strict" `elem` remaining
@@ -173,6 +182,7 @@ usage h =
     , "                                          validate source, mating constraints and hardware without writing artifacts;"
     , "                                          --json prints diagnostics as JSON, --stdin reads the file's text from stdin"
     , "  coscad stl <part.coscad> [-o part.stl]  compile and render to STL (prints volume + bounds)"
+    , "  coscad words <part.coscad> [-o out.coscad]  render the file back as the word (!simple) vocabulary"
     , "  coscad <spec.assemble>                  design stage: assembled view, packed plate(s), spec_design.json"
     , "  coscad next [--strict] <spec.assemble>  manufacturing: orient, pack beds, bedN.stl + spec_manifest.json;"
     , "                                          --strict exits 2 when any part has a printability warning"

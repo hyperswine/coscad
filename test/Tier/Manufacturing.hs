@@ -253,19 +253,19 @@ printabilityProbes t = do
   let parts =
         [ ("cube", "main = box 20 20 20"), ("ball", "main = sphere 10"), ("rod", "main = xcyl 5 40")
         , ("mushroom", "main = zcyl 3 4 |> at top (box 30 30 3)"), ("island", "main = box 20 20 4 ⊕ ζ 10 (box 6 6 4)")
-        , ("diagwall", "main = box 60 2 40 |> rotz 45"), ("pillar", "main = box 6 6 20")
+        , ("diagwall", "main = box 60 2 40 |> rotz 45"), ("post", "main = box 6 6 20")
         , ("cup", "main = box 30 30 10 |> cut (box 20 20 8 |> z -1)"), ("hhole", "main = box 30 20 20 |> cut (xcyl 4 40)")
         , ("chamf", "main = ▣ 20 20 10 2"), ("dome", "main = box 30 30 10 |> cut (sphere 8 |> z 5)")
         , ("hook", "main = (box 30 10 3) ⊕ (box 3 10 20 |> x 13.5 |> z 8.5) ⊕ (box 10 10 2 |> x 20 |> z 17.5)") ]
   forM_ parts $ \(n, src) -> writeFile (dir </> n <.> "coscad") (src ++ "\n")
   writeFile (dir </> "a.assemble") (unlines ("plate 256 256 6" : [n ++ " ← " ++ f ++ ".coscad ×1 " ++ d | (n, f, d) <-
     [("blk", "cube", "▽bot"), ("corner", "cube", "▽lft+fwd+bot"), ("ball", "ball", "▽bot"), ("rod", "rod", "▽bot"), ("mushroom", "mushroom", "▽bot")
-    , ("island", "island", "▽bot"), ("diagwall", "diagwall", "▽bot"), ("pillar", "pillar", "▽bot"), ("cup", "cup", "▽bot")]]))
+    , ("island", "island", "▽bot"), ("diagwall", "diagwall", "▽bot"), ("post", "post", "▽bot"), ("cup", "cup", "▽bot")]]))
   writeFile (dir </> "b.assemble") (unlines ("plate 256 256 6" : [n ++ " ← " ++ n ++ ".coscad ×1 ▽bot" | n <- ["hhole", "chamf", "dome", "hook"]]))
   let expected =
         [ ("blk_bot", [], Nothing), ("corner_lft_fwd_bot", ["flat bed contact"], Nothing), ("ball_bot", ["flat bed contact"], Nothing)
         , ("rod_bot", [], Nothing), ("mushroom_bot", ["flat overhang"], Just (800, 870)), ("island_bot", ["elevated downward-facing start at 10 mm"], Nothing)
-        , ("diagwall_bot", ["tall, narrow"], Nothing), ("pillar_bot", ["tall, narrow"], Nothing), ("cup_bot", [], Nothing)
+        , ("diagwall_bot", ["tall, narrow"], Nothing), ("post_bot", ["tall, narrow"], Nothing), ("cup_bot", [], Nothing)
         , ("hhole_bot", [], Nothing), ("chamf_bot", [], Nothing), ("dome_bot", [], Nothing), ("hook_bot", ["flat overhang"], Just (70, 90)) ]
   variants <- fmap concat $ forM ["a", "b"] $ \asm -> do
     r <- processNext silent (dir </> asm <.> "assemble")
@@ -305,7 +305,7 @@ printabilityProbes t = do
       (cc, _, ec) <- readProcessWithExitCode bin ["next", "--strict", dir </> "clean.assemble"] ""
       assertT t "next --strict on a clean assembly exits 0" (cc == ExitSuccess && not ("Warning: " `isInfixOf` ec)) (show (cc, ec))
       -- plate brim=8 reserves a brim for the tall pillar only; brim=0 on one instance opts out
-      writeFile (dir </> "brim.assemble") "plate 256 256 6 brim=8\nblk ← cube.coscad ×1 ▽bot\npillar ← pillar.coscad ×2 ▽bot\nbare ← pillar.coscad ×1 ▽bot brim=0\n"
+      writeFile (dir </> "brim.assemble") "plate 256 256 6 brim=8\nblk ← cube.coscad ×1 ▽bot\npost ← post.coscad ×2 ▽bot\nbare ← post.coscad ×1 ▽bot brim=0\n"
       (cb, _, eb) <- readProcessWithExitCode bin ["next", dir </> "brim.assemble"] ""
       mb <- decode <$> readFile (dir </> "brim_manifest.json")
       let placementsB = either (const []) (\v -> [pl | Just bs <- [asArray =<< lookupKey "beds" v], b <- bs, Just ps <- [asArray =<< lookupKey "placements" b], pl <- ps]) mb
@@ -313,14 +313,14 @@ printabilityProbes t = do
           xyOf i = firstOr (-1, -1) [(x, y) | pl <- placementsB, (asString =<< lookupKey "instance" pl) == Just i, Just x <- [asNumber =<< lookupKey "x" pl], Just y <- [asNumber =<< lookupKey "y" pl]]
           bedBrim = either (const Nothing) (\v -> asNumber =<< lookupKey "brim_mm" =<< lookupKey "bed" v) mb
       assertT t "plate brim=8: the warned pillars reserve 8 mm, the clean block and the brim=0 instance none"
-        (cb == ExitSuccess && map brimOf ["pillar_1", "pillar_2", "blk_1", "bare_1"] == [8, 8, 0, 0] && bedBrim == Just 8)
-        (show (cb, eb, map brimOf ["pillar_1", "pillar_2", "blk_1", "bare_1"], bedBrim))
+        (cb == ExitSuccess && map brimOf ["post_1", "post_2", "blk_1", "bare_1"] == [8, 8, 0, 0] && bedBrim == Just 8)
+        (show (cb, eb, map brimOf ["post_1", "post_2", "blk_1", "bare_1"], bedBrim))
       -- each pillar's 22×22 reservation outranks the 20×20 block: pillars 8 mm
       -- inside their cells (14, then 6 + 22 + 6 + 8 = 42), block at 6 + 2·(22 + 6) = 62,
       -- the bare pillar 6 mm after it
       assertT t "plate brim=8: placements step by margin + brim exactly"
-        (map xyOf ["blk_1", "pillar_1", "pillar_2", "bare_1"] == [(62, 6), (14, 14), (42, 14), (88, 6)])
-        (show (map xyOf ["blk_1", "pillar_1", "pillar_2", "bare_1"]))
+        (map xyOf ["blk_1", "post_1", "post_2", "bare_1"] == [(62, 6), (14, 14), (42, 14), (88, 6)])
+        (show (map xyOf ["blk_1", "post_1", "post_2", "bare_1"]))
 
 -- | `coscad next` against the plate's max height (the 4th `plate`
 -- argument) and with a part the packer turns 90° about Z.
@@ -331,7 +331,7 @@ bedHeightProbes t = do
   forM_ [("post", "box 10 10 200"), ("cube", "box 190 190 190"), ("slab", "box 90 50 10"), ("bar", "box 25 80 10")] $ \(n, src) ->
     writeFile (dir </> n <.> "coscad") ("main = " ++ src ++ "\n")
   forM_ [ ("declared", "plate 256 256 6 180\npost ← post.coscad ×1 ▽bot\n"), ("auto", "plate 256 256 6 180\npost ← post.coscad ×1\n")
-        , ("default", "plate 256 256 6\npost ← post.coscad ×1 ▽bot\n"), ("cube", "plate 256 256 6 180\nblock ← cube.coscad ×1\n")
+        , ("default", "plate 256 256 6\npost ← post.coscad ×1 ▽bot\n"), ("cube", "plate 256 256 6 180\npart ← cube.coscad ×1\n")
         , ("turn", "plate 100 100 5\nslab ← slab.coscad ×1 ▽bot\nbar ← bar.coscad ×1 ▽bot\n") ] $ \(n, src) ->
     writeFile (dir </> n <.> "assemble") src
   case exe of

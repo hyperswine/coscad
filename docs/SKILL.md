@@ -80,6 +80,11 @@ ever disagree; this file can drift, the compiler cannot.
 | `zcyl r l` | radius length | cylinder along Z axis |
 | `⊚ or ir h` | outer-r inner-r height | tube |
 | `frustum r1 r2 h` | bottom-r top-r height | truncated cone on the XY plane; r2 = 0 is a cone, r1 = r2 a cylinder |
+| `pillar r h` | radius height | cylinder on the XY plane, z 0..h (the ◎ glyph) |
+| `spike r h` | radius height | cone on the XY plane, point up (the ▻ glyph) |
+| `block x y z` | dims | box, corner at the origin (the ■ and ▬ glyphs) |
+| `prism n r h` | sides radius height | n-sided prism on the XY plane (the ⎏ glyph) |
+| `poly x0 y0 ...` | point pairs | plain closed polygon (holes have no word) |
 | `⏢ x1 y1 x2 y2 h` | base dims, top dims, height | prismoid |
 | `◉ rmaj rmin` | major-r minor-r | torus |
 | `⊿ x y z` | dims | wedge — right-angle triangular prism. **Profile is in the YZ plane, right angle at (−Y,−Z)**; rotate/mirror to reorient (see Gotchas) |

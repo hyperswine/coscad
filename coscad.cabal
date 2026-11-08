@@ -96,6 +96,7 @@ library
       Coscad.Stress.Command
       Coscad.Validate
       Coscad.Variants
+      Coscad.Words
       Lib
   other-modules:
       Coscad.Stress.Linear
@@ -187,6 +188,7 @@ test-suite coscad-test
       MigrationCases
       Oracle.OpenScad
       Tier.Assembly
+      Tier.Words
       Tier.Cli
       Tier.Diagnostics
       Tier.Examples

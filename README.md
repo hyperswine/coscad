@@ -151,8 +151,9 @@ A line starting with `|>` continues the previous definition.
 
 - **Shapes**: corner-anchored primitives with OpenSCAD's conventions (`■ ● ◎ ▻ ▬ ⎏`), centred primitives with BOSL2's conventions
   (`▣ ◙ ⌭ ⌽ ⊚ ⏢ ◉ ⊿`, `xcyl/ycyl/zcyl`), centered word shapes
-  (`cube box sphere cyl tube torus wedge`) plus the base-anchored
-  `frustum r1 r2 h` (truncated cone, like `◎`/`▻`), 2D profiles + `⮕`/`extrude`,
+  (`cube box sphere cyl tube torus wedge`), the bed-anchored words
+  `frustum r1 r2 h`, `pillar r h`, `spike r h`, `block x y z`, `prism n r h`
+  (the `◎ ▻ ■ ▬ ⎏` family) and `poly x0 y0 ...`, 2D profiles + `⮕`/`extrude`,
   and `✎` — compiler-evaluated piecewise cubic bezier outlines.
 - **Numbers**: `w = 20`, `t = w / 5 - 1`; use anywhere a number goes
   (`box w (w / 2) t`). Resolved before shapes, mistakes name the binding.

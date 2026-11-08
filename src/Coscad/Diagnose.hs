@@ -106,7 +106,7 @@ validateProject emit file sources = do
         text <- maybe (abort (inputFailure (file ++ ": file not found"))) return source
         case parseProgramFull file text of
           Left err -> abort (inputFailure err)
-          Right (_, shape, _) -> do
+          Right (_, shape, _, _) -> do
             mapM_ (emit . Warning . formatAnchorWarning file) (anchorWarnings shape)
             return "Valid part"
       _ -> abort (inputFailure "validate needs a .coscad or .assemble file")
@@ -120,7 +120,7 @@ validateProject emit file sources = do
     checkAnalysis (path, Just text) | takeExtension path == ".coscad" =
       case parseProgramFull path text of
         Left err -> abort (inputFailure err)
-        Right (_, shape, analysis) -> do
+        Right (_, shape, analysis, _) -> do
           let failAt message = abort (inputFailure (path ++ ": " ++ message))
               datums = datumPoints (resolve shape)
               check name = case Map.lookup name datums of

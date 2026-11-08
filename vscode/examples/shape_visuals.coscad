@@ -6,7 +6,7 @@ along_y = ycyl radius 20
 along_z = zcyl radius 20
 
 ball = sphere 7
-block = box 16 12 8
+boxdemo = box 16 12 8
 rounded = ◙ 16 12 8 1
 beveled = ▣ 16 12 8 1
 ring = torus 8 2

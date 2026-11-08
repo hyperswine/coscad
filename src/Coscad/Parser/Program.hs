@@ -116,11 +116,11 @@ hasUnsupportedOp b =
 
 -- Parse a complete program (file name is used in error messages)
 parseProgramNamed :: FilePath -> String -> Either String (VarTable, Shape)
-parseProgramNamed file input = (\(table, shape, _) -> (table, shape)) <$> parseProgramFull file input
+parseProgramNamed file input = (\(table, shape, _, _) -> (table, shape)) <$> parseProgramFull file input
 
 -- | Like 'parseProgramNamed', also returning the part's analysis directives
 -- (`support`, `load`, `stress` lines) for `coscad stress`.
-parseProgramFull :: FilePath -> String -> Either String (VarTable, Shape, Analysis)
+parseProgramFull :: FilePath -> String -> Either String (VarTable, Shape, Analysis, [(VarName, Either Double Shape)])
 parseProgramFull file input =
   case checkedPragma file input of
     Left err -> Left err
@@ -171,13 +171,14 @@ splitPragma input = go [] (lines input)
     blank l = let t = trim l in null t || take 2 t == "//"
 
 -- Parse the entire program
-program :: FilePath -> SynMode -> Parser (Either String (VarTable, Shape, Analysis))
+program :: FilePath -> SynMode -> Parser (Either String (VarTable, Shape, Analysis, [(VarName, Either Double Shape)]))
 program file mode = do
   items <- many ((Left <$> directive) <|> (Right <$> variableDefinition))
   let varDefs = rights items
       analysis = foldl' addDirective emptyAnalysis (lefts items)
   return $ do
-    varTable <- resolveVariables mode varDefs Map.empty
+    (varTable, nums) <- resolveVariables mode varDefs Map.empty
+    let defOf n = maybe (Right (varTable Map.! n)) Left (Map.lookup n nums)
     case Map.lookup "main" varTable of
       Nothing
         | any ((== "main") . defName) varDefs -> Left (file ++ ": 'main' is a number, not a shape; main must be the shape that gets rendered")
@@ -186,7 +187,7 @@ program file mode = do
         Right D2 ->
           let at = maybe file (sourcePosPretty . defPos) (listToMaybe [d | d <- varDefs, defName d == "main"])
            in Left (at ++ ": 'main' is a 2D profile; extrude it to get a solid (⮕ h main, or |> extrude h)")
-        _ -> Right (varTable, mainShape, analysis)
+        _ -> Right (varTable, mainShape, analysis, [(defName d, defOf (defName d)) | d <- varDefs])
 
 -- ANALYSIS DIRECTIVES -------------------------------------------
 -- `support WHERE`, `load WHERE fx fy fz`, `stress key=value ...` lines; see
@@ -348,7 +349,9 @@ retry (Just fresh) toks = not (Set.disjoint fresh toks)
 -- first (all of them, with file:line:col), then references to names
 -- that are defined nowhere, and only if neither applies is it a
 -- genuine circular dependency.
-resolveVariables :: SynMode -> [Def] -> VarTable -> Either String VarTable
+-- | Also returns the resolved numeric bindings, so callers that
+-- re-emit definitions (the words renderer) can print them.
+resolveVariables :: SynMode -> [Def] -> VarTable -> Either String (VarTable, NumTable)
 resolveVariables mode defs table0 = do
   checkDuplicates
   checkReserved
@@ -374,7 +377,7 @@ resolveVariables mode defs table0 = do
     -- Each round parses the pending definitions against the table so
     -- far; one whose names did not change keeps its last failure (see
     -- 'retry'), so a chain of n definitions costs O(n) parses, not O(n²).
-    go [] table _ _ = Right table
+    go [] table nums _ = Right (table, nums)
     go remaining table nums fresh =
       let attempt (d, toks, lastFail) = case lastFail of
             Just f | not (retry fresh toks) -> Left (d, toks, f)

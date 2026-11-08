@@ -28,7 +28,7 @@ stressTier t = do
   let prog body = parseProgramFull "<stress>" ("main = box 10 10 10 |> datum tip top 0 0 0\n" ++ body)
   case prog "support bot\nload @tip 0 0 -5\nload top 1 0 0\nsupport @tip lft\nstress material=petg safety=3 cell=0.5\n" of
     Left err -> failT t "directives parse" err
-    Right (_, _, a) -> do
+    Right (_, _, a, _) -> do
       assertT t "two supports" (aSupports a == [AtBox (0,0,-1), AtDatumFace "tip" (-1,0,0)]) (show (aSupports a))
       assertT t "two loads" (aLoads a == [(AtDatum "tip", (0,0,-5)), (AtBox (0,0,1), (1,0,0))]) (show (aLoads a))
       assertT t "settings in order" (aSettings a == [("material","petg"),("safety","3"),("cell","0.5")]) (show (aSettings a))
@@ -40,7 +40,7 @@ stressTier t = do
   expectErr t "unknown setting" (prog "stress colour=red\n") ["unknown stress setting"] []
   case prog "support = box 1 1 1\nload = box 2 2 2\n" of
     Left err -> failT t "definitions named support/load still parse" err
-    Right (_, _, a) -> assertT t "no directives from definitions" (a == emptyAnalysis) (show a)
+    Right (_, _, a, _) -> assertT t "no directives from definitions" (a == emptyAnalysis) (show a)
   expectErr t "unknown material" (setupFrom emptyAnalysis { aSettings = [("material","unobtainium")] }) ["unknown material"] []
   expectErr t "safety range" (setupFrom emptyAnalysis { aSettings = [("safety","0.5")] }) ["safety="] []
   assertT t "material table names are unique" (length (Set.toList (Set.fromList (map matName materialTable))) == length materialTable) ""

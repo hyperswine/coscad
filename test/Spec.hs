@@ -46,6 +46,7 @@ import Tier.Silence
 import Tier.Stress
 import Tier.Stdlib
 import Tier.Validate
+import Tier.Words
 
 main :: IO ()
 main = do
@@ -116,3 +117,4 @@ coreTiers t update = do
   silenceTier t
   validateTier t
   exportListTier t
+  wordsTier t

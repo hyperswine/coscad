@@ -51,7 +51,8 @@ where a shape is expected (or the reverse) is an error naming the binding.
   `◉ major minor`, `⊿ x y z`
 - 2D: `△ r`, `⬠ r`, `⭘ r`, `✎ x1 y1 ...` (bezier, 3k+1 control points)
 - Word aliases in every mode: `cube`, `box`, `sphere`, `cyl`, `tube`,
-  `frustum r1 r2 h` (truncated cone on the XY plane), `torus`, `wedge`
+  `frustum r1 r2 h` (truncated cone on the XY plane), `pillar r h`,
+  `spike r h`, `block x y z`, `prism n r h`, `poly x0 y0 ...`, `torus`, `wedge`
 
 ### Transforms and operations
 
