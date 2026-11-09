@@ -1,0 +1,184 @@
+{
+  "physical_tested": false,
+  "sliced": false,
+  "dispatched": false,
+  "compiler": "coscad 1.6.0.0",
+  "compiler_sha256": "46da470fb4ed35d7d382dd947ef987449c4c3e83a2741884fb6873c68b571ef5",
+  "configurations": {
+    "bare": {
+      "parts": 28,
+      "fasteners": 32,
+      "bounds_mm": [
+        [
+          -4.000000000000003,
+          -4.000000000000002,
+          -3.552713678800501e-15
+        ],
+        [
+          154.0,
+          154.0,
+          150.0
+        ]
+      ],
+      "overlaps": 0,
+      "clearance_warnings": 0,
+      "frame_matches_bare": true,
+      "source_sha256": "273eadf92f3369b5dab85b902ded221f6b54f2ff34052ad8ed0c8abc3b98fb04",
+      "plan": {
+        "steps": 28,
+        "flips": 3,
+        "fasteners_driven": 32,
+        "all_parts_placed_once": true,
+        "panel_before_cap": true
+      }
+    },
+    "back": {
+      "parts": 29,
+      "fasteners": 32,
+      "bounds_mm": [
+        [
+          -4.000000000000003,
+          -4.000000000000002,
+          -3.552713678800501e-15
+        ],
+        [
+          154.0,
+          154.0,
+          150.0
+        ]
+      ],
+      "overlaps": 0,
+      "clearance_warnings": 0,
+      "frame_matches_bare": true,
+      "source_sha256": "15fbb9a723cd8b84202fb22dd4ce71ea05f542dd2b26fda53eb2755cc2950306",
+      "plan": {
+        "steps": 29,
+        "flips": 3,
+        "fasteners_driven": 32,
+        "all_parts_placed_once": true,
+        "panel_before_cap": true
+      }
+    },
+    "back-side": {
+      "parts": 30,
+      "fasteners": 32,
+      "bounds_mm": [
+        [
+          -4.000000000000003,
+          -4.000000000000002,
+          -3.552713678800501e-15
+        ],
+        [
+          154.0,
+          154.0,
+          150.0
+        ]
+      ],
+      "overlaps": 0,
+      "clearance_warnings": 0,
+      "frame_matches_bare": true,
+      "source_sha256": "fea15f5535e91c9d5450df02ce0fb64f4b82499d853d84d1aecdf9461fd6633a",
+      "plan": {
+        "steps": 30,
+        "flips": 3,
+        "fasteners_driven": 32,
+        "all_parts_placed_once": true,
+        "panel_before_cap": true
+      }
+    }
+  },
+  "print_parts": {
+    "rail-print-150": {
+      "watertight_single_component": true,
+      "extents_mm": [
+        27.0,
+        26.984213827426174,
+        150.0
+      ],
+      "unsupported_faces_over_45deg": 0,
+      "volume_mm3": 28361.994203628772,
+      "source_sha256": "ea2fb21d3bb6b603e6ffa06444956d36135cbb70ce69305be995b2b55bcddcae",
+      "stl_sha256": "6deedce70d7f1d527ee1177b37aad4c1132ac4bfe47be2814eb305344dc44bd8"
+    },
+    "rail-print-110": {
+      "watertight_single_component": true,
+      "extents_mm": [
+        27.0,
+        26.984213827426174,
+        110.0
+      ],
+      "unsupported_faces_over_45deg": 0,
+      "volume_mm3": 20805.91376364735,
+      "source_sha256": "8bd9d64ca0f7a98f10ad6b0235be7050e89b273fb06401dfb40bcb7a1a041490",
+      "stl_sha256": "cbbb279c1322642ea6bfba01b3d717986c12237107e8440dc9d1cdcd7b3c5c31"
+    },
+    "panel-print": {
+      "watertight_single_component": true,
+      "extents_mm": [
+        120.0,
+        15.984213827426172,
+        120.0
+      ],
+      "unsupported_faces_over_45deg": 0,
+      "volume_mm3": 83809.70113235402,
+      "source_sha256": "b1c54690fb654ec3b16d590d1fde70aa7cfb418865644955f0b56197d5ea75c8",
+      "stl_sha256": "d679680a93516cdc6c26c9f2339cd87482f8363319337fc0d8a7d4738b1c03ee"
+    },
+    "bracket": {
+      "watertight_single_component": true,
+      "extents_mm": [
+        40.0,
+        40.0,
+        4.0
+      ],
+      "unsupported_faces_over_45deg": 0,
+      "volume_mm3": 4610.4334842339895,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    }
+  },
+  "panel_paths": {
+    "wall_back": {
+      "samples": 321,
+      "step_mm": 0.5,
+      "maximum_overlap_mm3": 0.0,
+      "overtravel_collision_mm3": [
+        89.10415011141014,
+        89.10415011140704
+      ],
+      "removed_cap_only": "top_back",
+      "other_panel_present": true
+    },
+    "wall_right": {
+      "samples": 321,
+      "step_mm": 0.5,
+      "maximum_overlap_mm3": 0.0,
+      "overtravel_collision_mm3": [
+        89.10415011140849,
+        89.10415011140734
+      ],
+      "removed_cap_only": "top_right",
+      "other_panel_present": true
+    }
+  },
+  "manufacturing": {
+    "generic_beds": 2,
+    "parts": 30,
+    "printer_specific_preflight_passed": false,
+    "warnings": {
+      "rail150_bot": [
+        "only 322.364779492 mm^2 of flat bed contact (322.364779492 mm^2 of first layer); check the first layer and use a brim or a broader print face",
+        "tall, narrow print (height/width 5.558805639 over its narrowest 26.984213827 mm); use a brim and conservative acceleration"
+      ],
+      "rail110_bot": [
+        "only 322.364779492 mm^2 of flat bed contact (322.364779492 mm^2 of first layer); check the first layer and use a brim or a broader print face",
+        "tall, narrow print (height/width 4.076457469 over its narrowest 26.984213827 mm); use a brim and conservative acceleration"
+      ],
+      "bracket_bot": [],
+      "panel_bot": [
+        "tall, narrow print (height/width 7.507407076 over its narrowest 15.984213827 mm); use a brim and conservative acceleration"
+      ]
+    }
+  },
+  "passed": true
+}

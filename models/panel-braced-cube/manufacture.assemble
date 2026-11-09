@@ -1,0 +1,7 @@
+// Complete two-panel kit; print poses include removable mouse ears.
+plate 256 256 6 250
+rail150 ← parts/rail-print-150.coscad ×4 ▽bot material=pla brim=0
+rail110 ← parts/rail-print-110.coscad ×8 ▽bot material=pla brim=0
+bracket ← parts/bracket.coscad ×16 ▽bot material=pla brim=0
+panel ← parts/panel-print.coscad ×2 ▽bot material=pla brim=0
+asm = (rail150 |> x 0) ⊕ (rail150 |> x 300) ⊕ (rail150 |> x 600) ⊕ (rail150 |> x 900) ⊕ (rail110 |> x 1200) ⊕ (rail110 |> x 1500) ⊕ (rail110 |> x 1800) ⊕ (rail110 |> x 2100) ⊕ (rail110 |> x 2400) ⊕ (rail110 |> x 2700) ⊕ (rail110 |> x 3000) ⊕ (rail110 |> x 3300) ⊕ (bracket |> x 3600) ⊕ (bracket |> x 3900) ⊕ (bracket |> x 4200) ⊕ (bracket |> x 4500) ⊕ (bracket |> x 4800) ⊕ (bracket |> x 5100) ⊕ (bracket |> x 5400) ⊕ (bracket |> x 5700) ⊕ (bracket |> x 6000) ⊕ (bracket |> x 6300) ⊕ (bracket |> x 6600) ⊕ (bracket |> x 6900) ⊕ (bracket |> x 7200) ⊕ (bracket |> x 7500) ⊕ (bracket |> x 7800) ⊕ (bracket |> x 8100) ⊕ (panel |> x 8400) ⊕ (panel |> x 8700)

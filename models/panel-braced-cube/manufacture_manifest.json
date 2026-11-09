@@ -1,0 +1,420 @@
+{
+  "schema": "coscad.next/1",
+  "geometry_backend": "native",
+  "source": "manufacture.assemble",
+  "bed": {
+    "w": 256,
+    "d": 256,
+    "margin": 6,
+    "max_z": 250
+  },
+  "variants": [
+    {
+      "id": "rail150_bot",
+      "part": "rail150",
+      "source": "./parts/rail-print-150.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.644,
+      "printability": {
+        "bed_contact_mm2": 322.365,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 322.365,
+        "min_width_mm": 26.984,
+        "warnings": ["only 322.364779492 mm^2 of flat bed contact (322.364779492 mm^2 of first layer); check the first layer and use a brim or a broader print face", "tall, narrow print (height/width 5.558805639 over its narrowest 26.984213827 mm); use a brim and conservative acceleration"],
+        "warning_codes": ["small_contact", "tall_narrow"]
+      },
+      "footprint": [27, 26.984, 150],
+      "mesh": "manufacture_next_rail150_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "0"
+      }
+    },
+    {
+      "id": "rail110_bot",
+      "part": "rail110",
+      "source": "./parts/rail-print-110.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.492,
+      "printability": {
+        "bed_contact_mm2": 322.365,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 322.365,
+        "min_width_mm": 26.984,
+        "warnings": ["only 322.364779492 mm^2 of flat bed contact (322.364779492 mm^2 of first layer); check the first layer and use a brim or a broader print face", "tall, narrow print (height/width 4.076457469 over its narrowest 26.984213827 mm); use a brim and conservative acceleration"],
+        "warning_codes": ["small_contact", "tall_narrow"]
+      },
+      "footprint": [27, 26.984, 110],
+      "mesh": "manufacture_next_rail110_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "0"
+      }
+    },
+    {
+      "id": "bracket_bot",
+      "part": "bracket",
+      "source": "./parts/bracket.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": 0.344,
+      "printability": {
+        "bed_contact_mm2": 1152.608,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 1152.608,
+        "min_width_mm": 40,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [40, 40, 4],
+      "mesh": "manufacture_next_bracket_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "0"
+      }
+    },
+    {
+      "id": "panel_bot",
+      "part": "panel",
+      "source": "./parts/panel-print.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.827,
+      "printability": {
+        "bed_contact_mm2": 820.506,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 820.506,
+        "min_width_mm": 15.984,
+        "warnings": ["tall, narrow print (height/width 7.507407076 over its narrowest 15.984213827 mm); use a brim and conservative acceleration"],
+        "warning_codes": ["tall_narrow"]
+      },
+      "footprint": [120, 15.984, 120],
+      "mesh": "manufacture_next_panel_bot.stl",
+      "hints": {
+        "material": "pla",
+        "brim": "0"
+      }
+    }
+  ],
+  "beds": [
+    {
+      "index": 1,
+      "stl": "manufacture_bed1.stl",
+      "placements": [
+        {
+          "instance": "panel_1",
+          "variant": "panel_bot",
+          "x": 6,
+          "y": 6,
+          "w": 120,
+          "d": 15.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "panel_2",
+          "variant": "panel_bot",
+          "x": 132,
+          "y": 6,
+          "w": 15.984,
+          "d": 120,
+          "brim_mm": 0,
+          "rot_z": 90
+        },
+        {
+          "instance": "bracket_1",
+          "variant": "bracket_bot",
+          "x": 153.984,
+          "y": 6,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_2",
+          "variant": "bracket_bot",
+          "x": 199.984,
+          "y": 6,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_3",
+          "variant": "bracket_bot",
+          "x": 6,
+          "y": 132,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_4",
+          "variant": "bracket_bot",
+          "x": 52,
+          "y": 132,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_5",
+          "variant": "bracket_bot",
+          "x": 98,
+          "y": 132,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_6",
+          "variant": "bracket_bot",
+          "x": 144,
+          "y": 132,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_7",
+          "variant": "bracket_bot",
+          "x": 190,
+          "y": 132,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_8",
+          "variant": "bracket_bot",
+          "x": 6,
+          "y": 178,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_9",
+          "variant": "bracket_bot",
+          "x": 52,
+          "y": 178,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_10",
+          "variant": "bracket_bot",
+          "x": 98,
+          "y": 178,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_11",
+          "variant": "bracket_bot",
+          "x": 144,
+          "y": 178,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_12",
+          "variant": "bracket_bot",
+          "x": 190,
+          "y": 178,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "stl": "manufacture_bed2.stl",
+      "placements": [
+        {
+          "instance": "bracket_13",
+          "variant": "bracket_bot",
+          "x": 6,
+          "y": 6,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_14",
+          "variant": "bracket_bot",
+          "x": 52,
+          "y": 6,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_15",
+          "variant": "bracket_bot",
+          "x": 98,
+          "y": 6,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "bracket_16",
+          "variant": "bracket_bot",
+          "x": 144,
+          "y": 6,
+          "w": 40,
+          "d": 40,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail150_1",
+          "variant": "rail150_bot",
+          "x": 190,
+          "y": 6,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail150_2",
+          "variant": "rail150_bot",
+          "x": 223,
+          "y": 6,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail150_3",
+          "variant": "rail150_bot",
+          "x": 6,
+          "y": 52,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail150_4",
+          "variant": "rail150_bot",
+          "x": 39,
+          "y": 52,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail110_1",
+          "variant": "rail110_bot",
+          "x": 72,
+          "y": 52,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail110_2",
+          "variant": "rail110_bot",
+          "x": 105,
+          "y": 52,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail110_3",
+          "variant": "rail110_bot",
+          "x": 138,
+          "y": 52,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail110_4",
+          "variant": "rail110_bot",
+          "x": 171,
+          "y": 52,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail110_5",
+          "variant": "rail110_bot",
+          "x": 204,
+          "y": 52,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail110_6",
+          "variant": "rail110_bot",
+          "x": 6,
+          "y": 84.984,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail110_7",
+          "variant": "rail110_bot",
+          "x": 39,
+          "y": 84.984,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rail110_8",
+          "variant": "rail110_bot",
+          "x": 72,
+          "y": 84.984,
+          "w": 27,
+          "d": 26.984,
+          "brim_mm": 0,
+          "rot_z": 0
+        }
+      ]
+    }
+  ],
+  "assembly_only": []
+}

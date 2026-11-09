@@ -1,0 +1,83 @@
+// 150 mm rail envelope; identical 28-part frame and 32 M5x8 joints in all configurations.
+!glyph
+plate 256 256 6
+up_fl ← parts/rail150.coscad ×1 ▽bot profile=2020 material=pla
+up_fr ← parts/rail150.coscad ×1 ▽bot profile=2020 material=pla
+up_bl ← parts/rail150.coscad ×1 ▽bot profile=2020 material=pla
+up_br ← parts/rail150.coscad ×1 ▽bot profile=2020 material=pla
+bottom_front ← parts/rail110.coscad ×1 ▽bot profile=2020 material=pla
+bottom_back ← parts/rail110.coscad ×1 ▽bot profile=2020 material=pla
+bottom_left ← parts/rail110.coscad ×1 ▽bot profile=2020 material=pla
+bottom_right ← parts/rail110.coscad ×1 ▽bot profile=2020 material=pla
+top_front ← parts/rail110.coscad ×1 ▽bot profile=2020 material=pla
+top_back ← parts/rail110.coscad ×1 ▽bot profile=2020 material=pla after=wall_back
+top_left ← parts/rail110.coscad ×1 ▽bot profile=2020 material=pla
+top_right ← parts/rail110.coscad ×1 ▽bot profile=2020 material=pla
+wall_back ← parts/panel.coscad ×1 ▽bot material=pla
+br ← parts/bracket.coscad ×16 ▽bot material=pla
+asm = (up_fl |> move 10 10 75)
+  ⊕ (up_fr |> move 140 10 75)
+  ⊕ (up_bl |> move 10 140 75)
+  ⊕ (up_br |> move 140 140 75)
+  ⊕ (bottom_front |> roty 90 |> move 75 10 10)
+  ⊕ (bottom_back |> roty 90 |> move 75 140 10)
+  ⊕ (bottom_left |> rotx 90 |> move 10 75 10)
+  ⊕ (bottom_right |> rotx 90 |> move 140 75 10)
+  ⊕ (top_front |> roty 90 |> move 75 10 140)
+  ⊕ (top_back |> roty 90 |> move 75 140 140)
+  ⊕ (top_left |> rotx 90 |> move 10 75 140)
+  ⊕ (top_right |> rotx 90 |> move 140 75 140)
+  ⊕ (wall_back |> rotx 90 |> move 75 140 75)
+  ⊕ (br |> rotx 90 |> move 20 -2 20)
+  ⊕ (br |> rotz 90 |> rotx 90 |> move 130 -2 20)
+  ⊕ (br |> rotx 90 |> move 20 152 20)
+  ⊕ (br |> rotz 90 |> rotx 90 |> move 130 152 20)
+  ⊕ (br |> rotx 90 |> rotz 90 |> move -2 20 20)
+  ⊕ (br |> rotz 90 |> rotx 90 |> rotz 90 |> move -2 130 20)
+  ⊕ (br |> rotx 90 |> rotz 90 |> move 152 20 20)
+  ⊕ (br |> rotz 90 |> rotx 90 |> rotz 90 |> move 152 130 20)
+  ⊕ (br |> rotz -90 |> rotx 90 |> move 20 -2 130)
+  ⊕ (br |> rotz 180 |> rotx 90 |> move 130 -2 130)
+  ⊕ (br |> rotz -90 |> rotx 90 |> move 20 152 130)
+  ⊕ (br |> rotz 180 |> rotx 90 |> move 130 152 130)
+  ⊕ (br |> rotz -90 |> rotx 90 |> rotz 90 |> move -2 20 130)
+  ⊕ (br |> rotz 180 |> rotx 90 |> rotz 90 |> move -2 130 130)
+  ⊕ (br |> rotz -90 |> rotx 90 |> rotz 90 |> move 152 20 130)
+  ⊕ (br |> rotz 180 |> rotx 90 |> rotz 90 |> move 152 130 130)
+
+fastener M5x8 br#1 up_fl fwd at=30
+fastener M5x8 br#1 bottom_front fwd at=10
+fastener M5x8 br#2 up_fr fwd at=30
+fastener M5x8 br#2 bottom_front fwd at=100
+fastener M5x8 br#3 up_bl bak at=30
+fastener M5x8 br#3 bottom_back bak at=10
+fastener M5x8 br#4 up_br bak at=30
+fastener M5x8 br#4 bottom_back bak at=100
+fastener M5x8 br#5 up_fl lft at=30
+fastener M5x8 br#5 bottom_left lft at=10
+fastener M5x8 br#6 up_bl lft at=30
+fastener M5x8 br#6 bottom_left lft at=100
+fastener M5x8 br#7 up_fr rt at=30
+fastener M5x8 br#7 bottom_right rt at=10
+fastener M5x8 br#8 up_br rt at=30
+fastener M5x8 br#8 bottom_right rt at=100
+fastener M5x8 br#9 up_fl fwd at=120
+fastener M5x8 br#9 top_front fwd at=10
+fastener M5x8 br#10 up_fr fwd at=120
+fastener M5x8 br#10 top_front fwd at=100
+fastener M5x8 br#11 up_bl bak at=120
+fastener M5x8 br#11 top_back bak at=10
+fastener M5x8 br#12 up_br bak at=120
+fastener M5x8 br#12 top_back bak at=100
+fastener M5x8 br#13 up_fl lft at=120
+fastener M5x8 br#13 top_left lft at=10
+fastener M5x8 br#14 up_bl lft at=120
+fastener M5x8 br#14 top_left lft at=100
+fastener M5x8 br#15 up_fr rt at=120
+fastener M5x8 br#15 top_right rt at=10
+fastener M5x8 br#16 up_br rt at=120
+fastener M5x8 br#16 top_right rt at=100
+
+joint drop wall_back bottom_back axis=top
+
+plan beam=10

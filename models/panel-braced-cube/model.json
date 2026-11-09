@@ -1,0 +1,41 @@
+{
+  "frame_outside_mm": [
+    150,
+    150,
+    150
+  ],
+  "with_brackets_bounds_mm": [
+    [
+      -4,
+      -4,
+      0
+    ],
+    [
+      154,
+      154,
+      150
+    ]
+  ],
+  "panel_size_mm": [
+    120,
+    120
+  ],
+  "clearance_per_face_mm": 0.25,
+  "bom": {
+    "rail150": 4,
+    "rail110": 8,
+    "bracket": 16,
+    "panel": 2,
+    "M5x8": 32,
+    "slot6_M5_T_nut": 32
+  },
+  "parent_sources": {
+    "models/tank-model-2020/rail100.coscad": "c9f9eadc9b550f730ce7b0ce1240cd54fc9ec1cebd6e5eab0d9ac74197f7ad4b",
+    "models/tank-model-2020/bracket.coscad": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+    "models/tank-model-2020/panel-full-v3/panel-wall-double-c025-upright.coscad": "a451d8e9163a01f697605cfb44b5e8bb3db3987440d2d8f4bb81712c6ddf898a",
+    "models/tank-model-2020/tank.assemble": "b6ae86d372da64ff3b121e854c8fbd4d9f391e53eb320a05f9fde143b0df2e98"
+  },
+  "physical_tested": false,
+  "sliced": false,
+  "dispatched": false
+}

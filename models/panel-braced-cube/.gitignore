@@ -1,0 +1,5 @@
+*.scad
+*_step*.png
+site/
+*_asm.png
+*_plate*.png

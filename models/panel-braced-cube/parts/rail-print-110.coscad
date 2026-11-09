@@ -1,0 +1,28 @@
+// 2020 rail, 110 mm long along Z, with four slot-6 T-slots so M5 drop-in
+// T-nuts, stock brackets and real 2020 aluminium are interchangeable.
+// Each slot: a 6.2 mm opening behind 1.8 mm lips, then a pocket that
+// tapers in three steps (11, 8.4, 6.2 mm wide) to 6.1 mm deep, leaving
+// diagonal webs from the centre core to the corners as on real 2020.
+// Prints standing on an end: the profile is the same on every layer.
+len = 110
+profile = box 20 20 len
+  |> cut (box 6.7 6.2 (len + 2) |> move 7.25 0 0)
+  |> cut (box 1.8 11 (len + 2) |> move 7.3 0 0)
+  |> cut (box 1.3 8.4 (len + 2) |> move 5.75 0 0)
+  |> cut (box 6.7 6.2 (len + 2) |> move -7.25 0 0)
+  |> cut (box 1.8 11 (len + 2) |> move -7.3 0 0)
+  |> cut (box 1.3 8.4 (len + 2) |> move -5.75 0 0)
+  |> cut (box 6.2 6.7 (len + 2) |> move 0 7.25 0)
+  |> cut (box 11 1.8 (len + 2) |> move 0 7.3 0)
+  |> cut (box 8.4 1.3 (len + 2) |> move 0 5.75 0)
+  |> cut (box 6.2 6.7 (len + 2) |> move 0 -7.25 0)
+  |> cut (box 11 1.8 (len + 2) |> move 0 -7.3 0)
+  |> cut (box 8.4 1.3 (len + 2) |> move 0 -5.75 0)
+  |> cut (zcyl 2.1 (len + 2))
+
+// Upright rail; four removable first-layer ears outside the slot mouths.
+ears = (zcyl 4 0.2 |> move -9.5 -9.5 0.1)
+  |> add (zcyl 4 0.2 |> move -9.5 9.5 0.1)
+  |> add (zcyl 4 0.2 |> move 9.5 -9.5 0.1)
+  |> add (zcyl 4 0.2 |> move 9.5 9.5 0.1)
+main = (profile |> z (len / 2)) |> add ears
