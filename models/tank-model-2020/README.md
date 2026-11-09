@@ -12,7 +12,9 @@ three [one-sided fit samples](panel-fit-v2/README.md) work on 2026-11-07; full p
 remain untested. The owner also confirmed all three
 [bilateral flange samples](panel-fit-v3-double-flange/README.md) fit on the same
 date. A [whole wall-panel trial](panel-full-v3/README.md) now uses the middle
-0.25 mm clearance, printed upright with mouse ears; its full-panel fit is pending.
+0.25 mm clearance, printed upright with mouse ears. The owner reported on
+2026-11-09 that it works very well; a [four-panel batch](panel-batch-v3-20261109/README.md)
+adds three more matching walls and a bilateral floor with the original corner notches.
 
 ## Parts
 

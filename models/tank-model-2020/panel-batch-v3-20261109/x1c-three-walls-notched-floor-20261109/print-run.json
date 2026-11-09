@@ -1,0 +1,1051 @@
+{
+  "job": "x1c-three-walls-notched-floor-20261109",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "fdee6c9a5e7b9e0201313bc7068c9896e4425c2c8d1eefa49523f48129a4c7a3",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 909,
+    "deposition_moves_checked": 765368,
+    "package_sha256": "fdee6c9a5e7b9e0201313bc7068c9896e4425c2c8d1eefa49523f48129a4c7a3"
+  },
+  "remote_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "authorization_note": "Owner reports the full bilateral panel works very well, requests three more walls plus one notched base, and explicitly confirms X1C bed clear, 2026-11-09. Use the same loaded external PLA and successful saved presets.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 699,
+    "total_layer_num": 699,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "tank-x1c-full-panel-c025-20261107-20261107-174420.gcode",
+    "nozzle_temper": 21.0,
+    "bed_temper": 17.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "BECF00FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-09T12:17:40+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 699,
+        "total_layer_num": 699,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 21.0,
+        "bed_temper": 17.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:17:55+1100",
+      "status": {
+        "gcode_state": "PREPARE",
+        "mc_percent": 0,
+        "layer_num": 699,
+        "total_layer_num": 699,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 21.0,
+        "bed_temper": 17.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:18:10+1100",
+      "status": {
+        "gcode_state": "PREPARE",
+        "mc_percent": 0,
+        "layer_num": 699,
+        "total_layer_num": 699,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 21.0,
+        "bed_temper": 17.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:18:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 788,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 59.0,
+        "bed_temper": 17.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:18:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 788,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 22.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:18:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 788,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 40.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:19:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 788,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 76.0,
+        "bed_temper": 53.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:19:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 788,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 164.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:19:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 788,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 234.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:19:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 787,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 248.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:20:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 783,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 225.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:20:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 202.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:20:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:20:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:21:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:21:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:21:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 178.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:21:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 149.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:22:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:22:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:22:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:22:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:23:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:23:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:23:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:23:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:24:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:24:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:24:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:24:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:25:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 178.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:25:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 215.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:25:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 187.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:25:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 218.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:26:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:26:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:26:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:26:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:27:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:27:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 782,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:27:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 781,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:27:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 781,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:28:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 780,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:28:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 780,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:28:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 780,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:28:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 780,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 203.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:29:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 780,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 221.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:29:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 780,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:29:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 780,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:29:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 779,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:30:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 909,
+        "mc_remaining_time": 779,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T12:30:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 1,
+        "total_layer_num": 909,
+        "mc_remaining_time": 779,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-09T12:17:26+1100",
+  "remote_content_sha256": "fdee6c9a5e7b9e0201313bc7068c9896e4425c2c8d1eefa49523f48129a4c7a3",
+  "sequence_id": "187060454",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "187060454"
+  },
+  "first_layer_reached": true
+}

@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "package_sha256": "fdee6c9a5e7b9e0201313bc7068c9896e4425c2c8d1eefa49523f48129a4c7a3",
+  "layers": 909,
+  "objects": 4,
+  "layer_height_mm": 0.1,
+  "path_segments": 765368,
+  "export_vertex_error_max_mm": 3.4452866377049423e-06,
+  "thermal": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 909,
+    "deposition_moves_checked": 765368,
+    "package_sha256": "fdee6c9a5e7b9e0201313bc7068c9896e4425c2c8d1eefa49523f48129a4c7a3"
+  },
+  "estimated_minutes": 788.3533203125,
+  "estimated_grams": 144.0231475830078,
+  "object_layer_coverage": {
+    "2": {
+      "part": "panel-wall-double-c025-upright",
+      "layers": 699,
+      "top_mm": 70.0
+    },
+    "4": {
+      "part": "panel-wall-double-c025-upright",
+      "layers": 699,
+      "top_mm": 70.0
+    },
+    "6": {
+      "part": "panel-wall-double-c025-upright",
+      "layers": 699,
+      "top_mm": 70.0
+    },
+    "8": {
+      "part": "panel-floor-double-c025-diagonal",
+      "layers": 909,
+      "top_mm": 91.0
+    }
+  }
+}

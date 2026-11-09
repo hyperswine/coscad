@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-09",
+  "evidence": "owner_report",
+  "printer": "X1C",
+  "job": "x1c-full-panel-c025-20261107",
+  "owner_statement": "The new panel works very well.",
+  "reported_print_and_fit": "works very well",
+  "clearance_per_face_mm": 0.25,
+  "neck_mm": 5.7,
+  "bilateral_head_width_mm": 10.5,
+  "scope": "Successful complete wall-panel trial. The notched double-flange floor, a complete assembled tank and waterproofing have not yet been tested."
+}

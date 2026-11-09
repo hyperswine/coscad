@@ -1,0 +1,59 @@
+{
+  "printer": "Bambu Lab X1 Carbon 0.4 nozzle",
+  "plate": "Textured PEI Plate",
+  "bed_c": 55,
+  "nozzle_c": 220,
+  "layer_height_mm": 0.1,
+  "reference_presets_sha256": {
+    "machine.json": "f097fb0196a54d1bc7d6fc07d66d2d98fd82ace7ff061f69065d5c9ea58a7aab",
+    "process.json": "8c1f5a04ea07b2f532246910f9d3223e0e0a1fe8cc604341a8f2c5a4505a4933",
+    "filament.json": "637e923cf0a074339cf9760a7029811f8353c86487a8b3273e7b50818d85b2e0",
+    "project.json": "12b18a91331eb160c86634107c3103ebe9858827aff82457cc9dedaf37cfa1c5"
+  },
+  "parts": [
+    {
+      "name": "panel-wall-double-c025-upright",
+      "object_id": 2,
+      "holes": 0,
+      "centre_mm": [
+        82,
+        75
+      ],
+      "source_sha256": "a451d8e9163a01f697605cfb44b5e8bb3db3987440d2d8f4bb81712c6ddf898a",
+      "stl_sha256": "429d762ccdb9ff981261ec0c2394e3c9baaf220a5aaac2eab5677a4ed6477f75"
+    },
+    {
+      "name": "panel-wall-double-c025-upright",
+      "object_id": 4,
+      "holes": 0,
+      "centre_mm": [
+        82,
+        128
+      ],
+      "source_sha256": "a451d8e9163a01f697605cfb44b5e8bb3db3987440d2d8f4bb81712c6ddf898a",
+      "stl_sha256": "429d762ccdb9ff981261ec0c2394e3c9baaf220a5aaac2eab5677a4ed6477f75"
+    },
+    {
+      "name": "panel-wall-double-c025-upright",
+      "object_id": 6,
+      "holes": 0,
+      "centre_mm": [
+        82,
+        181
+      ],
+      "source_sha256": "a451d8e9163a01f697605cfb44b5e8bb3db3987440d2d8f4bb81712c6ddf898a",
+      "stl_sha256": "429d762ccdb9ff981261ec0c2394e3c9baaf220a5aaac2eab5677a4ed6477f75"
+    },
+    {
+      "name": "panel-floor-double-c025-diagonal",
+      "object_id": 8,
+      "holes": 0,
+      "centre_mm": [
+        176,
+        128
+      ],
+      "source_sha256": "9d108bb1b0300a6ad18b642596ea00dc59c3a559fd73bd914a108f9e7052f488",
+      "stl_sha256": "16bafbad49ecdea1ddf455a56e7b5a57b16f85da670f5f62df7df82ede842f76"
+    }
+  ]
+}

@@ -19,6 +19,10 @@
 .Ar part.coscad
 .Op Fl o Ar part.stl
 .Nm
+.Cm words
+.Ar part.coscad
+.Op Fl o Ar out.coscad
+.Nm
 .Ar spec.assemble
 .Nm
 .Cm next
@@ -147,6 +151,17 @@ is accepted by every rendering command for older scripts;
 names the backend retired in 1.6.0.0 and is an error.
 Manufacturing manifests record the geometry backend
 .Pq Ql native .
+.It Nm Cm words Ar part.coscad Op Fl o Ar out.coscad
+Render the part file back as the word
+.Pq Ql !simple
+vocabulary, keeping each definition on its line and turning transforms into
+pipeline stages.
+Writes to standard output unless
+.Fl o
+is given.
+Constructs that have no word spelling yet (chamfered or rounded BOSL2
+primitives, arbitrary-axis rotations, mating frames, profiles beyond
+Triangle/Pentagon/Circle) are refused with an error naming the construct.
 .It Nm Ar spec.assemble
 Design stage.
 Renders the assembled view
@@ -394,8 +409,8 @@ at z = 0; further
 stages append.
 Profiles must be single closed outlines: the 2D primitives, beziers, and
 their in-plane transforms
-.Pq χ ψ ω ⬈ ⇋ ↯ ;
-booleans between profiles, ζ, θ, and ϕ are rejected.
+.Pq χ ψ ω ⬈ ⇋ ;
+offsets, booleans between profiles, ζ, θ, and ϕ are rejected.
 .Ss Booleans
 .Ql ⊕
 union,

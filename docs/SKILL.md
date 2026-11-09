@@ -16,9 +16,23 @@ stress reports; `.scad` is only an export. One variable, `main`, is the
 rendered shape. Every other
 variable is a named sub-expression you can reuse.
 
-The compiler is not a published package — it's a project-specific tool.
+The compiler is available as a release binary or a source build.
 Treat the `src/Coscad/` modules as the source of truth over this document if they
 ever disagree; this file can drift, the compiler cannot.
+
+## Backend choice and current status
+
+Use the native pipeline: CoScad tessellation plus pinned Manifold and Clipper2.
+OpenSCAD/BOSL2 are only relevant to `.scad` export or the independent test oracle.
+`--backend=occt` is not implemented; `--backend=openscad` is rejected.
+
+Keep Manifold for the current printing workflow. For backend reviews, first
+identify a concrete missing capability or reproduce a slow/failing model.
+Post-boolean edge fillets and analytic STEP interchange justify an optional
+OCCT experiment; smoother meshes alone call for tessellation work first.
+Do not claim a speed, robustness or print-quality gain without measurements.
+Read `docs/2026-11-09-BACKEND-REVIEW.md` in the checkout for the recommendation
+and acceptance gates; the older OCCT proposal contains historical assumptions.
 
 ## Before writing any .coscad
 
@@ -51,7 +65,7 @@ ever disagree; this file can drift, the compiler cannot.
 
 ## Full glyph reference
 
-### Basic shapes (plain OpenSCAD, no BOSL2 needed)
+### Basic shapes (native; also exportable to OpenSCAD)
 | Glyph | Args | Meaning |
 |---|---|---|
 | `■ s` | size | cube s×s×s |
@@ -68,7 +82,7 @@ ever disagree; this file can drift, the compiler cannot.
 | `⬠ r` | radius | pentagon profile |
 | `⭘ r` | radius | circle profile |
 
-### BOSL2 shapes (auto-adds the BOSL2 include; all centered at origin)
+### Extended primitives (native; anchoring varies by shape)
 | Glyph | Args | Meaning |
 |---|---|---|
 | `▣ x y z c` | dims, chamfer | cuboid, chamfer 0 = none |
@@ -136,7 +150,7 @@ are computed **in the Haskell compiler**, from the axis-aligned
 bounding box of the *fully resolved* shape tree (unions merge boxes,
 diffs keep the positive's box, hulls/minkowski propagate through,
 rotations transform the 8 corners). `⌖`/`⋈`/`⚓` are desugared into
-plain `translate`/`rotate` before any OpenSCAD is emitted — so the
+plain `translate`/`rotate` before native meshing or OpenSCAD export — so the
 generated `.scad` never contains BOSL2 attachment calls, and *any*
 CoScad expression, including composites you built with `⊕`/`⊖`, has
 usable anchors and can be attached to again.
@@ -159,11 +173,12 @@ unioning it into the composite, or nudge afterward with `χ`/`ψ`/`ζ`.
   `ctr` alone is valid.
 - `loft z0 p0 z1 p1 ...` / `p0 |> loft z1 p1` skins 2D profiles
   at finite, strictly increasing heights (no equal or descending Z values)
-  with BOSL2 `skin()`: `method="reindex"` when all profiles share a
+  with native tessellation matching BOSL2 `skin()` correspondence: `method="reindex"` when all profiles share a
   vertex count (fast), `method="distance"` otherwise (fine for a
   100-gon vs a triangle; ~30 s for two mismatched 100-gons — avoid).
   Profiles: single outlines only — `⭘ △ ⬠ ✎` and their in-plane
-  transforms/offset; no booleans, no `ζ`, no `θ`/`ϕ`.
+  transforms; native offsets inside loft profiles are unsupported, as are
+  profile booleans, `ζ`, and `θ`/`ϕ`.
 - Box dimensions, primitive heights, and non-tapered radii must be finite
   and positive. A frustum may have one zero-radius end. Tube inner
   radius may be zero, but must be smaller than its outer radius. Prismoids
@@ -200,8 +215,9 @@ unioning it into the composite, or nudge afterward with `χ`/`ψ`/`ζ`.
   convention alone.)
 - **No per-edge chamfer/rounding.** `▣`/`◙` chamfer or round *all*
   edges uniformly; there's no way to chamfer just one edge in the
-  current language. If a design needs that, either accept the
-  uniform version or drop to raw BOSL2 in the emitted `.scad` by hand.
+  current language. Model the feature explicitly or identify it as a reason
+  for an optional OCCT experiment. Editing exported `.scad` does not change
+  CoScad's native geometry or manufacturing outputs.
 - **`↯` offset value** comes from the *right* operand's one
   characteristic radius: a sphere or cylinder's radius, a 2D profile's
   radius, also `cyl`/`zcyl`/`xcyl`/`ycyl`/`tube`/`cone`/`prism`.
@@ -301,25 +317,21 @@ print('volume:', m.volume, '| bounds:', m.bounds.round(2).tolist())
 "
 ```
 
-- `watertight: False` almost always means two faces are exactly
-  coplanar/tangent (e.g. a hole's flat end sitting exactly on another
-  cut's boundary) — nudge one surface by ~0.1-0.5mm of intentional
-  overlap rather than leaving them touching.
+- If mesh validation fails, inspect topology, connected bodies, degenerate
+  geometry and the kernel diagnostic. Do not assume coplanarity is the cause
+  or apply a blanket dimensional nudge; any overlap must preserve design fit.
 - Cross-check volume/bounds against hand-calculated expectations
   (stack heights should sum, symmetric parts should have zero
   centroid offset on the symmetry axes, etc.) — this is what catches
   wrong-axis mistakes like the wedge orientation issue above.
 - For comparing two versions of "the same part" (e.g. hand-written
   BOSL2 vs. CoScad output), a boolean symmetric difference
-  (`difference(){A;B;} `+`difference(){B;A;}`, or just check both
-  volume and centroid match) is a strong equivalence check — near-zero
+  (`difference(){A;B;} `+`difference(){B;A;}`, with bounds and volume as additional checks) is a strong equivalence check — near-zero
   residual volume confirms they're the same solid, not just
   similar-looking.
-- Interference checks via OpenSCAD boolean intersection: DELETE the
-  output STL before each run. An empty intersection makes OpenSCAD skip
-  the export, and a stale file from the previous check silently
-  masquerades as a result (this produced a phantom 42 mm³ 'failure'
-  once). Treat missing-file as volume 0.
+- Use `coscad check` for assembly interference/clearance checks and native
+  mesh booleans for custom probes. Distinguish a successful empty intersection
+  from a kernel error or missing output; never reuse a stale result file.
 - For fit/tolerance parts (jigs, channels, slots), render the part
   intersected with a nominal mating solid (expect ~0 interference
   volume) and again with that solid shifted by the tolerance amount
@@ -337,5 +349,5 @@ print('volume:', m.volume, '| bounds:', m.bounds.round(2).tolist())
 - Prefer the BOSL2-shape glyphs (`▣`/`◙`/`⌭`/`⌽`/`xcyl` etc.) over the
   plain-OpenSCAD ones (`■`/`◎`) whenever chamfer, rounding, or
   axis-aligned cylinders are relevant — mixing both is fine, but
-  default to BOSL2 shapes for anything mechanical/printable since
+  use these native extended primitives for mechanical/printable parts since
   they carry more useful parameters.

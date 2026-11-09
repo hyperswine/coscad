@@ -64,3 +64,6 @@ at the first three.
 | 2026-10-29 | [PLAN-EASE](2026-10-29-PLAN-EASE.md) | `coscad plan` on the meshes: joint lines, approach sweeps, burial order, hands, settings, `coscad calibrate`; results and limits |
 | 2026-11-08 | [ARCHITECTURE-REVIEW](2026-11-08-ARCHITECTURE-REVIEW.md) | module architecture review: spine clean, leaves accreted; first fixes landed same day, `frustum` promoted |
 | 2026-11-08 | [WORDS-OVER-GLYPHS](2026-11-08-WORDS-OVER-GLYPHS.md) | whitepaper: the word vocabulary becomes the primary written form; glyph lists freeze; bed-anchored words, `coscad words` renderer, docs order |
+| 2026-11-09 | [BACKEND-REVIEW](2026-11-09-BACKEND-REVIEW.md) | keep native Manifold; triggers and acceptance gates for optional OCCT |
+| 2026-11-09 | [ASSEMBLY-FEA-PROPOSAL](2026-11-09-ASSEMBLY-FEA-PROPOSAL.md) | proposed bonded assembly stress, compliant joints, contact and validation gates |
+| 2026-11-09 | [BONDED-FEA-EXPERIMENT](2026-11-09-BONDED-FEA-EXPERIMENT.md) | first coupled Hex20 experiment: matching planar ties, interface resultants and regression fixtures |

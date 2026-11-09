@@ -1,5 +1,10 @@
 # An OCCT (Open CASCADE) geometry backend
 
+> 2026-11-09: [Updated backend review](2026-11-09-BACKEND-REVIEW.md) supersedes this proposal's
+> current-state and backend-selection assumptions. Native Manifold is now the
+> only backend; OpenSCAD is retired. OCCT remains an optional future experiment.
+> The original proposal and spike evidence below are historical.
+
 Status: **intent**, written 2026-10-26, revised 2026-10-27 after review
 against `main` at `2b307d6`. No OCCT integration is implemented here.
 OCCT is an **additional, opt-in backend alongside OpenSCAD and the existing

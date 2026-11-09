@@ -4,6 +4,7 @@ module Main (main) where
 
 import Coscad.Json (JValue (..), encodePretty)
 import Coscad.Stress.Experiment
+import Coscad.Stress.Bonded
 import Coscad.Stress.Cad
 import Coscad.Stress.Tetra
 import Coscad.Stress.Hex20
@@ -33,6 +34,11 @@ runMain :: IO ()
 runMain = do
   args <- getArgs
   case args of
+    ["bonded",path] -> do
+      source <- readFileUtf8 path
+      case do p <- parseBondedProblem source; r <- solveBonded p; return (bondedJson p r) of
+        Left err -> bad err
+        Right result -> putStrLn (encodePretty result)
     ["inventory"] -> inventory
     ["cad",source,conditions] -> runCad source conditions
     ["tetra",mesh,conditions] -> runTetra False mesh conditions
@@ -47,7 +53,7 @@ runMain = do
       case (readMaybe x,readMaybe y,readMaybe z) :: (Maybe Integer,Maybe Integer,Maybe Integer) of
         (Just nx,Just ny,Just nz) | all (\n -> n>=1 && n<=128) [nx,ny,nz] -> run mode (fromInteger nx,fromInteger ny,fromInteger nz)
         _ -> bad "cell counts must be integers in [1,128]"
-    _ -> bad "usage: coscad-experiments beam axial|bend NX NY NZ | hex20 axial|bend NY | voxel-mesh MODEL.coscad CELL MESH.json | inventory | cad MODEL.coscad CONDITIONS.json | tetra|tetra2 MESH.json LOADS.json"
+    _ -> bad "usage: coscad-experiments bonded PROBLEM.json | beam axial|bend NX NY NZ | hex20 axial|bend NY | voxel-mesh MODEL.coscad CELL MESH.json | inventory | cad MODEL.coscad CONDITIONS.json | tetra|tetra2 MESH.json LOADS.json"
 
 -- The checked-in geometry corpus is the acceptance population; unrelated
 -- untracked designs are not silently turned into regression baselines.

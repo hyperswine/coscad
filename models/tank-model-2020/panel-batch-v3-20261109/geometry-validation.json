@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "wall_matches_successful_source_and_mesh": true,
+  "clearance_per_face_mm": 0.25,
+  "notches_mm": [
+    5.3,
+    5.3
+  ],
+  "notches": 4,
+  "floor_bounds_mm": [
+    [
+      -45.74980874276962,
+      -7.992106913713086,
+      0.0
+    ],
+    [
+      45.74980874276962,
+      7.992106913713086,
+      91.0
+    ]
+  ],
+  "floor_unsupported_faces_over_45deg": 0,
+  "corner_probe_intersection_mm3": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "assembled_intersection_mm3": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "tip_trim_print_z_mm": 0.2498087427696305,
+  "tip_trim_total_mm3": 1.4228205102372158,
+  "insertion_sweep_samples": 1203,
+  "insertion_sweep_max_intersection_mm3": 0.0,
+  "overtravel_collision_mm3": [
+    22.535059113444113,
+    22.535059113444113
+  ],
+  "floor_physical_fit_tested": false,
+  "compiler": "coscad 1.6.0.0",
+  "compiler_sha256": "46da470fb4ed35d7d382dd947ef987449c4c3e83a2741884fb6873c68b571ef5",
+  "rail_source_sha256": "c9f9eadc9b550f730ce7b0ce1240cd54fc9ec1cebd6e5eab0d9ac74197f7ad4b",
+  "parts": {
+    "panel-wall-double-c025-upright": {
+      "source_sha256": "a451d8e9163a01f697605cfb44b5e8bb3db3987440d2d8f4bb81712c6ddf898a",
+      "stl_sha256": "429d762ccdb9ff981261ec0c2394e3c9baaf220a5aaac2eab5677a4ed6477f75"
+    },
+    "panel-floor-double-c025-diagonal": {
+      "source_sha256": "9d108bb1b0300a6ad18b642596ea00dc59c3a559fd73bd914a108f9e7052f488",
+      "stl_sha256": "16bafbad49ecdea1ddf455a56e7b5a57b16f85da670f5f62df7df82ede842f76"
+    }
+  }
+}

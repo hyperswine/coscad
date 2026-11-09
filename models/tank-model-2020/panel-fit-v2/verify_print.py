@@ -92,8 +92,8 @@ def verify(here=HERE, folder=FOLDER, expected_parts=3):
         reference = next((v for k, v in item.attrib.items() if k.endswith('}path')), '3D/3dmodel.model').lstrip('/')
         actual.extend(geometry(reference, item.get('objectid'), matrix(item.get('transform'))))
     require(len(actual) == expected_parts, 'Extra/missing exported meshes')
-    expected.sort(key=lambda mesh: mesh.bounds[0, 0])
-    actual.sort(key=lambda mesh: mesh.bounds[0, 0])
+    expected.sort(key=lambda mesh: tuple(mesh.bounds[0, :2]))
+    actual.sort(key=lambda mesh: tuple(mesh.bounds[0, :2]))
     errors = []
     for before, after in zip(expected, actual):
         require(after.is_watertight and len(after.split()) == 1 and after.euler_number == before.euler_number, 'Export changed topology')

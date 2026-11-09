@@ -43,6 +43,7 @@ import Tier.Cli
 import Tier.Linalg
 import Tier.Resolution
 import Tier.Silence
+import Tier.Bonded
 import Tier.Stress
 import Tier.Stdlib
 import Tier.Validate
@@ -72,6 +73,7 @@ main = do
     unless focused (coreTiers t update)
     experimentsTier t
     stressTier t
+    bondedTier t
     render <- lookupEnv "COSCAD_RENDER"
     -- OpenSCAD is only the test suite's independent oracle; the compiler
     -- never uses it. Its checks are skipped, loudly, when it is absent.

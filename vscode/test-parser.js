@@ -190,7 +190,7 @@ r_bot = 8
 h = 40
 outer = loft 0 (⭘ r_bot) h (⭘ r_top)
 lug = ⭘ 3 |> loft 6 (ω 30 (△ 4)) |> loft 9 (⬠ 2)
-glyph = ⟰ 0 (△ 4 ↯ ⭘ 1) 10 (χ 2 (⭘ 3))
+glyph = ⟰ 0 (poly 0 0 10 0 5 8) 10 (χ 2 (⭘ 3))
 main = outer ⊕ lug ⊕ glyph
 `
 const loftAst = parser.parse(loftCode)
@@ -204,10 +204,15 @@ checks += 6
 
 ok(messages('main = loft 0 (● 3) 10 (⭘ 5)\n').some(m => m.includes('loft profiles must be 2D')), 'loft of solid')
 ok(messages('main = loft 0 (⭘ 3 ⊕ χ 5 (⭘ 3)) 10 (⭘ 5)\n').some(m => m.includes('single closed outline')), 'boolean profile')
+ok(messages('main = loft 0 (△ 4 ↯ ⭘ 1) 10 (⭘ 5)\n').some(m => m.includes('offset inside a loft profile')), 'offset in loft profile')
+ok(messages('!simple\nmain = Loft 0 (Offset 1 (Triangle 4)) 10 (Circle 5)\n').some(m => m.includes('offset inside a loft profile')), 'Offset in Loft profile')
 ok(messages('main = loft 0 (⭘ 3)\n').some(m => m.includes('at least two profiles')), 'one profile')
 ok(messages('main = loft 0 (θ 90 (⭘ 3)) 10 (⭘ 5)\n').some(m => m.includes('XY plane')), 'out of plane')
 ok(messages('p = ζ 3 (⭘ 3)\nmain = loft 0 p 10 (⭘ 5)\n').some(m => m.includes('moved in Z')), 'z inside profile via variable')
-checks += 5
+ok(messages('main = poly 0 0 10 0 5 8 |> extrude 5\n').length === 0, 'poly 2D profile extrudes cleanly')
+ok(messages('main = poly 0 0 10 0 |> extrude 5\n').some(m => m.includes('poly needs at least three points')), 'poly under-count refused')
+ok(messages('main = poly 0 0 10 0 5 8 1 |> extrude 5\n').some(m => m.includes('one is unpaired')), 'poly odd count refused')
+checks += 10
 
 // --- dimensionality -------------------------------------------------
 ok(messages('main = ⟲ 360 (● 1)\n').some(m => m.startsWith('cannot revolve a 3D solid')), 'revolve solid')

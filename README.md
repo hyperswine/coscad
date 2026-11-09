@@ -97,6 +97,7 @@ coscad validate --json --stdin part.coscad < buffer  # JSON diagnostics for unsa
 coscad validate --json --project-stdin model.assemble < snapshot.json # recursive editor buffers
 coscad capabilities --json # build features, supported backends and materials
 coscad stl part.coscad       # -> part.stl (+ part.scad export), prints volume + bounds
+coscad words part.coscad     # -> render a part back as the word (!simple) vocabulary
 coscad frame.assemble        # -> _asm.png view, packed _plate(N).png, frame_design.json (+ .scad exports)
 coscad next frame.assemble   # -> frame_bed1.stl ... + frame_manifest.json
 coscad check frame.assemble  # interference / clearance check on real meshes
@@ -194,8 +195,10 @@ for editor diagnostics, backend selection and a reproducible stress-to-slice exa
 ```
 src/Coscad/Shape.hs     AST + bezier evaluation (pure data)
 src/Coscad/Linalg.hs    vectors, 3x3 matrices, rotations, bed orientation
+src/Coscad/Directive.hs support/load/stress analysis directives (shared leaf)
 src/Coscad/Geometry.hs  bboxes, anchors, attachment resolve (re-exports Linalg)
 src/Coscad/Codegen.hs   .scad export (OpenSCAD source for people who continue in OpenSCAD)
+src/Coscad/Words.hs     `coscad words`: render a shape or part file as word syntax
 src/Coscad/Dsl.hs       Haskell-embedded glyph DSL
 src/Coscad/Parser.hs    .coscad parser facade (glyphs, words, pipelines), over:
   Parser/Core.hs        lexer, numbers, contexts, anchor/frame references, reserved words
@@ -211,6 +214,7 @@ src/Coscad/Printability.hs  bed contact, overhang, slenderness, warnings
 src/Coscad/Check.hs     assembly interference / clearance checker
 src/Coscad/Plan.hs      `coscad plan` CLI and summaries, over:
   Plan/Model.hs         instances, fasteners and joints, requires-before relation, weights, settings
+  Plan/Options.hs       part/fastener/joint hint validators, plan weight and setting names
   Plan/Geometry.hs      mesh mass, contacts, approach sweeps, joint alignment and turning, burial order
   Plan/Search.hs        support/holding/access predicates, A*/beam search, steps
   Plan/Render.hs        plan Markdown, JSON, per-step scenes
@@ -232,8 +236,8 @@ src/Coscad/Stress/Experiment.hs  bounded isotropic Hex8 solver and beam validati
 src/Coscad/Stress/Cad.hs  exact rectilinear CAD grid, supports and surface loads
 src/Coscad/Stress/Tetra.hs  experimental conforming Tet4/Tet10 solver for curved parts
 src/Coscad/Stress/Linear.hs  shared sparse solver and residual checks
-src/Coscad/Stress/Spec.hs    support/load/settings directives
 src/Coscad/Stress/Material.hs material properties and strength assumptions
+src/Coscad/Stress/Bonded.hs  experimental matching-interface multi-body Hex20 solve
 src/Coscad/Stress/Hex20.hs   quadratic hexahedra and stress recovery
 src/Coscad/Stress/Sparse.hs  CSR matrix and preconditioned solver
 src/Coscad/Stress/Voxel.hs   mesh voxelization and connectivity
@@ -300,6 +304,7 @@ Nothing in the build or the test suite reads them. Renders and diagrams
 - [FEA/backend experiments](docs/2026-10-26-FEA-BACKEND-EXPERIMENTS.md): runnable CAD/beam FEA and pinned native CSG, validation results and promotion gates
 - [Native backend by default](docs/2026-10-27-NATIVE-DEFAULT.md): the native kernel becomes the default for `stl`, `check` and `next`; offsets and lofts; timings and affected goldens
 - [OpenSCAD retired](docs/2026-10-29-OPENSCAD-RETIRED.md): the native backend becomes the only one; OpenSCAD stays only as the test suite's oracle
+- [Backend review](docs/2026-11-09-BACKEND-REVIEW.md): keep Manifold; when optional OCCT would be worthwhile
 - [Try FEA and native geometry](docs/2026-10-26-FEA-NATIVE-QUICKSTART.md): build, mesh and analyze the existing bracket and strut examples
 
 ## Tests

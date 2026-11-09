@@ -5,6 +5,11 @@ requested a whole panel next, explicitly confirming the X1C plate clear.
 This trial uses **0.25 mm per face**, the middle tested clearance, rather than
 claiming it was the best of the three.
 
+**Owner result, 2026-11-09:** “The new panel works very well.” This confirms the
+complete wall trial, recorded in `physical-outcome-20261109.json`. The owner then
+requested [three matching walls and a notched base](../panel-batch-v3-20261109/README.md).
+This result does not establish the new base's fit or the tank's waterproofness.
+
 `panel-wall-double-c025-upright.coscad` is one complete **70 x 70 mm wall** for the
 100 mm tank frame. Its 5.7 mm neck and bilateral 10.5 mm stepped heads match the
 tested V3 profile. Heads remain only on the two edges parallel to insertion;

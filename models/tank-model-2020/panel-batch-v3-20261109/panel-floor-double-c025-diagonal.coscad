@@ -1,0 +1,46 @@
+// Floor panel, 70 x 70. clearance is per contacting face, in mm.
+// The 6.2 mm throat gets a 5.7 mm tongue, not an interference fit.
+// Local X edges slide axially down the upright slots; local Y edges stay
+// narrow so they can drop through the bottom rail mouth and accept a cap.
+clearance = 0.25
+neck = 6.2 - 2 * clearance
+key_length = 59.4
+lead = 3
+// One-sided keys follow the 11 and 8.4 mm pockets, with clearance from
+// every shoulder; this intermediate is reflected below.
+wide_height = 5.5 - clearance + neck / 2
+deep_height = 4.2 - clearance + neck / 2
+wide = (box (1.8 - 2 * clearance) (key_length - 2 * lead) wide_height |> move 32.7 0 ((wide_height - neck) / 2))
+  |> hull (box (1.8 - 2 * clearance) key_length neck |> move 32.7 0 0)
+deep = (box (1.3 - 2 * clearance) (key_length - 2 * lead) deep_height |> move 34.25 0 ((deep_height - neck) / 2))
+  |> hull (box (1.3 - 2 * clearance) key_length neck |> move 34.25 0 0)
+edge = wide |> add deep
+one_sided = box 70 70 neck |> add edge |> add (⇋ 1 0 0 edge)
+
+// Full 70 x 70 mm floor, with the tested 0.25 mm bilateral T-heads.
+// Keys stop 5.3 mm short of each corner; 3 mm ramps need no supports upright.
+panel = one_sided |> add (⇋ 0 0 1 one_sided)
+
+// Original 5.3 mm corner notches clear all four full-height uprights.
+corner_notched = panel
+  |> cut (box 10.6 10.6 13 |> move 35 35 0)
+  |> cut (box 10.6 10.6 13 |> move -35 35 0)
+  |> cut (box 10.6 10.6 13 |> move 35 -35 0)
+  |> cut (box 10.6 10.6 13 |> move -35 -35 0)
+// Tilt in its own plane: notch ledges are now 45 degrees, not flat cantilevers.
+raw_height = 64.7 * 1.4142135623730951
+ear_x = 5.3 / 1.4142135623730951 + 1
+raw_upright = corner_notched |> rotz 45 |> rotx 90 |> z (raw_height / 2)
+// Blunt the four needle-thin notch tips by 0.249809 mm vertically so the
+// first and final layers have at least a 0.499617 mm-wide printable land.
+// This removes under 2 cubic mm; it does not change nominal slot clearance.
+tip_trim = (raw_height - 91) / 2
+upright = (raw_upright |> isect (box 110 20 91 |> z (raw_height / 2))) |> z (-tip_trim)
+// Same physical floor in the assembled orientation, used by the fit audit.
+notched = upright |> z -45.5 |> rotx -90 |> rotz -45
+// Removable 0.20 mm mouse ears brace each bottom contact; keep the notch open.
+ears = (zcyl 4 0.2 |> move (-ear_x) -4 0.1)
+  |> add (zcyl 4 0.2 |> move (-ear_x) 4 0.1)
+  |> add (zcyl 4 0.2 |> move ear_x -4 0.1)
+  |> add (zcyl 4 0.2 |> move ear_x 4 0.1)
+main = upright |> add ears

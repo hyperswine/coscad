@@ -224,3 +224,60 @@ error naming the construct: chamfered or rounded BOSL2 primitives,
 arbitrary-axis rotations and matrix transforms, mating frames, tags, and
 profiles beyond Triangle/Pentagon/Circle. Those are the spellings to add
 as the corpus asks for them, one table entry each.
+
+## Review findings and follow-ups, 9 November 2026
+
+A review of the `5dbbdb3`..`44f560e` sequence surfaced seven issues; the
+six front-end, renderer, editor and documentation items are fixed, and
+the kernel revolve item remains open:
+
+1. **Fixed — `poly` in the editor parser (`vscode/coscad-parser.js`).**
+   `poly` was registered in `shapes3d` instead of `shapes2d` (giving it
+   `dim: 3` and rejecting `extrude` / `loft` / `revolve`) and `primary()`
+   ran the Bezier `3k+1` control-point check on every `variadic` shape.
+   Moved `poly` to `shapes2d` and gave it its own `>= 6`, even-count
+   point-pair check; moved `poly` hover docs to `shapes2d` in
+   `vscode/coscad-lsp-server.js`.
+2. **Fixed — variadic `poly` inside `loft` in `coscad words` (`Coscad.Words`).**
+   `Poly` was tagged `Prim`, so `Loft` rendered `poly` profiles bare
+   (`loft 0 poly 0 0 10 0 5 8 20 Circle 5`), where variadic `poly`
+   consumed the next profile's `z` height on reparse. `Poly` is now
+   `Tight`, parenthesised inside `loft`, `Offset` and stage arguments
+   while staying bare at the head of a pipeline.
+3. **Fixed — `coscad words` preserves analysis directives and checks
+   `!simple` reserved names (`Coscad.Words`).** `renderWords` previously
+   discarded the `Analysis` returned by `parseProgramFull` (dropping
+   `support`, `load` and `stress` lines) and emitted `!simple` without
+   checking whether a `!glyph`-mode definition used a capitalized
+   `!simple` keyword (`Sphere`, `Box`, ...). Directives are now
+   re-emitted and colliding definition names are refused with a message
+   naming the binding.
+4. **Fixed — CI docs drift check (`scripts/check-docs.py`).** Added
+   `coscad words` to `man/coscad.1` (`SYNOPSIS` and `COMMANDS`) and
+   `README.md` (`Quick start`), updated `man/coscad.1`'s `Lofts` section
+   to note that offsets inside loft profiles are rejected, and added
+   `src/Coscad/Directive.hs`, `src/Coscad/Plan/Options.hs` and
+   `src/Coscad/Words.hs` (removing deleted `Stress/Spec.hs`) in the
+   `README.md` module map.
+5. **Fixed — `-Werror` warnings in `test/Tier/Words.hs`.** Removed the
+   unused `Coscad.Shape` import and renamed the shadowed `round` and `t`
+   bindings so the test suite compiles cleanly under `-Wall -Werror`.
+6. **Fixed — editor drift from `5dbbdb3`, `44f560e` and `plan` joints.**
+   Updated `loftProfileProblem` in `vscode/coscad-parser.js` to reject
+   `Offset` and `↯` inside loft profiles, added `joint push|drop|screw`
+   and the expanded `plan` weight/setting names (`Coscad.Plan.Options`)
+   to `vscode/coscad-parser.js` and `vscode/hover-info.js` (fixing
+   `models/tank-model-2020/tank.assemble` in the corpus hover test),
+   updated the `↯` hover text in `vscode/coscad-lsp-server.js`, added
+   `frustum`, `pillar`, `spike`, `prism`, `block`, `poly` and `joint` to
+   `vscode/syntaxes/coscad.tmLanguage.json`, and added `block`,
+   `pillar`, `spike` and `prism` to the icon aliases in
+   `vscode/shape-icons.json`.
+7. **Open — partial revolve of a profile with an on-axis chord
+   (`Coscad.Backend.snapRevolveAxis` / `cbits/coscad_manifold.cpp`).**
+   Revolving a centred circle by a partial angle (`⭘ 4 |> revolve 90 64`)
+   snaps the `x = 0` vertices onto the revolve axis; under `< 360°`,
+   `Manifold::Revolve` emits a degenerate axis triangle whose coincident
+   vertices fail `weldTriangles` with `indexed mesh has invalid triangle
+   indices`. Also still open: rendering a dedicated `frustum` SVG icon in
+   `vscode/assets/shapes/` (`scripts/render-editor-icons.py`).

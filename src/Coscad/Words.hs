@@ -13,9 +13,10 @@ module Coscad.Words
   , wordsShape
   ) where
 
+import Coscad.Directive (Analysis (..), describeWhere)
 import Coscad.Format (showD)
 import Coscad.Geometry (bbox, resolve)
-import Coscad.Parser (parseProgramFull)
+import Coscad.Parser (SynMode (..), parseProgramFull, reservedNames)
 import Coscad.Shape
 
 -- | Render one shape tree as a word expression. The tree is resolved
@@ -25,25 +26,35 @@ wordsShape :: Shape -> Either String String
 wordsShape s = fst <$> go (resolve s)
 
 -- | Render a whole part file: every definition in source order, numbers
--- as numbers, shapes as word expressions, under a @!simple@ pragma. A
+-- as numbers, shapes as word expressions, plus any analysis directives
+-- ('support', 'load', 'stress'), under a @!simple@ pragma. A
 -- definition's shared subexpressions are inlined where other definitions
 -- used them, so the rendered file reparses to the same geometry.
 renderWords :: FilePath -> String -> Either String String
 renderWords file input = do
-  (_, _, _, defs) <- parseProgramFull file input
+  (_, _, analysis, defs) <- parseProgramFull file input
   ls <- mapM defLine defs
-  Right (unlines ("!simple" : "// rendered to word syntax by `coscad words`" : ls))
+  Right (unlines ("!simple" : "// rendered to word syntax by `coscad words`" : ls ++ directiveLines analysis))
   where
+    simpleReserved = reservedNames ModeSimple
+    defLine (name, _)
+      | name `elem` simpleReserved =
+          Left ("definition '" ++ name ++ "' is a reserved word in !simple mode; rename it before rendering to words")
     defLine (name, Left d) = Right (name ++ " = " ++ showD d)
     defLine (name, Right shape) = do
       (e, _) <- go (resolve shape)
       Right (name ++ " = " ++ e)
+    directiveLines a =
+      [ "support " ++ describeWhere w | w <- aSupports a ]
+        ++ [ "load " ++ describeWhere w ++ " " ++ unwords (map showD [fx, fy, fz]) | (w, (fx, fy, fz)) <- aLoads a ]
+        ++ [ "stress " ++ unwords [k ++ "=" ++ v | (k, v) <- aSettings a] | not (null (aSettings a)) ]
 
 -- | How tightly a rendered expression binds, deciding where it needs
 -- parentheses. The grammar's levels, loosest first: pipeline (stages),
--- boolean (@*@/@-@), transform (prefix @loft@/@Offset@), primary (the
--- words). A pipeline head accepts anything, but a stage's shape
--- arguments and boolean operands only take primaries bare.
+-- boolean (@*@/@-@), transform (prefix @loft@/@Offset@, plus variadic
+-- @poly@ so a following numeric argument in @loft@ is not swallowed),
+-- primary (fixed-arity words). A pipeline head accepts anything, but a
+-- stage's shape arguments and boolean operands only take primaries bare.
 data Form = Prim | Tight | Bool | Pipe deriving (Eq)
 
 go :: Shape -> Either String (String, Form)
@@ -67,9 +78,9 @@ go s = case s of
   Torus rj rn -> prim ("torus " ++ showD rj ++ " " ++ showD rn)
   Wedge (x, y, z) -> prim ("wedge " ++ d3 x y z)
   Frustum r1 r2 h -> prim ("frustum " ++ showD r1 ++ " " ++ showD r2 ++ " " ++ showD h)
-  -- 2D
+  -- 2D (poly is variadic, so it is Tight: parenthesised inside loft/stage arguments)
   Poly (PD pts [])
-    | length pts >= 3 -> prim ("poly " ++ unwords (concatMap (\(x, y) -> [showD x, showD y]) pts))
+    | length pts >= 3 -> Right ("poly " ++ unwords (concatMap (\(x, y) -> [showD x, showD y]) pts), Tight)
   Poly (PD _ _) -> Left "a polygon with holes has no word spelling"
   Shape2D n r
     | n == 3 -> prim ("Triangle " ++ showD r)

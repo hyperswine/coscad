@@ -1,0 +1,11 @@
+{
+  "job": "x1c-three-walls-notched-floor-20261109",
+  "printer": "x1c",
+  "spool": "external",
+  "bed_levelling": true,
+  "flow_cali": true,
+  "vibration_cali": true,
+  "layer_inspect": true,
+  "dispatcher_sha256": "c026cb148c4a0bb4be5de0440e59223e95f5d382b9aaa43d279d48bd0d286773",
+  "printer_ca_sha256": "36f2bcee347ec7adce719b5fd350099591a4d3d0ec4e039c7019890d78e152a0"
+}

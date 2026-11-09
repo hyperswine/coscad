@@ -10,6 +10,7 @@
 module Coscad.Stress.Hex20
   ( Key, Hex20Problem (..), Hex20Result (..), CellStress (..)
   , solveHex20, elementStiffness, cellNodes, faceNodes, nodePosition, allNodes
+  , assembleElements, elementForces, recoverCellStress
   , naturalOf, shapeGradients, vonMises
   ) where
 
@@ -164,27 +165,7 @@ solveHex20 problem = do
   let ke = elementStiffness e nu h
       fillOf c = Map.findWithDefault 1 c (vgFill g)
       cellGlobals = [ (c, map (index Map.!) (cellNodes c)) | c <- cells ]
-      neighbours = IM.fromListWith IS.union [ (a, IS.fromList gs) | (_, gs) <- cellGlobals, a <- gs ]
-      rowCols n = [ 3*m + j | m <- IS.toAscList (neighbours IM.! n), j <- [0..2] ]
-      rowLengths = [ length (rowCols n) | n <- [0..nodeCount-1] ]
-      ptrList = scanl (+) 0 (concatMap (replicate 3) rowLengths)
-      ptr = listArray (0, nd) ptrList :: UArray Int Int
-      nnz = last ptrList
-      col = listArray (0, nnz-1) (concat [ rowCols n | n <- [0..nodeCount-1], _ <- [0::Int,1,2] ]) :: UArray Int Int
-      val = runSTUArray $ do
-        arr <- newArray (0, nnz-1) 0
-        forM_ cellGlobals $ \(c, gs) -> do
-          let garr = listArray (0,19) gs :: UArray Int Int
-              fraction = fillOf c
-          forM_ [0..19] $ \a -> forM_ [0..19] $ \b -> forM_ [0..2] $ \i -> forM_ [0..2] $ \j -> do
-            let row = 3*(garr!a) + i; column = 3*(garr!b) + j
-                v = fraction * ke ! ((3*a+i)*60 + 3*b+j)
-            when (v /= 0) $ do
-              k <- find ptr col row column
-              old <- readArray arr k
-              writeArray arr k (old + v)
-        return arr
-      matrix = CSR nd ptr col val
+      matrix = assembleElements nodeCount [(gs, fillOf c, ke) | (c, gs) <- cellGlobals]
       freeMask = listArray (0, nd-1) [ not (Set.member key clamped) | key <- nodeList, _ <- [0::Int,1,2] ] :: UArray Int Bool
       rhs = vecFromList (concat [ maybe [0,0,0] (\(x,y,z) -> [x,y,z]) (Map.lookup key loads) | key <- nodeList ])
   (u, iterations, residual) <- pcgSolve (hpIterations problem) (hpTolerance problem) matrix freeMask rhs
@@ -195,28 +176,69 @@ solveHex20 problem = do
       moment = foldl' vadd (0,0,0) [ cross (pos n) (reactionOf n) | n <- clampedIdx ]
       energy = vecDot u ku / 2
       disp n = (u!(3*n), u!(3*n+1), u!(3*n+2))
-      lam = e*nu/((1+nu)*(1-2*nu)); mu = e/(2*(1+nu))
-      stressAt gs pt =
-        let grads = shapeGradients h pt
-            du :: Int -> Int -> Double
-            du i j = sum [ component (disp n) i * component gr j | (n, gr) <- zip gs grads ]
-            tr = du 0 0 + du 1 1 + du 2 2
-            normal i = lam*tr + 2*mu*du i i
-            shear i j = mu*(du i j + du j i)
-        in [normal 0, normal 1, normal 2, shear 0 1, shear 1 2, shear 2 0]
-      cellResult (c, gs) =
-        let centre = stressAt gs (0,0,0)
-            samples = [ stressAt gs pt | (pt,_) <- gaussPoints ]
-        in (c, cellCentre g c, CellStress centre (vonMises centre) (maximum (map vonMises samples)) (maximum (map (!! 2) samples)))
+      cellResult (c, gs) = (c, cellCentre g c, recoverCellStress e nu h (map disp gs))
       cellResults = map cellResult cellGlobals
       nodes = [ (key, pos n, disp n) | (key, n) <- zip nodeList [0..] ]
   unless (all finite (elems u) && all finite (concat [ csCentre s | (_,_,s) <- cellResults ])) (Left "FEA: nonfinite result")
   return (Hex20Result nodes cellResults reaction moment energy iterations residual nd)
-  where
-    component :: V3 -> Int -> Double
-    component (x,_,_) 0 = x
-    component (_,y,_) 1 = y
-    component (_,_,z) _ = z
+
+-- | Assemble checked 20-node elements into one matrix. Each tuple carries
+-- global node indices, occupancy and a cached 60x60 stiffness matrix. Callers
+-- validate connectivity/materials first; tied nodes may share global indices.
+assembleElements :: Int -> [([Int], Double, UArray Int Double)] -> CSR
+assembleElements nodeCount elements =
+  let nd = 3 * nodeCount
+      neighbours = IM.fromListWith IS.union [ (a, IS.fromList gs) | (gs, _, _) <- elements, a <- gs ]
+      rowCols n = [ 3*m + j | m <- IS.toAscList (neighbours IM.! n), j <- [0..2] ]
+      rowLengths = [ length (rowCols n) | n <- [0..nodeCount-1] ]
+      ptrList = scanl (+) 0 (concatMap (replicate 3) rowLengths)
+      ptr = listArray (0, nd) ptrList :: UArray Int Int
+      nnz = last ptrList
+      col = listArray (0, nnz-1) (concat [ rowCols n | n <- [0..nodeCount-1], _ <- [0::Int,1,2] ]) :: UArray Int Int
+      val = runSTUArray $ do
+        arr <- newArray (0, nnz-1) 0
+        forM_ elements $ \(gs, fraction, ke) -> do
+          let garr = listArray (0,19) gs :: UArray Int Int
+          forM_ [0..19] $ \a -> forM_ [0..19] $ \b -> forM_ [0..2] $ \i -> forM_ [0..2] $ \j -> do
+            let row = 3*(garr!a) + i; column = 3*(garr!b) + j
+                v = fraction * ke ! ((3*a+i)*60 + 3*b+j)
+            when (v /= 0) $ do
+              k <- find ptr col row column
+              old <- readArray arr k
+              writeArray arr k (old + v)
+        return arr
+  in CSR nd ptr col val
+
+
+-- | Element nodal internal forces, before interface reduction. This uses the
+-- same occupancy scaling as assembly, not a stress-times-area approximation.
+elementForces :: Double -> UArray Int Double -> [V3] -> [V3]
+elementForces fraction ke displacements =
+  let u = listArray (0,59) (concatMap components displacements) :: UArray Int Double
+      force i = fraction * sum [ke ! (i*60+j) * u!j | j <- [0..59]]
+  in [(force (3*n), force (3*n+1), force (3*n+2)) | n <- [0..19]]
+
+recoverCellStress :: Double -> Double -> Double -> [V3] -> CellStress
+recoverCellStress e nu h displacements =
+  let lam = e*nu/((1+nu)*(1-2*nu)); mu = e/(2*(1+nu))
+      stressAt pt =
+        let grads = shapeGradients h pt
+            du i j = sum [component d i * component gr j | (d,gr) <- zip displacements grads]
+            tr = du 0 0 + du 1 1 + du 2 2
+            normal i = lam*tr + 2*mu*du i i
+            shear i j = mu*(du i j + du j i)
+        in [normal 0, normal 1, normal 2, shear 0 1, shear 1 2, shear 2 0]
+      centre = stressAt (0,0,0)
+      samples = [stressAt pt | (pt,_) <- gaussPoints]
+  in CellStress centre (vonMises centre) (maximum (map vonMises samples)) (maximum (map (!! 2) samples))
+
+component :: V3 -> Int -> Double
+component (x,_,_) 0 = x
+component (_,y,_) 1 = y
+component (_,_,z) _ = z
+
+components :: V3 -> [Double]
+components (x,y,z) = [x,y,z]
 
 -- | Position of column c within row r of a CSR structure (binary search).
 find :: UArray Int Int -> UArray Int Int -> Int -> Int -> ST s Int

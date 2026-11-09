@@ -1,0 +1,30 @@
+[
+ {
+  "part": "panel-wall-double-c025-upright",
+  "centre_mm": [
+   82,
+   75
+  ]
+ },
+ {
+  "part": "panel-wall-double-c025-upright",
+  "centre_mm": [
+   82,
+   128
+  ]
+ },
+ {
+  "part": "panel-wall-double-c025-upright",
+  "centre_mm": [
+   82,
+   181
+  ]
+ },
+ {
+  "part": "panel-floor-double-c025-diagonal",
+  "centre_mm": [
+   176,
+   128
+  ]
+ }
+]

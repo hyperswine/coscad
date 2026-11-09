@@ -374,9 +374,15 @@ class ExpressionParser {
           if (!value) break
           node.params.push(value)
         }
-        const points = node.params.length / 2
-        if (node.params.length < 8 || node.params.length % 2 || points % 3 !== 1) {
-          throw new ParseError(`bezier needs 3k+1 control points as x y pairs (got ${node.params.length} numbers)`, token)
+        if (token.value === 'poly') {
+          if (node.params.length < 6 || node.params.length % 2) {
+            throw new ParseError(`poly needs at least three points as x y pairs (got ${node.params.length} numbers${node.params.length % 2 ? ', one is unpaired' : ''})`, token)
+          }
+        } else {
+          const points = node.params.length / 2
+          if (node.params.length < 8 || node.params.length % 2 || points % 3 !== 1) {
+            throw new ParseError(`bezier needs 3k+1 control points as x y pairs (got ${node.params.length} numbers)`, token)
+          }
         }
       } else {
         for (let count = 0; count < info.arity; count++) node.params.push(this.numArg())
@@ -460,7 +466,7 @@ class COSCADParser {
       cube: { name: 'cube', arity: 1 }, box: { name: 'box', arity: 3 }, sphere: { name: 'sphere', arity: 1 },
       cyl: { name: 'cyl', arity: 2 }, tube: { name: 'tube', arity: 3 }, frustum: { name: 'frustum', arity: 3 },
       pillar: { name: 'pillar', arity: 2 }, spike: { name: 'spike', arity: 2 }, prism: { name: 'prism', arity: 3 },
-      block: { name: 'block', arity: 3 }, poly: { name: 'poly', variadic: true },
+      block: { name: 'block', arity: 3 },
       torus: { name: 'torus', arity: 2 }, wedge: { name: 'wedge', arity: 3 },
       Sphere: { name: 'sphere', arity: 1, modes: simple }, Cube: { name: 'cube', arity: 1, modes: simple },
       Box: { name: 'box', arity: 3, modes: simple }, Cylinder: { name: 'cylinder', arity: 2, modes: simple },
@@ -471,6 +477,7 @@ class COSCADParser {
     this.shapes2d = {
       '△': { name: 'triangle', arity: 1, modes: glyph }, '⬠': { name: 'pentagon', arity: 1, modes: glyph },
       '⭘': { name: 'circle', arity: 1, modes: glyph }, '✎': { name: 'bezier', variadic: true, modes: glyph },
+      poly: { name: 'poly', variadic: true },
       Circle: { name: 'circle', arity: 1, modes: simple }, Triangle: { name: 'triangle', arity: 1, modes: simple },
       Pentagon: { name: 'pentagon', arity: 1, modes: simple }, Bezier: { name: 'bezier', variadic: true, modes: simple }
     }
@@ -724,6 +731,7 @@ class COSCADParser {
     if (identifierLike && first.value === 'clearance' && tokens[1]?.type !== 'assignment') return this.parseClearance(tokens)
     if (identifierLike && first.value === 'tolerance' && tokens[1]?.type !== 'assignment') return this.parseTolerance(tokens)
     if (identifierLike && first.value === 'fastener' && tokens[1]?.type !== 'assignment') return this.parseFastener(tokens)
+    if (identifierLike && first.value === 'joint' && tokens[1]?.type !== 'assignment') return this.parseJoint(tokens)
     if (identifierLike && first.value === 'plan' && tokens[1]?.type !== 'assignment') return this.parsePlan(tokens)
     if (identifierLike && ['fixed', 'mate'].includes(first.value) && tokens[1]?.type !== 'assignment') return this.parseConstraint(tokens, numericNames)
     if (identifierLike && tokens[1]?.type === 'part_arrow') return this.parsePart(tokens)
@@ -907,9 +915,54 @@ class COSCADParser {
     return node
   }
 
+  // joint push|drop|screw moving host [pitch=mm] [axis=face]
+  parseJoint(tokens) {
+    const word = index => tokens[index] ? String(tokens[index].raw ?? tokens[index].value) : null
+    const refs = []
+    let index = 1
+    const readRef = what => {
+      if (!tokens[index] || ['count', 'assignment'].includes(tokens[index].type)) throw new ParseError(`joint: expected ${what}`, tokens[index] || tokens[0])
+      const start = tokens[index]
+      let text = word(index++)
+      if (tokens[index]?.value === '#' && tokens[index + 1]?.type === 'number') { text += '#' + word(index + 1); index += 2 }
+      refs.push({ text, token: start })
+      return text
+    }
+    const kindTok = tokens[index]
+    const kind = readRef('joint kind (push, drop or screw)').toLowerCase()
+    if (!['push', 'drop', 'screw'].includes(kind)) throw new ParseError(`unknown joint kind '${kind}' (choose push, drop or screw)`, kindTok || tokens[0])
+    const moving = readRef('moving part instance')
+    const host = readRef('host part instance')
+    const node = {
+      type: 'joint_declaration', kind, moving, host, options: [],
+      refs: refs.slice(1, 3), position: tokens[0].position, line: tokens[0].line, column: tokens[0].column
+    }
+    while (index < tokens.length) {
+      if (tokens[index + 1]?.type === 'assignment') {
+        const keyToken = tokens[index]
+        const key = word(index)
+        let value = ''
+        index += 2
+        while (index < tokens.length && tokens[index + 1]?.type !== 'assignment' && tokens[index].type !== 'count') value += word(index++)
+        if (!['pitch', 'axis'].includes(key)) throw new ParseError(`unknown joint option '${key}'; choose pitch or axis`, keyToken)
+        node.options.push({ key, value }); continue
+      }
+      throw new ParseError('joints take key=value options (pitch=, axis=), not a count or a print orientation', tokens[index])
+    }
+    const hasPitch = node.options.some(o => o.key === 'pitch')
+    if (kind === 'screw' && !hasPitch) throw new ParseError('a screw joint needs pitch=mm (the thread pitch, for the number of turns)', kindTok || tokens[0])
+    if (kind !== 'screw' && hasPitch) throw new ParseError('pitch= only applies to screw joints', kindTok || tokens[0])
+    return node
+  }
+
   // plan key=value ...
   parsePlan(tokens) {
     const node = { type: 'plan_declaration', options: [], position: tokens[0].position, line: tokens[0].line, column: tokens[0].column }
+    const known = new Set([
+      'beam', 'rest', 'astar', 'step_parts',
+      'flip', 'vertical', 'driver', 'shrink', 'sibling', 'loose', 'insert', 'pass', 'turn', 'hand', 'finger', 'part', 'fastener', 'nut',
+      'driver_angle', 'standing_angle', 'slender', 'driver_length', 'driver_margin', 'phase_tau', 'finger_size', 'contact', 'settle', 'sweep_step', 'shell', 'infill'
+    ])
     let index = 1
     while (index < tokens.length) {
       if (tokens[index + 1]?.type !== 'assignment') throw new ParseError('plan takes key=value options (beam rest flip vertical driver shrink sibling loose astar)', tokens[index])
@@ -917,7 +970,7 @@ class COSCADParser {
       let value = ''
       index += 2
       while (index < tokens.length && tokens[index + 1]?.type !== 'assignment') value += String(tokens[index].raw ?? tokens[index].value), index++
-      if (!['beam', 'rest', 'flip', 'vertical', 'driver', 'shrink', 'sibling', 'loose', 'astar'].includes(key)) throw new ParseError(`Unknown plan option '${key}'`, tokens[index - 2])
+      if (!known.has(key)) throw new ParseError(`Unknown plan option '${key}'`, tokens[index - 2])
       node.options.push({ key, value })
     }
     return node
@@ -1026,6 +1079,13 @@ class COSCADParser {
         if (!partNames.has(base)) diagnostics.push(this.diagnostic(`unknown part '${ref.text}' in fastener (must be a part declared with ←)`, ref.token))
       }
       if (fastener.clamped === fastener.host) diagnostics.push(this.diagnostic('a fastener needs two different parts (clamped and host)', fastener))
+    }
+    for (const joint of ast.body.filter(node => node.type === 'joint_declaration')) {
+      for (const ref of joint.refs) {
+        const base = ref.text.split('#')[0]
+        if (!partNames.has(base)) diagnostics.push(this.diagnostic(`unknown part '${ref.text}' in joint (must be a part declared with ←)`, ref.token))
+      }
+      if (joint.moving === joint.host) diagnostics.push(this.diagnostic('a joint needs two different parts (moving and host)', joint))
     }
     // cycles
     const visiting = new Set(); const visited = new Set()
@@ -1191,11 +1251,12 @@ class COSCADParser {
       case 'transformation': {
         if (node.name === 'Tz' || (node.name === 'Translate' && node.axis === 'z')) return { node, message: 'a loft profile cannot be moved in Z (ζ); give the loft its z value instead' }
         if (node.name === 'Rx' || node.name === 'Ry' || (node.name === 'Rotate' && node.axis !== 'z')) return { node, message: 'a loft profile must stay in the XY plane (rotate only about Z)' }
+        if (node.name === 'Offset') return { node, message: "an offset inside a loft profile is not supported yet (BOSL2's round path offset); offset the solid or the profile outside the loft instead" }
         if (['Hull', 'Union', 'Intersect', 'Minkowski'].includes(node.name)) return { node, message: 'a loft profile must be a single closed outline: booleans (⊕ ⊖ ∩ ⇓ ⊞) between profiles are not supported' }
         return this.loftProfileProblem(node.target, byName, stack)
       }
       case 'boolean_operation':
-        if (node.symbol === '↯') return this.loftProfileProblem(node.left, byName, stack)
+        if (node.symbol === '↯') return { node, message: "an offset inside a loft profile is not supported yet (BOSL2's round path offset); offset the solid or the profile outside the loft instead" }
         return { node, message: 'a loft profile must be a single closed outline: booleans (⊕ ⊖ ∩ ⇓ ⊞) between profiles are not supported' }
       case 'attachment_operation': return { node, message: 'a loft profile must be a single closed outline: attachments between profiles are not supported' }
       case 'loft': return { node, message: 'a loft profile must be a 2D outline, not a loft' }

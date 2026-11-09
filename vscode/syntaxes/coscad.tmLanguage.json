@@ -33,7 +33,7 @@
     },
     "assembly": {
       "patterns": [
-        { "name": "keyword.declaration.assembly.coscad", "match": "\\b(?:plate|clearance|tolerance|fastener|plan|fixed|mate|support|load|stress)\\b" },
+        { "name": "keyword.declaration.assembly.coscad", "match": "\\b(?:plate|clearance|tolerance|fastener|joint|plan|fixed|mate|support|load|stress)\\b" },
         { "name": "keyword.operator.assembly.coscad", "match": "[←×▽@]" },
         { "name": "string.unquoted.filename.coscad", "match": "[^\\s]+\\.(?:coscad|assemble)\\b" },
         { "name": "constant.other.screw.coscad", "match": "\\bM\\d+(?:\\.\\d+)?x\\d+(?:\\.\\d+)?\\b" },
@@ -43,13 +43,13 @@
     "shapes3d": {
       "patterns": [
         { "name": "entity.name.function.shape3d.coscad", "match": "[■●◎▻▬⎏▣◙⌭⌽⊚⏢◉⊿]" },
-        { "name": "entity.name.function.shape3d.coscad", "match": "\\b(?:thread_male|thread_female|globe_stud|globe_socket|clearance_pin|clearance_bore|captive_bearing|xcyl|ycyl|zcyl|cube|box|sphere|cyl|tube|torus|wedge|Sphere|Cube|Box|Cylinder|Cone|Tube|Torus|Wedge|Prismoid)\\b" }
+        { "name": "entity.name.function.shape3d.coscad", "match": "\\b(?:thread_male|thread_female|globe_stud|globe_socket|clearance_pin|clearance_bore|captive_bearing|xcyl|ycyl|zcyl|cube|box|sphere|cyl|tube|frustum|pillar|spike|prism|block|torus|wedge|Sphere|Cube|Box|Cylinder|Cone|Tube|Torus|Wedge|Prismoid)\\b" }
       ]
     },
     "shapes2d": {
       "patterns": [
         { "name": "entity.name.function.shape2d.coscad", "match": "[△⬠⭘✎]" },
-        { "name": "entity.name.function.shape2d.coscad", "match": "\\b(?:Circle|Triangle|Pentagon|Bezier)\\b" }
+        { "name": "entity.name.function.shape2d.coscad", "match": "\\b(?:poly|Circle|Triangle|Pentagon|Bezier)\\b" }
       ]
     },
     "transformations": {

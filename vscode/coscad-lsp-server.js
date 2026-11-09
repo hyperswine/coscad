@@ -60,7 +60,8 @@ const documentation = {
     '△': { name: 'triangle', description: 'Equilateral triangle profile (2D; extrude or loft it)', usage: '△ radius', example: '⮕ 10 (△ 8)' },
     '⬠': { name: 'pentagon', description: 'Regular pentagon profile (2D)', usage: '⬠ radius', example: '⮕ 5 (⬠ 8)' },
     '⭘': { name: 'circle', description: 'Circle profile (2D, 100 segments)', usage: '⭘ radius', example: 'loft 0 (⭘ 10) 30 (⭘ 5)' },
-    '✎': { name: 'bezier', description: 'Closed piecewise-cubic bezier outline (2D): 3k+1 control points as x y pairs, evaluated by the compiler', usage: '✎ x0 y0 x1 y1 x2 y2 x3 y3 ...', example: '✎ 0 0 10 5 20 -5 30 0 ... |> extrude 4' }
+    '✎': { name: 'bezier', description: 'Closed piecewise-cubic bezier outline (2D): 3k+1 control points as x y pairs, evaluated by the compiler', usage: '✎ x0 y0 x1 y1 x2 y2 x3 y3 ...', example: '✎ 0 0 10 5 20 -5 30 0 ... |> extrude 4' },
+    poly: { name: 'poly', description: 'Plain closed polygon from x y point pairs (holes have no word)', usage: 'poly x0 y0 x1 y1 ...', example: 'poly 0 0 10 0 5 8' }
   },
   transformations: {
     'χ': { name: 'Tx', description: 'Translate along X', usage: 'χ distance shape', example: 'χ 5 (● 10)' },
@@ -75,7 +76,7 @@ const documentation = {
     '⟲': { name: 'Revolve', description: 'Surface of revolution about the Y axis: profile y becomes height, only the +X half is kept (2D → 3D)', usage: '⟲ degrees profile / ⟲ degrees segments profile', example: '⟲ 360 (χ 6 (⭘ 2))' },
     Revolve: { name: 'Revolve', description: 'Surface of revolution about the Y axis (simple mode)', usage: 'Revolve degrees profile / Revolve degrees segments profile', example: 'Revolve 360 (Circle 5)' },
     '⟰': { name: 'Loft', description: 'Loft: skin 2D profiles at ascending z into one solid (BOSL2 skin; profiles may differ in vertex count)', usage: '⟰ z0 profile0 z1 profile1 [z2 profile2 ...]', example: '⟰ 0 (⭘ 10) 30 (△ 5)' },
-    loft: { name: 'loft', description: 'Loft: skin 2D profiles at ascending z into one solid. Profiles must be single closed outlines (△ ⬠ ⭘ ✎ and their in-plane transforms/offset), no booleans, no ζ/θ/ϕ', usage: 'loft z0 profile0 z1 profile1 [...]', example: 'loft 0 (⭘ 10) 30 (⭘ 5)' },
+    loft: { name: 'loft', description: 'Loft: skin 2D profiles at ascending z into one solid. Profiles must be single closed outlines (△ ⬠ ⭘ ✎ poly and their in-plane transforms), no offsets, no booleans, no ζ/θ/ϕ', usage: 'loft z0 profile0 z1 profile1 [...]', example: 'loft 0 (⭘ 10) 30 (⭘ 5)' },
     Loft: { name: 'Loft', description: 'Loft (simple mode): skin 2D profiles at ascending z into one solid', usage: 'Loft z0 profile0 z1 profile1 [...]', example: 'Loft 0 (Circle 10) 30 (Triangle 5)' },
     '⚓': { name: 'Anchor', description: 'Re-origin a shape at one of its own bounding-box anchors', usage: '⚓ anchor shape', example: '⚓ bot (cyl 5 20) // bottom face at z = 0' }
   },
@@ -99,7 +100,6 @@ const documentation = {
     spike: { name: 'spike', description: 'Cone on the XY plane, point up (the \u25bb glyph)', usage: 'spike r h', example: 'spike 5 2' },
     prism: { name: 'prism', description: 'N-sided prism on the XY plane (the \u238f glyph)', usage: 'prism n r h', example: 'prism 6 2 8' },
     block: { name: 'block', description: 'Box with its corner at the origin (the \u25a0 and \u25ac glyphs)', usage: 'block x y z', example: 'block 20 10 5' },
-    poly: { name: 'poly', description: 'Plain closed polygon from x y point pairs (holes have no word)', usage: 'poly x0 y0 x1 y1 ...', example: 'poly 0 0 10 0 5 8' },
     '⊚': { name: 'tube', description: 'BOSL2 tube (centered)', usage: '⊚ outer_r inner_r h', example: '⊚ 10 6 25' },
     '⏢': { name: 'prismoid', description: 'BOSL2 prismoid: rectangle-to-rectangle taper (centered)', usage: '⏢ x1 y1 x2 y2 h', example: '⏢ 20 20 10 10 15' },
     '◉': { name: 'torus', description: 'BOSL2 torus', usage: '◉ r_major r_minor', example: '◉ 20 5' },
@@ -117,7 +117,7 @@ const documentation = {
     '∩': { name: 'Intersection', description: 'Intersection', usage: 'a ∩ b', example: '■ 10 ∩ ● 6' },
     '⇓': { name: 'Hull', description: 'Convex hull of both operands', usage: 'a ⇓ b', example: '■ 10 ⇓ ● 5' },
     '⊞': { name: 'Minkowski', description: 'Minkowski sum', usage: 'a ⊞ b', example: '■ 10 ⊞ ● 1 // rounded cube' },
-    '↯': { name: 'Offset', description: 'Offset a 2D profile by the right operand’s radius (sphere, cylinder, or 2D profile; anything else defaults to 1)', usage: 'profile ↯ ● r', example: '△ 8 ↯ ● 2' }
+    '↯': { name: 'Offset', description: 'Offset a 2D profile by the right operand’s radius (● ⭘ △ ⬠, sphere/cyl/zcyl/xcyl/ycyl/tube/cone/prism)', usage: 'profile ↯ ● r', example: '△ 8 ↯ ● 2' }
   },
   attachment: {
     '⌖': { name: 'Position', description: 'Position: translate the child so its opposite anchor meets the parent’s anchor (union)', usage: 'parent ⌖ anchor child', example: 'base ⌖ top post' },
@@ -415,7 +415,7 @@ connection.onCompletion((params) => {
     }
   }
 
-  for (const keyword of ['!glyph', '!simple', 'plate', 'clearance', 'tolerance', 'fastener', 'plan', 'fixed', 'mate', '@', '←', '×', '▽', 'loft']) {
+  for (const keyword of ['!glyph', '!simple', 'plate', 'clearance', 'tolerance', 'fastener', 'joint', 'plan', 'fixed', 'mate', '@', '←', '×', '▽', 'loft']) {
     completionItems.push({
       label: keyword,
       kind: 14,
