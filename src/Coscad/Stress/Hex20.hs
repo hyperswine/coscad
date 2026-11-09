@@ -230,7 +230,7 @@ recoverCellStress e nu h displacements =
         in [normal 0, normal 1, normal 2, shear 0 1, shear 1 2, shear 2 0]
       centre = stressAt (0,0,0)
       samples = [stressAt pt | (pt,_) <- gaussPoints]
-  in CellStress centre (vonMises centre) (maximum (map vonMises samples)) (maximum (map (!! 2) samples))
+  in CellStress centre (vonMises centre) (maximum (map vonMises samples)) (max 0 (maximum (map (!! 2) samples)))
 
 component :: V3 -> Int -> Double
 component (x,_,_) 0 = x

@@ -1,0 +1,161 @@
+{
+  "printer": "p1s",
+  "plate": "Textured PEI Plate",
+  "bed_c": 55,
+  "nozzle_c": 220,
+  "parts": [
+    {
+      "name": "parts/panel-print",
+      "centre_mm": [
+        128,
+        60
+      ],
+      "object_id": 2,
+      "holes": 0,
+      "height_mm": 120.0,
+      "source_sha256": "b1c54690fb654ec3b16d590d1fde70aa7cfb418865644955f0b56197d5ea75c8",
+      "stl_sha256": "d679680a93516cdc6c26c9f2339cd87482f8363319337fc0d8a7d4738b1c03ee"
+    },
+    {
+      "name": "parts/panel-print",
+      "centre_mm": [
+        128,
+        112
+      ],
+      "object_id": 4,
+      "holes": 0,
+      "height_mm": 120.0,
+      "source_sha256": "b1c54690fb654ec3b16d590d1fde70aa7cfb418865644955f0b56197d5ea75c8",
+      "stl_sha256": "d679680a93516cdc6c26c9f2339cd87482f8363319337fc0d8a7d4738b1c03ee"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        48,
+        164
+      ],
+      "object_id": 6,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        100,
+        164
+      ],
+      "object_id": 8,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        152,
+        164
+      ],
+      "object_id": 10,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        204,
+        164
+      ],
+      "object_id": 12,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        48,
+        210
+      ],
+      "object_id": 14,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        100,
+        210
+      ],
+      "object_id": 16,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        152,
+        210
+      ],
+      "object_id": 18,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        204,
+        210
+      ],
+      "object_id": 20,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    }
+  ],
+  "settings": {
+    "enable_support": "0",
+    "support_on_build_plate_only": "1",
+    "only_one_wall_top": "0",
+    "sparse_infill_pattern": "zig-zag",
+    "brim_object_gap": "0.1",
+    "wall_loops": "4",
+    "sparse_infill_density": "100%",
+    "top_shell_layers": "5",
+    "bottom_shell_layers": "5",
+    "brim_type": "no_brim",
+    "brim_width": "0",
+    "print_sequence": "by layer",
+    "outer_wall_speed": [
+      "40"
+    ],
+    "inner_wall_speed": [
+      "70"
+    ],
+    "initial_layer_speed": [
+      "25"
+    ],
+    "default_acceleration": "2000",
+    "outer_wall_acceleration": "1000",
+    "travel_speed": [
+      "180"
+    ],
+    "travel_acceleration": "3000",
+    "enable_arc_fitting": "0",
+    "elefant_foot_compensation": "0.15"
+  },
+  "spool": "external",
+  "owner_confirmed_bed_clear": true
+}

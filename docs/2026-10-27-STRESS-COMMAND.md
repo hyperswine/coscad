@@ -1,5 +1,10 @@
 # `coscad stress`: part stress and deflection in Haskell
 
+> Updated behavior, 2026-11-10: see [stress corrections](2026-11-10-STRESS-CORRECTIONS.md).
+> Selectors choose one nearest voxel plane and reject ambiguity; output meshes
+> now live in immutable generations referenced by the JSON `artifacts` field.
+> The command uses native geometry only; the OpenSCAD option below is historical.
+
 Status: implemented 2026-10-27 on top of the
 [FEA experiments](2026-10-26-FEA-BACKEND-EXPERIMENTS.md). This is the first
 user-facing stress command. It answers the design-loop questions from the

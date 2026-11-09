@@ -2,9 +2,9 @@
 -- region selection and the command end to end on small fixtures.
 module Tier.Stress (stressTier) where
 
-import Coscad.Backend (Backend (..), nativeMesh)
+import Coscad.Backend (Backend (..), nativeMesh, nativeCSGMesh)
 import Coscad.Geometry (resolve)
-import Coscad.Json (JValue (..), lookupKey, asNumber)
+import Coscad.Json (JValue (..), lookupKey, asNumber, asString)
 import Coscad.Parser (parseProgramFull)
 import Coscad.Report (Failure (..), silent)
 import Coscad.Shape (Shape (..))
@@ -15,11 +15,13 @@ import Coscad.Stress.Part
 import Coscad.Directive
 import Coscad.Stress.Voxel
 import Data.Array.Unboxed ((!))
-import Data.List (isInfixOf)
+import Control.Exception (try, IOException)
+import Control.Monad (forM_)
+import Data.List (isInfixOf, sort)
 import qualified Data.Map.Strict as Map
 import qualified Data.Set as Set
 import Harness
-import System.Directory (doesFileExist)
+import System.Directory (doesFileExist, createDirectory, listDirectory)
 import System.FilePath ((</>))
 
 stressTier :: T -> IO ()
@@ -100,6 +102,8 @@ stressTier t = do
       assertT t "one body" (length (connectedCells grid) == 1) ""
   expectErr t "open mesh is refused" (voxelize 1 (drop 2 (either error id (nativeMesh (resolve (Rectangle 2 2 2)))))) ["not closed"] []
 
+  planeSelectionTests t
+
   section "stress: command"
   dir <- tempDir "stress"
   let part = dir </> "bar.coscad"
@@ -135,3 +139,92 @@ stressTier t = do
   case r3 of
     Left (Failure 1 ls) -> assertT t "missing support is an input error" (any ("no support" `isInfixOf`) ls) (unlines ls)
     other -> failT t "missing support exits 1" (show (either failExit (const 0) other))
+
+  publicationTests t
+
+planeSelectionTests :: T -> IO ()
+planeSelectionTests t = do
+  section "stress: exact and ambiguous stepped planes; tension-only recovery"
+  let stepped = "main = block 2 2 2 |> add (block 2 2 2 |> x 2 |> z 1)"
+      solve text = case parseProgramFull "<plane-test>" text of
+        Left err -> return (Left err)
+        Right (_,shape,a,_) -> case setupFrom a of
+          Left err -> return (Left err)
+          Right setup -> do
+            mesh <- nativeCSGMesh shape
+            return (mesh >>= analysePart a setup shape)
+      program geometry support load = unlines [geometry,support,load,"stress material=pla cell=1"]
+  exact <- solve (program stepped "support bot" "load top 0 0 -1")
+  case exact of
+    Left err -> failT t "stepped part solves" err
+    Right r -> do
+      assertT t "only lowest step is clamped" (map rrFaces (srSupports r)==[4]) (show (srSupports r))
+      assertT t "only highest step is loaded" (map rrFaces (srLoads r)==[4]) (show (srLoads r))
+  ambiguous <- solve (program (stepped ++ " |> datum mid bot 0 0 0.5") "support @mid bot" "load top 0 0 -1")
+  expectErr t "midway datum refuses two equally near planes" ambiguous ["ambiguous face plane"] []
+  snapped <- solve (program (stepped ++ " |> datum face top 0 0 0.2") "support bot" "load @face top 0 0 -1")
+  case snapped of
+    Left err -> failT t "nearby datum selects unique voxel plane" err
+    Right r -> assertT t "nearby datum does not broaden patch" (map rrFaces (srLoads r)==[4]) ""
+  missing <- solve (program (stepped ++ " |> datum far top 0 0 10") "support bot" "load @far top 0 0 -1")
+  expectErr t "far datum refuses missing plane" missing ["selects no exterior face"] []
+  forM_ [("compression",-1),("tension",1)] $ \(label,force) -> do
+    result <- solve (program "main = block 2 2 2" "support bot" ("load top 0 0 " ++ show (force :: Int)))
+    case result of
+      Left err -> failT t label err
+      Right r -> do
+        assertT t (label ++ " has nonnegative tensile demand") (all (\(_,_,c) -> csPeakTensionZ c >= 0) (hrCells (srResult r))) ""
+        assertT t (label ++ " tensile demand is correctly recovered")
+          (if force<0 then fst (srAcrossLayers r)==0 else fst (srAcrossLayers r)>0.2) (show (srAcrossLayers r))
+
+publicationTests :: T -> IO ()
+publicationTests t = do
+  section "stress: immutable artifacts and atomic report publication"
+  dir <- tempDir "stress-publication"
+  let input = dir </> "part.coscad"
+      report = dir </> "result.json"
+      source = "main = block 2 2 2\nsupport bot\nload top 0 0 -1\nstress cell=1\n"
+  writeFile input source
+  first <- processStress Native silent False input (Just report)
+  case first of
+    Left err -> failT t "initial publication" (show err)
+    Right () -> do
+      oldReport <- readFile report
+      parsed <- readJson report
+      case parsed of
+        Left err -> failT t "artifact report parses" err
+        Right j -> do
+          let get role field = lookupKey "artifacts" j >>= lookupKey role >>= lookupKey field >>= asString
+              files = [dir </> path | role <- ["source","mesh","scad"], Just path <- [get role "path"]]
+          assertT t "three referenced generation artifacts" (length files==3) ""
+          forM_ ["source","mesh","scad"] $ \role ->
+            assertT t (role ++ " SHA-256 provenance") (maybe False ((==64) . length) (get role "sha256")) ""
+          oldContents <- mapM readFile files
+          assertT t "source snapshot matches parser input" (take 1 oldContents==[source]) ""
+          before <- sort <$> listDirectory dir
+          writeFile input "main = block 3 2 2\nsupport bot\nstress cell=1\n"
+          failure <- processStress Native silent False input (Just report)
+          assertT t "analysis failure exits 1" (either ((==1) . failExit) (const False) failure) ""
+          stillReport <- readFile report
+          stillContents <- mapM readFile files
+          after <- sort <$> listDirectory dir
+          assertT t "failed analysis preserves report and every artifact" (stillReport==oldReport && stillContents==oldContents) ""
+          assertT t "failed analysis removes unpublished generation" (before==after) (show (before,after))
+          writeFile input ("// next generation\n" ++ source)
+          second <- processStress Native silent False input (Just report)
+          assertT t "replacement publishes successfully" (either (const False) (const True) second) ""
+          newReport <- readFile report
+          retained <- mapM readFile files
+          assertT t "replacement leaves old generation immutable" (newReport/=oldReport && retained==oldContents) ""
+          -- A publication error must also clean its generation, without
+          -- touching the already published report or any older artifacts.
+          let blocked = dir </> "blocked.json"
+          createDirectory blocked
+          beforeFailure <- sort <$> listDirectory dir
+          ioFailure <- try (processStress Native silent False input (Just blocked)) :: IO (Either IOException (Either Failure ()))
+          afterFailure <- sort <$> listDirectory dir
+          assertT t "rename error cleans unpublished artifacts" (either (const True) (const False) ioFailure && beforeFailure==afterFailure) ""
+          saved <- readFile input
+          overwrite <- processStress Native silent False input (Just input)
+          untouched <- readFile input
+          assertT t "source cannot be report destination" (either ((==1) . failExit) (const False) overwrite && saved==untouched) ""

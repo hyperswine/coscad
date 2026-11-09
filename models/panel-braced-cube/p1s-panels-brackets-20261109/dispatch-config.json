@@ -1,0 +1,9 @@
+{
+  "printer": "p1s",
+  "spool": "external",
+  "dispatcher": "models/tank-model-2020/dispatch.py",
+  "owner_confirmed_bed_clear": true,
+  "dispatcher_sha256": "c026cb148c4a0bb4be5de0440e59223e95f5d382b9aaa43d279d48bd0d286773",
+  "shared_verifier_sha256": "e8d1611f165f720f2bf13df3b57cb8b41432c9aa5dd26a592f964c56a7418473",
+  "authorization": "Owner requests one cube bed on P1S and one on A1, and confirms both beds clear, 2026-11-09."
+}

@@ -8,6 +8,18 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Stress boundary selection and output consistency:** plane selectors now
+  choose one nearest exterior voxel plane and reject equally close alternatives,
+  rather than clamping/loading multiple steps. Across-layer tensile demand is
+  nonnegative under compression. A completed report is published atomically
+  and references immutable source/STL/SCAD files with SHA-256 hashes through
+  `artifacts`; readers must use these paths instead of assuming flat companion
+  filenames. Failed runs preserve the prior report and its artifacts.
+- **Bonded shelf validation:** symmetric/asymmetric three-body fixtures,
+  independent scikit-fem/SciPy comparison and three mesh levels. Displacement
+  and interface-resultant refinement passes; peak stress and physical printed
+  strength remain unqualified. See docs/2026-11-10-BONDED-SHELF-VALIDATION.md.
+
 - **`coscad words` renders a file back as the word vocabulary**, and the
   bed-anchored family gets its words: `block x y z` (■ ▬), `pillar r h` (◎),
   `spike r h` (▻), `prism n r h` (⎏) and `poly x0 y0 ...` join `frustum` in

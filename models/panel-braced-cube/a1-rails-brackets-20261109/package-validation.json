@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "package_sha256": "cfb08853c063ff6b0d571f38211cf3222945a721f20d4dd604b91c56ea5e8556",
+  "layers": 750,
+  "objects": 20,
+  "layer_height_mm": 0.2,
+  "path_segments": 3138088,
+  "export_vertex_error_max_mm": 3.2869825160479553e-06,
+  "thermal": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 750,
+    "deposition_moves_checked": 3138136,
+    "package_sha256": "cfb08853c063ff6b0d571f38211cf3222945a721f20d4dd604b91c56ea5e8556"
+  },
+  "estimated_minutes": 2803.602083333333,
+  "estimated_grams": 367.68878173828125,
+  "per_object_layers": {
+    "34": {
+      "layers": 20,
+      "top_mm": 4.0
+    },
+    "26": {
+      "layers": 20,
+      "top_mm": 4.0
+    },
+    "28": {
+      "layers": 20,
+      "top_mm": 4.0
+    },
+    "30": {
+      "layers": 20,
+      "top_mm": 4.0
+    },
+    "32": {
+      "layers": 20,
+      "top_mm": 4.0
+    },
+    "38": {
+      "layers": 20,
+      "top_mm": 4.0
+    },
+    "36": {
+      "layers": 20,
+      "top_mm": 4.0
+    },
+    "40": {
+      "layers": 20,
+      "top_mm": 4.0
+    },
+    "24": {
+      "layers": 550,
+      "top_mm": 110.0
+    },
+    "22": {
+      "layers": 550,
+      "top_mm": 110.0
+    },
+    "20": {
+      "layers": 550,
+      "top_mm": 110.0
+    },
+    "18": {
+      "layers": 550,
+      "top_mm": 110.0
+    },
+    "10": {
+      "layers": 550,
+      "top_mm": 110.0
+    },
+    "12": {
+      "layers": 550,
+      "top_mm": 110.0
+    },
+    "14": {
+      "layers": 550,
+      "top_mm": 110.0
+    },
+    "16": {
+      "layers": 550,
+      "top_mm": 110.0
+    },
+    "8": {
+      "layers": 750,
+      "top_mm": 150.0
+    },
+    "6": {
+      "layers": 750,
+      "top_mm": 150.0
+    },
+    "4": {
+      "layers": 750,
+      "top_mm": 150.0
+    },
+    "2": {
+      "layers": 750,
+      "top_mm": 150.0
+    }
+  }
+}

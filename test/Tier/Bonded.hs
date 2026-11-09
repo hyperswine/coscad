@@ -84,6 +84,8 @@ bondedTier t = do
       forM_ (baBodies r) $ \b -> assertT t (brName b ++ " axial stress is force/area")
         (all (\(_,_,s) -> abs (head (csCentre s)-1/16) < 1e-8) (brCells b)) ""
 
+  shelfTier t
+
 failureCases :: T -> BondedProblem -> IO ()
 failureCases t p = do
   section "bonded assembly: unsupported inputs fail before solving"
@@ -134,3 +136,49 @@ balanced :: T -> String -> Double -> Wrench -> Wrench -> IO ()
 balanced t name tol a b = do
   closeV t (name ++ " force equilibrium") tol (vadd (wrenchForce a) (wrenchForce b)) (0,0,0)
   closeV t (name ++ " moment equilibrium") tol (vadd (wrenchMoment a) (wrenchMoment b)) (0,0,0)
+
+-- Two separate supports make load sharing depend on component stiffness.
+-- These coarse fixtures run in the ordinary suite without Python; the optional
+-- reference script checks three refinements against independent elements.
+shelfTier :: T -> IO ()
+shelfTier t = do
+  section "bonded shelf: symmetry and stiffness-dependent load sharing"
+  symmetricText <- readFile "experiments/bonded/shelf-symmetric.json"
+  softText <- readFile "experiments/bonded/shelf-soft-right.json"
+  case do
+    p <- parseBondedProblem symmetricText
+    q <- parseBondedProblem softText
+    a <- solveBonded p
+    b <- solveBonded q
+    return (p,q,a,b) of
+    Left err -> failT t "shelf fixtures solve" err
+    Right (p,q,a,b) -> do
+      let reaction name r = [wrenchForce (brSupport x) | x <- baBodies r, brName x==name]
+          vertical name r = sum [z | (_,_,z) <- reaction name r]
+          probe r = [u | body <- baBodies r, brName body=="shelf", (_,x,u) <- brNodes body, x==(6,6,4)]
+          magnitude r = maximum [vlen u | u <- probe r]
+      forM_ [("symmetric",a),("soft-right",b)] $ \(label,r) -> do
+        assertT t (label ++ " has three bodies and two interfaces") (length (baBodies r)==3 && length (baInterfaces r)==2) ""
+        balanced t (label ++ " global") 1e-7 (baSupport r) (baApplied r)
+        forM_ (baInterfaces r) $ \i -> balanced t (label ++ " " ++ irName i) 1e-7 (irOnA i) (irOnB i)
+        assertT t (label ++ " has centre-front probe") (length (probe r)==1) ""
+      assertT t "symmetric arms each carry half the vertical force"
+        (abs (vertical "left" a-0.5)<1e-8 && abs (vertical "right" a-0.5)<1e-8) (show (reaction "left" a,reaction "right" a))
+      assertT t "softening right shifts load to left"
+        (vertical "left" b > vertical "left" a + 1e-3 && vertical "right" b < vertical "right" a - 1e-3) (show (reaction "left" b,reaction "right" b))
+      assertT t "softening increases displacement and energy"
+        (magnitude b > magnitude a && baEnergy b > baEnergy a) ""
+      -- Mirror the material assignment while keeping symmetric geometry/load.
+      let mirrored = q {bpBodies=[body {bodyYoung=if bodyName body=="left" then 500 else 2000} | body <- bpBodies q]}
+      case solveBonded mirrored of
+        Left err -> failT t "mirrored stiffness shelf" err
+        Right r -> do
+          assertT t "mirroring stiffness swaps vertical reactions"
+            (abs (vertical "left" r - vertical "right" b)<1e-8 && abs (vertical "right" r - vertical "left" b)<1e-8) ""
+          assertT t "mirroring preserves energy" (abs (baEnergy r/baEnergy b-1)<1e-8) ""
+      case solveBonded p {bpLoads=[(patch,(2*x,2*y,2*z)) | (patch,(x,y,z)) <- bpLoads p]} of
+        Left err -> failT t "shelf doubled load" err
+        Right r -> do
+          assertT t "linear displacement and quadratic energy scaling"
+            (abs (magnitude r/magnitude a-2)<1e-8 && abs (baEnergy r/baEnergy a-4)<1e-8) ""
+          assertT t "doubled load doubles reaction" (abs (vertical "left" r-1)<1e-8) ""

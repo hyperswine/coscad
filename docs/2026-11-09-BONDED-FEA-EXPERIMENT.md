@@ -1,5 +1,10 @@
 # First bonded assembly FEA experiment
 
+> 2026-11-10: [Shelf validation](2026-11-10-BONDED-SHELF-VALIDATION.md)
+> now adds symmetric/asymmetric load sharing, an independent numerical
+> comparison and mesh-refinement checks. Physical validation and `.assemble`
+> integration remain open. The original status below records the earlier stage.
+
 Status: implemented experimental foundation, 2026-11-09. This completes the
 initial two-body matching-interface experiment in the
 [assembly FEA proposal](2026-11-09-ASSEMBLY-FEA-PROPOSAL.md), not its full first

@@ -1,0 +1,727 @@
+{
+  "job": "p1s-panels-brackets-20261109",
+  "printer": "p1s",
+  "material": "pla",
+  "package_sha256": "36a58dd9472423bf435aa1355414ab56d0dd9a745d3692ed25a7728029852448",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 600,
+    "deposition_moves_checked": 671622,
+    "package_sha256": "36a58dd9472423bf435aa1355414ab56d0dd9a745d3692ed25a7728029852448"
+  },
+  "remote_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "authorization_note": "Owner requested cube kit on P1S and A1 and confirmed both beds clear, 2026-11-09. A1 uses white PLA physical AMS slot 1; P1S uses loaded external PLA.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 1164,
+    "total_layer_num": 1164,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "tesseract-v3-p1s-struts-20261103-165700.gcode",
+    "nozzle_temper": 24.28125,
+    "bed_temper": 20.46875,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-09T22:40:00+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 1164,
+        "total_layer_num": 1164,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 24.28125,
+        "bed_temper": 20.46875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:40:15+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 907,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 48.75,
+        "bed_temper": 20.46875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:40:30+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 907,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 80.40625,
+        "bed_temper": 20.625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:40:45+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 907,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 75.21875,
+        "bed_temper": 38.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:41:00+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 907,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 87.28125,
+        "bed_temper": 53.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:41:15+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 907,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 142.8125,
+        "bed_temper": 54.40625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:41:30+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 907,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 217.34375,
+        "bed_temper": 54.5625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:41:45+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 907,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 249.3125,
+        "bed_temper": 54.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:42:00+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 903,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 247.40625,
+        "bed_temper": 54.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:42:15+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 903,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 216.65625,
+        "bed_temper": 54.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:42:30+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 200.65625,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790412653
+        }
+      ]
+    },
+    {
+      "at": "2026-11-09T22:42:45+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 200.15625,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790412653
+        }
+      ]
+    },
+    {
+      "at": "2026-11-09T22:43:00+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 200.03125,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790412653
+        }
+      ]
+    },
+    {
+      "at": "2026-11-09T22:43:15+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 200.03125,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790412653
+        }
+      ]
+    },
+    {
+      "at": "2026-11-09T22:43:30+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 199.96875,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790412653
+        }
+      ]
+    },
+    {
+      "at": "2026-11-09T22:43:45+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 189.375,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790412653
+        }
+      ]
+    },
+    {
+      "at": "2026-11-09T22:44:00+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 171.25,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790412653
+        }
+      ]
+    },
+    {
+      "at": "2026-11-09T22:44:15+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 152.1875,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790412653
+        }
+      ]
+    },
+    {
+      "at": "2026-11-09T22:44:30+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 141.03125,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:44:45+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:45:00+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 140.125,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:45:15+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:45:30+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:45:45+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 139.84375,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:46:00+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:46:15+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 139.90625,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:46:30+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 139.9375,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:46:45+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 141.40625,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:47:00+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 193.6875,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:47:15+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 218.4375,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:47:30+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 600,
+        "mc_remaining_time": 902,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 219.9375,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-09T22:47:45+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 1,
+        "total_layer_num": 600,
+        "mc_remaining_time": 901,
+        "gcode_file": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf",
+        "subtask_name": "cube-p1s-panels-brackets-20261109-20261109-223916.gcode",
+        "nozzle_temper": 220.34375,
+        "bed_temper": 55.03125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-09T22:39:16+1100",
+  "remote_content_sha256": "36a58dd9472423bf435aa1355414ab56d0dd9a745d3692ed25a7728029852448",
+  "sequence_id": "224400634",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "224400634"
+  },
+  "first_layer_reached": true
+}

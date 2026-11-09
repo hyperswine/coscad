@@ -161,3 +161,57 @@ here. The individual print meshes, instance-based build-plan images and actual
 assembly interference checks succeeded. This renderer warning is not physical
 evidence of an assembly defect, and has not been fixed in the compiler by this
 model addition.
+
+## P1S and A1 print trial, 2026-11-09
+
+The owner requested one bed on each printer and explicitly confirmed both plates
+clear. `prepare_print.py` repacks the complete kit into printer-specific projects;
+it does not reuse the generic corner-start layouts above.
+
+| Printer / job folder | Contents | Final process | Slicer estimate |
+| --- | --- | --- | --- |
+| `p1s-panels-brackets-20261109` | 2 upright panels, 8 flat brackets | 0.20 mm, 4 walls, 100% infill | 15 h 8 min, 254.78 g |
+| `a1-rails-brackets-20261109` | 4 upright 150 mm rails, 8 upright 110 mm rails, 8 flat brackets | 0.20 mm, 4 walls, 25% gyroid | 46 h 44 min, 367.69 g |
+
+Both use a 0.20 mm first layer, integral mouse ears, no additional full brim,
+no supports, 220 C nozzle and **55 C textured PEI bed**. Outer/inner wall speeds
+are 40/70 mm/s; default/outer-wall acceleration is 2000/1000 mm/s², travel
+180 mm/s at 3000 mm/s². These actual settings supersede the suggested 0.10 mm
+first-trial recipe above. The initial unstarted, slower slices were replaced
+before any dispatch: their estimates were 36/58 hours.
+
+The P1S uses its reported loaded external yellow PLA. The A1 uses **white PLA
+in physical AMS slot 1 (`ams0`, mapping `[0]`)**, avoiding the yellow slot 3.
+The bracket infill differs between the two beds: label their origins and keep
+every bracket in the same position for all three test configurations, so this
+does not become an unrecorded change during the bracing comparison.
+
+`verify_print.py` checks the exact expected quantities and per-object layer
+coverage, source/STL identities, exported mesh poses and topology, motion settings,
+all model extrusion paths inside a central safe region, plate/printer identity,
+and actual bed/nozzle commands throughout the print. P1S has 600 layers and A1
+750; every shorter part must also finish all its own layers. The shared audit
+retains its X1C defaults for old callers and rejects wrong-printer packages.
+
+`print_job.py p1s` or `print_job.py a1` reads status. With `--start --bed-clear`,
+it repeats verification and uses the existing one-shot tank LAN dispatcher,
+full remote SHA-256 read-back, exclusive run record, and fresh printer/spool
+checks. **Never resend a job with a dispatch record**, including after an
+uncertain acknowledgement. The per-job `print-run.json` distinguishes acceptance,
+startup observations and first-layer telemetry. Print completion, physical
+quality and the stiffness test require later evidence.
+
+Both one-shot starts were acknowledged SUCCESS after full remote-content hash
+verification on 2026-11-09. The P1S job is
+`cube-p1s-panels-brackets-20261109-20261109-223916.gcode.3mf`; its verified package
+SHA-256 is `36a58dd9472423bf435aa1355414ab56d0dd9a745d3692ed25a7728029852448`.
+The A1 job is `cube-a1-rails-brackets-20261109-20261109-224110.gcode.3mf`, SHA-256
+`cfb08853c063ff6b0d571f38211cf3222945a721f20d4dd604b91c56ea5e8556`.
+
+During P1S startup, HMS `0300-3100-0001-0001` was reported around 22:42–22:44
+Sydney time, then cleared by 22:44:30 without any alert-clear command.
+The local dashboard's code catalogue labels this as fan-related; the same code
+was recorded during the earlier threaded-globe run. The printer kept RUNNING
+with print_error=0. This is a transient reported alert, not proof that the fan
+or its previously suspected connector is repaired. Startup telemetry, including
+any later recurrence, remains in the run records.

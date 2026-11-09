@@ -101,7 +101,7 @@ coscad words part.coscad     # -> render a part back as the word (!simple) vocab
 coscad frame.assemble        # -> _asm.png view, packed _plate(N).png, frame_design.json (+ .scad exports)
 coscad next frame.assemble   # -> frame_bed1.stl ... + frame_manifest.json
 coscad check frame.assemble  # interference / clearance check on real meshes
-coscad stress bracket.coscad # deflection, peak stress and safety factor from the part's support/load lines
+coscad stress bracket.coscad # deflection, peak stress and safety factor from the part's support/load lines; JSON references exact mesh
 coscad plan frame.assemble   # numbered build steps, preload sheet, BOM, step scenes
 coscad calibrate times.json  # fit the plan's cost weights to timed builds (seconds per term)
 coscad site out/ *.assemble  # phone-first static site: step images, search across builds

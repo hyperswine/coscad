@@ -1,0 +1,281 @@
+{
+  "printer": "a1",
+  "plate": "Textured PEI Plate",
+  "bed_c": 55,
+  "nozzle_c": 220,
+  "parts": [
+    {
+      "name": "parts/rail-print-150",
+      "centre_mm": [
+        52,
+        60
+      ],
+      "object_id": 2,
+      "holes": 1,
+      "height_mm": 150.0,
+      "source_sha256": "ea2fb21d3bb6b603e6ffa06444956d36135cbb70ce69305be995b2b55bcddcae",
+      "stl_sha256": "6deedce70d7f1d527ee1177b37aad4c1132ac4bfe47be2814eb305344dc44bd8"
+    },
+    {
+      "name": "parts/rail-print-150",
+      "centre_mm": [
+        88,
+        60
+      ],
+      "object_id": 4,
+      "holes": 1,
+      "height_mm": 150.0,
+      "source_sha256": "ea2fb21d3bb6b603e6ffa06444956d36135cbb70ce69305be995b2b55bcddcae",
+      "stl_sha256": "6deedce70d7f1d527ee1177b37aad4c1132ac4bfe47be2814eb305344dc44bd8"
+    },
+    {
+      "name": "parts/rail-print-150",
+      "centre_mm": [
+        124,
+        60
+      ],
+      "object_id": 6,
+      "holes": 1,
+      "height_mm": 150.0,
+      "source_sha256": "ea2fb21d3bb6b603e6ffa06444956d36135cbb70ce69305be995b2b55bcddcae",
+      "stl_sha256": "6deedce70d7f1d527ee1177b37aad4c1132ac4bfe47be2814eb305344dc44bd8"
+    },
+    {
+      "name": "parts/rail-print-150",
+      "centre_mm": [
+        160,
+        60
+      ],
+      "object_id": 8,
+      "holes": 1,
+      "height_mm": 150.0,
+      "source_sha256": "ea2fb21d3bb6b603e6ffa06444956d36135cbb70ce69305be995b2b55bcddcae",
+      "stl_sha256": "6deedce70d7f1d527ee1177b37aad4c1132ac4bfe47be2814eb305344dc44bd8"
+    },
+    {
+      "name": "parts/rail-print-110",
+      "centre_mm": [
+        52,
+        98
+      ],
+      "object_id": 10,
+      "holes": 1,
+      "height_mm": 110.0,
+      "source_sha256": "8bd9d64ca0f7a98f10ad6b0235be7050e89b273fb06401dfb40bcb7a1a041490",
+      "stl_sha256": "cbbb279c1322642ea6bfba01b3d717986c12237107e8440dc9d1cdcd7b3c5c31"
+    },
+    {
+      "name": "parts/rail-print-110",
+      "centre_mm": [
+        88,
+        98
+      ],
+      "object_id": 12,
+      "holes": 1,
+      "height_mm": 110.0,
+      "source_sha256": "8bd9d64ca0f7a98f10ad6b0235be7050e89b273fb06401dfb40bcb7a1a041490",
+      "stl_sha256": "cbbb279c1322642ea6bfba01b3d717986c12237107e8440dc9d1cdcd7b3c5c31"
+    },
+    {
+      "name": "parts/rail-print-110",
+      "centre_mm": [
+        124,
+        98
+      ],
+      "object_id": 14,
+      "holes": 1,
+      "height_mm": 110.0,
+      "source_sha256": "8bd9d64ca0f7a98f10ad6b0235be7050e89b273fb06401dfb40bcb7a1a041490",
+      "stl_sha256": "cbbb279c1322642ea6bfba01b3d717986c12237107e8440dc9d1cdcd7b3c5c31"
+    },
+    {
+      "name": "parts/rail-print-110",
+      "centre_mm": [
+        160,
+        98
+      ],
+      "object_id": 16,
+      "holes": 1,
+      "height_mm": 110.0,
+      "source_sha256": "8bd9d64ca0f7a98f10ad6b0235be7050e89b273fb06401dfb40bcb7a1a041490",
+      "stl_sha256": "cbbb279c1322642ea6bfba01b3d717986c12237107e8440dc9d1cdcd7b3c5c31"
+    },
+    {
+      "name": "parts/rail-print-110",
+      "centre_mm": [
+        52,
+        136
+      ],
+      "object_id": 18,
+      "holes": 1,
+      "height_mm": 110.0,
+      "source_sha256": "8bd9d64ca0f7a98f10ad6b0235be7050e89b273fb06401dfb40bcb7a1a041490",
+      "stl_sha256": "cbbb279c1322642ea6bfba01b3d717986c12237107e8440dc9d1cdcd7b3c5c31"
+    },
+    {
+      "name": "parts/rail-print-110",
+      "centre_mm": [
+        88,
+        136
+      ],
+      "object_id": 20,
+      "holes": 1,
+      "height_mm": 110.0,
+      "source_sha256": "8bd9d64ca0f7a98f10ad6b0235be7050e89b273fb06401dfb40bcb7a1a041490",
+      "stl_sha256": "cbbb279c1322642ea6bfba01b3d717986c12237107e8440dc9d1cdcd7b3c5c31"
+    },
+    {
+      "name": "parts/rail-print-110",
+      "centre_mm": [
+        124,
+        136
+      ],
+      "object_id": 22,
+      "holes": 1,
+      "height_mm": 110.0,
+      "source_sha256": "8bd9d64ca0f7a98f10ad6b0235be7050e89b273fb06401dfb40bcb7a1a041490",
+      "stl_sha256": "cbbb279c1322642ea6bfba01b3d717986c12237107e8440dc9d1cdcd7b3c5c31"
+    },
+    {
+      "name": "parts/rail-print-110",
+      "centre_mm": [
+        160,
+        136
+      ],
+      "object_id": 24,
+      "holes": 1,
+      "height_mm": 110.0,
+      "source_sha256": "8bd9d64ca0f7a98f10ad6b0235be7050e89b273fb06401dfb40bcb7a1a041490",
+      "stl_sha256": "cbbb279c1322642ea6bfba01b3d717986c12237107e8440dc9d1cdcd7b3c5c31"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        212,
+        54
+      ],
+      "object_id": 26,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        212,
+        100
+      ],
+      "object_id": 28,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        212,
+        146
+      ],
+      "object_id": 30,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        212,
+        192
+      ],
+      "object_id": 32,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        52,
+        216
+      ],
+      "object_id": 34,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        104,
+        216
+      ],
+      "object_id": 36,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        156,
+        216
+      ],
+      "object_id": 38,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    },
+    {
+      "name": "parts/bracket",
+      "centre_mm": [
+        104,
+        172.5
+      ],
+      "object_id": 40,
+      "holes": 2,
+      "height_mm": 4.0,
+      "source_sha256": "94ce19885baccb867c3ed284e0340a50c0d84423cccd64a2f7eb0bff481f42a6",
+      "stl_sha256": "5fcd895aeade6cf96fd04fa2ff2d42996af6cbc369acf63574416231069d7ad7"
+    }
+  ],
+  "settings": {
+    "enable_support": "0",
+    "support_on_build_plate_only": "1",
+    "only_one_wall_top": "0",
+    "sparse_infill_pattern": "gyroid",
+    "brim_object_gap": "0.1",
+    "wall_loops": "4",
+    "sparse_infill_density": "25%",
+    "top_shell_layers": "5",
+    "bottom_shell_layers": "5",
+    "brim_type": "no_brim",
+    "brim_width": "0",
+    "print_sequence": "by layer",
+    "outer_wall_speed": [
+      "40"
+    ],
+    "inner_wall_speed": [
+      "70"
+    ],
+    "initial_layer_speed": [
+      "25"
+    ],
+    "default_acceleration": "2000",
+    "outer_wall_acceleration": "1000",
+    "travel_speed": [
+      "180"
+    ],
+    "travel_acceleration": "3000",
+    "enable_arc_fitting": "0",
+    "elefant_foot_compensation": "0.15"
+  },
+  "spool": "ams0",
+  "owner_confirmed_bed_clear": true
+}

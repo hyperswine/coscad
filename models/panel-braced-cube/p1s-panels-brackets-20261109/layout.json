@@ -1,0 +1,72 @@
+[
+ {
+  "part": "panel-print",
+  "centre_mm": [
+   128,
+   60
+  ]
+ },
+ {
+  "part": "panel-print",
+  "centre_mm": [
+   128,
+   112
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   48,
+   164
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   100,
+   164
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   152,
+   164
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   204,
+   164
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   48,
+   210
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   100,
+   210
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   152,
+   210
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   204,
+   210
+  ]
+ }
+]

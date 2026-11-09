@@ -87,3 +87,36 @@ No safety-factor verdict, contact, preload, compliant joints, print orientation,
 material anisotropy or physical validation is provided. Peak stress remains
 mesh dependent. The matching-beam comparison validates coupling against the
 existing solver; it is not an independent solver or physical comparison.
+
+## Shelf validation
+
+`shelf-symmetric.json` and `shelf-soft-right.json` add a shelf bonded to two
+rectangular cantilever arms. Both apply 1 N downward; the latter reduces the
+right arm's modulus from 2000 to 500 MPa. Clamps lie behind the shelf and do
+not touch the tied faces. The coarse fixtures run in the ordinary Haskell
+regression tier, including mirrored-stiffness and load-scaling checks.
+
+The optional independent check runs both cases at 2, 1 and 2/3 mm cells using
+scikit-fem's Hex20 implementation and SciPy's direct solver:
+
+```sh
+python3.12 -m venv /tmp/coscad-fea-reference
+/tmp/coscad-fea-reference/bin/python -m pip install -r experiments/requirements-fea.txt
+cabal build exe:coscad-experiments
+FEA_EXE="$(cabal list-bin exe:coscad-experiments)"
+/tmp/coscad-fea-reference/bin/python scripts/compare-bonded-reference.py \
+  --exe "$FEA_EXE" --output /tmp/shelf-comparison.json
+```
+
+A failed reference or final refinement threshold exits nonzero. The report
+retains coarse-to-medium failures even when the medium-to-fine gate passes.
+To regenerate the two committed coarse inputs into a scratch directory:
+
+```sh
+python3 scripts/bonded_shelf.py --output-dir /tmp/bonded-shelf-fixtures
+```
+
+See [the validation record](../../docs/2026-11-10-BONDED-SHELF-VALIDATION.md)
+for measured load sharing, refinement, independent agreement and evidence.
+These fixtures establish numerical behavior for ideal perfect bonds; they do
+not validate physical prints, joint failure or peak-stress convergence.

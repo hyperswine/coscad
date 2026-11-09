@@ -34,6 +34,8 @@ extra-source-files:
     third-party/bosl2/LICENSE
     third-party/bosl2/README.md
     scripts/package-release.py
+    scripts/bonded_shelf.py
+    scripts/compare-bonded-reference.py
     scripts/compare-fea-reference.py
     scripts/compare-cad-fea-reference.py
     scripts/compare-native-pipeline.py
@@ -112,6 +114,9 @@ library
   build-depends:
       base >=4.7 && <5
     , array >=0.5 && <0.6
+    , bytestring
+    , text
+    , cryptohash-sha256 >=0.11 && <0.12
     , containers
     , directory
     , filepath

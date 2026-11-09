@@ -67,3 +67,5 @@ at the first three.
 | 2026-11-09 | [BACKEND-REVIEW](2026-11-09-BACKEND-REVIEW.md) | keep native Manifold; triggers and acceptance gates for optional OCCT |
 | 2026-11-09 | [ASSEMBLY-FEA-PROPOSAL](2026-11-09-ASSEMBLY-FEA-PROPOSAL.md) | proposed bonded assembly stress, compliant joints, contact and validation gates |
 | 2026-11-09 | [BONDED-FEA-EXPERIMENT](2026-11-09-BONDED-FEA-EXPERIMENT.md) | first coupled Hex20 experiment: matching planar ties, interface resultants and regression fixtures |
+| 2026-11-10 | [BONDED-SHELF-VALIDATION](2026-11-10-BONDED-SHELF-VALIDATION.md) | three-body shelf load sharing, independent scikit-fem comparison and mesh-refinement evidence |
+| 2026-11-10 | [STRESS-CORRECTIONS](2026-11-10-STRESS-CORRECTIONS.md) | nearest-plane selection, nonnegative tension and atomic report publication with artifact provenance |

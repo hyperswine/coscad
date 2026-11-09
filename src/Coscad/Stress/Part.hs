@@ -131,18 +131,31 @@ analysePart analysis setup shape tris = do
       axisOf (x,y,z) | x /= 0 = (0, signum x) | y /= 0 = (1, signum y) | otherwise = (2, signum z)
       planeOf face@(Face c axis sgn) = component axis (cellCorner grid c) + (if sgn > 0 then h else 0) + 0 * fromIntegral (faceSign face)
       component i (x,y,z) = [x,y,z] !! i
-      -- faces with the given outward normal whose plane is within one cell of the target coordinate
-      planarFaces normal target =
+      -- A voxel surface may be displaced from the CAD plane, but that does
+      -- not make neighbouring step levels part of the same support/load.
+      -- Select only the nearest plane; equally near alternatives are ambiguous.
+      planarFaces normal target = do
         let (axis, sgn) = axisOf normal
-        in [ f | f@(Face _ a s) <- faces, a == axis, fromIntegral s == sgn, abs (planeOf f - target) <= h + 1e-9 ]
+            epsilon = 1e-9 * max 1 h
+            candidates = [f | f@(Face _ a s) <- faces, a == axis, fromIntegral s == sgn,
+                               abs (planeOf f - target) <= h + epsilon]
+        case candidates of
+          [] -> Right []
+          _ -> do
+            let distance = minimum [abs (planeOf f-target) | f <- candidates]
+                selected = [f | f <- candidates, abs (abs (planeOf f-target)-distance) <= epsilon]
+                planes = map planeOf selected
+            unless (maximum planes - minimum planes <= epsilon)
+              (Left "stress: ambiguous face plane: two exterior voxel levels are equally close; choose a datum on the intended face or refine cell=")
+            Right selected
       selectFaces w = case w of
         AtBox normal -> let (axis, sgn) = axisOf normal
                             target = component axis (if sgn > 0 then hi else lo)
-                        in Right (planarFaces normal target)
+                        in planarFaces normal target
         AtDatumFace name normal -> do
           p <- datumPoint name
           let (axis, _) = axisOf normal
-          return (planarFaces normal (component axis p))
+          planarFaces normal (component axis p)
         AtDatum _ -> Right []
       nearestNode p = case sortOn snd [ (k, vlen (vsub (nodePosition grid k) p)) | k <- Set.toList (allNodes grid) ] of
         ((k, _):_) -> k

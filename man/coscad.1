@@ -93,7 +93,11 @@ feature names (including
 and material names/moduli.
 .Pp
 .Cm stress
-renders and analyses the part's support/load/stress directives. The full
+renders and analyses the part's support/load/stress directives.
+The JSON report's artifacts field identifies immutable source, STL and SCAD
+files relative to the report directory, with SHA-256 hashes. Use these paths
+rather than assuming a companion STL filename. Failed analyses preserve the
+previous report and its artifacts. The full
 report includes node and cell fields. Exit 2 means the requested safety
 factor was not met, 1 means analysis could not run. Validation checks
 analysis settings and datum identities without solving the part.

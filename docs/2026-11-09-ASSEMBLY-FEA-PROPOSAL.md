@@ -1,5 +1,10 @@
 # Extending FEA to assemblies
 
+> 2026-11-10: [Shelf validation](2026-11-10-BONDED-SHELF-VALIDATION.md)
+> now adds symmetric/asymmetric load sharing, an independent numerical
+> comparison and mesh-refinement checks. Physical validation and `.assemble`
+> integration remain open. The original status below records the earlier stage.
+
 Status: proposal, 2026-11-09. The [first bonded experiment](2026-11-09-BONDED-FEA-EXPERIMENT.md)
 now implements the initial coupled-solver foundation. `.assemble` analysis and
 the broader stages below remain proposed. The first target is coupled linear analysis of

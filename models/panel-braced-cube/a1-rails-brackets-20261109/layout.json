@@ -1,0 +1,142 @@
+[
+ {
+  "part": "rail-print-150",
+  "centre_mm": [
+   52,
+   60
+  ]
+ },
+ {
+  "part": "rail-print-150",
+  "centre_mm": [
+   88,
+   60
+  ]
+ },
+ {
+  "part": "rail-print-150",
+  "centre_mm": [
+   124,
+   60
+  ]
+ },
+ {
+  "part": "rail-print-150",
+  "centre_mm": [
+   160,
+   60
+  ]
+ },
+ {
+  "part": "rail-print-110",
+  "centre_mm": [
+   52,
+   98
+  ]
+ },
+ {
+  "part": "rail-print-110",
+  "centre_mm": [
+   88,
+   98
+  ]
+ },
+ {
+  "part": "rail-print-110",
+  "centre_mm": [
+   124,
+   98
+  ]
+ },
+ {
+  "part": "rail-print-110",
+  "centre_mm": [
+   160,
+   98
+  ]
+ },
+ {
+  "part": "rail-print-110",
+  "centre_mm": [
+   52,
+   136
+  ]
+ },
+ {
+  "part": "rail-print-110",
+  "centre_mm": [
+   88,
+   136
+  ]
+ },
+ {
+  "part": "rail-print-110",
+  "centre_mm": [
+   124,
+   136
+  ]
+ },
+ {
+  "part": "rail-print-110",
+  "centre_mm": [
+   160,
+   136
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   212,
+   54
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   212,
+   100
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   212,
+   146
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   212,
+   192
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   52,
+   216
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   104,
+   216
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   156,
+   216
+  ]
+ },
+ {
+  "part": "bracket",
+  "centre_mm": [
+   104,
+   172.5
+  ]
+ }
+]

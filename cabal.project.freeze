@@ -5,6 +5,7 @@ active-repositories: hackage.haskell.org:merge
 index-state: hackage.haskell.org 2026-10-13T00:04:23Z
 constraints: any.JuicyPixels ==3.3.9,
              any.case-insensitive ==1.2.1.0,
+             any.cryptohash-sha256 ==0.11.102.1,
              any.hashable ==1.5.1.0,
              any.hsc2hs ==0.68.10,
              any.integer-logarithms ==1.0.5,

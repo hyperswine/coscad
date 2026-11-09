@@ -24,8 +24,14 @@ def require(condition, reason):
         raise ValueError(reason)
 
 
-def verify(here=HERE, folder=FOLDER, expected_parts=3):
+def verify(here=HERE, folder=FOLDER, expected_parts=3, profile=None):
     HERE, FOLDER = Path(here), Path(folder)
+    options = dict(printer_settings_id='Bambu Lab X1 Carbon 0.4 nozzle', printer_model='Bambu Lab X1 Carbon',
+                   model_id='BL-P001', package_name='tank.gcode.3mf', layer_height=.1,
+                   wall_loops='4', sparse_infill_density='100%')
+    if profile is not None:
+        require(not (set(profile) - set(options)), 'Unknown package audit option')
+        options.update(profile)
     intent = json.loads((FOLDER / 'print-intent.json').read_text())
     require(len(intent['parts']) == expected_parts and expected_parts > 0, 'Unexpected panel object count')
     expected = []
@@ -44,18 +50,20 @@ def verify(here=HERE, folder=FOLDER, expected_parts=3):
     require(len(result['sliced_plates']) == 1, 'Not a single plate')
     plate = result['sliced_plates'][0]
     require(not plate['warning_message'] and len(plate['objects']) == expected_parts, 'Warnings or wrong object count')
-    package = out / 'tank.gcode.3mf'
+    package = out / options['package_name']
     with zipfile.ZipFile(package) as archive:
         require(archive.testzip() is None, 'Corrupt package')
         entries = {entry.filename: archive.read(entry) for entry in archive.infolist()}
     settings = json.loads(entries['Metadata/project_settings.config'])
-    require(settings['printer_settings_id'] == 'Bambu Lab X1 Carbon 0.4 nozzle', 'Wrong printer preset')
-    require(settings['printer_model'] == 'Bambu Lab X1 Carbon' and settings['nozzle_diameter'] == ['0.4'], 'Wrong machine/nozzle')
+    require(settings['printer_settings_id'] == options['printer_settings_id'], 'Wrong printer preset')
+    require(settings['printer_model'] == options['printer_model'] and settings['nozzle_diameter'] == ['0.4'], 'Wrong machine/nozzle')
     require(settings['filament_type'] == ['PLA'] and settings['curr_bed_type'] == 'Textured PEI Plate', 'Wrong material/plate')
     for key, value in [('enable_support', '0'), ('brim_type', 'no_brim'), ('print_sequence', 'by layer'),
-                       ('wall_loops', '4'), ('sparse_infill_density', '100%')]:
+                       ('wall_loops', options['wall_loops']), ('sparse_infill_density', options['sparse_infill_density'])]:
         require(settings[key] == value, f'Wrong {key}: {settings[key]}')
-    require(float(settings['layer_height']) == .1 and float(settings['initial_layer_print_height']) == .2, 'Wrong layer heights')
+    lh = options['layer_height']
+    require(lh in (.1, .2), 'Unsupported layer height for package audit')
+    require(float(settings['layer_height']) == lh and float(settings['initial_layer_print_height']) == .2, 'Wrong layer heights')
     require([n for n in entries if re.fullmatch(r'Metadata/plate_\d+\.gcode', n)] == ['Metadata/plate_1.gcode'], 'Ambiguous plate selection')
     code = entries['Metadata/plate_1.gcode']
     require(code == (out / 'plate_1.gcode').read_bytes(), 'Package G-code differs from inspected slice')
@@ -135,15 +143,15 @@ def verify(here=HERE, folder=FOLDER, expected_parts=3):
                 require(any(lo[0] - .6 <= px <= hi[0] + .6 and lo[1] - .6 <= py <= hi[1] + .6 for lo, hi in bounds), 'Path outside samples')
         x, y = nx, ny
     top = max(mesh.bounds[1, 2] for mesh in expected)
-    layer_count = round((top - .2) / .1) + 1
-    require(abs(.2 + .1 * (layer_count - 1) - top) < 1e-5, 'Sample height is not representable at the intended layer heights')
+    layer_count = round((top - .2) / lh) + 1
+    require(abs(.2 + lh * (layer_count - 1) - top) < 1e-5, 'Sample height is not representable at the intended layer heights')
     require(segments > 1000 and len(layers) == layer_count, 'Missing model paths or wrong layer count')
-    require(np.allclose(layers, .2 + .1 * np.arange(layer_count), atol=1e-5), 'Layer rounding could merge the fit variants')
+    require(np.allclose(layers, .2 + lh * np.arange(layer_count), atol=1e-5), 'Layer rounding could merge the fit variants')
     info = E.fromstring(entries['Metadata/slice_info.config'])
     identity = info.find(".//metadata[@key='printer_model_id']")
-    require(identity is not None and identity.get('value') in ('', 'BL-P001'), 'Wrong printer model ID')
+    require(identity is not None and identity.get('value') in ('', options['model_id']), 'Wrong printer model ID')
     if identity.get('value') == '':
-        identity.set('value', 'BL-P001')
+        identity.set('value', options['model_id'])
         entries['Metadata/slice_info.config'] = E.tostring(info, encoding='utf-8', xml_declaration=True)
         temporary = package.with_suffix('.tmp')
         with zipfile.ZipFile(temporary, 'w', zipfile.ZIP_DEFLATED) as archive:
@@ -152,7 +160,7 @@ def verify(here=HERE, folder=FOLDER, expected_parts=3):
     thermal = verify_package(package, preset_expectations(FOLDER / 'presets', plate='Textured PEI Plate'))
     require(thermal['expected'] == dict(plate='Textured PEI Plate', bed_initial_c=55., bed_c=55., nozzle_initial_c=220., nozzle_c=220.), 'Thermal intent differs')
     report = {'passed': True, 'package_sha256': hashlib.sha256(package.read_bytes()).hexdigest(),
-              'layers': len(layers), 'objects': expected_parts, 'layer_height_mm': .1, 'path_segments': segments,
+              'layers': len(layers), 'objects': expected_parts, 'layer_height_mm': lh, 'path_segments': segments,
               'export_vertex_error_max_mm': max(errors), 'thermal': thermal,
               'estimated_minutes': plate['total_predication'] / 60,
               'estimated_grams': plate['filaments'][0]['total_used_g']}
