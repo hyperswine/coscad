@@ -8,6 +8,13 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Mass and balance:** `coscad mass` reports native solid properties or combines
+  explicit component/hardware masses. Shared mesh moments improve translation
+  stability and remove the planner's duplicate centroid calculation. The optional
+  `scripts/slice-mass.py` reader estimates Bambu deposited-filament mass in an
+  explicit assembly frame, with measured-mass overrides and source hashes.
+  See docs/2026-11-10-MASS-ANALYSIS.md for supported modes and limitations.
+
 - **Stress boundary selection and output consistency:** plane selectors now
   choose one nearest exterior voxel plane and reject equally close alternatives,
   rather than clamping/loading multiple steps. Across-layer tensile demand is

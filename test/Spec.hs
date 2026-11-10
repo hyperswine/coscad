@@ -44,6 +44,7 @@ import Tier.Linalg
 import Tier.Resolution
 import Tier.Silence
 import Tier.Bonded
+import Tier.Mass
 import Tier.Stress
 import Tier.Stdlib
 import Tier.Validate
@@ -72,6 +73,7 @@ main = do
   unless (args == ["--images-only"] || args == ["--plan-only"] || args == ["--stdlib-only"]) $ do
     unless focused (coreTiers t update)
     experimentsTier t
+    massTier t
     stressTier t
     bondedTier t
     render <- lookupEnv "COSCAD_RENDER"

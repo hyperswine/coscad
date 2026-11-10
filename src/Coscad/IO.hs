@@ -1,10 +1,10 @@
 -- | UTF-8 file access regardless of the process locale: .coscad files
 -- are full of glyphs, and a C or POSIX locale would reject them.
-module Coscad.IO (readFileUtf8, writeFileUtf8, readFileLatin1, scratchDir) where
+module Coscad.IO (readFileUtf8, writeFileUtf8, writeFileUtf8Atomic, readFileLatin1, scratchDir) where
 
-import Control.Exception (throwIO, try)
-import System.Directory (createDirectory, createDirectoryIfMissing, getTemporaryDirectory)
-import System.FilePath ((</>))
+import Control.Exception (throwIO, try, bracketOnError)
+import System.Directory (createDirectory, createDirectoryIfMissing, getTemporaryDirectory, renameFile, removeFile)
+import System.FilePath ((</>), takeDirectory, takeFileName)
 import System.IO
 import System.IO.Error (isAlreadyExistsError)
 
@@ -46,3 +46,15 @@ writeFileUtf8 :: FilePath -> String -> IO ()
 writeFileUtf8 path s = withFile path WriteMode $ \h -> do
   hSetEncoding h utf8
   hPutStr h s
+
+-- | Publish a complete UTF-8 report by renaming a sibling temporary file.
+-- A failed write leaves an existing report intact; no multi-file transaction.
+writeFileUtf8Atomic :: FilePath -> String -> IO ()
+writeFileUtf8Atomic path s =
+  bracketOnError (openTempFile (takeDirectory path) (takeFileName path ++ ".tmp"))
+    (\(tmp,h) -> hClose h >> removeFile tmp)
+    (\(tmp,h) -> do
+      hSetEncoding h utf8
+      hPutStr h s
+      hClose h
+      renameFile tmp path)

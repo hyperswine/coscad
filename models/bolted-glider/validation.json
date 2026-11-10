@@ -1,0 +1,154 @@
+{
+  "parts": {
+    "wing-right": {
+      "volume_mm3": 148406.13884190292,
+      "bounds": [
+        [
+          0.89,
+          0.14,
+          38.97
+        ],
+        [
+          265.54,
+          120.08,
+          73.42
+        ]
+      ]
+    },
+    "wing-left": {
+      "volume_mm3": 148406.1388419029,
+      "bounds": [
+        [
+          -265.54,
+          0.14,
+          38.97
+        ],
+        [
+          -0.89,
+          120.08,
+          73.42
+        ]
+      ]
+    },
+    "stab": {
+      "volume_mm3": 11330.925161703033,
+      "bounds": [
+        [
+          -115.0,
+          161.0,
+          19.0
+        ],
+        [
+          115.0,
+          233.0,
+          22.2
+        ]
+      ]
+    },
+    "fin": {
+      "volume_mm3": 12694.009850781915,
+      "bounds": [
+        [
+          -11.5,
+          164.0,
+          22.2
+        ],
+        [
+          11.5,
+          233.0,
+          121.4
+        ]
+      ]
+    },
+    "fuselage": {
+      "volume_mm3": 257746.56007495383,
+      "bounds": [
+        [
+          -28.58,
+          -119.25,
+          0.0
+        ],
+        [
+          28.58,
+          204.25,
+          46.79
+        ]
+      ]
+    }
+  },
+  "fit": {
+    "overlaps_mm3": {
+      "wing-right/wing-left": 0.0,
+      "wing-right/stab": 0.0,
+      "wing-right/fin": 0.0,
+      "wing-right/fuselage": 0.0004975705817975909,
+      "wing-left/stab": 0.0,
+      "wing-left/fin": 0.0,
+      "wing-left/fuselage": 0.0004973734465361865,
+      "stab/fin": 3.2457329128521804e-13,
+      "stab/fuselage": -1.2207682781317786e-14,
+      "fin/fuselage": 0.0
+    },
+    "seated": {
+      "wing-right on saddle": true,
+      "wing-left on saddle": true,
+      "stab on platform": true,
+      "fin on stab": true
+    },
+    "screws": [
+      {
+        "where": "wing-right u=0.22",
+        "length_head_to_nut_top_mm": 6.999999999999996,
+        "plastic_in_path_mm3": 0.0
+      },
+      {
+        "where": "wing-right u=0.62",
+        "length_head_to_nut_top_mm": 6.999999999999996,
+        "plastic_in_path_mm3": 0.0
+      },
+      {
+        "where": "wing-left u=0.22",
+        "length_head_to_nut_top_mm": 6.999999999999996,
+        "plastic_in_path_mm3": 0.0
+      },
+      {
+        "where": "wing-left u=0.62",
+        "length_head_to_nut_top_mm": 6.999999999999996,
+        "plastic_in_path_mm3": 0.0
+      },
+      {
+        "where": "tail x=6.5",
+        "length_head_to_nut_top_mm": 9.0,
+        "plastic_in_path_mm3": 0.3432829229089434
+      },
+      {
+        "where": "tail x=-6.5",
+        "length_head_to_nut_top_mm": 9.0,
+        "plastic_in_path_mm3": 0.3432829229089436
+      }
+    ],
+    "screw_choice": {
+      "wing": "M5 x 12: head seat to nut top plus a 4 mm nut, rounded up",
+      "tail": "M5 x 16"
+    }
+  },
+  "aero": {
+    "wing_area_mm2": 50267.76224260999,
+    "span_mm": 531.0966045451848,
+    "aspect_ratio": 5.611222596265292,
+    "mac_mm": 102.06806221995471,
+    "wing_ac_y": 30.0,
+    "stab_area_mm2": 13672.667807277645,
+    "stab_aspect_ratio": 3.869032784651036,
+    "tail_arm_mm": 149.0,
+    "Vh": 0.39706363005774736,
+    "fin_area_mm2": 4845.0,
+    "fin_arm_mm": 163.75,
+    "Vv": 0.029717482314038115,
+    "lift_slope_wing_per_rad": 4.430861193923011,
+    "lift_slope_stab_per_rad": 3.8250765380140384,
+    "downwash_gradient": 0.5027021823274419,
+    "neutral_point_fraction_mac": 0.4034161769247126,
+    "neutral_point_y": 45.658891891899145
+  }
+}

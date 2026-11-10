@@ -1,0 +1,17 @@
+{
+  "schema": "coscad.slice-mass/1",
+  "dialect": "bambu-relative-e",
+  "jobs": [{
+    "gcode": "line.gcode.txt",
+    "density_g_cm3": 1.24,
+    "filament_diameter_mm": 1.75,
+    "extruder_offset_xy_mm": [0, 0],
+    "objects": [{
+      "id": 2,
+      "name": "body",
+      "measured_mass_g": 100,
+      "plate_to_assembly": [[1,0,0,-5],[0,1,0,0],[0,0,1,-0.1],[0,0,0,1]]
+    }]
+  }],
+  "hardware": [{"name": "screw-and-nut", "mass_g": 10, "center_mm": [110,0,0]}]
+}

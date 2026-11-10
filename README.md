@@ -182,6 +182,10 @@ A line starting with `|>` continues the previous definition.
   per-bed STLs plus a variants+placements manifest (`foo_manifest.json`,
   schema `coscad.next/1`) for slice-once /
   stamp-many slicing; `coscad check` verifies fits on the real meshes.
+- **Mass and balance**: `coscad mass part.coscad --density 1.24` reports uniform-solid
+  mass and centre; `coscad mass components.json` combines explicit part/hardware masses.
+  `scripts/slice-mass.py` estimates deposited-filament mass with declared assembly poses.
+  See [mass analysis](docs/2026-11-10-MASS-ANALYSIS.md) for schemas and limitations.
 - **Stress**: `coscad stress` solves a part's `support`/`load` lines with
   20-node hexahedra in Haskell and reports deflection, peak stress and
   safety factors (docs/2026-10-27-STRESS-COMMAND.md).
@@ -222,7 +226,9 @@ src/Coscad/Plan.hs      `coscad plan` CLI and summaries, over:
 src/Coscad/Solid.hs     kernel solids kept alive across queries: posed gap and overlap
 src/Coscad/Image.hs     cached native scene meshing, CPU depth-buffer rendering and PNG encoding
 src/Coscad/Site.hs      `coscad site` static build-instruction pages
-src/Coscad/Mesh.hs      ASCII STL in/out, volume, bounds
+src/Coscad/Mesh.hs      ASCII STL in/out, stable volume/centroid moments, bounds
+src/Coscad/Mass.hs      explicit component and hardware mass aggregation
+src/Coscad/Mass/Command.hs solid/component mass command and source provenance
 src/Coscad/Json.hs      minimal JSON encode/decode for manifests
 src/Coscad/IO.hs        UTF-8 file IO, scratch directories
 src/Coscad/Report.hs    command failures (exit status + lines) and warning emitters

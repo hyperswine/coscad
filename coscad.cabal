@@ -67,6 +67,8 @@ library
       Coscad.Linalg
       Coscad.Loft
       Coscad.Manifold
+      Coscad.Mass
+      Coscad.Mass.Command
       Coscad.Mesh
       Coscad.Mesh.Distance
       Coscad.Mesh.Indexed
@@ -209,6 +211,7 @@ test-suite coscad-test
       Tier.Resolution
       Tier.Silence
       Tier.Bonded
+      Tier.Mass
       Tier.Stress
       Tier.Stdlib
       Tier.Validate

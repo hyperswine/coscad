@@ -1,0 +1,11 @@
+{
+  "revision": "balanced-v2",
+  "job": "p1s-wing-left",
+  "dispatcher": "../bolted-glider/dispatch.py",
+  "dispatcher_sha256": "69ad95ab20f55a01031ffa54e80733ae831d2553963de15ddbb3ca475ed11387",
+  "owner_confirmed_bed_clear": true,
+  "authorization_note": "Owner explicitly requested the first two balanced-glider beds on P1S and X1C and confirmed both beds clear in this turn. P1S left wing uses its loaded external PLA; previous job is stopped with no active faults.",
+  "spool": "external",
+  "flow_calibration": true,
+  "layer_inspection": true
+}

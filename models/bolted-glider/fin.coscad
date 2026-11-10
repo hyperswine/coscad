@@ -1,0 +1,2 @@
+// Bolted glider, mm. Print frame: flat face on the plate at z = 0. See design.py.
+main = ((box 23 66 4 |> move 0 33 2) ⊕ ((zcyl 1 0.4 |> move 0 4 3.5) ⇓ (zcyl 0.5 0.4 |> move 0 66.5 3.5) ⇓ (zcyl 0.8 0.4 |> move 0 31.8 99) ⇓ (zcyl 0.5 0.4 |> move 0 68.5 99))) ⊖ ((zcyl 2.75 30 |> move 6.5 33 0) ⊕ (zcyl 2.75 30 |> move -6.5 7 0))

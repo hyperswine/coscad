@@ -1,0 +1,12 @@
+{
+  "meshes.json": "54eab3378461013987fc9b03f71d851c3acc2e6099afd6443669f9bc97c68a6f",
+  "prepare_slice.py": "b8892eaab780715de6d0f64ea6f6265c1f8328c7472c51b15a711e6187b1514f",
+  "a1-tail/glider-project.3mf": "ebc346626091c10aa8d3236dc1978d25b9066afb709d47475cc3f7ce5f841a80",
+  "a1-tail/layout.json": "2fc45946f5c3a6451a1430aaf41e2f14328738e821734f400bc5f5aa89e66c55",
+  "a1-tail/presets/filament.json": "2df419aba26c7959d27079725bb5ab17b36cfc21f7caf9e537201e9e1e25868a",
+  "a1-tail/presets/project.json": "7466e34fc0503fc4022931ae76725d00278a40d71e1ec261ba917a12fe08996c",
+  "a1-tail/presets/process.json": "c9e11876f33ca291a5f65ca45d23344d143d8a3942d3b299a60804c8d8e6a813",
+  "a1-tail/presets/machine.json": "1285f783a170b31ec77cae44a761884c44f9221bb09b3dff8c0fc757c5569b19",
+  "a1-tail/slice/plate_1.gcode": "7fdd5dd485457c91cf4e148999114ba025063e85e620876fdcf2390a673008ae",
+  "slice.py": "add2ff49fb957339f0ffaba33fddfb2851e1cd75ab7a5580daafbe2aa1168919"
+}

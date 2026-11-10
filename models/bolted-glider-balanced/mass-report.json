@@ -1,0 +1,218 @@
+{
+  "schema": "coscad.mass-report/1",
+  "basis": "sliced-extrusion-plus-explicit-hardware",
+  "mass_g": 218.3750720838624,
+  "center_mm": [
+    0.3746730160730607,
+    90.45931554291063,
+    41.311632701446904
+  ],
+  "components": [
+    {
+      "name": "wing-right",
+      "kind": "sliced",
+      "mass_g": 56.47653414617407,
+      "center_mm": [
+        99.74615010294742,
+        114.69341518028142,
+        53.332520614122345
+      ],
+      "deposited_mass_g": 56.47653414617407,
+      "center_basis": "sliced-extrusion"
+    },
+    {
+      "name": "wing-left",
+      "kind": "sliced",
+      "mass_g": 55.883057523287476,
+      "center_mm": [
+        -99.39707963146301,
+        114.29569967834243,
+        53.32239661948512
+      ],
+      "deposited_mass_g": 55.883057523287476,
+      "center_basis": "sliced-extrusion"
+    },
+    {
+      "name": "fuselage",
+      "kind": "sliced",
+      "mass_g": 71.84936271356793,
+      "center_mm": [
+        0.043018049491792,
+        34.20284176855333,
+        23.734001170137866
+      ],
+      "deposited_mass_g": 71.84936271356793,
+      "center_basis": "sliced-extrusion"
+    },
+    {
+      "name": "stab",
+      "kind": "sliced",
+      "mass_g": 9.39209145166197,
+      "center_mm": [
+        0.0036449909260524143,
+        192.97045613128498,
+        20.358583629770596
+      ],
+      "deposited_mass_g": 9.39209145166197,
+      "center_basis": "sliced-extrusion"
+    },
+    {
+      "name": "fin",
+      "kind": "sliced",
+      "mass_g": 7.1740262491709474,
+      "center_mm": [
+        -0.0013855794207131567,
+        196.7957217215146,
+        59.94485403989982
+      ],
+      "deposited_mass_g": 7.1740262491709474,
+      "center_basis": "sliced-extrusion"
+    },
+    {
+      "name": "wing-1-0-M5x12",
+      "kind": "hardware",
+      "mass_g": 2.6,
+      "center_mm": [
+        14.708771503988793,
+        26.530025934305424,
+        46.40203346532242
+      ]
+    },
+    {
+      "name": "wing-1-0-M5-nut",
+      "kind": "hardware",
+      "mass_g": 1.2,
+      "center_mm": [
+        15.440470746862367,
+        26.226362883723787,
+        39.44700614907917
+      ]
+    },
+    {
+      "name": "wing-1-1-M5x12",
+      "kind": "hardware",
+      "mass_g": 2.6,
+      "center_mm": [
+        14.708771503988793,
+        74.48434057023461,
+        44.308302871786296
+      ]
+    },
+    {
+      "name": "wing-1-1-M5-nut",
+      "kind": "hardware",
+      "mass_g": 1.2,
+      "center_mm": [
+        15.440470746862367,
+        74.18067751965297,
+        37.35327555554305
+      ]
+    },
+    {
+      "name": "wing--1-0-M5x12",
+      "kind": "hardware",
+      "mass_g": 2.6,
+      "center_mm": [
+        -14.708771503988793,
+        26.530025934305424,
+        46.40203346532242
+      ]
+    },
+    {
+      "name": "wing--1-0-M5-nut",
+      "kind": "hardware",
+      "mass_g": 1.2,
+      "center_mm": [
+        -15.440470746862367,
+        26.226362883723787,
+        39.44700614907917
+      ]
+    },
+    {
+      "name": "wing--1-1-M5x12",
+      "kind": "hardware",
+      "mass_g": 2.6,
+      "center_mm": [
+        -14.708771503988793,
+        74.48434057023461,
+        44.308302871786296
+      ]
+    },
+    {
+      "name": "wing--1-1-M5-nut",
+      "kind": "hardware",
+      "mass_g": 1.2,
+      "center_mm": [
+        -15.440470746862367,
+        74.18067751965297,
+        37.35327555554305
+      ]
+    },
+    {
+      "name": "tail-0-M3x10",
+      "kind": "hardware",
+      "mass_g": 0.8,
+      "center_mm": [
+        4.5,
+        193.72393217762328,
+        22.347408401283467
+      ]
+    },
+    {
+      "name": "tail-0-M3-nut",
+      "kind": "hardware",
+      "mass_g": 0.4,
+      "center_mm": [
+        4.5,
+        194.24149924123248,
+        16.972268930100704
+      ]
+    },
+    {
+      "name": "tail-1-M3x10",
+      "kind": "hardware",
+      "mass_g": 0.8,
+      "center_mm": [
+        -4.5,
+        173.8160082102797,
+        20.430493350878987
+      ]
+    },
+    {
+      "name": "tail-1-M3-nut",
+      "kind": "hardware",
+      "mass_g": 0.4,
+      "center_mm": [
+        -4.5,
+        174.3335752738889,
+        15.055353879696224
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "gcode": "a1-wing-right/slice/plate_1.gcode",
+      "sha256": "e078ac3260c0da55def4d9d1341cfc19b35a9ef63d11c3f7f2130201cb9deb8a"
+    },
+    {
+      "gcode": "p1s-wing-left/slice/plate_1.gcode",
+      "sha256": "feded6221e2268a6b6d5c78172f7389f75324e0ddcac08a0e7a21036b51c6ff9"
+    },
+    {
+      "gcode": "x1c-fuselage/slice/plate_1.gcode",
+      "sha256": "93458a37b8e1ff3ae0cbc23d6b274e3011d9b6d3e2097c937cbc35fc544398f3"
+    },
+    {
+      "gcode": "a1-tail/slice/plate_1.gcode",
+      "sha256": "7fdd5dd485457c91cf4e148999114ba025063e85e620876fdcf2390a673008ae"
+    }
+  ],
+  "limitations": [
+    "Modeled mouse ears remain included; purge, support, brim and skirt excluded.",
+    "Measured mass overrides retain sliced centres. Filament density, diameter and flow are estimates, not physical measurements.",
+    "Rigid transforms are explicit; no automatic assembly placement, uncertainty bound, inertia or strength verdict."
+  ],
+  "source": "models/bolted-glider-balanced/slice-mass-input.json",
+  "source_sha256": "eb8c071489c3d3f899942d38cd2957fcfcfadcd89bc89dd47d1f17f139dacc24",
+  "reader_sha256": "7ddaaa01e9639518444d8ae27d5977c199bdcfa7935ef232aa65b0730ba89c6d"
+}

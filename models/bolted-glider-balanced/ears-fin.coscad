@@ -1,0 +1,2 @@
+// Mouse-ear pads for fin, print frame.
+main = (⚓ bot (◎ 6 0.2) |> move 6 5 0) ⊕ (⚓ bot (◎ 6 0.2) |> move 6 35 0) ⊕ (⚓ bot (◎ 6 0.2) |> move -6 5 0) ⊕ (⚓ bot (◎ 6 0.2) |> move -6 35 0)

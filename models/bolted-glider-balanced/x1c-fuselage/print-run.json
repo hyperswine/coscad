@@ -1,0 +1,730 @@
+{
+  "job": "x1c-fuselage",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "834d7477a5d752152c3a6924eb9310b8e4b4790a36bbb072ae087a2691b8fce9",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 234,
+    "deposition_moves_checked": 155841,
+    "package_sha256": "834d7477a5d752152c3a6924eb9310b8e4b4790a36bbb072ae087a2691b8fce9"
+  },
+  "remote_name": "glider-x1c-fuselage-20261110-214630.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner explicitly requested the first two balanced-glider beds on P1S and X1C and confirmed both beds clear in this turn. X1C fuselage uses its loaded external PLA; flow calibration is disabled for plate clearance.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 909,
+    "total_layer_num": 909,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "tank-x1c-three-walls-notched-floor-20261109-20261109-121726.gcode",
+    "nozzle_temper": 27.0,
+    "bed_temper": 24.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "BECF00FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-10T21:46:34+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 909,
+        "total_layer_num": 909,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 27.0,
+        "bed_temper": 24.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:46:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 27.0,
+        "bed_temper": 24.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:47:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 129,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 74.0,
+        "bed_temper": 24.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:47:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 129,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 37.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:47:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 129,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 52.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:47:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 129,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 157.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:48:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 129,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 233.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:48:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 128,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 248.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:48:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 124,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 226.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:48:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 204.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:49:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:49:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:49:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:49:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:50:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 191.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:50:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 160.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:50:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 141.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:50:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:51:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:51:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:51:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:51:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:52:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:52:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:52:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:52:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:53:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:53:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:53:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 176.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:53:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 216.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:54:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 188.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:54:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 167.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:54:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 180.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:54:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 216.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-10T21:55:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 1,
+        "total_layer_num": 234,
+        "mc_remaining_time": 123,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-10T21:46:30+1100",
+  "remote_content_sha256": "834d7477a5d752152c3a6924eb9310b8e4b4790a36bbb072ae087a2691b8fce9",
+  "sequence_id": "307594523",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "307594523"
+  },
+  "first_layer_reached": true
+}

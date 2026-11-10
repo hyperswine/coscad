@@ -23,7 +23,7 @@ import Control.Monad (foldM, forM)
 import System.IO.Error (ioeGetErrorString, tryIOError)
 import Coscad.Backend (nativeIndexedCSGMesh)
 import Coscad.Geometry
-import Coscad.Mesh (triArea)
+import Coscad.Mesh (triArea, meshVolumeCentre)
 import Coscad.Mesh.Indexed
 import Coscad.Solid
 import Data.IORef
@@ -199,11 +199,9 @@ withMass :: Settings -> IndexedMesh -> Placed -> (Inst, ())
 withMass sets mesh p =
   let i = plInst p
       tris = map (\(a, b, c) -> (affApply (iAff i) a, affApply (iAff i) b, affApply (iAff i) c)) (indexedTriangles mesh)
-      signed = sum [dot3 a (cross b c) / 6 | (a, b, c) <- tris]
-      vol = abs signed
+      (vol, centre) = meshVolumeCentre tris
       area = sum (map triArea tris)
-      com = if abs signed < 1e-12 then bcenter (plBox p)
-            else scale3 (1 / signed) (foldr vadd (0, 0, 0) [scale3 (dot3 a (cross b c) / 24) (vadd a (vadd b c)) | (a, b, c) <- tris])
+      com = fromMaybe (bcenter (plBox p)) centre
       ((x0, y0, z0), (x1, y1, z1)) = bbox (iShape i)
       boxVol = (x1 - x0) * (y1 - y0) * (z1 - z0)
       effective = case iMat i of

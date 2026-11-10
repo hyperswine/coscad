@@ -1,0 +1,2 @@
+// Mouse-ear pads for wing-right, print frame.
+main = (⚓ bot (◎ 6 0.2) |> move 118 -2 0) ⊕ (⚓ bot (◎ 6 0.2) |> move 206.125 -234 0) ⊕ (⚓ bot (◎ 6 0.2) |> move 174.128 -118.5 0)

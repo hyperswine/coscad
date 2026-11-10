@@ -1,0 +1,10 @@
+{
+  "meshes.json": "54eab3378461013987fc9b03f71d851c3acc2e6099afd6443669f9bc97c68a6f",
+  "prepare_slice.py": "b8892eaab780715de6d0f64ea6f6265c1f8328c7472c51b15a711e6187b1514f",
+  "p1s-wing-left/glider-project.3mf": "0cbc3a5f1131ae888dc1cc06eef998b5baafd9c0c6cb70560e608efcc541e7ca",
+  "p1s-wing-left/layout.json": "1168d8e8c542bd68b2a570267c48e133bea6738225969c4dc3cf356005f74468",
+  "p1s-wing-left/presets/filament.json": "d729ae823fe91bea706f7c03d486da5ea67cb91692da2e3136e70a18f8e5ecc8",
+  "p1s-wing-left/presets/project.json": "9b38a28c2e83943797a718a8bcb36d92e9ee197654fe1a11cfd8656c925e74da",
+  "p1s-wing-left/presets/process.json": "adf8561384500f14f6c38188a1fe418989f93ec2255bfa3c5d92b6ca75ab7df5",
+  "p1s-wing-left/presets/machine.json": "a01956ccc0d6a60631442c68da2149de290a7a4c4164277e3ba0a735c27a31ca"
+}

@@ -9,13 +9,14 @@ module Coscad.Mesh
   , meshMap
   , meshBounds
   , meshVolume
+  , meshVolumeCentre
   ) where
 
 import Coscad.Geometry (BBox, fromCorners)
-import Coscad.Linalg (cross, dot3, vlen, vnormed, vsub)
+import Coscad.Linalg (cross, dot3, vlen, vnormed, vsub, vadd, scale3)
 import Coscad.Validate (readFinite)
 import Data.Char (isSpace)
-import Data.List (isPrefixOf)
+import Data.List (isPrefixOf, foldl')
 
 type Tri = ((Double, Double, Double), (Double, Double, Double), (Double, Double, Double))
 
@@ -59,7 +60,28 @@ meshBounds tris = fromCorners [v | (a, b, c) <- tris, v <- [a, b, c]]
 
 -- | Signed-volume sum (absolute), exact for closed meshes.
 meshVolume :: [Tri] -> Double
-meshVolume = abs . sum . map (\(a, b, c) -> dot3 a (cross b c) / 6)
+meshVolume = fst . meshVolumeCentre
+
+-- | Volume and uniform-density centre for consistently oriented closed meshes.
+-- Translate near the mesh before taking tetrahedral moments: a small model far
+-- from the world origin must not lose its volume to cancellation. Degenerate
+-- meshes have no centre; callers decide whether a bounding-box fallback is valid.
+meshVolumeCentre :: [Tri] -> (Double, Maybe (Double, Double, Double))
+meshVolumeCentre [] = (0, Nothing)
+meshVolumeCentre tris =
+  let (lo, hi) = meshBounds tris
+      ref = vadd lo (scale3 0.5 (vsub hi lo))
+      step (vol, acc) (a0,b0,c0) =
+        let a = vsub a0 ref; b = vsub b0 ref; c = vsub c0 ref
+            dv = dot3 a (cross b c) / 6
+            total = vol + dv
+            (mx,my,mz) = vadd acc (scale3 (dv/4) (vadd a (vadd b c)))
+        in total `seq` mx `seq` my `seq` mz `seq` (total, (mx,my,mz))
+      (signed, moment) = foldl' step (0, (0,0,0)) tris
+      centre = vadd ref (scale3 (1/signed) moment)
+      finite q = not (isNaN q || isInfinite q)
+      (x,y,z) = centre
+  in (abs signed, if signed /= 0 && all finite [signed,x,y,z] then Just centre else Nothing)
 
 stlAscii :: String -> [Tri] -> String
 stlAscii name tris =

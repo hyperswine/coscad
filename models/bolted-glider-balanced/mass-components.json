@@ -1,0 +1,185 @@
+{
+  "schema": "coscad.mass-components/1",
+  "components": [
+    {
+      "name": "wing-right",
+      "kind": "sliced",
+      "mass_g": 56.47653414617407,
+      "center_mm": [
+        99.74615010294742,
+        114.69341518028142,
+        53.332520614122345
+      ],
+      "deposited_mass_g": 56.47653414617407,
+      "center_basis": "sliced-extrusion"
+    },
+    {
+      "name": "wing-left",
+      "kind": "sliced",
+      "mass_g": 55.883057523287476,
+      "center_mm": [
+        -99.39707963146301,
+        114.29569967834243,
+        53.32239661948512
+      ],
+      "deposited_mass_g": 55.883057523287476,
+      "center_basis": "sliced-extrusion"
+    },
+    {
+      "name": "fuselage",
+      "kind": "sliced",
+      "mass_g": 71.84936271356793,
+      "center_mm": [
+        0.043018049491792,
+        34.20284176855333,
+        23.734001170137866
+      ],
+      "deposited_mass_g": 71.84936271356793,
+      "center_basis": "sliced-extrusion"
+    },
+    {
+      "name": "stab",
+      "kind": "sliced",
+      "mass_g": 9.39209145166197,
+      "center_mm": [
+        0.0036449909260524143,
+        192.97045613128498,
+        20.358583629770596
+      ],
+      "deposited_mass_g": 9.39209145166197,
+      "center_basis": "sliced-extrusion"
+    },
+    {
+      "name": "fin",
+      "kind": "sliced",
+      "mass_g": 7.1740262491709474,
+      "center_mm": [
+        -0.0013855794207131567,
+        196.7957217215146,
+        59.94485403989982
+      ],
+      "deposited_mass_g": 7.1740262491709474,
+      "center_basis": "sliced-extrusion"
+    },
+    {
+      "name": "wing-1-0-M5x12",
+      "kind": "hardware",
+      "mass_g": 2.6,
+      "center_mm": [
+        14.708771503988793,
+        26.530025934305424,
+        46.40203346532242
+      ]
+    },
+    {
+      "name": "wing-1-0-M5-nut",
+      "kind": "hardware",
+      "mass_g": 1.2,
+      "center_mm": [
+        15.440470746862367,
+        26.226362883723787,
+        39.44700614907917
+      ]
+    },
+    {
+      "name": "wing-1-1-M5x12",
+      "kind": "hardware",
+      "mass_g": 2.6,
+      "center_mm": [
+        14.708771503988793,
+        74.48434057023461,
+        44.308302871786296
+      ]
+    },
+    {
+      "name": "wing-1-1-M5-nut",
+      "kind": "hardware",
+      "mass_g": 1.2,
+      "center_mm": [
+        15.440470746862367,
+        74.18067751965297,
+        37.35327555554305
+      ]
+    },
+    {
+      "name": "wing--1-0-M5x12",
+      "kind": "hardware",
+      "mass_g": 2.6,
+      "center_mm": [
+        -14.708771503988793,
+        26.530025934305424,
+        46.40203346532242
+      ]
+    },
+    {
+      "name": "wing--1-0-M5-nut",
+      "kind": "hardware",
+      "mass_g": 1.2,
+      "center_mm": [
+        -15.440470746862367,
+        26.226362883723787,
+        39.44700614907917
+      ]
+    },
+    {
+      "name": "wing--1-1-M5x12",
+      "kind": "hardware",
+      "mass_g": 2.6,
+      "center_mm": [
+        -14.708771503988793,
+        74.48434057023461,
+        44.308302871786296
+      ]
+    },
+    {
+      "name": "wing--1-1-M5-nut",
+      "kind": "hardware",
+      "mass_g": 1.2,
+      "center_mm": [
+        -15.440470746862367,
+        74.18067751965297,
+        37.35327555554305
+      ]
+    },
+    {
+      "name": "tail-0-M3x10",
+      "kind": "hardware",
+      "mass_g": 0.8,
+      "center_mm": [
+        4.5,
+        193.72393217762328,
+        22.347408401283467
+      ]
+    },
+    {
+      "name": "tail-0-M3-nut",
+      "kind": "hardware",
+      "mass_g": 0.4,
+      "center_mm": [
+        4.5,
+        194.24149924123248,
+        16.972268930100704
+      ]
+    },
+    {
+      "name": "tail-1-M3x10",
+      "kind": "hardware",
+      "mass_g": 0.8,
+      "center_mm": [
+        -4.5,
+        173.8160082102797,
+        20.430493350878987
+      ]
+    },
+    {
+      "name": "tail-1-M3-nut",
+      "kind": "hardware",
+      "mass_g": 0.4,
+      "center_mm": [
+        -4.5,
+        174.3335752738889,
+        15.055353879696224
+      ]
+    }
+  ]
+}

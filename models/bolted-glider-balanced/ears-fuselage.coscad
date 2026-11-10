@@ -1,0 +1,2 @@
+// Mouse-ear pads for fuselage, print frame.
+main = (⚓ bot (◎ 6 0.2) |> move 0 -115 0) ⊕ (⚓ bot (◎ 6 0.2) |> move 0 200 0) ⊕ (⚓ bot (◎ 6 0.2) |> move 10.2 -60 0) ⊕ (⚓ bot (◎ 6 0.2) |> move -10.2 -60 0) ⊕ (⚓ bot (◎ 6 0.2) |> move 7 60 0) ⊕ (⚓ bot (◎ 6 0.2) |> move -7 60 0) ⊕ (⚓ bot (◎ 6 0.2) |> move 5.75 150 0) ⊕ (⚓ bot (◎ 6 0.2) |> move -5.75 150 0) ⊕ (⚓ bot (◎ 6 0.2) |> move 4.5 200 0) ⊕ (⚓ bot (◎ 6 0.2) |> move -4.5 200 0)

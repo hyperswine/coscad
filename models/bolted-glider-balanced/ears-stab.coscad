@@ -1,0 +1,2 @@
+// Mouse-ear pads for stab, print frame.
+main = (⚓ bot (◎ 6 0.2) |> move 21.75 113 0) ⊕ (⚓ bot (◎ 6 0.2) |> move 21.75 -113 0)

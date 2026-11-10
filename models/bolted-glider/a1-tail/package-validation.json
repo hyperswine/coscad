@@ -1,0 +1,43 @@
+{
+  "printer": "A1",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL A1",
+  "process": "0.20mm Standard @BBL A1",
+  "nozzle_temperature": "220",
+  "bed_temperature": "65",
+  "model_id": "N2S",
+  "package": "a1-tail/slice/glider.gcode.3mf",
+  "package_sha256": "274f1aa87ce08066560305312c775ef9b6754d760645125baf23825a08b1995b",
+  "gcode_sha256": "97839987742b226ced1e25587231ff388855963c5a212a7edd60e88edb6226fd",
+  "objects": 2,
+  "layers": 496,
+  "model_path_segments": 24477,
+  "support_segments": 0,
+  "segments_in_exclusion_corner": 0,
+  "extrusion_bounds_xy_mm": [
+    [
+      35.21,
+      9.381
+    ],
+    [
+      152.284,
+      246.275
+    ]
+  ],
+  "features": {
+    "Outer wall": 4335,
+    "Inner wall": 3311,
+    "Gap infill": 8083,
+    "Bottom surface": 1251,
+    "Internal solid infill": 1608,
+    "Top surface": 2069,
+    "Sparse infill": 3070,
+    "Floating vertical shell": 76,
+    "Bridge": 671,
+    "Overhang wall": 3
+  },
+  "estimated_hours": 1.4774774848090277,
+  "estimated_grams": 22.205764770507812,
+  "solid_parts_grams": 29.866723308883802,
+  "passed": true
+}

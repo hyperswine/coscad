@@ -125,6 +125,9 @@ passed.
 Printing on the A1 since 2026-11-03 12:19 (AMS slot 1, the owner confirmed the plate
 clear); layer 1 of 558 at 12:27. Record: `a1-stems/print-run.json`.
 
+**Result (owner report, 2026-11-10):** the tighter stems worked quite well, and the
+modelled mouse-ear pads did their job.
+
 ## Using it
 
 1. Press the stem's hex peg fully into the socket (glue optional).

@@ -1,0 +1,7 @@
+{
+  "schema": "coscad.mass-components/1",
+  "components": [
+    {"name": "printed-body", "kind": "measured", "mass_g": 100, "center_mm": [0, 0, 0]},
+    {"name": "screw-and-nut", "kind": "hardware", "mass_g": 10, "center_mm": [110, 0, 0]}
+  ]
+}

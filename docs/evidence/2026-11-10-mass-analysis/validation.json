@@ -1,0 +1,42 @@
+{
+  "scope": "local validation; hosted CI and physical mass calibration not run",
+  "build": "cabal build exe:coscad test:coscad-test --offline --ghc-options=-Werror",
+  "full_native_suite": {
+    "passed": 1676,
+    "failed": 0,
+    "oracle": "disabled: COSCAD_OPENSCAD=none",
+    "note": "Before final evaluation-strictness-only mesh accumulator cleanup"
+  },
+  "final_focused_suite": {
+    "passed": 435,
+    "failed": 0,
+    "mode": "--experiments-only, COSCAD_RENDER=0"
+  },
+  "python_analytic_tests": {
+    "passed": 9,
+    "failed": 0
+  },
+  "glider_parity": {
+    "mass_g": 218.3750720838624,
+    "center_mm": [
+      0.3746730160730607,
+      90.45931554291063,
+      41.311632701446904
+    ],
+    "tolerance": 1e-10,
+    "comparison": "Existing model balance plus independent native component aggregation",
+    "manifest_sha256": "eb8c071489c3d3f899942d38cd2957fcfcfadcd89bc89dd47d1f17f139dacc24"
+  },
+  "final_source_sha256": {
+    "src/Coscad/Mesh.hs": "af73097771cecdef68560b0770943daafb872558fdccce16486a4739517d1252",
+    "src/Coscad/Mass.hs": "1ad222c8e62ad671e3cb1d21ff3655f483f690e6243ade04fe0260541ddd77dc",
+    "src/Coscad/Mass/Command.hs": "9ceafc5a4dc4f8cbc40e9a5cdff62eae2f10d27f927e3ba9764af2611febc873",
+    "src/Coscad/Plan/Geometry.hs": "89d4e1ec61a1aa5db75b3a2cc58226b3a01ecaefebd893cfe31c008bc1d6d520",
+    "src/Coscad/IO.hs": "d9dd77b51b2917677f0e8c94803f5c7637f80e71a1f3c757c0e6de9c2d8772e7",
+    "app/Main.hs": "d437403eadafd4ab68ea0bbc8307a7ba6a0e575c0dc2d92a09d56c379ff6bebc",
+    "scripts/coscad_mass.py": "7ddaaa01e9639518444d8ae27d5977c199bdcfa7935ef232aa65b0730ba89c6d",
+    "scripts/slice-mass.py": "b62143f9b5e166c2110b6a17eb7c769e1c272ec074d054666c7b612958ace530",
+    "scripts/test_mass.py": "06c17025e108386751cfb63ae71080023e7c443dc2eaabd2bca038ff82d76b63",
+    "test/Tier/Mass.hs": "42bd9392fdf1c4117422e92c0f61c262f3a898f5b651a5107482a8e7fd0348c9"
+  }
+}

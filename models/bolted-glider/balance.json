@@ -1,0 +1,62 @@
+{
+  "parts_g": {
+    "wing-right": 62.076602935791016,
+    "wing-left": 62.17986297607422,
+    "fuselage": 74.44950103759766,
+    "stab": 15.502580883413446,
+    "fin": 6.703183887094367
+  },
+  "hardware_g": 24.0,
+  "empty_g": 244.91173171997076,
+  "cg_empty": [
+    -0.043542326983603434,
+    63.73920558681313,
+    41.488464346193496
+  ],
+  "cg_empty_fraction_mac": 0.5805559530865373,
+  "neutral_point_fraction_mac": 0.40341617692471254,
+  "static_margin": 0.1,
+  "target_cg_y": 35.452085669903674,
+  "target_cg_fraction_mac": 0.30341617692471257,
+  "ballast_g_lead_steel_screws": 51.212802420679225,
+  "pocket_cm3": 9.86488143161602,
+  "ballast_volume_cm3": {
+    "lead shot": 7.531294473629298,
+    "steel BBs": 11.159843194860205
+  },
+  "options": {
+    "steel tail screws": {
+      "lead shot": {
+        "ballast_g": 51.212802420679225,
+        "fits_pockets": true,
+        "flying_g": 296.12453414065
+      },
+      "steel BBs": {
+        "ballast_g": 52.45126301584297,
+        "fits_pockets": false,
+        "flying_g": 297.36299473581374
+      }
+    },
+    "nylon tail screws": {
+      "lead shot": {
+        "ballast_g": 43.160917017175024,
+        "fits_pockets": true,
+        "flying_g": 281.2726487371458
+      },
+      "steel BBs": {
+        "ballast_g": 44.39937761233878,
+        "fits_pockets": true,
+        "flying_g": 282.5111093323095
+      }
+    }
+  },
+  "flying_g": 296.12453414065,
+  "wing_loading_g_per_dm2": 58.90943239355838,
+  "glide_speed_m_s_at_CL_0.6": 12.540020633610467,
+  "sink_m_s_at_LD_8": 1.5675025792013084,
+  "launch_5g": {
+    "lift_per_panel_N": 7.262454199799441,
+    "root_moment_N_m": 0.9027230570350705,
+    "tension_per_screw_N": 34.720117578271946
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "parts": {
+    "wing-right": {
+      "volume_mm3": 132371.9551219752,
+      "bounds": [
+        [
+          0.89,
+          0.14,
+          38.97
+        ],
+        [
+          236.7,
+          236.34,
+          63.59
+        ]
+      ]
+    },
+    "wing-left": {
+      "volume_mm3": 132371.95512197516,
+      "bounds": [
+        [
+          -236.7,
+          0.14,
+          38.97
+        ],
+        [
+          -0.89,
+          236.34,
+          63.59
+        ]
+      ]
+    },
+    "stab": {
+      "volume_mm3": 8176.673802502938,
+      "bounds": [
+        [
+          -115.0,
+          160.97,
+          16.8
+        ],
+        [
+          115.0,
+          232.77,
+          25.09
+        ]
+      ]
+    },
+    "fin": {
+      "volume_mm3": 6366.530128021562,
+      "bounds": [
+        [
+          -8.0,
+          166.66,
+          19.76
+        ],
+        [
+          8.0,
+          230.55,
+          120.85
+        ]
+      ]
+    },
+    "fuselage": {
+      "volume_mm3": 264313.8458950974,
+      "bounds": [
+        [
+          -28.58,
+          -119.25,
+          0.0
+        ],
+        [
+          28.58,
+          204.91,
+          46.79
+        ]
+      ]
+    }
+  },
+  "hardware_interference_mm3": {
+    "wing-right-0-shank": 0.0,
+    "wing-right-0-head": 1.0704034983358503e-05,
+    "wing-right-0-nut": 9.449734238699743e-06,
+    "wing-right-1-shank": 0.0,
+    "wing-right-1-head": 1.3322409586230647e-05,
+    "wing-right-1-nut": 6.557986822078386e-06,
+    "wing-left-0-shank": 0.0,
+    "wing-left-0-head": 8.801234436963468e-06,
+    "wing-left-0-nut": 8.323585463922556e-06,
+    "wing-left-1-shank": 0.0,
+    "wing-left-1-head": 1.0915045821934867e-05,
+    "wing-left-1-nut": 6.482670871296934e-06,
+    "tail-0-shank": 0.0,
+    "tail-0-head": 2.255936798914301e-06,
+    "tail-0-nut": 0.1279275025426008,
+    "tail-1-shank": 0.0,
+    "tail-1-head": 4.573719814713808e-06,
+    "tail-1-nut": 0.12792718473788534
+  },
+  "fit": {
+    "overlaps_mm3": {
+      "wing-right/wing-left": 0.0,
+      "wing-right/stab": 0.0,
+      "wing-right/fin": 0.0,
+      "wing-right/fuselage": 0.0005079826629803283,
+      "wing-left/stab": 0.0,
+      "wing-left/fin": 0.0,
+      "wing-left/fuselage": 0.0005078095732924512,
+      "stab/fin": 6.748552839038485e-05,
+      "stab/fuselage": 0.000306033245443972,
+      "fin/fuselage": 0.0
+    },
+    "seated": {
+      "wing-right on saddle": true,
+      "wing-left on saddle": true,
+      "stab on platform": true,
+      "fin on stab": true
+    },
+    "screws": [
+      {
+        "where": "wing-right u=0.22",
+        "length_head_to_nut_top_mm": 6.999999999999996,
+        "plastic_in_path_mm3": 0.0
+      },
+      {
+        "where": "wing-right u=0.62",
+        "length_head_to_nut_top_mm": 6.999999999999996,
+        "plastic_in_path_mm3": 0.0
+      },
+      {
+        "where": "wing-left u=0.22",
+        "length_head_to_nut_top_mm": 6.999999999999996,
+        "plastic_in_path_mm3": 0.0
+      },
+      {
+        "where": "wing-left u=0.62",
+        "length_head_to_nut_top_mm": 6.999999999999996,
+        "plastic_in_path_mm3": 0.0
+      },
+      {
+        "where": "tail x=4.5",
+        "length_head_to_nut_top_mm": 6.0,
+        "plastic_in_path_mm3": 0.0
+      },
+      {
+        "where": "tail x=-4.5",
+        "length_head_to_nut_top_mm": 6.0,
+        "plastic_in_path_mm3": 0.0
+      }
+    ],
+    "screw_choice": {
+      "wing": "M5 x 12: head seat to nut top plus a 4 mm nut, rounded up",
+      "tail": "M3 x 10"
+    }
+  },
+  "aero": {
+    "wing_area_mm2": 44420.53654873098,
+    "span_mm": 473.414334613825,
+    "aspect_ratio": 5.045439556363338,
+    "mac_mm": 99.41973813628249,
+    "wing_ac_y": 92.95540553584473,
+    "stab_area_mm2": 13672.667807277645,
+    "stab_aspect_ratio": 3.869032784651036,
+    "tail_arm_mm": 86.06761347231938,
+    "Vh": 0.26646281285933604,
+    "fin_area_mm2": 4845.0,
+    "fin_arm_mm": 100.79459446415527,
+    "Vv": 0.023222331446173153,
+    "lift_slope_wing_per_rad": 3.56297983839507,
+    "lift_slope_stab_per_rad": 3.8250765380140384,
+    "quarter_chord_sweep_deg": 40.15251772122551,
+    "tail_efficiency": 0.9,
+    "downwash_gradient": 0.4495670572068601,
+    "neutral_point_fraction_mac": 0.3717783381761022,
+    "neutral_point_y": 105.06257602798446
+  },
+  "inputs": {
+    "meshes.json": "54eab3378461013987fc9b03f71d851c3acc2e6099afd6443669f9bc97c68a6f",
+    "assembly.py": "40f262c4b9bb87a269a14a70ef3814619c8ae5bf469eea9149b71b1ea3424bee",
+    "verify.py": "16e57fbbfca35117148b44a901f2703f4783d4df36046715ab7ab50f4e9f4d7d"
+  }
+}

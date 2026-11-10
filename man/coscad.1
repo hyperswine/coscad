@@ -19,6 +19,11 @@
 .Ar part.coscad
 .Op Fl o Ar part.stl
 .Nm
+.Cm mass
+.Ar part.coscad | components.json
+.Op Fl -density Ar grams-per-cubic-centimetre
+.Op Fl o Ar report.json
+.Nm
 .Cm words
 .Ar part.coscad
 .Op Fl o Ar out.coscad
@@ -736,3 +741,13 @@ and
 .Lk https://github.com/BelfrySCAD/BOSL2 .
 .Sh AUTHORS
 .An Jasen Qin
+
+.Sh MASS REPORTS
+.Nm coscad mass
+reports uniform-solid volume and centre for .coscad input. An explicit
+.Fl -density
+in grams per cubic centimetre adds solid mass; printed infill is not inferred.
+A coscad.mass-components/1 JSON input combines positive gram masses and
+assembly-frame centre coordinates, including explicit hardware. Reports use
+coscad.mass-report/1 and record the input SHA-256.
+See docs/2026-11-10-MASS-ANALYSIS.md for sliced-print estimates and schemas.

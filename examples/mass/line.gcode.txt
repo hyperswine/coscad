@@ -1,0 +1,8 @@
+; Analytical fixture only, not a printable machine program.
+G90
+M83
+; Z_HEIGHT: 0.2
+; LAYER_HEIGHT: 0.2
+; FEATURE: Outer wall
+G1 X0 Y0
+G1 X10 Y0 E2

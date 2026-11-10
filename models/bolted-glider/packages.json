@@ -1,0 +1,172 @@
+{
+  "a1-wing-right": {
+    "printer": "A1",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL A1",
+    "process": "0.20mm Standard @BBL A1",
+    "nozzle_temperature": "220",
+    "bed_temperature": "65",
+    "model_id": "N2S",
+    "package": "a1-wing-right/slice/glider.gcode.3mf",
+    "package_sha256": "a5dbadfefdc2ed3268bdaf46521cb5d61f510cfdaf20d28a20abe258ee48c000",
+    "gcode_sha256": "a902287e1943a1edc8176c8a05ced527a64f32e99f41647eabd4a99a88ca69c5",
+    "objects": 1,
+    "layers": 52,
+    "model_path_segments": 146525,
+    "support_segments": 0,
+    "segments_in_exclusion_corner": 0,
+    "extrusion_bounds_xy_mm": [
+      [
+        7.322,
+        6.99
+      ],
+      [
+        248.789,
+        248.524
+      ]
+    ],
+    "features": {
+      "Inner wall": 1912,
+      "Outer wall": 2005,
+      "Bottom surface": 1303,
+      "Internal solid infill": 23837,
+      "Sparse infill": 45512,
+      "Bridge": 31485,
+      "Floating vertical shell": 5680,
+      "Top surface": 20370,
+      "Gap infill": 14421
+    },
+    "estimated_hours": 2.4582210286458333,
+    "estimated_grams": 62.076602935791016,
+    "solid_parts_grams": 184.05416169917353,
+    "passed": true
+  },
+  "p1s-wing-left": {
+    "printer": "P1S",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL P1S 0.4 nozzle",
+    "process": "0.20mm Standard @BBL X1C",
+    "nozzle_temperature": "220",
+    "bed_temperature": "55",
+    "model_id": "C12",
+    "package": "p1s-wing-left/slice/glider.gcode.3mf",
+    "package_sha256": "1e34967e41d485af28333af5909d8bf4f6d01964c6d6bded9786661eb7001f1a",
+    "gcode_sha256": "314c65d3b6d9a5a12cdfb45094f00e8040a341bedee646bea6235188c5828114",
+    "objects": 1,
+    "layers": 52,
+    "model_path_segments": 143950,
+    "support_segments": 0,
+    "segments_in_exclusion_corner": 0,
+    "extrusion_bounds_xy_mm": [
+      [
+        6.99,
+        7.322
+      ],
+      [
+        248.452,
+        248.789
+      ]
+    ],
+    "features": {
+      "Inner wall": 1864,
+      "Outer wall": 2045,
+      "Bottom surface": 1308,
+      "Internal solid infill": 20219,
+      "Sparse infill": 45325,
+      "Bridge": 31928,
+      "Floating vertical shell": 6466,
+      "Top surface": 20370,
+      "Gap infill": 14425
+    },
+    "estimated_hours": 2.3147184244791665,
+    "estimated_grams": 62.17986297607422,
+    "solid_parts_grams": 184.05416169917356,
+    "passed": true
+  },
+  "x1c-fuselage": {
+    "printer": "X1C",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL X1C",
+    "process": "0.20mm Standard @BBL X1C",
+    "nozzle_temperature": "220",
+    "bed_temperature": "55",
+    "model_id": "BL-P001",
+    "package": "x1c-fuselage/slice/glider.gcode.3mf",
+    "package_sha256": "6b173726eed4bd5dc4442120f5a0bdcd56e8a7d21b5ef7a9409fce967491af4c",
+    "gcode_sha256": "888b8f1cb43993724bca519a6b82b0f2f66ff630364c38c6d1fc17ba43487e80",
+    "objects": 1,
+    "layers": 234,
+    "model_path_segments": 183916,
+    "support_segments": 0,
+    "segments_in_exclusion_corner": 0,
+    "extrusion_bounds_xy_mm": [
+      [
+        5.526,
+        5.526
+      ],
+      [
+        250.474,
+        250.474
+      ]
+    ],
+    "features": {
+      "Inner wall": 24153,
+      "Outer wall": 28726,
+      "Bottom surface": 1471,
+      "Internal solid infill": 4623,
+      "Sparse infill": 93953,
+      "Floating vertical shell": 7734,
+      "Bridge": 12257,
+      "Top surface": 7764,
+      "Gap infill": 2871,
+      "Overhang wall": 364
+    },
+    "estimated_hours": 2.2714472113715276,
+    "estimated_grams": 74.44950103759766,
+    "solid_parts_grams": 319.7242308802139,
+    "passed": true
+  },
+  "a1-tail": {
+    "printer": "A1",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL A1",
+    "process": "0.20mm Standard @BBL A1",
+    "nozzle_temperature": "220",
+    "bed_temperature": "65",
+    "model_id": "N2S",
+    "package": "a1-tail/slice/glider.gcode.3mf",
+    "package_sha256": "274f1aa87ce08066560305312c775ef9b6754d760645125baf23825a08b1995b",
+    "gcode_sha256": "97839987742b226ced1e25587231ff388855963c5a212a7edd60e88edb6226fd",
+    "objects": 2,
+    "layers": 496,
+    "model_path_segments": 24477,
+    "support_segments": 0,
+    "segments_in_exclusion_corner": 0,
+    "extrusion_bounds_xy_mm": [
+      [
+        35.21,
+        9.381
+      ],
+      [
+        152.284,
+        246.275
+      ]
+    ],
+    "features": {
+      "Outer wall": 4335,
+      "Inner wall": 3311,
+      "Gap infill": 8083,
+      "Bottom surface": 1251,
+      "Internal solid infill": 1608,
+      "Top surface": 2069,
+      "Sparse infill": 3070,
+      "Floating vertical shell": 76,
+      "Bridge": 671,
+      "Overhang wall": 3
+    },
+    "estimated_hours": 1.4774774848090277,
+    "estimated_grams": 22.205764770507812,
+    "solid_parts_grams": 29.866723308883802,
+    "passed": true
+  }
+}
