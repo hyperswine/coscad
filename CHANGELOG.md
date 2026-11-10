@@ -8,6 +8,12 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Assembly analysis:** `coscad instances` exports recursive physical identities,
+  transforms, print frames and source hashes. `coscad stress model.assemble
+  --bonded analysis.json` connects explicit rectangular supports, loads and bonds
+  to experimental Hex20 FEA for grid-aligned orthogonal solids. Placement constraints
+  retain geometric meaning; no implicit mechanical joints or strength verdict.
+
 - **Mass and balance:** `coscad mass` reports native solid properties or combines
   explicit component/hardware masses. Shared mesh moments improve translation
   stability and remove the planner's duplicate centroid calculation. The optional

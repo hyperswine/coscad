@@ -284,7 +284,7 @@ bondedJson p r = JObject
   ,("solver",JObject [("tolerance",JNumber (bpTolerance p)),("iteration_limit",num (bpIterations p))])
   ,("limitations",JArray (map JString
     ["Experimental small-strain isotropic Hex20; common aligned grids, full cells and explicit matching planar perfect bonds only."
-    ,"No .assemble integration, contact, joint compliance, preload, infill, print-layer model or strength verdict."
+    ,"No contact, joint compliance, preload, infill, print-layer stiffness model or strength verdict."
     ,"Interface wrench is the force/moment applied to that body by the other body, after subtracting external loads; all moments about world origin."
     ,"Lengths mm, forces N, stresses MPa; peak stresses and geometry require refinement. No physical validation claimed."]))]
   where

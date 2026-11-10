@@ -119,6 +119,9 @@ strength verdict, or printer operation in either mass-analysis command.
 
 ## Next increments
 
+Items 1 and 2 now have an [implemented experimental bridge](2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md).
+Automatic slice-manifest generation and region previews remain open.
+
 1. Add a shared resolved-instance export for `.assemble` so callers can generate mass
    transforms and component identity without model-specific Python adapters.
 2. Use the same identity and region contracts for bounded assembly FEA supports, loads

@@ -70,3 +70,4 @@ at the first three.
 | 2026-11-10 | [BONDED-SHELF-VALIDATION](2026-11-10-BONDED-SHELF-VALIDATION.md) | three-body shelf load sharing, independent scikit-fem comparison and mesh-refinement evidence |
 | 2026-11-10 | [STRESS-CORRECTIONS](2026-11-10-STRESS-CORRECTIONS.md) | nearest-plane selection, nonnegative tension and atomic report publication with artifact provenance |
 | 2026-11-10 | [MASS-ANALYSIS](2026-11-10-MASS-ANALYSIS.md) | shared mesh moments, solid/component mass reports and sliced filament balance |
+| 2026-11-10 | [ASSEMBLY-ANALYSIS-INTEGRATION](2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md) | shared physical instances, transforms and explicit bonded FEA regions |

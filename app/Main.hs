@@ -14,9 +14,11 @@ import Coscad.Plan.Calibrate (runCalibrate)
 import Coscad.Diagnose (validateProjectJson, validateProject, projectSources)
 import Coscad.Json
 import Coscad.Stress.Material (Material (..), materialTable)
-import Coscad.Report (Failure (..), collecting, stderrEmit)
+import Coscad.Report (Failure (..), runCommand, collecting, stderrEmit)
 import Coscad.Site (processSiteWithBackend)
 import Coscad.Stress.Command (processStress)
+import Coscad.Assembly.Instances
+import Coscad.Stress.Assembly (processAssemblyStress)
 import Coscad.Mass.Command (massArgs, processMass)
 import System.Directory (canonicalizePath)
 import Coscad.Words (renderWords)
@@ -55,7 +57,7 @@ runCLI = do
       [("schema",JString "coscad.capabilities/1"), ("version",JString (showVersion version))
       ,("default_backend",JString (backendName defaultBackend))
       ,("backends",JArray [JString (backendName defaultBackend)])
-      ,("features",JArray (map JString ["validate-json", "project-buffers", "stress", "mass", "stl", "check", "next", "plan", "image-backends", "native-images", "openscad-retired", "plan-geometry", "plan-joints", "calibrate"]))
+      ,("features",JArray (map JString ["validate-json", "project-buffers", "stress", "assembly-bonded-stress", "instances", "mass", "stl", "check", "next", "plan", "image-backends", "native-images", "openscad-retired", "plan-geometry", "plan-joints", "calibrate"]))
       ,("materials",JArray [jobj [("name",JString (matName m)),("young_mpa",JNumber (matYoungMPa m))]
           | m <- materialTable])]))
     ["doctor"] -> runDoctor >>= finish
@@ -110,6 +112,27 @@ runCLI = do
         _ -> bad "plan takes one .assemble file (and optionally --png)"
     ["calibrate", f] -> needExt ".json" f >> runCalibrate f >>= finish
     ("calibrate" : _) -> bad "calibrate takes one JSON file of timed builds (see docs/2026-10-29-PLAN-EASE.md)"
+    ("instances" : rest) -> do
+      (f,out) <- case rest of
+        [path] -> pure (path,Nothing)
+        [path,"-o",target] -> pure (path,Just target)
+        _ -> bad "usage: coscad instances model.assemble [-o instances.json]" >> exitFailure
+      needExt ".assemble" f
+      snapshot <- loadInstances stderrEmit f
+      case snapshot of
+        Left e -> finish (Left e)
+        Right snap -> case out of
+          Nothing -> putStrLn (encodePretty (instancesJson snap))
+          Just target -> runCommand (do
+            protectInputs (map fst (isSources snap)) target
+            writeFileUtf8Atomic target (encodePretty (instancesJson snap) ++ "\n")) >>= finish
+    ("stress" : f : "--bonded" : config : rest) -> do
+      needExt ".assemble" f
+      out <- case rest of
+        [] -> pure Nothing
+        ["-o",target] -> pure (Just target)
+        _ -> bad "usage: coscad stress model.assemble --bonded analysis.json [-o report.json]" >> exitFailure
+      processAssemblyStress stderrEmit f config out >>= finish
     ("mass" : rest) -> do
       (f,density,out) <- either (\e -> bad e >> exitFailure) pure (massArgs rest)
       case out of
@@ -205,6 +228,8 @@ usage h =
     , "  coscad plan <spec.assemble> [--png]     build instructions: ordered steps, preload sheet, BOM"
     , "  coscad calibrate <times.json>           fit the plan cost weights to timed builds (seconds)"
     , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
+    , "  coscad instances <model.assemble> [-o instances.json]  resolved physical leaves and transforms"
+    , "  coscad stress <model.assemble> --bonded analysis.json [-o report.json]  experimental bonded FEA"
     , "  coscad mass <part.coscad|components.json> [--density g/cm3] [-o report.json]"
     , "                                          solid geometry or explicit component mass and centre of mass"
     , "  coscad stress <part.coscad> [-o part_stress.json] [--full]"

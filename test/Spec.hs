@@ -45,6 +45,7 @@ import Tier.Resolution
 import Tier.Silence
 import Tier.Bonded
 import Tier.Mass
+import Tier.Instances
 import Tier.Stress
 import Tier.Stdlib
 import Tier.Validate
@@ -74,6 +75,7 @@ main = do
     unless focused (coreTiers t update)
     experimentsTier t
     massTier t
+    instancesTier t
     stressTier t
     bondedTier t
     render <- lookupEnv "COSCAD_RENDER"

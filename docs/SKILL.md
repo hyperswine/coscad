@@ -34,6 +34,18 @@ Do not claim a speed, robustness or print-quality gain without measurements.
 Read `docs/2026-11-09-BACKEND-REVIEW.md` in the checkout for the recommendation
 and acceptance gates; the older OCCT proposal contains historical assumptions.
 
+## Assembly analysis
+
+Use `coscad instances model.assemble [-o instances.json]` for qualified physical
+leaf IDs, part-to-assembly and explicitly declared print transforms. Print quantity
+does not define physical multiplicity. `coscad stress model.assemble --bonded
+analysis.json` accepts explicit material and bounded rectangular region declarations
+for experimental bonded Hex20 analysis. Geometric `fixed`/`mate` never imply
+mechanical supports or bonds. Only rigid, grid-aligned orthogonal solids are supported
+(32 bodies, 1000 cells); no contact, preload, print anisotropy or strength verdict.
+Read `docs/2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md` and its runnable shelf fixtures
+before creating a configuration. Never infer slicer bed placement from print orientation.
+
 ## Before writing any .coscad
 
 1. Get a `coscad` binary: a release download, or `cabal install

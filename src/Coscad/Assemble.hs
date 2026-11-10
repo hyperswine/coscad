@@ -165,6 +165,8 @@ data AsmResult = AsmResult
   , arPlanOpts :: [(String, String)] -- `plan key=value ...` line
   , arConstraints :: [Constraint] -- rigid frames, re-resolved for check/plan
   , arTolerance :: Tolerance -- `tolerance` line: how far a mating loop may miss
+  , arChildren :: [(String, AsmResult)] -- resolved recursive declarations, not placements
+  , arReferences :: [(String, FilePath, Maybe ((Double,Double,Double),String))]
   , arPartPos :: [(String, String)] -- top-level part name -> declaration file:line:col
   }
 
@@ -518,10 +520,10 @@ loadAssemblyFrom reader emit visited path contents =
                 loaded <- mapM (loadRef reader emit visited dir) partsS
                 case sequence loaded of
                   Left err -> return (Left err)
-                  Right entries | sum [toInteger (fpCount f) | (_, _, fs) <- entries, f <- fs] > toInteger maxQuantity ->
+                  Right entries | sum [toInteger (fpCount f) | (_, _, fs, _) <- entries, f <- fs] > toInteger maxQuantity ->
                     return (Left (InputError (path ++ ": total expanded print count is too large; maximum is " ++ show maxQuantity)))
                   Right entries -> do
-                    let table0 = Map.fromList [(n, s) | (n, s, _) <- entries]
+                    let table0 = Map.fromList [(n, s) | (n, s, _, _) <- entries]
                         meta = [(n, (c, h)) | APart n _ c _ h <- partsS]
                         tol = last (defaultTolerance : [t | ATolerance t <- stmts])
                         evaluated = do
@@ -533,7 +535,7 @@ loadAssemblyFrom reader emit visited path contents =
                       Right (constraints, table) -> do
                        -- anchors in the asm expression itself; part-level
                        -- warnings were printed when each part was loaded
-                       let partWarnings = concat [anchorWarnings sh | (_, sh, _) <- entries]
+                       let partWarnings = concat [anchorWarnings sh | (_, sh, _, _) <- entries]
                        case Map.lookup "asm" table of
                          Just a -> mapM_ (emit . Warning . formatAnchorWarning path) (filter (`notElem` partWarnings) (anchorWarnings a))
                          Nothing -> return ()
@@ -549,14 +551,16 @@ loadAssemblyFrom reader emit visited path contents =
                               , arMode = fmode
                               , arClearance = clr
                               , arDefs = defs
-                              , arParts = [(n, s) | (n, s, _) <- entries]
+                              , arParts = [(n, s) | (n, s, _, _) <- entries]
                               , arPartMeta = meta
                               , arFasteners = [f | AFastener f <- stmts]
                               , arPlanOpts = concat [o | APlan o <- stmts]
                               , arConstraints = constraints
                               , arTolerance = tol
+                              , arChildren = [(n, child) | (n, _, _, Just child) <- entries]
+                              , arReferences = [(n, dir </> rel, down) | APart n rel _ down _ <- partsS]
                               , arPartPos = positions
-                              , arFlat = concat [f | (_, _, f) <- entries]
+                              , arFlat = concat [f | (_, _, f, _) <- entries]
                               }
 
 -- | Printed parts (×n, n > 0) whose count differs from their placements
@@ -585,7 +589,7 @@ countMismatches mode tol defs meta positions constraints table0 =
       Tag n _ -> [n]
       _ -> concatMap tags (shapeChildren sh)
 
-loadRef :: (FilePath -> IO (Maybe String)) -> Emit -> [FilePath] -> FilePath -> AsmStmt -> IO (Either AsmError (String, Shape, [FlatPart]))
+loadRef :: (FilePath -> IO (Maybe String)) -> Emit -> [FilePath] -> FilePath -> AsmStmt -> IO (Either AsmError (String, Shape, [FlatPart], Maybe AsmResult))
 loadRef reader emit visited dir (APart name rel cnt down hints) = do
   let p = dir </> rel
       referrer = case visited of (v : _) -> takeFileName v; [] -> "the assembly"
@@ -599,7 +603,7 @@ loadRef reader emit visited dir (APart name rel cnt down hints) = do
             Left err -> return (Left (InputError err))
             Right (_, shape) -> do
               mapM_ (emit . Warning . formatAnchorWarning p) (anchorWarnings shape)
-              return (Right (name, shape, [FlatPart [] name p cnt down hints shape]))
+              return (Right (name, shape, [FlatPart [] name p cnt down hints shape], Nothing))
     ".assemble" -> do
       r <- loadAssemblyWith reader emit visited p
       case r of
@@ -620,6 +624,7 @@ loadRef reader emit visited dir (APart name rel cnt down hints) = do
                       }
                     | fp <- arFlat ar
                   ]
+                , Just ar
                 )
     ext -> return (Left (InputError (p ++ ": unsupported part reference (" ++ ext ++ "); use a .coscad or .assemble file")))
 loadRef _ _ _ _ _ = return (Left (InputError "internal error: loadRef on non-part statement"))

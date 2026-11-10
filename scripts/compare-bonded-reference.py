@@ -237,18 +237,26 @@ def sha(path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, required=True)
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--exe', type=Path, help='coscad-experiments executable')
+    mode.add_argument('--assembly-exe', type=Path, help='coscad executable: exercise the .assemble bridge')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
-    exe = args.exe.resolve()
+    exe = (args.assembly_exe or args.exe).resolve()
     report = dict(schema='coscad.bonded-reference/1', utc=datetime.now(timezone.utc).isoformat(),
                   executable_sha256=sha(exe), python=platform.python_version(),
+                  mode='assembly' if args.assembly_exe else 'explicit-grid',
                   git_head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                   packages={p:importlib.metadata.version(p) for p in ['numpy','scipy','scikit-fem']},
                   thresholds=dict(reference=REFERENCE_TOL,balance=BALANCE_TOL,refinement=REFINEMENT_TOL),
                   source_sha256={p:sha(ROOT/p) for p in ['scripts/compare-bonded-reference.py','scripts/bonded_shelf.py',
                                                        'src/Coscad/Stress/Bonded.hs','src/Coscad/Stress/Hex20.hs','src/Coscad/Stress/Sparse.hs']},
                   cases=[], refinement=[], physical_validation=False, peak_stress_convergence_claimed=False)
+    if args.assembly_exe:
+        report['source_sha256'].update({str(p.relative_to(ROOT)):sha(p) for p in
+            [ROOT/'src/Coscad/Assemble.hs',ROOT/'src/Coscad/Instance.hs',
+             ROOT/'src/Coscad/Assembly/Instances.hs',ROOT/'src/Coscad/Stress/Assembly.hs',
+             *sorted((ROOT/'experiments/assembly-fea').glob('*'))] if p.is_file()})
     for label, modulus in [('symmetric',2000.0),('soft-right',500.0)]:
         summaries=[]
         for n in (1,2,3):
@@ -256,8 +264,19 @@ def main():
             with tempfile.TemporaryDirectory(prefix='coscad-shelf-') as directory:
                 path=Path(directory)/'problem.json'; path.write_text(json.dumps(problem))
                 started=time.perf_counter()
-                run=subprocess.run([str(exe),'bonded',str(path)],capture_output=True,text=True,timeout=600,check=True)
-                actual=json.loads(run.stdout)
+                if args.assembly_exe:
+                    fixture=ROOT/'experiments/assembly-fea'
+                    config=json.loads((fixture/('shelf-analysis.json' if label=='symmetric' else 'shelf-soft-right-analysis.json')).read_text())
+                    config['cell_mm']=2/n
+                    path.write_text(json.dumps(config))
+                    output=Path(directory)/'report.json'
+                    subprocess.run([str(exe),'stress',str(fixture/'shelf.assemble'),
+                                    '--bonded',str(path),'-o',str(output)],
+                                   capture_output=True,text=True,timeout=600,check=True)
+                    actual=json.loads(output.read_text())['result']
+                else:
+                    run=subprocess.run([str(exe),'bonded',str(path)],capture_output=True,text=True,timeout=600,check=True)
+                    actual=json.loads(run.stdout)
                 elapsed=time.perf_counter()-started
             ref=reference(problem)
             comparison=compare(problem,actual,ref)

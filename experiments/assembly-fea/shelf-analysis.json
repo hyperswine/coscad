@@ -1,0 +1,166 @@
+{
+  "schema": "coscad.assembly-bonded/1",
+  "cell_mm": 2,
+  "bodies": [
+    {
+      "instance": "shelf",
+      "young_mpa": 2000,
+      "poisson": 0.3
+    },
+    {
+      "instance": "left",
+      "young_mpa": 2000,
+      "poisson": 0.3
+    },
+    {
+      "instance": "right",
+      "young_mpa": 2000,
+      "poisson": 0.3
+    }
+  ],
+  "supports": [
+    {
+      "instance": "left",
+      "axis": "y",
+      "side": -1,
+      "plane_mm": -2,
+      "bounds_mm": [
+        [
+          0,
+          -2,
+          0
+        ],
+        [
+          2,
+          -2,
+          2
+        ]
+      ]
+    },
+    {
+      "instance": "right",
+      "axis": "y",
+      "side": -1,
+      "plane_mm": -2,
+      "bounds_mm": [
+        [
+          10,
+          -2,
+          0
+        ],
+        [
+          12,
+          -2,
+          2
+        ]
+      ]
+    }
+  ],
+  "loads": [
+    {
+      "region": {
+        "instance": "shelf",
+        "axis": "z",
+        "side": 1,
+        "plane_mm": 4,
+        "bounds_mm": [
+          [
+            0,
+            0,
+            4
+          ],
+          [
+            12,
+            6,
+            4
+          ]
+        ]
+      },
+      "force_n": [
+        0,
+        0,
+        -1
+      ]
+    }
+  ],
+  "bonds": [
+    {
+      "name": "left_bond",
+      "a": {
+        "instance": "left",
+        "axis": "z",
+        "side": 1,
+        "plane_mm": 2,
+        "bounds_mm": [
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            2,
+            6,
+            2
+          ]
+        ]
+      },
+      "b": {
+        "instance": "shelf",
+        "axis": "z",
+        "side": -1,
+        "plane_mm": 2,
+        "bounds_mm": [
+          [
+            0,
+            0,
+            2
+          ],
+          [
+            2,
+            6,
+            2
+          ]
+        ]
+      }
+    },
+    {
+      "name": "right_bond",
+      "a": {
+        "instance": "right",
+        "axis": "z",
+        "side": 1,
+        "plane_mm": 2,
+        "bounds_mm": [
+          [
+            10,
+            0,
+            2
+          ],
+          [
+            12,
+            6,
+            2
+          ]
+        ]
+      },
+      "b": {
+        "instance": "shelf",
+        "axis": "z",
+        "side": -1,
+        "plane_mm": 2,
+        "bounds_mm": [
+          [
+            10,
+            0,
+            2
+          ],
+          [
+            12,
+            6,
+            2
+          ]
+        ]
+      }
+    }
+  ]
+}

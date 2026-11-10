@@ -19,6 +19,10 @@
 .Ar part.coscad
 .Op Fl o Ar part.stl
 .Nm
+.Cm instances
+.Ar spec.assemble
+.Op Fl o Ar instances.json
+.Nm
 .Cm mass
 .Ar part.coscad | components.json
 .Op Fl -density Ar grams-per-cubic-centimetre
@@ -59,8 +63,22 @@
 .Op Fl o Ar report.json
 .Op Fl -full
 .Nm
+.Cm stress
+.Ar spec.assemble
+.Fl -bonded Ar analysis.json
+.Op Fl o Ar report.json
+.Nm
 .Fl -version | Fl -help
 .Sh DESCRIPTION
+.Cm instances
+exports qualified physical leaves, composed transforms and dependency hashes.
+.Cm stress
+with
+.Fl -bonded
+analyzes explicit assembly regions with the experimental bonded Hex20 solver.
+Only rigid placements with grid-aligned orthogonal geometry are supported, with
+at most 32 bodies and 1000 cells. Placement constraints do not imply mechanical
+supports or bonds; no strength verdict is produced.
 .Cm validate
 checks a .coscad or .assemble file, including recursive part sources and
 rigid mating constraints, without writing output files or rendering meshes.

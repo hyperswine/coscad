@@ -19,6 +19,9 @@ extra-source-files:
     stdlib/README.md
     stdlib/examples/*.coscad
     experiments/bonded/*.json
+    experiments/assembly-fea/*.json
+    experiments/assembly-fea/*.coscad
+    experiments/assembly-fea/*.assemble
     experiments/bonded/README.md
     experiments/beam.coscad
     experiments/cad/*.coscad
@@ -50,6 +53,8 @@ source-repository head
 library
   exposed-modules:
       Coscad.Assemble
+      Coscad.Instance
+      Coscad.Assembly.Instances
       Coscad.Backend
       Coscad.Check
       Coscad.Codegen
@@ -92,6 +97,7 @@ library
       Coscad.Solid
       Coscad.Site
       Coscad.Stress.Bonded
+      Coscad.Stress.Assembly
       Coscad.Stress.Cad
       Coscad.Stress.Experiment
       Coscad.Stress.Tetra
@@ -212,6 +218,7 @@ test-suite coscad-test
       Tier.Silence
       Tier.Bonded
       Tier.Mass
+      Tier.Instances
       Tier.Stress
       Tier.Stdlib
       Tier.Validate

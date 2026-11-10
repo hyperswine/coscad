@@ -2,8 +2,8 @@
 
 > 2026-11-10: [Shelf validation](2026-11-10-BONDED-SHELF-VALIDATION.md)
 > now adds symmetric/asymmetric load sharing, an independent numerical
-> comparison and mesh-refinement checks. Physical validation and `.assemble`
-> integration remain open. The original status below records the earlier stage.
+> comparison and mesh-refinement checks. The [assembly bridge](2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md)
+> now adds explicit bounded regions from `.assemble`; physical validation remains open. The original status below records the earlier stage.
 
 Status: implemented experimental foundation, 2026-11-09. This completes the
 initial two-body matching-interface experiment in the

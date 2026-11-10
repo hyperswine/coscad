@@ -1,5 +1,8 @@
 # Bonded shelf load sharing and refinement
 
+> The [assembly integration](2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md) now
+> runs these cases from `.assemble` geometry and explicit region configurations.
+
 Status: implemented and locally validated numerical experiment, 2026-11-10.
 This advances the [assembly FEA proposal](2026-11-09-ASSEMBLY-FEA-PROPOSAL.md)
 beyond the [split-beam foundation](2026-11-09-BONDED-FEA-EXPERIMENT.md): a

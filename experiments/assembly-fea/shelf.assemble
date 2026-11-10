@@ -1,0 +1,6 @@
+shelf ← shelf.coscad ×1 ▽bot
+left ← arm.coscad ×1 ▽bot
+right ← arm.coscad ×1 ▽bot
+fixed shelf 0 0 2 0 0 0
+fixed left 0 -2 0 0 0 0
+fixed right 10 -2 0 0 0 0

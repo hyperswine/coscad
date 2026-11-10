@@ -101,6 +101,8 @@ coscad words part.coscad     # -> render a part back as the word (!simple) vocab
 coscad frame.assemble        # -> _asm.png view, packed _plate(N).png, frame_design.json (+ .scad exports)
 coscad next frame.assemble   # -> frame_bed1.stl ... + frame_manifest.json
 coscad check frame.assemble  # interference / clearance check on real meshes
+coscad instances model.assemble -o instances.json # qualified physical leaves and transforms
+coscad stress experiments/assembly-fea/shelf.assemble --bonded experiments/assembly-fea/shelf-analysis.json # experimental bonded assembly FEA
 coscad stress bracket.coscad # deflection, peak stress and safety factor from the part's support/load lines; JSON references exact mesh
 coscad plan frame.assemble   # numbered build steps, preload sheet, BOM, step scenes
 coscad calibrate times.json  # fit the plan's cost weights to timed builds (seconds per term)
@@ -182,6 +184,10 @@ A line starting with `|>` continues the previous definition.
   per-bed STLs plus a variants+placements manifest (`foo_manifest.json`,
   schema `coscad.next/1`) for slice-once /
   stamp-many slicing; `coscad check` verifies fits on the real meshes.
+- **Assembly analysis**: `coscad instances` exports qualified leaf identities and
+  composed transforms; `coscad stress model.assemble --bonded analysis.json` connects
+  explicit bounded regions to experimental bonded FEA for grid-aligned orthogonal
+  solids. See [assembly analysis](docs/2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md).
 - **Mass and balance**: `coscad mass part.coscad --density 1.24` reports uniform-solid
   mass and centre; `coscad mass components.json` combines explicit part/hardware masses.
   `scripts/slice-mass.py` estimates deposited-filament mass with declared assembly poses.
@@ -227,6 +233,9 @@ src/Coscad/Solid.hs     kernel solids kept alive across queries: posed gap and o
 src/Coscad/Image.hs     cached native scene meshing, CPU depth-buffer rendering and PNG encoding
 src/Coscad/Site.hs      `coscad site` static build-instruction pages
 src/Coscad/Mesh.hs      ASCII STL in/out, stable volume/centroid moments, bounds
+src/Coscad/Instance.hs  shared instance numbering and affine transforms
+src/Coscad/Assembly/Instances.hs recursive physical-instance export and source hashes
+src/Coscad/Stress/Assembly.hs explicit assembly regions to bonded Hex20 bridge
 src/Coscad/Mass.hs      explicit component and hardware mass aggregation
 src/Coscad/Mass/Command.hs solid/component mass command and source provenance
 src/Coscad/Json.hs      minimal JSON encode/decode for manifests

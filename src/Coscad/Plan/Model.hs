@@ -52,6 +52,7 @@ where
 
 
 import Control.Monad (unless, when)
+import Coscad.Instance (Aff, affApply, instancesOf, numberedInstances)
 import Coscad.Assemble
 import Coscad.Plan.Options
 import Coscad.Constraint (Constraint (..))
@@ -69,52 +70,6 @@ import Text.Printf (printf)
 
 -- ------------------------------------------------------------------
 -- affine transforms and instance enumeration
-
-type Aff = (M3, V3)
-
-affApply :: Aff -> V3 -> V3
-affApply (m, t) p = vadd (mApply m p) t
-
-affCompose :: Aff -> Aff -> Aff
-affCompose (m1, t1) (m2, t2) = (matMul m1 m2, vadd (mApply m1 t2) t1)
-
-diag :: V3 -> M3
-diag (x, y, z) = ((x, 0, 0), (0, y, 0), (0, 0, z))
-
--- | Every Tag'd subtree with its accumulated world transform.
-instancesOf :: Shape -> [(String, Aff, Shape)]
-instancesOf = go (matIdentity, (0, 0, 0))
-  where
-    go aff s = case s of
-      Tag n x -> [(n, aff, x)]
-      Datum _ _ x -> go aff x
-      Frame _ _ _ x -> go aff x
-      Tx d x -> go (affCompose aff (matIdentity, (d, 0, 0))) x
-      Ty d x -> go (affCompose aff (matIdentity, (0, d, 0))) x
-      Tz d x -> go (affCompose aff (matIdentity, (0, 0, d))) x
-      Translate v x -> go (affCompose aff (matIdentity, v)) x
-      Rx a x -> go (affCompose aff (rodMat a (1, 0, 0), (0, 0, 0))) x
-      Ry a x -> go (affCompose aff (rodMat a (0, 1, 0), (0, 0, 0))) x
-      Rz a x -> go (affCompose aff (rodMat a (0, 0, 1), (0, 0, 0))) x
-      RotAxis a v x -> go (affCompose aff (rodMat a v, (0, 0, 0))) x
-      Transform3 m t x -> go (affCompose aff (m,t)) x
-      Scale v x -> go (affCompose aff (diag v, (0, 0, 0))) x
-      Mirror n x -> go (affCompose aff (mirrorMat n, (0, 0, 0))) x
-      -- Union keeps physical instances on both sides; a difference's
-      -- cutter is negative space and is never a placed part (it is
-      -- consumed by the cut). What hull, intersection and minkowski do
-      -- to tagged subtrees is still an open question (see
-      -- docs/2026-11-08-ARCHITECTURE-REVIEW.md).
-      Diff a _ -> go aff a
-      Union xs -> concatMap (go aff) xs
-      Intersection xs -> concatMap (go aff) xs
-      Hull xs -> concatMap (go aff) xs
-      Minkowski xs -> concatMap (go aff) xs
-      Extrude _ x -> go aff x
-      Revolve _ x -> go aff x
-      RevolveSeg _ _ x -> go aff x
-      Offset _ x -> go aff x
-      _ -> []
 
 -- ------------------------------------------------------------------
 -- model
@@ -408,12 +363,7 @@ splitOn c s = case break (== c) s of
 mkInstances :: AsmResult -> Shape -> Either String [Inst]
 mkInstances ar asmShape = do
   let occ = instancesOf (resolve asmShape)
-      counts = Map.fromListWith (+) [(n, 1 :: Int) | (n, _, _) <- occ]
-      numbered = snd (foldl' step (Map.empty, []) occ)
-      step (seen, acc) (n, aff, sh) =
-        let k = Map.findWithDefault (0 :: Int) n seen + 1
-            nm = if Map.findWithDefault 1 n counts > 1 then n ++ "#" ++ show k else n
-         in (Map.insert n k seen, acc ++ [(nm, n, aff, sh)])
+      numbered = numberedInstances occ
   mapM mk numbered
   where
     mk (nm, part, aff, sh) = do
