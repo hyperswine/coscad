@@ -22,7 +22,7 @@ where
 import Control.Monad (unless, void, when)
 import Coscad.Codegen
 import Coscad.Constraint (AsmError (..), Constraint (..), Tolerance (..), defaultTolerance, errorText, solveConstraints)
-import Coscad.Format (showD, roundTo3)
+import Coscad.Format (roundTo3)
 import Coscad.Geometry
 import Coscad.Plan.Options
 import Coscad.Image (Scene (..), SceneObject (..), defaultView, renderScenes)
@@ -31,10 +31,9 @@ import Coscad.Json
 import Coscad.Parser
 import Coscad.Report
 import Coscad.Shape
-import Coscad.Validate (finite, readFinite, suggestion, maxQuantity)
+import Coscad.Validate (finite, suggestion, maxQuantity)
 import Coscad.Variants
-import Data.Char (isAlphaNum, isDigit, isLetter, isSpace, toLower)
-import Data.List (intercalate)
+import Data.Char (isDigit, isSpace, toLower)
 import qualified Data.List.NonEmpty as NE
 import qualified Data.Map as Map
 import Data.Maybe (isJust, isNothing)
