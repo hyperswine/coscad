@@ -102,18 +102,34 @@ These support the methods, not this prototype's numerical coefficients or flight
 ## Reproduce and check
 
 Requires the native CoScad compiler, Python with numpy, trimesh, manifold3d, scipy and
-matplotlib, and the installed Bambu Studio CLI for slicing. Run from this directory:
+matplotlib, and the installed Bambu Studio CLI for slicing. Run from this directory
+with the Sol executable from the FP-RISC 0.13.1 release and the geometry Python
+environment active.
 
 ```sh
-python build.py --coscad /absolute/path/to/current/coscad
-python prepare_slice.py
-python slice.py
+"$SOL" build.sol --coscad /absolute/path/to/current/coscad --python "$(command -v python)"
+"$SOL" ../../scripts/prepare-projects.sol --python "$(command -v python)" .
+"$SOL" slice.sol
 python verify_packages.py
 python balance.py
 python test_analysis.py
 ```
 
-`build.py` generates all five parts and five mouse-ear meshes and checks watertight
+With `SOL` set, `python build.py` also selects the Sol builder. Use `slice.sol`
+directly to keep earlier slice receipts reproducible.
+
+`build.sol` runs the design generator and geometry verifier in a temporary directory.
+It publishes the generated files after verification and writes `meshes.json` last.
+`slice.sol` accepts individual prepared job names, including `p1s-tail` and
+`p1s-wing-right`. Each slice records hashes of its Sol driver and provenance helper.
+The shared project preparation driver also accepts `p1s-tail` and
+`p1s-wing-right` explicitly. Those jobs keep their original guard against
+rebuilding a dispatched plate. The receipt records the shared preparation scripts, the Sol provenance module
+and the model-specific P1S helper where applicable. The Python drivers remain
+available for reproducing their original receipt format.
+See the [Sol commands and migration record](../../scripts/sol-workflows.md).
+
+The build generates all five parts and five mouse-ear meshes and checks watertight
 volumes, all ten part-pair intersections, four seating interfaces, six screw paths and
 18 complete fastener envelopes. The four slices use PLA Basic, 0.20 mm layers, two walls,
 8% gyroid and no supports or slicer brim. Package verification checks extrusion bounds,
@@ -150,8 +166,8 @@ matched. The P1S uses loaded yellow external PLA; the X1C uses loaded green exte
 with flow calibration disabled. Live progress is recorded in
 [`p1s-wing-left/print-run.json`](p1s-wing-left/print-run.json) and
 [`x1c-fuselage/print-run.json`](x1c-fuselage/print-run.json). A command acknowledgement
-is not evidence of adhesion, completion or a successful physical part. The remaining
-right-wing and tail beds have not been dispatched.
+is not evidence of adhesion, completion or a successful physical part. The original right-wing and tail packages were not dispatched at that time.
+See the subsequent P1S right-wing preparation below.
 
 ## Shared CoScad mass-report cross-check
 
@@ -167,3 +183,41 @@ coscad mass mass-components.json
 Both reports match the original mass/CG within floating-point precision. These are
 read-only analysis operations and do not change the dispatched packages. See the
 [shared mass-analysis contract](../../docs/2026-11-10-MASS-ANALYSIS.md) for limitations.
+
+## Owner results and next bed - 2026-11-11
+
+The owner reports that the P1S left wing and X1C fuselage printed very well; this
+is a physical print-quality report, not a flight or structural test. The X1C
+spool is almost out. The owner reports white PLA is now loaded on the P1S; its
+LAN spool colour metadata still reports yellow. See `physical-outcome-20261111.json`.
+
+The next bed is the right wing, re-sliced specifically for the P1S (about 2.2 h,
+57 g), with unchanged geometry and printer-specific placement. Reproduce with
+`python prepare_right_p1s.py`, `python slice.py p1s-wing-right`,
+`python verify_packages.py p1s-wing-right`, then
+`python balance.py --right-wing-job p1s-wing-right --output p1s-wing-right/balance.json`.
+The selected balance passes all gates with zero ballast; the original balance
+and dispatched package histories are preserved. Dispatch state belongs in
+`p1s-wing-right/print-run.json`. The tail remains after this wing.
+
+The [structural feasibility screen](structural/README.md) includes two completed
+wing FEA probes and explains why their idealized solid results do not establish
+the strength of the printed, bolted aircraft.
+
+## Tail on P1S - 2026-11-11
+
+The owner reports the P1S right wing printed well and confirmed the plate clear
+for the next bed. `physical-outcome-right-wing-20261111.json` records that report.
+The remaining stabilizer and fin were prepared and sliced together as `p1s-tail`,
+with unchanged geometry, integrated mouse ears, two walls and 8% gyroid.
+The printer-specific package passes bounds/exclusion and slice checks; the
+combined P1S-wing/P1S-tail balance still passes all zero-ballast design gates.
+Estimated duration is about one hour and usage is 17 g PLA. Actual dispatch
+and thermal checks are recorded in `p1s-tail/print-run.json`; acknowledgement
+or startup is not evidence of adhesion or completion. This is the final bed
+of the five-part glider kit.
+
+Reproduce before dispatch with `python prepare_tail_p1s.py`,
+`python slice.py p1s-tail`, `python verify_packages.py p1s-tail`, and
+`python balance.py --right-wing-job p1s-wing-right --tail-job p1s-tail --output p1s-tail/balance.json`.
+Preparation refuses to overwrite a job that already has a dispatch record.

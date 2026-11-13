@@ -20,11 +20,17 @@ A single print containing a stationary base/meridian/axle and a captive rotating
 
 ## Rebuild (macOS)
 
-Tested with CoScad 1.2.0.0 via Cabal/GHC 9.8.2, OpenSCAD 2025.05.16 (Manifold), BambuStudio 02.08.02.61, Python 3.12, numpy 2.3.5, trimesh 4.11.4, manifold3d 3.4.0, shapely 2.1.2, scipy 1.17.0 and matplotlib 3.10.8. Native apps must run with normal host access. Build the CoScad executable with `cabal build exe:coscad`; `generate.py` currently references this checkout's GHC 9.8.2 Cabal executable path.
+Tested with CoScad 1.2.0.0 via Cabal/GHC 9.8.2, OpenSCAD 2025.05.16 (Manifold), BambuStudio 02.08.02.61, Python 3.12, numpy 2.3.5, trimesh 4.11.4, manifold3d 3.4.0, shapely 2.1.2, scipy 1.17.0 and matplotlib 3.10.8. Native apps must run with normal host access. Build the native executable with `cabal build exe:coscad`.
 
 Run `python build.py` in a Python environment containing the above packages. It renders component meshes, joins them without altering geometry, validates, slices with absolute paths, checks toolpaths, and finalizes the package. It does not send a print. Presets are flattened from installed vendor profiles; exact settings used here are retained under `presets/`, including the full base project configuration seeded from the prior successful A1 tesseract project.
 
 2026-10-29: `build.py` no longer uses OpenSCAD. It renders each part from `globe.coscad` with the native compiler (`coscad stl`; `--coscad PATH`, `$COSCAD` or `cabal list-bin exe:coscad`), and `--render-only` stops after `verify.py`, before slicing. The recorded meshes, logs, validation and package above came from OpenSCAD at `$fn=96`, which `generate.py` writes into the `.scad` files; the native kernel always uses 50 circle segments, so a rebuild is coarser and not identical. A native rebuild on 2026-10-29 passed every `verify.py` check (zero intersection over the 72-pose rotation sweep) with stand 1730 triangles and 49273.48 mm³ (OpenSCAD 3266, 49367.12), rotor 4718 and 137391.47 mm³ (12596, 138054.04), and `verify.py` now reports the faceted bore clearance for 50 segments (0.5939 mm; 0.5983 mm at 96). Re-slice and re-verify toolpaths before printing a native rebuild.
+
+Both globe revisions also support the Sol 0.13.1 bundle. From the model
+directory, run `SOL="$HOME/.fpr/0.13.1/bin/sol" python build.py --render-only`.
+On 2026-11-13 the Python and Sol native builds produced 13 byte-identical
+files, including all six SCAD exports, the assembled mesh and the clearance
+report. Omit `--render-only` to prepare and slice the A1 project offline.
 
 LAN sending uses the repository's `scripts/bambu-slice.py` and `scripts/bambu-print-run.py`, with paho-mqtt 2.1.0. For this run the A1 reported slot 3 (`ams2`) present with yellow PLA; credentials remain outside this directory. Read printer status and spool presence again before any future dispatch, confirm an empty bed, and never repeat a dispatch merely because acknowledgement is delayed.
 

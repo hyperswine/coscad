@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-11",
+  "command": "bin/coscad check models/orbit-tower-v2/orbit-tower.assemble",
+  "exit_code": 0,
+  "parts": 20,
+  "overlaps": 0,
+  "clearance_warnings": 0,
+  "scope": "assembled static geometry only; no full rotation sweep, packing or physical fit validation"
+}

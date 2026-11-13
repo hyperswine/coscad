@@ -101,8 +101,13 @@ cabal build exe:coscad
 MPLCONFIGDIR=/private/tmp/globe-matplotlib /private/tmp/coscad-globe-venv/bin/python models/print-in-place-globe/v2-threaded/build.py
 ```
 
-The generator locates CoScad through `cabal list-bin exe:coscad`. It emits all
-geometry in CoScad without a third-party thread library or external map data.
+Set `SOL="$HOME/.fpr/0.13.1/bin/sol"` in the environment of the command above
+to use the Sol generator and build driver. The selected Python environment
+still supplies the mesh and toolpath verifiers. Pass `--render-only` for the
+geometry checks or `--slicer /path/to/BambuStudio` to select the offline slicer.
+The build selects CoScad from `--coscad`, `COSCAD` or `cabal list-bin exe:coscad`
+for both SCAD exports and native meshes. The generator emits the threads and
+retains the geography from the original `../globe.coscad`.
 `build.py` renders, verifies, prepares both multipart projects, slices both jobs
 and verifies the packages. Native macOS apps may need host access outside a
 sandbox. This build never dispatches a print. Saved presets, logs and checks
@@ -120,6 +125,11 @@ every `verify.py` check. Volumes moved by up to 0.5% (rotor 137391 against
 wrong-phase thread probe intersects 225.85 mm³ (224.83 at 96). The physically
 tested thread fit was printed from the 96-segment meshes; print a coupon again
 before relying on a native rebuild.
+
+The build also renders an independent reference rotor from the original globe
+source with that same compiler. The translated rotor must agree with the
+reference to within 0.1 mm³ of symmetric difference. To check archived meshes,
+standalone `verify.py` uses the archived parent rotor by default.
 
 ## Thread coupon dispatch, 2026-10-23
 

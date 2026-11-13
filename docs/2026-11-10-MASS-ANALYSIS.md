@@ -68,6 +68,11 @@ The included short toolpath is an analytical fixture, **not a printable program*
 Python requires numpy; install the optional dependency with
 `python -m pip install -r scripts/requirements-mass.txt`.
 
+Set `SOL="$HOME/.fpr/0.13.1/bin/sol"` when running the Python command above to
+use the Sol driver with that interpreter. From the repository root, the direct
+command is `"$SOL" scripts/slice-mass.sol MANIFEST --python /path/to/numpy-python`.
+Both accept `-o` and `--components-out`.
+
 A `coscad.slice-mass/1` manifest declares `dialect: "bambu-relative-e"`, a `jobs` array
 and an optional `hardware` array. Each job declares:
 

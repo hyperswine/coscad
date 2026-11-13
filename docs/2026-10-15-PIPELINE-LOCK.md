@@ -51,6 +51,11 @@ python3 scripts/pipeline-lock.py --check-ci
 python3 scripts/pipeline-lock.py --scope source --scope render --run coscad doctor
 ```
 
+Set `SOL="$HOME/.fpr/0.13.1/bin/sol"` in the environment of any of these
+commands to use the Sol driver. The Python entry point locates the checkout
+and passes through the interpreter used for version probes. From the repository
+root, `"$SOL" scripts/pipeline-lock.sol --check-ci` runs the Sol driver directly.
+
 The complete check includes SSH to `root@localhost-0`. Version probes have a
 30-second deadline. An unavailable dependency is a refusal, not an invitation
 to download a replacement or silently accept a different version. Scope checks

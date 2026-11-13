@@ -1,0 +1,22 @@
+{
+  "rotor.coscad": "cd842933a5aaf2509e546e556b9f2c285028bafc21d01f291bcfe68f70beb4d8",
+  "axle.coscad": "18e72e2037266178f986d765e0ec08979de4966f1e0dcbe42dacdc9786288336",
+  "cap.coscad": "d5048b860d4b4828bef7ef0a6117e7d0a426e07e56efa5100ceb5363c1fa0c72",
+  "satellite.coscad": "f897c2e1d26ccc1aac42e80f07d924cb6016456974aa270568c3399bbbcdcaab",
+  "base.coscad": "728a46c5f2cfeec864c8680c55e6452a9d8446e84156c1f6c038635324d122d2",
+  "orbit-tower.assemble": "b8c1221595b5ba60a897d3f00cf265360af6500d8fa775940f748ba75cb579e1",
+  "prepare_print.py": "55014098fe3352eba7e6a62176f212b499f127e5d68cc29077a5dc859f0f904c",
+  "../bolted-glider/prepare_slice.py": "5353cdae317196e0761bf2d6f4110f40b92aff02dba3e8b888a64b92d0ec334b",
+  "orbit-tower_next_rotor1_bot.stl": "e27dfee1bebd8235403b95e0b1bd49f6031bf1d52cd2946ac54b37615bfb2d61",
+  "orbit-tower_next_base_bot.stl": "e354aeed20205c385c2333f85e7631f2c75e55cfd07aa9b8d078e345c5bb9121",
+  "orbit-tower_next_satellite1_bot.stl": "abe113ff45471b3d5adfd7250bd538c7addf1a3572f0b03138361787b1b0dae2",
+  "orbit-tower_next_cap_bot.stl": "f61b4ff23e4f8414268d7d8cfdb0f09e7410af90042a1bbb21a5a86182525f3a",
+  "orbit-tower_next_axle1_bot.stl": "32df27d1c91000f3fda1c8e505cbe5a27a2990cdce55c72e4adf4815415da2a0",
+  "x1c-tower/glider-project.3mf": "90139dea10122563878ccc2855630f39884c0ad9ad621da886d4a95a328a1717",
+  "x1c-tower/presets/filament.json": "094ca7b6180e47c2ea1c616c51bf8db01262d2c78bedbd8ac3b412d91ab9fe9c",
+  "x1c-tower/presets/project.json": "a57c803a2c47458beab62de8fb56342f931f2fa6a6e06ab3bc3e84e6d7e2d0c7",
+  "x1c-tower/presets/process.json": "ad7420db156aaa98f621776efe7fb69237dad62556dd43e2813c7ba531a3c5c8",
+  "x1c-tower/presets/machine.json": "f097fb0196a54d1bc7d6fc07d66d2d98fd82ace7ff061f69065d5c9ea58a7aab",
+  "x1c-tower/slice/plate_1.gcode": "a2e703ea00b62b9970aefc7ce739dbca3a93362dc4cce9e9caaf8b75d1989b44",
+  "slice.py": "add2ff49fb957339f0ffaba33fddfb2851e1cd75ab7a5580daafbe2aa1168919"
+}

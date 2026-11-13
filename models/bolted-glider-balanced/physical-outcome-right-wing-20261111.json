@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-11",
+  "model": "bolted-glider-balanced",
+  "job": "p1s-wing-right",
+  "evidence": "owner report",
+  "outcome": "printed well",
+  "owner_statement": "It printed well on the P1S. The bed is now clear. Can you print the next bed on the P1s",
+  "structural_or_flight_validation": false
+}

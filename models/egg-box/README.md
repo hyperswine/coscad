@@ -9,16 +9,17 @@ Outside dimensions: approximately 127.2 x 127.2 x 78 mm.
 Walls/dividers: 2.4 mm. Floor: 3 mm. Exterior corner radius: 4 mm.
 All four compartments share a single continuous floor. Print upright.
 
-The geometry is pure CoScad. `generate.py` emits the repeated cells because
+The geometry is pure CoScad. The generator emits the repeated cells because
 the current CoScad language does not provide a grid loop. For another grid:
 
 ```sh
-python3 models/egg-box/generate.py --columns 2 --rows 2
+"$SOL" models/egg-box/generate.sol --columns 2 --rows 2
 stack exec coscad -- stl models/egg-box/egg-box.coscad
 python3 scripts/bambu-slice.py models/egg-box/egg-box_manifest.json --printer 'Bambu Lab A1 0.4 nozzle'
 ```
 
-Run from the CoScad repository root. Regeneration overwrites this model's
+Run from the CoScad repository root with `SOL` set to the 0.13.1 bundle's
+executable. The Python generator accepts the same grid dimensions. Regeneration overwrites this model's
 source and manifest; recompile and re-slice afterward. Larger grids must
 fit the target build plate (the supplied manifest is for a 256 mm A1 bed).
 

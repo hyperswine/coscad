@@ -1,0 +1,334 @@
+{
+  "schema": "coscad.next/1",
+  "geometry_backend": "native",
+  "source": "models/orbit-tower-v2/orbit-tower.assemble",
+  "bed": {
+    "w": 256,
+    "d": 256,
+    "margin": 7,
+    "max_z": 250
+  },
+  "variants": [
+    {
+      "id": "base_bot",
+      "part": "base",
+      "source": "models/orbit-tower-v2/base.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": 0.37,
+      "printability": {
+        "bed_contact_mm2": 2635.131,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 2635.131,
+        "min_width_mm": 57.886,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [58, 57.886, 11],
+      "mesh": "models/orbit-tower-v2/orbit-tower_next_base_bot.stl",
+      "hints": {
+        "material": "pla"
+      }
+    },
+    {
+      "id": "axle1_bot",
+      "part": "axle1",
+      "source": "models/orbit-tower-v2/axle.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -0.228,
+      "printability": {
+        "bed_contact_mm2": 215.36,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 215.36,
+        "min_width_mm": 17.964,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [18, 17.964, 20],
+      "mesh": "models/orbit-tower-v2/orbit-tower_next_axle1_bot.stl",
+      "hints": {
+        "material": "pla",
+        "after": "base"
+      }
+    },
+    {
+      "id": "rotor1_bot",
+      "part": "rotor1",
+      "source": "models/orbit-tower-v2/rotor.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": 0.262,
+      "printability": {
+        "bed_contact_mm2": 572.317,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 572.317,
+        "min_width_mm": 20.959,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [59, 20.959, 4.5],
+      "mesh": "models/orbit-tower-v2/orbit-tower_next_rotor1_bot.stl",
+      "hints": {
+        "material": "pla"
+      }
+    },
+    {
+      "id": "satellite1_bot",
+      "part": "satellite1",
+      "source": "models/orbit-tower-v2/satellite.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": 2.0e-3,
+      "printability": {
+        "bed_contact_mm2": 132.383,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 132.383,
+        "min_width_mm": 12.974,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [13, 12.974, 10.8],
+      "mesh": "models/orbit-tower-v2/orbit-tower_next_satellite1_bot.stl",
+      "hints": {
+        "material": "pla"
+      }
+    },
+    {
+      "id": "cap_bot",
+      "part": "cap",
+      "source": "models/orbit-tower-v2/cap.coscad",
+      "down": "bot",
+      "orientation_mode": "declared",
+      "fff_score": -9.1e-2,
+      "printability": {
+        "bed_contact_mm2": 215.36,
+        "elevated_start_heights_mm": [],
+        "overhang_mm2": 0,
+        "first_layer_mm2": 215.36,
+        "min_width_mm": 17.964,
+        "warnings": [],
+        "warning_codes": []
+      },
+      "footprint": [18, 17.964, 11],
+      "mesh": "models/orbit-tower-v2/orbit-tower_next_cap_bot.stl",
+      "hints": {
+        "material": "pla",
+        "after": "rotor6"
+      }
+    }
+  ],
+  "beds": [
+    {
+      "index": 1,
+      "stl": "models/orbit-tower-v2/orbit-tower_bed1.stl",
+      "placements": [
+        {
+          "instance": "base_1",
+          "variant": "base_bot",
+          "x": 7,
+          "y": 7,
+          "w": 58,
+          "d": 57.886,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rotor1_1",
+          "variant": "rotor1_bot",
+          "x": 72,
+          "y": 7,
+          "w": 59,
+          "d": 20.959,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rotor2_1",
+          "variant": "rotor1_bot",
+          "x": 138,
+          "y": 7,
+          "w": 59,
+          "d": 20.959,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rotor3_1",
+          "variant": "rotor1_bot",
+          "x": 204,
+          "y": 7,
+          "w": 20.959,
+          "d": 59,
+          "brim_mm": 0,
+          "rot_z": 90
+        },
+        {
+          "instance": "rotor4_1",
+          "variant": "rotor1_bot",
+          "x": 7,
+          "y": 73,
+          "w": 59,
+          "d": 20.959,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rotor5_1",
+          "variant": "rotor1_bot",
+          "x": 73,
+          "y": 73,
+          "w": 59,
+          "d": 20.959,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "rotor6_1",
+          "variant": "rotor1_bot",
+          "x": 139,
+          "y": 73,
+          "w": 59,
+          "d": 20.959,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "axle1_1",
+          "variant": "axle1_bot",
+          "x": 205,
+          "y": 73,
+          "w": 18,
+          "d": 17.964,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "axle2_1",
+          "variant": "axle1_bot",
+          "x": 230,
+          "y": 73,
+          "w": 18,
+          "d": 17.964,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "axle3_1",
+          "variant": "axle1_bot",
+          "x": 7,
+          "y": 100.959,
+          "w": 18,
+          "d": 17.964,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "axle4_1",
+          "variant": "axle1_bot",
+          "x": 32,
+          "y": 100.959,
+          "w": 18,
+          "d": 17.964,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "axle5_1",
+          "variant": "axle1_bot",
+          "x": 57,
+          "y": 100.959,
+          "w": 18,
+          "d": 17.964,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "axle6_1",
+          "variant": "axle1_bot",
+          "x": 82,
+          "y": 100.959,
+          "w": 18,
+          "d": 17.964,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "cap_1",
+          "variant": "cap_bot",
+          "x": 107,
+          "y": 100.959,
+          "w": 18,
+          "d": 17.964,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "satellite1_1",
+          "variant": "satellite1_bot",
+          "x": 132,
+          "y": 100.959,
+          "w": 13,
+          "d": 12.974,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "satellite2_1",
+          "variant": "satellite1_bot",
+          "x": 152,
+          "y": 100.959,
+          "w": 13,
+          "d": 12.974,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "satellite3_1",
+          "variant": "satellite1_bot",
+          "x": 172,
+          "y": 100.959,
+          "w": 13,
+          "d": 12.974,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "satellite4_1",
+          "variant": "satellite1_bot",
+          "x": 192,
+          "y": 100.959,
+          "w": 13,
+          "d": 12.974,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "satellite5_1",
+          "variant": "satellite1_bot",
+          "x": 212,
+          "y": 100.959,
+          "w": 13,
+          "d": 12.974,
+          "brim_mm": 0,
+          "rot_z": 0
+        },
+        {
+          "instance": "satellite6_1",
+          "variant": "satellite1_bot",
+          "x": 232,
+          "y": 100.959,
+          "w": 13,
+          "d": 12.974,
+          "brim_mm": 0,
+          "rot_z": 0
+        }
+      ]
+    }
+  ],
+  "assembly_only": []
+}

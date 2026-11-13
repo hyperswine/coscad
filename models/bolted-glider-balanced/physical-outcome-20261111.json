@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-11",
+  "evidence": "owner_report",
+  "revision": "balanced-v2",
+  "owner_statement": "The two parts printed very well.",
+  "parts": [
+    {"part": "wing-left", "printer": "P1S", "job": "p1s-wing-left", "reported_result": "printed very well"},
+    {"part": "fuselage", "printer": "X1C", "job": "x1c-fuselage", "reported_result": "printed very well"}
+  ],
+  "filament_update": {"P1S": "white filament, still good", "X1C": "almost out"},
+  "structural_or_flight_tested": false
+}

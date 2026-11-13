@@ -91,3 +91,11 @@ with print_error 0 and 82 minutes remaining. The first layer completed
 according to printer telemetry. The camera angle obscures much of the bed,
 so adhesion of all twenty pieces could not be visually confirmed. Print
 completion and actual assembly fit remain unverified.
+
+## Physical result (owner report, 2026-11-11)
+
+The original kit printed well several weeks before this report and was assembled.
+Assembly was intuitive; the joints felt somewhat too loose. This supersedes the
+earlier unverified-completion notes above. Exact print date and which individual
+joints were loose were not specified. See `physical-outcome-20261111.json`.
+A separate [tighter-fit candidate](../orbit-tower-v2/README.md) preserves this original.

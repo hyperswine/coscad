@@ -1,0 +1,159 @@
+{
+  "job": "p1s-tail",
+  "printer": "p1s",
+  "material": "pla",
+  "package_sha256": "483972c9f003bfe221993c18546d589efac35f0d35817fc65c5717132497065b",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 476,
+    "deposition_moves_checked": 19183,
+    "package_sha256": "483972c9f003bfe221993c18546d589efac35f0d35817fc65c5717132497065b"
+  },
+  "remote_name": "glider-p1s-tail-20261111-223319.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": true,
+  "layer_inspect": true,
+  "authorization_note": "Owner reports the right wing printed well, explicitly confirms the P1S bed is clear, and requests the next ballast-free glider bed on P1S, 2026-11-11.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 52,
+    "total_layer_num": 52,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+    "nozzle_temper": 29.125,
+    "bed_temper": 25.8125,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-11T22:33:30+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 52,
+        "total_layer_num": 52,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "glider-p1s-tail-20261111-223319.gcode",
+        "nozzle_temper": 29.125,
+        "bed_temper": 25.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T22:33:45+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 57,
+        "gcode_file": "glider-p1s-tail-20261111-223319.gcode.3mf",
+        "subtask_name": "glider-p1s-tail-20261111-223319.gcode",
+        "nozzle_temper": 43.34375,
+        "bed_temper": 25.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T22:34:00+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 57,
+        "gcode_file": "glider-p1s-tail-20261111-223319.gcode.3mf",
+        "subtask_name": "glider-p1s-tail-20261111-223319.gcode",
+        "nozzle_temper": 79.8125,
+        "bed_temper": 26.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T22:34:15+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 57,
+        "gcode_file": "glider-p1s-tail-20261111-223319.gcode.3mf",
+        "subtask_name": "glider-p1s-tail-20261111-223319.gcode",
+        "nozzle_temper": 75.46875,
+        "bed_temper": 41.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T22:34:30+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 57,
+        "gcode_file": "glider-p1s-tail-20261111-223319.gcode.3mf",
+        "subtask_name": "glider-p1s-tail-20261111-223319.gcode",
+        "nozzle_temper": 91.59375,
+        "bed_temper": 54.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-11T22:33:19+1100",
+  "remote_content_sha256": "483972c9f003bfe221993c18546d589efac35f0d35817fc65c5717132497065b",
+  "sequence_id": "396809814",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "396809814"
+  }
+}

@@ -4,6 +4,12 @@ The manual is a static site built from this repo by `scripts/build-manual.sh`:
 README and `docs/*.md` (pandoc), `man coscad` (mandoc), and the build-plan
 companion site with renders under `/builds` (`coscad site`).
 
+For a local Sol build, set `SOL="$HOME/.fpr/0.13.1/bin/sol"` in the
+environment of `scripts/build-manual.sh OUTDIR`. The same setting on
+`scripts/manual-update.sh` selects the Sol updater under the checkout lock.
+The Sol builder requires Python 3 for the final directory exchange. Both
+entry points use their existing shell implementations when `SOL` is unset.
+
 **Serving machine** (mac mini, on the tailnet): a checkout at `~/srv/coscad`,
 the compiler installed to `~/srv/bin`, the site at `~/srv/manual-www`, nginx
 serving it on port 6210 (`manual-nginx-mini.conf`), and a launchd job

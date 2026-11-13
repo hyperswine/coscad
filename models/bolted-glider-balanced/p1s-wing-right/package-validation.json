@@ -1,0 +1,42 @@
+{
+  "printer": "P1S",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL P1S 0.4 nozzle",
+  "process": "0.20mm Standard @BBL X1C",
+  "nozzle_temperature": "220",
+  "bed_temperature": "55",
+  "model_id": "C12",
+  "package": "p1s-wing-right/slice/glider.gcode.3mf",
+  "package_sha256": "d950943c45f86caff4c10444efa53cbc6cc7a42841622c4aa82a409c2288a0b0",
+  "gcode_sha256": "076e42c55c56e4dca0cd46e1bd33452aa8c17357998ce5d5ba921336196fd5c9",
+  "objects": 1,
+  "layers": 52,
+  "model_path_segments": 137017,
+  "support_segments": 0,
+  "segments_in_exclusion_corner": 0,
+  "extrusion_bounds_xy_mm": [
+    [
+      7.683,
+      7.607
+    ],
+    [
+      248.351,
+      248.01
+    ]
+  ],
+  "features": {
+    "Inner wall": 1806,
+    "Outer wall": 1957,
+    "Bottom surface": 1481,
+    "Internal solid infill": 21742,
+    "Sparse infill": 40839,
+    "Bridge": 29773,
+    "Floating vertical shell": 5222,
+    "Top surface": 20126,
+    "Gap infill": 14071
+  },
+  "estimated_hours": 2.1851901584201388,
+  "estimated_grams": 56.55451202392578,
+  "solid_parts_grams": 164.17258852614358,
+  "passed": true
+}

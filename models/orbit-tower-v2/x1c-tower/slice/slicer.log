@@ -1,0 +1,26 @@
+[2026-11-12 00:37:45.461373] [0x00000001f353d300] [trace]   Initializing StaticPrintConfigs
+[2026-11-12 00:37:45.518083] [0x00000001f353d300] [warning] cli mode, Current BambuStudio Version 02.08.02.61
+[2026-11-12 00:37:45.547765] [0x00000001f353d300] [warning] run:2873, can not find system preset file: /Applications/BambuStudio.app/Contents/Resources/profiles/BBL/machine_full/Bambu Lab X1 Carbon 0.4 nozzle.json 
+[2026-11-12 00:37:45.547980] [0x00000001f353d300] [warning] no filament colors found in projects
+[2026-11-12 00:37:45.548576] [0x00000001f353d300] [warning] 4191: disable_wipe_tower_after_mapping: disable prime tower for only one filament!
+[2026-11-12 00:37:45.550466] [0x00000001f353d300] [warning] load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types
+[2026-11-12 00:37:46.000044] [0x000000016e0b7000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.000082] [0x000000016f4f3000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.000101] [0x0000000170117000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.000120] [0x00000001f353d300] [warning] tree support default to organic support
+[2026-11-12 00:37:46.000147] [0x000000016ecdb000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.000187] [0x000000016e8cf000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.000212] [0x000000016f8ff000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.000236] [0x000000016f0e7000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.000261] [0x000000016e4c3000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.000288] [0x000000016fd0b000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.005946] [0x000000016f4f3000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.008365] [0x000000016e8cf000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.008878] [0x00000001f353d300] [warning] tree support default to organic support
+[2026-11-12 00:37:46.013312] [0x000000016ecdb000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.013663] [0x000000016f4f3000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.015125] [0x000000016fd0b000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.017083] [0x000000016e4c3000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.018961] [0x000000016ecdb000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.018973] [0x000000016e0b7000] [warning] tree support default to organic support
+[2026-11-12 00:37:46.021665] [0x000000016f4f3000] [warning] tree support default to organic support

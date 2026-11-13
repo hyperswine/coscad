@@ -1,0 +1,806 @@
+{
+  "job": "x1c-tower",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "5bafdea98e63cd2e178551b3646a283cba73b7f1022880034aebb9e2ff07da79",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 100,
+    "deposition_moves_checked": 364310,
+    "package_sha256": "5bafdea98e63cd2e178551b3646a283cba73b7f1022880034aebb9e2ff07da79"
+  },
+  "remote_name": "glider-x1c-tower-20261112-003936.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": true,
+  "layer_inspect": true,
+  "authorization_note": "Owner explicitly requested the new tighter-fit Orbit Tower on X1C, confirms its bed clear and reports white filament loaded; LAN confirms white external PLA, 2026-11-12.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 234,
+    "total_layer_num": 234,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "glider-x1c-fuselage-20261110-214630.gcode",
+    "nozzle_temper": 190.0,
+    "bed_temper": 25.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-12T00:39:43+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 234,
+        "total_layer_num": 234,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 183.0,
+        "bed_temper": 25.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:39:58+1100",
+      "status": {
+        "gcode_state": "PREPARE",
+        "mc_percent": 0,
+        "layer_num": 234,
+        "total_layer_num": 100,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 176.0,
+        "bed_temper": 25.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:40:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 95,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 151.0,
+        "bed_temper": 25.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:40:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 95,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 138.0,
+        "bed_temper": 41.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:40:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 95,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 133.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:40:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 95,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 213.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:41:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 95,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 248.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:41:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 235.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:41:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 209.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:41:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:42:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:42:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:42:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 187.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:42:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 160.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:43:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 141.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:43:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:43:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:43:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:44:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:44:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:44:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:44:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:45:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:45:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:45:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:45:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:46:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 191.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:46:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 213.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:46:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 187.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:46:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 167.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:47:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 150.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:47:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 141.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:47:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 152.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:47:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 6,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 218.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:48:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 6,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 89,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:48:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 6,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 89,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 204.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:48:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 6,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 89,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:48:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 6,
+        "layer_num": 0,
+        "total_layer_num": 100,
+        "mc_remaining_time": 89,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-12T00:49:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 1,
+        "total_layer_num": 100,
+        "mc_remaining_time": 88,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "glider-x1c-tower-20261112-003936.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-12T00:39:36+1100",
+  "remote_content_sha256": "5bafdea98e63cd2e178551b3646a283cba73b7f1022880034aebb9e2ff07da79",
+  "sequence_id": "404383052",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "404383052"
+  },
+  "first_layer_reached": true
+}

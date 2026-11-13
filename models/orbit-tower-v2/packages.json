@@ -1,0 +1,44 @@
+{
+  "x1c-tower": {
+    "printer": "X1C",
+    "material": "PLA",
+    "filament": "Bambu PLA Basic @BBL X1C",
+    "process": "0.20mm Standard @BBL X1C",
+    "nozzle_temperature": "220",
+    "bed_temperature": "55",
+    "model_id": "BL-P001",
+    "package": "x1c-tower/slice/glider.gcode.3mf",
+    "package_sha256": "5bafdea98e63cd2e178551b3646a283cba73b7f1022880034aebb9e2ff07da79",
+    "gcode_sha256": "a2e703ea00b62b9970aefc7ce739dbca3a93362dc4cce9e9caaf8b75d1989b44",
+    "objects": 20,
+    "layers": 100,
+    "model_path_segments": 364232,
+    "support_segments": 0,
+    "segments_in_exclusion_corner": 0,
+    "extrusion_bounds_xy_mm": [
+      [
+        21.21,
+        16.267
+      ],
+      [
+        233.79,
+        198.772
+      ]
+    ],
+    "features": {
+      "Inner wall": 143786,
+      "Outer wall": 77019,
+      "Gap infill": 1520,
+      "Bottom surface": 3151,
+      "Internal solid infill": 32495,
+      "Sparse infill": 88431,
+      "Floating vertical shell": 12807,
+      "Bridge": 2975,
+      "Top surface": 2048
+    },
+    "estimated_hours": 1.5981037055121528,
+    "estimated_grams": 39.479820251464844,
+    "solid_parts_grams": 63.9094711187258,
+    "passed": true
+  }
+}

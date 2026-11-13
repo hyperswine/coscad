@@ -284,7 +284,10 @@ python scripts/compare-fea-reference.py --exe /path/to/coscad-experiments
 python scripts/compare-cad-fea-reference.py --exe /path/to/coscad-experiments
 ```
 
-Run from the repository root. The sidecars and comparison scripts are executable
+Run from the repository root. Set `SOL` to the Sol 0.13.1 executable to use
+the shared batch driver with the same Python reference solvers. The
+[Sol migration record](../scripts/sol-workflows.md) lists the compared cases.
+The sidecars and comparison scripts are executable
 acceptance examples, not committed printer dispatches or deployment changes.
 
 

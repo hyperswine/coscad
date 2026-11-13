@@ -1,0 +1,13 @@
+{
+  "meshes.json": "54eab3378461013987fc9b03f71d851c3acc2e6099afd6443669f9bc97c68a6f",
+  "prepare_slice.py": "b8892eaab780715de6d0f64ea6f6265c1f8328c7472c51b15a711e6187b1514f",
+  "p1s-wing-right/glider-project.3mf": "14b80e5f936bd092f50d0648cf4c7ca55d38cbb282d8d4703b6edd54c915d869",
+  "p1s-wing-right/layout.json": "bf0a55c4bdeb411d4b2dbe9e83f872bc35051d529884f7b248ff2054e6b7e854",
+  "p1s-wing-right/presets/filament.json": "d729ae823fe91bea706f7c03d486da5ea67cb91692da2e3136e70a18f8e5ecc8",
+  "p1s-wing-right/presets/project.json": "9b38a28c2e83943797a718a8bcb36d92e9ee197654fe1a11cfd8656c925e74da",
+  "p1s-wing-right/presets/process.json": "adf8561384500f14f6c38188a1fe418989f93ec2255bfa3c5d92b6ca75ab7df5",
+  "p1s-wing-right/presets/machine.json": "a01956ccc0d6a60631442c68da2149de290a7a4c4164277e3ba0a735c27a31ca",
+  "prepare_right_p1s.py": "2aad0ccae7ac41e01b788b417189031407e3ce271253da6eabb182981ae05b9b",
+  "p1s-wing-right/slice/plate_1.gcode": "076e42c55c56e4dca0cd46e1bd33452aa8c17357998ce5d5ba921336196fd5c9",
+  "slice.py": "add2ff49fb957339f0ffaba33fddfb2851e1cd75ab7a5580daafbe2aa1168919"
+}

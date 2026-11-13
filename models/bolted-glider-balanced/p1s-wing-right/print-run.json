@@ -1,0 +1,665 @@
+{
+  "job": "p1s-wing-right",
+  "printer": "p1s",
+  "material": "pla",
+  "package_sha256": "d950943c45f86caff4c10444efa53cbc6cc7a42841622c4aa82a409c2288a0b0",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 52,
+    "deposition_moves_checked": 137018,
+    "package_sha256": "d950943c45f86caff4c10444efa53cbc6cc7a42841622c4aa82a409c2288a0b0"
+  },
+  "remote_name": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": true,
+  "layer_inspect": true,
+  "authorization_note": "Owner requested the next ballast-free glider bed on P1S, reports white PLA loaded, and explicitly confirmed the P1S plate clear on 2026-11-11.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 52,
+    "total_layer_num": 52,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "glider-p1s-wing-left-20261110-214634.gcode",
+    "nozzle_temper": 28.75,
+    "bed_temper": 25.375,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-11T16:43:26+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 52,
+        "total_layer_num": 52,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 28.75,
+        "bed_temper": 25.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:43:41+1100",
+      "status": {
+        "gcode_state": "PREPARE",
+        "mc_percent": 100,
+        "layer_num": 52,
+        "total_layer_num": 52,
+        "mc_remaining_time": 0,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 28.75,
+        "bed_temper": 25.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:43:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 131,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 79.59375,
+        "bed_temper": 25.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:44:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 131,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 75.375,
+        "bed_temper": 26.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:44:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 131,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 75.09375,
+        "bed_temper": 43.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:44:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 131,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 102.59375,
+        "bed_temper": 54.59375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:44:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 131,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 181.46875,
+        "bed_temper": 54.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:45:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 131,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 235.6875,
+        "bed_temper": 54.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:45:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 130,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 247.375,
+        "bed_temper": 54.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:45:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 126,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 233.28125,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:45:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 204,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790564064
+        }
+      ]
+    },
+    {
+      "at": "2026-11-11T16:46:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 200.125,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790564064
+        }
+      ]
+    },
+    {
+      "at": "2026-11-11T16:46:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 200.0625,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790564064
+        }
+      ]
+    },
+    {
+      "at": "2026-11-11T16:46:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 199.6875,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790564064
+        }
+      ]
+    },
+    {
+      "at": "2026-11-11T16:46:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 184.1875,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790564064
+        }
+      ]
+    },
+    {
+      "at": "2026-11-11T16:47:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 163.40625,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790564064
+        }
+      ]
+    },
+    {
+      "at": "2026-11-11T16:47:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 149.46875,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1790564064
+        }
+      ]
+    },
+    {
+      "at": "2026-11-11T16:47:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 140.78125,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:47:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 140.1875,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:48:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 140.15625,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:48:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:48:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 139.96875,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:48:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 139.84375,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:49:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:49:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 139.90625,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:49:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 139.9375,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:49:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 139.96875,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:50:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 185.28125,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-11T16:50:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 1,
+        "total_layer_num": 52,
+        "mc_remaining_time": 125,
+        "gcode_file": "glider-p1s-wing-right-20261111-164257.gcode.3mf",
+        "subtask_name": "glider-p1s-wing-right-20261111-164257.gcode",
+        "nozzle_temper": 217.9375,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-11T16:42:57+1100",
+  "remote_content_sha256": "d950943c45f86caff4c10444efa53cbc6cc7a42841622c4aa82a409c2288a0b0",
+  "sequence_id": "375806167",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "375806167"
+  },
+  "first_layer_reached": true
+}

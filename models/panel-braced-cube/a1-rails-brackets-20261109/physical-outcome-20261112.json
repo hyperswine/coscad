@@ -1,0 +1,23 @@
+{
+  "reported_on": "2026-11-12",
+  "printer": "A1",
+  "likely_model": "panel-braced-cube",
+  "likely_job": "a1-rails-brackets-20261109",
+  "job_identity": "probable from owner description and matching upright rails/brackets; not independently confirmed from live printer",
+  "evidence": "owner report and attached photograph",
+  "owner_report": {
+    "progress_before_failure": "approximately three quarters through; approximate, not verified layer telemetry",
+    "failed_parts": "four extrusions near the front fell down",
+    "remaining_parts": "other parts stayed on the plate",
+    "cause": "unknown"
+  },
+  "photo_observations": [
+    "Substantial white filament spaghetti over the front/centre of the build plate and spilling off its front.",
+    "Several upright rails remain standing and flat brackets remain on the right.",
+    "Detached rail-like parts are visible on the table; the photo alone does not establish their precise origin or failure sequence."
+  ],
+  "cause_confirmed": false,
+  "photo": "physical-evidence-20261112/owner-photo.jpg",
+  "photo_sha256": "3eab66aa1c8040094799250a18db68d17cdebfdaa033a7f5f7688b674a376144",
+  "printer_control_performed": false
+}

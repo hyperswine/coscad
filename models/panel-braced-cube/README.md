@@ -215,3 +215,20 @@ was recorded during the earlier threaded-globe run. The printer kept RUNNING
 with print_error=0. This is a transient reported alert, not proof that the fan
 or its previously suspected connector is repaired. Startup telemetry, including
 any later recurrence, remains in the run records.
+
+## A1 partial print failure (owner report, 2026-11-12)
+
+The owner reports that the A1 bed, believed to be this cube-frame rail/bracket
+bed, was printing well until roughly three quarters through, when **four
+extrusions near the front fell down**. The other parts stayed on the plate.
+The cause is unknown; neither the failure layer nor a nozzle collision, adhesion
+loss or other mechanism has been confirmed. The job association is probable,
+not independently confirmed from live printer telemetry.
+
+The [owner photograph](a1-rails-brackets-20261109/physical-evidence-20261112/owner-photo.jpg)
+shows substantial white spaghetti at the front/centre and off the front of the
+plate, while several rails remain upright and flat brackets remain on the right.
+Remaining on the plate does not establish that those parts finished successfully.
+See [the structured outcome](a1-rails-brackets-20261109/physical-outcome-20261112.json).
+This updates the earlier startup-only evidence; no printer commands were sent
+while recording this result.

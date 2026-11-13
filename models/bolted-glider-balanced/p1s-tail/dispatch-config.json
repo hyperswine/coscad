@@ -1,0 +1,11 @@
+{
+  "revision": "balanced-v2",
+  "job": "p1s-tail",
+  "dispatcher": "../bolted-glider/dispatch.py",
+  "dispatcher_sha256": "69ad95ab20f55a01031ffa54e80733ae831d2553963de15ddbb3ca475ed11387",
+  "owner_confirmed_bed_clear": true,
+  "authorization_note": "Owner reports the right wing printed well, explicitly confirms the P1S bed is clear, and requests the next ballast-free glider bed on P1S, 2026-11-11.",
+  "spool": "external",
+  "flow_calibration": true,
+  "layer_inspection": true
+}

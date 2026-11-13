@@ -69,10 +69,11 @@ E of 3500 MPa and Poisson ratio 0.36 for both bodies.
 d=models/bolted-glider-balanced/structural
 bin=$(cabal list-bin exe:coscad)
 export GHCRTS=-N2
+export SOL="$HOME/.fpr/0.13.1/bin/sol"
 "$bin" stress "$d/wing-saddle.assemble" --bonded "$d/wing-saddle.json" --preview -o /tmp/regions.json
-python3 scripts/assembly-region-preview.py /tmp/regions.json /tmp/regions.svg
+"$SOL" scripts/assembly-region-preview.sol /tmp/regions.json /tmp/regions.svg
 "$bin" stress "$d/wing-saddle.assemble" --bonded "$d/wing-saddle.json" -o /tmp/wing-result.json
-python3 "$d/wing_gauges.py" /tmp/wing-result.json
+"$SOL" "$d/wing-gauges.sol" /tmp/wing-result.json
 ```
 
 The fixture clamps a 4 × 4 mm voxel patch on the fuselage. An inward pressure
@@ -148,7 +149,7 @@ To reproduce the finer perfectly bonded case from the repository root:
 d=models/bolted-glider-balanced/structural
 cabal run coscad-experiments -- assembly-refine "$d/wing-saddle.assemble" \
   "$d/wing-saddle-cell2.json" /tmp/saddle-2mm.json +RTS -N2 -M7G -s -RTS
-python3 "$d/wing_gauges.py" /tmp/saddle-2mm.json
+"$SOL" "$d/wing-gauges.sol" /tmp/saddle-2mm.json
 ```
 
 For the compliant case add `"stiffness_n_mm": [1000, 1000, 1000]` to both

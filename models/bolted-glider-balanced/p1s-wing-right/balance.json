@@ -1,0 +1,233 @@
+{
+  "status": "design estimate; not flight validated",
+  "items": [
+    {
+      "name": "wing-right",
+      "mass_g": 56.45935045262598,
+      "cg_mm": [
+        99.74388430844249,
+        114.68913416318061,
+        53.333609189121034
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "wing-left",
+      "mass_g": 55.883057523287476,
+      "cg_mm": [
+        -99.397079631463,
+        114.29569967834243,
+        53.3223966194851
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "fuselage",
+      "mass_g": 71.84936271356793,
+      "cg_mm": [
+        0.04301804949178566,
+        34.20284176855332,
+        23.734001170137866
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "stab",
+      "mass_g": 9.39209145166197,
+      "cg_mm": [
+        0.0036449909260502715,
+        192.97045613128498,
+        20.358583629770596
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "fin",
+      "mass_g": 7.1740262491709474,
+      "cg_mm": [
+        -0.0013855794207131567,
+        196.7957217215146,
+        59.94485403989982
+      ],
+      "kind": "printed"
+    },
+    {
+      "name": "wing-1-0-M5x12",
+      "mass_g": 2.6,
+      "cg_mm": [
+        14.708771503988793,
+        26.530025934305424,
+        46.40203346532242
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "wing-1-0-M5-nut",
+      "mass_g": 1.2,
+      "cg_mm": [
+        15.440470746862367,
+        26.226362883723787,
+        39.44700614907917
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "wing-1-1-M5x12",
+      "mass_g": 2.6,
+      "cg_mm": [
+        14.708771503988793,
+        74.48434057023461,
+        44.308302871786296
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "wing-1-1-M5-nut",
+      "mass_g": 1.2,
+      "cg_mm": [
+        15.440470746862367,
+        74.18067751965297,
+        37.35327555554305
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "wing--1-0-M5x12",
+      "mass_g": 2.6,
+      "cg_mm": [
+        -14.708771503988793,
+        26.530025934305424,
+        46.40203346532242
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "wing--1-0-M5-nut",
+      "mass_g": 1.2,
+      "cg_mm": [
+        -15.440470746862367,
+        26.226362883723787,
+        39.44700614907917
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "wing--1-1-M5x12",
+      "mass_g": 2.6,
+      "cg_mm": [
+        -14.708771503988793,
+        74.48434057023461,
+        44.308302871786296
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "wing--1-1-M5-nut",
+      "mass_g": 1.2,
+      "cg_mm": [
+        -15.440470746862367,
+        74.18067751965297,
+        37.35327555554305
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "tail-0-M3x10",
+      "mass_g": 0.8,
+      "cg_mm": [
+        4.5,
+        193.72393217762328,
+        22.347408401283467
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "tail-0-M3-nut",
+      "mass_g": 0.4,
+      "cg_mm": [
+        4.5,
+        194.24149924123248,
+        16.972268930100704
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "tail-1-M3x10",
+      "mass_g": 0.8,
+      "cg_mm": [
+        -4.5,
+        173.8160082102797,
+        20.430493350878987
+      ],
+      "kind": "hardware"
+    },
+    {
+      "name": "tail-1-M3-nut",
+      "mass_g": 0.4,
+      "cg_mm": [
+        -4.5,
+        174.3335752738889,
+        15.055353879696224
+      ],
+      "kind": "hardware"
+    }
+  ],
+  "gcode_sha256": {
+    "p1s-wing-right": "076e42c55c56e4dca0cd46e1bd33452aa8c17357998ce5d5ba921336196fd5c9",
+    "p1s-wing-left": "feded6221e2268a6b6d5c78172f7389f75324e0ddcac08a0e7a21036b51c6ff9",
+    "x1c-fuselage": "93458a37b8e1ff3ae0cbc23d6b274e3011d9b6d3e2097c937cbc35fc544398f3",
+    "a1-tail": "7fdd5dd485457c91cf4e148999114ba025063e85e620876fdcf2390a673008ae"
+  },
+  "total_g": 218.35788839031426,
+  "hardware_g": 17.6,
+  "ballast_g": 0,
+  "cg_mm": [
+    0.36626711734770384,
+    90.45630152408484,
+    41.31096818221294
+  ],
+  "neutral_point_y_mm": 105.06257602798446,
+  "mac_mm": 99.41973813628249,
+  "static_margin": 0.14691523813790028,
+  "target_static_margin": [
+    0.1,
+    0.15
+  ],
+  "cg_sensitivity_y_mm": [
+    85.93556792130516,
+    95.01711300098293
+  ],
+  "neutral_point_sensitivity_y_mm": [
+    100.24432320958446,
+    107.19619705290394
+  ],
+  "static_margin_sensitivity": [
+    0.052577187453825155,
+    0.21384716486031327
+  ],
+  "wing_loading_g_dm2": 49.15696778015446,
+  "speed_m_s_assuming_CL_0.6": 11.455086550100347,
+  "gates": {
+    "nominal_margin_10_to_15_percent": true,
+    "sensitivity_margin_above_5_percent": true,
+    "lateral_cg_within_1_mm": true,
+    "nominal_trim_incidence_within_1_degree": true
+  },
+  "trim": {
+    "assumed_total_CL": 0.6,
+    "assumed_wing_Cm": -0.06,
+    "assumed_wing_alpha0_deg": -3,
+    "nominal": {
+      "wing_CL": 0.6867300299622415,
+      "tail_CL": -0.313081585679167,
+      "tail_incidence_deg": -5.26819187670424
+    },
+    "built_tail_incidence_deg": -5.5,
+    "required_incidence_sensitivity_deg": [
+      -9.175584161849558,
+      -2.814495734131583
+    ],
+    "limitations": "Linear model only. Modified section polar, stall, fuselage moment and wing-tail interference are unmeasured."
+  },
+  "passed": true
+}
