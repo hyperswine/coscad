@@ -36,14 +36,15 @@ extra-source-files:
     third-party/clipper2/CPP/Clipper2Lib/include/clipper2/*.h
     third-party/bosl2/LICENSE
     third-party/bosl2/README.md
-    scripts/package-release.py
-    scripts/bonded_shelf.py
-    scripts/compare-bonded-reference.py
-    scripts/compare-fea-reference.py
-    scripts/compare-cad-fea-reference.py
-    scripts/compare-native-pipeline.py
-    scripts/compare-tetra-fea-reference.py
-    experiments/requirements-fea.txt
+    scripts/assembly-region-preview.sol
+    scripts/bonded-shelf.sol
+    scripts/check-docs.sol
+    scripts/package-release.sol
+    scripts/render-boats.sol
+    scripts/slice-prepared.sol
+    scripts/update-formula.sol
+    scripts/sol-only-check.sol
+    models/tesseract-v3-threaded/*.sol
     test/native/bridge_smoke.cpp
 
 source-repository head

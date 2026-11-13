@@ -1,2 +1,0 @@
-# Runtime LAN client version captured from the working environment.
-paho-mqtt==2.1.0

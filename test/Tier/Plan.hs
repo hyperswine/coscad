@@ -7,7 +7,7 @@ module Tier.Plan
   )
 where
 
-import Control.Monad (forM_)
+import Control.Monad (forM_, unless)
 import Coscad.Geometry (mApply, vlen, vsub, vadd, rodMat)
 import Coscad.Plan (PlanSummary (..), StepSummary (..), FastenerSummary (..), planSummary, processPlanSummary)
 import Coscad.Site (buildPageHtml, indexHtml)
@@ -15,6 +15,8 @@ import Coscad.Report (silent)
 import Coscad.Plan.Calibrate (fitWeights, nnls)
 import qualified Data.Map as Map
 import System.Exit (ExitCode (..))
+import System.Environment (lookupEnv)
+import Data.Maybe (fromMaybe)
 import System.Process (readProcessWithExitCode)
 import Data.List (isInfixOf, isPrefixOf, sort)
 import System.Directory
@@ -345,7 +347,10 @@ planEaseTier t = do
   let src = "models/tesseract-v3-threaded"
   fs <- listDirectory src
   forM_ [f | f <- fs, takeExtension f == ".coscad"] $ \f -> copyFile (src </> f) (t3 </> f)
-  generator <- readProcessWithExitCode "python3" [src </> "instructions.py", src </> "tesseract.assemble", t3 </> "tesseract.assemble"] ""
+  sol <- fromMaybe "sol" <$> lookupEnv "SOL"
+  generator <- readProcessWithExitCode sol [src </> "instructions.sol", src </> "tesseract.assemble", t3 </> "tesseract.assemble"] ""
+  unless (case generator of (ExitSuccess, _, _) -> True; _ -> False) $
+    ioError (userError ("Sol instruction generator failed: " ++ show generator))
   generated <- readFile (t3 </> "tesseract.assemble")
   assertT t "Tesseract III instructions declare joints and no ordering hints"
     (case generator of (ExitSuccess, _, _) -> length (filter ("joint " `isPrefixOf`) (lines generated)) == 48 && not ("after=" `isInfixOf` generated); _ -> False) (show generator)

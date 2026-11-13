@@ -249,7 +249,7 @@ processNextWithBackend backend emit strict inputFile = runCommand $ do
               when (strict && not (null warned)) $
                 abort $ designFailure (inputFile ++ ": --strict: " ++ show count ++ " printability warning"
                   ++ (if count == 1 then "" else "s") ++ " on " ++ intercalate ", " (map vName warned)
-                  ++ "; fix or reorient the parts, or slice with scripts/bambu-slice.py --accept-printability after review")
+                  ++ "; fix or reorient the parts before slicing; legacy slicer automation is archived")
 
 -- | Brim reserved around one instance: its own @brim=N@ hint wins
 -- (@brim=0@ opts out); otherwise @plate … brim=N@ applies to parts whose

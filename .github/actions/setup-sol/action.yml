@@ -1,0 +1,46 @@
+name: Pinned Sol runner
+description: Install the released macOS runner or build the pinned Linux runner
+runs:
+  using: composite
+  steps:
+    - name: Sol runtime dependencies
+      shell: sh
+      run: |
+        if [ "${{ runner.os }}" = Linux ]; then
+          apt-get update
+          apt-get install -y --no-install-recommends git curl ca-certificates make gcc g++ pkg-config xz-utils libgit2-dev libarchive-dev libcurl4-openssl-dev libegl-dev libgl-dev
+        fi
+    - name: Install pinned Sol
+      shell: sh
+      run: |
+        set -eu
+        root="$RUNNER_TEMP/coscad-sol"
+        mkdir -p "$root"
+        if [ "${{ runner.os }}" = macOS ]; then
+          curl -fL --retry 3 https://github.com/hyperswine/fprisc/releases/download/v0.13.1/fprisc-0.13.1-macos-arm64.tar.gz -o "$root/runner.tar.gz"
+          have=$(shasum -a 256 "$root/runner.tar.gz" | cut -d ' ' -f 1)
+          test "$have" = f59a88dcb48f095d71d2f067ed5c49d7421d64e0efaf86a47e1ebc5157e0495a
+          tar -xzf "$root/runner.tar.gz" -C "$root"
+          runner=$(find "$root" -path '*/bin/sol' -print -quit)
+          library=$(find "$root" -path '*/sol/lib/proc.sol' -print -quit)
+          test -n "$runner" && test -n "$library"
+          toolchain_root=${library%/sol/lib/proc.sol}
+        else
+          toolchain_root="$root/fprisc"
+          git init "$toolchain_root"
+          git -C "$toolchain_root" remote add origin https://github.com/hyperswine/fprisc.git
+          git -C "$toolchain_root" fetch --depth 1 origin 1b4aca1658d44c148496d8e2131138b8d71bc0b4
+          git -C "$toolchain_root" checkout --detach FETCH_HEAD
+          cd "$toolchain_root"
+          rm -f cabal.project.freeze
+          cabal update
+          cabal build exe:fpr
+          compiler=$(cabal list-bin exe:fpr)
+          ln -s "$compiler" "$root/sol"
+          runner="$root/sol"
+        fi
+        test -x "$runner"
+        echo "SOL=$runner" >> "$GITHUB_ENV"
+        echo "FPR_HOME=$toolchain_root" >> "$GITHUB_ENV"
+        echo "FPR_PATH=$toolchain_root" >> "$GITHUB_ENV"
+        dirname "$runner" >> "$GITHUB_PATH"

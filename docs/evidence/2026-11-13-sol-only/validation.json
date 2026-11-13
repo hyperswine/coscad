@@ -1,0 +1,20 @@
+{
+  "native_suite": {
+    "passed": 1727,
+    "failed": 0,
+    "openscad_oracle": "disabled locally; retained in CI"
+  },
+  "editor_tests": "passed",
+  "selected_sol_modules_compiled": 15,
+  "docs_cli_commands": 13,
+  "tesseract_joint_count": 48,
+  "native_package": "passed with python/python3/bash blocked on PATH",
+  "installed_doctor": "passed",
+  "script_policy": "passed; extensionless shell negative fixture rejected",
+  "not_qualified": [
+    "new Linux bootstrap on hosted CI",
+    "physical printer operations"
+  ],
+  "archive": "https://github.com/hyperswine/coscad/releases/tag/legacy-scripts-final-2026-11-13",
+  "source_distribution": "cabal sdist passed; no .py/.sh members"
+}

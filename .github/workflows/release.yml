@@ -21,17 +21,25 @@ jobs:
   build:
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
             artifact: coscad-linux-x86_64
+            container: debian:trixie
           # macos-latest (macos-26) pairs a CLT SDK with an older Xcode
           # linker: "tapi error ... unknown architecture arm64e.x1-macos".
           - os: macos-15
             artifact: coscad-macos-arm64
+            container: ""
     steps:
+      - name: Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          apt-get update
+          apt-get install -y git curl ca-certificates xz-utils make gcc g++ pkg-config libgmp-dev zlib1g-dev libtinfo-dev
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ env.TAG }}
@@ -52,6 +60,7 @@ jobs:
           restore-keys: ${{ runner.os }}-cabal-
       # The pinned native kernel (native-kernel.lock.json) is vendored under
       # third-party/ and linked statically into the released binary by cabal.
+      - uses: ./.github/actions/setup-sol
       - run: cabal update
       - name: Build
         run: cabal build --enable-tests all
@@ -63,10 +72,10 @@ jobs:
         env:
           COSCAD_OPENSCAD: none
       - name: Tag matches package version
-        shell: bash
+        shell: sh
         run: |
           want="$(awk '/^version:/ { print $2 }' coscad.cabal)"
-          if [[ "$TAG" == v* ]]; then test "${TAG#v}" = "$want"; fi
+          case "$TAG" in v*) test "${TAG#v}" = "$want";; esac
           have=$(cabal run -v0 coscad -- --version | awk '{print $2}')
           test "$want" = "$have" || { echo "tag $TAG but coscad --version says $have"; exit 1; }
       - name: Install
@@ -77,7 +86,7 @@ jobs:
         if: runner.os == 'macOS'
         run: codesign --force --sign - dist-bin/coscad
       - name: Package binary and native notices
-        run: python3 scripts/package-release.py --binary dist-bin/coscad
+        run: '"$SOL" scripts/package-release.sol --binary dist-bin/coscad'
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ matrix.artifact }}

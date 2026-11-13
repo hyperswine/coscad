@@ -13,7 +13,7 @@ a part can still be exported as `.scad` for people who continue in OpenSCAD.
 .coscad  ──coscad stl──▶ .stl                          (one part)
 .assemble ─coscad───▶  asm + plate PNGs + _design.json  (design stage)
 .assemble ─coscad next▶ bedN.stl + _manifest.json       (manufacturing)
-manifest  ─bambu-slice▶ bedN.gcode.3mf → printer        (scripts/bambu-slice.py)
+manifest  → external slicer → printer (legacy LAN automation archived)
 ```
 
 ## Install
@@ -78,16 +78,11 @@ against its known volume.
 
 ## Quick start
 
-The working compiler-to-printer toolchain is recorded in
-[`pipeline.lock.json`](pipeline.lock.json), with QOS-style repository revisions
-and content hashes for local tools, profiles and deployed artifacts. Use
-`python3 scripts/pipeline-lock.py --scope source --scope render --check` to
-detect drift in a plain checkout, or
-`python3 scripts/pipeline-lock.py --scope source --scope render --run coscad doctor`
-to run through the checked entry point. A bare `--check` (no `--scope`) is the
-complete check: it also SSHes to the print host (`root@localhost-0`) and hashes
-the local printer profiles, so it only passes on the maintainer's machine. See
-[pins, deliberate upgrades and graceful recovery](docs/2026-10-15-PIPELINE-LOCK.md).
+The main branch now uses repository-owned Sol scripts only. The prior Python/Bash
+pipeline, print automation and reference harnesses are preserved in the
+[final legacy source release](https://github.com/hyperswine/coscad/releases/tag/legacy-scripts-final-2026-11-13).
+See the [cutover record](docs/2026-11-13-SOL-ONLY.md) for supported commands and
+functionality still to restore. `coscad doctor` checks the linked native kernel.
 
 ```sh
 coscad part.coscad           # -> part.scad (an export for OpenSCAD users)
@@ -107,16 +102,12 @@ coscad stress bracket.coscad # deflection, peak stress and safety factor from th
 coscad plan frame.assemble   # numbered build steps, preload sheet, BOM, step scenes
 coscad calibrate times.json  # fit the plan's cost weights to timed builds (seconds per term)
 coscad site out/ *.assemble  # phone-first static site: step images, search across builds
-scripts/bambu-slice.py frame_manifest.json [--print 1]  # slice beds with Bambu Studio, optionally print over LAN
-scripts/bambu-print-run.py frame.assemble  # photo, model → slice → print, watch, photo, verdict
 coscad --help                # command + language cheat sheet
 ```
 
-The two Bambu scripts need Bambu Studio; printing over the LAN also needs
-`python3 -m pip install -r scripts/requirements.txt` (paho-mqtt) and the
-bambu-lan scripts (`BAMBU_LAN_DIR`). The VS Code extension lives in
-`vscode/` (`npm install && npm test && npm run package`, or take the
-`.vsix` attached to each release).
+The VS Code extension lives in `vscode/` (`npm ci && npm test && npm run package`,
+or take the `.vsix` attached to a release). Printer dispatch, package verification
+and live monitoring from the legacy scripts are not supported on this branch.
 
 Errors carry `file:line:col` and quote the offending line — an unknown
 name, a stray glyph, a circular definition, a duplicate, or a 2D/3D
@@ -191,7 +182,7 @@ A line starting with `|>` continues the previous definition.
   compliant patches and a face preview. See [assembly analysis](docs/2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md).
 - **Mass and balance**: `coscad mass part.coscad --density 1.24` reports uniform-solid
   mass and centre; `coscad mass components.json` combines explicit part/hardware masses.
-  `scripts/slice-mass.py` estimates deposited-filament mass with declared assembly poses.
+  Sliced-filament mass automation is archived pending a Sol implementation.
   See [mass analysis](docs/2026-11-10-MASS-ANALYSIS.md) for schemas and limitations.
 - **Stress**: `coscad stress` solves a part's `support`/`load` lines with
   20-node hexahedra in Haskell and reports deflection, peak stress and
@@ -200,6 +191,22 @@ A line starting with `|>` continues the previous definition.
 
 See [the shelf bracket integration workflow](docs/2026-10-27-EDITOR-WORKFLOW.md)
 for editor diagnostics, backend selection and a reproducible stress-to-slice example.
+
+## Sol batch scripts
+
+Use FP-RISC 0.13.1's Sol runner, or set `SOL` to its executable. From this checkout:
+
+```sh
+sol scripts/sol-only-check.sol
+sol scripts/check-docs.sol
+sol scripts/bonded-shelf.sol --output-dir /tmp/shelf --refinement 1
+sol scripts/render-boats.sol models/beach-monohull --out /tmp/monohull
+sol scripts/package-release.sol --binary /path/to/coscad --output /tmp/coscad-release
+```
+
+The [cutover record](docs/2026-11-13-SOL-ONLY.md) lists the supported Sol ports.
+Drivers that still depend on Python are not shipped on main. Native Haskell/C++
+tests and the JavaScript editor tests remain; the retired Python tests do not.
 
 ## Module map
 
@@ -282,10 +289,9 @@ walk through building the 20-piece spinning desktop kit, with a render for
 each step. A separate [hand-written guide](https://manual.cswine.cloud/orbit-tower.html)
 includes handling and print notes.
 
-`scripts/build-manual.sh DIR` renders this documentation, the man page,
-and the example build plans into a static site (needs pandoc and mandoc;
-plan images are rendered by coscad itself). manual.cswine.cloud rebuilds it from `main` automatically; see
-`deploy/README.md`.
+The previous automatic manual publisher and its launchd job are archived. This
+cleanup does not deploy changes to the existing hosted manual. A safe Sol-only
+publisher remains to be implemented.
 
 ## Releasing
 
@@ -293,9 +299,8 @@ plan images are rendered by coscad itself). manual.cswine.cloud rebuilds it from
    `v<version>`, push the tag: the release workflow runs every test tier
    (native geometry included, OpenSCAD oracle off), checks the tag against
    `coscad --version`, and attaches binaries.
-2. After the release succeeds, run `scripts/update-release.py coscad v<version>`
-   in the shared `homebrew-tap` repository. It downloads the archive and verifies
-   the published checksum and build metadata before updating the binary formula.
+2. The release workflow packages the tested executable with `scripts/package-release.sol`.
+   Homebrew updates can use `scripts/update-formula.sol`; inspect its arguments before publishing.
 
 ## Print photos
 

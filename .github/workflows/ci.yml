@@ -9,6 +9,7 @@ jobs:
   test:
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    container: debian:trixie
     strategy:
       fail-fast: false
       matrix:
@@ -16,6 +17,10 @@ jobs:
         # supported platform. The release workflow builds and tests macOS.
         os: [ubuntu-latest]
     steps:
+      - name: Container build dependencies
+        run: |
+          apt-get update
+          apt-get install -y git curl ca-certificates xz-utils make gcc g++ pkg-config libgmp-dev zlib1g-dev libtinfo-dev
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
@@ -40,10 +45,10 @@ jobs:
       - name: OpenSCAD + BOSL2 oracle (Linux)
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y openscad xvfb
-          printf '#!/bin/sh\nexec xvfb-run -a openscad "$@"\n' | sudo tee /usr/local/bin/openscad-headless >/dev/null
-          sudo chmod +x /usr/local/bin/openscad-headless
+          apt-get update
+          apt-get install -y openscad xvfb
+          printf '#!/bin/sh\nexec xvfb-run -a openscad "$@"\n' | tee /usr/local/bin/openscad-headless >/dev/null
+          chmod +x /usr/local/bin/openscad-headless
           echo "COSCAD_OPENSCAD=/usr/local/bin/openscad-headless" >> "$GITHUB_ENV"
           git init "$HOME/BOSL2"
           git -C "$HOME/BOSL2" remote add origin https://github.com/BelfrySCAD/BOSL2
@@ -55,17 +60,11 @@ jobs:
       # Clipper2) is vendored under third-party/ and built by cabal itself, so
       # there is no kernel step, cache or pkg-config probe to run here. ---
 
-      - name: Pin policy and refusal checks
+      - uses: ./.github/actions/setup-sol
+      - name: Sol script policy and documentation
         run: |
-          python3 scripts/pipeline-lock.py --check-ci
-          python3 scripts/test-pipeline-lock.py
-      # README, man page and --help must agree on commands and exit codes.
-      - name: docs agree
-        run: python3 scripts/check-docs.py
-      # Offline: presets and the slicer are mocked, no Bambu Studio needed.
-      # unittest, not bare asserts, so nothing is stripped under -O.
-      - name: bambu-slice tests
-        run: python3 -m unittest -v scripts/test-bambu-slice.py scripts/test-bambu-preflight.py
+          "$SOL" scripts/sol-only-check.sol
+          "$SOL" scripts/check-docs.sol
       # Warnings are errors in CI only: a newer GHC with new warnings must
       # not break a user's `cabal build`, but nothing new lands warning.
       - name: Warnings are errors (CI only)
@@ -84,7 +83,12 @@ jobs:
   no-openscad:
     name: ubuntu-latest (no OpenSCAD)
     runs-on: ubuntu-latest
+    container: debian:trixie
     steps:
+      - name: Container build dependencies
+        run: |
+          apt-get update
+          apt-get install -y git curl ca-certificates xz-utils make gcc g++ pkg-config libgmp-dev zlib1g-dev libtinfo-dev
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
         id: hs
@@ -104,6 +108,7 @@ jobs:
       - name: Warnings are errors (CI only)
         run: |
           printf 'package coscad\n  ghc-options: -Werror\n' > cabal.project.local
+      - uses: ./.github/actions/setup-sol
       - run: cabal update
       - run: cabal build --enable-tests all
       - name: openscad is not installed
@@ -112,22 +117,15 @@ jobs:
         run: cabal run coscad -- doctor
       - name: tests with the OpenSCAD oracle off
         run: |
-          set -o pipefail
-          cabal test coscad-test --test-show-details=direct | tee suite.log
+          if cabal test coscad-test --test-show-details=direct > suite.log 2>&1; then
+            cat suite.log
+          else
+            cat suite.log
+            exit 1
+          fi
           grep -q "OpenSCAD oracle checks skipped" suite.log
         env:
           COSCAD_OPENSCAD: none
-
-  slice-mass:
-    name: sliced mass analytic regressions
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - name: Install optional mass-analysis dependency
-        run: |
-          python3 -m venv /tmp/coscad-mass-tests
-          /tmp/coscad-mass-tests/bin/pip install -r scripts/requirements-mass.txt
-      - run: /tmp/coscad-mass-tests/bin/python scripts/test_mass.py
 
   vscode:
     name: vscode extension
