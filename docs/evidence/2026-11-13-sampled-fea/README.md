@@ -22,3 +22,24 @@ The OpenSCAD oracle was disabled. The first harness invocation picked up an
 older installed CLI and stopped in the mass tier. The full rerun used the
 binary path returned by cabal list-bin. The later build introducing the
 separate refinement budget also passed -Werror and the seven comparisons.
+
+## Glider refinement runtime
+
+The bonded 4 mm case took 391.15 s wall time, including 0.17 s preparation
+and 389.55 s in the solve. GHC reported 929 MiB total runtime memory in use.
+The mesh had 7,544 occupied cells and 122,583 reduced DOF. The archived 4 mm
+solution took 3,622 PCG iterations.
+
+At 2 mm the same geometry occupied 54,251 cells. The experimental bonded
+and compliant runs were stopped after 44 min 49 s and 41 min 44 s respectively.
+Each was using about 90% of one CPU at interruption. The compliant process
+peaked at 2,496,987,136 bytes resident. Neither run published a solution.
+The termination times are lower bounds on runtime. The native sample showed
+compiled Haskell loops without source-level names. Iteration counts and
+residual histories were unavailable, so convergence rate and time per
+iteration could not be distinguished. The 4-to-2 mm change in pad travel,
+root rotation and joint forces remains unknown.
+
+Before repeating the long runs, add periodic iteration, true/estimated
+residual and elapsed-time reporting in the experimental solver, then time the
+matrix multiply and SSOR preconditioner separately on the completed 4 mm case.
