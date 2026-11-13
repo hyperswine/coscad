@@ -3,7 +3,7 @@
 -- along grid columns. The grid is what the part stress solver meshes; it is a
 -- staircase approximation whose volume is reported against the mesh volume.
 module Coscad.Stress.Voxel
-  ( VoxelGrid (..), fillThreshold, voxelize, voxelCount, voxelVolume, cellCentre, cellCorner
+  ( VoxelGrid (..), fillThreshold, voxelize, voxelizeAligned, voxelCount, voxelVolume, cellCentre, cellCorner
   , exteriorFaces, Face (..), connectedCells
   ) where
 
@@ -51,12 +51,26 @@ cellCentre g c = let (x,y,z)=cellCorner g c; r=vgCell g/2 in (x+r,y+r,z+r)
 -- Rays that cross the surface an odd number of times mean the mesh is not
 -- closed and are an error.
 voxelize :: Double -> [Tri] -> Either String VoxelGrid
-voxelize h tris = do
+voxelize = voxelizeWithOrigin False
+
+-- Put separate instances on one lattice while retaining tight per-body bounds.
+voxelizeAligned :: Double -> [Tri] -> Either String VoxelGrid
+voxelizeAligned = voxelizeWithOrigin True
+
+voxelizeWithOrigin :: Bool -> Double -> [Tri] -> Either String VoxelGrid
+voxelizeWithOrigin aligned h tris = do
   unless (finite h && h > 0) (Left "FEA: cell size must be a positive finite number")
   unless (not (null tris)) (Left "FEA: empty mesh")
-  let ((x0,y0,z0),(x1,y1,z1)) = meshBounds tris
+  let ((lx,ly,lz),(x1,y1,z1)) = meshBounds tris
+      start x | aligned = fromInteger (floor (x/h))*h
+              | otherwise = x
+      (x0,y0,z0) = (start lx,start ly,start lz)
       count a b = max 1 (ceiling ((b-a)/h - 1e-9))
       nx = count x0 x1; ny = count y0 y1; nz = count z0 z1
+  unless (not aligned || all (\x -> finite (x/h) && abs (x/h)<=1e7) [lx,ly,lz,x1,y1,z1])
+    (Left "assembly FEA: sampled mesh outside supported lattice coordinate range")
+  unless (not aligned || toInteger nx*toInteger ny*toInteger nz <= 2000000)
+    (Left "assembly FEA: sampled body exceeds two million candidate cells")
   unless (all (\n -> n <= 4096) [nx,ny,nz]) (Left "FEA: more than 4096 cells along one axis; use a larger cell")
   unless (toInteger nx*toInteger ny*toInteger nz <= 50000000) (Left "FEA: grid exceeds fifty million candidate cells; use a larger cell")
   -- Sub-sample positions 1/6, 1/2, 5/6 of a cell, jittered so rays never pass

@@ -1,0 +1,10 @@
+{
+  "node_displacement_relative": 3.1480791082075412e-12,
+  "energy_relative": 1.4477308241112041e-13,
+  "body_energy_relative": 1.3435919044013644e-12,
+  "wrench_force_normalized": 2.6554355237705408e-11,
+  "wrench_moment_normalized": 1.299235670194086e-11,
+  "force_balance_normalized": 3.915141795909653e-11,
+  "moment_balance_normalized": 1.1339286718103715e-11,
+  "passed": true
+}

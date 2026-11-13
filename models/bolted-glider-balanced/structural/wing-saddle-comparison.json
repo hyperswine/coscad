@@ -1,0 +1,133 @@
+{
+  "schema": "glider-saddle-comparison/1",
+  "cell_mm": 4,
+  "cases": {
+    "bonded": {
+      "load_pad_corner_mean_z_mm": 1.7142357735900464,
+      "root_baseline_angle_rad": 0.0013135058107724843,
+      "baseline_mm": [
+        [
+          8,
+          40,
+          0
+        ],
+        [
+          24,
+          40,
+          0
+        ]
+      ],
+      "degrees_of_freedom": 122583,
+      "iterations": 3622,
+      "relative_residual": 9.614261782357779e-07,
+      "equilibrium": {
+        "force_n": [
+          -2.631035833644546e-08,
+          -1.0210796714815729e-06,
+          2.044760364472431e-06
+        ],
+        "moment_n_mm": [
+          4.363987488886778e-05,
+          -4.288013514042177e-06,
+          2.6353177418059204e-08
+        ]
+      },
+      "interface_wrenches": {
+        "saddle-front": {
+          "force_n": [
+            0.02688666513845206,
+            -0.5375349308151713,
+            1.767036493673567
+          ],
+          "moment_n_mm": [
+            63.03219437946626,
+            71.62480290278569,
+            -7.674569879857589
+          ]
+        },
+        "saddle-rear": {
+          "force_n": [
+            -0.026888324726527912,
+            0.5375349168318047,
+            -2.767036615320812
+          ],
+          "moment_n_mm": [
+            -237.03219244809657,
+            114.37519655918146,
+            7.6747198368721286
+          ]
+        }
+      },
+      "patch_stiffness_n_mm": null,
+      "analysis_sha256": "f081367d73d9dbd263a1ce75dc7957177985a53e75b1fd734425602764648619"
+    },
+    "compliant": {
+      "load_pad_corner_mean_z_mm": 6.893469464781239,
+      "root_baseline_angle_rad": 0.030639222283440702,
+      "baseline_mm": [
+        [
+          8,
+          40,
+          0
+        ],
+        [
+          24,
+          40,
+          0
+        ]
+      ],
+      "degrees_of_freedom": 122631,
+      "iterations": 4388,
+      "relative_residual": 9.382408041560728e-07,
+      "equilibrium": {
+        "force_n": [
+          -1.714993729251546e-07,
+          8.84160984426785e-08,
+          7.066771735564359e-07
+        ],
+        "moment_n_mm": [
+          3.9566129373724834e-05,
+          -2.9878649741021945e-06,
+          7.862374900469149e-06
+        ]
+      },
+      "interface_wrenches": {
+        "saddle-front": {
+          "force_n": [
+            0.0017345711403216058,
+            -0.10493341152041252,
+            1.8188756291202743
+          ],
+          "moment_n_mm": [
+            68.62014936680589,
+            69.87729245889408,
+            -1.198810105646547
+          ]
+        },
+        "saddle-rear": {
+          "force_n": [
+            -0.00173415349554773,
+            0.10493346723937946,
+            -2.8188753649858
+          ],
+          "moment_n_mm": [
+            -242.62014154355973,
+            116.12269805107195,
+            1.1988388217430075
+          ]
+        }
+      },
+      "patch_stiffness_n_mm": [
+        1000,
+        1000,
+        1000
+      ],
+      "analysis_sha256": "fee6e8751c1cb3b536dbaf1f9990a97cc9093838ee0bec6cdcb7aee3cffc3466"
+    }
+  },
+  "source_sha256": {
+    "fuselage.coscad": "a36793eea30d11d7f4163427d49ffa0f83fa1c10c1fe6b927b7f0b48b105e991",
+    "wing-saddle.assemble": "2aca6f616a061afe0feb8f5d2743a411fdefe2c71493b8f2222ef1dd9a66ac97",
+    "wing-right.coscad": "ff32ec710deb93ff40ad69835731198449af705c54d240a0df3b4ed45b66b0d3"
+  }
+}

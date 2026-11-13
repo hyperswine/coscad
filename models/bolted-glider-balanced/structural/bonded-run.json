@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/Users/jasonqin/Documents/GitHub/coscad/dist-newstyle/build/aarch64-osx/ghc-9.8.2/coscad-1.6.0.0/x/coscad/build/coscad/coscad",
+    "stress",
+    "/private/tmp/coscad-glider-fea-20261111/wing.assemble",
+    "--bonded",
+    "/private/tmp/coscad-glider-fea-20261111/bonded.json",
+    "-o",
+    "/private/tmp/coscad-glider-fea-20261111/bonded-result.json"
+  ],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "Error: assembly FEA: geometry must have grid-aligned orthogonal boundaries; refine cell size or use a supported part\n"
+}

@@ -1,0 +1,3 @@
+wing ← ../wing-right.coscad ×1 ▽bot
+body ← ../fuselage.coscad ×1 ▽bot
+asm = (wing |> rotz 90 |> move 2 0 0) ⊕ (body |> move 0 0 -44 |> rotx 2.5 |> roty 6)

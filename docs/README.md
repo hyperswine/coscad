@@ -71,3 +71,4 @@ at the first three.
 | 2026-11-10 | [STRESS-CORRECTIONS](2026-11-10-STRESS-CORRECTIONS.md) | nearest-plane selection, nonnegative tension and atomic report publication with artifact provenance |
 | 2026-11-10 | [MASS-ANALYSIS](2026-11-10-MASS-ANALYSIS.md) | shared mesh moments, solid/component mass reports and sliced filament balance |
 | 2026-11-10 | [ASSEMBLY-ANALYSIS-INTEGRATION](2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md) | shared physical instances, transforms and explicit bonded FEA regions |
+| 2026-11-12 | [FEA-ENHANCEMENT-PROPOSAL](2026-11-12-FEA-ENHANCEMENT-PROPOSAL.md) | proposed next steps for assembly FEA after the glider rejection: bench calibration, curved bodies with flat interfaces, size and speed, printed-material model, joints, declarations |

@@ -1,0 +1,140 @@
+{
+  "schema": "coscad.assembly-sampled/1",
+  "cell_mm": 4,
+  "bodies": [
+    {
+      "instance": "wing",
+      "young_mpa": 3500,
+      "poisson": 0.36
+    },
+    {
+      "instance": "body",
+      "young_mpa": 3500,
+      "poisson": 0.36
+    }
+  ],
+  "supports": [
+    {
+      "instance": "body",
+      "axis": "z",
+      "side": -1,
+      "plane_mm": -44,
+      "bounds_mm": [
+        [
+          0,
+          40,
+          -44
+        ],
+        [
+          4,
+          44,
+          -44
+        ]
+      ]
+    }
+  ],
+  "loads": [
+    {
+      "region": {
+        "instance": "wing",
+        "axis": "z",
+        "side": -1,
+        "plane_mm": 0,
+        "bounds_mm": [
+          [
+            184,
+            172,
+            0
+          ],
+          [
+            188,
+            176,
+            0
+          ]
+        ]
+      },
+      "pressure_mpa": 0.0625
+    }
+  ],
+  "bonds": [
+    {
+      "name": "saddle-front",
+      "a": {
+        "instance": "wing",
+        "axis": "z",
+        "side": -1,
+        "plane_mm": 0,
+        "bounds_mm": [
+          [
+            8,
+            36,
+            0
+          ],
+          [
+            12,
+            40,
+            0
+          ]
+        ]
+      },
+      "b": {
+        "instance": "body",
+        "axis": "z",
+        "side": 1,
+        "plane_mm": 0,
+        "bounds_mm": [
+          [
+            8,
+            36,
+            0
+          ],
+          [
+            12,
+            40,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "saddle-rear",
+      "a": {
+        "instance": "wing",
+        "axis": "z",
+        "side": -1,
+        "plane_mm": 0,
+        "bounds_mm": [
+          [
+            8,
+            84,
+            0
+          ],
+          [
+            12,
+            88,
+            0
+          ]
+        ]
+      },
+      "b": {
+        "instance": "body",
+        "axis": "z",
+        "side": 1,
+        "plane_mm": 0,
+        "bounds_mm": [
+          [
+            8,
+            84,
+            0
+          ],
+          [
+            12,
+            88,
+            0
+          ]
+        ]
+      }
+    }
+  ],
+  "tolerance": 1e-06
+}

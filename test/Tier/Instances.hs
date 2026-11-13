@@ -91,6 +91,13 @@ instancesTier t = do
                     let nodes r=Map.fromList [((brName body,k),u) | body<-baBodies r,(k,_,u)<-brNodes body]
                     assertT t "all reference nodal displacements agree" (Map.keysSet(nodes a)==Map.keysSet(nodes b) && all (<1e-8) (Map.elems (Map.intersectionWith (\u v -> vlen(vsub u v)) (nodes a) (nodes b)))) "displacements"
                   (a,b) -> failT t "reference solves" (show (fmap baEnergy a,fmap baEnergy b))
+            sampled<-assemblyProblem snap (set "schema" (JString "coscad.assembly-sampled/1") config)
+            case sampled >>= solveBonded of
+              Left e -> failT t "sampled shelf solves" e
+              Right r -> case solveBonded expected of
+                Left e -> failT t "exact shelf control" e
+                Right baseline -> assertT t "sampling preserves exact shelf compliance"
+                  (abs (baEnergy r / baEnergy baseline-1)<1e-7) ""
             forM_ [("no inferred support",set "supports" (JArray []) config),("no inferred bonds",set "bonds" (JArray []) config)] $ \(label,cfgBad) -> do
               p <- assemblyProblem snap cfgBad
               assertT t label (isLeft (p >>= solveBonded)) "fixed is placement only"

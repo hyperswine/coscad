@@ -46,9 +46,22 @@ def reference(problem):
         h = spec['cell_mm']
         mesh = MeshHex.init_tensor(*[origin[d]+h*np.arange(spec['counts'][d]+1)
                                     for d in range(3)])
+        fills = spec.get('cell_fractions')
+        if fills is not None:
+            def cell_keys(mesh):
+                centres = mesh.p[:, mesh.t].mean(axis=1).T
+                return [tuple(np.floor((c-origin)/h).astype(int)) for c in centres]
+            kept = [i for i,key in enumerate(cell_keys(mesh)) if key in fills]
+            mesh = mesh.restrict(kept)
+            weights = np.array([fills[key] for key in cell_keys(mesh)])
         basis = Basis(mesh, ElementVector(ElementHexS2()), intorder=5)
         lam, mu = lame_parameters(spec['young_mpa'], spec['poisson'])
-        matrix = linear_elasticity(lam, mu).assemble(basis).tocsr()
+        if fills is None:
+            matrix = linear_elasticity(lam, mu).assemble(basis).tocsr()
+        else:
+            # Linear elasticity is linear in both Lame parameters. Integrate
+            # each voxel with its sampled fraction at every quadrature point.
+            matrix = linear_elasticity(lam*weights[:, None], mu*weights[:, None]).assemble(basis).tocsr()
         components = np.empty(basis.N, dtype=int)
         for d, indices in enumerate(basis.split_indices()):
             components[indices] = d

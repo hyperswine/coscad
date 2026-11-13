@@ -198,10 +198,12 @@ assembleElements nodeCount elements =
       val = runSTUArray $ do
         arr <- newArray (0, nnz-1) 0
         forM_ elements $ \(gs, fraction, ke) -> do
-          let garr = listArray (0,19) gs :: UArray Int Int
-          forM_ [0..19] $ \a -> forM_ [0..19] $ \b -> forM_ [0..2] $ \i -> forM_ [0..2] $ \j -> do
+          let lastNode = length gs - 1
+              width = 3 * length gs
+              garr = listArray (0,lastNode) gs :: UArray Int Int
+          forM_ [0..lastNode] $ \a -> forM_ [0..lastNode] $ \b -> forM_ [0..2] $ \i -> forM_ [0..2] $ \j -> do
             let row = 3*(garr!a) + i; column = 3*(garr!b) + j
-                v = fraction * ke ! ((3*a+i)*60 + 3*b+j)
+                v = fraction * ke ! ((3*a+i)*width + 3*b+j)
             when (v /= 0) $ do
               k <- find ptr col row column
               old <- readArray arr k

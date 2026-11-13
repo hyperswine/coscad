@@ -41,8 +41,10 @@ leaf IDs, part-to-assembly and explicitly declared print transforms. Print quant
 does not define physical multiplicity. `coscad stress model.assemble --bonded
 analysis.json` accepts explicit material and bounded rectangular region declarations
 for experimental bonded Hex20 analysis. Geometric `fixed`/`mate` never imply
-mechanical supports or bonds. Only rigid, grid-aligned orthogonal solids are supported
-(32 bodies, 1000 cells); no contact, preload, print anisotropy or strength verdict.
+mechanical supports or bonds. Use the exact schema for orthogonal solids (1000 cells) or
+`coscad.assembly-sampled/1` for partial-cell stiffness, pressure loads and optional
+compliant planar patches (8000 cells, 160000 reduced DOF). Both require rigid
+placements and accept up to 32 bodies. Add `--preview` to inspect selected faces.
 Read `docs/2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md` and its runnable shelf fixtures
 before creating a configuration. Never infer slicer bed placement from print orientation.
 

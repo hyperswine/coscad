@@ -1,9 +1,11 @@
+{-# LANGUAGE PatternSynonyms #-}
 -- | Bounded experimental bonded Hex20 assemblies. Identity is per instance;
 -- coincident nodes are merged only by explicit matching exterior-face ties.
 -- No assembly placement constraint is interpreted as a mechanical constraint.
 module Coscad.Stress.Bonded
-  ( Body (..), Patch (..), Bond (..), BondedProblem (..)
+  ( Body (..), Patch (..), Bond (Bond,Spring,bondName,bondA,bondB), BondedProblem (..)
   , Wrench (..), InterfaceResult (..), BodyResult (..), BondedResult (..)
+  , AssemblyBudget(StandardBudget, RefinementBudget), maxOccupiedCells, solveBondedWithBudget
   , solveBonded, parseBondedProblem, bondedJson
   ) where
 
@@ -22,7 +24,14 @@ import Coscad.Validate (finite)
 data Body = Body { bodyName :: String, bodyGrid :: VoxelGrid, bodyYoung :: Double, bodyPoisson :: Double }
   deriving (Eq, Show)
 data Patch = Patch { patchBody :: String, patchFaces :: [Face] } deriving (Eq, Show)
-data Bond = Bond { bondName :: String, bondA :: Patch, bondB :: Patch } deriving (Eq, Show)
+data Bond = Joint { bondName :: String, bondA :: Patch, bondB :: Patch, jointStiffness :: Maybe V3 }
+  deriving (Eq, Show)
+
+pattern Bond :: String -> Patch -> Patch -> Bond
+pattern Bond name a b = Joint name a b Nothing
+pattern Spring :: String -> Patch -> Patch -> V3 -> Bond
+pattern Spring name a b k = Joint name a b (Just k)
+{-# COMPLETE Bond, Spring #-}
 data BondedProblem = BondedProblem
   { bpBodies :: [Body], bpBonds :: [Bond], bpSupports :: [Patch]
   , bpLoads :: [(Patch, V3)], bpTolerance :: Double, bpIterations :: Int
@@ -61,12 +70,27 @@ addW (Wrench f m) (Wrench g n) = Wrench (vadd f g) (vadd m n)
 sumW :: [Wrench] -> Wrench
 sumW = foldl' addW (Wrench zero zero)
 
+-- The larger budget is reserved for explicitly requested refinement experiments.
+data AssemblyBudget = StandardBudget | RefinementBudget
+
+maxOccupiedCells :: AssemblyBudget -> Int
+maxOccupiedCells StandardBudget = 8000
+maxOccupiedCells RefinementBudget = 56000
+
+maxDegreesOfFreedom :: AssemblyBudget -> Int
+maxDegreesOfFreedom StandardBudget = 160000
+maxDegreesOfFreedom RefinementBudget = 950000
+
 solveBonded :: BondedProblem -> Either String BondedResult
-solveBonded p = do
+solveBonded = solveBondedWithBudget StandardBudget
+
+solveBondedWithBudget :: AssemblyBudget -> BondedProblem -> Either String BondedResult
+solveBondedWithBudget budget p = do
   let bodies = bpBodies p; names = map bodyName bodies
   check (not (null bodies) && length bodies <= 32) "need 1..32 bodies"
   check (all (not . null) names && Set.size (Set.fromList names) == length names) "body names must be nonempty and unique"
-  check (sum (map (toInteger . voxelCount . bodyGrid) bodies) <= 1000) "assembly exceeds the experimental 1000-cell budget"
+  check (sum (map (toInteger . voxelCount . bodyGrid) bodies) <= toInteger (maxOccupiedCells budget))
+    ("assembly exceeds the " ++ show (maxOccupiedCells budget) ++ "-cell budget")
   check (finite (bpTolerance p) && bpTolerance p >= 1e-12 && bpTolerance p <= 1e-4) "tolerance must be in [1e-12,1e-4]"
   check (bpIterations p >= 1 && bpIterations p <= 50000) "iterations must be in [1,50000]"
   check (length (bpBonds p) <= 64 && length (bpSupports p) <= 64 && length (bpLoads p) <= 64) "at most 64 bonds, supports and loads each"
@@ -84,8 +108,8 @@ solveBonded p = do
       (bodyName b ++ ": grids must have the same cell size and aligned finite origins")
     check (all (\n -> n>0 && n<=4096) [nx,ny,nz] && not (Set.null (vgCells g)) && all inside (Set.toList (vgCells g)))
       (bodyName b ++ ": invalid or empty grid")
-    check (Map.keysSet (vgFill g) `Set.isSubsetOf` vgCells g && all (==1) (Map.elems (vgFill g)))
-      (bodyName b ++ ": only fully filled cells are supported")
+    check (Map.keysSet (vgFill g) `Set.isSubsetOf` vgCells g && all (\x -> finite x && x >= fillThreshold && x <= 1) (Map.elems (vgFill g)))
+      (bodyName b ++ ": invalid sampled cell fill")
     check (length (connectedCells g) == 1) (bodyName b ++ ": body must be face-connected")
     check (finite (bodyYoung b) && bodyYoung b > 0 && bodyYoung b <= 1e9) (bodyName b ++ ": invalid Young's modulus")
     check (finite (bodyPoisson b) && bodyPoisson b >= 0 && bodyPoisson b <= 0.45) (bodyName b ++ ": Poisson ratio must be in [0,0.45]")
@@ -115,6 +139,9 @@ solveBonded p = do
   let bondNames = map bondName (bpBonds p)
   check (all (not . null) bondNames && Set.size (Set.fromList bondNames) == length bondNames) "bond names must be nonempty and unique"
   pairs <- mapM (\bond -> do
+    case bond of
+      Spring _ _ _ k -> check (all (\x -> finite x && x>0) (components k)) "connector stiffness must be positive in all three axes"
+      Bond {} -> pure ()
     let a = bondA bond; b = bondB bond
         keyed patch = Map.fromList [(worldKey n,n) | n <- Set.toList (nodesOf patch)]
         na = keyed a; nb = keyed b
@@ -159,7 +186,7 @@ solveBonded p = do
         [Map.fromListWith vadd [((patchBody patch,k), scale (w / fromIntegral (length (patchFaces patch))) f)
                               | face <- patchFaces patch, (k,w) <- faceNodes face]
         | (patch,f) <- bpLoads p]
-      aliases = Map.fromList [(n,min a b) | ps <- pairs, (a,b) <- ps, n <- [a,b]]
+      aliases = Map.fromList [(n,min a b) | (Bond {},ps) <- zip (bpBonds p) pairs, (a,b) <- ps, n <- [a,b]]
       representative n = Map.findWithDefault n n aliases
       nodeList = [(bodyName b,k) | b <- bodies, k <- Set.toList (allNodes (bodyGrid b))]
       reps = sortOn (\n -> (worldKey n,n)) (Set.toList (Set.fromList (map representative nodeList)))
@@ -168,19 +195,28 @@ solveBonded p = do
       nd = 3 * length reps
       reducedLoads = Map.fromListWith vadd [(index n,f) | (n,f) <- Map.toList loads]
       fixedIndices = Set.map index fixed
-  check (nd <= 60000) "assembly exceeds 60000 degrees of freedom"
+  check (nd <= maxDegreesOfFreedom budget) ("assembly exceeds " ++ show (maxDegreesOfFreedom budget) ++ " degrees of freedom")
   check (any (\(n,f) -> Set.notMember n fixedIndices && vlen f > 0) (Map.toList reducedLoads)) "no nonzero free load after reduction"
   let stiffness = Map.fromSet (\(e,nu) -> elementStiffness e nu h)
                     (Set.fromList [(bodyYoung b,bodyPoisson b) | b <- bodies])
       ke b = stiffness Map.! (bodyYoung b,bodyPoisson b)
+      fill b c = Map.findWithDefault 1 c (vgFill (bodyGrid b))
       elements = [(b,c,[(bodyName b,k) | k <- cellNodes c]) | b <- bodies, c <- Set.toList (vgCells (bodyGrid b))]
-      matrix = assembleElements (length reps) [(map index ns,1,ke b) | (b,_,ns) <- elements]
+      springs = [(a,b,map (/fromIntegral (length ps)) (components k))
+                | (Spring _ _ _ k,ps)<-zip (bpBonds p) pairs,(a,b)<-ps]
+      springMatrix ks = listArray (0,35)
+        [if i `mod` 3 /= j `mod` 3 then 0 else
+           (if i `div` 3 == j `div` 3 then 1 else -1) * ks!!(i `mod` 3)
+        | i<-[0..5],j<-[0..5]]
+      matrix = assembleElements (length reps)
+        ([(map index ns,fill b c,ke b) | (b,c,ns) <- elements] ++
+         [([index a,index b],1,springMatrix ks) | (a,b,ks)<-springs])
       rhs = vecFromList (concat [components (Map.findWithDefault zero i reducedLoads) | i <- [0..length reps-1]])
       free = listArray (0,nd-1) [Set.notMember i fixedIndices | i <- [0..length reps-1], _ <- [0::Int,1,2]]
   check (all finite (elems (csrVal matrix)) && all (>0) (elems (csrDiagonal matrix))) "invalid stiffness matrix"
   (u,it,res) <- pcgSolve (bpIterations p) (bpTolerance p) matrix free rhs
   let displacement n = let i = 3*index n in (u!i,u!(i+1),u!(i+2))
-      contributions = [(n,f) | (b,_,ns) <- elements, (n,f) <- zip ns (elementForces 1 (ke b) (map displacement ns))]
+      contributions = [(n,f) | (b,c,ns) <- elements, (n,f) <- zip ns (elementForces (fill b c) (ke b) (map displacement ns))]
       internal = Map.fromListWith vadd contributions
       residual n = vsub (Map.findWithDefault zero n internal) (Map.findWithDefault zero n loads)
       resultant ns = sumW [let f=residual n in Wrench f (cross (pos n) f) | n <- Set.toList ns]
@@ -197,7 +233,8 @@ solveBonded p = do
                     | bond <- bpBonds p, let a=bondA bond; b=bondB bond]
       applied = sumW [Wrench f (cross (pos n) f) | (n,f) <- Map.toList loads]
       support = resultant fixed
-      energy = sum (map brEnergy results)
+      energy = sum (map brEnergy results) + sum
+        [sum (zipWith (\k x -> k*x*x/2) ks (components (vsub (displacement a) (displacement b)))) | (a,b,ks)<-springs]
       wrenchNumbers (Wrench f m) = components f ++ components m
   check (all finite (elems u ++ [energy] ++ concatMap brNumbers results ++ concatMap interfaceNumbers interfaces ++ wrenchNumbers applied ++ wrenchNumbers support)) "nonfinite result"
   return (BondedResult results interfaces support applied energy it res nd)
@@ -280,11 +317,11 @@ bondedJson p r = JObject
   ,("bodies",JArray (map body (baBodies r))), ("interfaces",JArray (map interface (baInterfaces r)))
   ,("supports",JArray (map patch (bpSupports p)))
   ,("loads",JArray [JObject [("patch",patch ps),("force_n",vec f)] | (ps,f) <- bpLoads p])
-  ,("bonds",JArray [JObject [("name",JString (bondName b)),("a",patch (bondA b)),("b",patch (bondB b))] | b <- bpBonds p])
+  ,("bonds",JArray [JObject [("name",JString (bondName b)),("stiffness_n_mm",maybe JNull vec (jointStiffness b)),("a",patch (bondA b)),("b",patch (bondB b))] | b <- bpBonds p])
   ,("solver",JObject [("tolerance",JNumber (bpTolerance p)),("iteration_limit",num (bpIterations p))])
   ,("limitations",JArray (map JString
-    ["Experimental small-strain isotropic Hex20; common aligned grids, full cells and explicit matching planar perfect bonds only."
-    ,"No contact, joint compliance, preload, infill, print-layer stiffness model or strength verdict."
+    ["Experimental small-strain isotropic Hex20; common aligned grids and explicit matching planar patches."
+    ,"No contact, bolt preload, infill, print-layer stiffness model or strength verdict."
     ,"Interface wrench is the force/moment applied to that body by the other body, after subtracting external loads; all moments about world origin."
     ,"Lengths mm, forces N, stresses MPa; peak stresses and geometry require refinement. No physical validation claimed."]))]
   where
@@ -296,7 +333,7 @@ bondedJson p r = JObject
                         ,("origin_mm",vec (vgOrigin (bodyGrid spec))),("cell_mm",JNumber (vgCell (bodyGrid spec)))
                         ,("support",wrench (brSupport b)),("strain_energy_n_mm",JNumber (brEnergy b))
                         ,("nodes",JArray [JObject [("key",key k),("position_mm",vec x),("displacement_mm",vec u)] | (k,x,u) <- brNodes b])
-                        ,("cells",JArray [JObject [("key",key k),("centre_mm",vec x),("stress_xx_yy_zz_xy_yz_zx_mpa",JArray (map JNumber (csCentre s))),("peak_von_mises_mpa",JNumber (csPeakVonMises s))] | (k,x,s) <- brCells b])]
+                        ,("cells",JArray [JObject [("key",key k),("centre_mm",vec x),("solid_fraction",JNumber (Map.findWithDefault 1 k (vgFill (bodyGrid spec)))),("stress_xx_yy_zz_xy_yz_zx_mpa",JArray (map JNumber (csCentre s))),("peak_von_mises_mpa",JNumber (csPeakVonMises s))] | (k,x,s) <- brCells b])]
     patch ps = JObject [("body",JString (patchBody ps)),("faces",JArray [JArray (map num [a,b,c,axis,sgn]) | Face (a,b,c) axis sgn <- patchFaces ps])]
     key (a,b,c) = JArray (map num [a,b,c])
     interface i = JObject [("name",JString (irName i)),("body_a",JString (irBodyA i)),("body_b",JString (irBodyB i))

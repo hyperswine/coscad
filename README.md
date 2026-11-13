@@ -186,8 +186,9 @@ A line starting with `|>` continues the previous definition.
   stamp-many slicing; `coscad check` verifies fits on the real meshes.
 - **Assembly analysis**: `coscad instances` exports qualified leaf identities and
   composed transforms; `coscad stress model.assemble --bonded analysis.json` connects
-  explicit bounded regions to experimental bonded FEA for grid-aligned orthogonal
-  solids. See [assembly analysis](docs/2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md).
+  explicit regions to experimental Hex20 FEA. Exact-grid and sampled geometry
+  support separate material definitions. The sampled schema adds pressure loads,
+  compliant patches and a face preview. See [assembly analysis](docs/2026-11-10-ASSEMBLY-ANALYSIS-INTEGRATION.md).
 - **Mass and balance**: `coscad mass part.coscad --density 1.24` reports uniform-solid
   mass and centre; `coscad mass components.json` combines explicit part/hardware masses.
   `scripts/slice-mass.py` estimates deposited-filament mass with declared assembly poses.

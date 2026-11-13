@@ -91,6 +91,28 @@ bondedTier t = do
       forM_ (baBodies r) $ \b -> assertT t (brName b ++ " axial stress is force/area")
         (all (\(_,_,s) -> abs (the "stress components" (csCentre s)-1/16) < 1e-8) (brCells b)) ""
 
+  case parseBondedProblem barText of
+    Left err -> failT t "connector fixture parses" err
+    Right p -> do
+      let half body = body {bodyGrid=g {vgFill=Map.fromSet (const 0.5) (vgCells g)}}
+            where g=bodyGrid body
+      case (solveBonded p,solveBonded p {bpBodies=map half (bpBodies p)}) of
+        (Right full,Right partial) -> do
+          assertT t "half fill doubles compliance" (abs (baEnergy partial / baEnergy full - 2)<1e-8) ""
+          balanced t "partial-fill reactions" 1e-7 (baSupport partial) (baApplied partial)
+        _ -> failT t "partial-fill bar" "reference or sampled solve failed"
+      let joint = the "joint" (bpBonds p)
+          k = 100
+          compliant = Spring (bondName joint) (bondA joint) (bondB joint) (k,k,k)
+      case solveBonded p {bpBonds=[compliant]} of
+        Left err -> failT t "compliant axial connector solves" err
+        Right r -> do
+          let openings side = [u | (_, (x,_,_), (u,_,_)) <- brNodes side, x==10]
+              a=openings (the "root" (baBodies r)); b=openings (last (baBodies r))
+              mean xs = sum xs / fromIntegral (length xs)
+          assertT t "mean axial connector opening equals F/k" (abs (mean b - mean a - 1/k)<1e-8) ""
+          balanced t "connector reactions" 1e-7 (baSupport r) (baApplied r)
+          assertT t "connector contributes stored energy" (baEnergy r > sum (map brEnergy (baBodies r))) ""
   shelfTier t
 
 failureCases :: T -> BondedProblem -> IO ()
@@ -116,7 +138,7 @@ failureCases t p = do
   err "duplicate joint" p {bpBonds=[joint,joint]} ["unique"]
   err "shared joint nodes" p {bpBonds=[joint,joint {bondName="other"}]} ["shared interface"]
   err "support on joint" p {bpSupports=[a]} ["attribution"]
-  err "partial cells" (changeTip (\x -> x {bodyGrid=(bodyGrid x) {vgFill=Map.singleton (0,0,0) 0.5}})) ["fully filled"]
+  err "out-of-range solid fraction" (changeTip (\x -> x {bodyGrid=(bodyGrid x) {vgFill=Map.singleton (0,0,0) 1.5}})) ["invalid sampled cell fill"]
   err "invalid material" (changeTip (\x -> x {bodyYoung=0})) ["modulus"]
   err "nonfinite load" p {bpLoads=[(fst (the "loads" (bpLoads p)),(0/0,0,0))]} ["finite"]
   err "no load" p {bpLoads=[]} ["free load"]

@@ -1,6 +1,6 @@
 -- | Immutable dependency snapshot and qualified physical leaf placements.
 module Coscad.Assembly.Instances
-  ( ResolvedInstance(..), InstanceSnapshot(..), loadInstances, instancesJson, protectInputs ) where
+  ( ResolvedInstance(..), InstanceSnapshot(..), loadInstances, instancesJson, printToAssembly, protectInputs ) where
 import Coscad.Assemble
 import Coscad.Instance
 import Coscad.Geometry
@@ -89,6 +89,10 @@ protectInputs inputs output = do
   paths <- mapM canonicalizePath inputs
   unless (target `notElem` paths) (abort (inputFailure "output must not overwrite any input or assembly dependency"))
 
+printToAssembly :: ResolvedInstance -> Maybe Aff
+printToAssembly r = fmap (affCompose (riTransform r) . inverse) (riPrintTransform r)
+  where inverse (m,t) = let rot=matTranspose m in (rot,vneg (mApply rot t))
+
 instancesJson :: InstanceSnapshot -> JValue
 instancesJson snap = JObject
   [("schema",JString "coscad.instances/1"),("source",JString (isSource snap))
@@ -102,9 +106,8 @@ instancesJson snap = JObject
     vec (x,y,z) = JArray (map JNumber [x,y,z])
     matrix (m,t) = let ((a,b,c),(d,e,f),(g,h,i))=m; (x,y,z)=t
                   in JArray [JArray (map JNumber r) | r <- [[a,b,c,x],[d,e,f,y],[g,h,i,z],[0,0,0,1]]]
-    inverse (m,t) = let r=matTranspose m in (r,vneg (mApply r t))
     row r = let world=riTransform r
-                printWorld = fmap (affCompose world . inverse) (riPrintTransform r)
+                printWorld = printToAssembly r
                 layer = if rigid world then fmap (\(m,_) -> vec (mApply m (0,0,1))) printWorld else Nothing
             in JObject [("id",JString (riId r)),("source",JString (riSource r))
               ,("part_to_assembly",matrix world),("rigid",JBool (rigid world))

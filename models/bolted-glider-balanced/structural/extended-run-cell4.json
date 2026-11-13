@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/jasonqin/Documents/GitHub/coscad/dist-newstyle/build/aarch64-osx/ghc-9.8.2/coscad-1.6.0.0/x/coscad/build/coscad/coscad",
+    "stress",
+    "/private/tmp/coscad-glider-fea-20261111/wing-right-cell4.coscad",
+    "-o",
+    "/private/tmp/coscad-glider-fea-20261111/extended-cell4.json"
+  ],
+  "exit": 0,
+  "elapsed_s": 50.20554287498817,
+  "stdout": "material pla (E 3500.0 MPa), cell 4.0 mm, 2573 cells, 46632 unknowns, 1371 iterations\nmax displacement 0.679 mm at [232.0 -228.0 0.0]\npeak stress 0.757 MPa von Mises at [86.0 -86.0 10.0] (cell centres: 0.319 MPa)\nacross layers 0.113 MPa tension at [90.0 -2.0 2.0]\nsafety factor 66.035 in plane, 310.769 across layers; requested 2.0 (ok)\nnote: Peak stress is the largest Gauss-point value on a stair-stepped mesh; refine the cell to check it has settled\nnote: Across-layer strength assumes layers stacked along the part's z axis\nWrote /private/tmp/coscad-glider-fea-20261111/extended-cell4.json (mesh analysed: /private/tmp/coscad-glider-fea-20261111/extended-cell4.json.assets-1/mesh.stl)\n",
+  "stderr": ""
+}

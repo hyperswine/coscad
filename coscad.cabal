@@ -246,7 +246,7 @@ test-suite coscad-test
 executable coscad-experiments
   main-is: Main.hs
   hs-source-dirs: experiments
-  ghc-options: -Wall -Wcompat
+  ghc-options: -Wall -Wcompat -threaded -rtsopts
   build-depends:
       base >=4.7 && <5
     , containers

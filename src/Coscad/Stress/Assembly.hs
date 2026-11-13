@@ -1,13 +1,14 @@
 -- | Explicit experimental bridge from physical assembly instances to bonded Hex20.
-module Coscad.Stress.Assembly (assemblyProblem, processAssemblyStress) where
+module Coscad.Stress.Assembly (assemblyProblem, processAssemblyStress, processAssemblyRegions, processAssemblyRefinement) where
 import Coscad.Assembly.Instances
 import Coscad.Instance
 import Coscad.Backend (nativeCSGMesh)
-import Coscad.Geometry (V3, vsub)
-import Coscad.Mesh (Tri, meshMap, meshBounds)
+import Coscad.Geometry (V3, vsub, mApply)
+import Coscad.Mesh (Tri, meshMap, meshBounds, meshVolume)
 import Coscad.Json
 import Coscad.IO (writeFileUtf8Atomic)
 import Coscad.Report
+import Coscad.Stress.Hex20 (csCentre)
 import Coscad.Stress.Bonded
 import Coscad.Stress.Voxel
 import Coscad.Validate (finite)
@@ -20,6 +21,7 @@ import qualified Data.Text.Encoding as Text
 import qualified Data.ByteString as BS
 import qualified Crypto.Hash.SHA256 as SHA
 import Numeric (showHex)
+import GHC.Clock (getMonotonicTimeNSec)
 
 check :: Bool -> String -> Either String ()
 check ok msg = unless ok (Left ("assembly FEA: " ++ msg))
@@ -87,43 +89,126 @@ region bodies h v = do
     (name++": region is empty, partial or crosses a hole; specify a fully covered exterior rectangle")
   pure (Patch name faces)
 
+-- A sampled cell may miss a narrow drilled hole. For a perfect bond,
+-- intersect the original coplanar surface triangles with each face square.
+-- Clipping preserves area even when triangles extend beyond the patch.
+surfaceCovers :: [Tri] -> VoxelGrid -> Face -> Bool
+surfaceCovers tris grid face = abs (sum (map area tris) - h*h) <= h*h*1e-6
+  where
+    h = vgCell grid
+    axis = faceAxis face
+    u = (axis+1) `mod` 3
+    v = (axis+2) `mod` 3
+    corner = vec (cellCorner grid (faceCell face))
+    plane = corner!!axis + if faceSign face > 0 then h else 0
+    project a = (vec a!!u - corner!!u, vec a!!v - corner!!v)
+    edges [] = []
+    edges ps@(x:xs) = zip ps (xs++[x])
+    clip distance ps = concatMap cut (edges ps)
+      where cut (a@(x,y),b@(xx,yy)) =
+              let da=distance a; db=distance b; t=da/(da-db)
+                  crossPoint=(x+t*(xx-x),y+t*(yy-y))
+               in [crossPoint | (da>=0)/=(db>=0)] ++ [b | db>=0]
+    area (a,b,c)
+      | any (\p -> abs (vec p!!axis-plane)>h*1e-7) [a,b,c] = 0
+      | otherwise = let poly=foldl (flip clip) (map project [a,b,c])
+                               [fst,snd,(h-).fst,(h-).snd]
+                        signed=sum [x*yy-y*xx | ((x,y),(xx,yy))<-edges poly]/2
+                     in max 0 (fromIntegral (faceSign face)*signed)
+
 assemblyProblem :: InstanceSnapshot -> JValue -> IO (Either String BondedProblem)
-assemblyProblem snap config = case setup of
+assemblyProblem snap config = fmap (fmap fst) (prepareAssembly StandardBudget snap config)
+
+prepareAssembly :: AssemblyBudget -> InstanceSnapshot -> JValue -> IO (Either String (BondedProblem,JValue))
+prepareAssembly budget snap config = case setup of
   Left e -> pure (Left e)
-  Right (h,materials) -> do
+  Right (sampled,h,materials,tolerance) -> do
     meshes<-forM (isInstances snap) $ \r -> do
       if not(rigid (riTransform r)) then pure (Left "assembly FEA: scaled/sheared instance transforms are unsupported") else do
         mesh<-nativeCSGMesh (riShape r)
         pure $ do
           local<-mesh
-          grid<-exactGrid h (meshMap (affApply (riTransform r)) local)
+          let placed=meshMap (affApply (riTransform r)) local
+          grid<-(if sampled then voxelizeAligned else exactGrid) h placed
           (young,poisson)<-maybe (Left "assembly FEA: missing material") Right (Map.lookup (riId r) materials)
-          pure (Body (riId r) grid young poisson)
+          pure (Body (riId r) grid young poisson,placed)
     pure $ do
-      bodies<-sequence meshes
-      check (sum(map (voxelCount.bodyGrid) bodies)<=1000) "assembly exceeds the experimental 1000-cell budget"
+      rows<-sequence meshes
+      let bodies=map fst rows
+          surfaces=Map.fromList [(bodyName b,(bodyGrid b,tris)) | (b,tris)<-rows]
+      check (sum(map (voxelCount.bodyGrid) bodies)<=(if sampled then maxOccupiedCells budget else 1000)) "assembly exceeds the occupied-cell budget"
       let table=Map.fromList [(bodyName b,b)|b<-bodies]; patch=region table h
+          bondPatch v=do
+            p<-patch v
+            let (grid,tris)=surfaces Map.! patchBody p
+                whole f=Map.lookup (faceCell f) (vgFill grid)==Just 1 && surfaceCovers tris grid f
+            check (not sampled || all whole (patchFaces p)) "bond crosses a hole, partial cell or nonplanar surface"
+            pure p
       supports<-field "supports" config >>= array >>= mapM patch
       loads<-field "loads" config >>= array >>= mapM (\v -> do
-        object ["region","force_n"] v
+        object (if sampled then ["region","force_n","pressure_mpa"] else ["region","force_n"]) v
         p<-field "region" v >>= patch
-        f<-field "force_n" v >>= triple
+        f<-case (lookupKey "force_n" v,lookupKey "pressure_mpa" v) of
+          (Just force,Nothing)->triple force
+          (Nothing,Just pressure)->do
+            q<-number pressure
+            case patchFaces p of
+              face:_ -> let total=negate q*h*h*fromIntegral (length (patchFaces p)*faceSign face)
+                            component i=if i==faceAxis face then total else 0
+                         in pure (component 0,component 1,component 2)
+              [] -> Left "assembly FEA: empty pressure patch"
+          _ -> Left "assembly FEA: specify exactly one force or pressure"
         pure (p,f))
       bonds<-field "bonds" config >>= array >>= mapM (\v -> do
-        object ["name","a","b"] v
-        Bond <$> (field "name" v >>= string) <*> (field "a" v >>= patch) <*> (field "b" v >>= patch))
-      pure (BondedProblem bodies bonds supports loads 1e-9 50000)
+        object (if sampled then ["name","a","b","stiffness_n_mm"] else ["name","a","b"]) v
+        name<-field "name" v >>= string
+        a<-field "a" v >>= bondPatch
+        b<-field "b" v >>= bondPatch
+        case lookupKey "stiffness_n_mm" v of
+          Nothing -> pure (Bond name a b)
+          Just k -> Spring name a b <$> triple k)
+      let geometry (b,tris)=
+            let grid=bodyGrid b; input=abs (meshVolume tris)
+             in JObject [("instance",JString (bodyName b)),("source_volume_mm3",JNumber input),
+                   ("sampled_volume_mm3",JNumber (voxelVolume grid)),
+                   ("occupied_cells",JNumber (fromIntegral (voxelCount grid))),
+                   ("xy_cell_mm",JNumber h),("xy_footprint_mm",JArray
+                     [JArray [JNumber x,JNumber y] | (i,j)<-Set.toAscList
+                       (Set.map (\(ix,iy,_) -> (ix,iy)) (vgCells grid)),
+                       let (x,y,_)=cellCorner grid (i,j,0)])]
+          selection role p=
+            let grid=bodyGrid (table Map.! patchBody p)
+                square f=let (x,y,z)=cellCorner grid (faceCell f)
+                             corner=[x,y,z]; axis=faceAxis f
+                             point u v=JArray [JNumber (c+h*component i) | (i,c)<-zip [0..] corner,
+                               let component j | j==axis = if faceSign f>0 then 1 else 0
+                                               | j==(axis+1) `mod` 3 = u
+                                               | otherwise = v]
+                          in JArray [point 0 0, point 1 0, point 1 1, point 0 1]
+             in JObject [("role",JString role),("instance",JString (patchBody p)),
+                         ("area_mm2",JNumber (h*h*fromIntegral (length (patchFaces p)))),
+                         ("faces_mm",JArray (map square (patchFaces p)))]
+          preview=JObject [("geometry",JArray (map geometry rows)),("regions",JArray
+            (map (selection "support") supports ++ map (selection "load".fst) loads ++
+             [selection (bondName b) side | b<-bonds,side<-[bondA b,bondB b]]))]
+      pure (BondedProblem bodies bonds supports loads tolerance 50000,preview)
   where
     setup = do
-      object ["schema","cell_mm","bodies","supports","loads","bonds"] config
       schema<-field "schema" config >>= string
-      check (schema=="coscad.assembly-bonded/1") "expected coscad.assembly-bonded/1"
+      let sampled=schema=="coscad.assembly-sampled/1"
+      object (["schema","cell_mm","bodies","supports","loads","bonds"] ++ ["tolerance" | sampled]) config
+      tolerance<-maybe (Right 1e-9) number (lookupKey "tolerance" config)
+      check (tolerance>=1e-12 && tolerance<=1e-4) "invalid solver tolerance"
+      check (schema `elem` ["coscad.assembly-bonded/1","coscad.assembly-sampled/1"]) "unknown assembly analysis schema"
       h<-field "cell_mm" config >>= number
       check (h>0) "cell_mm must be positive"
       rows<-field "bodies" config >>= array
       check (not(null rows) && length rows<=32) "need 1..32 bodies"
       pairs<-mapM (\v -> do
-        object ["instance","young_mpa","poisson"] v
+        object (["instance","young_mpa","poisson"] ++ ["material_source" | sampled]) v
+        case lookupKey "material_source" v of
+          Nothing -> pure ()
+          Just value -> string value >>= \label -> check (not (null label)) "material_source must identify the measurement or assumption"
         name<-field "instance" v >>= string
         e<-field "young_mpa" v >>= number
         nu<-field "poisson" v >>= number
@@ -132,21 +217,41 @@ assemblyProblem snap config = case setup of
       let materials=Map.fromList pairs
       check (Map.size materials==length pairs && Map.keysSet materials==Set.fromList(map riId (isInstances snap)))
         "declare exactly one material for every physical leaf instance; no implicit omissions"
-      pure (h,materials)
+      pure (sampled,h,materials,tolerance)
 
-processAssemblyStress :: Emit -> FilePath -> FilePath -> Maybe FilePath -> IO (Either Failure ())
-processAssemblyStress emit input spec output = runCommand $ do
+processAssemblyStress, processAssemblyRegions, processAssemblyRefinement :: Emit -> FilePath -> FilePath -> Maybe FilePath -> IO (Either Failure ())
+processAssemblyStress = writeAssemblyReport StandardBudget False
+processAssemblyRegions = writeAssemblyReport StandardBudget True
+processAssemblyRefinement = writeAssemblyReport RefinementBudget False
+
+writeAssemblyReport :: AssemblyBudget -> Bool -> Emit -> FilePath -> FilePath -> Maybe FilePath -> IO (Either Failure ())
+writeAssemblyReport budget previewOnly emit input spec output = runCommand $ do
+  start<-getMonotonicTimeNSec
   snap<-loadInstances emit input >>= either abort pure
   bytes<-BS.readFile spec
   source<-either (const (abort(inputFailure "assembly FEA: config is not UTF-8"))) (pure.Text.unpack) (Text.decodeUtf8' bytes)
   config<-either (abort.inputFailure) pure (decode source)
-  problem<-assemblyProblem snap config >>= either (abort.inputFailure) pure
-  result<-either (abort.designFailure) pure (solveBonded problem)
-  let target=maybe (dropExtension input++"_bonded_stress.json") id output
+  (problem,preview)<-prepareAssembly budget snap config >>= either (abort.inputFailure) pure
+  prepared<-getMonotonicTimeNSec
+  result<-if previewOnly then pure [] else do
+    solved<-either (abort.designFailure) pure (solveBondedWithBudget budget problem)
+    let normals=Map.fromList [(riId r, fmap (\(m,_) -> mApply m (0,0,1)) (printToAssembly r)) | r<-isInstances snap]
+        layer b=case Map.lookup (brName b) normals of
+          Just (Just (x,y,z)) ->
+            let tensions=[xx*x*x+yy*y*y+zz*z*z+2*(xy*x*y+yz*y*z+zx*z*x)
+                         | (_,_,cell)<-brCells b,[xx,yy,zz,xy,yz,zx]<-[csCentre cell]]
+             in JNumber (maximum (0:tensions))
+          _ -> JNull
+    pure [("result",bondedJson problem solved),("max_cell_centre_layer_normal_tension_mpa",
+          JObject [(brName b,layer b) | b<-baBodies solved])]
+  finished<-getMonotonicTimeNSec
+  let seconds a b=JNumber (fromIntegral (b-a)/1e9)
+      target=maybe (dropExtension input++if previewOnly then "_regions.json" else "_bonded_stress.json") id output
       hash=concatMap (\n -> let h=showHex n "" in if length h==1 then '0':h else h) (BS.unpack(SHA.hash bytes))
-      report=JObject [("schema",JString "coscad.assembly-stress/1"),("experimental",JBool True)
+      report=JObject $ [("schema",JString (if previewOnly then "coscad.assembly-regions/1" else "coscad.assembly-stress/1")),("experimental",JBool True)
         ,("assembly",instancesJson snap),("analysis_source",JString spec),("analysis_sha256",JString hash)
-        ,("region_specification",config),("result",bondedJson problem result)]
+        ,("prepare_seconds",seconds start prepared),("solve_seconds",if previewOnly then JNull else seconds prepared finished)
+        ,("region_specification",config),("preview",preview)] ++ result
   protectInputs (spec:map fst (isSources snap)) target
   writeFileUtf8Atomic target (encodePretty report++"\n")
   emit (Note ("Wrote "++target++" (experimental bonded assembly; no strength verdict)"))

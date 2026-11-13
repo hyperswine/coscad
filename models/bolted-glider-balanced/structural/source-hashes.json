@@ -1,0 +1,12 @@
+{
+  "app/Main.hs": "61a3e79a0d25e909988655026b4e21025024f740ee2f1c1c749c38d0794721b7",
+  "src/Coscad/Stress/Part.hs": "6fc206818e15a6bba567452eb99df41db30d3aedea1908ab040e0b88a172f1ae",
+  "src/Coscad/Stress/Hex20.hs": "4b940ab37afaf45b7399a9894d032e883f779f9255ac82bf8b3946fefbb8879c",
+  "src/Coscad/Stress/Material.hs": "55b3eca4416ca3c42de710185a3ff8db5c2005a81ba54d180fa89c942799737e",
+  "src/Coscad/Stress/Assembly.hs": "a7c99df625a86b4cf55c00c2c0a422a08d55ff2e8a9d628c52732d2e8d3f82a1",
+  "models/bolted-glider-balanced/wing-right.coscad": "ff32ec710deb93ff40ad69835731198449af705c54d240a0df3b4ed45b66b0d3",
+  "models/bolted-glider-balanced/design.json": "742536bac4f4ed8f1b8c242536117fbf8dcde4b4180564b0676c3200a08ba4c4",
+  "models/bolted-glider-balanced/assembly.py": "40f262c4b9bb87a269a14a70ef3814619c8ae5bf469eea9149b71b1ea3424bee",
+  "models/bolted-glider-balanced/balance.json": "e8f7635e55b9f438f6d332076d260cc0e2f99f942c3a220823b2f5432df9aed4",
+  "models/bolted-glider-balanced/validation.json": "a162f0e7c7aa24f77118f0124671c075f86576bd44028d2e4e17821a13c58699"
+}

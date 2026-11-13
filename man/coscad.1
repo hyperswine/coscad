@@ -66,6 +66,7 @@
 .Cm stress
 .Ar spec.assemble
 .Fl -bonded Ar analysis.json
+.Op Fl -preview
 .Op Fl o Ar report.json
 .Nm
 .Fl -version | Fl -help
@@ -76,8 +77,12 @@ exports qualified physical leaves, composed transforms and dependency hashes.
 with
 .Fl -bonded
 analyzes explicit assembly regions with the experimental bonded Hex20 solver.
-Only rigid placements with grid-aligned orthogonal geometry are supported, with
-at most 32 bodies and 1000 cells. Placement constraints do not imply mechanical
+Rigid placements support exact orthogonal geometry (1000 cells) or sampled
+geometry (8000 cells, 160000 reduced degrees of freedom). Both accept up to
+32 bodies. The sampled schema supports pressure and compliant planar joints.
+Use
+.Fl -preview
+to inspect the selected exterior faces before solving. Placement constraints do not imply mechanical
 supports or bonds; no strength verdict is produced.
 .Cm validate
 checks a .coscad or .assemble file, including recursive part sources and

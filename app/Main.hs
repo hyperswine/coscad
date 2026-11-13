@@ -18,7 +18,7 @@ import Coscad.Report (Failure (..), runCommand, collecting, stderrEmit)
 import Coscad.Site (processSiteWithBackend)
 import Coscad.Stress.Command (processStress)
 import Coscad.Assembly.Instances
-import Coscad.Stress.Assembly (processAssemblyStress)
+import Coscad.Stress.Assembly (processAssemblyStress, processAssemblyRegions)
 import Coscad.Mass.Command (massArgs, processMass)
 import System.Directory (canonicalizePath)
 import Coscad.Words (renderWords)
@@ -128,11 +128,13 @@ runCLI = do
             writeFileUtf8Atomic target (encodePretty (instancesJson snap) ++ "\n")) >>= finish
     ("stress" : f : "--bonded" : config : rest) -> do
       needExt ".assemble" f
-      out <- case rest of
-        [] -> pure Nothing
-        ["-o",target] -> pure (Just target)
-        _ -> bad "usage: coscad stress model.assemble --bonded analysis.json [-o report.json]" >> exitFailure
-      processAssemblyStress stderrEmit f config out >>= finish
+      (preview,out) <- case rest of
+        [] -> pure (False,Nothing)
+        ["-o",target] -> pure (False,Just target)
+        ["--preview"] -> pure (True,Nothing)
+        ["--preview","-o",target] -> pure (True,Just target)
+        _ -> bad "usage: coscad stress model.assemble --bonded analysis.json [--preview] [-o report.json]" >> exitFailure
+      (if preview then processAssemblyRegions else processAssemblyStress) stderrEmit f config out >>= finish
     ("mass" : rest) -> do
       (f,density,out) <- either (\e -> bad e >> exitFailure) pure (massArgs rest)
       case out of
@@ -229,7 +231,7 @@ usage h =
     , "  coscad calibrate <times.json>           fit the plan cost weights to timed builds (seconds)"
     , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
     , "  coscad instances <model.assemble> [-o instances.json]  resolved physical leaves and transforms"
-    , "  coscad stress <model.assemble> --bonded analysis.json [-o report.json]  experimental bonded FEA"
+    , "  coscad stress <model.assemble> --bonded analysis.json [--preview] [-o report.json]  experimental bonded FEA"
     , "  coscad mass <part.coscad|components.json> [--density g/cm3] [-o report.json]"
     , "                                          solid geometry or explicit component mass and centre of mass"
     , "  coscad stress <part.coscad> [-o part_stress.json] [--full]"
