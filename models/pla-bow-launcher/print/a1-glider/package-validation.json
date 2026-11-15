@@ -1,0 +1,41 @@
+{
+  "job": "a1-glider",
+  "printer": "a1",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL A1",
+  "nozzle_temperature": "220",
+  "bed_temperature": "65",
+  "package_sha256": "c12be4926ec8f971a78a97a798a6d36598a5554e3460bd3a232cfe1794492a33",
+  "gcode_sha256": "ed4ce6a18350cfdc8bd32ab92703a3d48ffbf08a3c9ea473706ab4053f66e23c",
+  "objects": 4,
+  "layers": 34,
+  "model_path_segments": 6961,
+  "support_segments": 0,
+  "segments_in_exclusion_corner": 0,
+  "extrusion_bounds_xy_mm": [
+    [
+      6.326,
+      6.326
+    ],
+    [
+      245.674,
+      133.324
+    ]
+  ],
+  "features": {
+    "Inner wall": 289,
+    "Outer wall": 1432,
+    "Bottom surface": 905,
+    "Gap infill": 278,
+    "Top surface": 1525,
+    "Internal solid infill": 1750,
+    "Sparse infill": 484,
+    "Floating vertical shell": 113,
+    "Overhang wall": 4,
+    "Bridge": 181
+  },
+  "estimated_hours": 0.42,
+  "estimated_grams": 8.9,
+  "solid_parts_grams": 8.9,
+  "passed": true
+}

@@ -1,0 +1,8 @@
+[2026-11-15 21:27:41.987834] [0x00000001f4e2d300] [trace]   Initializing StaticPrintConfigs
+[2026-11-15 21:27:42.074779] [0x00000001f4e2d300] [warning] cli mode, Current BambuStudio Version 02.08.02.61
+[2026-11-15 21:27:42.094503] [0x00000001f4e2d300] [warning] run:2873, can not find system preset file: /Applications/BambuStudio.app/Contents/Resources/profiles/BBL/machine_full/Bambu Lab X1 Carbon 0.4 nozzle.json 
+[2026-11-15 21:27:42.095202] [0x00000001f4e2d300] [warning] no filament colors found in projects
+[2026-11-15 21:27:42.096313] [0x00000001f4e2d300] [warning] 4191: disable_wipe_tower_after_mapping: disable prime tower for only one filament!
+[2026-11-15 21:27:42.102872] [0x00000001f4e2d300] [warning] load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types
+[2026-11-15 21:27:42.164490] [0x00000001707b7000] [warning] tree support default to organic support
+[2026-11-15 21:27:42.164536] [0x00000001f4e2d300] [warning] tree support default to organic support

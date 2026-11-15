@@ -1,0 +1,12 @@
+// 10 g glider in its own frame (origin = hook slot end). Wing shown flat at 2 deg incidence;
+// in use it is bent into the saddle's 6 deg dihedral.
+plate 256 256 6
+fuselage ← glider-fuselage.coscad ×1 ▽fwd material=pla
+wing ← glider-wing.coscad ×1 ▽bot material=pla
+stab ← glider-stab.coscad ×1 ▽bot material=pla
+saddle ← glider-saddle.coscad ×1 ▽bot material=pla
+
+fixed fuselage 0 0 0 0 0 0
+fixed saddle 0 0 0 0 0 0
+fixed wing -26.7043 0 12.3 0 -2 0
+fixed stab -105 0 7.1 0 0 0

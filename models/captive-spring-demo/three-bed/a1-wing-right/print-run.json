@@ -60,7 +60,7 @@
     ]
   ],
   "hms_before": [],
-  "phase": "acknowledged",
+  "phase": "first-layer",
   "dispatch_attempted": true,
   "events": [
     {
@@ -119,6 +119,462 @@
         "stg_cur": 13
       },
       "hms": []
+    },
+    {
+      "at": "2026-11-15T14:49:17+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 45,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 122.34375,
+        "bed_temper": 47.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:49:32+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 45,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 114.75,
+        "bed_temper": 63.5,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:49:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 45,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 147.4375,
+        "bed_temper": 65.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:50:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 45,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 181.65625,
+        "bed_temper": 64.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:50:17+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 45,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 208.34375,
+        "bed_temper": 64.5,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:50:32+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 45,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 220.34375,
+        "bed_temper": 64.5,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:50:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 45,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 218.09375,
+        "bed_temper": 64.625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:51:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 45,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 218.78125,
+        "bed_temper": 64.625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:51:17+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 43,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 219.71875,
+        "bed_temper": 64.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:51:32+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 43,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 212.125,
+        "bed_temper": 64.5,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:51:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 43,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 194.71875,
+        "bed_temper": 63.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:52:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 174.59375,
+        "bed_temper": 63.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:52:17+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 167.5625,
+        "bed_temper": 64.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:52:32+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 168.875,
+        "bed_temper": 64.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:52:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 152.59375,
+        "bed_temper": 64.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:53:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 139.8125,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:53:17+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 140.5625,
+        "bed_temper": 65.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:53:32+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 139.625,
+        "bed_temper": 65.0625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:53:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 140.1875,
+        "bed_temper": 65.03125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:54:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 140.03125,
+        "bed_temper": 65.0625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:54:17+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 147.78125,
+        "bed_temper": 65.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:54:32+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 186.125,
+        "bed_temper": 65.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:54:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 214.46875,
+        "bed_temper": 65.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:55:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 1,
+        "total_layer_num": 25,
+        "mc_remaining_time": 39,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 219.75,
+        "bed_temper": 65.21875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
     }
   ],
   "created_at": "2026-11-15T14:48:01+1100",
@@ -129,5 +585,6 @@
     "reason": "success",
     "command": "project_file",
     "sequence_id": "714512001"
-  }
+  },
+  "first_layer_reached": true
 }

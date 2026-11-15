@@ -1,0 +1,2 @@
+// Drop through carriage and rail at full draw; lift to launch.
+main = ((zcyl 2 16 |> move 0 0 -8.5) ⊕ (box 3 16 6 |> move 0 0 2.5))

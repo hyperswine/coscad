@@ -1,0 +1,38 @@
+{
+  "job": "x1c-limbs",
+  "printer": "x1c",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL X1C",
+  "nozzle_temperature": "220",
+  "bed_temperature": "55",
+  "package_sha256": "3a9dfea2b6c53c71e5ba1cdb4dadf2bf5b38be0c43e435461a0f5b3d0609a848",
+  "gcode_sha256": "83f296882c231ba4c6bec3b00aa5ff08273b222af26f0936ff8a7a004af2fc09",
+  "objects": 2,
+  "layers": 15,
+  "model_path_segments": 23694,
+  "support_segments": 0,
+  "segments_in_exclusion_corner": 0,
+  "extrusion_bounds_xy_mm": [
+    [
+      6.401,
+      36.401
+    ],
+    [
+      244.599,
+      149.599
+    ]
+  ],
+  "features": {
+    "Inner wall": 640,
+    "Outer wall": 810,
+    "Gap infill": 840,
+    "Bottom surface": 694,
+    "Internal solid infill": 6332,
+    "Sparse infill": 14082,
+    "Top surface": 296
+  },
+  "estimated_hours": 0.84,
+  "estimated_grams": 45.3,
+  "solid_parts_grams": 45.1,
+  "passed": true
+}

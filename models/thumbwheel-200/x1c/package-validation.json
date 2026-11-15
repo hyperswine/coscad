@@ -1,0 +1,8 @@
+{
+  "layers": 80,
+  "passed": true,
+  "package_sha256": "04823790a73dab8448a60df028dc3e654a21f78455b4f3ce8d4aa64870bf60d2",
+  "parts": [
+    "base.stl"
+  ]
+}

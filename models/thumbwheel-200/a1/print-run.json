@@ -1,0 +1,533 @@
+{
+  "job": "a1",
+  "printer": "a1",
+  "material": "pla",
+  "package_sha256": "ef65870221f86cc609fc37502b894ad2caf1438ecdd077564b834264a2ef4d6f",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 65.0,
+      "bed_c": 65.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 50,
+    "deposition_moves_checked": 56070,
+    "package_sha256": "ef65870221f86cc609fc37502b894ad2caf1438ecdd077564b834264a2ef4d6f"
+  },
+  "remote_name": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+  "spool": "ams0",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner confirmed all three beds clear and requested these standard PLA thumbwheel plates.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 25,
+    "total_layer_num": 25,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+    "nozzle_temper": 20.6875,
+    "bed_temper": 21.03125,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "ams0",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ],
+    [
+      "ams2",
+      "PLA",
+      "F4EE2AFF",
+      false
+    ],
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-15T17:49:58+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 25,
+        "total_layer_num": 25,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 20.6875,
+        "bed_temper": 21.03125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:50:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 21,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 34.375,
+        "bed_temper": 21.0625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 2
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:50:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 21,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 98.53125,
+        "bed_temper": 32.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:50:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 21,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 115.1875,
+        "bed_temper": 49.03125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:50:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 21,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 107.84375,
+        "bed_temper": 63.25,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:51:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 21,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 148.65625,
+        "bed_temper": 65.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:51:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 21,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 180.21875,
+        "bed_temper": 64.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:51:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 21,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 211.8125,
+        "bed_temper": 64.53125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:51:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 21,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 220.4375,
+        "bed_temper": 64.5625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:52:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 21,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 217.96875,
+        "bed_temper": 64.625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:52:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 21,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 220.53125,
+        "bed_temper": 64.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:52:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 20,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 219.625,
+        "bed_temper": 64.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:52:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 20,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 213.5,
+        "bed_temper": 64.4375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:53:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 20,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 194.6875,
+        "bed_temper": 63.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:53:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 20,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 175.65625,
+        "bed_temper": 63.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:53:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 27,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 15,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 168.59375,
+        "bed_temper": 64.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:53:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 27,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 15,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 169.1875,
+        "bed_temper": 64.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:54:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 28,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 15,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 153.03125,
+        "bed_temper": 64.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:54:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 28,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 15,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 139.46875,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:54:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 28,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 15,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 140.78125,
+        "bed_temper": 65.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:54:58+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 28,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 15,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 140.0625,
+        "bed_temper": 65.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:55:13+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 28,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 15,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 170.34375,
+        "bed_temper": 65.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:55:28+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 28,
+        "layer_num": 0,
+        "total_layer_num": 50,
+        "mc_remaining_time": 15,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 207.625,
+        "bed_temper": 65.3125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T17:55:43+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 29,
+        "layer_num": 1,
+        "total_layer_num": 50,
+        "mc_remaining_time": 15,
+        "gcode_file": "thumbwheel-200-a1-20261115-174948.gcode.3mf",
+        "subtask_name": "thumbwheel-200-a1-20261115-174948.gcode",
+        "nozzle_temper": 220.25,
+        "bed_temper": 65.25,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-15T17:49:48+1100",
+  "remote_content_sha256": "ef65870221f86cc609fc37502b894ad2caf1438ecdd077564b834264a2ef4d6f",
+  "sequence_id": "725398264",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "725398264"
+  },
+  "first_layer_reached": true
+}

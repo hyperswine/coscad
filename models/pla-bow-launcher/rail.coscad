@@ -1,0 +1,2 @@
+// Slide the carriage on from the front before fitting the riser.
+main = (((box 232.7 12 10 |> move -96.85 0 -11) ⊕ (box 8 18 10 |> move -209.2 0 -1)) ⊖ (zcyl 2.2 12 |> move 6 0 -11) ⊖ (zcyl 2.2 12 |> move 14 0 -11) ⊖ (zcyl 2.2 12 |> move -193.2 0 -11))

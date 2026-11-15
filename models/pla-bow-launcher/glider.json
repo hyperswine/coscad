@@ -1,0 +1,19 @@
+{
+ "parts": {
+  "glider-fuselage": 3.02,
+  "glider-wing": 4.15,
+  "glider-stab": 0.74,
+  "glider-saddle": 0.77
+ },
+ "ballast_g": 1.0,
+ "glue_g": 0.3,
+ "total_g": 9.98,
+ "wing_le_x": -8.7,
+ "cg_x": -21.4,
+ "wing_area_cm2": 80.3,
+ "wing_loading_g_dm2": 12.4,
+ "tail_volume": 0.42,
+ "cg_chord_fraction": 0.353,
+ "static_margin": 0.1,
+ "glide_speed_CL06": 5.8
+}

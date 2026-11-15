@@ -1,0 +1,2 @@
+// Flat; bend into the saddle's 6 deg dihedral and glue.
+main = ((⮕ 0.4 (poly 18 -90 18 90 8 115 -18 115 -18 -115 8 -115)) ⊕ (box 1.2 93 0.61 |> move 7.2 56.5 0.695) ⊕ (box 1.2 93 0.61 |> move 7.2 -56.5 0.695))

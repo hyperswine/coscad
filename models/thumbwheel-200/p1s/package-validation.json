@@ -1,0 +1,8 @@
+{
+  "layers": 25,
+  "passed": true,
+  "package_sha256": "3408ad201d451fa3798bcdb94a0d66c86626412199f350fc44e0210b0b729283",
+  "parts": [
+    "rack.stl"
+  ]
+}

@@ -48,7 +48,7 @@
     ]
   ],
   "hms_before": [],
-  "phase": "acknowledged",
+  "phase": "first-layer",
   "dispatch_attempted": true,
   "events": [
     {
@@ -126,6 +126,614 @@
         "stg_cur": 54
       },
       "hms": []
+    },
+    {
+      "at": "2026-11-15T14:49:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 70,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 121.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:49:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 70,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 196.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:49:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 70,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 247.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:49:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 6,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 243.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:50:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 6,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 215.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:50:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:50:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:50:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:51:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:51:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 199.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:51:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 170.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:51:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 144.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:52:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:52:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:52:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:52:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:53:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:53:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:53:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:53:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:54:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:54:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:54:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:54:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 153.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:55:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 216.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:55:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 197.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:55:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 173.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:55:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 153.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:56:10+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 141.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:56:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 172.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:56:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 216.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:56:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 1,
+        "total_layer_num": 75,
+        "mc_remaining_time": 65,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
     }
   ],
   "created_at": "2026-11-15T14:48:01+1100",
@@ -136,5 +744,6 @@
     "reason": "SUCCESS",
     "command": "project_file",
     "sequence_id": "714490505"
-  }
+  },
+  "first_layer_reached": true
 }

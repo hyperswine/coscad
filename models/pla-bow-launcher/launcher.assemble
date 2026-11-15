@@ -1,0 +1,25 @@
+// PLA bow launcher with the glider, carriage at full draw (nock x = -201.2).
+plate 256 256 6
+riser ← riser.coscad ×1 ▽bot material=pla
+rail ← rail.coscad ×1 ▽bot material=pla
+limbR ← limb.coscad ×1 ▽lft material=pla
+limbL ← limb.coscad ×1 ▽lft material=pla
+carriage ← carriage.coscad ×1 ▽bot material=pla
+bumper ← bumper.coscad ×1 ▽bot material=tpu
+pin ← latch-pin.coscad ×1 ▽top material=pla
+
+fixed riser 0 0 0 0 0 0
+fixed rail 0 0 0 0 0 0
+fixed limbR 0 0 0 0 0 0
+fixed limbL 0 0 0 180 0 0
+fixed carriage -204.2 0 0 0 0 0
+fixed bumper 0 0 0 0 0 0
+fixed pin -193.2 0 0 0 0 0
+fuselage ← glider-fuselage.coscad ×1 ▽fwd material=pla
+wing ← glider-wing.coscad ×1 ▽bot material=pla
+stab ← glider-stab.coscad ×1 ▽bot material=pla
+saddle ← glider-saddle.coscad ×1 ▽bot material=pla
+fixed fuselage -171.9 0 41 0 0 0
+fixed saddle -171.9 0 41 0 0 0
+fixed wing -198.6 0 53.3 0 -2 0
+fixed stab -276.9 0 48.1 0 0 0

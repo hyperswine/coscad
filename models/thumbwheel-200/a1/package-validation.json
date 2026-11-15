@@ -1,0 +1,8 @@
+{
+  "layers": 50,
+  "passed": true,
+  "package_sha256": "ef65870221f86cc609fc37502b894ad2caf1438ecdd077564b834264a2ef4d6f",
+  "parts": [
+    "controls.stl"
+  ]
+}

@@ -1,0 +1,1 @@
+main = ((box 242 23 3 |> move 0 21 1.5) ⊕ (zcyl 21 3 |> move 0 0 1.5) ⊕ (zcyl 3 13 |> move 0 0 9.5) ⊕ (zcyl 2 8.4 |> move -10 24 7.2) ⊕ (zcyl 2 8.4 |> move 10 24 7.2))
