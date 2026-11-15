@@ -1,0 +1,3 @@
+nose ← nose.coscad ×1 ▽bot material=pla
+body ← fuselage.coscad ×1 ▽bot material=pla
+asm = nose ⊕ body

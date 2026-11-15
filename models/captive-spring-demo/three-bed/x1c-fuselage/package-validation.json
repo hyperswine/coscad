@@ -1,0 +1,8 @@
+{
+  "layers": 75,
+  "passed": true,
+  "package_sha256": "fbe23a59023a1b01b7eaeaa8608a9b20c3d24c0dc1ea877f30434287caeb4b95",
+  "parts": [
+    "bed-1-base.stl"
+  ]
+}

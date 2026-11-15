@@ -1,0 +1,79 @@
+{
+    "error_string": "Success.",
+    "export_time": 454,
+    "layer_height": 0.20000000298023224,
+    "plate_index": 1,
+    "prepare_time": 15,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 136.57861328125,
+                "Bridge": 161.1723175048828,
+                "Custom": 361.2597351074219,
+                "Flush": 29.0,
+                "Gap infill": 22.245561599731445,
+                "Inner wall": 144.691650390625,
+                "Internal solid infill": 177.35499572753906,
+                "Outer wall": 215.20094299316406,
+                "Overhang wall": 12.262516021728516,
+                "Sparse infill": 305.4519958496094,
+                "Top surface": 98.9732437133789,
+                "Travel": 121.48931884765625,
+                "Undefined": 105.92678833007813
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFA00",
+                    "id": 1,
+                    "main_used_g": 10.903343200683594,
+                    "total_used_g": 10.903343200683594
+                }
+            ],
+            "generate_support_material_time": 24,
+            "id": 1,
+            "infill_time": 116,
+            "layer_filament_change": 0,
+            "main_predication": 1366.3916015625,
+            "make_perimeters_time": 78,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 87.506591796875,
+                        "height": 7.0,
+                        "width": 200.7917938232422,
+                        "x": 27.604103088378906,
+                        "y": 84.2467041015625,
+                        "z": 0.0
+                    },
+                    "id": 5,
+                    "name": "wing-left",
+                    "triangle_count": 7040
+                }
+            ],
+            "sliced_time": 425,
+            "sliced_time_with_cache": 195,
+            "total_predication": 1770.0582275390625,
+            "triangle_count": 7040,
+            "warning_message": "It seems object wing-left has floating regions. Please re-orient the object or enable support generation."
+        }
+    ],
+    "sparse_infill_density": 15.0,
+    "upward_compatible_machine": [
+        "Bambu Lab P1P 0.4 nozzle",
+        "Bambu Lab X1 0.4 nozzle",
+        "Bambu Lab X1 Carbon 0.4 nozzle",
+        "Bambu Lab X1E 0.4 nozzle",
+        "Bambu Lab A1 0.4 nozzle",
+        "Bambu Lab H2D 0.4 nozzle",
+        "Bambu Lab H2D Pro 0.4 nozzle",
+        "Bambu Lab H2S 0.4 nozzle",
+        "Bambu Lab P2S 0.4 nozzle",
+        "Bambu Lab H2C 0.4 nozzle",
+        "Bambu Lab X2D 0.4 nozzle",
+        "Bambu Lab A2L 0.4 nozzle"
+    ],
+    "wall_loops": 2
+}

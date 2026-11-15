@@ -1,0 +1,140 @@
+{
+  "job": "x1c-fuselage",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "fbe23a59023a1b01b7eaeaa8608a9b20c3d24c0dc1ea877f30434287caeb4b95",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 75,
+    "deposition_moves_checked": 133095,
+    "package_sha256": "fbe23a59023a1b01b7eaeaa8608a9b20c3d24c0dc1ea877f30434287caeb4b95"
+  },
+  "remote_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner confirmed all three beds clear for the three-bed captive prototype.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 476,
+    "total_layer_num": 476,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+    "nozzle_temper": 25.0,
+    "bed_temper": 22.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-15T14:48:10+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 476,
+        "total_layer_num": 476,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 25.0,
+        "bed_temper": 22.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:48:25+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 70,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 70.0,
+        "bed_temper": 22.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:48:40+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 70,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 30.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:48:55+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 75,
+        "mc_remaining_time": 70,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "three-bed-captive-x1c-fuselage-20261115-144801.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 47.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-15T14:48:01+1100",
+  "remote_content_sha256": "fbe23a59023a1b01b7eaeaa8608a9b20c3d24c0dc1ea877f30434287caeb4b95",
+  "sequence_id": "714490505",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "714490505"
+  }
+}

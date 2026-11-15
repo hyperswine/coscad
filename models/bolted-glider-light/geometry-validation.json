@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-14",
+  "stage": "development geometry; not sliced or flight qualified",
+  "assembly_parts": 2,
+  "static_overlaps": 0,
+  "static_clearance_warnings": 0,
+  "nose_body_gap_mm": 0.2,
+  "nose_volume_mm3": 49073.459,
+  "body_volume_mm3": 212663.03,
+  "original_body_volume_mm3": 264313.846,
+  "notes": [
+    "Raw solid-volume reduction is approximately 1 percent; deposited mass can increase because internal surfaces and extra hardware are added.",
+    "Static overlap checking does not validate joint stiffness, bolt seating, fastener clearances or strength.",
+    "No flight load or crash qualification."
+  ],
+  "source_sha256": {
+    "nose.coscad": "80d8c941f9f1b6270378cf88db4002dd22f847976d4be2dfc1d250728fd899e5",
+    "fuselage.coscad": "debef45c5ae6fecef9111cfd4fbcda2a1411d2ca1142f4f0f67ebb3cc4080e37"
+  }
+}

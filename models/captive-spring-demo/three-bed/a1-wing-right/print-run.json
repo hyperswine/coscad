@@ -1,0 +1,133 @@
+{
+  "job": "a1-wing-right",
+  "printer": "a1",
+  "material": "pla",
+  "package_sha256": "23735f8faa6568ca45124fb246513ec446441fefce87bbf0e2f4c3ed1d9c825d",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 65.0,
+      "bed_c": 65.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 25,
+    "deposition_moves_checked": 83552,
+    "package_sha256": "23735f8faa6568ca45124fb246513ec446441fefce87bbf0e2f4c3ed1d9c825d"
+  },
+  "remote_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+  "spool": "ams0",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner confirmed all three beds clear for the three-bed captive prototype.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 40,
+    "total_layer_num": 40,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+    "nozzle_temper": 21.25,
+    "bed_temper": 21.5,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "ams0",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ],
+    [
+      "ams2",
+      "PLA",
+      "F4EE2AFF",
+      false
+    ],
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ]
+  ],
+  "hms_before": [],
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-15T14:48:32+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 40,
+        "total_layer_num": 40,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 21.25,
+        "bed_temper": 21.53125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:48:47+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 0,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 40.71875,
+        "bed_temper": 21.5,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:49:02+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 25,
+        "mc_remaining_time": 45,
+        "gcode_file": "three-bed-captive-a1-wing-right-20261115-144801.gcode.3mf",
+        "subtask_name": "three-bed-captive-a1-wing-right-20261115-144801.gcode",
+        "nozzle_temper": 94.5,
+        "bed_temper": 27.4375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-15T14:48:01+1100",
+  "remote_content_sha256": "23735f8faa6568ca45124fb246513ec446441fefce87bbf0e2f4c3ed1d9c825d",
+  "sequence_id": "714512001",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "714512001"
+  }
+}

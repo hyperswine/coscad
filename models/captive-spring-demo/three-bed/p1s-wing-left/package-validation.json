@@ -1,0 +1,8 @@
+{
+  "layers": 35,
+  "passed": true,
+  "package_sha256": "8b2d3a82ca7cce2ef9dc75d3c8faf195d0ab83622fa589e7783fcd589e4eef58",
+  "parts": [
+    "bed-2-drive.stl"
+  ]
+}

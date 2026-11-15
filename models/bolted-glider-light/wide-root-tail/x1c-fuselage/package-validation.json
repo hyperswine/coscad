@@ -1,0 +1,9 @@
+{
+  "layers": 476,
+  "passed": true,
+  "package_sha256": "f0f945f183d20be0b9b05aae03e0da354dfa0e50b6607b902c15c1892923159c",
+  "parts": [
+    "stab.stl",
+    "fin.stl"
+  ]
+}

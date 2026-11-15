@@ -1,0 +1,78 @@
+{
+    "error_string": "Success.",
+    "export_time": 572,
+    "layer_height": 0.20000000298023224,
+    "plate_index": 1,
+    "prepare_time": 17,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 179.5325164794922,
+                "Bridge": 569.7782592773438,
+                "Custom": 422.7223205566406,
+                "Flush": 29.0,
+                "Gap infill": 143.79653930664063,
+                "Internal solid infill": 83.51044464111328,
+                "Outer wall": 1875.234130859375,
+                "Overhang wall": 46.134742736816406,
+                "Sparse infill": 424.0125427246094,
+                "Top surface": 316.13922119140625,
+                "Travel": 774.150146484375,
+                "Undefined": 758.4999389648438
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFA00",
+                    "id": 1,
+                    "main_used_g": 32.34878921508789,
+                    "total_used_g": 32.34878921508789
+                }
+            ],
+            "generate_support_material_time": 42,
+            "id": 1,
+            "infill_time": 237,
+            "layer_filament_change": 0,
+            "main_predication": 4383.4296875,
+            "make_perimeters_time": 96,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 204.34536743164063,
+                        "height": 46.191715240478516,
+                        "width": 242.07278442382813,
+                        "x": 4.099895477294922,
+                        "y": 27.827316284179688,
+                        "z": 0.0
+                    },
+                    "id": 5,
+                    "name": "fuselage",
+                    "triangle_count": 5700
+                }
+            ],
+            "sliced_time": 905,
+            "sliced_time_with_cache": 493,
+            "total_predication": 4848.47119140625,
+            "triangle_count": 5700,
+            "warning_message": "It seems object fuselage has floating regions. Please re-orient the object or enable support generation."
+        }
+    ],
+    "sparse_infill_density": 5.0,
+    "upward_compatible_machine": [
+        "Bambu Lab P1S 0.4 nozzle",
+        "Bambu Lab P1P 0.4 nozzle",
+        "Bambu Lab X1 0.4 nozzle",
+        "Bambu Lab X1E 0.4 nozzle",
+        "Bambu Lab A1 0.4 nozzle",
+        "Bambu Lab H2D 0.4 nozzle",
+        "Bambu Lab H2D Pro 0.4 nozzle",
+        "Bambu Lab H2S 0.4 nozzle",
+        "Bambu Lab P2S 0.4 nozzle",
+        "Bambu Lab H2C 0.4 nozzle",
+        "Bambu Lab X2D 0.4 nozzle",
+        "Bambu Lab A2L 0.4 nozzle"
+    ],
+    "wall_loops": 1
+}

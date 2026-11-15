@@ -1,0 +1,38 @@
+[
+  {
+    "layer_z_mm": 0.2,
+    "hub_to_anchor_connected": true,
+    "centreline_samples": 989,
+    "uncovered_samples": 0
+  },
+  {
+    "layer_z_mm": 0.4,
+    "hub_to_anchor_connected": true,
+    "centreline_samples": 989,
+    "uncovered_samples": 0
+  },
+  {
+    "layer_z_mm": 0.6,
+    "hub_to_anchor_connected": true,
+    "centreline_samples": 989,
+    "uncovered_samples": 0
+  },
+  {
+    "layer_z_mm": 0.8,
+    "hub_to_anchor_connected": true,
+    "centreline_samples": 989,
+    "uncovered_samples": 0
+  },
+  {
+    "layer_z_mm": 1.0,
+    "hub_to_anchor_connected": true,
+    "centreline_samples": 989,
+    "uncovered_samples": 0
+  },
+  {
+    "layer_z_mm": 1.2,
+    "hub_to_anchor_connected": true,
+    "centreline_samples": 989,
+    "uncovered_samples": 0
+  }
+]

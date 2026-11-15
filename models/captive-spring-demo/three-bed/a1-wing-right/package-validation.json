@@ -1,0 +1,8 @@
+{
+  "layers": 25,
+  "passed": true,
+  "package_sha256": "23735f8faa6568ca45124fb246513ec446441fefce87bbf0e2f4c3ed1d9c825d",
+  "parts": [
+    "bed-3-cover-rack.stl"
+  ]
+}

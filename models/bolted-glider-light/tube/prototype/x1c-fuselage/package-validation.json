@@ -1,0 +1,11 @@
+{
+  "layers": 231,
+  "passed": true,
+  "package_sha256": "3cd71042986a108bc8a6275e9f1ae983aee1bbd0edad8a28a56a254f0754ba11",
+  "parts": [
+    "fuselage.stl",
+    "nose.stl",
+    "ears-fin.stl",
+    "ears-stab.stl"
+  ]
+}

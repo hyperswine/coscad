@@ -1,0 +1,8 @@
+{
+  "layers": 38,
+  "passed": true,
+  "package_sha256": "2c31d659db8ae5dd4dc65ca64ff6643f4805b3fc9ddf733ae16a4b3977cb88ef",
+  "parts": [
+    "plate.stl"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+    "error_string": "Success.",
+    "export_time": 500,
+    "layer_height": 0.20000000298023224,
+    "plate_index": 1,
+    "prepare_time": 8,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 604.8543090820313,
+                "Bridge": 1386.6024169921875,
+                "Custom": 367.6382141113281,
+                "Flush": 25.0,
+                "Gap infill": 514.7042236328125,
+                "Internal solid infill": 26.38636589050293,
+                "Outer wall": 1724.560791015625,
+                "Overhang wall": 639.2536010742188,
+                "Sparse infill": 76.55807495117188,
+                "Top surface": 1059.4700927734375,
+                "Travel": 1525.8984375,
+                "Undefined": 1509.0556640625
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFA00",
+                    "id": 1,
+                    "main_used_g": 34.10508346557617,
+                    "total_used_g": 34.10508346557617
+                }
+            ],
+            "generate_support_material_time": 87,
+            "id": 1,
+            "infill_time": 269,
+            "layer_filament_change": 0,
+            "main_predication": 7532.70361328125,
+            "make_perimeters_time": 115,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 233.88059997558594,
+                        "height": 10.470000267028809,
+                        "width": 241.15016174316406,
+                        "x": 7.424919128417969,
+                        "y": 11.059700012207031,
+                        "z": 0.0
+                    },
+                    "id": 5,
+                    "name": "wing-right",
+                    "triangle_count": 3546
+                }
+            ],
+            "sliced_time": 1034,
+            "sliced_time_with_cache": 524,
+            "total_predication": 7933.4990234375,
+            "triangle_count": 3546,
+            "warning_message": "It seems object wing-right has floating cantilever. Please re-orient the object or enable support generation."
+        }
+    ],
+    "sparse_infill_density": 5.0,
+    "upward_compatible_machine": [
+        "Bambu Lab H2D 0.4 nozzle",
+        "Bambu Lab H2D Pro 0.4 nozzle",
+        "Bambu Lab H2S 0.4 nozzle",
+        "Bambu Lab P2S 0.4 nozzle",
+        "Bambu Lab H2C 0.4 nozzle",
+        "Bambu Lab X2D 0.4 nozzle",
+        "Bambu Lab A2L 0.4 nozzle"
+    ],
+    "wall_loops": 1
+}

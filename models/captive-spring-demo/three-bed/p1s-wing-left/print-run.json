@@ -1,0 +1,102 @@
+{
+  "job": "p1s-wing-left",
+  "printer": "p1s",
+  "material": "pla",
+  "package_sha256": "8b2d3a82ca7cce2ef9dc75d3c8faf195d0ab83622fa589e7783fcd589e4eef58",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 35,
+    "deposition_moves_checked": 70876,
+    "package_sha256": "8b2d3a82ca7cce2ef9dc75d3c8faf195d0ab83622fa589e7783fcd589e4eef58"
+  },
+  "remote_name": "three-bed-captive-p1s-wing-left-20261115-144806.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner confirmed all three beds clear for the three-bed captive prototype.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 52,
+    "total_layer_num": 52,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "supported-glider-p1s-wing-left-20261114-212252.gcode",
+    "nozzle_temper": 25.53125,
+    "bed_temper": 22.1875,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "acknowledged",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-15T14:48:33+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 52,
+        "total_layer_num": 52,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "three-bed-captive-p1s-wing-left-20261115-144806.gcode",
+        "nozzle_temper": 25.53125,
+        "bed_temper": 22.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T14:48:48+1100",
+      "status": {
+        "gcode_state": "PREPARE",
+        "mc_percent": 100,
+        "layer_num": 52,
+        "total_layer_num": 35,
+        "mc_remaining_time": 0,
+        "gcode_file": "three-bed-captive-p1s-wing-left-20261115-144806.gcode.3mf",
+        "subtask_name": "three-bed-captive-p1s-wing-left-20261115-144806.gcode",
+        "nozzle_temper": 25.53125,
+        "bed_temper": 22.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-15T14:48:06+1100",
+  "remote_content_sha256": "8b2d3a82ca7cce2ef9dc75d3c8faf195d0ab83622fa589e7783fcd589e4eef58",
+  "sequence_id": "714513332",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "714513332"
+  }
+}

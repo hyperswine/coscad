@@ -1,0 +1,28 @@
+{
+  "baseline": "../bolted-glider-balanced/p1s-tail/balance.json",
+  "baseline_weighed": false,
+  "wing_area_dm2": 4.4420536548730984,
+  "scenarios": [
+    {
+      "mass_g": 218.3415562805605,
+      "wing_loading_g_dm2": 49.153291077659915,
+      "speed_m_s_at_CL_0_6": 11.454658149664345
+    },
+    {
+      "mass_g": 180,
+      "wing_loading_g_dm2": 40.521797795605934,
+      "speed_m_s_at_CL_0_6": 10.400403398441398
+    },
+    {
+      "mass_g": 160,
+      "wing_loading_g_dm2": 36.019375818316384,
+      "speed_m_s_at_CL_0_6": 9.80559436015137
+    },
+    {
+      "mass_g": 140,
+      "wing_loading_g_dm2": 31.516953841026837,
+      "speed_m_s_at_CL_0_6": 9.172293642342318
+    }
+  ],
+  "limitations": "Target masses, not achieved slice estimates. Same area, CL and air density; not stall speed or glide ratio prediction."
+}

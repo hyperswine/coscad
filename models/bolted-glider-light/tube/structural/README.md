@@ -1,0 +1,7 @@
+# Tube saddle comparison
+
+Clamp the fuselage across y=165–175 mm. Apply 0.5 N vertically to each right-hand saddle pad near x=15 mm, at y=26.4 and 74.4 mm. This asymmetric fixture exercises bending and twisting. Report mean vertical motion at each pad. Stress is centre-point von Mises in the deposited material. Saddle peaks include material within 11 mm of each bolt row above z=20 mm. The body peak excludes the clamp and nose.
+
+Run each of shell, tube and tube-reinforced's slice-study.py with GLIDER_FEA_DIR set to a common absolute directory. With NumPy and SciPy installed, run compare.py DESIGN CELL with that environment and mesh sizes 4, 3 and 2 mm. The reinforced-results file corresponds to tube-reinforced. Each occupied brick uses eight-node linear elasticity with full integration, E=2500 MPa, Poisson ratio 0.35 and stiffness scaled by deposited volume fraction. This treats welds as bonded and smears thin skins across a cell. Curved extrusion moves are approximated by chords. The loads are fixture loads rather than a flight envelope.
+
+At 2 mm the shell, tube and reinforced tube give front pad motions of 0.143, 0.268 and 0.257 mm. The reinforced rear pad moves 0.158 mm versus 0.092 mm for the shell. Local rear stresses change substantially on refinement. The three transverse webs cost 1.45 g and reduce tube motion around 4%. This study does not establish bolt slip, bearing failure, wall buckling or allowable load. Hold the production release pending a mounted-wing load/deflection check or a more detailed fastener/contact comparison.

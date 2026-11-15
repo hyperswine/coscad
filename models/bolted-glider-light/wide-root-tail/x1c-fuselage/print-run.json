@@ -1,0 +1,711 @@
+{
+  "job": "x1c-fuselage",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "f0f945f183d20be0b9b05aae03e0da354dfa0e50b6607b902c15c1892923159c",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 476,
+    "deposition_moves_checked": 32411,
+    "package_sha256": "f0f945f183d20be0b9b05aae03e0da354dfa0e50b6607b902c15c1892923159c"
+  },
+  "remote_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner requested X1C tail reprint on cleared bed.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 231,
+    "total_layer_num": 231,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "glider-x1c-fuselage-20261114-131526.gcode",
+    "nozzle_temper": 31.0,
+    "bed_temper": 28.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-14T23:00:41+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 231,
+        "total_layer_num": 231,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 31.0,
+        "bed_temper": 28.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:00:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 60,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 72.0,
+        "bed_temper": 28.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:01:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 60,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 36.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:01:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 60,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 52.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:01:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 60,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 146.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:01:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 60,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 226.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:02:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 59,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 248.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:02:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 55,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 230.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:02:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 205.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:02:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:03:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:03:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:03:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 185.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:03:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 158.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:04:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 141.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:04:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:04:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:04:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:05:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:05:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:05:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:05:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:06:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:06:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:06:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:06:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:07:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 197.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:07:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 210.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:07:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 185.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:07:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 164.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:08:11+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 145.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:08:26+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 205.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:08:41+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 476,
+        "mc_remaining_time": 54,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 210.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-14T23:08:56+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 11,
+        "layer_num": 1,
+        "total_layer_num": 476,
+        "mc_remaining_time": 53,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "wide-root-tail-x1c-fuselage-20261114-230038.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-14T23:00:38+1100",
+  "remote_content_sha256": "f0f945f183d20be0b9b05aae03e0da354dfa0e50b6607b902c15c1892923159c",
+  "sequence_id": "657641453",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "657641453"
+  },
+  "first_layer_reached": true
+}

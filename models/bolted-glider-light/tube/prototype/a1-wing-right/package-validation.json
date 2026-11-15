@@ -1,0 +1,8 @@
+{
+  "layers": 52,
+  "passed": true,
+  "package_sha256": "99a4831dcca75bd2b704650f04a547f30f503f1a681e650e4e33995db143503e",
+  "parts": [
+    "wing-right.stl"
+  ]
+}

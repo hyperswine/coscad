@@ -31,12 +31,15 @@ runCase exe host family tmp entry =
   _ = case Proc.pipeline cmd of Ok (PipelineResult 0 _ _ _) -> Unit | other -> error "FEA case {params} failed: {other}";
   spec = P.spec (host + ["measure",family,source,target] + params);
   result = unwrap (J.parse (unwrap (P.output (Proc.query spec))));
+
   passed =
     if family == "hex20" then
       _ = print (unwrap (J.text (unwrap (J.get "line" result))));
       unwrap (J.num (unwrap (J.get "worst" result))) <= 0.000001
-    else unwrap (J.get "passed" result) == J.JBool True;
-  (target,passed).
+    else
+      unwrap (J.get "passed" result) == J.JBool True;
+
+  (target, passed).
 
 batch exe python family cells =
   scripts = (case unwrap (Env.get "COSCAD_FEA_SCRIPTS") of EnvText dir -> dir | EnvMissing -> "scripts");
@@ -47,15 +50,25 @@ batch exe python family cells =
   outputs = List.map (fn r -> (file,ok) = r; file) records;
   spec = P.spec (host + ["summary",family,if passed then "pass" else "fail"] + outputs);
   _ = case Proc.streamNow spec of Ok 0 -> Unit | other -> error "could not print comparison: {other}";
-  if passed then Unit else
+
+  if passed then
+    Unit
+  else
     _ = if family == "hex20" then unwrap (IO.stderrText "Hex20 differs from the independent reference\n") else Unit;
     Script.exit 1.
 
 > usage = "usage: fea-reference.sol beam|cad|hex20 --exe PATH [--python PATH] [HEX20-CELLS ...]";
   argv = args Unit;
-  if List.has "--help" argv or List.has "-h" argv then print usage else
-    opts = unwrap (C.parse [C.Option "exe" "" C.One,C.Option "python" "" C.One] argv);
+  if List.has "--help" argv or List.has "-h" argv then
+    print usage
+  else
+    opts = unwrap (C.parse [C.Option "exe" "" C.One, C.Option "python" "" C.One] argv);
     exe = C.valueOr "" "exe" opts;
-    case C.operands opts of family :: cells ->
-      if exe == "" then error usage else batch exe (C.valueOr "python3" "python" opts) family cells
-    | [] -> error usage.
+    case C.operands opts of
+      family :: cells ->
+        if exe == "" then
+          error usage
+        else
+          batch exe (C.valueOr "python3" "python" opts) family cells
+    | [] ->
+        error usage.

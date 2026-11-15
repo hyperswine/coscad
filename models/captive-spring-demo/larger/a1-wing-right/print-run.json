@@ -1,0 +1,666 @@
+{
+  "job": "a1-wing-right",
+  "printer": "a1",
+  "material": "pla",
+  "package_sha256": "03a5ef6ab05442f281363bbc20dbf446aaa74eef7e69a24ab7f27f5abdb22e14",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 65.0,
+      "bed_c": 65.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 40,
+    "deposition_moves_checked": 52484,
+    "package_sha256": "03a5ef6ab05442f281363bbc20dbf446aaa74eef7e69a24ab7f27f5abdb22e14"
+  },
+  "remote_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+  "spool": "ams0",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": true,
+  "layer_inspect": true,
+  "authorization_note": "Owner removed and tested the previous plate and requested the larger revised fit prototype.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 38,
+    "total_layer_num": 38,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "spring-demo-a1-wing-right-20261115-060431.gcode",
+    "nozzle_temper": 20.3125,
+    "bed_temper": 20.75,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "ams0",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ],
+    [
+      "ams2",
+      "PLA",
+      "F4EE2AFF",
+      false
+    ],
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-15T10:26:31+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 38,
+        "total_layer_num": 38,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 20.3125,
+        "bed_temper": 20.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:26:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 30,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 37.625,
+        "bed_temper": 20.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 2
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:27:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 30,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 91.34375,
+        "bed_temper": 29.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:27:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 30,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 110.59375,
+        "bed_temper": 51.65625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:27:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 30,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 105.40625,
+        "bed_temper": 63.65625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:27:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 30,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 145.9375,
+        "bed_temper": 65.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:28:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 30,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 175.84375,
+        "bed_temper": 64.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:28:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 30,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 208.25,
+        "bed_temper": 64.4375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:28:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 30,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 220.375,
+        "bed_temper": 64.4375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:28:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 30,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 218,
+        "bed_temper": 64.625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:29:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 30,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 220.21875,
+        "bed_temper": 64.65625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:29:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 29,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 220.03125,
+        "bed_temper": 64.65625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:29:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 29,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 220.03125,
+        "bed_temper": 64.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:29:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 29,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 219.53125,
+        "bed_temper": 64.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:30:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 29,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 220.1875,
+        "bed_temper": 64.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:30:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 28,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 218.375,
+        "bed_temper": 64.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:30:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 28,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 219.90625,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:30:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 28,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 222.0625,
+        "bed_temper": 64.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:31:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 28,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 208.1875,
+        "bed_temper": 64.25,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:31:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 28,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 190.75,
+        "bed_temper": 63.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:31:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 28,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 174.34375,
+        "bed_temper": 63.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:31:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 19,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 24,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 168.5,
+        "bed_temper": 64.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:32:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 24,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 168.125,
+        "bed_temper": 64.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:32:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 24,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 153.84375,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:32:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 24,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 138.9375,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:32:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 24,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 140.78125,
+        "bed_temper": 65.0625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:33:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 24,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 139.625,
+        "bed_temper": 65.03125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:33:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 24,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 65,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:33:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 24,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 161.3125,
+        "bed_temper": 65.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:33:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 0,
+        "total_layer_num": 40,
+        "mc_remaining_time": 24,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 200.375,
+        "bed_temper": 65.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-15T10:34:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 20,
+        "layer_num": 1,
+        "total_layer_num": 40,
+        "mc_remaining_time": 23,
+        "gcode_file": "larger-spring-demo-a1-wing-right-20261115-102620.gcode.3mf",
+        "subtask_name": "larger-spring-demo-a1-wing-right-20261115-102620.gcode",
+        "nozzle_temper": 220,
+        "bed_temper": 65.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-15T10:26:20+1100",
+  "remote_content_sha256": "03a5ef6ab05442f281363bbc20dbf446aaa74eef7e69a24ab7f27f5abdb22e14",
+  "sequence_id": "698791468",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "698791468"
+  },
+  "first_layer_reached": true
+}

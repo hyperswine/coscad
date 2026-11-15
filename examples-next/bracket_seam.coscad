@@ -3,6 +3,7 @@
 // z centered (rail height spans -10..10), y = along-rail (15 wide).
 // Pose rule in the .assemble: rotate to face, translate face_axis by
 // (rail_face_plane + 2.5), then lift z +10.
+
 plate  = box 5 15 20
 flange = box 16 15 5
 key    = box 1 15 5.8
@@ -15,5 +16,5 @@ main = plate
   |> cutat lft 3.5 0 0 (xcyl 2.7 12)
   |> cutat rt -0.5 0 0 (xcyl 5.0 21)
   |> cutat top 2.5 0 -4 (zcyl 1.4 10)
-// Oriented joint interfaces; construction metadata does not add material.
+  // Oriented joint interfaces; construction metadata does not add material.
   |> frame slot_mount_railY2 ctr lft top -7.5 0 0

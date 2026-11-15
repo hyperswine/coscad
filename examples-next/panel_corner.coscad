@@ -7,13 +7,16 @@
 // M3 clearance (d3.4) over bracket pilots: 20mm in from interior edges,
 // 30mm in from perimeter edges (pilot is always 10mm off the rail face).
 // The square rotates: one part serves all four quadrants of a 2x2 grid.
+
 p = ◙ 210 210 2.5 1
+
 h = zcyl 1.7 8
+
 main = p
   |> cut (χ -85 h)
   |> cut (χ 75 h)
   |> cut (ψ -85 h)
   |> cut (ψ 75 h)
-// Oriented joint interfaces; construction metadata does not add material.
+  // Oriented joint interfaces; construction metadata does not add material.
   |> frame panel_support_railX6 ctr bot bak 0 95 -1.25
   |> frame panel_support_railX5 ctr bot bak 95 0 -1.25
