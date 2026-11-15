@@ -122,8 +122,9 @@ bolt compliance, layer failure, film bonding and buckling remain unresolved.
 These results compare bending stiffness and stress demand. Ultimate strength
 requires material and assembly tests. This candidate misses the balance target.
 
-Run wing-study.py to generate both CoScad frames and the beam comparison.
-Render both STLs using the loft/poly-capable CoScad build. Run slice-study.py
-to reproduce the slice mass and CG. The skin allowance uses y=115 mm. The
+Run `"$SOL" models/bolted-glider-light/wing-study.sol` to generate both CoScad frames and the beam comparison.
+Render both STLs using the loft/poly-capable CoScad build. Run
+`"$SOL" models/bolted-glider-light/slice-study.sol` (Bambu Studio CLI) to
+reproduce the slice mass and CG. The skin allowance uses y=115 mm. The
 separate nose and body use the baseline global two-wall process. Regional
 reinforcement, adhesion aids and actual hardware weights can change the result.

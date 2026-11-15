@@ -8,7 +8,7 @@ region joins the tube at the aft end. The short hollow nose retains the original
 tongue and twin transverse screw locations. Its tip is 40 mm farther aft.
 
 The native mesh and nose-joint checks produced one body and one nose with a
-0.20 mm gap and zero overlaps. Run slice-study.py to reproduce standard PLA
+0.20 mm gap and zero overlaps. Run `"$SOL" models/bolted-glider-light/tube/slice-study.sol` to reproduce standard PLA
 deposited mass and longitudinal moment using the shell X1C process. Wings
 are reused from the previous slice. Nose hardware allowance is 5 g.
 

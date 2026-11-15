@@ -5,7 +5,8 @@ captive spring demonstrator (`../captive-spring-demo/three-bed`). Its PLA
 spiral stores about 32 uJ over 10 mm travel, which is about 0.05 m/s. Wound
 to 15 MPa it would store 3.6 mJ, still under 1 m/s.
 
-Run `python3 study.py`. Every number below comes from that script, using
+Run `"$SOL" models/spring-launcher-study/study.sol` (FP-RISC 0.13.1 Sol). Every
+number below comes from that script, using
 typical published material values. None of it has been measured on our
 prints.
 

@@ -17,18 +17,40 @@ limb stress** with nominal PLA (E 3.5 GPa).
 
 ## Files
 
-- `sim.py`: quasi-static bow model. Each limb is 24 rigid segments joined by
+All scripts are Sol (FP-RISC 0.13.1); run them from the repository root or
+this folder, e.g. `"$SOL" models/pla-bow-launcher/sim.sol 210 3 44 8 225`.
+
+- `sim.sol`: quasi-static bow model. Each limb is 24 rigid segments joined by
   rotational springs and clamped at the riser, so large deflection is handled
   (the limb bends about 0.9 rad). The string is taut. Launch speed counts the
-  limb mass along its real motion, using the quasi-static mode.
-- `search.py`: grid search over limb length, thickness, root width,
-  pre-curvature and brace. Results are in `search-25.json` and `search-30.json`.
-- `build.py`: writes every `.coscad` part and `launcher.assemble` from the
+  limb mass along its real motion, using the quasi-static mode. About 4 s per
+  design.
+- `search.sol [SIGMA]`: grid search over limb length, thickness, root width,
+  pre-curvature and brace, in 8 worker processes (about 4 minutes). It writes
+  `search-SIGMA.json`.
+- `build.sol`: writes every `.coscad` part and the launcher assemblies from the
   chosen numbers.
-- `glider.py`: writes the four glider parts, renders them, computes mass and
-  CG from the meshes, and places the wing for a 10% static margin. It writes
-  `glider.json` and `glider.assemble`. Run it before `build.py`, because the
-  launcher assemblies read `glider.json`.
+- `glider.sol [BALLAST_G]`: writes the four glider parts, renders them with
+  CoScad, computes mass and CG from the meshes, and places the wing for a 10%
+  static margin. It writes `glider.json` and `glider.assemble`. The committed
+  design uses `glider.sol 1.0`. Run it before `build.sol`, because the launcher
+  assemblies read `glider.json`.
+
+The committed `search-25.json` and `search-30.json` come from the original
+Python version.
+- **How it was replaced:** that version used scipy's SLSQP optimiser.
+  `sim.sol` instead solves the stationarity conditions with Newton's method
+  and an exact, structured Jacobian.
+- **Straight-limb designs:** at 30 MPa the Sol port reproduces 203 of the 243
+  rows exactly. All straight-limb designs match, five of them only to the last
+  digit.
+- **Reflex designs:** the larger differences are all here. A reflexed limb has
+  more than one braced equilibrium (curled forward or bent back). SLSQP landed
+  in whichever basin its starting point reached, and is not always the lower
+  energy one. `sim.sol` follows a continuation path from the same start.
+- **Solver failures:** three rows that SLSQP failed on ("rank-deficient")
+  are solved.
+- **Unaffected:** the build, glider and design conclusions above.
 - `launcher.assemble`: the carriage at full draw with the latch pin in and the
   glider loaded.
 - `launcher-brace.assemble`: the carriage at rest at the bumper, the moment of
