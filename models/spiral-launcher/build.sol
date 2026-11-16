@@ -130,7 +130,7 @@ screwHoles xs = List.map (fn x -> zc 1.7 (floorZ0 - 1) (lipZ1 + 1) x screwY) xs.
 guideX0 = stopperX - 6.0. guideX1 = stopperX + 6.0.
 rearRail = dif (un (railSection railX0 railJoint
     + [box railX0 rearStop floorY0 (wallY0 + 0.1) (floorZ1 - 0.1) (lipZ0 + 0.1),                # rear stop wall
-       box guideX0 guideX1 notchY0 floorY1 (lipZ0 + 0.1) 50.0]))                        # stopper guide
+       box guideX0 guideX1 lipY0 floorY1 (lipZ0 + 0.1) 50.0]))                          # stopper guide (starts at the lip edge: nothing to overhang)
   (screwHoles [0.0 - 45.0, 0.0 - 3.0, 0.0 - 200.0]
    + [box (stopperX - 1.7) (stopperX + 1.7) (notchY0 + 0.3) (barY1 - 0.2) (floorZ0 + 0.5) 51.0]).  # stopper slot + floor pocket
 frontRail = dif (un (railSection railJoint railX1 + [box frontStop railX1 floorY0 (wallY0 + 0.1) (floorZ1 - 0.1) (lipZ0 + 0.1)]))

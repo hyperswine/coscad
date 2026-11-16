@@ -1,0 +1,692 @@
+{
+  "job": "x1c-spring",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "6dd2abe52c2893003bc0fab3c39d5ed0589638a2758d17271a71adb1133e945a",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 180,
+    "deposition_moves_checked": 222297,
+    "package_sha256": "6dd2abe52c2893003bc0fab3c39d5ed0589638a2758d17271a71adb1133e945a"
+  },
+  "remote_name": "launcher-x1c-spring-20261116-111627.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner: 'commit and push, then print the beds (all beds clear)' - spiral spring launcher, 2026-11-16.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 15,
+    "total_layer_num": 15,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "launcher-x1c-limbs-20261115-213959.gcode",
+    "nozzle_temper": 22.0,
+    "bed_temper": 19.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-16T11:16:36+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 15,
+        "total_layer_num": 15,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 22.0,
+        "bed_temper": 19.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:16:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 97,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 51.0,
+        "bed_temper": 19.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:17:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 97,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 73.0,
+        "bed_temper": 19.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:17:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 97,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 41.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:17:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 97,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 78.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:17:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 97,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 167.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:18:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 97,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 235.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:18:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 97,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 249.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:18:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 223.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:18:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 201.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:19:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:19:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:19:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 193.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:19:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 163.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:20:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 141.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:20:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:20:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:20:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:21:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:21:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:21:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:21:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:22:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:22:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:22:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:22:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:23:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:23:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 199.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:23:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 209.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:23:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 183.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:24:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 208.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:24:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 180,
+        "mc_remaining_time": 92,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 212.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-16T11:24:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 1,
+        "total_layer_num": 180,
+        "mc_remaining_time": 90,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "launcher-x1c-spring-20261116-111627.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-16T11:16:27+1100",
+  "remote_content_sha256": "6dd2abe52c2893003bc0fab3c39d5ed0589638a2758d17271a71adb1133e945a",
+  "sequence_id": "788196731",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "788196731"
+  },
+  "first_layer_reached": true
+}

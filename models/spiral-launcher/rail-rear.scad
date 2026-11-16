@@ -23,8 +23,8 @@ difference() {
               cuboid([4, 8.9, 5.1]);
             }
           }
-          translate([-188, 41, 43.85]) {
-            cuboid([12, 10, 12.3]);
+          translate([-188, 41.75, 43.85]) {
+            cuboid([12, 8.5, 12.3]);
           }
         }
         translate([-45, 43.4, 34.9]) {
