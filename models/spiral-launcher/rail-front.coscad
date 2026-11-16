@@ -1,0 +1,2 @@
+// Front rail with the end wall (put foam tape on it). M3 screws into the legs and the front foot.
+main = (((box 200 14 2.2 |> move 100 39 31.6) ⊕ (box 200 5.2 7.2 |> move 100 43.4 34.1) ⊕ (box 200 8.5 1.7 |> move 100 41.75 38.45) ⊕ (box 7 8.9 5.1 |> move 196.5 36.45 35.15)) ⊖ (zcyl 1.7 10.8 |> move 3 43.4 34.9) ⊖ (zcyl 1.7 10.8 |> move 45 43.4 34.9) ⊖ (zcyl 1.7 10.8 |> move 190 43.4 34.9))

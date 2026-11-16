@@ -1,0 +1,27 @@
+// Carriage at the front end wall (rack clear of the pinion), glider 100 mm on.
+plate 256 256 6
+base ← base.coscad ×1 ▽bot material=pla
+spring ← spring.coscad ×1 ▽bot material=pla
+pinion ← pinion.coscad ×1 ▽bot material=pla
+carriage ← carriage.coscad ×1 ▽bot material=pla
+railRear ← rail-rear.coscad ×1 ▽bot material=pla
+railFront ← rail-front.coscad ×1 ▽bot material=pla
+footRear ← foot.coscad ×1 ▽bot material=pla
+footFront ← foot.coscad ×1 ▽bot material=pla
+fuselage ← ../pla-bow-launcher/glider-fuselage.coscad ×1 ▽fwd material=pla
+wing ← ../pla-bow-launcher/glider-wing.coscad ×1 ▽bot material=pla
+stab ← ../pla-bow-launcher/glider-stab.coscad ×1 ▽bot material=pla
+saddle ← ../pla-bow-launcher/glider-saddle.coscad ×1 ▽bot material=pla
+
+fixed base 0 0 0 0 0 0
+fixed spring 0 0 0 0 0 0
+fixed railRear 0 0 0 0 0 0
+fixed railFront 0 0 0 0 0 0
+fixed footRear -200 0 0 0 0 0
+fixed footFront 190 0 0 0 0 0
+fixed pinion 0 0 0 0 0 -6.2504
+fixed carriage 3 0 0 0 0 0
+fixed fuselage 97.3 34 45 0 0 0
+fixed saddle 97.3 34 45 0 0 0
+fixed wing 70.6 34 57.3 0 -2 0
+fixed stab -7.7 34 52.1 0 0 0

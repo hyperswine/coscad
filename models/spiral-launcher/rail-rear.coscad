@@ -1,0 +1,2 @@
+// Rear rail with the stopper guide and the overdraw stop. M3 screws into the legs and the rear foot.
+main = (((box 215 14 2.2 |> move -107.5 39 31.6) ⊕ (box 215 5.2 7.2 |> move -107.5 43.4 34.1) ⊕ (box 215 8.5 1.7 |> move -107.5 41.75 38.45) ⊕ (box 4 8.9 5.1 |> move -213 36.45 35.15) ⊕ (box 12 10 12.3 |> move -188 41 43.85)) ⊖ (zcyl 1.7 10.8 |> move -45 43.4 34.9) ⊖ (zcyl 1.7 10.8 |> move -3 43.4 34.9) ⊖ (zcyl 1.7 10.8 |> move -200 43.4 34.9) ⊖ (box 3.4 4 20 |> move -188 38.3 41))
