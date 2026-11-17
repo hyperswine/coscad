@@ -26,6 +26,10 @@ dif a parts = "(" + a + Str.join "" (List.map (fn q -> " ⊖ " + q) parts) + ")"
 inter a b = "(" + a + " ∩ " + b + ")".
 polyAt pts z0 z1 = "((⮕ {f (z1 - z0)} (poly " + Str.join " " (List.map (fn p -> (a, b) = p; "{N.fixed 4 a} {N.fixed 4 b}") pts) + ")) |> move 0 0 {f z0})".
 rotZ deg s = "(ω {f deg} {s})".
+# A hole cylinder carrying a planner frame on the face it opens on (z1 - over), normal +z.
+zcF name over r z0 z1 x y = "(zcyl {f r} {f (z1 - z0)} |> move {f x} {f y} {f (half z0 z1)} |> frame {name} top top bak 0 0 {f (0 - over)})".
+# A hex pocket whose top is a bearing face for a head or nut below it (normal -z, away from the screw's driven end).
+hexF name r h x y z = "(⎏ 6 {f r} {f h} |> move {f x} {f y} {f z} |> frame {name} top bot bak)".
 
 # ---- spring (study.sol) ---------------------------------------------------------
 tS = 2.0. bS = 28.0. rIn = 8.0. rOut = 34.0. coils = 7.
@@ -86,7 +90,7 @@ spring = dif (un [polyAt spiralPts zS0 zS1, zc hubR zS0 zS1 0 0,
                   box (rOut - 1.0) 47.0 (0.0 - 7.0) 0.6 zS0 zS1,
                   # D boss that keys the pinion
                   inter (zc 6.0 zS1 zG1 0 0) (box (0.0 - 7.0) 4.6 (0.0 - 7.0) 7.0 zS1 zG1)])
-  ([zc axleR (zS0 - 1) (zG1 + 1) 0 0] + List.map (fn h -> (x, y) = h; zc 2.2 (zS0 - 1) (zS1 + 1) x y) clampHoles).
+  ([zc axleR (zS0 - 1) (zG1 + 1) 0 0] + List.map (fn i -> (x, y) = clampHoles ! i; zcF "clamp{i + 1}" 1 2.2 (zS0 - 1) (zS1 + 1) x y) [0, 1]).
 
 # ---- pinion: spoked ring, module 1.25, 44 teeth ---------------------------------------
 rb = bigR * N.cos alpha.
@@ -102,7 +106,7 @@ gearPts = List.concat (List.map (fn i ->
 rimR = bigR - 1.25 * gmod - 2.5.
 spokes = List.map (fn k -> rotZ (45 + 90 * k) (box 5.0 (rimR + 0.5) (0.0 - 1.5) 1.5 zG0 zG1)) (List.range 0 3).
 pinion = dif (un ([dif (polyAt gearPts zG0 zG1) [zc rimR (zG0 - 1) (zG1 + 1) 0 0], zc 8.5 zG0 zG1 0 0] + spokes))
-  [inter (zc 6.25 (zG0 - 1) (zG1 + 1) 0 0) (box (0.0 - 7.5) 4.85 (0.0 - 7.5) 7.5 (zG0 - 1) (zG1 + 1)), zc axleR (zG0 - 1) (zG1 + 1) 0 0].
+  [inter (zc 6.25 (zG0 - 1) (zG1 + 1) 0 0) (box (0.0 - 7.5) 4.85 (0.0 - 7.5) 7.5 (zG0 - 1) (zG1 + 1)), zcF "axle_nut" 1 axleR (zG0 - 1) (zG1 + 1) 0 0].
 
 # ---- carriage (rack bar), local frame ----------------------------------------------------
 rackPts =
@@ -126,7 +130,7 @@ carriage = dif (un [polyAt rackPts zG0 zG1,
 railSection x0 x1 = [box x0 x1 floorY0 floorY1 floorZ0 floorZ1,          # floor
                      box x0 x1 wallY0 floorY1 floorZ0 (lipZ0 + 0.1),     # outer wall (overlaps the lip: no near-coincident faces)
                      box x0 x1 lipY0 floorY1 lipZ0 lipZ1].               # hold-down lip
-screwHoles xs = List.map (fn x -> zc 1.7 (floorZ0 - 1) (lipZ1 + 1) x screwY) xs.
+screwHoles xs = List.map (fn i -> zcF "screw{i + 1}" 1 1.7 (floorZ0 - 1) (lipZ1 + 1) (xs ! i) screwY) (List.range 0 (List.len xs - 1)).
 guideX0 = stopperX - 6.0. guideX1 = stopperX + 6.0.
 rearRail = dif (un (railSection railX0 railJoint
     + [box railX0 rearStop floorY0 (wallY0 + 0.1) (floorZ1 - 0.1) (lipZ0 + 0.1),                # rear stop wall
@@ -142,17 +146,24 @@ stopper = un [box (stopperX - 1.5) (stopperX + 1.5) (notchY0 + 0.5) (barY1 - 0.4
 
 # ---- base plate with legs, axle and clamp bolts ------------------------------------------
 legParts = List.map (fn l -> (x, y, lx) = l; box (x - Num.div lx 2) (x + Num.div lx 2) (y - 4) (y + 4) 0 floorZ0) legs.
-legHoles = List.concat (List.map (fn l -> (x, y, lx) = l;
-    if lx > 10 then [zc 1.3 (floorZ0 - 10) (floorZ0 + 1) (x - 3) screwY, zc 1.3 (floorZ0 - 10) (floorZ0 + 1) (x + 3) screwY]
-    else [zc 1.3 (floorZ0 - 10) (floorZ0 + 1) x screwY]) legs).
+# leg screw holes, named leg1..leg4 from the rear: x -45, -3, 3, 45
+legHoleXs = List.concat (List.map (fn l -> (x, y, lx) = l; if lx > 10 then [x - 3, x + 3] else [x]) legs).
+legHoles = List.map (fn i -> zcF "leg{i + 1}" 1 1.3 (floorZ0 - 10) (floorZ0 + 1) (legHoleXs ! i) screwY) (List.range 0 (List.len legHoleXs - 1)).
 base = dif (un ([box (0.0 - 55.0) 55.0 (0.0 - 42.0) 46.0 (0.0 - 4.0) 0,
-                 dif (zc 7.5 0 zS0 0 0) [zc 3.2 (0.0 - 1) (zS0 + 1) 0 0]]                   # hub washer
+                 dif (zc 7.5 0 zS0 0 0) [zc 3.2 (0.0 - 1) (zS0 + 1) 0 0],                    # hub washer
+                 box (rOut - 1.0) 47.0 (0.0 - 7.0) 0.6 (0.0 - 0.1) zS0]                         # clamp pad: the clamp block starts at zS0
                 + legParts))
-  ([zc axleR (0.0 - 5) (zS0 + 1) 0 0,
-    "(⎏ 6 4.7 3.5 |> move 0 0 -4.1)"]                                                     # M5 head pocket (hex)
-   + List.concat (List.map (fn h -> (x, y) = h; [zc 2.2 (0.0 - 5) 1 x y, "(⎏ 6 3.9 3 |> move {f x} {f y} -4.1)"]) clampHoles)
+  ([zcF "axle" 1 axleR (0.0 - 5) (zS0 + 1) 0 0,
+    hexF "axle_head" 4.7 3.7 0 0 (0.0 - 2.35)]                                          # M5 hex head (3.5 tall): pocket -4.2..-0.5, flush
+   + List.concat (List.map (fn i -> (x, y) = clampHoles ! i;
+       [zcF "clamp{i + 1}" 1 2.2 (0.0 - 5) (zS0 + 1) x y, hexF "clamp{i + 1}_head" 3.9 3.0 x y (0.0 - 2.7)]) [0, 1])        # M4 hex head (2.8 tall): pocket -4.2..-1.2
    + legHoles).
-foot = dif (box (0.0 - 5) 5 (screwY - 4) (screwY + 4) (0.0 - 4.0) floorZ0) [zc 1.3 (floorZ0 - 10) (floorZ0 + 1) 0 screwY].
+foot = dif (box (0.0 - 5) 5 (screwY - 4) (screwY + 4) (0.0 - 4.0) floorZ0) [zcF "screw" 1 1.3 (floorZ0 - 10) (floorZ0 + 1) 0 screwY].
+
+# ---- pinion spacer ----------------------------------------------------------------------
+# The D boss has no shoulder: this ring holds the pinion at the rack's height (zG0) on the hub top.
+spacerR0 = 6.3. spacerR1 = 8.5.
+pinionSpacer = dif (zc spacerR1 zS1 zG0 0 0) [zc spacerR0 (zS1 - 1) (zG0 + 1) 0 0].
 
 # ---- assemblies ----------------------------------------------------------------------------
 partsHeader = "plate 256 256 6\n"
@@ -163,23 +174,48 @@ partsHeader = "plate 256 256 6\n"
   + "railRear ← rail-rear.coscad ×1 ▽bot material=pla\n"
   + "railFront ← rail-front.coscad ×1 ▽bot material=pla\n"
   + "footRear ← foot.coscad ×1 ▽bot material=pla\n"
-  + "footFront ← foot.coscad ×1 ▽bot material=pla\n".
+  + "footFront ← foot.coscad ×1 ▽bot material=pla\n"
+  + "spacer ← pinion-spacer.coscad ×1 ▽bot material=pla\n".
 gliderParts = "fuselage ← ../pla-bow-launcher/glider-fuselage.coscad ×1 ▽fwd material=pla\n"
   + "wing ← ../pla-bow-launcher/glider-wing.coscad ×1 ▽bot material=pla\n"
   + "stab ← ../pla-bow-launcher/glider-stab.coscad ×1 ▽bot material=pla\n"
   + "saddle ← ../pla-bow-launcher/glider-saddle.coscad ×1 ▽bot material=pla\n".
 # carriage at world offset cx; the pinion turns -cx/R (rad) with it
-fixedAt cx glide wingLe withStopper =
+launcherAt cx withStopper =
   pinDeg = 0 - Num.div (cx * 180) (N.pi * bigR);
-  gx = cx + mastX1 + 8.0 + 0.3 + glide;   # glider slot end 0.3 mm ahead of the screw tip, plus any flight
-  xw = wingLe - 18.0;
   "fixed base 0 0 0 0 0 0\nfixed spring 0 0 0 0 0 0\nfixed railRear 0 0 0 0 0 0\nfixed railFront 0 0 0 0 0 0\n"
   + "fixed footRear {f (feetX ! 0)} 0 0 0 0 0\nfixed footFront {f (feetX ! 1)} 0 0 0 0 0\n"
+  + "fixed spacer 0 0 0 0 0 {f pinDeg}\n"
   + "fixed pinion 0 0 0 0 0 {f pinDeg}\nfixed carriage {f cx} 0 0 0 0 0\n"
-  + (if withStopper then "fixed stopper 0 0 0 0 0 0\n" else "")
+  + (if withStopper then "fixed stopper 0 0 0 0 0 0\n" else "").
+fixedAt cx glide wingLe withStopper =
+  gx = cx + mastX1 + 8.0 + 0.3 + glide;   # glider slot end 0.3 mm ahead of the screw tip, plus any flight
+  xw = wingLe - 18.0;
+  launcherAt cx withStopper
   + "fixed fuselage {f gx} {f mastY} {f pinZ} 0 0 0\nfixed saddle {f gx} {f mastY} {f pinZ} 0 0 0\n"
   + "fixed wing {f (gx + xw)} {f mastY} {f (pinZ + 12.3)} 0 -2 0\n"
   + "fixed stab {f (gx - 105)} {f mastY} {f (pinZ + 7.1)} 0 0 0\n".
+
+# Build plan (coscad plan): the launcher at the end of the stroke, where the carriage goes in.
+# The M5 is modelled from its driven end: the nut on the pinion turns while the bolt's hex
+# head sits captive in the base pocket. It is an axle, not a clamp: the hub must turn, so
+# the nyloc nut is only run down to take out play (the torque below).
+buildPlan =
+  rail = fn part host hostFrame seat -> "fastener M3x16 {part} {host} @{hostFrame} seat=@{seat} nut=none\n";
+  "// Build plan for the spiral launcher (coscad plan): end-of-stroke pose, no glider. Written by build.sol.\n"
+  + Str.replace "base.coscad ×1 ▽bot material=pla" "base.coscad ×1 ▽bot material=pla preload=hand" partsHeader + "\n" + launcherAt 0.0 False + "\n"
+  + "fastener M4x40 spring base @clamp1 seat=@clamp1 nut=hex pocket=@clamp1_head\n"
+  + "fastener M4x40 spring base @clamp2 seat=@clamp2 nut=hex pocket=@clamp2_head\n"
+  + "joint drop spacer spring axis=top\n"
+  + "joint drop pinion spring axis=top\n"
+  + "fastener M5x50 pinion base @axle seat=@axle_nut nut=hex pocket=@axle_head torque=0.1\n"
+  + rail "railRear" "base" "leg1" "screw1" + rail "railRear" "base" "leg2" "screw2" + rail "railRear" "footRear" "screw" "screw3"
+  + rail "railFront" "base" "leg3" "screw1" + rail "railFront" "base" "leg4" "screw2" + rail "railFront" "footFront" "screw" "screw3"
+  + "joint drop carriage railRear axis=rt\n"
+  # driver_margin=0: drivers are judged against boxes, and the carriage's box runs up its
+  # 49 mm mast along its whole length; its body tops out at z 37, under the rail lip (39.3)
+  # the M3 heads seat on, so the front rail's screws are reachable over it.
+  + "plan rest=bot driver_margin=0\n".
 
 writePart dir name body note = writePath "{dir}/{name}.coscad" (note + "main = {body}\n").
 
@@ -195,6 +231,8 @@ build dir =
   _ = writePart dir "rail-front" frontRail "// Front rail with the end wall (put foam tape on it). M3 screws into the legs and the front foot.\n";
   _ = writePart dir "stopper" stopper "// Stopper plate, shown dropped in (full draw held). Print on its side.\n";
   _ = writePart dir "base" base "// Base plate: M5 axle bolt and two M4 clamp bolts from below, legs for the rail.\n";
+  _ = writePart dir "pinion-spacer" pinionSpacer "// Ring on the spring hub top that holds the pinion at the rack's height.\n";
+  _ = writePath "{dir}/spiral-launcher-build.assemble" buildPlan;
   _ = writePart dir "foot" foot "// Rail end foot (two): stands on the table, M3 screw from the rail.\n";
   _ = writePath "{dir}/launcher.assemble"
         ("// Spiral launcher at full draw (carriage at x = -{f stroke}), stopper in, glider loaded.\n" + partsHeader

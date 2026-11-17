@@ -8,6 +8,7 @@ railRear ← rail-rear.coscad ×1 ▽bot material=pla
 railFront ← rail-front.coscad ×1 ▽bot material=pla
 footRear ← foot.coscad ×1 ▽bot material=pla
 footFront ← foot.coscad ×1 ▽bot material=pla
+spacer ← pinion-spacer.coscad ×1 ▽bot material=pla
 stopper ← stopper.coscad ×1 ▽fwd material=pla
 fuselage ← ../pla-bow-launcher/glider-fuselage.coscad ×1 ▽fwd material=pla
 wing ← ../pla-bow-launcher/glider-wing.coscad ×1 ▽bot material=pla
@@ -20,6 +21,7 @@ fixed railRear 0 0 0 0 0 0
 fixed railFront 0 0 0 0 0 0
 fixed footRear -200 0 0 0 0 0
 fixed footFront 190 0 0 0 0 0
+fixed spacer 0 0 0 0 0 375.0269
 fixed pinion 0 0 0 0 0 375.0269
 fixed carriage -180 0 0 0 0 0
 fixed stopper 0 0 0 0 0 0

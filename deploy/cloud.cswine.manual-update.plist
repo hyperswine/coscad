@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>cloud.cswine.manual-update</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/jq/.fpr/0.13.1/bin/sol</string>
+    <string>scripts/manual-update.sol</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>/Users/jq/srv/coscad</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/Users/jq/srv/bin:/Users/jq/.fpr/0.13.1/bin:/opt/homebrew/bin:/Users/jq/.ghcup/bin:/Users/jq/.cabal/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>SOL</key>
+    <string>/Users/jq/.fpr/0.13.1/bin/sol</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StartInterval</key>
+  <integer>300</integer>
+  <key>StandardOutPath</key>
+  <string>/Users/jq/srv/logs/manual-update.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/jq/srv/logs/manual-update.log</string>
+</dict>
+</plist>

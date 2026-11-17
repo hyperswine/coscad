@@ -1,4 +1,10 @@
-# The manual-update.sh entry point holds the checkout lock throughout this worker.
+# Poll origin/main; when it moved (or with --force), rebuild the compiler and the
+# manual site. Run from the checkout by the launchd job on the machine that serves
+# manual.cswine.cloud (deploy/cloud.cswine.manual-update.plist):
+#   sol scripts/manual-update.sol [--force]
+# WWW and BIN override ~/srv/manual-www and ~/srv/bin. One update runs at a time: the
+# job holds .update-lock in the checkout and does the work in a child process, so the
+# lock is released even when the update fails.
 P = use "sol/lib/proc".
 output argv = Str.trim (unwrap (P.output (Proc.query (P.spec argv)))).
 command argv = case Proc.streamNow (P.spec argv) of
@@ -11,6 +17,9 @@ tailLog lines argv =
   | Ok (PipelineResult code _ _ _) -> error "{argv} exited {code}"
   | Err why -> error (str why).
 stamp u = output ["date","-u","+%FT%TZ"].
+envOr name fallback = case unwrap (Env.get name) of EnvText v -> (if v == "" then fallback else v) | EnvMissing -> fallback.
+sol u = envOr "SOL" "sol".
+
 update www bin flag =
   _ = command ["git","fetch","-q","origin","main"];
   previous = output ["git","rev-parse","HEAD"];
@@ -23,6 +32,21 @@ update www bin flag =
     _ = tailLog "1" ["cabal","update"];
     _ = tailLog "3" ["cabal","install","exe:coscad","--install-method=copy","--overwrite-policy=always","--installdir={bin}"];
     _ = command ["coscad","doctor"];
-    _ = command ["scripts/build-manual.sh",www];
+    _ = command [sol Unit,"scripts/build-manual.sol",www];
     print "{stamp Unit} done".
-> case args Unit of [www,bin,flag] -> update www bin flag | _ -> error "use scripts/manual-update.sh [--force]".
+
+poll flag =
+  home = envOr "HOME" ".";
+  www = envOr "WWW" "{home}/srv/manual-www";
+  bin = envOr "BIN" "{home}/srv/bin";
+  if P.succeeded (Proc.query (P.spec ["mkdir",".update-lock"])) then
+    result = Proc.streamNow (P.spec [sol Unit,"scripts/manual-update.sol","--worker",www,bin,flag]);
+    _ = command ["rmdir",".update-lock"];
+    case result of Ok 0 -> Unit | Ok code -> error "update exited {code}" | Err why -> error why
+  else print "{stamp Unit} another update is running".
+
+> case args Unit of
+    ["--worker",www,bin,flag] -> update www bin flag
+  | [] -> poll ""
+  | ["--force"] -> poll "--force"
+  | _ -> error "usage: sol scripts/manual-update.sol [--force]".

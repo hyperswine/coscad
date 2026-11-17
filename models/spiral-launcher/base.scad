@@ -14,16 +14,21 @@ difference() {
                       union() {
                         union() {
                           union() {
-                            translate([0, 2, -2]) {
-                              cuboid([110, 88, 4]);
+                            union() {
+                              translate([0, 2, -2]) {
+                                cuboid([110, 88, 4]);
+                              }
+                              difference() {
+                                translate([0, 0, 0.5]) {
+                                  zcyl(r = 7.5, l = 1);
+                                }
+                                translate([0, 0, 0.5]) {
+                                  zcyl(r = 3.2, l = 3);
+                                }
+                              }
                             }
-                            difference() {
-                              translate([0, 0, 0.5]) {
-                                zcyl(r = 7.5, l = 1);
-                              }
-                              translate([0, 0, 0.5]) {
-                                zcyl(r = 3.2, l = 3);
-                              }
+                            translate([40, -3.2, 0.45]) {
+                              cuboid([14, 7.6, 1.1]);
                             }
                           }
                           translate([-45, 41, 15.25]) {
@@ -42,23 +47,23 @@ difference() {
                       zcyl(r = 2.7, l = 7);
                     }
                   }
-                  translate([0, 0, -4.1]) {
-                    cylinder(h = 3.5, r = 4.7, $fn = 6);
+                  translate([0, 0, -2.35]) {
+                    cylinder(h = 3.7, r = 4.7, $fn = 6);
                   }
                 }
-                translate([38, -2.5, -2]) {
-                  zcyl(r = 2.2, l = 6);
+                translate([38, -2.5, -1.5]) {
+                  zcyl(r = 2.2, l = 7);
                 }
               }
-              translate([38, -2.5, -4.1]) {
+              translate([38, -2.5, -2.7]) {
                 cylinder(h = 3, r = 3.9, $fn = 6);
               }
             }
-            translate([43, -2.5, -2]) {
-              zcyl(r = 2.2, l = 6);
+            translate([43, -2.5, -1.5]) {
+              zcyl(r = 2.2, l = 7);
             }
           }
-          translate([43, -2.5, -4.1]) {
+          translate([43, -2.5, -2.7]) {
             cylinder(h = 3, r = 3.9, $fn = 6);
           }
         }

@@ -1,0 +1,35 @@
+// Build plan for the spiral launcher (coscad plan): end-of-stroke pose, no glider. Written by build.sol.
+plate 256 256 6
+base ← base.coscad ×1 ▽bot material=pla preload=hand
+spring ← spring.coscad ×1 ▽bot material=pla
+pinion ← pinion.coscad ×1 ▽bot material=pla
+carriage ← carriage.coscad ×1 ▽bot material=pla
+railRear ← rail-rear.coscad ×1 ▽bot material=pla
+railFront ← rail-front.coscad ×1 ▽bot material=pla
+footRear ← foot.coscad ×1 ▽bot material=pla
+footFront ← foot.coscad ×1 ▽bot material=pla
+spacer ← pinion-spacer.coscad ×1 ▽bot material=pla
+
+fixed base 0 0 0 0 0 0
+fixed spring 0 0 0 0 0 0
+fixed railRear 0 0 0 0 0 0
+fixed railFront 0 0 0 0 0 0
+fixed footRear -200 0 0 0 0 0
+fixed footFront 190 0 0 0 0 0
+fixed spacer 0 0 0 0 0 0
+fixed pinion 0 0 0 0 0 0
+fixed carriage 0 0 0 0 0 0
+
+fastener M4x40 spring base @clamp1 seat=@clamp1 nut=hex pocket=@clamp1_head
+fastener M4x40 spring base @clamp2 seat=@clamp2 nut=hex pocket=@clamp2_head
+joint drop spacer spring axis=top
+joint drop pinion spring axis=top
+fastener M5x50 pinion base @axle seat=@axle_nut nut=hex pocket=@axle_head torque=0.1
+fastener M3x16 railRear base @leg1 seat=@screw1 nut=none
+fastener M3x16 railRear base @leg2 seat=@screw2 nut=none
+fastener M3x16 railRear footRear @screw seat=@screw3 nut=none
+fastener M3x16 railFront base @leg3 seat=@screw1 nut=none
+fastener M3x16 railFront base @leg4 seat=@screw2 nut=none
+fastener M3x16 railFront footFront @screw seat=@screw3 nut=none
+joint drop carriage railRear axis=rt
+plan rest=bot driver_margin=0

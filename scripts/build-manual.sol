@@ -1,4 +1,4 @@
-# Assemble the documentation pages, man page and eight rendered assembly guides.
+# Assemble the documentation pages, man page and nine rendered assembly guides.
 
 P = use "sol/lib/proc".
 B = use "sol/lib/base".
@@ -10,7 +10,7 @@ pages = [("README","Overview"),("docs/ORBIT-TOWER","Orbit Tower notes"),("docs/L
          ("docs/LESSONS","Lessons"),("docs/SYNTAX","Syntax modes"),("docs/EXAMPLES","Examples"),
          ("docs/TESSERACT","Tesseract"),("CHANGELOG","Changelog")].
 
-plans = ["plan/corner_pair","corner/corner","plan/cube","bow3/bow3","ball/ball","tesseract/tesseract","orbit-tower/orbit-tower","tank/tank"].
+plans = ["plan/corner_pair","corner/corner","plan/cube","bow3/bow3","ball/ball","tesseract/tesseract","orbit-tower/orbit-tower","tank/tank","spiral/spiral-launcher-build"].
 
 output argv = unwrap (P.output (Proc.query (P.spec argv))).
 
@@ -67,11 +67,23 @@ assemblies site scratch sol =
   _ = copyShapes "examples/assemble" "{scratch}/corner" "corner";
   _ = copyShapes "models/orbit-tower" "{scratch}/orbit-tower" "orbit-tower";
   _ = copyShapes "models/tank-model-2020" "{scratch}/tank" "tank";
+  _ = copyShapes "models/spiral-launcher" "{scratch}/spiral" "spiral-launcher-build";
   _ = command ["find",scratch,"-name","*.png","-delete"];
   _ = command (["coscad","site","{site}/builds"] + List.map (fn part -> "{scratch}/{part}.assemble") plans);
   _ = List.map (fn part -> name = B.baseName part;
     command ["test","-s","{site}/builds/{name}/{name}_plan.json"]) plans;
   command ["test","-s","{site}/builds/index.html"].
+
+# Swap the finished site in: stage a copy beside the output (same file system), then two renames.
+publish site outputDir =
+  staged = "{outputDir}.tmp";
+  old = "{outputDir}.old";
+  _ = command ["rm","-rf",staged,old];
+  _ = command ["cp","-R",site,staged];
+  _ = command ["chmod","-R","a+rX",staged];
+  _ = if P.succeeded (Proc.query (P.spec ["test","-e",outputDir])) then command ["mv",outputDir,old] else Unit;
+  _ = command ["mv",staged,outputDir];
+  command ["rm","-rf",old].
 
 build outputDir =
   sol = case unwrap (Env.get "SOL") of EnvText path -> (if path == "" then "sol" else path) | EnvMissing -> "sol";
@@ -86,7 +98,8 @@ build outputDir =
   _ = put "{site}/version.json" ("\{\"commit\": \"{revision}\", \"built\": \"{stamp}\"\}\n");
   # PipePublish creates private files. Apply the caller's umask for public pages.
   _ = command ["chmod","=rw","{site}/version.json","{site}/man.html"];
-  _ = command ["python3","scripts/publish-manual.py",site,outputDir];
+  _ = publish site outputDir;
+  _ = command ["rm","-rf",site,scratch];
   print "manual built at {outputDir} ({revision})".
 
 > case args Unit of [out] -> build out | _ -> error "usage: build-manual.sol OUTDIR".

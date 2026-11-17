@@ -1,2 +1,2 @@
 // Rail end foot (two): stands on the table, M3 screw from the rail.
-main = ((box 10 8 34.5 |> move 0 43.4 13.25) ⊖ (zcyl 1.3 11 |> move 0 43.4 26))
+main = ((box 10 8 34.5 |> move 0 43.4 13.25) ⊖ (zcyl 1.3 11 |> move 0 43.4 26 |> frame screw top top bak 0 0 -1))

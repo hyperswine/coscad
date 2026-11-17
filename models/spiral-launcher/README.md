@@ -40,6 +40,8 @@ So the design keeps the spiral compact and puts a large, light pinion on it:
   - `launcher-end.assemble`: end of the stroke, with the last rack tooth at
     the pinion.
   - `launcher-coast.assemble`: the carriage at the end wall, glider 100 mm on.
+  - `spiral-launcher-build.assemble`: the build plan input (`coscad plan`).
+    Published with renders at https://manual.cswine.cloud/builds/spiral-launcher-build/.
 - The glider parts come from `../pla-bow-launcher`.
 
 Run both scripts from the repository root or this folder, e.g.
@@ -54,7 +56,8 @@ Run both scripts from the repository root or this folder, e.g.
 | `carriage` | Rack bar 220 mm long with lightening windows. Glider mast, groove cap and M3×16 screw pin as on the bow carriage, raised to z 45 so the glider clears the pinion, nut and rail. Stopper notch. 10.2 g + screw. |
 | `rail-rear`, `rail-front` | Open channel above the spring, with an outer wall and a hold-down lip. The rear piece has the overdraw stop and the stopper guide; the front piece has the end wall (put foam tape on it). |
 | `stopper` | Plate that drops through the guide into the carriage notch and a floor pocket, so it is held on both sides. |
-| `base` | Plate with the M5 axle hole and hex pocket, two M4 clamp bolt holes, the hub washer and three rail legs |
+| `pinion-spacer` | Ring (r 6.3–8.5, 4 mm) on the spring hub top that holds the pinion at the rack's height. Added 2026-11-17 |
+| `base` | Plate with the M5 axle hole and flush hex head pocket, two M4 clamp bolt holes with flush head pockets, a 1 mm pad under the spring clamp, the hub washer and three rail legs |
 | `foot` ×2 | Feet at the far ends of the rail |
 
 How it runs:
@@ -72,10 +75,51 @@ How it runs:
 4. Lift the stopper.
 
 **Hardware:**
-- M5 axle bolt (from below) with a washer and nut on top
-- 2 × M4 bolts for the spring clamp
-- 7 × M3 screws: rail into legs and feet
-- M3×16 glider pin
+- M5×50 hex bolt (head captive in the base, from below), washer and nyloc nut
+  on the pinion. It is the spring's axle, not a clamp: run the nut down only
+  until the play is gone, so the hub still turns.
+- 2 × M4×40 hex bolts (heads captive in the base) and nuts for the spring clamp
+- 6 × M3×16 screws: rails into the legs and feet
+- M3×16 glider pin, threaded into the carriage mast from behind before the build
+
+## Build plan
+
+`coscad plan spiral-launcher-build.assemble` gives 9 steps with no flips,
+published with renders at https://manual.cswine.cloud/builds/spiral-launcher-build/.
+In short:
+1. Bolt heads into the base pockets in hand.
+2. Spring on, clamp nuts on.
+3. Spacer on the hub.
+4. Rear rail, then the rear foot.
+5. Slide the carriage in from the open front end of the rear rail.
+6. Pinion onto the D boss, meshing with the rack; then the M5 nut.
+7. Front rail and front foot.
+
+Foam tape on the end wall last. Two things the plan's wording gets backwards:
+- **M5 and M4:** the planner models each from its driven end. "Screw through
+  the pinion/spring into the hex nut in the base" is a hex bolt head in the
+  base pocket with the nut turned on top. The hardware counts are the same.
+- **Driver margin:** the plan uses `driver_margin=0`. Drivers are judged
+  against boxes, and the carriage's box runs up its 49 mm mast along its whole
+  length. Its body tops out at z 37, under the rail lip the M3 heads seat on.
+
+## Fixes found while planning (2026-11-17)
+
+The parts printed on 2026-11-16 have three faults; the model is fixed.
+- **Pinion support:** the D boss has no shoulder, so the pinion would slide
+  4 mm down onto the coils, out of the rack's plane. Fixed by the new
+  `pinion-spacer` (print it).
+- **Clamp gap:** the spring's clamp block starts at z 1 (level with the hub
+  washer) over plate at z 0. The bolts would pull the outer coil down. The
+  base now has a 1 mm pad there; on the printed base, use a 1 mm shim or two
+  M4 washers.
+- **Pocket depth:** the base's hex head pockets were half below the part
+  (1.4–1.65 mm deep), so the heads stood 1.4–1.85 mm proud and the base
+  would rock. They are now flush (M5 3.7 mm, M4 3.0 mm deep). On the printed
+  base, stand the base on 2 mm pads.
+
+The `print/a1-base` package is the printed (faulty) base; a reprint needs a
+new package.
 
 ## Checks done
 
