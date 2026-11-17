@@ -3,12 +3,21 @@ plate 256 256 6
 base ← base.coscad ×1 ▽bot material=pla
 spring ← spring.coscad ×1 ▽bot material=pla
 pinion ← pinion.coscad ×1 ▽bot material=pla
+cap ← cap.coscad ×1 ▽bot material=pla
 carriage ← carriage.coscad ×1 ▽bot material=pla
-railRear ← rail-rear.coscad ×1 ▽bot material=pla
-railFront ← rail-front.coscad ×1 ▽bot material=pla
-footRear ← foot.coscad ×1 ▽bot material=pla
-footFront ← foot.coscad ×1 ▽bot material=pla
-spacer ← pinion-spacer.coscad ×1 ▽bot material=pla
+mast ← mast.coscad ×1 ▽fwd material=pla
+beamRear ← beam221.coscad ×1 ▽bot profile=2020 material=pla
+beamFront ← beam221.coscad ×1 ▽bot profile=2020 material=pla
+footRear ← ../tank-model-2020/rail100.coscad ×1 ▽bot profile=2020 material=pla
+footFront ← ../tank-model-2020/rail100.coscad ×1 ▽bot profile=2020 material=pla
+brRearL ← corner-bracket.coscad ×1 ▽lft material=pla
+brRearR ← corner-bracket.coscad ×1 ▽lft material=pla
+brFrontL ← corner-bracket.coscad ×1 ▽lft material=pla
+brFrontR ← corner-bracket.coscad ×1 ▽lft material=pla
+splice ← splice.coscad ×1 ▽bak material=pla
+stopRear ← stop.coscad ×1 ▽top material=pla
+stopFront ← stop.coscad ×1 ▽top material=pla
+guide ← stopper-guide.coscad ×1 ▽lft material=pla
 stopper ← stopper.coscad ×1 ▽fwd material=pla
 fuselage ← ../pla-bow-launcher/glider-fuselage.coscad ×1 ▽fwd material=pla
 wing ← ../pla-bow-launcher/glider-wing.coscad ×1 ▽bot material=pla
@@ -17,15 +26,24 @@ saddle ← ../pla-bow-launcher/glider-saddle.coscad ×1 ▽bot material=pla
 
 fixed base 0 0 0 0 0 0
 fixed spring 0 0 0 0 0 0
-fixed railRear 0 0 0 0 0 0
-fixed railFront 0 0 0 0 0 0
-fixed footRear -200 0 0 0 0 0
-fixed footFront 190 0 0 0 0 0
-fixed spacer 0 0 0 0 0 375.0269
+fixed cap 0 0 0 0 0 0
 fixed pinion 0 0 0 0 0 375.0269
 fixed carriage -180 0 0 0 0 0
+fixed mast -180 0 0 0 0 0
+fixed beamRear -116.5 51 26.2 0 90 0
+fixed beamFront 104.5 51 26.2 0 90 0
+fixed footRear -116.5 51 6.2 90 0 0
+fixed footFront 104.5 51 6.2 90 0 0
+fixed brRearR -116.5 61 16.2 0 0 0
+fixed brRearL -116.5 41 16.2 0 0 180
+fixed brFrontR 104.5 61 16.2 0 0 0
+fixed brFrontL 104.5 41 16.2 0 0 180
+fixed splice 0 0 0 0 0 0
+fixed guide 0 0 0 0 0 0
+fixed stopRear -217 51 36.2 0 0 0
+fixed stopFront 204 51 36.2 0 0 0
 fixed stopper 0 0 0 0 0 0
-fixed fuselage -185.7 34 45 0 0 0
-fixed saddle -185.7 34 45 0 0 0
-fixed wing -212.4 34 57.3 0 -2 0
-fixed stab -290.7 34 52.1 0 0 0
+fixed fuselage -185.7 51 54 0 0 0
+fixed saddle -185.7 51 54 0 0 0
+fixed wing -212.4 51 66.3 0 -2 0
+fixed stab -290.7 51 61.1 0 0 0

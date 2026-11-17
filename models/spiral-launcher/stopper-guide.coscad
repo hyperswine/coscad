@@ -1,0 +1,2 @@
+// Stopper guide on the beam's -y face, two M5x10. Print on its -x face.
+main = (((box 35 17 15.4 |> move -179.5 32.5 24.9) ⊕ (box 4 4.05 27.6 |> move -195 22.025 31) ⊕ (box 13.7 20.3 6 |> move -190.15 30.15 41.8)) ⊖ (box 3.4 6 16.2 |> move -188 35 37.3) ⊖ (ycyl 2.75 19 |> move -180.5 32.5 26.2) ⊖ (ycyl 5.2 13 |> move -180.5 29.5 26.2) ⊖ (ycyl 2.75 19 |> move -167.5 32.5 26.2) ⊖ (ycyl 5.2 13 |> move -167.5 29.5 26.2))

@@ -1,0 +1,2 @@
+// End stop on the beam top, one M5x10, key necks clear of the T-nut. Print upside down. Foam tape on the impact face.
+main = (((box 20 18 10 |> move 0 0 5) ⊕ (box 4 5.6 1.65 |> move -8 0 -0.775) ⊕ (box 4 5.6 1.65 |> move 8 0 -0.775)) ⊖ (zcyl 2.75 12 |> move 0 0 5) ⊖ (zcyl 5.2 6 |> move 0 0 8))

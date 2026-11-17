@@ -6,81 +6,86 @@ difference() {
       difference() {
         difference() {
           difference() {
-            difference() {
-              difference() {
-                difference() {
-                  difference() {
+            union() {
+              union() {
+                union() {
+                  union() {
                     union() {
                       union() {
                         union() {
                           union() {
                             union() {
-                              translate([0, 2, -2]) {
-                                cuboid([110, 88, 4]);
+                              union() {
+                                union() {
+                                  translate([10, -2, -1.875]) {
+                                    cuboid([132, 86, 3.85]);
+                                  }
+                                  translate([10, 39, 14.3]) {
+                                    cuboid([132, 4, 36.2]);
+                                  }
+                                }
+                                translate([0, 0, 18.65]) {
+                                  zcyl(r = 6, l = 37.3);
+                                }
                               }
-                              difference() {
-                                translate([0, 0, 0.5]) {
-                                  zcyl(r = 7.5, l = 1);
-                                }
-                                translate([0, 0, 0.5]) {
-                                  zcyl(r = 3.2, l = 3);
-                                }
+                              translate([0, 0, 0.5]) {
+                                zcyl(r = 10, l = 1);
                               }
                             }
-                            translate([40, -3.2, 0.45]) {
-                              cuboid([14, 7.6, 1.1]);
+                            translate([40, -3.2, 0.5]) {
+                              cuboid([14, 7.6, 1]);
                             }
                           }
-                          translate([-45, 41, 15.25]) {
-                            cuboid([10, 8, 30.5]);
+                          translate([42.75, -8.6, 4]) {
+                            cuboid([14.5, 2.8, 8]);
                           }
                         }
-                        translate([0, 41, 15.25]) {
-                          cuboid([12, 8, 30.5]);
+                        translate([43, 2.3, 4]) {
+                          cuboid([14, 3, 8]);
                         }
                       }
-                      translate([45, 41, 15.25]) {
-                        cuboid([10, 8, 30.5]);
+                      translate([48.6, -3.1, 4]) {
+                        cuboid([2.8, 13.8, 8]);
                       }
                     }
-                    translate([0, 0, -1.5]) {
-                      zcyl(r = 2.7, l = 7);
+                    translate([-50, 36.5, 26.2]) {
+                      ycyl(r = 6, l = 1.05);
                     }
                   }
-                  translate([0, 0, -2.35]) {
-                    cylinder(h = 3.7, r = 4.7, $fn = 6);
+                  translate([-36, 36.5, 26.2]) {
+                    ycyl(r = 6, l = 1.05);
                   }
                 }
-                translate([38, -2.5, -1.5]) {
-                  zcyl(r = 2.2, l = 7);
+                translate([56, 36.5, 26.2]) {
+                  ycyl(r = 6, l = 1.05);
                 }
               }
-              translate([38, -2.5, -2.7]) {
-                cylinder(h = 3, r = 3.9, $fn = 6);
+              translate([70, 36.5, 26.2]) {
+                ycyl(r = 6, l = 1.05);
               }
             }
-            translate([43, -2.5, -1.5]) {
-              zcyl(r = 2.2, l = 7);
+            translate([0, 0, 33.65]) {
+              zcyl(r = 2.75, l = 9.3);
             }
           }
-          translate([43, -2.5, -2.7]) {
-            cylinder(h = 3, r = 3.9, $fn = 6);
+          translate([-1.1, 0, 33.7]) {
+            cuboid([11.8, 8.2, 4.2]);
           }
         }
-        translate([-45, 43.4, 26]) {
-          zcyl(r = 1.3, l = 11);
+        translate([-50, 38.5, 26.2]) {
+          ycyl(r = 2.75, l = 7);
         }
       }
-      translate([-3, 43.4, 26]) {
-        zcyl(r = 1.3, l = 11);
+      translate([-36, 38.5, 26.2]) {
+        ycyl(r = 2.75, l = 7);
       }
     }
-    translate([3, 43.4, 26]) {
-      zcyl(r = 1.3, l = 11);
+    translate([56, 38.5, 26.2]) {
+      ycyl(r = 2.75, l = 7);
     }
   }
-  translate([45, 43.4, 26]) {
-    zcyl(r = 1.3, l = 11);
+  translate([70, 38.5, 26.2]) {
+    ycyl(r = 2.75, l = 7);
   }
 }
 $fn = 50;

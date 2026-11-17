@@ -1,2 +1,0 @@
-// Ring on the spring hub top that holds the pinion at the rack's height.
-main = ((zcyl 8.5 4 |> move 0 0 31) ⊖ (zcyl 6.3 6 |> move 0 0 31))

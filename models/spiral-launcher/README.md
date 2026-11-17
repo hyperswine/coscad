@@ -1,15 +1,22 @@
-# Spiral spring launcher (2026-11-16)
+# Spiral spring launcher (2026-11-16, revision 2 2026-11-17)
 
-A follow-up to the captive spring demonstrator (`../captive-spring-demo`): a
+A follow-up to the captive spring demonstrator (`../captive-spring-demo`). A
 printed PLA spiral (clock) spring drives a pinion, and the pinion drives a rack
 carriage that throws the 10 g glider from `../pla-bow-launcher`. It winds about
 **1.04 turns** over a 180 mm pull, where the demonstrator wound 0.04 turns
 over 10 mm.
 
-**Result (model only, not printed or tested):**
-- **Speed:** 8.6 m/s for the 10 g glider at 24.8 MPa peak strip stress. That
-  is the same class as the PLA bow launcher. It already includes a 0.85
-  efficiency deduction.
+**Revision 2** keeps the spring and gearing and rebuilds everything else:
+- **Structure:** printed 2020 extrusion, the same slot-6 profile as
+  `../tank-model-2020`.
+- **Hardware:** only **M5×10** screws, M5 drop-in T-nuts and one M5 hex nut.
+
+![The finished build (last step of the build plan)](built.png)
+
+**Result (model only, revision 2 not printed or tested):**
+- **Speed:** 8.3 m/s for the 10 g glider at 24.8 MPa peak strip stress,
+  including a 0.85 efficiency deduction. Revision 1 gave 8.6 m/s; the 2.4 g
+  heavier carriage (T-key shoes, printed mast) costs the difference.
 - **Energy:** 1.51 J stored.
 - **Draw:** 16.8 N at full draw.
 
@@ -19,14 +26,14 @@ The spring spins as it releases. Its inertia, seen at the carriage through a
 pinion of pitch radius R, acts like a mass of J/R² riding on the carriage.
 Winding more turns over the same stroke means a smaller R, and that effective
 mass grows quickly. Best designs from `study.sol` (strip ≤ 75 g, 180 mm
-stroke):
+stroke, 13.2 g carriage):
 
 | Turns wound | Best speed | Spring + pinion felt at the rack |
 |---|---|---|
-| 0.5–1.0 | 8.5 m/s | 13 g |
-| 1.0–1.5 | 8.6 m/s | 14 g (this design) |
-| 1.5–2.0 | 6.5 m/s | 32 g |
-| 2.0–3.0 | 3.6 m/s | 111 g |
+| 0.5–1.0 | 8.2 m/s | 13 g |
+| 1.0–1.5 | 8.3 m/s | 14 g (this design) |
+| 1.5–2.0 | 6.4 m/s | 32 g |
+| 2.0–3.0 | 3.5 m/s | 111 g |
 
 So the design keeps the spiral compact and puts a large, light pinion on it:
 - **Spiral:** 7 coils inside 70 mm, from a thick (2.0 mm), tall (28 mm) strip.
@@ -35,106 +42,100 @@ So the design keeps the spiral compact and puts a large, light pinion on it:
 ## Files
 
 - `study.sol`: sizing model and the trade table above (about 1 minute).
-- `build.sol`: writes every part and the three assemblies:
+- `build.sol`: writes every part and four assemblies:
   - `launcher.assemble`: full draw, stopper in, glider loaded.
   - `launcher-end.assemble`: end of the stroke, with the last rack tooth at
     the pinion.
-  - `launcher-coast.assemble`: the carriage at the end wall, glider 100 mm on.
+  - `launcher-coast.assemble`: the carriage at the front stop, glider 100 mm on.
   - `spiral-launcher-build.assemble`: the build plan input (`coscad plan`).
-    Published with renders at https://manual.cswine.cloud/builds/spiral-launcher-build/.
-- The glider parts come from `../pla-bow-launcher`.
+    Published with renders at
+    https://manual.cswine.cloud/builds/spiral-launcher-build/.
+- The glider parts come from `../pla-bow-launcher`; the feet are
+  `../tank-model-2020/rail100.coscad` itself.
+- `print/` holds the revision 1 print records (2026-11-16). They do not match
+  these sources.
 
 Run both scripts from the repository root or this folder, e.g.
 `"$SOL" models/spiral-launcher/build.sol`.
 
 ## Design
 
-| Part | What it is |
-|---|---|
-| `spring` | Counter-clockwise spiral, 2.0 × 28 mm strip, 924 mm long, centreline r 8–34 mm. Hub with a D boss for the pinion. Outer clamp block bolted to the base. 74 g solid (strip 64 g). |
-| `pinion` | Spoked ring gear, module 1.25, 44 teeth, R 27.5, 4 mm face, keyed to the hub, 4.6 g |
-| `carriage` | Rack bar 220 mm long with lightening windows. Glider mast, groove cap and M3×16 screw pin as on the bow carriage, raised to z 45 so the glider clears the pinion, nut and rail. Stopper notch. 10.2 g + screw. |
-| `rail-rear`, `rail-front` | Open channel above the spring, with an outer wall and a hold-down lip. The rear piece has the overdraw stop and the stopper guide; the front piece has the end wall (put foam tape on it). |
-| `stopper` | Plate that drops through the guide into the carriage notch and a floor pocket, so it is held on both sides. |
-| `pinion-spacer` | Ring (r 6.3–8.5, 4 mm) on the spring hub top that holds the pinion at the rack's height. Added 2026-11-17 |
-| `base` | Plate with the M5 axle hole and flush hex head pocket, two M4 clamp bolt holes with flush head pockets, a 1 mm pad under the spring clamp, the hub washer and three rail legs |
-| `foot` ×2 | Feet at the far ends of the rail |
+| Part | Count | What it is |
+|---|---|---|
+| `beam221` | 2 | 2020 rail, 221 mm, the tank model's profile. Joined end to end at x −6 as the track; the carriage rides the top slot |
+| `rail100` (tank model) | 2 | The tank model's 100 mm rails, reused as cross feet, one under each beam's centre |
+| `corner-bracket` | 4 | Beam side face to foot top, 5 mm thick, one M5×10 per leg |
+| `splice` | 1 | Plate across the beam joint on the +y faces, 4 × M5×10 |
+| `base` | 1 | Plate on the bench under the spring, with a flange bolted to the beams' −y faces (4 × M5×10). Arbor post (12 mm) with a slide-in M5 nut, clamp pocket for the spring's outer block, hub washer |
+| `spring` | 1 | Counter-clockwise spiral, 2.0 × 28 mm strip, 924 mm long, centreline r 8–34 mm. Hub turns on the post (12.5 mm bore) and has a collar the pinion rests on and a 16 mm hex boss that keys it. The clamp block drops into the base's pocket: no screws |
+| `pinion` | 1 | Spoked ring gear, module 1.25, 44 teeth, R 27.5, 4 mm face, hex hole |
+| `cap` | 1 | Disc on the post top, one M5×10 into the post's nut; 0.3 mm axial play for the hub and pinion |
+| `carriage` | 1 | Rack bar (215 mm, lightening windows, stopper notch), backed by the beam face 0.3 mm away, with two shoes whose T-keys run in the beam's top slot. Prints flat on its bottom |
+| `mast` | 1 | Glider mast and printed pin (6 × 2.9 mm bar, 8 mm long), pushed into the rear shoe's socket (a drop of glue). Prints lying on its side so the pin is on the bed |
+| `stop` | 2 | End stops on the beam top, one M5×10 each, key necks clear of the T-nut. Foam tape on the front one's face |
+| `stopper-guide` | 1 | C-shaped guide on the beams' −y face around the rack's path, 2 × M5×10 |
+| `stopper` | 1 | Plate dropped through the guide into the rack's notch and the guide's lower pocket |
+
+**Hardware:** 21 × M5×10 button head screws, 20 × M5 drop-in T-nuts (2020,
+slot 6), and 1 × M5 hex nut (in the arbor post).
 
 How it runs:
 - **Winding:** pulling the carriage back (−x) turns the pinion
   counter-clockwise, which tightens the spiral.
 - **Release:** at the end of the stroke the rack's last tooth leaves the
   pinion. The spring and pinion free-spin instead of being stopped through the
-  teeth. The carriage coasts about 5 mm into the end wall, and the glider
-  slides forward off the pin.
+  teeth. The carriage coasts 5 mm into the front stop, and the glider slides
+  forward off the pin.
 
 **To launch:**
 1. Pull the carriage back to the rear stop.
-2. Slide the stopper down its slot.
+2. Drop the stopper through the guide.
 3. Load the glider.
 4. Lift the stopper.
 
-**Hardware:**
-- M5×50 hex bolt (head captive in the base, from below), washer and nyloc nut
-  on the pinion. It is the spring's axle, not a clamp: run the nut down only
-  until the play is gone, so the hub still turns.
-- 2 × M4×40 hex bolts (heads captive in the base) and nuts for the spring clamp
-- 6 × M3×16 screws: rails into the legs and feet
-- M3×16 glider pin, threaded into the carriage mast from behind before the build
-
 ## Build plan
 
-`coscad plan spiral-launcher-build.assemble` gives 9 steps with no flips,
-published with renders at https://manual.cswine.cloud/builds/spiral-launcher-build/.
-In short:
-1. Bolt heads into the base pockets in hand.
-2. Spring on, clamp nuts on.
-3. Spacer on the hub.
-4. Rear rail, then the rear foot.
-5. Slide the carriage in from the open front end of the rear rail.
-6. Pinion onto the D boss, meshing with the rack; then the M5 nut.
-7. Front rail and front foot.
+`coscad plan spiral-launcher-build.assemble`: 19 steps, no flips. The T-nut
+positions in the preload sheet are the real holes (`at=` from each rail's
+marked end). In short:
+1. Slide the hex nut into the arbor post's side slot.
+2. Each beam on its foot, T-nuts in, then the rear stop and corner brackets.
+3. Splice the beams.
+4. Base flange onto the beams; spring onto the post.
+5. Stopper guide.
+6. Slide the carriage in from the front end, then the front stop.
+7. Mast into the carriage.
+8. Pinion onto the hex boss, meshing with the rack.
+9. Cap and its screw.
 
-Foam tape on the end wall last. Two things the plan's wording gets backwards:
-- **M5 and M4:** the planner models each from its driven end. "Screw through
-  the pinion/spring into the hex nut in the base" is a hex bolt head in the
-  base pocket with the nut turned on top. The hardware counts are the same.
-- **Driver margin:** the plan uses `driver_margin=0`. Drivers are judged
-  against boxes, and the carriage's box runs up its 49 mm mast along its whole
-  length. Its body tops out at z 37, under the rail lip the M3 heads seat on.
-
-## Fixes found while planning (2026-11-17)
-
-The parts printed on 2026-11-16 have three faults; the model is fixed.
-- **Pinion support:** the D boss has no shoulder, so the pinion would slide
-  4 mm down onto the coils, out of the rack's plane. Fixed by the new
-  `pinion-spacer` (print it).
-- **Clamp gap:** the spring's clamp block starts at z 1 (level with the hub
-  washer) over plate at z 0. The bolts would pull the outer coil down. The
-  base now has a 1 mm pad there; on the printed base, use a 1 mm shim or two
-  M4 washers.
-- **Pocket depth:** the base's hex head pockets were half below the part
-  (1.4–1.65 mm deep), so the heads stood 1.4–1.85 mm proud and the base
-  would rock. They are now flush (M5 3.7 mm, M4 3.0 mm deep). On the printed
-  base, stand the base on 2 mm pads.
-
-The `print/a1-base` package is the printed (faulty) base; a reprint needs a
-new package.
+Two things in the plan input are worth knowing:
+- **Base preloaded by hand (a workaround):** the post's nut slides in from
+  the side. The planner reads a framed nut pocket as opening along its
+  bearing normal (down onto the bench), so the plan says to load it in hand
+  before the base goes down.
+- **Feet under the beam centres (a real design choice):** each beam balances
+  on its foot while it is built, and the base plate carries the middle.
 
 ## Checks done
 
 - **Renders:** every part renders with the native backend.
-- **Interference:** `coscad check` finds 0 overlaps at the end of the stroke,
-  with the glider loaded.
-- **Mesh:** with the carriage at -137, -91, -46, -12 and -2 mm, and the pinion
-  turned to match, the rack-pinion clearance is 0.14 mm at every position.
+- **Interference:** `coscad check` finds 0 overlaps at the end of the
+  stroke, with the glider loaded.
+  - Shoes on the beam top: contact.
+  - Key head under the slot lips: 0.2 mm.
+  - Rack bar to beam face: 0.3 mm.
+  - Rack to pinion: 0.14 mm.
+  - Rack bar to base flange: 0.6 mm.
+  - At full draw, the carriage clears the guide by 0.4 mm and the stopper
+    sits 0.2 mm from each side of the notch.
 - **The one overlap at full draw and coast** is a modelling artefact. There
-  the pinion is turned (375° and -6°) but the spring is drawn in its rest
-  pose, so its D boss no longer lines up with the pinion's D hole. In reality
-  the hub turns with the pinion; a wound spiral can't be drawn as a rigid part.
-- **Stopper:** it sits in the carriage notch with 0.2 mm each side at full
-  draw.
-- **Overdraw stop:** 1 mm behind the carriage.
+  the pinion is turned (375° and −6°) but the spring is drawn in its rest
+  pose, so its hex boss no longer lines up with the pinion's hex hole. A
+  wound spiral can't be drawn as a rigid part.
+- **Overdraw stop:** 1 mm behind the carriage at full draw.
+- **The assembled-view PNG** from `coscad launcher.assemble` fails
+  (near-coincident faces where parts rest on each other). `built.png` is the
+  plan's last step render instead.
 
 ## Not checked
 
@@ -144,10 +145,25 @@ new package.
   the bow launcher).
 - **Inertia:** the effective mass assumes each strip element turns by
   θ(L−s)/L about the arbor.
+- **Sliding:** the T-keys run in a printed slot whose layer lines cross the
+  direction of travel, and the rack bar may bear on the beam face. Friction is
+  inside the flat 0.85 efficiency only by assumption. The keys cross the beam
+  joint, so the splice must line the slots up.
+- **The hub on the post:** PLA on PLA, turning about one revolution at speed
+  per launch.
+- **Drop-in T-nuts in the printed slot:** the tank model used them; the
+  owner's nuts have not been measured against this profile.
 - **Re-engaging the rack:** after a launch the pinion stops at an arbitrary
   angle, and pulling the carriage back has to find the mesh. The teeth have no
   lead-in chamfer yet.
-- **Rail lip:** the lip is a 3.3 mm overhang when printed. It has 0.6 mm
-  clearance over the carriage to allow for droop.
-- **Rail stiffness:** the rear rail cantilevers past its leg to a foot, with
-  the 16.8 N stopper load at its end.
+- **The mast's push fit:** it takes the end-of-stroke shock; glue it.
+- **The glider's nose trim:** the glider still carries its 1 g M3 screw as
+  ballast. That is part of the glider, not the launcher.
+
+## Revision 1 (printed 2026-11-16)
+
+A printed rail with a hold-down lip, a base with legs, M3/M4 screws and an
+M5×50 axle. Planning it found three faults in the printed parts: the pinion
+had no shoulder, the clamp block sat over a 1 mm gap, and the bolt-head
+pockets were too shallow. Revision 2 replaces those parts. See the git
+history (7ba2966, 28e8b35) for its sources.

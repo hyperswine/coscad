@@ -1,0 +1,17 @@
+// 2020 rail, 221 mm long along Z: the tank model's slot-6 profile (../tank-model-2020/rail100.coscad).
+// Prints standing on an end.
+len = 221
+main = box 20 20 221
+  |> cut (box 6.7 6.2 (221 + 2) |> move 7.25 0 0)
+  |> cut (box 1.8 11 (221 + 2) |> move 7.3 0 0)
+  |> cut (box 1.3 8.4 (221 + 2) |> move 5.75 0 0)
+  |> cut (box 6.7 6.2 (221 + 2) |> move -7.25 0 0)
+  |> cut (box 1.8 11 (221 + 2) |> move -7.3 0 0)
+  |> cut (box 1.3 8.4 (221 + 2) |> move -5.75 0 0)
+  |> cut (box 6.2 6.7 (221 + 2) |> move 0 7.25 0)
+  |> cut (box 11 1.8 (221 + 2) |> move 0 7.3 0)
+  |> cut (box 8.4 1.3 (221 + 2) |> move 0 5.75 0)
+  |> cut (box 6.2 6.7 (221 + 2) |> move 0 -7.25 0)
+  |> cut (box 11 1.8 (221 + 2) |> move 0 -7.3 0)
+  |> cut (box 8.4 1.3 (221 + 2) |> move 0 -5.75 0)
+  |> cut (zcyl 2.1 (221 + 2))

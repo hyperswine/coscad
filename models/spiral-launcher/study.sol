@@ -56,16 +56,17 @@ report = fn d -> "{N.fixed 2 d.turns} turns, {N.fixed 1 d.sigma} MPa, {N.fixed 2
 
 main : unsafe Unit -> Unit.
 main u =
-  # carriage: the rendered rack bar, 8252 mm^3 of solid PLA, plus the M3 pin screw
-  chosen = analyse 2.0 28 8 34 7 27.5 180 10.8;
-  _ = print "Chosen: strip 2.0 x 28 mm, 7 coils r 8..34 mm, pinion R 27.5 (m 1.25, z 44, 4 mm face), stroke 180 mm, 10.8 g rack carriage";
+  # carriage (revision 2, 2026-11-17): the rendered rack bar with its two T-key shoes plus the
+  # printed mast, 10679 mm^3 of solid PLA (revision 1: 8252 mm^3 plus an M3 pin screw, 10.8 g)
+  chosen = analyse 2.0 28 8 34 7 27.5 180 13.2;
+  _ = print "Chosen: strip 2.0 x 28 mm, 7 coils r 8..34 mm, pinion R 27.5 (m 1.25, z 44, 4 mm face), stroke 180 mm, 13.2 g rack carriage";
   _ = print ("  " + report chosen);
   _ = print "  strip length {N.fixed 0 chosen.len} mm";
   _ = print "\nThe old captive demo, for scale: 0.04 turns over 10 mm (32 uJ).";
   _ = print "\nWinding more turns costs speed (best design per band, strip <= 75 g, gaps >= 1.0 mm wound / 1.5 mm rest, 180 mm stroke):";
   grid = List.concat (List.map (fn t -> List.concat (List.map (fn b -> List.concat (List.map (fn n -> List.concat (List.map (fn ro ->
            List.map (fn bigR -> (t, b, n, ro, bigR)) [12.0, 15.0, 18.0, 22.5, 27.5, 32.5, 40.0]) [34.0, 42.0, 50.0])) [5, 7, 9, 12])) [16.0, 24.0, 28.0])) [1.6, 2.0, 2.4]);
-  rows = List.concat (List.map (fn g -> (t, b, n, ro, bigR) = g; d = analyse t b 8 ro n bigR 180 10.8;
+  rows = List.concat (List.map (fn g -> (t, b, n, ro, bigR) = g; d = analyse t b 8 ro n bigR 180 13.2;
       if and (d.sigma <= 25.01) (and (d.gapWound >= 1.0) (and (d.gapRest >= 1.5) (d.mStrip <= 75))) then [(g, d)] else []) grid);
   _ = List.map (fn band -> (lo, hi) = band;
       inBand = List.filter (fn r -> (g, d) = r; and (d.turns >= lo) (d.turns < hi)) rows;

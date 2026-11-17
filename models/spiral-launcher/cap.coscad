@@ -1,0 +1,2 @@
+// Cap on the arbor post: one M5x10 into the post's nut. Keeps the hub and pinion on, 0.3 mm play.
+main = ((zcyl 10.5 3 |> move 0 0 38.8) ⊖ (zcyl 2.75 5 |> move 0 0 38.8 |> frame cap top top bak 0 0 -1))

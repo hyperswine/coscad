@@ -68,6 +68,9 @@ assemblies site scratch sol =
   _ = copyShapes "models/orbit-tower" "{scratch}/orbit-tower" "orbit-tower";
   _ = copyShapes "models/tank-model-2020" "{scratch}/tank" "tank";
   _ = copyShapes "models/spiral-launcher" "{scratch}/spiral" "spiral-launcher-build";
+  # the launcher's feet are the tank model's 100 mm rails, referenced as ../tank-model-2020/rail100.coscad
+  _ = command ["mkdir","-p","{scratch}/tank-model-2020"];
+  _ = command ["cp","models/tank-model-2020/rail100.coscad","{scratch}/tank-model-2020/"];
   _ = command ["find",scratch,"-name","*.png","-delete"];
   _ = command (["coscad","site","{site}/builds"] + List.map (fn part -> "{scratch}/{part}.assemble") plans);
   _ = List.map (fn part -> name = B.baseName part;

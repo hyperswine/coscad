@@ -1,11 +1,11 @@
 include <BOSL2/std.scad>
 
 union() {
-  translate([-188, 38.3, 42.55]) {
-    cuboid([3, 3.6, 22.9]);
+  translate([-188, 35, 38.4]) {
+    cuboid([3, 5.6, 18]);
   }
-  translate([-188, 42.75, 57]) {
-    cuboid([3, 14.5, 6]);
+  translate([-188, 34, 49.375]) {
+    cuboid([3, 12, 4.05]);
   }
 }
 $fn = 50;

@@ -1,0 +1,2 @@
+// Glider mast and pin, carriage frame. Print lying on its -y face; push into the rear shoe's socket.
+main = (((box 8 6 16.8 |> move -18 51 48.6) ⊕ (box 8 6 1.25 |> move -18 51 57.575) ⊕ (box 4 4 3.45 |> move -18 51 38.525) ⊕ (box 6.6 6 2.9 |> move -10.75 51 54) ⊕ (ycyl 1.45 6 |> move -7.45 51 54)) ⊖ (box 10 1.5 2.2 |> move -18 51 58.1))

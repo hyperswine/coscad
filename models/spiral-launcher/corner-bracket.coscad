@@ -1,0 +1,2 @@
+// 2020 corner bracket: beam side face (y = 0) to foot top (z = 0), 18 wide, 5 thick, one M5x10 per leg. Print on its side.
+main = (((box 18 5 16.2 |> move 0 2.5 8.1) ⊕ (box 18 20 5 |> move 0 10 2.5)) ⊖ (ycyl 2.75 7 |> move 0 2.5 10) ⊖ (zcyl 2.75 7 |> move 0 13 2.5))
