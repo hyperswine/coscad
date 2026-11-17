@@ -1,0 +1,723 @@
+{
+  "job": "a1-r2-frame",
+  "printer": "a1",
+  "material": "pla",
+  "package_sha256": "8cb45611d587f7d5a63fc7c21d4285740272117b46459bf614d6406f5fe44715",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 65.0,
+      "bed_c": 65.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 205,
+    "deposition_moves_checked": 217294,
+    "package_sha256": "8cb45611d587f7d5a63fc7c21d4285740272117b46459bf614d6406f5fe44715"
+  },
+  "remote_name": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+  "spool": "ams0",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": true,
+  "layer_inspect": true,
+  "authorization_note": "Owner: 'Yes each bed is clear, send all 3 jobs' - spiral launcher revision 2, 2026-11-17.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 173,
+    "total_layer_num": 173,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "launcher-a1-base-20261116-200141.gcode",
+    "nozzle_temper": 21.84375,
+    "bed_temper": 22.3125,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "ams0",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ],
+    [
+      "ams2",
+      "PLA",
+      "F4EE2AFF",
+      false
+    ],
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-17T20:50:06+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 173,
+        "total_layer_num": 173,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 21.84375,
+        "bed_temper": 22.3125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:50:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 213,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 35.09375,
+        "bed_temper": 22.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 2
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:50:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 213,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 88.5625,
+        "bed_temper": 33.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:50:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 213,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 100.34375,
+        "bed_temper": 57.03125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:51:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 213,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 101.75,
+        "bed_temper": 65.0625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:51:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 213,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 140.5625,
+        "bed_temper": 65.5625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:51:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 213,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 175.5625,
+        "bed_temper": 64.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:51:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 213,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 206.15625,
+        "bed_temper": 64.5,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:52:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 213,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 220.3125,
+        "bed_temper": 64.53125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:52:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 213,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 218.125,
+        "bed_temper": 64.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:52:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 213,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 219.96875,
+        "bed_temper": 64.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:52:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 212,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 219.78125,
+        "bed_temper": 64.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:53:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 212,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 221.0625,
+        "bed_temper": 64.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:53:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 212,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 219,
+        "bed_temper": 64.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:53:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 212,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 220.25,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:53:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 212,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 220.5,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:54:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 212,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 218.78125,
+        "bed_temper": 64.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:54:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 212,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 220.625,
+        "bed_temper": 64.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 8
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:54:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 212,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 218.5,
+        "bed_temper": 64.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:54:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 212,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 199.15625,
+        "bed_temper": 64.03125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:55:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 212,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 180,
+        "bed_temper": 63.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:55:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 166.625,
+        "bed_temper": 64.625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:55:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 170.34375,
+        "bed_temper": 64.3125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:55:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 157.5,
+        "bed_temper": 64.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:56:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 144.5625,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:56:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 139.3125,
+        "bed_temper": 65.21875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:56:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 139.71875,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:56:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 140.21875,
+        "bed_temper": 65.0625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:57:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 139.9375,
+        "bed_temper": 65.0625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:57:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 140,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:57:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 152.9375,
+        "bed_temper": 65.21875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:57:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 186.90625,
+        "bed_temper": 65.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:58:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 213.28125,
+        "bed_temper": 65.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:58:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 3,
+        "layer_num": 1,
+        "total_layer_num": 205,
+        "mc_remaining_time": 207,
+        "gcode_file": "launcher-a1-r2-frame-20261117-204942.gcode.3mf",
+        "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+        "nozzle_temper": 218.5625,
+        "bed_temper": 65.21875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-17T20:49:42+1100",
+  "remote_content_sha256": "8cb45611d587f7d5a63fc7c21d4285740272117b46459bf614d6406f5fe44715",
+  "sequence_id": "909006688",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "909006688"
+  },
+  "first_layer_reached": true
+}

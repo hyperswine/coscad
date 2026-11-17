@@ -1,0 +1,532 @@
+{
+  "job": "p1s-r2-beams",
+  "printer": "p1s",
+  "material": "pla",
+  "package_sha256": "caffe8569df917c89a9b87ac301d93fec5cb9f8d2bc0d71c11ab7e4b60d9aac4",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 1105,
+    "deposition_moves_checked": 630700,
+    "package_sha256": "caffe8569df917c89a9b87ac301d93fec5cb9f8d2bc0d71c11ab7e4b60d9aac4"
+  },
+  "remote_name": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner: 'Yes each bed is clear, send all 3 jobs' - spiral launcher revision 2, 2026-11-17.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 98,
+    "total_layer_num": 98,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "launcher-p1s-rails-20261116-111626.gcode",
+    "nozzle_temper": 26.5625,
+    "bed_temper": 23.125,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-17T20:51:07+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 98,
+        "total_layer_num": 98,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 26.5625,
+        "bed_temper": 23.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:51:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 458,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 45.5625,
+        "bed_temper": 23.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:51:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 458,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 80.15625,
+        "bed_temper": 23.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:51:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 458,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 75.375,
+        "bed_temper": 36.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:52:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 458,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 78.53125,
+        "bed_temper": 52.625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:52:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 458,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 161.34375,
+        "bed_temper": 54.28125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:52:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 458,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 220.53125,
+        "bed_temper": 54.65625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:52:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 458,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 247.78125,
+        "bed_temper": 54.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:53:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 243.40625,
+        "bed_temper": 54.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:53:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 208.9375,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791097306
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T20:53:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 201.0625,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791097306
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T20:53:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 200.1875,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791097306
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T20:54:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 199.96875,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791097306
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T20:54:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 193,
+        "bed_temper": 54.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791097306
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T20:54:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 170.46875,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791097306
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T20:54:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 158.75,
+        "bed_temper": 54.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791097306
+        }
+      ]
+    },
+    {
+      "at": "2026-11-17T20:55:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 141.40625,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:55:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 140.21875,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:55:37+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:55:52+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 156.125,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:56:07+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 453,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 216.40625,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-17T20:56:22+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 1,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 452,
+        "gcode_file": "launcher-p1s-r2-beams-20261117-204946.gcode.3mf",
+        "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+        "nozzle_temper": 221.125,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-17T20:49:46+1100",
+  "remote_content_sha256": "caffe8569df917c89a9b87ac301d93fec5cb9f8d2bc0d71c11ab7e4b60d9aac4",
+  "sequence_id": "909067528",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "909067528"
+  },
+  "first_layer_reached": true
+}
