@@ -1,0 +1,41 @@
+{
+  "job": "x1c-r2-spring",
+  "printer": "x1c",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL X1C",
+  "nozzle_temperature": "220",
+  "bed_temperature": "55",
+  "package_sha256": "e30855afbcaeebfab29b8029b7ec1f51f8b076333bf1caf2e616638f46c925bd",
+  "gcode_sha256": "eb94ca35aa98907de0fae2a5e371fa650a7d8797d4598e1e0f7c83a91ee8be78",
+  "objects": 5,
+  "layers": 180,
+  "model_path_segments": 245198,
+  "support_segments": 0,
+  "segments_in_exclusion_corner": 0,
+  "extrusion_bounds_xy_mm": [
+    [
+      6.21,
+      6.21
+    ],
+    [
+      246.158,
+      99.04
+    ]
+  ],
+  "features": {
+    "Inner wall": 32420,
+    "Outer wall": 33078,
+    "Gap infill": 120753,
+    "Bottom surface": 608,
+    "Internal solid infill": 7291,
+    "Sparse infill": 46872,
+    "Overhang wall": 12,
+    "Bridge": 12,
+    "Floating vertical shell": 1646,
+    "Top surface": 2506
+  },
+  "estimated_hours": 1.67,
+  "estimated_grams": 78.6,
+  "solid_parts_grams": 79.9,
+  "passed": true
+}

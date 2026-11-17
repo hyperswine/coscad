@@ -1,0 +1,41 @@
+{
+  "job": "a1-r2-frame",
+  "printer": "a1",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL A1",
+  "nozzle_temperature": "220",
+  "bed_temperature": "65",
+  "package_sha256": "8cb45611d587f7d5a63fc7c21d4285740272117b46459bf614d6406f5fe44715",
+  "gcode_sha256": "bc0959b305fe9d77450e6f5de617f164ee84094cbfff86ec04932ddbd24391c8",
+  "objects": 10,
+  "layers": 205,
+  "model_path_segments": 217292,
+  "support_segments": 0,
+  "segments_in_exclusion_corner": 0,
+  "extrusion_bounds_xy_mm": [
+    [
+      6.21,
+      6.326
+    ],
+    [
+      230.674,
+      205.712
+    ]
+  ],
+  "features": {
+    "Inner wall": 15654,
+    "Outer wall": 19512,
+    "Bottom surface": 2809,
+    "Gap infill": 1723,
+    "Internal solid infill": 20643,
+    "Sparse infill": 149316,
+    "Floating vertical shell": 3668,
+    "Top surface": 2747,
+    "Overhang wall": 281,
+    "Bridge": 939
+  },
+  "estimated_hours": 3.57,
+  "estimated_grams": 130.7,
+  "solid_parts_grams": 131.5,
+  "passed": true
+}

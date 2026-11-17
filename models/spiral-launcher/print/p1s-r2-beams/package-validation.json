@@ -1,0 +1,37 @@
+{
+  "job": "p1s-r2-beams",
+  "printer": "p1s",
+  "material": "PLA",
+  "filament": "Bambu PLA Basic @BBL P1S 0.4 nozzle",
+  "nozzle_temperature": "220",
+  "bed_temperature": "55",
+  "package_sha256": "caffe8569df917c89a9b87ac301d93fec5cb9f8d2bc0d71c11ab7e4b60d9aac4",
+  "gcode_sha256": "856462313e907c333afce8211c58d20c4b73cf7fc3408621343aaf11ccd2f0b7",
+  "objects": 2,
+  "layers": 1105,
+  "model_path_segments": 630700,
+  "support_segments": 0,
+  "segments_in_exclusion_corner": 0,
+  "extrusion_bounds_xy_mm": [
+    [
+      26.401,
+      6.401
+    ],
+    [
+      91.599,
+      35.599
+    ]
+  ],
+  "features": {
+    "Outer wall": 157288,
+    "Inner wall": 256236,
+    "Bottom surface": 436,
+    "Gap infill": 137108,
+    "Internal solid infill": 79416,
+    "Top surface": 216
+  },
+  "estimated_hours": 7.65,
+  "estimated_grams": 99.7,
+  "solid_parts_grams": 103.6,
+  "passed": true
+}
