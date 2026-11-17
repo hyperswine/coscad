@@ -688,5 +688,16 @@
     "command": "project_file",
     "sequence_id": "788196731"
   },
-  "first_layer_reached": true
+  "first_layer_reached": true,
+  "outcome": {
+    "gcode_state": "FINISH",
+    "layers": [
+      180,
+      180
+    ],
+    "print_error": 0,
+    "subtask": "launcher-x1c-spring-20261116-111627.gcode",
+    "checked_at": "2026-11-17T15:07:51+1100",
+    "note": "Printer reported FINISH (status read); the parts have not been inspected or test-fitted."
+  }
 }

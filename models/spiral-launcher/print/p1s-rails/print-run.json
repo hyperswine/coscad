@@ -554,5 +554,16 @@
     "command": "project_file",
     "sequence_id": "788203638"
   },
-  "first_layer_reached": true
+  "first_layer_reached": true,
+  "outcome": {
+    "gcode_state": "FINISH",
+    "layers": [
+      98,
+      98
+    ],
+    "print_error": 0,
+    "subtask": "launcher-p1s-rails-20261116-111626.gcode",
+    "checked_at": "2026-11-17T15:07:51+1100",
+    "note": "Printer reported FINISH (status read); the parts have not been inspected or test-fitted."
+  }
 }
