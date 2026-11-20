@@ -1,0 +1,18 @@
+// Build plan for the press-fit SG90 rack and pinion (coscad plan). Written by build.sol.
+plate 256 256 6
+base ← base.coscad ×1 ▽bot material=pla preload=hand
+servo ← servo.coscad ×0 ▽bot mass=9
+pinion ← pinion.coscad ×1 ▽bot material=pla
+rack ← rack.coscad ×1 ▽bot material=pla
+keeper ← keeper.coscad ×1 ▽bot material=pla
+
+fixed base 0 0 0 0 0 0
+fixed servo 0 0 0 0 0 0
+fixed pinion 0 0 0 0 0 0
+fixed rack 0 0 0 0 0 0
+fixed keeper 0 0 0 0 0 0
+
+joint push servo base axis=top
+joint push pinion servo axis=top
+joint drop rack base axis=top
+joint push keeper base axis=top

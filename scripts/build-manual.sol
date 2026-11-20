@@ -10,7 +10,7 @@ pages = [("README","Overview"),("docs/ORBIT-TOWER","Orbit Tower notes"),("docs/L
          ("docs/LESSONS","Lessons"),("docs/SYNTAX","Syntax modes"),("docs/EXAMPLES","Examples"),
          ("docs/TESSERACT","Tesseract"),("CHANGELOG","Changelog")].
 
-plans = ["plan/corner_pair","corner/corner","plan/cube","bow3/bow3","ball/ball","tesseract/tesseract","orbit-tower/orbit-tower","tank/tank","spiral/spiral-launcher-build"].
+plans = ["plan/corner_pair","corner/corner","plan/cube","bow3/bow3","ball/ball","tesseract/tesseract","orbit-tower/orbit-tower","tank/tank","spiral/spiral-launcher-build","sg90/sg90-rack"].
 
 output argv = unwrap (P.output (Proc.query (P.spec argv))).
 
@@ -68,6 +68,7 @@ assemblies site scratch sol =
   _ = copyShapes "models/orbit-tower" "{scratch}/orbit-tower" "orbit-tower";
   _ = copyShapes "models/tank-model-2020" "{scratch}/tank" "tank";
   _ = copyShapes "models/spiral-launcher" "{scratch}/spiral" "spiral-launcher-build";
+  _ = copyShapes "models/sg90-rack/press-fit" "{scratch}/sg90" "sg90-rack";
   # the launcher's feet are the tank model's 100 mm rails, referenced as ../tank-model-2020/rail100.coscad
   _ = command ["mkdir","-p","{scratch}/tank-model-2020"];
   _ = command ["cp","models/tank-model-2020/rail100.coscad","{scratch}/tank-model-2020/"];

@@ -1,0 +1,654 @@
+{
+  "job": "x1c",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "7b699982b2397a4405605874cd4c050bf27278c7cd4cd216e5392c45a8a4d1e4",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 175,
+    "deposition_moves_checked": 31053,
+    "package_sha256": "7b699982b2397a4405605874cd4c050bf27278c7cd4cd216e5392c45a8a4d1e4"
+  },
+  "remote_name": "sg90-rack-x1c-20261120-223011.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner requested SG90 rack plate and confirmed X1C bed clear.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 143,
+    "total_layer_num": 143,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+    "nozzle_temper": 31.0,
+    "bed_temper": 27.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-20T22:30:14+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 143,
+        "total_layer_num": 143,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 31.0,
+        "bed_temper": 27.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:30:29+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 72.0,
+        "bed_temper": 27.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:30:44+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 36.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:30:59+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 52.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:31:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 152.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:31:29+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 226.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:31:44+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 40,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 248.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:31:59+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 12,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 35,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 228.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:32:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 35,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 204.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:32:29+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 35,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:32:44+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 35,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:32:59+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 35,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:33:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 35,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 176.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:33:29+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 35,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 151.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:33:44+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:33:59+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:34:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:34:29+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:34:44+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:34:59+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:35:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:35:29+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:35:44+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:35:59+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:36:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:36:29+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 13,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 145.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:36:44+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 211.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:36:59+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 203.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:37:14+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 203.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:37:29+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 14,
+        "layer_num": 0,
+        "total_layer_num": 175,
+        "mc_remaining_time": 34,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 212.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T22:37:44+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 17,
+        "layer_num": 1,
+        "total_layer_num": 175,
+        "mc_remaining_time": 33,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "sg90-rack-x1c-20261120-223011.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-20T22:30:11+1100",
+  "remote_content_sha256": "7b699982b2397a4405605874cd4c050bf27278c7cd4cd216e5392c45a8a4d1e4",
+  "sequence_id": "174213994",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "174213994"
+  },
+  "first_layer_reached": true
+}

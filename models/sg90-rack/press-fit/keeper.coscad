@@ -1,0 +1,1 @@
+main = ((box 22 7 2.4 |> move 0 0 1.2) ⊖ (zcyl 0.93 4 |> move -8 0 1) ⊖ (zcyl 0.93 4 |> move 8 0 1) |> move 0 24.7 32.55)
