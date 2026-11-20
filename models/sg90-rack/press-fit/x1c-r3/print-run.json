@@ -1,0 +1,165 @@
+{
+ "job": "x1c-r3-base",
+ "printer": "x1c",
+ "material": "pla",
+ "spool": "external",
+ "package_sha256": "985458b272e0929ac5a91c26013791da6fa2f42539ae503745198dba760ab109",
+ "remote_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode.3mf",
+ "bed_clear_owner_confirmed": true,
+ "created_at": "2026-11-21T09:37:03+11:00",
+ "events": [
+  {
+   "at": "2026-11-21T09:37:27+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 175,
+    "mc_remaining_time": 28,
+    "subtask_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode",
+    "nozzle_temper": 74.0,
+    "bed_temper": 26.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T09:37:44+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 175,
+    "mc_remaining_time": 28,
+    "subtask_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode",
+    "nozzle_temper": 75.0,
+    "bed_temper": 40.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T09:38:01+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 175,
+    "mc_remaining_time": 28,
+    "subtask_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode",
+    "nozzle_temper": 96.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T09:38:18+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 175,
+    "mc_remaining_time": 28,
+    "subtask_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode",
+    "nozzle_temper": 193.0,
+    "bed_temper": 54.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T09:38:35+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 2,
+    "layer_num": 0,
+    "total_layer_num": 175,
+    "mc_remaining_time": 27,
+    "subtask_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode",
+    "nozzle_temper": 248.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T09:38:52+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 17,
+    "layer_num": 0,
+    "total_layer_num": 175,
+    "mc_remaining_time": 23,
+    "subtask_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode",
+    "nozzle_temper": 238.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T09:39:09+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 19,
+    "layer_num": 0,
+    "total_layer_num": 175,
+    "mc_remaining_time": 22,
+    "subtask_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode",
+    "nozzle_temper": 206.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T09:39:26+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 19,
+    "layer_num": 0,
+    "total_layer_num": 175,
+    "mc_remaining_time": 22,
+    "subtask_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode",
+    "nozzle_temper": 200.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "hms": []
+   }
+  }
+ ],
+ "before": {
+  "gcode_state": "FINISH",
+  "subtask_name": "sg90-press-fit-r2-x1c-20261121-044942.gcode",
+  "print_error": 0,
+  "hms": []
+ },
+ "uploaded": true,
+ "phase": "acknowledged",
+ "sequence_id": "1795214230",
+ "dispatch_attempted": true,
+ "reply": {
+  "ams_mapping": [],
+  "bed_levelling": true,
+  "bed_type": "auto",
+  "command": "project_file",
+  "err_code": 0,
+  "flow_cali": true,
+  "layer_inspect": true,
+  "md5": "4a7936a29864a5ea847b7922c81cf886",
+  "param": "Metadata/plate_1.gcode",
+  "profile_id": "0",
+  "project_id": "0",
+  "reason": "SUCCESS",
+  "result": "SUCCESS",
+  "sequence_id": "1795214230",
+  "subtask_id": "0",
+  "subtask_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode",
+  "task_id": "0",
+  "timelapse": false,
+  "url": "file:///sdcard/sg90-press-fit-r3-base-x1c-20261121-093703.gcode.3mf",
+  "use_ams": false,
+  "vibration_cali": true
+ }
+}
