@@ -53,6 +53,11 @@
 .Ar dir
 .Ar spec.assemble ...
 .Nm
+.Cm site
+.Fl -index
+.Ar dir
+.Ar name ...
+.Nm
 .Cm doctor
 .Nm
 .Cm capabilities
@@ -318,6 +323,20 @@ part, material, or screw spec.
 Plain HTML, no server needed: open
 .Pa dir/index.html
 from a file or host the folder anywhere.
+Each build folder also gets
+.Pa build.json ,
+its index entry.
+.It Nm Cm site Fl -index Ar dir Ar name ...
+Rewrites
+.Pa dir/index.html
+from the
+.Pa build.json
+of each named build already under
+.Ar dir ,
+in the order given, without planning anything.
+Use it to combine builds made by separate
+.Cm site
+runs, for example when only some of them changed.
 .It Nm Cm doctor
 Report the linked geometry kernel and the image renderer, and render a
 boolean test part natively against its known volume.

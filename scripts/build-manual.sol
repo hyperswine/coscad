@@ -1,4 +1,6 @@
-# Assemble the documentation pages, man page and nine rendered assembly guides.
+# Assemble the documentation pages, man page and the rendered assembly guides.
+# Build pages are cached per build by a hash of its inputs and the coscad binary,
+# so an update replans only the builds that changed.
 
 P = use "sol/lib/proc".
 B = use "sol/lib/base".
@@ -60,7 +62,7 @@ documents site scratch revision stamp =
   head = "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>man coscad</title><link rel=\"stylesheet\" href=\"manual.css\"></head><body>\n";
   put "{site}/man.html" (head + nav + man + foot + "</body></html>\n").
 
-assemblies site scratch sol =
+assemblies site scratch sol cache =
   _ = List.map (fn name -> command ["cp","-R","examples/assemble/{name}","{scratch}/{name}"]) ["plan","bow3","ball"];
   _ = copyShapes "models/tesseract-v3-threaded" "{scratch}/tesseract" "";
   _ = command [sol,"models/tesseract-v3-threaded/instructions.sol","models/tesseract-v3-threaded/tesseract.assemble","{scratch}/tesseract/tesseract.assemble"];
@@ -73,10 +75,41 @@ assemblies site scratch sol =
   _ = command ["mkdir","-p","{scratch}/tank-model-2020"];
   _ = command ["cp","models/tank-model-2020/rail100.coscad","{scratch}/tank-model-2020/"];
   _ = command ["find",scratch,"-name","*.png","-delete"];
-  _ = command (["coscad","site","{site}/builds"] + List.map (fn part -> "{scratch}/{part}.assemble") plans);
+  _ = command ["mkdir","-p","{site}/builds",cache];
+  # Fingerprint every build before planning any: builds that share an input
+  # folder (plan/) write their outputs into it.
+  compiler = line ["sh","-c","shasum -a 256 \"$(command -v coscad)\" | cut -c1-64"];
+  shared = folderHash "{scratch}/tank-model-2020";
+  keyed = List.map (fn part -> (part, line ["sh","-c","printf '%s\\n' \"$@\" | shasum -a 256 | cut -c1-16","key",
+      compiler, shared, part, folderHash "{scratch}/{folderOf part}"])) plans;
+  _ = List.map (fn pk -> (part, key) = pk; siteBuild site scratch cache part key) keyed;
   _ = List.map (fn part -> name = B.baseName part;
     command ["test","-s","{site}/builds/{name}/{name}_plan.json"]) plans;
+  _ = command (["coscad","site","--index","{site}/builds"] + List.map B.baseName plans);
   command ["test","-s","{site}/builds/index.html"].
+
+# "tank/tank" -> "tank": plans are listed as FOLDER/NAME.
+folderOf part = Str.slice part 0 (Str.find 47 part).
+
+# Content hash of a folder's files (names and bytes), short form.
+folderHash dir = line ["sh","-c","cd \"$1\" && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 shasum -a 256 | shasum -a 256 | cut -c1-16","hash",dir].
+
+# One build's pages: reuse the cached copy when its inputs and the compiler are
+# unchanged, otherwise plan it alone and replace its cache entry.
+siteBuild site scratch cache part key =
+  name = B.baseName part;
+  cached = "{cache}/{name}/{key}";
+  if P.succeeded (Proc.query (P.spec ["test","-s","{cached}/build.json"])) then
+    _ = print "{name}: unchanged, reusing {key}";
+    command ["cp","-R",cached,"{site}/builds/{name}"]
+  else
+    out = tempDir "coscad-manual-build";
+    _ = command ["coscad","site",out,"{scratch}/{part}.assemble"];
+    _ = command ["rm","-rf","{cache}/{name}"];
+    _ = command ["mkdir","-p","{cache}/{name}"];
+    _ = command ["cp","-R","{out}/{name}",cached];
+    _ = command ["rm","-rf",out];
+    command ["cp","-R",cached,"{site}/builds/{name}"].
 
 # Swap the finished site in: stage a copy beside the output (same file system), then two renames.
 publish site outputDir =
@@ -93,10 +126,12 @@ build outputDir =
   sol = case unwrap (Env.get "SOL") of EnvText path -> (if path == "" then "sol" else path) | EnvMissing -> "sol";
   revision = gitStamp Unit;
   stamp = line ["date","-u","+%Y-%m-%d %H:%MZ"];
+  # Planned build pages are cached by content; MANUAL_CACHE overrides the folder.
+  cache = case unwrap (Env.get "MANUAL_CACHE") of EnvText path -> (if path == "" then "{outputDir}-cache" else path) | EnvMissing -> "{outputDir}-cache";
   site = tempDir "coscad-manual-site";
   scratch = tempDir "coscad-manual-input";
   _ = documents site scratch revision stamp;
-  _ = assemblies site scratch sol;
+  _ = assemblies site scratch sol cache;
   # Run the finishing transaction to completion before copying its output.
   _ = command [sol,"scripts/finish-manual.sol",site];
   _ = put "{site}/version.json" ("\{\"commit\": \"{revision}\", \"built\": \"{stamp}\"\}\n");

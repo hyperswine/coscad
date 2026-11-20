@@ -151,6 +151,17 @@ cliTier t = do
       step1 <- readFile (dir </> "corner_pair_step1.scad")
       assertT t "plan: step scene draws the bench as a solid slab, no background modifier" ("color(\"Gainsboro\") translate(" `isInfixOf` step1 && not ("\n%" `isInfixOf` step1) && "color(\"Orange\")" `isInfixOf` step1) (take 600 step1)
       assertT t "plan: exit 0, plan JSON parses, nut kinds use the nut= words" (c9 == ExitSuccess && null e9 && "Wrote" `isInfixOf` o9 && either (const False) (\v -> not (null (steps v)) && all (`elem` ["dropin", "slidein", "hex", "none"]) (nuts v) && not (null (nuts v))) pj) (show (c9, e9, either id (const "parsed") pj))
+      -- site saves a build.json per build; site --index rewrites the index from those without planning
+      let siteDir = dir </> "site-index"
+      (cs1, _, es1) <- run ["site", siteDir, dir </> "corner_pair.assemble"]
+      summaryOk <- doesFileExist (siteDir </> "corner_pair" </> "build.json")
+      assertT t "site writes <name>/build.json" (cs1 == ExitSuccess && summaryOk) (show (cs1, es1))
+      removeFile (siteDir </> "index.html")
+      (cs2, os2, es2) <- run ["site", "--index", siteDir, "corner_pair"]
+      indexText <- readFile (siteDir </> "index.html")
+      assertT t "site --index rewrites the index from build.json" (cs2 == ExitSuccess && "(1 builds)" `isInfixOf` os2 && "\"name\": \"corner_pair\"" `isInfixOf` indexText) (show (cs2, os2, es2))
+      (cs3, _, es3) <- run ["site", "--index", siteDir, "missing"]
+      assertT t "site --index with an unbuilt name is an input error" (cs3 == ExitFailure 1 && "build.json does not exist" `isInfixOf` es3) (show (cs3, es3))
       -- a design error: two screws at the same spot. Exit 2, stderr, files still written.
       srcPair <- readFile (dir </> "corner_pair.assemble")
       let fastLines = [l | l <- lines srcPair, "fastener " `isPrefixOf` l]

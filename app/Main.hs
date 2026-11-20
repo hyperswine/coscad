@@ -15,7 +15,7 @@ import Coscad.Diagnose (validateProjectJson, validateProject, projectSources)
 import Coscad.Json
 import Coscad.Stress.Material (Material (..), materialTable)
 import Coscad.Report (Failure (..), runCommand, collecting, stderrEmit)
-import Coscad.Site (processSiteWithBackend)
+import Coscad.Site (processSiteIndex, processSiteWithBackend)
 import Coscad.Stress.Command (processStress)
 import Coscad.Assembly.Instances
 import Coscad.Stress.Assembly (processAssemblyStress, processAssemblyRegions)
@@ -102,6 +102,8 @@ runCLI = do
     ("site" : rest) -> do
       (backend,remaining) <- backendArgs "site" rest
       case remaining of
+        ("--index" : dir : names) | not (null names) -> processSiteIndex dir names >>= finish
+        ("--index" : _) -> bad "site --index takes an output directory and one or more build names"
         (dir : specs) | not (null specs) -> mapM_ (needExt ".assemble") specs >> processSiteWithBackend backend stderrEmit dir specs >>= finish
         _ -> bad "site takes an output directory and one or more .assemble files"
     ("plan" : rest) -> do
@@ -230,6 +232,7 @@ usage h =
     , "  coscad plan <spec.assemble> [--png]     build instructions: ordered steps, preload sheet, BOM"
     , "  coscad calibrate <times.json>           fit the plan cost weights to timed builds (seconds)"
     , "  coscad site <dir> <spec.assemble>...    static phone-friendly site: step images, search across builds"
+    , "  coscad site --index <dir> <name>...     rewrite the site index from each build's build.json, no planning"
     , "  coscad instances <model.assemble> [-o instances.json]  resolved physical leaves and transforms"
     , "  coscad stress <model.assemble> --bonded analysis.json [--preview] [-o report.json]  experimental bonded FEA"
     , "  coscad mass <part.coscad|components.json> [--density g/cm3] [-o report.json]"

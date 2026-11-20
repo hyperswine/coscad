@@ -8,6 +8,12 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Faster manual builds:** `coscad site` writes `<name>/build.json` for each
+  build, and `coscad site --index DIR name ...` rewrites the index from those
+  without planning. `scripts/build-manual.sol` caches each build's pages under a
+  hash of its inputs and the `coscad` binary (`OUTDIR-cache`, or `MANUAL_CACHE`),
+  so an update replans only the builds that changed: 409 s cold, 5 s unchanged.
+
 - **Assembly analysis:** `coscad instances` exports recursive physical identities,
   transforms, print frames and source hashes. `coscad stress model.assemble
   --bonded analysis.json` connects explicit rectangular supports, loads and bonds

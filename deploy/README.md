@@ -8,6 +8,12 @@ Build it locally with `sol scripts/build-manual.sol OUTDIR` from the checkout,
 with a current `coscad` first on PATH (the builder stages the site beside OUTDIR
 and swaps it in with two renames).
 
+Build pages are cached in `OUTDIR-cache` (`MANUAL_CACHE` overrides it), one
+entry per build keyed by a hash of its input files and the `coscad` binary.
+An update replans only the builds whose inputs changed, and every build after a
+compiler change. Delete the folder to force a full replan; `--force` on the
+updater rebuilds the site but still reuses cached pages.
+
 **Serving machine** (mac mini, on the tailnet): a checkout at `~/srv/coscad`,
 the compiler installed to `~/srv/bin`, the site at `~/srv/manual-www`, nginx
 serving it on port 6210 (`manual-nginx-mini.conf`), and a launchd job
@@ -31,5 +37,7 @@ reload it (`launchctl unload` then `launchctl load` on that path).
 proxies to the mini over Tailscale (`proxy_pass http://100.107.153.43:6210`).
 
 Pushing to `main` updates https://manual.cswine.cloud within about five minutes plus
-build time (a minute or two for the compiler build and the native plan renders;
+build time. With the build cache, a push that leaves the compiler and plan inputs
+alone needs no replanning; a compiler change still replans everything (about 7
+minutes here, 15 or so on the mini). Build time (a minute or two for the compiler build and the native plan renders;
 since 2026-10-29 the site needs no OpenSCAD or BOSL2, only pandoc and mandoc).

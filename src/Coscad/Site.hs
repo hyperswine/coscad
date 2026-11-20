@@ -2,7 +2,7 @@
 -- site. One page per build (steps with images, preload sheet, BOM,
 -- step-through navigation, in-build search) and an index with search
 -- across builds. Plain HTML/CSS/JS, no server, host anywhere.
-module Coscad.Site (processSite, processSiteWithBackend, buildPageHtml, indexHtml) where
+module Coscad.Site (processSite, processSiteWithBackend, processSiteIndex, buildPageHtml, indexHtml) where
 
 import Control.Monad (forM, forM_, when)
 import Coscad.IO (readFileUtf8, writeFileUtf8)
@@ -158,9 +158,44 @@ processSiteWithBackend backend emit outDir specs = runCommand $ do
     let tags = sort (uniq [w | l <- lines spec', let ws = words l, take 1 ws /= ["//"], w <- ws, any (`isPrefixOf` w) ["material=", "profile=", "M"], length w > 1])
         screws = length [() | s <- psSteps summary, (specName, _, _, _) <- ssFasteners s, specName `notElem` ["peg", "push", "drop", "screw"]]
     putStrLn ("Wrote " ++ dest </> "index.html")
-    return (name, name, tags, length (psParts summary), screws, nSteps)
-  writeFileUtf8 (outDir </> "index.html") (indexHtml builds)
-  putStrLn ("Wrote " ++ outDir </> "index.html" ++ " (" ++ show (length builds) ++ " builds)")
+    let entry = (name, name, tags, length (psParts summary), screws, nSteps)
+    writeFileUtf8 (dest </> "build.json") (encodePretty (entryJson entry))
+    return entry
+  writeIndex outDir builds
   where
     trim = reverse . dropWhile isSpace . reverse . dropWhile isSpace
     uniq = foldr (\x acc -> if x `elem` acc then acc else x : acc) []
+
+writeIndex :: FilePath -> [(String, String, [String], Int, Int, Int)] -> IO ()
+writeIndex outDir builds = do
+  writeFileUtf8 (outDir </> "index.html") (indexHtml builds)
+  putStrLn ("Wrote " ++ outDir </> "index.html" ++ " (" ++ show (length builds) ++ " builds)")
+
+-- | One build's index entry, saved as DIR/<name>/build.json so the index can
+-- be rewritten without planning again.
+entryJson :: (String, String, [String], Int, Int, Int) -> JValue
+entryJson (n, d, tags, p, f, st) = jobj
+  [ ("name", JString n), ("dir", JString d), ("tags", jlist (map JString tags))
+  , ("parts", JNumber (fromIntegral p)), ("screws", JNumber (fromIntegral f)), ("steps", JNumber (fromIntegral st)) ]
+
+entryFrom :: FilePath -> JValue -> Either String (String, String, [String], Int, Int, Int)
+entryFrom path v = do
+  let str k = case lookupKey k v of Just (JString x) -> Right x; _ -> Left (path ++ ": missing " ++ k)
+      int k = case lookupKey k v of Just (JNumber x) -> Right (round x); _ -> Left (path ++ ": missing " ++ k)
+  tags <- case lookupKey "tags" v of
+    Just (JArray xs) -> Right [t | JString t <- xs]
+    _ -> Left (path ++ ": missing tags")
+  (,,,,,) <$> str "name" <*> str "dir" <*> pure tags <*> int "parts" <*> int "screws" <*> int "steps"
+
+-- | Rewrite DIR/index.html from the build.json files of the named builds, in
+-- order, without planning anything. The builds must already be under DIR.
+processSiteIndex :: FilePath -> [String] -> IO (Either Failure ())
+processSiteIndex outDir names = runCommand $ do
+  when (null names) (abort (inputFailure "no builds given"))
+  builds <- forM names $ \name -> do
+    let path = outDir </> name </> "build.json"
+    ok <- doesFileExist path
+    if not ok then abort (inputFailure (path ++ " does not exist; run coscad site for that build first")) else do
+      text <- readFileUtf8 path
+      either (abort . inputFailure) return (decode text >>= entryFrom path)
+  writeIndex outDir builds
