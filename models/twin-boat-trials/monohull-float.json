@@ -1,0 +1,8 @@
+{
+  "schema": "coscad.float/1",
+  "body": "monohull.coscad",
+  "displacer": "monohull-envelope.coscad",
+  "opening": "monohull-opening.coscad",
+  "material": "pla",
+  "water": "fresh"
+}

@@ -1,0 +1,6 @@
+{
+  "schema": "coscad.float/1",
+  "body": "beach-outrigger.coscad",
+  "material": "pla",
+  "water": "fresh"
+}

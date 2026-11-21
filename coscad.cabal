@@ -65,8 +65,11 @@ library
       Coscad.Dim
       Coscad.Doctor
       Coscad.Dsl
+      Coscad.Flight
       Coscad.Format
+      Coscad.Gear
       Coscad.Geometry
+      Coscad.Hydro
       Coscad.IO
       Coscad.Image
       Coscad.Json
@@ -218,6 +221,7 @@ test-suite coscad-test
       Tier.Resolution
       Tier.Silence
       Tier.Bonded
+      Tier.Analysis
       Tier.Mass
       Tier.Instances
       Tier.Stress

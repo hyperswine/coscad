@@ -28,6 +28,18 @@
 .Op Fl -density Ar grams-per-cubic-centimetre
 .Op Fl o Ar report.json
 .Nm
+.Cm gears
+.Ar mesh.json
+.Op Fl o Ar report.json
+.Nm
+.Cm float
+.Ar part.coscad | float.json
+.Op Fl o Ar report.json
+.Nm
+.Cm flight
+.Ar flight.json
+.Op Fl o Ar report.json
+.Nm
 .Cm words
 .Ar part.coscad
 .Op Fl o Ar out.coscad
@@ -784,6 +796,49 @@ and
 .Sh AUTHORS
 .An Jasen Qin
 
+.Sh GEAR MESH REPORTS
+.Nm coscad gears
+sweeps a driver part through its motion (a rotation about an axis, or a
+translation) with the driven part linked by a ratio, on the real meshes. At
+each step it reports intersection volume, surface gap, the driven part's free
+play each way before contact (backlash) and how many tooth pairs touch after a
+small push past contact (the sampled contact ratio). With
+.Ql torque_n_mm ,
+.Ql module_mm ,
+.Ql teeth
+and
+.Ql face_mm
+it adds a Lewis root bending stress and safety factor. The spec is
+coscad.gear-mesh/1 JSON; parts are placed as their files place them. The
+report is coscad.gear-mesh-report/1. Exit status 2 when the verdict is not
+ok: interference, contact lost within one tooth, or backlash over
+.Ql max_backlash_deg .
+.Sh FLOAT REPORTS
+.Nm coscad float
+solves static hydrostatics for a .coscad part (solid PLA, fresh water, sealed
+voids keep water out) or a coscad.float/1 JSON spec naming the body, an
+optional displacer (the solid that keeps water out, such as a closed
+envelope over an open hull), an optional opening mesh or points that flood
+the hull, material or density or a given mass and centre, payload point masses,
+water (fresh, sea or a density) and heel angles. It reports draft, waterline,
+upright trim, reserve buoyancy, the righting-arm curve over heel (heel about
+x, the hull's length), the largest righting arm, the first heel without
+righting and the downflooding heel. The report is coscad.float-report/1.
+See docs/2026-11-21-GEARS-AND-FLOAT.md.
+.Sh FLIGHT REPORTS
+.Nm coscad flight
+solves a vortex lattice over every lifting surface in a coscad.flight/1 spec
+(x aft, y right, z up, mm; each surface a list of sections with leading edge,
+chord and incidence, optionally mirrored, with zero-lift angle, cm0, cd0 and
+cl_max) and reports lift slope, neutral point, static margin, span efficiency,
+trim angle, trim lift coefficient and speed, induced and profile drag, glide
+ratio, sink rate and the most heavily loaded section. Mass and CG come from
+.Ql mass_g
+and
+.Ql cg_mm
+or a coscad.mass-components/1 file. The report is coscad.flight-report/1. Exit
+status 2 when the verdict is not ok: no lift, unstable, no positive trim, or a
+section over its cl_max at trim. See docs/2026-11-22-FLIGHT-MODEL.md.
 .Sh MASS REPORTS
 .Nm coscad mass
 reports uniform-solid volume and centre for .coscad input. An explicit

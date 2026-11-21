@@ -1,0 +1,8 @@
+{
+  "schema": "coscad.float/1",
+  "body": "outrigger.coscad",
+  "displacer": "outrigger-envelope.coscad",
+  "opening": "outrigger-opening.coscad",
+  "material": "pla",
+  "water": "fresh"
+}

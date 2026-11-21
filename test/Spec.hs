@@ -45,6 +45,7 @@ import Tier.Resolution
 import Tier.Silence
 import Tier.Bonded
 import Tier.Mass
+import Tier.Analysis
 import Tier.Instances
 import Tier.Stress
 import Tier.Stdlib
@@ -75,6 +76,7 @@ main = do
     unless focused (coreTiers t update)
     experimentsTier t
     massTier t
+    analysisTier t
     instancesTier t
     stressTier t
     bondedTier t

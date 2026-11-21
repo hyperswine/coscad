@@ -98,6 +98,9 @@ coscad next frame.assemble   # -> frame_bed1.stl ... + frame_manifest.json
 coscad check frame.assemble  # interference / clearance check on real meshes
 coscad instances model.assemble -o instances.json # qualified physical leaves and transforms
 coscad stress experiments/assembly-fea/shelf.assemble --bonded experiments/assembly-fea/shelf-analysis.json # experimental bonded assembly FEA
+coscad gears models/sg90-rack/press-fit/gear-mesh.json # gear mesh sweep: interference, backlash, contact pairs, Lewis stress
+coscad float models/beach-outrigger/float.json # hydrostatics: draft, trim, righting-arm curve, downflooding
+coscad flight models/bolted-glider-balanced/flight.json # vortex lattice: neutral point, trim speed, glide ratio, stall check
 coscad stress bracket.coscad # deflection, peak stress and safety factor from the part's support/load lines; JSON references exact mesh
 coscad plan frame.assemble   # numbered build steps, preload sheet, BOM, step scenes
 coscad calibrate times.json  # fit the plan's cost weights to timed builds (seconds per term)
@@ -184,6 +187,15 @@ A line starting with `|>` continues the previous definition.
   mass and centre; `coscad mass components.json` combines explicit part/hardware masses.
   Sliced-filament mass automation is archived pending a Sol implementation.
   See [mass analysis](docs/2026-11-10-MASS-ANALYSIS.md) for schemas and limitations.
+- **Gear mesh**: `coscad gears mesh.json` sweeps a driver through one tooth with the
+  driven part linked by a ratio, on the real meshes, and reports interference, gap,
+  backlash, tooth pairs in contact and an optional Lewis root stress.
+- **Hydrostatics**: `coscad float part.coscad` (or a coscad.float/1 spec with an
+  envelope, opening and payload) reports draft, trim, reserve buoyancy and the
+  righting-arm curve over heel with the downflooding angle.
+- **Flight**: `coscad flight flight.json` solves a vortex lattice over the wing,
+  tail and fin and reports neutral point, static margin, trim speed, glide ratio
+  and which part of the span stalls first.
 - **Stress**: `coscad stress` solves a part's `support`/`load` lines with
   20-node hexahedra in Haskell and reports deflection, peak stress and
   safety factors (docs/2026-10-27-STRESS-COMMAND.md).

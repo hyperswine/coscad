@@ -1,0 +1,264 @@
+{
+  "schema": "coscad.float-report/1",
+  "source": "twin-boat-trials/monohull-float.json",
+  "water": {
+    "name": "fresh",
+    "density_g_cm3": 1
+  },
+  "mass_g": 44.96446448489877,
+  "mass_basis": "uniform solid pla at 1.24 g/cm3",
+  "payload": [],
+  "gravity_center_mm": [-4.826783453607493, 1.29796441882166e-15, 11.818152775973255],
+  "displacer_volume_cm3": 108.90346914611429,
+  "reserve_buoyancy_g": 63.93900466121552,
+  "upright": {
+    "floats": true,
+    "waterline_mm": 15.286859281694715,
+    "draft_mm": 15.286859281694715,
+    "opening_freeboard_mm": 12.713140718305285,
+    "static_trim_deg_bow_up": 0.5827256850898266
+  },
+  "stability": {
+    "max_righting_arm_mm": 8.214399105278348,
+    "heel_of_max_deg": 55,
+    "first_sampled_heel_with_no_righting_deg": null,
+    "downflooding_heel_deg": 35,
+    "max_righting_arm_before_downflooding_mm": 6.205819725497588,
+    "heel_of_max_before_downflooding_deg": 30,
+    "righting_arm_inverted_180_mm": -5.733604595878606e-17
+  },
+  "righting_curve": [
+    {
+      "heel_deg": 0,
+      "floats": true,
+      "waterline_mm": 15.286859281694715,
+      "displaced_g": 44.96446448489205,
+      "righting_arm_mm": 2.146005654063943e-15,
+      "opening_clearance_mm": 12.713140718305285,
+      "buoyancy_center_mm": [-4.028816365086092, -8.480412352422831e-16, 8.949855602559316],
+      "gravity_center_mm": [-4.826783453607493, 1.29796441882166e-15, 11.818152775973255]
+    },
+    {
+      "heel_deg": 5,
+      "floats": true,
+      "waterline_mm": 15.183598153197236,
+      "displaced_g": 44.96446448486057,
+      "righting_arm_mm": 1.1024613206101017,
+      "opening_clearance_mm": 10.618115567427845,
+      "buoyancy_center_mm": [-4.048786626836914, -2.1324812037053475, 8.856169138076838],
+      "gravity_center_mm": [-4.826783453607493, -1.0300198830952458, 11.773181136662801]
+    },
+    {
+      "heel_deg": 10,
+      "floats": true,
+      "waterline_mm": 14.864994192586472,
+      "displaced_g": 44.964464484856244,
+      "righting_arm_mm": 2.1347605043532436,
+      "opening_clearance_mm": 8.542066627749023,
+      "buoyancy_center_mm": [-4.110513501807411, -4.186961197290372, 8.579959216639317],
+      "gravity_center_mm": [-4.826783453607493, -2.052200692937128, 11.63860848006121]
+    },
+    {
+      "heel_deg": 15,
+      "floats": true,
+      "waterline_mm": 14.336009720231988,
+      "displaced_g": 44.964464484840676,
+      "righting_arm_mm": 3.130266519404484,
+      "opening_clearance_mm": 6.498256333401425,
+      "buoyancy_center_mm": [-4.2115884240160195, -6.1890295357575855, 8.126928989913873],
+      "gravity_center_mm": [-4.826783453607493, -3.0587630163531014, 11.415458985342413]
+    },
+    {
+      "heel_deg": 20,
+      "floats": true,
+      "waterline_mm": 13.60070930128709,
+      "displaced_g": 44.96446448489813,
+      "righting_arm_mm": 4.121155343119879,
+      "opening_clearance_mm": 4.502200640902295,
+      "buoyancy_center_mm": [-4.352726894147451, -8.1632016494029, 7.500583716202053],
+      "gravity_center_mm": [-4.826783453607493, -4.042046306283021, 11.105430954902566]
+    },
+    {
+      "heel_deg": 25,
+      "floats": true,
+      "waterline_mm": 12.661642713728309,
+      "displaced_g": 44.96446448490526,
+      "righting_arm_mm": 5.142034880659043,
+      "opening_clearance_mm": 2.5721370415211027,
+      "buoyancy_center_mm": [-4.537814022821709, -10.136602063826881, 6.7022116453652645],
+      "gravity_center_mm": [-4.826783453607493, -4.994567183167838, 10.710883889253362]
+    },
+    {
+      "heel_deg": 30,
+      "floats": true,
+      "waterline_mm": 11.532002818664292,
+      "displaced_g": 44.964464484949595,
+      "righting_arm_mm": 6.205819725497588,
+      "opening_clearance_mm": 0.7167084872999947,
+      "buoyancy_center_mm": [-4.76361785026816, -12.114896113484214, 5.730738294731207],
+      "gravity_center_mm": [-4.826783453607493, -5.909076387986626, 10.234820529798423]
+    },
+    {
+      "heel_deg": 35,
+      "floats": true,
+      "waterline_mm": 10.35779293159137,
+      "displaced_g": 44.96446448489401,
+      "righting_arm_mm": 7.034712729838208,
+      "opening_clearance_mm": -1.1873701639247045,
+      "buoyancy_center_mm": [-4.923946313998487, -13.81332668333317, 4.596888079207049],
+      "gravity_center_mm": [-4.826783453607493, -6.778613953494961, 9.680864006158115]
+    },
+    {
+      "heel_deg": 40,
+      "floats": true,
+      "waterline_mm": 9.186149767306475,
+      "displaced_g": 44.96446448488693,
+      "righting_arm_mm": 7.6012317490901955,
+      "opening_clearance_mm": -3.163807992452032,
+      "buoyancy_center_mm": [-5.014983156360792, -15.197793922868382, 3.328976776419277],
+      "gravity_center_mm": [-4.826783453607493, -7.596562173778186, 9.053230261965437]
+    },
+    {
+      "heel_deg": 45,
+      "floats": true,
+      "waterline_mm": 8.017311148404088,
+      "displaced_g": 44.96446448486247,
+      "righting_arm_mm": 7.965531045599789,
+      "opening_clearance_mm": -5.188884023657897,
+      "buoyancy_center_mm": [-5.062176611513934, -16.322227014589096, 1.9519199308782673],
+      "gravity_center_mm": [-4.826783453607493, -8.356695968989307, 8.356695968989312]
+    },
+    {
+      "heel_deg": 50,
+      "floats": true,
+      "waterline_mm": 6.852423934038363,
+      "displaced_g": 44.964464484943726,
+      "righting_arm_mm": 8.170730087950803,
+      "opening_clearance_mm": -7.239437497670735,
+      "buoyancy_center_mm": [-5.081267942324596, -17.22396034991624, 0.48667764748530545],
+      "gravity_center_mm": [-4.826783453607493, -9.053230261965437, 7.596562173778189]
+    },
+    {
+      "heel_deg": 55,
+      "floats": true,
+      "waterline_mm": 5.671197056570216,
+      "displaced_g": 44.964464484856165,
+      "righting_arm_mm": 8.214399105278348,
+      "opening_clearance_mm": -9.27070590167673,
+      "buoyancy_center_mm": [-5.095866781871563, -17.895263111436464, -1.0475157024206196],
+      "gravity_center_mm": [-4.826783453607493, -9.680864006158115, 6.778613953494963]
+    },
+    {
+      "heel_deg": 60,
+      "floats": true,
+      "waterline_mm": 4.453085668628387,
+      "displaced_g": 44.96446448494625,
+      "righting_arm_mm": 8.092730515411079,
+      "opening_clearance_mm": -11.23769535945491,
+      "buoyancy_center_mm": [-5.119338883527673, -18.3275510452095, -2.629680733883685],
+      "gravity_center_mm": [-4.826783453607493, -10.234820529798421, 5.909076387986629]
+    },
+    {
+      "heel_deg": 65,
+      "floats": true,
+      "waterline_mm": 3.203765618741479,
+      "displaced_g": 44.96446448483885,
+      "righting_arm_mm": 7.833766666810261,
+      "opening_clearance_mm": -13.121841178881493,
+      "buoyancy_center_mm": [-5.146772593479831, -18.544650556063623, -4.240022273486683],
+      "gravity_center_mm": [-4.826783453607493, -10.710883889253362, 4.99456718316784]
+    },
+    {
+      "heel_deg": 70,
+      "floats": true,
+      "waterline_mm": 1.9312422468274097,
+      "displaced_g": 44.96446448494804,
+      "righting_arm_mm": 7.4604906852752215,
+      "opening_clearance_mm": -14.907301132570481,
+      "buoyancy_center_mm": [-5.174445300478539, -18.565921640177788, -5.860640026234708],
+      "gravity_center_mm": [-4.826783453607493, -11.105430954902566, 4.042046306283025]
+    },
+    {
+      "heel_deg": 75,
+      "floats": true,
+      "waterline_mm": 0.6440732757275374,
+      "displaced_g": 44.96446448492448,
+      "righting_arm_mm": 6.991412549379691,
+      "opening_clearance_mm": -16.5793598437946,
+      "buoyancy_center_mm": [-5.199551952812829, -18.406871534722104, -7.4751440033979],
+      "gravity_center_mm": [-4.826783453607493, -11.415458985342413, 3.058763016353104]
+    },
+    {
+      "heel_deg": 80,
+      "floats": true,
+      "waterline_mm": -0.6496663741639992,
+      "displaced_g": 44.96446448496129,
+      "righting_arm_mm": 6.4415537400389855,
+      "opening_clearance_mm": -18.12357072345494,
+      "buoyancy_center_mm": [-5.2173871715153695, -18.080162220100195, -9.068370141201495],
+      "gravity_center_mm": [-4.826783453607493, -11.63860848006121, 2.052200692937132]
+    },
+    {
+      "heel_deg": 85,
+      "floats": true,
+      "waterline_mm": -1.9418559447773562,
+      "displaced_g": 44.964464484953815,
+      "righting_arm_mm": 5.824135314337488,
+      "opening_clearance_mm": -19.52645601249011,
+      "buoyancy_center_mm": [-5.223408657643866, -17.59731645100029, -10.62618461310842],
+      "gravity_center_mm": [-4.826783453607493, -11.773181136662801, 1.0300198830952483]
+    },
+    {
+      "heel_deg": 90,
+      "floats": true,
+      "waterline_mm": -3.223065493691138,
+      "displaced_g": 44.96446448489723,
+      "righting_arm_mm": 5.15259415880845,
+      "opening_clearance_mm": -20.776934506308862,
+      "buoyancy_center_mm": [-5.217092763114351, -16.970746934781705, -12.13550045383221],
+      "gravity_center_mm": [-4.826783453607493, -11.818152775973255, 2.0216175672681628e-15]
+    },
+    {
+      "heel_deg": 100,
+      "floats": true,
+      "waterline_mm": -5.71571448418069,
+      "displaced_g": 44.9644644848381,
+      "righting_arm_mm": 3.6994973500689596,
+      "opening_clearance_mm": -22.788766489893025,
+      "buoyancy_center_mm": [-5.162604529978263, -15.33810583013017, -14.961815736277376],
+      "gravity_center_mm": [-4.826783453607493, -11.63860848006121, -2.052200692937128]
+    },
+    {
+      "heel_deg": 120,
+      "floats": true,
+      "waterline_mm": -10.255139578478811,
+      "displaced_g": 44.964464484905285,
+      "righting_arm_mm": 0.6709124715821932,
+      "opening_clearance_mm": -24.549470112347713,
+      "buoyancy_center_mm": [-4.859108932908893, -10.905733001380616, -19.582550805289827],
+      "gravity_center_mm": [-4.826783453607493, -10.234820529798423, -5.909076387986625]
+    },
+    {
+      "heel_deg": 150,
+      "floats": true,
+      "waterline_mm": -15.996586290102424,
+      "displaced_g": 44.96446448490826,
+      "righting_arm_mm": -2.908724983677667,
+      "opening_clearance_mm": -20.286766032013237,
+      "buoyancy_center_mm": [-4.360560100209222, -3.0003514043089603, -23.19055890221425],
+      "gravity_center_mm": [-4.826783453607493, -5.9090763879866275, -10.234820529798423]
+    },
+    {
+      "heel_deg": 180,
+      "floats": true,
+      "waterline_mm": -19.377704518339016,
+      "displaced_g": 44.964464484894044,
+      "righting_arm_mm": -5.733604595878606e-17,
+      "opening_clearance_mm": -8.662295481660987,
+      "buoyancy_center_mm": [-4.6596371962220235, -2.6879346697558793e-15, -23.807058175227553],
+      "gravity_center_mm": [-4.826783453607493, -2.7452707157146654e-15, -11.818152775973255]
+    }
+  ],
+  "assumptions": ["Static equilibrium only: no waves, surf, slamming, dynamic capsize or leakage rate.", "Heel is about the x axis (the hull's length) at zero trim; trim is solved upright only.", "Mass is uniform solid geometry unless given: printed shells and infill are not inferred.", "Sealed internal voids keep water out unless a displacer is given; an opening floods the hull only as a reported downflooding limit."]
+}
+

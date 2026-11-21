@@ -20,10 +20,14 @@ import Coscad.Stress.Command (processStress)
 import Coscad.Assembly.Instances
 import Coscad.Stress.Assembly (processAssemblyStress, processAssemblyRegions)
 import Coscad.Mass.Command (massArgs, processMass)
+import Coscad.Gear (gearArgs, processGears)
+import Coscad.Hydro (floatArgs, processFloat)
+import Coscad.Flight (flightArgs, processFlight)
 import System.Directory (canonicalizePath)
 import Coscad.Words (renderWords)
 import Coscad.IO (readFileUtf8, writeFileUtf8, writeFileUtf8Atomic)
 import Data.List (isInfixOf, isPrefixOf)
+import Data.Maybe (fromMaybe)
 import Data.Version (showVersion)
 import GHC.IO.Encoding (setLocaleEncoding, utf8)
 import Paths_coscad (version)
@@ -57,7 +61,7 @@ runCLI = do
       [("schema",JString "coscad.capabilities/1"), ("version",JString (showVersion version))
       ,("default_backend",JString (backendName defaultBackend))
       ,("backends",JArray [JString (backendName defaultBackend)])
-      ,("features",JArray (map JString ["validate-json", "project-buffers", "stress", "assembly-bonded-stress", "instances", "mass", "stl", "check", "next", "plan", "image-backends", "native-images", "openscad-retired", "plan-geometry", "plan-joints", "calibrate"]))
+      ,("features",JArray (map JString ["validate-json", "project-buffers", "stress", "assembly-bonded-stress", "instances", "mass", "gears", "float", "flight", "stl", "check", "next", "plan", "image-backends", "native-images", "openscad-retired", "plan-geometry", "plan-joints", "calibrate"]))
       ,("materials",JArray [jobj [("name",JString (matName m)),("young_mpa",JNumber (matYoungMPa m))]
           | m <- materialTable])]))
     ["doctor"] -> runDoctor >>= finish
@@ -137,6 +141,21 @@ runCLI = do
         ["--preview","-o",target] -> pure (True,Just target)
         _ -> bad "usage: coscad stress model.assemble --bonded analysis.json [--preview] [-o report.json]" >> exitFailure
       (if preview then processAssemblyRegions else processAssemblyStress) stderrEmit f config out >>= finish
+    ("gears" : rest) -> do
+      (f,out) <- either (\e -> bad e >> exitFailure) pure (gearArgs rest)
+      reportCommand f out (processGears f) $ \report ->
+        case lookupKey "verdict" report >>= asString of
+          Just "ok" -> pure ()
+          v -> hPutStrLn stderr ("Error: gears: " ++ fromMaybe "no verdict" v) >> exitWith (ExitFailure 2)
+    ("float" : rest) -> do
+      (f,out) <- either (\e -> bad e >> exitFailure) pure (floatArgs rest)
+      reportCommand f out (processFloat f) (const (pure ()))
+    ("flight" : rest) -> do
+      (f,out) <- either (\e -> bad e >> exitFailure) pure (flightArgs rest)
+      reportCommand f out (processFlight f) $ \report ->
+        case lookupKey "verdict" report >>= asString of
+          Just "ok" -> pure ()
+          v -> hPutStrLn stderr ("Error: flight: " ++ fromMaybe "no verdict" v) >> exitWith (ExitFailure 2)
     ("mass" : rest) -> do
       (f,density,out) <- either (\e -> bad e >> exitFailure) pure (massArgs rest)
       case out of
@@ -237,6 +256,14 @@ usage h =
     , "  coscad stress <model.assemble> --bonded analysis.json [--preview] [-o report.json]  experimental bonded FEA"
     , "  coscad mass <part.coscad|components.json> [--density g/cm3] [-o report.json]"
     , "                                          solid geometry or explicit component mass and centre of mass"
+    , "  coscad gears <mesh.json> [-o report.json]"
+    , "                                          gear mesh sweep on the real meshes: interference, gap, backlash,"
+    , "                                          contact pairs, optional Lewis tooth stress; exit 2 unless the verdict is ok"
+    , "  coscad float <part.coscad|float.json> [-o report.json]"
+    , "                                          static hydrostatics: draft, trim, righting-arm curve over heel, downflooding"
+    , "  coscad flight <flight.json> [-o report.json]"
+    , "                                          vortex-lattice flight model: lift slope, neutral point, static margin,"
+    , "                                          trim speed, induced drag, glide ratio; exit 2 unless the verdict is ok"
     , "  coscad stress <part.coscad> [-o part_stress.json] [--full]"
     , "                                          stress and deflection of a part under its support/load lines;"
     , "                                          exit 2 when the requested safety factor is not met; --full adds every node and cell"
@@ -272,3 +299,22 @@ usage h =
     , ""
     , "Manual: man coscad   Docs: docs/2025-07-14-LANGEXTENSION.md, docs/2026-07-24-TOPOLOGICAL.md, docs/2026-07-24-MANUFACTURING.md"
     ]
+
+-- | Run a read-only report command: print the JSON or write it atomically,
+-- refusing to overwrite the input, then let the caller set the exit status.
+reportCommand :: FilePath -> Maybe FilePath -> IO (Either Failure JValue) -> (JValue -> IO ()) -> IO ()
+reportCommand f out run after = do
+  case out of
+    Just target -> do
+      src <- canonicalizePath f
+      dest <- canonicalizePath target
+      unless (src /= dest) (bad "output must not overwrite the input")
+    Nothing -> pure ()
+  result <- run
+  case result of
+    Left err -> finish (Left err)
+    Right report -> do
+      case out of
+        Nothing -> putStrLn (encodePretty report)
+        Just target -> writeFileUtf8Atomic target (encodePretty report ++ "\n")
+      after report

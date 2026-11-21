@@ -1,0 +1,12 @@
+{
+  "schema": "coscad.gear-mesh/1",
+  "driver": {"part": "pinion.coscad", "rotate": {"axis": [0, 0, 1], "origin": [0, 0, 0]}},
+  "driven": {"part": "rack.coscad", "translate": [-1, 0, 0]},
+  "teeth": 22,
+  "driven_teeth": 0,
+  "module_mm": 1.5,
+  "face_mm": 4,
+  "torque_n_mm": 176,
+  "material": "pla",
+  "steps": 24
+}

@@ -1,0 +1,138 @@
+{
+ "schema": "coscad.flight/1",
+ "frame": "x aft from the wing root leading edge, y right, z up from the keel (design.json frame with x and y swapped)",
+ "mass_g": 218.4,
+ "cg_mm": [
+  90.5,
+  0,
+  41.5
+ ],
+ "parasite_drag_area_mm2": 350,
+ "surfaces": [
+  {
+   "name": "wing",
+   "mirror": true,
+   "zero_lift_deg": -3,
+   "cm0": -0.06,
+   "cd0": 0.025,
+   "cl_max": 1.0,
+   "sections": [
+    {
+     "le": [
+      0.0,
+      0.0,
+      44.0
+     ],
+     "chord": 120.0,
+     "incidence_deg": 2.5
+    },
+    {
+     "le": [
+      0.0,
+      30.83,
+      47.24
+     ],
+     "chord": 120.0,
+     "incidence_deg": 2.5
+    },
+    {
+     "le": [
+      146.829,
+      204.872,
+      65.533
+     ],
+     "chord": 73.902,
+     "incidence_deg": 2.5
+    },
+    {
+     "le": [
+      156.898,
+      216.806,
+      66.787
+     ],
+     "chord": 64.836,
+     "incidence_deg": 2.5
+    },
+    {
+     "le": [
+      164.449,
+      225.756,
+      67.728
+     ],
+     "chord": 48.826,
+     "incidence_deg": 2.5
+    },
+    {
+     "le": [
+      169.483,
+      231.724,
+      68.355
+     ],
+     "chord": 29.113,
+     "incidence_deg": 2.5
+    },
+    {
+     "le": [
+      172.0,
+      234.707,
+      68.669
+     ],
+     "chord": 16.5,
+     "incidence_deg": 2.5
+    }
+   ]
+  },
+  {
+   "name": "stab",
+   "mirror": true,
+   "zero_lift_deg": 0,
+   "cm0": 0,
+   "cd0": 0.02,
+   "cl_max": 0.8,
+   "sections": [
+    {
+     "le": [
+      161.0,
+      0,
+      19.0
+     ],
+     "chord": 72.0,
+     "incidence_deg": -5.5
+    },
+    {
+     "le": [
+      161.0,
+      115.0,
+      19.0
+     ],
+     "chord": 50.0,
+     "incidence_deg": -5.5
+    }
+   ]
+  },
+  {
+   "name": "fin",
+   "mirror": false,
+   "cd0": 0.02,
+   "cl_max": 0.8,
+   "sections": [
+    {
+     "le": [
+      160,
+      0,
+      19.0
+     ],
+     "chord": 64.0
+    },
+    {
+     "le": [
+      188.0,
+      0,
+      114.0
+     ],
+     "chord": 38.0
+    }
+   ]
+  }
+ ]
+}

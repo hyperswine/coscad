@@ -1,0 +1,301 @@
+{
+  "schema": "coscad.gear-mesh-report/1",
+  "source": "sg90-rack/press-fit/gear-mesh.json",
+  "verdict": "ok",
+  "driver": {
+    "part": "pinion.coscad",
+    "motion": "deg"
+  },
+  "driven": {
+    "part": "rack.coscad",
+    "motion": "mm"
+  },
+  "ratio": {
+    "value": 0.2879793265790644,
+    "unit": "mm per driver deg"
+  },
+  "sweep_deg": {
+    "start": 0,
+    "span": 16.363636363636363,
+    "steps": 24
+  },
+  "interference_at_deg": [],
+  "max_overlap_mm3": 0,
+  "gap_mm": {
+    "min": 0.17171989429706652,
+    "max": 0.1739777210026587
+  },
+  "backlash": {
+    "driver_deg": {
+      "min": 1.27679781480269,
+      "max": 1.2908135760914194
+    },
+    "driver_pitch_mm": {
+      "min": 0.3676913748844996,
+      "max": 0.3717276243819208
+    },
+    "driven": {
+      "min": 0.3676913748844996,
+      "max": 0.37172762438192086
+    },
+    "driven_unit": "mm",
+    "no_contact_within_one_tooth_at_deg": []
+  },
+  "contact_pairs": {
+    "push": {
+      "driven": 4.71238898038469e-3,
+      "unit": "mm"
+    },
+    "forward": {
+      "min": 1,
+      "mean": 1.5416666666666667
+    },
+    "backward": {
+      "min": 1,
+      "mean": 1.5416666666666667
+    }
+  },
+  "lewis": {
+    "torque_n_mm": 176,
+    "tangential_force_n": 10.666666666666666,
+    "face_mm": 4,
+    "material": "pla",
+    "strength_mpa": 50,
+    "teeth": [
+      {
+        "part": "driver",
+        "teeth": 22,
+        "lewis_y": 0.331,
+        "root_stress_mpa": 5.370929842228935,
+        "safety_factor": 9.309375000000001
+      },
+      {
+        "part": "driven",
+        "teeth": "rack",
+        "lewis_y": 0.485,
+        "root_stress_mpa": 3.6655211912943866,
+        "safety_factor": 13.640625000000002
+      }
+    ]
+  },
+  "steps": [
+    {
+      "driver_deg": 0,
+      "overlap_mm3": 0,
+      "gap_mm": 0.1739777210026587,
+      "free_play_forward": 0.18585187477943357,
+      "free_play_backward": 0.18576283573345712,
+      "pairs_forward": 1,
+      "pairs_backward": 1
+    },
+    {
+      "driver_deg": 0.6818181818181818,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17249138320631308,
+      "free_play_forward": 0.18445646159201615,
+      "free_play_backward": 0.18622376025852794,
+      "pairs_forward": 1,
+      "pairs_backward": 1
+    },
+    {
+      "driver_deg": 1.3636363636363635,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17185111142911544,
+      "free_play_forward": 0.18387616295167708,
+      "free_play_backward": 0.18454521975772145,
+      "pairs_forward": 1,
+      "pairs_backward": 1
+    },
+    {
+      "driver_deg": 2.0454545454545454,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17174302782173426,
+      "free_play_forward": 0.1841385051249959,
+      "free_play_backward": 0.18370370246514842,
+      "pairs_forward": 1,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 2.727272727272727,
+      "overlap_mm3": 0,
+      "gap_mm": 0.1718801741337898,
+      "free_play_forward": 0.18520837807807022,
+      "free_play_backward": 0.18381942513689078,
+      "pairs_forward": 1,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 3.4090909090909087,
+      "overlap_mm3": 0,
+      "gap_mm": 0.1728073166637935,
+      "free_play_forward": 0.18695095928071467,
+      "free_play_backward": 0.18474155506730375,
+      "pairs_forward": 1,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 4.090909090909091,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17206693151983268,
+      "free_play_forward": 0.18635493134518735,
+      "free_play_backward": 0.1844668541620513,
+      "pairs_forward": 1,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 4.7727272727272725,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17181211442758088,
+      "free_play_forward": 0.18487581583694654,
+      "free_play_backward": 0.18411041709787399,
+      "pairs_forward": 1,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 5.454545454545454,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17178945009047403,
+      "free_play_forward": 0.18406463361366526,
+      "free_play_backward": 0.18362674127083434,
+      "pairs_forward": 1,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 6.136363636363637,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17181750980424043,
+      "free_play_forward": 0.1839520006249063,
+      "free_play_backward": 0.1838413337980459,
+      "pairs_forward": 2,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 6.8181818181818175,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17239504964695207,
+      "free_play_forward": 0.18432753754752648,
+      "free_play_backward": 0.18505333216835718,
+      "pairs_forward": 2,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 7.5,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17171989429706652,
+      "free_play_forward": 0.18397475192687507,
+      "free_play_backward": 0.18586002030729898,
+      "pairs_forward": 2,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 8.181818181818182,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17232185036305492,
+      "free_play_forward": 0.18431124649179575,
+      "free_play_backward": 0.1843570299760045,
+      "pairs_forward": 2,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 8.863636363636363,
+      "overlap_mm3": 0,
+      "gap_mm": 0.1717657647997955,
+      "free_play_forward": 0.18581760738634484,
+      "free_play_backward": 0.18402081629135503,
+      "pairs_forward": 2,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 9.545454545454545,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17244520273649658,
+      "free_play_forward": 0.18506203945676494,
+      "free_play_backward": 0.18437753423580353,
+      "pairs_forward": 2,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 10.227272727272727,
+      "overlap_mm3": 0,
+      "gap_mm": 0.1718680473142434,
+      "free_play_forward": 0.18385369252997957,
+      "free_play_backward": 0.1840042443553531,
+      "pairs_forward": 2,
+      "pairs_backward": 2
+    },
+    {
+      "driver_deg": 10.909090909090908,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17180281461661084,
+      "free_play_forward": 0.18363825736195435,
+      "free_play_backward": 0.184116877344112,
+      "pairs_forward": 2,
+      "pairs_backward": 1
+    },
+    {
+      "driver_deg": 11.590909090909092,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17181552418403587,
+      "free_play_forward": 0.18411771998492565,
+      "free_play_backward": 0.18492749780685092,
+      "pairs_forward": 2,
+      "pairs_backward": 1
+    },
+    {
+      "driver_deg": 12.272727272727273,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17207051908793652,
+      "free_play_forward": 0.1844699438450347,
+      "free_play_backward": 0.1864046471531932,
+      "pairs_forward": 2,
+      "pairs_backward": 1
+    },
+    {
+      "driver_deg": 12.954545454545453,
+      "overlap_mm3": 0,
+      "gap_mm": 0.1728110815355216,
+      "free_play_forward": 0.1847834062277154,
+      "free_play_backward": 0.18694421815420542,
+      "pairs_forward": 2,
+      "pairs_backward": 1
+    },
+    {
+      "driver_deg": 13.636363636363635,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17193764663103753,
+      "free_play_forward": 0.18387840999384686,
+      "free_play_backward": 0.18519714286722144,
+      "pairs_forward": 2,
+      "pairs_backward": 1
+    },
+    {
+      "driver_deg": 14.318181818181818,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17180049005838072,
+      "free_play_forward": 0.18376212556156205,
+      "free_play_backward": 0.18412642727333345,
+      "pairs_forward": 2,
+      "pairs_backward": 1
+    },
+    {
+      "driver_deg": 15,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17183740714271498,
+      "free_play_forward": 0.18460167669223654,
+      "free_play_backward": 0.18386436598028588,
+      "pairs_forward": 1,
+      "pairs_backward": 1
+    },
+    {
+      "driver_deg": 15.681818181818182,
+      "overlap_mm3": 0,
+      "gap_mm": 0.17247774664795942,
+      "free_play_forward": 0.18627263342572006,
+      "free_play_backward": 0.18444606902198105,
+      "pairs_forward": 1,
+      "pairs_backward": 1
+    }
+  ],
+  "assumptions": ["Rigid parts exactly as modelled: printed size error, tooth deflection and shaft play are not included.", "Backlash is the free play of the driven part each way before the meshes intersect, with the driver held.", "Contact pairs count separate intersections after pushing past first contact (contact_push, default 0.1% of one tooth's driven motion); the mean approximates the contact ratio but depends on the push and on how finely the tooth flanks are tessellated.", "Lewis stress is the classic root bending estimate for 20 degree full-depth teeth with the whole load on one tooth tip; no dynamic or stress-concentration factors."]
+}
+

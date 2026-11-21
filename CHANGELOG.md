@@ -8,6 +8,25 @@ and this project adheres to the
 
 ## Unreleased
 
+- **Flight model:** `coscad flight flight.json` solves a vortex lattice over
+  every lifting surface and reports lift slope, neutral point, static margin,
+  trim speed, induced drag, glide ratio, sink rate and the most loaded section.
+  Exit 2 when unstable, untrimmable or stalling at trim. It agrees with AR 6
+  wing theory; on the balanced glider it puts the neutral point at 101.1 mm
+  (hand estimate 105.1).
+
+- **Gear mesh analysis:** `coscad gears mesh.json` sweeps a driver through one
+  tooth (or a given span) with the driven part linked by a ratio, on the real
+  meshes: interference, gap, backlash each way, tooth pairs in contact and an
+  optional Lewis root stress. Exit 2 on interference, lost contact or backlash
+  over a limit. The SG90 rack and pinion measures 0.37 mm of backlash, as designed.
+
+- **Hydrostatics:** `coscad float part.coscad|float.json` brings back the
+  boat checks the Sol cutover removed with the Python verifiers: draft, trim,
+  reserve buoyancy, the righting-arm curve and downflooding, in Haskell with no
+  external libraries. It reproduces the recorded beach-outrigger and twin-boat
+  numbers.
+
 - **Faster manual builds:** `coscad site` writes `<name>/build.json` for each
   build, and `coscad site --index DIR name ...` rewrites the index from those
   without planning. `scripts/build-manual.sol` caches each build's pages under a

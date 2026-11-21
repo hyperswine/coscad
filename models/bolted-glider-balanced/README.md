@@ -221,3 +221,15 @@ Reproduce before dispatch with `python prepare_tail_p1s.py`,
 `python slice.py p1s-tail`, `python verify_packages.py p1s-tail`, and
 `python balance.py --right-wing-job p1s-wing-right --tail-job p1s-tail --output p1s-tail/balance.json`.
 Preparation refuses to overwrite a job that already has a dispatch record.
+
+## Vortex-lattice check, 22 November
+
+`coscad flight flight.json` models the wing, stabiliser and fin from
+`design.json` with the same airfoil assumptions as above. It puts the neutral
+point at **101.1 mm** (static margin **10.7%**), 4 mm ahead of the hand
+estimate. At the built -5.5 degree tail incidence it trims at CL 0.90,
+9.5 degrees and about 9.4 m/s, with a glide near 9.6:1. The swept outer panel
+(y about 156 mm) then reaches cl 1.04, above the assumed cl_max of 1.0, so the
+tips would stall first at that trim. Less tail-down incidence or tip washout
+would raise trim speed. These are predictions: the glider has not been flown.
+See `flight-report.json` and `docs/2026-11-22-FLIGHT-MODEL.md`.
