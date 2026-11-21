@@ -1,5 +1,10 @@
-# Press-fit SG90 rack and pinion, revision 3. Dimensions in mm.
+# Press-fit SG90 rack and pinion, revision 4. Dimensions in mm.
 # Run from the CoScad root or this directory: sol build.sol
+#
+# Revision 4 (2026-11-21): base only. Revision 3 was the best so far, but the
+# pinion sat about 10 mm above the rack, so the shelf top (and the rail, studs
+# and keeper on it) is 10 mm higher: 38.2 mm. Also writes tall-pinion.coscad,
+# a 17 mm pinion (10 mm taller) to try on the revision 3 base as it is.
 #
 # Revision 3 (2026-11-21): base only. Cable slot moved to the shaft end and
 # floor raised 3 mm (see the socket section). Writes base.coscad as well, so
@@ -53,11 +58,13 @@ gear = List.concat (List.map (fn i ->
 # Bore: plain through-hole with a chamfer at each end so the first layer's
 # squish does not close the entry.
 chamfer = 0.4.
-bore d = minus (poly gear face) [ disk (Num.div d 2) (face + 2) 0 0 m1
+bore h d = minus (poly gear h) [ disk (Num.div d 2) (h + 2) 0 0 m1
   , cone (Num.div d 2 + chamfer + 0.01) (Num.div d 2 - 0.01) (chamfer + 0.02) 0 0 (0 - 0.01)
-  , cone (Num.div d 2 - 0.01) (Num.div d 2 + chamfer + 0.01) (chamfer + 0.02) 0 0 (face - chamfer - 0.01) ].
+  , cone (Num.div d 2 - 0.01) (Num.div d 2 + chamfer + 0.01) (chamfer + 0.02) 0 0 (h - chamfer - 0.01) ].
 pinionBore = 4.95.
-pinion = bore pinionBore.
+pinion = bore face pinionBore.
+# Same gear, 10 mm taller, so its teeth reach 10 mm higher on the same shaft.
+tallPinion = bore (face + 10) pinionBore.
 
 # Rack, in assembly coordinates: shaft at the origin, teeth facing -y.
 backlash = 0.2.
@@ -98,7 +105,8 @@ endY = Num.div pocketL 2 - ribIn + ribR.
 # Two ribs per end, clear of the lead slot in the +y wall.
 endRibs = List.concat (List.map (fn x ->
     [disk ribR ribH x (sockY + endY) ribZ, disk ribR ribH x (sockY - endY) ribZ]) [4.5, 0 - 4.5]).
-shelfTop = 28.2.
+# Revision 4: 10 mm higher than revision 3 (28.2), to meet the pinion.
+shelfTop = 38.2.
 # The shelf front stays 1 mm outside the gear tips, so a pinion pressed
 # low still clears it. Rack teeth overhang the front edge.
 shelfFront = tipR + 1.
@@ -174,4 +182,7 @@ assembly = Str.join "\n"
 > root = R.modelDir "models/sg90-rack/press-fit" "build.sol";
   _ = writePath "{root}/plate.coscad" ("main = " + plate + "\n");
   _ = List.map (fn np -> (name, shape) = np; writePath "{root}/{name}.coscad" ("main = " + shape + "\n")) asmParts;
+  _ = writePath "{root}/tall-pinion.coscad" ("main = " + tallPinion + "\n");
+  # Revision 4 print: the new base and the tall pinion.
+  _ = writePath "{root}/print-r4.coscad" ("main = " + union [base, move tallPinion 0 (0 - 44) 0] + "\n");
   writePath "{root}/sg90-rack.assemble" assembly.

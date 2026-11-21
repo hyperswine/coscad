@@ -1,0 +1,165 @@
+{
+ "job": "x1c-r4",
+ "printer": "x1c",
+ "material": "pla",
+ "spool": "external",
+ "package_sha256": "629fcf3de582d1c6094aea4e95547fd381328f39e16e0fe613475c3068a444e1",
+ "remote_name": "sg90-press-fit-r4-x1c-20261121-113538.gcode.3mf",
+ "bed_clear_owner_confirmed": true,
+ "created_at": "2026-11-21T11:35:38+11:00",
+ "events": [
+  {
+   "at": "2026-11-21T11:36:04+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 225,
+    "mc_remaining_time": 58,
+    "subtask_name": "sg90-press-fit-r4-x1c-20261121-113538.gcode",
+    "nozzle_temper": 73.0,
+    "bed_temper": 29.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T11:36:21+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 225,
+    "mc_remaining_time": 58,
+    "subtask_name": "sg90-press-fit-r4-x1c-20261121-113538.gcode",
+    "nozzle_temper": 75.0,
+    "bed_temper": 41.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T11:36:38+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 225,
+    "mc_remaining_time": 58,
+    "subtask_name": "sg90-press-fit-r4-x1c-20261121-113538.gcode",
+    "nozzle_temper": 107.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T11:36:55+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 225,
+    "mc_remaining_time": 58,
+    "subtask_name": "sg90-press-fit-r4-x1c-20261121-113538.gcode",
+    "nozzle_temper": 197.0,
+    "bed_temper": 54.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T11:37:12+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 225,
+    "mc_remaining_time": 58,
+    "subtask_name": "sg90-press-fit-r4-x1c-20261121-113538.gcode",
+    "nozzle_temper": 248.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T11:37:29+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 8,
+    "layer_num": 0,
+    "total_layer_num": 225,
+    "mc_remaining_time": 54,
+    "subtask_name": "sg90-press-fit-r4-x1c-20261121-113538.gcode",
+    "nozzle_temper": 237.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T11:37:46+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 9,
+    "layer_num": 0,
+    "total_layer_num": 225,
+    "mc_remaining_time": 53,
+    "subtask_name": "sg90-press-fit-r4-x1c-20261121-113538.gcode",
+    "nozzle_temper": 205.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "hms": []
+   }
+  },
+  {
+   "at": "2026-11-21T11:38:03+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 9,
+    "layer_num": 0,
+    "total_layer_num": 225,
+    "mc_remaining_time": 53,
+    "subtask_name": "sg90-press-fit-r4-x1c-20261121-113538.gcode",
+    "nozzle_temper": 200.0,
+    "bed_temper": 55.0,
+    "print_error": 0,
+    "hms": []
+   }
+  }
+ ],
+ "before": {
+  "gcode_state": "FINISH",
+  "subtask_name": "sg90-press-fit-r3-base-x1c-20261121-093703.gcode",
+  "print_error": 0,
+  "hms": []
+ },
+ "uploaded": true,
+ "phase": "acknowledged",
+ "sequence_id": "1795221346",
+ "dispatch_attempted": true,
+ "reply": {
+  "ams_mapping": [],
+  "bed_levelling": true,
+  "bed_type": "auto",
+  "command": "project_file",
+  "err_code": 0,
+  "flow_cali": true,
+  "layer_inspect": true,
+  "md5": "8104e5882ce285d91298dff679082a27",
+  "param": "Metadata/plate_1.gcode",
+  "profile_id": "0",
+  "project_id": "0",
+  "reason": "SUCCESS",
+  "result": "SUCCESS",
+  "sequence_id": "1795221346",
+  "subtask_id": "0",
+  "subtask_name": "sg90-press-fit-r4-x1c-20261121-113538.gcode",
+  "task_id": "0",
+  "timelapse": false,
+  "url": "file:///sdcard/sg90-press-fit-r4-x1c-20261121-113538.gcode.3mf",
+  "use_ams": false,
+  "vibration_cali": true
+ }
+}
