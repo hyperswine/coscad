@@ -1,0 +1,10 @@
+platform bottom 46 mm
+Wrote /tmp/move-twin.stl: 12 triangles, volume 1.000 mm^3, bounds [199.50 -0.50 -0.50] .. [200.50 0.50 0.50]
+platform bottom 64 mm
+Wrote /tmp/move-twin.stl: 12 triangles, volume 1.000 mm^3, bounds [199.50 -0.50 -0.50] .. [200.50 0.50 0.50]
+platform bottom 83 mm
+Wrote /tmp/move-twin.stl: 12 triangles, volume 1.000 mm^3, bounds [199.50 -0.50 -0.50] .. [200.50 0.50 0.50]
+platform bottom 102 mm
+Wrote /tmp/move-twin.stl: 12 triangles, volume 1.000 mm^3, bounds [199.50 -0.50 -0.50] .. [200.50 0.50 0.50]
+platform bottom 120.2 mm
+Wrote /tmp/move-twin.stl: 320 triangles, volume 1.000 mm^3, bounds [-27.50 -7.00 -0.50] .. [200.50 24.00 132.20]

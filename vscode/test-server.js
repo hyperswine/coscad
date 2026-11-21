@@ -26,6 +26,12 @@ async function run() {
     assert(init.capabilities.completionProvider.triggerCharacters.includes('@'))
     connection.sendNotification('initialized',{})
     connection.sendNotification('$/setTrace',{value:'off'})
+    const plateFile = path.resolve(__dirname, "../models/sg90-lift/edge/quad/plate.coscad")
+    const plateUri = pathToFileURL(plateFile).href
+    const plateDiagnostics = nextDiagnostics(plateUri)
+    connection.sendNotification("textDocument/didOpen", {textDocument: {uri: plateUri, languageId: "coscad", version: 1, text: fs.readFileSync(plateFile, "utf8")}})
+    assert.deepEqual(await plateDiagnostics, [])
+
     const part = 'main = box 20 30 4 |> frame socket top top bak\n'
     const file = path.join(dir,'part.coscad'),uri=pathToFileURL(file).href
     fs.writeFileSync(file,part)

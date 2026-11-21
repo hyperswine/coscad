@@ -1,0 +1,20 @@
+{
+  "reply": {
+    "command": "project_file",
+    "sequence_id": "11221028",
+    "result": "success",
+    "subtask_name": "edge-twin-1122-1028"
+  },
+  "startup": {
+    "command": "push_status",
+    "sequence_id": "12091",
+    "gcode_state": "PREPARE",
+    "subtask_name": "edge-twin-1122-1028",
+    "print_error": 0,
+    "hms": [],
+    "spool": "PLA",
+    "active": "254",
+    "nozzle_diameter": "0.4",
+    "layer_num": 340
+  }
+}

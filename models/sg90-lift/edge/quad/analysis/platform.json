@@ -1,0 +1,72 @@
+{
+  "schema": "coscad.stress/1",
+  "source": "models/sg90-lift/edge/quad/analysis/platform.coscad",
+  "geometry_backend": "native",
+  "material": {
+    "name": "pla",
+    "young_mpa": 3500,
+    "poisson": 0.36,
+    "strength_mpa": 50,
+    "across_layers_mpa": 35,
+    "printed": true
+  },
+  "mesh": {
+    "cell_mm": 2,
+    "grid_cells": [49, 41, 8],
+    "solid_cells": 8776,
+    "degrees_of_freedom": 127839,
+    "voxel_volume_mm3": 64965.3333333328,
+    "mesh_volume_mm3": 65065.131077758844
+  },
+  "supports": [
+    {
+      "where": "bot",
+      "faces": 144,
+      "nodes": 656
+    }
+  ],
+  "loads": [
+    {
+      "where": "top",
+      "faces": 1412,
+      "nodes": 4493,
+      "force_n": [0, 0, -10]
+    }
+  ],
+  "result": {
+    "max_displacement_mm": 3.076799889920703e-4,
+    "max_displacement_at_mm": [-41, 33.017759444145554, 12],
+    "peak_von_mises_mpa": 0.11426154480873932,
+    "peak_von_mises_at_mm": [2, 24.017759444145554, -1],
+    "max_cell_centre_von_mises_mpa": 6.884781665512381e-2,
+    "max_across_layer_tension_mpa": 9.56782610727343e-3,
+    "max_across_layer_tension_at_mm": [-48, -1.982240555854446, -1],
+    "support_reaction_n": [6.895443354585501e-8, -6.151703574059503e-9, 10.000000000507288],
+    "support_moment_n_mm": [-4.903330500077675e-2, 0.2832878773346971, 1.2895640705209988e-6],
+    "strain_energy_n_mm": 7.585212351194227e-4,
+    "iterations": 445,
+    "free_residual_relative": 9.463318945955944e-8
+  },
+  "safety": {
+    "requested": 2,
+    "in_plane": 437.5925433503831,
+    "across_layers": 3658.0932395283726,
+    "pass": true
+  },
+  "notes": ["Peak stress is the largest Gauss-point value on a stair-stepped mesh; refine the cell to check it has settled", "Across-layer strength assumes layers stacked along the part's z axis"],
+  "limitations": ["Small-strain linear elasticity of a homogeneous isotropic solid; infill, layer bonding, contact, friction, buckling, fatigue and large deflection are not modelled.", "Material values are table defaults, not measurements of this spool or print.", "Supports are fully clamped faces or nodes; loads are uniform tractions over selected faces or single nodes.", "Geometry is a stair-stepped voxel grid; refine the cell and compare before trusting a peak."],
+  "artifacts": {
+    "source": {
+      "path": "platform.json.assets-1/source.coscad",
+      "sha256": "88aed7105f4673346b76e96175c61fee3ce61d869d1a88ef7feb165ce1be82e2"
+    },
+    "mesh": {
+      "path": "platform.json.assets-1/mesh.stl",
+      "sha256": "4c2c569c4ea454dbf263e998f2f27295ca47aa44d424de1a8e60ac2dc1a95196"
+    },
+    "scad": {
+      "path": "platform.json.assets-1/model.scad",
+      "sha256": "2a11f8e3897b471916309acc20968996988eb6929152b2cc30b32d5c16b44473"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+One screw offset 0 degrees with platform held level
+Wrote /tmp/lag-twin.stl: 12 triangles, volume 1.000 mm^3, bounds [199.50 -0.50 -0.50] .. [200.50 0.50 0.50]
+One screw offset 5 degrees with platform held level
+Wrote /tmp/lag-twin.stl: 12 triangles, volume 1.000 mm^3, bounds [199.50 -0.50 -0.50] .. [200.50 0.50 0.50]
+One screw offset 10 degrees with platform held level
+Wrote /tmp/lag-twin.stl: 2356 triangles, volume 9.000 mm^3, bounds [14.50 -5.50 -0.50] .. [200.50 5.50 95.00]
+One screw offset 15 degrees with platform held level
+Wrote /tmp/lag-twin.stl: 2364 triangles, volume 20.846 mm^3, bounds [14.50 -5.50 -0.50] .. [200.50 5.50 95.00]

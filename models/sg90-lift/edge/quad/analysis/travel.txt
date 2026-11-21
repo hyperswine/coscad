@@ -1,0 +1,10 @@
+platform bottom 46 mm
+Wrote /tmp/move-quad.stl: 12 triangles, volume 1.000 mm^3, bounds [199.50 -0.50 -0.50] .. [200.50 0.50 0.50]
+platform bottom 64 mm
+Wrote /tmp/move-quad.stl: 12 triangles, volume 1.000 mm^3, bounds [199.50 -0.50 -0.50] .. [200.50 0.50 0.50]
+platform bottom 83 mm
+Wrote /tmp/move-quad.stl: 12 triangles, volume 1.000 mm^3, bounds [199.50 -0.50 -0.50] .. [200.50 0.50 0.50]
+platform bottom 102 mm
+Wrote /tmp/move-quad.stl: 12 triangles, volume 1.000 mm^3, bounds [199.50 -0.50 -0.50] .. [200.50 0.50 0.50]
+platform bottom 120.2 mm
+Wrote /tmp/move-quad.stl: 434 triangles, volume 1.000 mm^3, bounds [-49.00 -40.98 -0.50] .. [200.50 40.98 132.20]

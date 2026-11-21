@@ -1,5 +1,9 @@
 # Changelog for the CoScad VS Code extension
 
+## 0.7.2 - 2026-11-22
+
+- Package the current language server with support for polygon loft profiles and frustum primitives.
+
 ## Unreleased
 
 - Fix oversized inline SVGs by sizing the image itself to the editor font instead
