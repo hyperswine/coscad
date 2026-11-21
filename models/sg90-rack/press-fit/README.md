@@ -90,3 +90,7 @@ textured PEI at 55 C, nozzle 220 C, 0.2 mm layers, 4 walls and 20% gyroid
 to run again while that record exists. The X1C needs a clean TLS shutdown
 after the FTPS upload; bambu-lan's `ftp.py` skips that for the A1 and gets
 426 from the X1C.
+
+## Bench result, 21 November 2026
+
+The owner confirmed that the SG90 drove the rack back and forth. They reported loose fit and alignment, with visible wobble and brief pauses in rack motion. The test did not isolate which interface contributed the most play.

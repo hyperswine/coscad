@@ -1,0 +1,24 @@
+{
+  "printer": "X1C",
+  "file": "sg90-twin-lift-1121-1729.gcode.3mf",
+  "reply": {
+    "command": "project_file",
+    "sequence_id": "11211729",
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "subtask_name": "sg90-twin-lift-1121-1729"
+  },
+  "startup": {
+    "command": "push_status",
+    "sequence_id": "2021",
+    "gcode_state": "RUNNING",
+    "subtask_name": "sg90-twin-lift-1121-1729",
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "layer_num": 225,
+    "print_error": 0,
+    "hms": [],
+    "spool": "PLA",
+    "active": "254",
+    "nozzle_diameter": "0.4"
+  }
+}

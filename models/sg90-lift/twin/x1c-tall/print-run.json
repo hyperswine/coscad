@@ -1,0 +1,19 @@
+{
+  "ack": {
+    "command": "project_file",
+    "sequence_id": "11212056",
+    "result": "SUCCESS",
+    "subtask_name": "twin-plus6-1121-2056"
+  },
+  "startup": {
+    "command": "push_status",
+    "sequence_id": "2021",
+    "gcode_state": "RUNNING",
+    "subtask_name": "twin-plus6-1121-2056",
+    "print_error": 0,
+    "hms": [],
+    "spool": "PLA",
+    "active": "254",
+    "nozzle_diameter": "0.4"
+  }
+}
