@@ -1,0 +1,596 @@
+{
+  "job": "a1",
+  "printer": "a1",
+  "material": "pla",
+  "package_sha256": "d278d32ac9fd348bcea30180670ad479e55ce3b50425e08afcaa043267314ff1",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 65.0,
+      "bed_c": 65.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 260,
+    "deposition_moves_checked": 355583,
+    "package_sha256": "d278d32ac9fd348bcea30180670ad479e55ce3b50425e08afcaa043267314ff1"
+  },
+  "remote_name": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+  "spool": "ams1",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner confirmed A1 bed clear and requested tree supports and same AMS roll 2.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 143,
+    "total_layer_num": 143,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+    "nozzle_temper": 29.375,
+    "bed_temper": 30.96875,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "ams0",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ],
+    [
+      "ams1",
+      "PLA",
+      "000000FF",
+      false
+    ],
+    [
+      "ams2",
+      "PLA",
+      "F4EE2AFF",
+      false
+    ],
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-20T20:23:21+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 143,
+        "total_layer_num": 143,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 29.28125,
+        "bed_temper": 30.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:23:36+1100",
+      "status": {
+        "gcode_state": "PREPARE",
+        "mc_percent": 100,
+        "layer_num": 143,
+        "total_layer_num": 260,
+        "mc_remaining_time": 0,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 29.15625,
+        "bed_temper": 30.5,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:23:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 359,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 95,
+        "bed_temper": 34.25,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:24:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 359,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 130.75,
+        "bed_temper": 53.75,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:24:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 359,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 121.5625,
+        "bed_temper": 64.3125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 24
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:24:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 359,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 142.46875,
+        "bed_temper": 65.8125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:24:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 359,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 178.375,
+        "bed_temper": 65.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:25:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 359,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 208.0625,
+        "bed_temper": 64.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:25:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 359,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 220.6875,
+        "bed_temper": 64.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:25:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 359,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 218.0625,
+        "bed_temper": 64.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:25:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 359,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 220.5,
+        "bed_temper": 64.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:26:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 358,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 219.71875,
+        "bed_temper": 64.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:26:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 358,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 210.5,
+        "bed_temper": 64.53125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:26:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 358,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 193.53125,
+        "bed_temper": 64,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:26:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 358,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 175.3125,
+        "bed_temper": 64.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:27:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 167.28125,
+        "bed_temper": 64.5625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:27:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 168.9375,
+        "bed_temper": 64.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:27:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 152.25,
+        "bed_temper": 64.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:27:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 140.0625,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:28:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 140.375,
+        "bed_temper": 65.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:28:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 139.625,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:28:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 140.1875,
+        "bed_temper": 65.15625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:28:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 139.96875,
+        "bed_temper": 65.1875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:29:06+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 139.96875,
+        "bed_temper": 65.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:29:21+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 160.28125,
+        "bed_temper": 65.25,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:29:36+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 0,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 191.40625,
+        "bed_temper": 65.40625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T20:29:51+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 1,
+        "layer_num": 1,
+        "total_layer_num": 260,
+        "mc_remaining_time": 353,
+        "gcode_file": "mk3-light-balanced-a1-20261120-202203.gcode.3mf",
+        "subtask_name": "mk3-light-balanced-a1-20261120-202203.gcode",
+        "nozzle_temper": 218.71875,
+        "bed_temper": 65.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-20T20:22:03+1100",
+  "remote_content_sha256": "d278d32ac9fd348bcea30180670ad479e55ce3b50425e08afcaa043267314ff1",
+  "sequence_id": "166600906",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "166600906"
+  },
+  "first_layer_reached": true
+}

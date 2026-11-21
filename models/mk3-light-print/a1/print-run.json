@@ -1,0 +1,577 @@
+{
+  "job": "a1",
+  "printer": "a1",
+  "material": "pla",
+  "package_sha256": "3e9aea5e1f6bc354a0bcc32495815f1c7e43be16a05a0cc603052dfa49b7b536",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 65.0,
+      "bed_c": 65.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 143,
+    "deposition_moves_checked": 43650,
+    "package_sha256": "3e9aea5e1f6bc354a0bcc32495815f1c7e43be16a05a0cc603052dfa49b7b536"
+  },
+  "remote_name": "mk3-light-a1-20261120-184850.gcode.3mf",
+  "spool": "ams1",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner confirmed both beds clear and requested one-piece Mk3 Light; A1 uses AMS roll 2.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 205,
+    "total_layer_num": 205,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "launcher-a1-r2-frame-20261117-204942.gcode",
+    "nozzle_temper": 24.71875,
+    "bed_temper": 24.9375,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "ams0",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ],
+    [
+      "ams1",
+      "PLA",
+      "000000FF",
+      false
+    ],
+    [
+      "ams2",
+      "PLA",
+      "F4EE2AFF",
+      false
+    ],
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      false
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-20T18:49:01+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 205,
+        "total_layer_num": 205,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 24.71875,
+        "bed_temper": 24.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:49:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 0,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 44.46875,
+        "bed_temper": 24.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:49:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 69,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 91,
+        "bed_temper": 27.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:49:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 69,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 125.28125,
+        "bed_temper": 48.59375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:50:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 69,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 115.28125,
+        "bed_temper": 62.46875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 13
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:50:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 68,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 123.65625,
+        "bed_temper": 65.46875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:50:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 68,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 167.28125,
+        "bed_temper": 65.125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:50:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 68,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 194.46875,
+        "bed_temper": 64.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:51:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 68,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 218.40625,
+        "bed_temper": 64.65625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:51:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 68,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 218.875,
+        "bed_temper": 64.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:51:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 68,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 219.125,
+        "bed_temper": 64.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:51:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 68,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 220.375,
+        "bed_temper": 64.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 4
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:52:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 67,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 219.875,
+        "bed_temper": 64.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:52:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 67,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 211.1875,
+        "bed_temper": 64.5625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:52:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 67,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 192.53125,
+        "bed_temper": 63.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 3
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:52:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 2,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 67,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 174.46875,
+        "bed_temper": 64.0625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:53:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 63,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 167.625,
+        "bed_temper": 64.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:53:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 166.8125,
+        "bed_temper": 64.34375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:53:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 151.28125,
+        "bed_temper": 64.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:53:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 65.21875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:54:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 140.75,
+        "bed_temper": 65.25,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:54:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 139.65625,
+        "bed_temper": 65.09375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:54:31+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 140.09375,
+        "bed_temper": 65.21875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:54:46+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 165.5625,
+        "bed_temper": 65.3125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:55:01+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 198,
+        "bed_temper": 65.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:55:16+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 1,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "mk3-light-a1-20261120-184850.gcode.3mf",
+        "subtask_name": "mk3-light-a1-20261120-184850.gcode",
+        "nozzle_temper": 219.9375,
+        "bed_temper": 65.375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-20T18:48:50+1100",
+  "remote_content_sha256": "3e9aea5e1f6bc354a0bcc32495815f1c7e43be16a05a0cc603052dfa49b7b536",
+  "sequence_id": "160941130",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "160941130"
+  },
+  "first_layer_reached": true
+}

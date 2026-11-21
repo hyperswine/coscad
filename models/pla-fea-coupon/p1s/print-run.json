@@ -1,0 +1,698 @@
+{
+  "job": "p1s",
+  "printer": "p1s",
+  "material": "pla",
+  "package_sha256": "b4a29683e627d0ff70e9916af87b3b2de23739bad73ccea8e9bddc904a2178e5",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 20,
+    "deposition_moves_checked": 7962,
+    "package_sha256": "b4a29683e627d0ff70e9916af87b3b2de23739bad73ccea8e9bddc904a2178e5"
+  },
+  "remote_name": "coupon-p1s-20261120-185431.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner confirmed P1S bed clear and white PLA loaded.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 1105,
+    "total_layer_num": 1105,
+    "mc_remaining_time": 0,
+    "gcode_file": "",
+    "subtask_name": "launcher-p1s-r2-beams-20261117-204946.gcode",
+    "nozzle_temper": 29.34375,
+    "bed_temper": 25.59375,
+    "print_error": 0,
+    "fail_reason": null,
+    "mc_print_error_code": null,
+    "stg_cur": 255
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFF144FF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-20T18:54:38+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 1105,
+        "total_layer_num": 1105,
+        "mc_remaining_time": 0,
+        "gcode_file": "",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 29.34375,
+        "bed_temper": 25.59375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:54:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 14,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 45.6875,
+        "bed_temper": 25.59375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 255
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:55:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 14,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 81.1875,
+        "bed_temper": 29.65625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:55:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 14,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 75.4375,
+        "bed_temper": 47.5625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:55:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 14,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 113.375,
+        "bed_temper": 54.6875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:55:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 14,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 189.75,
+        "bed_temper": 54.46875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:56:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 14,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 239.15625,
+        "bed_temper": 54.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:56:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 34,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 9,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 248.46875,
+        "bed_temper": 54.71875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:56:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 34,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 9,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 225.34375,
+        "bed_temper": 54.78125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:56:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 38,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 201.15625,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791349506
+        }
+      ]
+    },
+    {
+      "at": "2026-11-20T18:57:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 38,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 200.125,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791349506
+        }
+      ]
+    },
+    {
+      "at": "2026-11-20T18:57:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 38,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 200.03125,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791349506
+        }
+      ]
+    },
+    {
+      "at": "2026-11-20T18:57:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 38,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 199.96875,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791349506
+        }
+      ]
+    },
+    {
+      "at": "2026-11-20T18:57:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 38,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 200,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791349506
+        }
+      ]
+    },
+    {
+      "at": "2026-11-20T18:58:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 38,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 199.96875,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791349506
+        }
+      ]
+    },
+    {
+      "at": "2026-11-20T18:58:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 38,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 187.34375,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791349506
+        }
+      ]
+    },
+    {
+      "at": "2026-11-20T18:58:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 38,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 167.3125,
+        "bed_temper": 54.84375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791349506
+        }
+      ]
+    },
+    {
+      "at": "2026-11-20T18:58:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 38,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 151.71875,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 14
+      },
+      "hms": [
+        {
+          "attr": 50344192,
+          "code": 65537,
+          "action": 0,
+          "timestamp": 1791349506
+        }
+      ]
+    },
+    {
+      "at": "2026-11-20T18:59:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 140.75,
+        "bed_temper": 54.90625,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:59:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 140.15625,
+        "bed_temper": 54.875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:59:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 140.15625,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:59:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 140.0625,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T19:00:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T19:00:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 139.875,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T19:00:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 139.90625,
+        "bed_temper": 54.9375,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T19:00:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 139.9375,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T19:01:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 139.9375,
+        "bed_temper": 54.96875,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T19:01:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 162.40625,
+        "bed_temper": 55.03125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T19:01:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 39,
+        "layer_num": 0,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 216.53125,
+        "bed_temper": 55,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T19:01:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 41,
+        "layer_num": 1,
+        "total_layer_num": 20,
+        "mc_remaining_time": 8,
+        "gcode_file": "coupon-p1s-20261120-185431.gcode.3mf",
+        "subtask_name": "coupon-p1s-20261120-185431.gcode",
+        "nozzle_temper": 219.21875,
+        "bed_temper": 55.03125,
+        "print_error": 0,
+        "fail_reason": null,
+        "mc_print_error_code": null,
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-20T18:54:31+1100",
+  "remote_content_sha256": "b4a29683e627d0ff70e9916af87b3b2de23739bad73ccea8e9bddc904a2178e5",
+  "sequence_id": "161278063",
+  "reply": {
+    "result": "success",
+    "reason": "success",
+    "command": "project_file",
+    "sequence_id": "161278063"
+  },
+  "first_layer_reached": true
+}

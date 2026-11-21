@@ -1,0 +1,18 @@
+// Base uses the r4 socket, cable relief, crush ribs and footprint.
+shell = (box 18 29 18 |> move 0 -5.2 9) ⊖ (box 12.8 23.4 20 |> move 0 -5.2 13.8) ⊖ (box 6 4 20 |> move 0 7.9 13.8)
+side = zcyl 0.65 13 |> move 6.65 -10 10.5
+endrib = zcyl 0.65 13 |> move 4.5 6.85 10.5
+socket = shell ⊕ side ⊕ (side |> move -13.3 0 0) ⊕ endrib ⊕ (endrib |> move -9 0 0) ⊕ (endrib |> move 0 -24.1 0) ⊕ (endrib |> move -9 -24.1 0)
+foot = box 28 23.5 2 |> move 0 18.75 1
+tower = box 11 11.5 46 |> move 0 24.75 23
+rod = zcyl 3 18.2 |> move 0 24.7 55
+key = box 4.2 3.2 4 |> move 0 24.7 66
+base = socket ⊕ foot ⊕ tower ⊕ rod ⊕ key
+male = MALE_THREAD
+hub = (zcyl 5.5 4.2 |> move 0 0 2.1) ⊖ (zcyl 2.475 9 |> move 0 0 2) ⊖ (frustum 2.885 2.465 0.42 |> move 0 0 -0.01)
+journal = zcyl 2.5 3.8 |> move 0 0 28.8
+screw = hub ⊕ (male |> move 0 0 4) ⊕ journal
+female = NUT_PROFILE
+platform = (box 25 39 8 |> move 0 11.5 4) ⊖ (female |> move 0 0 -1) ⊖ (zcyl 3.3 10 |> move 0 24.7 4)
+cap = (box 13 37 4 |> move 0 12.35 2) ⊖ (box 4.15 3.15 6 |> move 0 24.7 2) ⊖ (zcyl 2.8 6 |> move 0 0 2)
+main = base ⊕ (platform |> move 38 0 0) ⊕ (screw |> move 61 0 0) ⊕ (cap |> move 77 0 0)

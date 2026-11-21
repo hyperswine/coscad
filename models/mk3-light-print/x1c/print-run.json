@@ -1,0 +1,673 @@
+{
+  "job": "x1c",
+  "printer": "x1c",
+  "material": "pla",
+  "package_sha256": "2b72f3747b85833d18ca242d9aac6fdce7071598b4783b083c16daf81d68c722",
+  "thermal_preflight": {
+    "schema": "coscad.thermal-preflight/1",
+    "checked": true,
+    "expected": {
+      "plate": "Textured PEI Plate",
+      "bed_initial_c": 55.0,
+      "bed_c": 55.0,
+      "nozzle_initial_c": 220.0,
+      "nozzle_c": 220.0
+    },
+    "layers_checked": 143,
+    "deposition_moves_checked": 45806,
+    "package_sha256": "2b72f3747b85833d18ca242d9aac6fdce7071598b4783b083c16daf81d68c722"
+  },
+  "remote_name": "mk3-light-x1c-20261120-184850.gcode.3mf",
+  "spool": "external",
+  "bed_clear_owner_confirmed": true,
+  "accepted_failed_state": false,
+  "flow_cali": false,
+  "layer_inspect": true,
+  "authorization_note": "Owner confirmed both beds clear and requested one-piece Mk3 Light; A1 uses AMS roll 2.",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 180,
+    "total_layer_num": 180,
+    "mc_remaining_time": 0,
+    "gcode_file": "/data/Metadata/plate_1.gcode",
+    "subtask_name": "launcher-x1c-r2-spring-20261117-204942.gcode",
+    "nozzle_temper": 29.0,
+    "bed_temper": 26.0,
+    "print_error": 0,
+    "fail_reason": "0",
+    "mc_print_error_code": "0",
+    "stg_cur": -1
+  },
+  "spools_before": [
+    [
+      "external",
+      "PLA",
+      "FFFFFFFF",
+      true
+    ]
+  ],
+  "hms_before": [],
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-20T18:48:53+1100",
+      "status": {
+        "gcode_state": "FINISH",
+        "mc_percent": 100,
+        "layer_num": 180,
+        "total_layer_num": 180,
+        "mc_remaining_time": 0,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 29.0,
+        "bed_temper": 26.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:49:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 71.0,
+        "bed_temper": 26.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": -1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:49:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 35.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:49:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 75.0,
+        "bed_temper": 51.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:49:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 139.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:50:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 218.0,
+        "bed_temper": 54.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:50:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 62,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 248.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:50:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 236.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:50:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 7,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 209.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 54
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:51:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:51:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:51:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 200.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:51:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 183.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:52:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 155.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:52:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 141.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:52:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:52:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 14
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:53:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:53:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:53:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:53:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:54:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:54:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:54:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:54:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 8,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 140.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:55:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 156.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:55:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 216.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:55:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 197.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:55:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 57,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 176.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:56:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 56,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 216.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 1
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:56:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 9,
+        "layer_num": 0,
+        "total_layer_num": 143,
+        "mc_remaining_time": 56,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 219.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    },
+    {
+      "at": "2026-11-20T18:56:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 10,
+        "layer_num": 1,
+        "total_layer_num": 143,
+        "mc_remaining_time": 55,
+        "gcode_file": "/data/Metadata/plate_1.gcode",
+        "subtask_name": "mk3-light-x1c-20261120-184850.gcode",
+        "nozzle_temper": 220.0,
+        "bed_temper": 55.0,
+        "print_error": 0,
+        "fail_reason": "0",
+        "mc_print_error_code": "0",
+        "stg_cur": 0
+      },
+      "hms": []
+    }
+  ],
+  "created_at": "2026-11-20T18:48:50+1100",
+  "remote_content_sha256": "2b72f3747b85833d18ca242d9aac6fdce7071598b4783b083c16daf81d68c722",
+  "sequence_id": "160933391",
+  "reply": {
+    "result": "SUCCESS",
+    "reason": "SUCCESS",
+    "command": "project_file",
+    "sequence_id": "160933391"
+  },
+  "first_layer_reached": true
+}

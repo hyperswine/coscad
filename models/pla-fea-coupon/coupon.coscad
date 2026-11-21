@@ -1,0 +1,3 @@
+// Flat printed beam, 100 x 12 x 4 mm. Clamp the first 20 mm.
+// Load at x=+45 mm, 75 mm from the clamp face at x=-30 mm.
+main = box 100 12 4 |> move 0 0 2
