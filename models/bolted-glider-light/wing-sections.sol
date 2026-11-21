@@ -159,7 +159,7 @@ properties sts layers s =
 # Euler-Bernoulli cantilever elements, each solved from its known left nodal
 # motion; Hermite element with a consistent uniform load.
 solve sts layers step =
-  len = 236;
+  (len, _) = sts ! (List.len sts - 1);
   clamp = 20;
   n = Num.round (Num.div (len - clamp) step);
   dz = Num.div (len - clamp) n;
