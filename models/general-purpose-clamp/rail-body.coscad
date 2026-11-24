@@ -1,0 +1,26 @@
+// Side-lying C frame. Y is the closing axis; a seated pole runs along Z.
+depth = 20
+spine = box 14 70 depth |> move -23 27 10
+lowerJaw = box 60 15 depth |> move 0 -0.5 10
+upperJaw = box 60 12 depth |> move 0 56 10
+// 90-degree pole seat, flanked by flat lands for desk edges.
+poleSeat = box 12 12 24 |> rotz 45 |> move 14 48 10
+fixedJaw = upperJaw ⊖ poleSeat
+root = 5.6
+major = 7
+pitch = 4
+socketTool = thread_female root major pitch 24 3 0.5 32 0.35 0.18 |> rotx 90 |> move 14 -12 10
+frame = (spine ⊕ lowerJaw ⊕ fixedJaw) ⊖ socketTool
+// One outward-facing slot per 20 mm-wide pad. Local X runs along the rail.
+// Original shelf profile is centered on a 20 mm rail with the face at Z=10.
+mouth = box 74 7.4 3.1 |> z 9.95
+pocketLower = ⏢ 74 7.2 74 11.2 2 |> z 5.3
+pocketUpper = box 74 11.2 2.22 |> z 7.4
+tipRelief = box 74 5.6 5 |> z 6
+slot = mouth ⊕ pocketLower ⊕ pocketUpper ⊕ tipRelief
+// Eight millimeters of added stock keep the cuts outside the loaded frame.
+topPad = box 60 8.2 20 |> move 0 65.9 10
+topSlot = slot |> rotx -90 |> move 0 60 10
+spinePad = box 8.2 70 20 |> move -33.9 27 10
+spineSlot = slot |> rotx -90 |> rotz 90 |> move -28 27 10
+main = frame ⊕ (topPad ⊖ topSlot) ⊕ (spinePad ⊖ spineSlot)

@@ -1,0 +1,10 @@
+{
+  "printer": "P1S",
+  "material": "PLA",
+  "spool": "external",
+  "sha256": "f8af0e9ff487feabbf1a93a356617528d8012cd5468155e3b82c9549d5755fb6",
+  "remote": "turbine-core-20261122-155355.gcode.3mf",
+  "owner_confirmed_bed_clear": true,
+  "phase": "start-sent",
+  "at": "2026-11-22T15:53:55+1100"
+}

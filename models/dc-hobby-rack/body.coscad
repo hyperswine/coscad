@@ -1,0 +1,23 @@
+// Replacement holder. Motor enters from below with its shaft pointing up.
+bodyWidth = 19.7
+bodyDepth = 14.8
+capture = 21.2
+seat = 31.4
+mouth = seat - capture
+outerWidth = bodyWidth + 4
+outerDepth = bodyDepth + 4
+socket = box outerWidth outerDepth (capture + 1.2) |> move 0 0 (mouth + (capture + 1.2) / 2)
+bore = box (bodyWidth + 0.3) (bodyDepth + 0.3) (capture + 1) |> move 0 0 (seat - (capture + 1) / 2)
+bossOpening = zcyl 6 5 |> move 0 0 seat
+wireSlot = box 5 6 (capture + 1) |> move 0 -8 (seat - (capture + 1) / 2)
+grip = zcyl 0.55 16 |> move 10.25 0 (mouth + capture / 2)
+// Feet under the side walls leave the terminal bay open at the rear.
+leg = box 1.85 outerDepth (mouth + 0.2) |> move 10.925 0 ((mouth + 0.2) / 2)
+foot = box 27 24 2 |> move 0 18 1
+bay = box 20 20 (mouth + 1) |> move 0 -2 (mouth / 2)
+rackFloor = seat + 1.8
+shelf = box 27 11.5 rackFloor |> move 0 24.75 (rackFloor / 2)
+rail = box 22 3.05 4.35 |> move 0 24.7 (rackFloor + 2.175)
+stud = zcyl 0.96 2.6 |> move 8 24.7 (rackFloor + 5.55)
+holder = (socket ⊖ bore ⊖ bossOpening ⊖ wireSlot) ⊕ grip ⊕ (grip |> move -20.5 0 0) ⊕ leg ⊕ (leg |> move -21.85 0 0) ⊕ (foot ⊖ bay) ⊕ shelf ⊕ rail ⊕ stud ⊕ (stud |> move -16 0 0)
+main = holder

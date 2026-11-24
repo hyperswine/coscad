@@ -1,0 +1,37 @@
+{
+  "area_dm2": 1.001595375,
+  "cg_aft_of_nose_mm": 178.51964170785746,
+  "neutral_aft_of_nose_mm": 182.1626898642795,
+  "static_margin_percent": 6.2115058080512675,
+  "trim_tail_incidence_deg_at_CL_0.6": -3.0492187485994267,
+  "scenarios": [
+    {
+      "fraction_of_PLA_mass": 1,
+      "mass_g": 46.20934328917796,
+      "loading_g_dm2": 46.13573948379899,
+      "speed_at_CL_0.6_m_s": 11.09559022055744,
+      "Re_at_MAC": 43383.757762379595
+    },
+    {
+      "fraction_of_PLA_mass": 0.75,
+      "mass_g": 34.65700746688347,
+      "loading_g_dm2": 34.60180461284925,
+      "speed_at_CL_0.6_m_s": 9.609063000984927,
+      "Re_at_MAC": 37571.43633385107
+    },
+    {
+      "fraction_of_PLA_mass": 0.6,
+      "mass_g": 27.725605973506774,
+      "loading_g_dm2": 27.681443690279394,
+      "speed_at_CL_0.6_m_s": 8.594607228112169,
+      "Re_at_MAC": 33604.91426191858
+    },
+    {
+      "fraction_of_PLA_mass": 0.5,
+      "mass_g": 23.10467164458898,
+      "loading_g_dm2": 23.067869741899496,
+      "speed_at_CL_0.6_m_s": 7.845767086223307,
+      "Re_at_MAC": 30676.94930713313
+    }
+  ]
+}

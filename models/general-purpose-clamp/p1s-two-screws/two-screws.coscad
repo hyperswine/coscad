@@ -1,0 +1,10 @@
+root = 5.6
+major = 7
+pitch = 4
+thread = thread_male root major pitch 62 3 0.5 32 |> rotx 180 |> z 6
+knobBlank = zcyl 15 6.4 |> move 0 0 3.2
+scallop = zcyl 4 8 |> move 16 0 3
+knob = knobBlank ⊖ scallop ⊖ (scallop |> rotz 60) ⊖ (scallop |> rotz 120) ⊖ (scallop |> rotz 180) ⊖ (scallop |> rotz 240) ⊖ (scallop |> rotz 300)
+tip = frustum 5.5 4.8 1.4 |> z 67.8
+screw = knob ⊕ thread ⊕ tip
+main = screw ⊕ (screw |> x 40)

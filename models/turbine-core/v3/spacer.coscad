@@ -1,0 +1,2 @@
+// Spacer sleeve between turbine wheels: r6 x 9, bore r4.15 (slides on the shaft, glue optional).
+main = (zcyl 6 9.000 |> move 0 0 4.500) ⊖ (zcyl 4.15 11.000 |> move 0 0 4.500)

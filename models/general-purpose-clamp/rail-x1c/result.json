@@ -1,0 +1,68 @@
+{
+    "error_string": "Success.",
+    "export_time": 397,
+    "layer_height": 0.20000000298023224,
+    "plate_index": 1,
+    "prepare_time": 11,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 105.92334747314453,
+                "Bridge": 209.3927764892578,
+                "Custom": 422.0793762207031,
+                "Flush": 29.0,
+                "Gap infill": 8.026865005493164,
+                "Inner wall": 677.4557495117188,
+                "Internal solid infill": 177.45846557617188,
+                "Outer wall": 374.2214660644531,
+                "Overhang wall": 69.59656524658203,
+                "Sparse infill": 1156.813720703125,
+                "Support": 281.25628662109375,
+                "Support interface": 112.60051727294922,
+                "Support transition": 29.712369918823242,
+                "Top surface": 128.21868896484375,
+                "Travel": 279.4283752441406,
+                "Undefined": 264.1416931152344
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFA00",
+                    "id": 1,
+                    "main_used_g": 35.43754577636719,
+                    "total_used_g": 35.43754577636719
+                }
+            ],
+            "generate_support_material_time": 57,
+            "id": 1,
+            "infill_time": 61,
+            "layer_filament_change": 0,
+            "main_predication": 3581.281005859375,
+            "make_perimeters_time": 26,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 78.0,
+                        "height": 20.0,
+                        "width": 68.0,
+                        "x": 93.9999771118164,
+                        "y": 89.00000762939453,
+                        "z": 0.0
+                    },
+                    "id": 5,
+                    "name": "rail-body.stl",
+                    "triangle_count": 3756
+                }
+            ],
+            "sliced_time": 338,
+            "sliced_time_with_cache": 182,
+            "total_predication": 4046.043212890625,
+            "triangle_count": 3756,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 4
+}

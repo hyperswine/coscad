@@ -74,3 +74,4 @@ at the first three.
 | 2026-11-12 | [FEA-ENHANCEMENT-PROPOSAL](2026-11-12-FEA-ENHANCEMENT-PROPOSAL.md) | proposed next steps for assembly FEA after the glider rejection: bench calibration, curved bodies with flat interfaces, size and speed, printed-material model, joints, declarations |
 | 2026-11-21 | [GEARS-AND-FLOAT](2026-11-21-GEARS-AND-FLOAT.md) | `coscad gears` mesh sweep (interference, backlash, contact pairs, Lewis) and `coscad float` hydrostatics restored from the deleted Python verifiers |
 | 2026-11-22 | [FLIGHT-MODEL](2026-11-22-FLIGHT-MODEL.md) | `coscad flight` vortex lattice: neutral point, trim, glide and stall check; AR 6 wing checks and the balanced glider |
+| 2026-11-24 | [ASSEMBLY-PLANNER-PROPOSAL](2026-11-24-ASSEMBLY-PLANNER-PROPOSAL.md) | temporary bench supports, one-person handling, gearbox replay and generalization tests |

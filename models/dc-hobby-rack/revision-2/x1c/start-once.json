@@ -1,0 +1,22 @@
+{
+  "print": {
+    "sequence_id": "231752",
+    "command": "project_file",
+    "param": "Metadata/plate_1.gcode",
+    "url": "file:///sdcard/dc-body-pinion-r2.gcode.3mf",
+    "subtask_name": "dc-body-pinion-r2",
+    "project_id": "0",
+    "profile_id": "0",
+    "task_id": "0",
+    "subtask_id": "0",
+    "md5": "86ae75b1b0ce7ce3d722b1cb293a6311",
+    "timelapse": false,
+    "bed_type": "auto",
+    "bed_levelling": true,
+    "flow_cali": true,
+    "vibration_cali": true,
+    "layer_inspect": true,
+    "use_ams": false,
+    "ams_mapping": []
+  }
+}

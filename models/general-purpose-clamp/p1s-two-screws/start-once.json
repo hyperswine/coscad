@@ -1,0 +1,22 @@
+{
+  "print": {
+    "sequence_id": "241528",
+    "command": "project_file",
+    "param": "Metadata/plate_1.gcode",
+    "url": "file:///sdcard/two-clamp-screws.gcode.3mf",
+    "subtask_name": "two-clamp-screws",
+    "project_id": "0",
+    "profile_id": "0",
+    "task_id": "0",
+    "subtask_id": "0",
+    "md5": "92fd98f91f1974891141c07c5d9b9784",
+    "timelapse": false,
+    "bed_type": "auto",
+    "bed_levelling": true,
+    "flow_cali": false,
+    "vibration_cali": true,
+    "layer_inspect": false,
+    "use_ams": false,
+    "ams_mapping": []
+  }
+}

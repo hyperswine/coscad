@@ -1,0 +1,8 @@
+base ← base.coscad ×1
+input ← driver.coscad ×1
+first ← idler.coscad ×1
+second ← idler.coscad ×1
+third ← idler.coscad ×1
+output ← output.coscad ×1
+lid ← cover.coscad ×1
+asm = base ⊕ (input |> rotx 180 |> z 8.15) ⊕ (first |> rotz 8.181818 |> move 33.2 0 3.35) ⊕ (second |> move 66.4 0 3.35) ⊕ (third |> rotz 8.181818 |> move 99.6 0 3.35) ⊕ (output |> move 132.8 0 3.35) ⊕ (lid |> z 8.5)

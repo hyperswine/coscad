@@ -1,0 +1,22 @@
+{
+  "print": {
+    "sequence_id": "231036",
+    "command": "project_file",
+    "param": "Metadata/plate_1.gcode",
+    "url": "file:///sdcard/dc-hobby-rack.gcode.3mf",
+    "subtask_name": "dc-hobby-rack",
+    "project_id": "0",
+    "profile_id": "0",
+    "task_id": "0",
+    "subtask_id": "0",
+    "md5": "ace14d486c377b68ef9dc66c8974edf8",
+    "timelapse": false,
+    "bed_type": "auto",
+    "bed_levelling": true,
+    "flow_cali": true,
+    "vibration_cali": true,
+    "layer_inspect": true,
+    "use_ams": false,
+    "ams_mapping": []
+  }
+}

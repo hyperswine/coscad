@@ -1,0 +1,8 @@
+// Axial turbine wheel, hub flat on the plate. 13 twisted blades, pitch (from the plane of rotation) 72 deg root -> 48 deg tip.
+// Pitch is kept >= 48 deg so the blades self-support when printed hub-down; a real turbine blade is lower-pitch.
+// Each blade section sits with its lowest edge on the plate (z = 0), so nothing floats. Four 0.2 mm mouse-ear pads around the hub foot.
+hub = (zcyl 14 7 |> move 0 0 3.5)
+blade = ((χ 13.000 (ζ 6.108 (θ 72.00 (box 0.05 12.00 2.60)))) ⇓ (χ 16.800 (ζ 5.796 (θ 67.20 (box 0.05 11.60 2.32))))) ⊕ ((χ 16.800 (ζ 5.796 (θ 67.20 (box 0.05 11.60 2.32)))) ⇓ (χ 20.600 (ζ 5.435 (θ 62.40 (box 0.05 11.20 2.04))))) ⊕ ((χ 20.600 (ζ 5.435 (θ 62.40 (box 0.05 11.20 2.04)))) ⇓ (χ 24.400 (ζ 5.031 (θ 57.60 (box 0.05 10.80 1.76))))) ⊕ ((χ 24.400 (ζ 5.031 (θ 57.60 (box 0.05 10.80 1.76)))) ⇓ (χ 28.200 (ζ 4.589 (θ 52.80 (box 0.05 10.40 1.48))))) ⊕ ((χ 28.200 (ζ 4.589 (θ 52.80 (box 0.05 10.40 1.48)))) ⇓ (χ 32.000 (ζ 4.117 (θ 48.00 (box 0.05 10.00 1.20)))))
+blades = (ω 0.000 blade) ⊕ (ω 27.692 blade) ⊕ (ω 55.385 blade) ⊕ (ω 83.077 blade) ⊕ (ω 110.769 blade) ⊕ (ω 138.462 blade) ⊕ (ω 166.154 blade) ⊕ (ω 193.846 blade) ⊕ (ω 221.538 blade) ⊕ (ω 249.231 blade) ⊕ (ω 276.923 blade) ⊕ (ω 304.615 blade) ⊕ (ω 332.308 blade)
+pads = (ω 0.0 (χ 18 (⚓ bot (zcyl 5 0.2)))) ⊕ (ω 90.0 (χ 18 (⚓ bot (zcyl 5 0.2)))) ⊕ (ω 180.0 (χ 18 (⚓ bot (zcyl 5 0.2)))) ⊕ (ω 270.0 (χ 18 (⚓ bot (zcyl 5 0.2))))
+main = (((hub ⊕ blades) ⊖ (zcyl 4.15 20 |> move 0 0 3.5)) ⊕ pads)

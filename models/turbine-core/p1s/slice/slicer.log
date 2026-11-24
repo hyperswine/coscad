@@ -1,0 +1,7 @@
+[2026-11-22 14:44:15.974955] [0x00000001edeb1300] [trace]   Initializing StaticPrintConfigs
+[2026-11-22 14:44:15.981543] [0x00000001edeb1300] [warning] cli mode, Current BambuStudio Version 02.08.02.61
+[2026-11-22 14:44:16.005126] [0x00000001edeb1300] [warning] 2189: not support to slice plate 1, reset to 0
+[2026-11-22 14:44:16.007423] [0x00000001edeb1300] [warning] no filament colors found in projects
+[2026-11-22 14:44:16.733820] [0x000000016f9ab000] [warning] Detected missing Voronoi vertex, input polygons will be rotated back and forth.
+[2026-11-22 14:44:16.733960] [0x000000016f9ab000] [warning] Detected missing Voronoi vertex, input polygons will be rotated back and forth.
+[2026-11-22 14:44:16.734418] [0x000000016f9ab000] [warning] Detected missing Voronoi vertex, input polygons will be rotated back and forth.

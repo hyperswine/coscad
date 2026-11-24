@@ -1,0 +1,21 @@
+// Side-lying C frame. Y is the closing axis; a seated pole runs along Z.
+depth = 20
+spine = box 14 70 depth |> move -23 27 10
+lowerJaw = box 60 15 depth |> move 0 -0.5 10
+upperJaw = box 60 12 depth |> move 0 56 10
+// 90-degree pole seat, flanked by flat lands for desk edges.
+poleSeat = box 12 12 24 |> rotz 45 |> move 14 48 10
+fixedJaw = upperJaw ⊖ poleSeat
+root = 5.6
+major = 7
+pitch = 4
+socketTool = thread_female root major pitch 24 3 0.5 32 0.35 0.18 |> rotx 90 |> move 14 -12 10
+frame = (spine ⊕ lowerJaw ⊕ fixedJaw) ⊖ socketTool
+// Print the screw upright on its integral hand knob.
+thread = thread_male root major pitch 62 3 0.5 32 |> rotx 180 |> z 6
+knobBlank = zcyl 15 6.4 |> move 0 0 3.2
+scallop = zcyl 4 8 |> move 16 0 3
+knob = knobBlank ⊖ scallop ⊖ (scallop |> rotz 60) ⊖ (scallop |> rotz 120) ⊖ (scallop |> rotz 180) ⊖ (scallop |> rotz 240) ⊖ (scallop |> rotz 300)
+tip = frustum 5.5 4.8 1.4 |> z 67.8
+screw = knob ⊕ thread ⊕ tip
+main = frame ⊕ (screw |> move 50 20 0)

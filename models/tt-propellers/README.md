@@ -6,8 +6,9 @@ geometry is CoScad written by design.py. Printed on the X1C on 2026-11-02 (black
 158 at 20:26) with flow calibration and first-layer inspection off. Record:
 `x1c-props/print-run.json`.
 
-**Result (owner report, 2026-11-03):** printed well, no issues. Not tested on a motor yet:
-shaft fit and thrust are still unmeasured.
+**Print result (2026-11-03).** The owner reported that all four propellers printed well.
+
+**Motor test (owner report, 2026-11-23).** P2-50, P3-50, P3-60 and P4-40 all fit the shaft and spun in air on the yellow TT motor at 5 V. The owner felt no noticeable change in airflow nearby. Thrust and airspeed were not measured, and none of the four was tested in water. The thrust figures below are model estimates. [Motor used: Jaycar YG2900](https://www.jaycar.com.au/dc-geared-motor-with-rubber-wheel/p/YG2900)
 
 | Design | Blades | Diameter | Pitch | Hub | Mass | 6 V: rpm, static thrust | 3 V |
 | --- | --- | --- | --- | --- | --- | --- | --- |

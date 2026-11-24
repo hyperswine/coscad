@@ -1,0 +1,22 @@
+{
+  "print": {
+    "sequence_id": "241229",
+    "command": "project_file",
+    "param": "Metadata/plate_1.gcode",
+    "url": "file:///sdcard/rail-clamp-tree.gcode.3mf",
+    "subtask_name": "rail-clamp-tree",
+    "project_id": "0",
+    "profile_id": "0",
+    "task_id": "0",
+    "subtask_id": "0",
+    "md5": "6daa406b613e2c31b3968ed2b530487f",
+    "timelapse": false,
+    "bed_type": "auto",
+    "bed_levelling": true,
+    "flow_cali": true,
+    "vibration_cali": true,
+    "layer_inspect": true,
+    "use_ams": false,
+    "ams_mapping": []
+  }
+}
