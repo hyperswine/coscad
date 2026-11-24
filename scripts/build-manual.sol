@@ -12,7 +12,7 @@ pages = [("README","Overview"),("docs/ORBIT-TOWER","Orbit Tower notes"),("docs/L
          ("docs/LESSONS","Lessons"),("docs/SYNTAX","Syntax modes"),("docs/EXAMPLES","Examples"),
          ("docs/TESSERACT","Tesseract"),("CHANGELOG","Changelog")].
 
-plans = ["plan/corner_pair","corner/corner","plan/cube","bow3/bow3","ball/ball","tesseract/tesseract","orbit-tower/orbit-tower","tank/tank","spiral/spiral-launcher-build","sg90/sg90-rack"].
+plans = ["plan/corner_pair","corner/corner","plan/cube","bow3/bow3","ball/ball","tesseract/tesseract","orbit-tower/orbit-tower","tank/tank","spiral/spiral-launcher-build","sg90/sg90-rack","gearbox/tt-m5-gearbox"].
 
 output argv = unwrap (P.output (Proc.query (P.spec argv))).
 
@@ -71,6 +71,13 @@ assemblies site scratch sol cache =
   _ = copyShapes "models/tank-model-2020" "{scratch}/tank" "tank";
   _ = copyShapes "models/spiral-launcher" "{scratch}/spiral" "spiral-launcher-build";
   _ = copyShapes "models/sg90-rack/press-fit" "{scratch}/sg90" "sg90-rack";
+  # The print plate and assembly share the same named gearbox solids.
+  gearbox = "models/tt-propeller-gearbox/m5";
+  gearDir = "{scratch}/gearbox";
+  _ = command ["mkdir","-p",gearDir];
+  definitions = output ["sed","/^main =/d","{gearbox}/gearbox.coscad"];
+  _ = List.map (fn part -> put "{gearDir}/{part}.coscad" (definitions + "\nmain = {part}\n")) ["base","driver","idler","output","cover"];
+  _ = command ["cp","docs/evidence/2026-11-24-assembly-planner/train.assemble","{gearDir}/tt-m5-gearbox.assemble"];
   # the launcher's feet are the tank model's 100 mm rails, referenced as ../tank-model-2020/rail100.coscad
   _ = command ["mkdir","-p","{scratch}/tank-model-2020"];
   _ = command ["cp","models/tank-model-2020/rail100.coscad","{scratch}/tank-model-2020/"];
@@ -83,6 +90,10 @@ assemblies site scratch sol cache =
   keyed = List.map (fn part -> (part, line ["sh","-c","printf '%s\\n' \"$@\" | shasum -a 256 | cut -c1-16","key",
       compiler, shared, part, folderHash "{scratch}/{folderOf part}"])) plans;
   _ = List.map (fn pk -> (part, key) = pk; siteBuild site scratch cache part key) keyed;
+  gearPage = "{site}/builds/tt-m5-gearbox/index.html";
+  notes = output ["pandoc","-f","gfm","-t","html5","{gearbox}/README.md"];
+  intro = "<section><p>The illustrated steps cover the housing and five gears. See the assembly notes for the motor mount, propeller collar, spacers and eight M5 fasteners.</p><details><summary>Full assembly notes and hardware</summary>{notes}</details></section>";
+  _ = put gearPage (readPath gearPage |> Str.replace "<main>" ("<main>" + intro));
   _ = List.map (fn part -> name = B.baseName part;
     command ["test","-s","{site}/builds/{name}/{name}_plan.json"]) plans;
   _ = command (["coscad","site","--index","{site}/builds"] + List.map B.baseName plans);
