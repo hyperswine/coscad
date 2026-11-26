@@ -1,0 +1,34 @@
+// Hand crank on the M5 TT propeller gearbox: build plan (coscad plan) and checks (coscad check).
+// Parts are written in one assembled frame by build.sol. The base and input gear are the
+// existing gearbox parts (×0, reused); the stand, cover, crank, sleeve and knob are new.
+plate 256 256 6
+stand ← stand.coscad ×1 ▽bot material=pla preload=hand
+base ← base.coscad ×0 ▽bot material=pla
+driver ← driver.coscad ×0 ▽bot material=pla
+cover ← cover.coscad ×1 ▽bot material=pla
+crank ← crank.coscad ×1 ▽bot material=pla preload=hand
+sleeve ← sleeve.coscad ×1 ▽bot material=pla
+knob ← knob.coscad ×1 ▽bot material=pla
+
+fixed stand 0 0 0 0 0 0
+fixed base 0 0 0 0 0 0
+fixed driver 0 0 0 0 0 0
+fixed cover 0 0 0 0 0 0
+fixed crank 0 0 0 0 0 0
+fixed sleeve 0 0 0 0 0 0
+fixed knob 0 0 0 0 0 0
+
+joint drop base stand axis=top
+joint push driver base axis=top
+joint drop cover base axis=top
+joint push crank driver axis=top
+joint drop knob crank axis=top
+joint push sleeve knob axis=top
+
+// Cover screws go in heads up; their nuts sit in the stand's hex pockets under the floor.
+fastener M5x20 cover stand @holeA seat=@seatA nut=hex pocket=@nutA head=socket
+fastener M5x20 cover stand @holeB seat=@seatB nut=hex pocket=@nutB head=socket
+fastener M5x20 cover stand @holeC seat=@seatC nut=hex pocket=@nutC head=socket
+fastener M5x20 cover stand @holeD seat=@seatD nut=hex pocket=@nutD head=socket
+// Handle screw: clamps the sleeve to the arm through the knob into the captive nut.
+fastener M5x25 sleeve crank @handleHole seat=@handleSeat nut=hex pocket=@handleNut head=socket

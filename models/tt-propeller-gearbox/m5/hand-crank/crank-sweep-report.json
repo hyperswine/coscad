@@ -1,0 +1,414 @@
+{
+  "schema": "coscad.gear-mesh-report/1",
+  "source": "crank-sweep.json",
+  "verdict": "ok",
+  "driver": {
+    "part": "crank.coscad",
+    "motion": "deg"
+  },
+  "driven": {
+    "part": "cover-screw-heads.coscad",
+    "motion": "mm"
+  },
+  "ratio": {
+    "value": 1.0e-9,
+    "unit": "mm per driver deg"
+  },
+  "sweep_deg": {
+    "start": 0,
+    "span": 360,
+    "steps": 72
+  },
+  "interference_at_deg": [],
+  "max_overlap_mm3": 0,
+  "gap_mm": {
+    "min": 2.4999999999999964,
+    "max": 12.447636541755106
+  },
+  "backlash": {
+    "driver_deg": null,
+    "driver_pitch_mm": null,
+    "driven": null,
+    "driven_unit": "mm",
+    "no_contact_within_one_tooth_at_deg": []
+  },
+  "contact_pairs": {
+    "push": {
+      "driven": 3.6000000000000005e-10,
+      "unit": "mm"
+    },
+    "forward": {
+      "min": null,
+      "mean": null
+    },
+    "backward": {
+      "min": null,
+      "mean": null
+    }
+  },
+  "lewis": null,
+  "steps": [
+    {
+      "driver_deg": 0,
+      "overlap_mm3": 0,
+      "gap_mm": 12.434791519588199
+    },
+    {
+      "driver_deg": 5,
+      "overlap_mm3": 0,
+      "gap_mm": 12.440931956250695
+    },
+    {
+      "driver_deg": 10,
+      "overlap_mm3": 0,
+      "gap_mm": 12.445057113793197
+    },
+    {
+      "driver_deg": 15,
+      "overlap_mm3": 0,
+      "gap_mm": 12.434887971688868
+    },
+    {
+      "driver_deg": 20,
+      "overlap_mm3": 0,
+      "gap_mm": 12.437679567885525
+    },
+    {
+      "driver_deg": 25,
+      "overlap_mm3": 0,
+      "gap_mm": 12.447636541755106
+    },
+    {
+      "driver_deg": 30,
+      "overlap_mm3": 0,
+      "gap_mm": 12.436168401236557
+    },
+    {
+      "driver_deg": 35,
+      "overlap_mm3": 0,
+      "gap_mm": 12.435610053730615
+    },
+    {
+      "driver_deg": 40,
+      "overlap_mm3": 0,
+      "gap_mm": 12.447005648347695
+    },
+    {
+      "driver_deg": 45,
+      "overlap_mm3": 0,
+      "gap_mm": 12.355990342515101
+    },
+    {
+      "driver_deg": 50,
+      "overlap_mm3": 0,
+      "gap_mm": 12.092529223122988
+    },
+    {
+      "driver_deg": 55,
+      "overlap_mm3": 0,
+      "gap_mm": 11.647576163894545
+    },
+    {
+      "driver_deg": 60,
+      "overlap_mm3": 0,
+      "gap_mm": 11.041862854528963
+    },
+    {
+      "driver_deg": 65,
+      "overlap_mm3": 0,
+      "gap_mm": 10.281610219057157
+    },
+    {
+      "driver_deg": 70,
+      "overlap_mm3": 0,
+      "gap_mm": 9.357365434320071
+    },
+    {
+      "driver_deg": 75,
+      "overlap_mm3": 0,
+      "gap_mm": 8.297265703620404
+    },
+    {
+      "driver_deg": 80,
+      "overlap_mm3": 0,
+      "gap_mm": 7.120006459146765
+    },
+    {
+      "driver_deg": 85,
+      "overlap_mm3": 0,
+      "gap_mm": 5.840749025763649
+    },
+    {
+      "driver_deg": 90,
+      "overlap_mm3": 0,
+      "gap_mm": 4.518438544039691
+    },
+    {
+      "driver_deg": 95,
+      "overlap_mm3": 0,
+      "gap_mm": 3.29152680178553
+    },
+    {
+      "driver_deg": 100,
+      "overlap_mm3": 0,
+      "gap_mm": 2.534265937120891
+    },
+    {
+      "driver_deg": 105,
+      "overlap_mm3": 0,
+      "gap_mm": 2.4999999999999964
+    },
+    {
+      "driver_deg": 110,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 115,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 120,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 125,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 130,
+      "overlap_mm3": 0,
+      "gap_mm": 2.4999999999999964
+    },
+    {
+      "driver_deg": 135,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 140,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 145,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 150,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 155,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 160,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5599070262649226
+    },
+    {
+      "driver_deg": 165,
+      "overlap_mm3": 0,
+      "gap_mm": 3.3795194299515154
+    },
+    {
+      "driver_deg": 170,
+      "overlap_mm3": 0,
+      "gap_mm": 4.620750879499694
+    },
+    {
+      "driver_deg": 175,
+      "overlap_mm3": 0,
+      "gap_mm": 5.940876674431917
+    },
+    {
+      "driver_deg": 180,
+      "overlap_mm3": 0,
+      "gap_mm": 7.218911512763318
+    },
+    {
+      "driver_deg": 185,
+      "overlap_mm3": 0,
+      "gap_mm": 5.940876675222558
+    },
+    {
+      "driver_deg": 190,
+      "overlap_mm3": 0,
+      "gap_mm": 4.620750882420448
+    },
+    {
+      "driver_deg": 195,
+      "overlap_mm3": 0,
+      "gap_mm": 3.379519435176163
+    },
+    {
+      "driver_deg": 200,
+      "overlap_mm3": 0,
+      "gap_mm": 2.559907029207295
+    },
+    {
+      "driver_deg": 205,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 210,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 215,
+      "overlap_mm3": 0,
+      "gap_mm": 2.4999999999999964
+    },
+    {
+      "driver_deg": 220,
+      "overlap_mm3": 0,
+      "gap_mm": 2.4999999999999964
+    },
+    {
+      "driver_deg": 225,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 230,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 235,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 240,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 245,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 250,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 255,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5
+    },
+    {
+      "driver_deg": 260,
+      "overlap_mm3": 0,
+      "gap_mm": 2.5342659112971857
+    },
+    {
+      "driver_deg": 265,
+      "overlap_mm3": 0,
+      "gap_mm": 3.2915266916252377
+    },
+    {
+      "driver_deg": 270,
+      "overlap_mm3": 0,
+      "gap_mm": 4.518438394101542
+    },
+    {
+      "driver_deg": 275,
+      "overlap_mm3": 0,
+      "gap_mm": 5.8407488547015705
+    },
+    {
+      "driver_deg": 280,
+      "overlap_mm3": 0,
+      "gap_mm": 7.120006274725897
+    },
+    {
+      "driver_deg": 285,
+      "overlap_mm3": 0,
+      "gap_mm": 8.29726551020255
+    },
+    {
+      "driver_deg": 290,
+      "overlap_mm3": 0,
+      "gap_mm": 9.357365235102483
+    },
+    {
+      "driver_deg": 295,
+      "overlap_mm3": 0,
+      "gap_mm": 10.281610016862382
+    },
+    {
+      "driver_deg": 300,
+      "overlap_mm3": 0,
+      "gap_mm": 11.041862652080246
+    },
+    {
+      "driver_deg": 305,
+      "overlap_mm3": 0,
+      "gap_mm": 11.64757596387934
+    },
+    {
+      "driver_deg": 310,
+      "overlap_mm3": 0,
+      "gap_mm": 12.092529028254317
+    },
+    {
+      "driver_deg": 315,
+      "overlap_mm3": 0,
+      "gap_mm": 12.355990155545006
+    },
+    {
+      "driver_deg": 320,
+      "overlap_mm3": 0,
+      "gap_mm": 12.447005474985799
+    },
+    {
+      "driver_deg": 325,
+      "overlap_mm3": 0,
+      "gap_mm": 12.435609873337112
+    },
+    {
+      "driver_deg": 330,
+      "overlap_mm3": 0,
+      "gap_mm": 12.436168215077844
+    },
+    {
+      "driver_deg": 335,
+      "overlap_mm3": 0,
+      "gap_mm": 12.447636348998003
+    },
+    {
+      "driver_deg": 340,
+      "overlap_mm3": 0,
+      "gap_mm": 12.437679370289267
+    },
+    {
+      "driver_deg": 345,
+      "overlap_mm3": 0,
+      "gap_mm": 12.434887765413947
+    },
+    {
+      "driver_deg": 350,
+      "overlap_mm3": 0,
+      "gap_mm": 12.445056905090777
+    },
+    {
+      "driver_deg": 355,
+      "overlap_mm3": 0,
+      "gap_mm": 12.440931741730816
+    }
+  ],
+  "assumptions": ["Rigid parts exactly as modelled: printed size error, tooth deflection and shaft play are not included.", "Backlash is the free play of the driven part each way before the meshes intersect, with the driver held.", "Contact pairs count separate intersections after pushing past first contact (contact_push, default 0.1% of one tooth's driven motion); the mean approximates the contact ratio but depends on the push and on how finely the tooth flanks are tessellated.", "Lewis stress is the classic root bending estimate for 20 degree full-depth teeth with the whole load on one tooth tip; no dynamic or stress-concentration factors."]
+}
+

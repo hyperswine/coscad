@@ -1,0 +1,10 @@
+{
+  "printer": "P1S",
+  "material": "PLA",
+  "spool": "external",
+  "sha256": "701021874efd510b7568438c057b70d4105c745001b5eb35a0607ee2b2d93ba3",
+  "remote": "hand-crank-20261126-212518.gcode.3mf",
+  "owner_confirmed_bed_clear": true,
+  "phase": "start-sent",
+  "at": "2026-11-26T21:25:18+1100"
+}

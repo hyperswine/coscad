@@ -12,7 +12,7 @@ pages = [("README","Overview"),("docs/ORBIT-TOWER","Orbit Tower notes"),("docs/L
          ("docs/LESSONS","Lessons"),("docs/SYNTAX","Syntax modes"),("docs/EXAMPLES","Examples"),
          ("docs/TESSERACT","Tesseract"),("CHANGELOG","Changelog")].
 
-plans = ["plan/corner_pair","corner/corner","plan/cube","bow3/bow3","ball/ball","tesseract/tesseract","orbit-tower/orbit-tower","tank/tank","spiral/spiral-launcher-build","sg90/sg90-rack","gearbox/tt-m5-gearbox"].
+plans = ["plan/corner_pair","corner/corner","plan/cube","bow3/bow3","ball/ball","tesseract/tesseract","orbit-tower/orbit-tower","tank/tank","spiral/spiral-launcher-build","sg90/sg90-rack","gearbox/tt-m5-gearbox","handcrank/hand-crank"].
 
 output argv = unwrap (P.output (Proc.query (P.spec argv))).
 
@@ -71,6 +71,8 @@ assemblies site scratch sol cache =
   _ = copyShapes "models/tank-model-2020" "{scratch}/tank" "tank";
   _ = copyShapes "models/spiral-launcher" "{scratch}/spiral" "spiral-launcher-build";
   _ = copyShapes "models/sg90-rack/press-fit" "{scratch}/sg90" "sg90-rack";
+  # The hand-crank parts carry the gearbox definitions, so they plan on their own.
+  _ = copyShapes "models/tt-propeller-gearbox/m5/hand-crank" "{scratch}/handcrank" "hand-crank";
   # The print plate and assembly share the same named gearbox solids.
   gearbox = "models/tt-propeller-gearbox/m5";
   gearDir = "{scratch}/gearbox";
@@ -94,6 +96,10 @@ assemblies site scratch sol cache =
   notes = output ["pandoc","-f","gfm","-t","html5","{gearbox}/README.md"];
   intro = "<section><p>The illustrated steps cover the housing and five gears. See the assembly notes for the motor mount, propeller collar, spacers and eight M5 fasteners.</p><details><summary>Full assembly notes and hardware</summary>{notes}</details></section>";
   _ = put gearPage (readPath gearPage |> Str.replace "<main>" ("<main>" + intro));
+  crankPage = "{site}/builds/hand-crank/index.html";
+  crankNotes = output ["pandoc","-f","gfm","-t","html5","models/tt-propeller-gearbox/m5/hand-crank/README.md"];
+  crankIntro = "<section><p>Converts the M5 gearbox to a hand crank. The base and input gear are the existing gearbox parts; the stand, cover, crank, sleeve and knob are new.</p><details><summary>Full notes, checks and print record</summary>{crankNotes}</details></section>";
+  _ = put crankPage (readPath crankPage |> Str.replace "<main>" ("<main>" + crankIntro));
   _ = List.map (fn part -> name = B.baseName part;
     command ["test","-s","{site}/builds/{name}/{name}_plan.json"]) plans;
   _ = command (["coscad","site","--index","{site}/builds"] + List.map B.baseName plans);
