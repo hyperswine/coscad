@@ -1,0 +1,9 @@
+{
+  "schema": "coscad.gear-mesh/1",
+  "driver": {"part": "crank.coscad", "rotate": {"axis": [0, 0, 1], "origin": [-85, -78, 0]}},
+  "driven": {"part": "bar-screw-heads.coscad", "translate": [1, 0, 0]},
+  "ratio": 1e-9,
+  "sweep_deg": 360,
+  "steps": 72,
+  "backlash": false
+}

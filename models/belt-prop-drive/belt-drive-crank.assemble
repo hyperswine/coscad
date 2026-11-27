@@ -1,0 +1,77 @@
+// Belt propeller drive, hand-crank version (coscad check / plan). Parts written by build.sol in one assembled frame.
+plate 256 256 6
+base ← base.coscad ×1 ▽bot material=pla
+belt ← belt.coscad ×0 ▽bot mass=7
+drive ← drive.coscad ×1 ▽bot material=pla
+output ← output.coscad ×1 ▽bot material=pla
+outputBar ← outputBar.coscad ×1 ▽bot material=pla
+lowerRightPost ← lowerRightPost.coscad ×1 ▽bot material=pla
+lowerRightIdler ← lowerRightIdler.coscad ×1 ▽bot material=pla
+lowerRightCap ← lowerRightCap.coscad ×1 ▽bot material=pla
+neckLowPost ← neckLowPost.coscad ×1 ▽bot material=pla
+neckLowIdler ← neckLowIdler.coscad ×1 ▽bot material=pla
+neckLowCap ← neckLowCap.coscad ×1 ▽bot material=pla
+neckHighPost ← neckHighPost.coscad ×1 ▽bot material=pla
+neckHighIdler ← neckHighIdler.coscad ×1 ▽bot material=pla
+neckHighCap ← neckHighCap.coscad ×1 ▽bot material=pla
+upperRightPost ← upperRightPost.coscad ×1 ▽bot material=pla
+upperRightIdler ← upperRightIdler.coscad ×1 ▽bot material=pla
+upperRightCap ← upperRightCap.coscad ×1 ▽bot material=pla
+notchPost ← notchPost.coscad ×1 ▽bot material=pla
+notchIdler ← notchIdler.coscad ×1 ▽bot material=pla
+notchCap ← notchCap.coscad ×1 ▽bot material=pla
+upperMidPost ← upperMidPost.coscad ×1 ▽bot material=pla
+upperMidIdler ← upperMidIdler.coscad ×1 ▽bot material=pla
+upperMidCap ← upperMidCap.coscad ×1 ▽bot material=pla
+tensionerPost ← tensionerPost.coscad ×1 ▽bot material=pla
+tensionerIdler ← tensionerIdler.coscad ×1 ▽bot material=pla
+tensionerCap ← tensionerCap.coscad ×1 ▽bot material=pla
+upperLeftPost ← upperLeftPost.coscad ×1 ▽bot material=pla
+upperLeftIdler ← upperLeftIdler.coscad ×1 ▽bot material=pla
+upperLeftCap ← upperLeftCap.coscad ×1 ▽bot material=pla
+leg1 ← leg1.coscad ×1 ▽bot material=pla
+leg2 ← leg2.coscad ×1 ▽bot material=pla
+leg3 ← leg3.coscad ×1 ▽bot material=pla
+leg4 ← leg4.coscad ×1 ▽bot material=pla
+driveBar ← driveBar.coscad ×1 ▽bot material=pla
+crank ← crank.coscad ×1 ▽bot material=pla
+sleeve ← sleeve.coscad ×1 ▽bot material=pla
+knob ← knob.coscad ×1 ▽bot material=pla
+
+fixed base 0 0 0 0 0 0
+fixed belt 0 0 0 0 0 0
+fixed drive 0 0 0 0 0 0
+fixed output 0 0 0 0 0 0
+fixed outputBar 0 0 0 0 0 0
+fixed lowerRightPost 0 0 0 0 0 0
+fixed lowerRightIdler 0 0 0 0 0 0
+fixed lowerRightCap 0 0 0 0 0 0
+fixed neckLowPost 0 0 0 0 0 0
+fixed neckLowIdler 0 0 0 0 0 0
+fixed neckLowCap 0 0 0 0 0 0
+fixed neckHighPost 0 0 0 0 0 0
+fixed neckHighIdler 0 0 0 0 0 0
+fixed neckHighCap 0 0 0 0 0 0
+fixed upperRightPost 0 0 0 0 0 0
+fixed upperRightIdler 0 0 0 0 0 0
+fixed upperRightCap 0 0 0 0 0 0
+fixed notchPost 0 0 0 0 0 0
+fixed notchIdler 0 0 0 0 0 0
+fixed notchCap 0 0 0 0 0 0
+fixed upperMidPost 0 0 0 0 0 0
+fixed upperMidIdler 0 0 0 0 0 0
+fixed upperMidCap 0 0 0 0 0 0
+fixed tensionerPost 0 0 0 0 0 0
+fixed tensionerIdler 0 0 0 0 0 0
+fixed tensionerCap 0 0 0 0 0 0
+fixed upperLeftPost 0 0 0 0 0 0
+fixed upperLeftIdler 0 0 0 0 0 0
+fixed upperLeftCap 0 0 0 0 0 0
+fixed leg1 0 0 0 0 0 0
+fixed leg2 0 0 0 0 0 0
+fixed leg3 0 0 0 0 0 0
+fixed leg4 0 0 0 0 0 0
+fixed driveBar 0 0 0 0 0 0
+fixed crank 0 0 0 0 0 0
+fixed sleeve 0 0 0 0 0 0
+fixed knob 0 0 0 0 0 0

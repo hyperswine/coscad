@@ -49,7 +49,8 @@ kCos r = x = r * r; ((((((((((0.0 - 1.5619206968586225e-16) * x + 4.779477332387
 reduce x =
   k = Num.round (Num.div x halfPi);
   r = ((x - k * piO2Hi) - k * piO2Mid) - k * piO2Lo;
-  (k % 4, r).
+  # Sol's % keeps the dividend's sign, so a negative k needs folding into 0..3.
+  ((k % 4 + 4) % 4, r).
 quadrantSin q r | q == 0 = kSin r.
 quadrantSin q r | q == 1 = kCos r.
 quadrantSin q r | q == 2 = 0 - kSin r.
