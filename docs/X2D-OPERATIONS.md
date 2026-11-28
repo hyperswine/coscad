@@ -8,7 +8,7 @@ On the X2D touchscreen, join the printer LAN and enable **Settings → LAN Only 
 | --- | --- |
 | Slicing workstation | `/Users/jasonqin/Documents/GitHub/coscad/.env` contains `IP_ADDR` and `ACCESS_CODE`. The file is ignored by Git. |
 | Production dashboard Mac mini | `~/printer-host/data/printers.json` defines printer ID `x2d`, the MQTT host and TLS identity. Its `access_code_env` refers to `BAMBU_X2D_ACCESS_CODE` in `~/printer-host/data/printer-credentials.env`, owned by the service user with mode 0600. |
-| Operator view | Sign in to [3dprint.cswine.cloud](https://3dprint.cswine.cloud) and open **Bambu X2D** for live job status and reported filament labels. Camera streaming is disabled for this printer. |
+| Operator view | Sign in to [3dprint.cswine.cloud](https://3dprint.cswine.cloud) and open **Bambu X2D** for live job status, reported filament labels and the camera (periodic snapshots from its RTSPS stream; see fprisc `deploy/printer-dashboard/snapshots/README.md` for the extra intermediate certificate it needs). |
 
 If the LAN access code changes, update both private credential files and restart the dashboard service so it reloads its binding. Keep the value out of commands, screenshots, logs and commits.
 
