@@ -1,0 +1,43 @@
+// Five parallel axes, four 1:1 meshes. All dimensions in mm.
+step = 33.2
+span = 4 * step
+length = span + 41
+floor = box length 44 3 |> move (span / 2) 0 1.5
+inputBearing = zcyl 4.3 8 |> z 2
+wall = box length 2.5 5.7 |> move (span / 2) 20.75 5.65
+end = box 1.8 44 5.7 |> move -19.6 0 5.65
+rim = wall ⊕ (wall |> y -41.5) ⊕ end ⊕ (end |> x (span + 39.2))
+axle = zcyl 3 8 |> z 6
+axles = (axle |> x step) ⊕ (axle |> x (2 * step)) ⊕ (axle |> x (3 * step))
+shortPin = zcyl 2.2 2.8 |> move span 0 4
+// Four M5 through-bolts and external nuts close the gear compartment.
+corner = zcyl 5.2 8.5 |> anchor bot
+ends = (corner |> move -15 18 0) ⊕ (corner |> move -15 -18 0) ⊕ (corner |> move (span + 15) 18 0) ⊕ (corner |> move (span + 15) -18 0)
+bolt = zcyl 2.8 20 |> z 6
+pair = (bolt |> y 18) ⊕ (bolt |> y -18)
+holes = (pair |> x -15) ⊕ (pair |> x (span + 15))
+gearFloor = (floor ⊕ rim ⊕ axles ⊕ shortPin ⊕ ends) ⊖ inputBearing ⊖ holes
+// Motor lies along +X below the floor. Push it up along its shaft axis.
+// The upper 2 mm standoffs leave space for the motor shaft boss and driver.
+motorWidth = 22.5
+motorThickness = 18.8
+sideGap = 0.35
+seatGap = 2
+endGap = 0.35
+side = motorWidth / 2 + sideGap
+lipTop = 0 - seatGap - motorThickness - endGap
+armThickness = 1.8
+armHeight = 0.3 - lipTop
+arm = box 12 armThickness armHeight |> move 21 (side + armThickness / 2) ((0.3 + lipTop) / 2)
+lip = box 12 2.9 0.8 |> move 21 (side + 0.35) (lipTop - 0.4)
+tip = box 12 0.6 0.3 |> move 21 (side + 1.4) (lipTop - 2.6)
+clip = arm ⊕ (lip |> hull tip)
+oppositeClip = clip |> rotz 180 |> x 42
+// Open-ended guides flank the yellow gearcase. Wires and the unused
+// opposite motor shaft pass into open space below the housing.
+guide = box 31 2.4 9 |> move 8 (side + 1.2) -4.3
+seat = box 30 2.8 2.3 |> move 8 8.6 -0.85
+printLand = box length 1.4 8.5 |> move (span / 2) -22.5 4.25
+housing = printLand ⊕ gearFloor ⊕ clip ⊕ oppositeClip ⊕ guide ⊕ (guide |> y (0 - 2 * (side + 1.2))) ⊕ seat ⊕ (seat |> y -17.2)
+// Print on the long flat side of the gearbox.
+main = housing |> rotx 90 |> anchor bot

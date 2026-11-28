@@ -1,0 +1,183 @@
+{
+ "job": "hand-crank-stand-a1",
+ "printer": "a1",
+ "material": "pla",
+ "ams_mapping": [
+  1
+ ],
+ "package_sha256": "5871bea9fbb4f59d3421661eec5d53a7b57286ab23a77178b989cd6d8c34b772",
+ "remote_name": "hand-crank-stand-a1-20261126-221534.gcode.3mf",
+ "bed_clear_owner_confirmed": true,
+ "created_at": "2026-11-26T22:15:34+11:00",
+ "events": [
+  {
+   "at": "2026-11-26T22:16:02+11:00",
+   "status": {
+    "gcode_state": "PREPARE",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 50,
+    "mc_remaining_time": 41,
+    "nozzle_temper": 46.875,
+    "bed_temper": 24.4375,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-26T22:16:19+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 50,
+    "mc_remaining_time": 104,
+    "nozzle_temper": 105.96875,
+    "bed_temper": 31.5625,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-26T22:16:36+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 50,
+    "mc_remaining_time": 104,
+    "nozzle_temper": 125.71875,
+    "bed_temper": 53.90625,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-26T22:16:53+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 50,
+    "mc_remaining_time": 104,
+    "nozzle_temper": 138.3125,
+    "bed_temper": 65.15625,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-26T22:17:10+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 50,
+    "mc_remaining_time": 104,
+    "nozzle_temper": 174.5,
+    "bed_temper": 65.375,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-26T22:17:27+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 50,
+    "mc_remaining_time": 104,
+    "nozzle_temper": 209.78125,
+    "bed_temper": 64.6875,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-26T22:17:44+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 50,
+    "mc_remaining_time": 104,
+    "nozzle_temper": 220.25,
+    "bed_temper": 64.5625,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-26T22:18:02+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 50,
+    "mc_remaining_time": 104,
+    "nozzle_temper": 218.59375,
+    "bed_temper": 64.71875,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "1"
+   }
+  }
+ ],
+ "before": {
+  "gcode_state": "FAILED",
+  "subtask_name": "ams-tricolor-a1-20261125-163319.gcode",
+  "trays": {
+   "0": [
+    "PLA",
+    "FFFFFFFF"
+   ],
+   "1": [
+    "PLA",
+    "000000FF"
+   ],
+   "2": [
+    "PLA",
+    "F4EE2AFF"
+   ],
+   "3": [
+    null,
+    null
+   ]
+  }
+ },
+ "phase": "acknowledged",
+ "sequence_id": "1795691745",
+ "dispatch_attempted": true,
+ "reply": {
+  "sequence_id": "1795691745",
+  "command": "project_file",
+  "param": "Metadata/plate_1.gcode",
+  "url": "file:///sdcard/hand-crank-stand-a1-20261126-221534.gcode.3mf",
+  "subtask_name": "hand-crank-stand-a1-20261126-221534.gcode",
+  "project_id": "0",
+  "profile_id": "0",
+  "task_id": "0",
+  "subtask_id": "0",
+  "md5": "3260c17fb7739e4b5dc734245f3d0708",
+  "timelapse": false,
+  "bed_type": "auto",
+  "bed_levelling": true,
+  "flow_cali": false,
+  "vibration_cali": true,
+  "layer_inspect": true,
+  "use_ams": true,
+  "ams_mapping": [
+   1
+  ],
+  "reason": "success",
+  "result": "success"
+ }
+}

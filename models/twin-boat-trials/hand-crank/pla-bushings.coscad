@@ -1,0 +1,10 @@
+// Upright pair for the 6.10 mm stern-tube seats and 4 mm shaft.
+outerRadius = 3
+boreRadius = 2.15
+length = 6
+lead = 0.3
+entry = frustum (outerRadius - lead) outerRadius lead
+sleeve = zcyl outerRadius (length - lead) |> z ((length + lead) / 2)
+hole = zcyl boreRadius (length + 2) |> z (length / 2)
+bushing = (entry ⊕ sleeve) ⊖ hole
+main = bushing ⊕ (bushing |> x 12)

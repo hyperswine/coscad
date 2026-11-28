@@ -1,0 +1,211 @@
+{
+ "job": "ams-tricolor-a1",
+ "printer": "a1",
+ "material": "pla",
+ "ams_mapping": [
+  0,
+  1,
+  2
+ ],
+ "package_sha256": "3e32ef762e77f0581a0ac26e01b1527fb7b7c7411b37f5f8f318d732ac5b15d8",
+ "remote_name": "ams-tricolor-a1-20261125-163319.gcode.3mf",
+ "bed_clear_owner_confirmed": true,
+ "created_at": "2026-11-25T16:33:19+11:00",
+ "events": [
+  {
+   "at": "2026-11-25T16:33:43+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 6,
+    "mc_remaining_time": 41,
+    "nozzle_temper": 42.25,
+    "bed_temper": 22.0625,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-25T16:34:00+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 6,
+    "mc_remaining_time": 41,
+    "nozzle_temper": 98.40625,
+    "bed_temper": 43.65625,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-25T16:34:17+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 6,
+    "mc_remaining_time": 41,
+    "nozzle_temper": 93.71875,
+    "bed_temper": 60.75,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-25T16:34:34+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 6,
+    "mc_remaining_time": 41,
+    "nozzle_temper": 111.1875,
+    "bed_temper": 65.875,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-25T16:34:51+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 6,
+    "mc_remaining_time": 41,
+    "nozzle_temper": 157.4375,
+    "bed_temper": 64.9375,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-25T16:35:08+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 6,
+    "mc_remaining_time": 41,
+    "nozzle_temper": 193.1875,
+    "bed_temper": 64.4375,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-25T16:35:25+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 6,
+    "mc_remaining_time": 41,
+    "nozzle_temper": 218.3125,
+    "bed_temper": 64.5625,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-25T16:35:42+11:00",
+   "status": {
+    "gcode_state": "PAUSE",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 6,
+    "mc_remaining_time": 41,
+    "nozzle_temper": 219.15625,
+    "bed_temper": 64.625,
+    "print_error": 302022662,
+    "hms": [
+     {
+      "attr": 301993984,
+      "code": 131074,
+      "action": 0,
+      "timestamp": 1792034229
+     }
+    ],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-25T16:37:31+11:00",
+   "status": {
+    "gcode_state": "PAUSE",
+    "print_error": 302022662,
+    "hms": "HMS_1200_1000_0002_0002"
+   },
+   "note": "Paused loading AMS tray 0 (white): feeder motor overload / failed to feed (1200-8006)."
+  },
+  {
+   "at": "2026-11-25T16:37:31+11:00",
+   "status": {
+    "gcode_state": "FAILED",
+    "print_error": 50348044
+   },
+   "note": "Owner asked to cancel; stop command sent, printer reports cancelled (0300-400C)."
+  }
+ ],
+ "before": {
+  "gcode_state": "FINISH",
+  "subtask_name": "mk3-ribbed-lw-ironing-a1-20261122.gcode",
+  "trays": {
+   "0": [
+    "PLA",
+    "FFFFFFFF"
+   ],
+   "1": [
+    "PLA",
+    "000000FF"
+   ],
+   "2": [
+    "PLA",
+    "F4EE2AFF"
+   ],
+   "3": [
+    null,
+    null
+   ]
+  }
+ },
+ "phase": "cancelled-at-first-filament-load",
+ "sequence_id": "1795584806",
+ "dispatch_attempted": true,
+ "reply": {
+  "sequence_id": "1795584806",
+  "command": "project_file",
+  "param": "Metadata/plate_1.gcode",
+  "url": "file:///sdcard/ams-tricolor-a1-20261125-163319.gcode.3mf",
+  "subtask_name": "ams-tricolor-a1-20261125-163319.gcode",
+  "project_id": "0",
+  "profile_id": "0",
+  "task_id": "0",
+  "subtask_id": "0",
+  "md5": "ebe0e03fe631a26bb8912d9d9ce4a72b",
+  "timelapse": false,
+  "bed_type": "auto",
+  "bed_levelling": true,
+  "flow_cali": false,
+  "vibration_cali": true,
+  "layer_inspect": true,
+  "use_ams": true,
+  "ams_mapping": [
+   0,
+   1,
+   2
+  ],
+  "reason": "success",
+  "result": "success"
+ }
+}

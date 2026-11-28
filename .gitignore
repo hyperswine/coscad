@@ -67,3 +67,5 @@ examples-next/bracket_seam.scad
 ._*
 # Kept on purpose as a reference output (docs/2025-08-11-EXAMPLES.md).
 !examples-next/greaser-example/greaser_manifest.json
+
+.env

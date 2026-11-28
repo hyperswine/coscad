@@ -1,0 +1,22 @@
+{
+  "print": {
+    "sequence_id": "242238",
+    "command": "project_file",
+    "param": "Metadata/plate_1.gcode",
+    "url": "file:///sdcard/tt-standing-p1s.gcode.3mf",
+    "subtask_name": "tt-standing-p1s",
+    "project_id": "0",
+    "profile_id": "0",
+    "task_id": "0",
+    "subtask_id": "0",
+    "md5": "a3ae9f22445d408244eb21f775c14bd4",
+    "timelapse": false,
+    "bed_type": "auto",
+    "bed_levelling": true,
+    "flow_cali": false,
+    "vibration_cali": true,
+    "layer_inspect": false,
+    "use_ams": false,
+    "ams_mapping": []
+  }
+}

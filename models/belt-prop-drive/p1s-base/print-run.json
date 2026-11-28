@@ -1,0 +1,10 @@
+{
+  "printer": "P1S",
+  "material": "PLA",
+  "spool": "external",
+  "sha256": "0c52a4c3ef85f0f5145bdf71381e4432d313a70235f27ac3d7c64cc6219beacd",
+  "remote": "belt-base-20261127-171939.gcode.3mf",
+  "owner_confirmed_bed_clear": true,
+  "phase": "start-sent",
+  "at": "2026-11-27T17:19:39+1100"
+}

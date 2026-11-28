@@ -38,3 +38,5 @@ At 1:1, a comfortable hand rate of about 2 turns per second gives about 120 rpm 
 ## Print, 26 November 2026
 
 `p1s/` holds the P1S package, built from the turbine-core P1S presets with supports off, 4 walls, 20% infill and mouse-ear brims. The estimate is 52 min, 29 g of external yellow PLA, 117 layers at 0.2 mm on textured PEI at 55 C. `p1s/dispatch.py` sent it once at 21:25 and the printer reported PREPARE. The record is in `p1s/print-run.json`.
+
+The stand printed separately on the A1 from AMS tray 1 (second slot, black PLA), with `ams_mapping` [1]. The estimate is 1 h 45 min, 28 g, 50 layers. `a1-stand/dispatch.py` sent it at 22:15 on 26 November, and the AMS loaded tray 1 without a fault. The record is in `a1-stand/print-run.json`.

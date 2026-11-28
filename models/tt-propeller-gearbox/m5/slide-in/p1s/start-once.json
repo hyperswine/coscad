@@ -1,0 +1,22 @@
+{
+  "print": {
+    "sequence_id": "241825",
+    "command": "project_file",
+    "param": "Metadata/plate_1.gcode",
+    "url": "file:///sdcard/tt-slide-p1s.gcode.3mf",
+    "subtask_name": "tt-slide-p1s",
+    "project_id": "0",
+    "profile_id": "0",
+    "task_id": "0",
+    "subtask_id": "0",
+    "md5": "17ace66dbc24bec5df89ca9e07976222",
+    "timelapse": false,
+    "bed_type": "auto",
+    "bed_levelling": true,
+    "flow_cali": false,
+    "vibration_cali": true,
+    "layer_inspect": false,
+    "use_ams": false,
+    "ams_mapping": []
+  }
+}

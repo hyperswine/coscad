@@ -1,0 +1,1 @@
+[{"command":"project_file","result":"success","reason":"success","gcode_state":null,"subtask_name":"shaft-trials-p1s"},{"command":"push_status","result":null,"reason":null,"gcode_state":"PREPARE","subtask_name":"shaft-trials-p1s"},{"command":"push_status","result":null,"reason":null,"gcode_state":"RUNNING","subtask_name":null}]

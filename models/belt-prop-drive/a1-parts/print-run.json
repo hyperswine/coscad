@@ -1,0 +1,183 @@
+{
+ "job": "belt-parts-a1",
+ "printer": "a1",
+ "material": "pla",
+ "ams_mapping": [
+  0
+ ],
+ "package_sha256": "367365212f55ac6f58e836380e145f6b5d402eb5476eafe2a2a72b627600e9e1",
+ "remote_name": "belt-parts-a1-20261127-172000.gcode.3mf",
+ "bed_clear_owner_confirmed": true,
+ "created_at": "2026-11-27T17:20:00+11:00",
+ "events": [
+  {
+   "at": "2026-11-27T17:20:46+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 305,
+    "mc_remaining_time": 0,
+    "nozzle_temper": 43.28125,
+    "bed_temper": 27.03125,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-27T17:21:03+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 305,
+    "mc_remaining_time": 310,
+    "nozzle_temper": 107.21875,
+    "bed_temper": 36.34375,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-27T17:21:20+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 305,
+    "mc_remaining_time": 310,
+    "nozzle_temper": 126.125,
+    "bed_temper": 56.8125,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-27T17:21:37+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 305,
+    "mc_remaining_time": 310,
+    "nozzle_temper": 128.40625,
+    "bed_temper": 65.78125,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-27T17:21:54+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 305,
+    "mc_remaining_time": 310,
+    "nozzle_temper": 168.09375,
+    "bed_temper": 65.4375,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-27T17:22:11+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 305,
+    "mc_remaining_time": 310,
+    "nozzle_temper": 201.1875,
+    "bed_temper": 64.71875,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-27T17:22:28+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 305,
+    "mc_remaining_time": 310,
+    "nozzle_temper": 220.5625,
+    "bed_temper": 64.59375,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  },
+  {
+   "at": "2026-11-27T17:22:45+11:00",
+   "status": {
+    "gcode_state": "RUNNING",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 305,
+    "mc_remaining_time": 310,
+    "nozzle_temper": 219.53125,
+    "bed_temper": 64.75,
+    "print_error": 0,
+    "hms": [],
+    "tray_now": "255"
+   }
+  }
+ ],
+ "before": {
+  "gcode_state": "FINISH",
+  "subtask_name": "hand-crank-stand-a1-20261126-221534.gcode",
+  "trays": {
+   "0": [
+    "PLA",
+    "FFFFFFFF"
+   ],
+   "1": [
+    "PLA",
+    "000000FF"
+   ],
+   "2": [
+    "PLA",
+    "F4EE2AFF"
+   ],
+   "3": [
+    null,
+    null
+   ]
+  }
+ },
+ "phase": "acknowledged",
+ "sequence_id": "1795760429",
+ "dispatch_attempted": true,
+ "reply": {
+  "sequence_id": "1795760429",
+  "command": "project_file",
+  "param": "Metadata/plate_1.gcode",
+  "url": "file:///sdcard/belt-parts-a1-20261127-172000.gcode.3mf",
+  "subtask_name": "belt-parts-a1-20261127-172000.gcode",
+  "project_id": "0",
+  "profile_id": "0",
+  "task_id": "0",
+  "subtask_id": "0",
+  "md5": "7a6b0dcc3e5959377f3370b5d50d7149",
+  "timelapse": false,
+  "bed_type": "auto",
+  "bed_levelling": true,
+  "flow_cali": false,
+  "vibration_cali": true,
+  "layer_inspect": true,
+  "use_ams": true,
+  "ams_mapping": [
+   0
+  ],
+  "reason": "success",
+  "result": "success"
+ }
+}

@@ -1,0 +1,11 @@
+[2026-11-28 17:55:21.529488] [0x00000001f6015300] [trace]   Initializing StaticPrintConfigs
+[2026-11-28 17:55:21.535505] [0x00000001f6015300] [warning] cli mode, Current BambuStudio Version 02.08.02.61
+[2026-11-28 17:55:21.544058] [0x00000001f6015300] [warning] run:2873, can not find system preset file: /Applications/BambuStudio.app/Contents/Resources/profiles/BBL/machine_full/Bambu Lab X2D 0.4 nozzle.json 
+[2026-11-28 17:55:21.544070] [0x00000001f6015300] [warning] run:2895, can not find system preset file: /Applications/BambuStudio.app/Contents/Resources/profiles/BBL/process_full/0.20mm Standard @BBL X2D.json 
+[2026-11-28 17:55:21.544173] [0x00000001f6015300] [warning] no filament colors found in projects
+[2026-11-28 17:55:21.544818] [0x00000001f6015300] [warning] load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types
+[2026-11-28 17:55:21.743063] [0x00000001f6015300] [warning] tree support default to organic support
+[2026-11-28 17:55:21.876701] [0x00000001f6015300] [warning] plate 1: found NON_CRITICAL slicing warnings: It seems object AGVN sailboat has floating regions. Please re-orient the object or enable support generation.
+
+[2026-11-28 17:55:22.338838] [0x00000001f6015300] [error]   Invalid T command (T65279).
+[2026-11-28 17:55:22.338849] [0x00000001f6015300] [error]   Invalid T command (T65535).

@@ -1,0 +1,14 @@
+// 88 mm horizontal fit gauges with axial extrusion paths. The small
+// longitudinal flat provides bed contact and a seat for the hub set screws.
+flatCut = box 92 10 4 |> z -2
+s390 = ((xcyl 1.95 88 |> z 1.65) ⊖ flatCut)
+s400 = ((xcyl 2 88 |> z 1.70) ⊖ flatCut)
+s410 = ((xcyl 2.05 88 |> z 1.75) ⊖ flatCut)
+// Breakaway identifying tabs beyond the end, one/two/three edge notches.
+tab = box 7 6 1 |> move 48.5 0 0.5
+link = box 1.5 1.0 0.6 |> move 44.55 0 0.65
+notch = box 0.9 2.4 3 |> move 47 3 0.5
+tag1 = (tab ⊖ notch) ⊕ link
+tag2 = tag1 ⊖ (notch |> x 1.7)
+tag3 = tag2 ⊖ (notch |> x 3.4)
+main = (s390 ⊕ tag1) ⊕ ((s400 ⊕ tag2) |> y 12) ⊕ ((s410 ⊕ tag3) |> y 24)
