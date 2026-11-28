@@ -1,0 +1,675 @@
+{
+  "printer": "x2d",
+  "serial": "20P8BJ692700673",
+  "package": "coscad/models/twin-boat-trials/agvn/sail/x2d-light/tree-two-nozzles-notower-cool10/slice/AGVN-sail-light.gcode.3mf",
+  "package_sha256": "2620cd9e2d9dcf547f6e17ff12ef514691df2dc73680fe9be7c4a99f4325eacc",
+  "package_md5": "5cc9d6b08fe1bc9b03f805395c63f57e",
+  "remote_name": "AGVN-tree-two-nozzles-notower-cool10.gcode.3mf",
+  "bed_clear_owner_confirmed": true,
+  "authorization_note": "Owner confirmed 2026-11-28 in chat: X2D bed clear, print the flush-lettered AGVN sailboat without prime tower and with the 10 min cool-down",
+  "accepted_failed_state": false,
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 475,
+    "total_layer_num": 475,
+    "mc_remaining_time": 0,
+    "subtask_name": "AGVN-sail-light-2n",
+    "print_error": 0,
+    "fail_reason": "0",
+    "stg_cur": -1,
+    "hms": []
+  },
+  "spools_before": {
+    "ams0-slot3": {
+      "tray_type": "PLA",
+      "tray_color": "000000FF",
+      "tray_info_idx": "GFSNL04"
+    },
+    "virtual-255": {
+      "tray_type": "PLA",
+      "tray_color": "0ACC38FF",
+      "tray_info_idx": "GFA00"
+    }
+  },
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-28T21:27:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 13,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:28:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 13,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:28:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 74,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:28:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 11,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:28:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 11,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:29:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 73,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:29:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:29:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:29:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:30:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:30:23+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:30:38+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:30:53+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:31:08+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 8,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:31:24+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 8,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:31:39+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 8,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:31:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 8,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:32:09+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:32:24+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:32:39+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:32:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:33:09+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 87,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:33:24+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 86,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:33:39+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 86,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:33:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 86,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 54,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:34:09+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 86,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 1,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:34:24+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 86,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 1,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:34:39+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 86,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 1,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:34:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 82,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 3,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:35:09+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 82,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:35:24+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 82,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:35:39+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 82,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:35:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 82,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:36:09+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 82,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:36:24+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 82,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:36:39+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 82,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:36:54+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 82,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 51,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T21:37:09+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 5,
+        "layer_num": 1,
+        "total_layer_num": 475,
+        "mc_remaining_time": 82,
+        "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 0,
+        "hms": []
+      }
+    }
+  ],
+  "created_at": "2026-11-28T21:27:36+1100",
+  "remote_content_sha256": "2620cd9e2d9dcf547f6e17ff12ef514691df2dc73680fe9be7c4a99f4325eacc",
+  "command": {
+    "sequence_id": "1795861658",
+    "command": "project_file",
+    "param": "Metadata/plate_1.gcode",
+    "url": "ftp:///AGVN-tree-two-nozzles-notower-cool10.gcode.3mf",
+    "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+    "project_id": "0",
+    "profile_id": "0",
+    "task_id": "0",
+    "subtask_id": "0",
+    "md5": "5cc9d6b08fe1bc9b03f805395c63f57e",
+    "bed_type": "textured_plate",
+    "bed_levelling": true,
+    "timelapse": false,
+    "use_ams": true,
+    "ams_mapping": [
+      3,
+      255
+    ],
+    "ams_mapping2": [
+      {
+        "ams_id": 0,
+        "slot_id": 3
+      },
+      {
+        "ams_id": 255,
+        "slot_id": 0
+      }
+    ]
+  },
+  "reply": {
+    "ams_mapping": [
+      3,
+      255
+    ],
+    "ams_mapping2": [
+      {
+        "ams_id": 0,
+        "slot_id": 3
+      },
+      {
+        "ams_id": 255,
+        "slot_id": 0
+      }
+    ],
+    "bed_levelling": true,
+    "bed_type": "textured_plate",
+    "command": "project_file",
+    "err_code": 0,
+    "is_from_mqtt": true,
+    "md5": "5cc9d6b08fe1bc9b03f805395c63f57e",
+    "param": "Metadata/plate_1.gcode",
+    "profile_id": "0",
+    "project_id": "0",
+    "reason": "SUCCESS",
+    "result": "SUCCESS",
+    "sequence_id": "1795861658",
+    "subtask_id": "0",
+    "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+    "task_id": "0",
+    "timelapse": false,
+    "url": "ftp:///AGVN-tree-two-nozzles-notower-cool10.gcode.3mf",
+    "use_ams": true
+  }
+}
