@@ -67,7 +67,7 @@ It then:
 
 `--dry-run` stops after the checks and prints the start command it would send.
 
-**Secrets.** The access code comes from `BAMBU_ACCESS_CODE_<PRINTER>`, the printer's keys in `coscad/.env`, or `BAMBU_ACCESS_CODE`. It never appears on a command line or on disk:
+**Secrets.** The access code comes from `BAMBU_ACCESS_CODE_<PRINTER>`, the printer's keys in `coscad/.env`, `BAMBU_ACCESS_CODE` in `~/.config/bambu/<printer>.env`, or `BAMBU_ACCESS_CODE`. It never appears on a command line or on disk:
 - mosquitto reads its options through a bash process substitution fed on stdin
 - curl reads its `user` line from stdin
 
@@ -98,7 +98,7 @@ Per-nozzle toolpath bounding boxes match the template slice to 0.01 mm, so the l
 
 **Letters.** `letters.sol` draws strokes with mitred bends instead of shapely buffers. The rendered green volume is 274.920 mm³, against 274.918 mm³ for the shapely outlines.
 
-**Older printers.** The nine X1C/P1S/A1 job files compile and refuse to resend because their records exist. They have not been dry-run against those printers, because their access codes are not in `coscad/.env`.
+**Older printers.** The nine X1C/P1S/A1 job files compile and refuse to resend because their records exist. Their access codes are in `~/.config/bambu/<printer>.env` (mode 600), which `bambu.sol` reads. Read-only dry runs passed against the live X1C (FAILED state from an earlier job, external PLA, `ams_mapping []`), P1S (FINISH, external PLA, `[254]`) and A1 (IDLE): the belt parts got white on AMS slot 1 (`[0]`), and the three-colour test got white, black and yellow on slots 1-3 (`[0, 1, 2]`), the same mapping as the original dispatch.
 
 ## Not done
 

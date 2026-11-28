@@ -16,7 +16,7 @@
 # and after every step; if it exists the job is never sent again.
 #
 # Secrets: the access code comes from BAMBU_ACCESS_CODE_<PRINTER>, the printer's keys in
-# coscad/.env, or BAMBU_ACCESS_CODE. It is never printed, written or put on a command line:
+# coscad/.env, BAMBU_ACCESS_CODE in ~/.config/bambu/<printer>.env (mode 600), or BAMBU_ACCESS_CODE. It is never printed, written or put on a command line:
 # mosquitto reads its options from a bash process substitution fed on stdin, curl reads its
 # `user` line from stdin (-K -). curl checks the printer certificate against bbl-ca.pem with the
 # serial number as the host name (--connect-to); that is the identity check before MQTT is used.
@@ -80,8 +80,10 @@ host p = env = dotenv "{repoRoot Unit}/.env";
 caFile unused = "{repoRoot Unit}/models/lib/bbl-ca.pem".
 accessCode p =
   env = dotenv "{repoRoot Unit}/.env";
-  code = firstNonEmpty ([envValue "BAMBU_ACCESS_CODE_{Str.upper p.name}"] + List.map (fn k -> lookup k env) p.codeKeys + [envValue "BAMBU_ACCESS_CODE"]);
-  if code == "" then error "no access code for {p.name}: set BAMBU_ACCESS_CODE_{Str.upper p.name} or {Str.join "/" p.codeKeys} in coscad/.env" else code.
+  own = dotenv "{envValue "HOME"}/.config/bambu/{p.name}.env";
+  code = firstNonEmpty ([envValue "BAMBU_ACCESS_CODE_{Str.upper p.name}"] + List.map (fn k -> lookup k env) p.codeKeys +
+    [lookup "BAMBU_ACCESS_CODE" own, envValue "BAMBU_ACCESS_CODE"]);
+  if code == "" then error "no access code for {p.name}: set BAMBU_ACCESS_CODE_{Str.upper p.name}, {Str.join "/" p.codeKeys} in coscad/.env, or BAMBU_ACCESS_CODE in ~/.config/bambu/{p.name}.env" else code.
 
 # ---------------------------------------------------------------- MQTT
 mqttOptions p code = Str.join nl ["-h {host p}", "-p 8883", "-u bblp", "-P {code}", "--cafile {caFile Unit}", "--insecure", ""].
