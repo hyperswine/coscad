@@ -1,0 +1,9 @@
+jaw closes 4.45 mm per N on the pads; opens 13.50 mm per N pinch; moves 3.09 mm per N sideways (z)
+rest half-gap at the jaw 13.03 mm: the jaws touch with 2.9 N on the pads
+pinch 0.0 N: pads 2.9 N, peak von Mises 7.2 MPa at x 32.2 y 1.8 z 11.4, safety 6.9
+pinch 1.0 N: pads 6.0 N, peak von Mises 8.3 MPa at x 22.6 y 1.8 z 0.6, safety 6.0
+pinch 2.0 N: pads 9.0 N, peak von Mises 9.7 MPa at x 22.6 y 1.8 z 0.6, safety 5.2
+pinch 3.0 N: pads 12.0 N, peak von Mises 11.1 MPa at x 22.6 y 1.8 z 0.6, safety 4.5
+pinch 4.0 N: pads 15.1 N, peak von Mises 12.4 MPa at x 22.6 y 1.8 z 0.6, safety 4.0
+pinch 5.0 N: pads 18.1 N, peak von Mises 13.8 MPa at x 22.6 y 1.8 z 0.6, safety 3.6
+lever: each extra N on the pads adds 0.33 N at the jaw

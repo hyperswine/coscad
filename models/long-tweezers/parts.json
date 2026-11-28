@@ -1,0 +1,10 @@
+{
+  "model": "print.coscad",
+  "filaments": [
+    {"key": "pla", "material": "PLA", "colour": "", "idx": "", "preset": "presets/PRINTER/filament.json", "note": "any loaded PLA"}
+  ],
+  "parts": [
+    {"name": "main", "filament": "pla"}
+  ],
+  "supports": "pla"
+}

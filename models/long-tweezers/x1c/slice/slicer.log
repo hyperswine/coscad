@@ -1,0 +1,6 @@
+[2026-11-28 22:50:51.118021] [0x00000001f6015300] [trace]   Initializing StaticPrintConfigs
+[2026-11-28 22:50:51.175143] [0x00000001f6015300] [warning] cli mode, Current BambuStudio Version 02.08.02.61
+[2026-11-28 22:50:51.182244] [0x00000001f6015300] [warning] 2189: not support to slice plate 1, reset to 0
+[2026-11-28 22:50:51.184992] [0x00000001f6015300] [warning] no filament colors found in projects
+[2026-11-28 22:50:51.187854] [0x00000001f6015300] [warning] load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types
+[2026-11-28 22:50:51.481285] [0x00000001f6015300] [warning] tree support default to organic support

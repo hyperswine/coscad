@@ -1,0 +1,14 @@
+material pla (E 3500.0 MPa), cell 1.2 mm, 16970 cells, 259662 unknowns, 4601 iterations
+max displacement 3.276 mm at [310.0 13.208 0.0]
+peak stress 3.295 MPa von Mises at [40.6 1.808 11.4] (cell centres: 2.562 MPa)
+across layers 1.799 MPa tension at [10.6 1.808 0.6]
+safety factor 15.176 in plane, 19.45 across layers; requested 2.0 (ok)
+note: Point loads at datums act on one node, which is a stress singularity; judge deflection, not the stress there
+note: Point loads at datums act on one node, which is a stress singularity; judge deflection, not the stress there
+note: Point loads at datums act on one node, which is a stress singularity; judge deflection, not the stress there
+note: Peak stress is the largest Gauss-point value on a stair-stepped mesh; refine the cell to check it has settled
+note: Across-layer strength assumes layers stacked along the part's z axis
+Wrote fea/side.json (mesh analysed: fea/side.json.assets-1/mesh.stl)
+real 1221.85
+user 1211.67
+sys 8.19
