@@ -87,13 +87,14 @@ accessCode p =
 
 # ---------------------------------------------------------------- MQTT
 mqttOptions p code = Str.join nl ["-h {host p}", "-p 8883", "-u bblp", "-P {code}", "--cafile {caFile Unit}", "--insecure", ""].
-# $1 serial, $2 message, $3 messages to collect, $4 seconds; options arrive on stdin. Payloads are
-# printed hex-encoded, one per line (the X2D pretty-prints its JSON across lines).
-mqttScript = "o=$(cat; echo .); o=$\{o%.\}; mosquitto_sub -o <(printf '%s' \"$o\") -t \"device/$1/report\" -F %x -C \"$3\" -W \"$4\" & s=$!; sleep 1; mosquitto_pub -o <(printf '%s' \"$o\") -t \"device/$1/request\" -m \"$2\"; wait $s; exit 0".
+# $1 serial, $2 message, $3 messages to collect, $4 seconds; options arrive on stdin. jq re-prints
+# each payload compact on one line (the X2D pretty-prints its JSON across lines, and process
+# captures stop at 1 MiB, which 60 hex-encoded X2D reports overflowed on 2026-11-28).
+mqttScript = "o=$(cat; echo .); o=$\{o%.\}; mosquitto_sub -o <(printf '%s' \"$o\") -t \"device/$1/report\" -F %p -C \"$3\" -W \"$4\" | jq -c . & s=$!; sleep 1; mosquitto_pub -o <(printf '%s' \"$o\") -t \"device/$1/request\" -m \"$2\"; wait $s; exit 0".
 exchange p code message count seconds =
   argv = ["bash", "-c", mqttScript, "bambu-mqtt", p.serial, message, str count, str seconds];
   ProcessResult status stdout err = unwrap (Proc.query (P.withStdin (mqttOptions p code) (P.spec argv)));
-  List.fold (fn acc line -> case Hex.decode (Str.trim line) |>? Utf8.decode |>? J.parse of Ok j -> acc + [j] | Err _ -> acc) [] (Str.lines stdout).
+  List.fold (fn acc line -> case J.parse line of Ok j -> acc + [j] | Err _ -> acc) [] (Str.lines stdout).
 pushall = "\{\"pushing\":\{\"sequence_id\":\"0\",\"command\":\"pushall\",\"version\":1,\"push_target\":1\}\}".
 # The full report (the pushall reply carries the AMS block).
 status p code =
@@ -291,7 +292,7 @@ dispatch job confirmed note dryRun =
   cmd = startCommand p job pl remote md5;
   rec2 = J.set "command" cmd (J.set "dispatch_attempted" (J.JBool True) (J.set "phase" (J.JStr "start-intent") rec1));
   _ = save rec2;
-  replies = List.filter (fn m -> text "command" (get "print" m) == "project_file") (exchange p code (J.render (J.JObj [("print", cmd)])) 60 35);
+  replies = List.filter (fn m -> text "command" (get "print" m) == "project_file") (exchange p code (J.render (J.JObj [("print", cmd)])) 25 30);
   reply = case replies of m :: _ -> get "print" m | [] -> J.JNull;
   rec3 = J.set "reply" reply (J.set "phase" (J.JStr (if replies == [] then "no-acknowledgement" else "acknowledged")) rec2);
   _ = save rec3;

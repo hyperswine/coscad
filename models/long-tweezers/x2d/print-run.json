@@ -1,0 +1,76 @@
+{
+  "printer": "x2d",
+  "serial": "20P8BJ692700673",
+  "package": "/Users/jasonqin/Documents/GitHub/coscad/models/long-tweezers/x2d/slice/long-tweezers-x2d.gcode.3mf",
+  "package_sha256": "fe63972b6d3e1f55aa2b8da9992a554089551cc2a2d879042e955f4681e9ce07",
+  "package_md5": "fe638ec99367539a2e9d458d8f9b41ec",
+  "remote_name": "long-tweezers-x2d-20261128-231740.gcode.3mf",
+  "bed_clear_owner_confirmed": true,
+  "authorization_note": "Owner confirmed 2026-11-28 in chat: X2D bed clear, print the long tweezers in the black PLA with the cool-down afterwards",
+  "before": {
+    "gcode_state": "FINISH",
+    "mc_percent": 100,
+    "layer_num": 475,
+    "total_layer_num": 475,
+    "mc_remaining_time": 0,
+    "subtask_name": "AGVN-tree-two-nozzles-notower-cool10",
+    "print_error": 0,
+    "fail_reason": "0",
+    "stg_cur": -1,
+    "hms": []
+  },
+  "plan": {
+    "filament_map": "1",
+    "use_ams": true,
+    "ams_mapping": [
+      3
+    ],
+    "spools": [
+      {
+        "filament": "pla",
+        "feed": "AMS 0 slot 4: PLA 000000FF GFSNL04",
+        "nozzle": 1
+      }
+    ]
+  },
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-28T23:19:35+1100",
+      "status": "RUNNING, preparing, subtask long-tweezers-x2d-20261128-231740"
+    },
+    {
+      "at": "2026-11-28T23:26+1100",
+      "status": "RUNNING layer 1/60, 119 min left, no faults"
+    }
+  ],
+  "created_at": "2026-11-28T23:17:52+1100",
+  "remote_content_sha256": "fe63972b6d3e1f55aa2b8da9992a554089551cc2a2d879042e955f4681e9ce07",
+  "command": {
+    "sequence_id": "1795868286",
+    "command": "project_file",
+    "param": "Metadata/plate_1.gcode",
+    "url": "ftp:///long-tweezers-x2d-20261128-231740.gcode.3mf",
+    "subtask_name": "long-tweezers-x2d-20261128-231740",
+    "project_id": "0",
+    "profile_id": "0",
+    "task_id": "0",
+    "subtask_id": "0",
+    "md5": "fe638ec99367539a2e9d458d8f9b41ec",
+    "bed_type": "textured_plate",
+    "bed_levelling": true,
+    "timelapse": false,
+    "use_ams": true,
+    "ams_mapping": [
+      3
+    ],
+    "ams_mapping2": [
+      {
+        "ams_id": 0,
+        "slot_id": 3
+      }
+    ]
+  },
+  "note": "The dispatcher published project_file, then crashed collecting the acknowledgement (process capture over 1 MiB of hex-encoded X2D reports). A separate status read showed the X2D RUNNING subtask long-tweezers-x2d-20261128-231740, 60 layers. Fixed in bambu.sol (jq -c, 25 messages)."
+}
