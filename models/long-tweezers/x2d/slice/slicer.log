@@ -1,0 +1,7 @@
+[2026-11-28 23:16:28.107182] [0x00000001f6015300] [trace]   Initializing StaticPrintConfigs
+[2026-11-28 23:16:28.175551] [0x00000001f6015300] [warning] cli mode, Current BambuStudio Version 02.08.02.61
+[2026-11-28 23:16:28.184900] [0x00000001f6015300] [warning] 2189: not support to slice plate 1, reset to 0
+[2026-11-28 23:16:28.191864] [0x00000001f6015300] [warning] load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types
+[2026-11-28 23:16:28.429789] [0x00000001f6015300] [warning] tree support default to organic support
+[2026-11-28 23:16:29.078164] [0x00000001f6015300] [error]   Invalid T command (T65279).
+[2026-11-28 23:16:29.078183] [0x00000001f6015300] [error]   Invalid T command (T65535).

@@ -1,0 +1,35 @@
+{
+  "plates": [
+    {
+      "plate_name": "long-tweezers-x2d",
+      "need_arrange": false,
+      "plate_params": {
+        "filament_map_mode": "Manual",
+        "filament_maps": "1",
+        "filament_map": "1"
+      },
+      "objects": [
+        {
+          "path": "/Users/jasonqin/Documents/GitHub/coscad/models/long-tweezers/print.stl",
+          "count": 1,
+          "subtype": "normal_part",
+          "filaments": [
+            1
+          ],
+          "assemble_index": [
+            1
+          ],
+          "pos_x": [
+            122.67500000000001
+          ],
+          "pos_y": [
+            133.325
+          ],
+          "pos_z": [
+            0
+          ]
+        }
+      ]
+    }
+  ]
+}

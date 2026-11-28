@@ -5,7 +5,8 @@
 # length, so the printed part matches the FEA's solid-PLA model: 8 walls, 100% infill laid along the
 # arms, 4 top and bottom layers.
 #
-#   sol design.sol && sol build.sol --printer x1c      (or a1)
+#   sol design.sol && sol build.sol --printer x1c      (or a1, p1s)
+#   sol build.sol --printer x2d --colour "#000000" --cooldown   (black spool, fans 10 min after)
 J = use "sol/lib/json".
 Bambu = use "../lib/bambu".
 
@@ -16,12 +17,24 @@ coscadBin root = case unwrap (Env.get "COSCAD") of
 bounds line = i = Str.indexOf "bounds [" line; t = Str.slice line (i + 8) (Str.len line);
   ws = Str.words (Str.replace "]" " " (Str.replace "[" " " (Str.replace ".." " " t)));
   List.map (fn w -> unwrap (Try.parseNum w)) (List.take 6 ws).
-tagsFor dir printer = raw = Str.replace "PRINTER" printer (Bambu.readNow "{dir}/parts.json");
+# --colour picks a spool colour (e.g. "#000000"); otherwise any loaded PLA.
+tagsFor dir printer colour = raw = Str.replace "\"colour\": \"\"" "\"colour\": \"{colour}\"" (Str.replace "PRINTER" printer (Bambu.readNow "{dir}/parts.json"));
   J.set "dir" (J.JStr dir) (unwrap (J.parse raw)).
+
+# Two-nozzle printers: which nozzle holds the tagged spool now (read-only status).
+liveMap p tags = code = Bambu.accessCode p;
+  u = Bambu.identity p code;
+  pl = Bambu.plan p (Bambu.status p code) (Bambu.filamentsOf tags);
+  u2 = print "spools now: {J.render (Bambu.planJson p pl)}";
+  pl.filamentMap.
 
 > argv = args Unit;
   printer = Bambu.argAfter "--printer" argv;
-  u0 = if List.has printer ["x1c", "a1", "p1s"] then Unit else error "usage: sol build.sol --printer x1c|a1|p1s";
+  u0 = if List.has printer ["x1c", "a1", "p1s", "x2d"] then Unit else error "usage: sol build.sol --printer x1c|a1|p1s|x2d [--colour \"#000000\"] [--cooldown[=MIN]]";
+  colour = Bambu.argAfter "--colour" argv;
+  coolArg = List.fold (fn acc a -> if a == "--cooldown" then "10" else if Str.startsWith "--cooldown=" a then Str.slice a 11 (Str.len a) else acc) "" argv;
+  cool = if coolArg == "" then 0 else unwrap (Try.parseInt coolArg);
+  p = Bambu.printer printer;
   root = Bambu.repoRoot Unit;
   dir = "{root}/models/long-tweezers";
   presets = "{dir}/presets/{printer}";
@@ -39,6 +52,10 @@ tagsFor dir printer = raw = Str.replace "PRINTER" printer (Bambu.readNow "{dir}/
     ("enable_support", "0"), ("brim_type", "no_brim"), ("layer_height", "0.2")];
   process = List.fold (fn acc kv -> (k, v) = kv; J.set k (J.JStr v) acc) base overrides;
   u4 = Bambu.putNow "{job}/process.json" (J.pretty process + Bambu.nl);
-  result = Bambu.slice {dir = job, tags = tagsFor dir printer, stls = [("main", "{dir}/print.stl")], machine = "{presets}/machine.json",
-    process = "{job}/process.json", center = (cx, cy), filamentMap = "", name = "long-tweezers-{printer}"};
+  tags = tagsFor dir printer colour;
+  machine = Bambu.withCooldown p (unwrap (J.parse (Bambu.readNow "{presets}/machine.json"))) cool;
+  u5 = Bambu.putNow "{job}/machine.json" (J.pretty machine + Bambu.nl);
+  fmap = if List.len p.physical > 1 then liveMap p tags else "";
+  result = Bambu.slice {dir = job, tags = tags, stls = [("main", "{dir}/print.stl")], machine = "{job}/machine.json",
+    process = "{job}/process.json", center = (cx, cy), filamentMap = fmap, name = "long-tweezers-{printer}"};
   print (J.pretty result).
