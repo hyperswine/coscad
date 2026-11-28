@@ -1,0 +1,13 @@
+{
+  "model": "boat.coscad",
+  "center": [138.25, 128],
+  "filaments": [
+    {"key": "black", "material": "PLA", "colour": "#000000", "idx": "GFSNL04", "preset": "../filament.json", "note": "SUNLU PLA+ 2.0"},
+    {"key": "green", "material": "PLA", "colour": "#00AE42", "idx": "GFA00", "preset": "green.json", "note": "Bambu PLA Basic"}
+  ],
+  "parts": [
+    {"name": "blackBody", "filament": "black"},
+    {"name": "greenLetters", "filament": "green"}
+  ],
+  "supports": "black"
+}

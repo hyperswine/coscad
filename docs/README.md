@@ -75,5 +75,6 @@ at the first three.
 | 2026-11-21 | [GEARS-AND-FLOAT](2026-11-21-GEARS-AND-FLOAT.md) | `coscad gears` mesh sweep (interference, backlash, contact pairs, Lewis) and `coscad float` hydrostatics restored from the deleted Python verifiers |
 | 2026-11-22 | [FLIGHT-MODEL](2026-11-22-FLIGHT-MODEL.md) | `coscad flight` vortex lattice: neutral point, trim, glide and stall check; AR 6 wing checks and the balanced glider |
 | 2026-11-24 | [ASSEMBLY-PLANNER-PROPOSAL](2026-11-24-ASSEMBLY-PLANNER-PROPOSAL.md) | temporary bench supports, one-person handling, gearbox replay and generalization tests |
+| 2026-11-28 | [COLOUR-TAGS](2026-11-28-COLOUR-TAGS.md) | Parts tagged with filaments; assemble-list slicing, live spool matching and dispatch in Sol (models/lib/bambu.sol) |
 | 2026-11-28 | [X2D operations](X2D-OPERATIONS.md) | Local credentials, dashboard, plate selection, AMS mapping and verified LAN dispatch |
 | 2026-11-25 | [X2D-AMS2-INTEGRATION](2026-11-25-X2D-AMS2-INTEGRATION.md) | X2D material routing, AMS 2 Pro telemetry, dispatch and dashboard arrival checks |
