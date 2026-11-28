@@ -1,0 +1,735 @@
+{
+  "printer": "x2d",
+  "serial": "20P8BJ692700673",
+  "package": "coscad/models/twin-boat-trials/agvn/sail/x2d-light/tree-two-nozzles/slice/AGVN-sail-light.gcode.3mf",
+  "package_sha256": "3ad776ff82b450d651a2b83437b4f535e76dfde68cd86366d879f0bc1c4539fc",
+  "package_md5": "78e64d71008fcaabbdf46de2200938c8",
+  "remote_name": "AGVN-sail-light-2n.gcode.3mf",
+  "bed_clear_owner_confirmed": true,
+  "authorization_note": "Owner confirmed 2026-11-28 in chat: X2D bed clear, green Bambu PLA on the external spool, print the two-colour AGVN sailboat",
+  "accepted_failed_state": true,
+  "before": {
+    "gcode_state": "FAILED",
+    "mc_percent": 0,
+    "layer_num": 0,
+    "total_layer_num": 475,
+    "mc_remaining_time": 0,
+    "subtask_name": "AGVN-Sail-Tree",
+    "print_error": 0,
+    "fail_reason": "134184967",
+    "stg_cur": -1,
+    "hms": []
+  },
+  "spools_before": {
+    "ams0-slot3": {
+      "tray_type": "PLA",
+      "tray_color": "000000FF",
+      "tray_info_idx": "GFSNL04"
+    },
+    "virtual-255": {
+      "tray_type": "PLA",
+      "tray_color": "0ACC38FF",
+      "tray_info_idx": "GFA00"
+    }
+  },
+  "phase": "first-layer",
+  "dispatch_attempted": true,
+  "events": [
+    {
+      "at": "2026-11-28T18:53:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 13,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:53:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 13,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:53:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 74,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:54:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 11,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:54:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 73,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:54:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:54:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:55:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:55:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:55:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:55:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:56:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 4,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:56:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 8,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:56:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 8,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:56:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 8,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:57:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:57:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:57:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:57:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:58:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:58:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 116,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:58:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 115,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:58:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 115,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 14,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:59:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 115,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 1,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:59:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 115,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 1,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:59:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 115,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 1,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T18:59:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 115,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 1,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:00:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 115,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 1,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:00:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 0,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 115,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 1,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:00:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:00:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:01:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:01:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:01:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:01:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:02:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:02:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:02:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:02:49+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:03:04+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 39,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:03:19+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 0,
+        "total_layer_num": 475,
+        "mc_remaining_time": 111,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 51,
+        "hms": []
+      }
+    },
+    {
+      "at": "2026-11-28T19:03:34+1100",
+      "status": {
+        "gcode_state": "RUNNING",
+        "mc_percent": 4,
+        "layer_num": 1,
+        "total_layer_num": 475,
+        "mc_remaining_time": 110,
+        "subtask_name": "AGVN-sail-light-2n",
+        "print_error": 0,
+        "fail_reason": "0",
+        "stg_cur": 0,
+        "hms": []
+      }
+    }
+  ],
+  "created_at": "2026-11-28T18:53:02+1100",
+  "remote_content_sha256": "3ad776ff82b450d651a2b83437b4f535e76dfde68cd86366d879f0bc1c4539fc",
+  "command": {
+    "sequence_id": "1795852384",
+    "command": "project_file",
+    "param": "Metadata/plate_1.gcode",
+    "url": "ftp:///AGVN-sail-light-2n.gcode.3mf",
+    "subtask_name": "AGVN-sail-light-2n",
+    "project_id": "0",
+    "profile_id": "0",
+    "task_id": "0",
+    "subtask_id": "0",
+    "md5": "78e64d71008fcaabbdf46de2200938c8",
+    "bed_type": "textured_plate",
+    "bed_levelling": true,
+    "timelapse": false,
+    "use_ams": true,
+    "ams_mapping": [
+      3,
+      255
+    ],
+    "ams_mapping2": [
+      {
+        "ams_id": 0,
+        "slot_id": 3
+      },
+      {
+        "ams_id": 255,
+        "slot_id": 0
+      }
+    ]
+  },
+  "reply": {
+    "ams_mapping": [
+      3,
+      255
+    ],
+    "ams_mapping2": [
+      {
+        "ams_id": 0,
+        "slot_id": 3
+      },
+      {
+        "ams_id": 255,
+        "slot_id": 0
+      }
+    ],
+    "bed_levelling": true,
+    "bed_type": "textured_plate",
+    "command": "project_file",
+    "err_code": 0,
+    "is_from_mqtt": true,
+    "md5": "78e64d71008fcaabbdf46de2200938c8",
+    "param": "Metadata/plate_1.gcode",
+    "profile_id": "0",
+    "project_id": "0",
+    "reason": "SUCCESS",
+    "result": "SUCCESS",
+    "sequence_id": "1795852384",
+    "subtask_id": "0",
+    "subtask_name": "AGVN-sail-light-2n",
+    "task_id": "0",
+    "timelapse": false,
+    "url": "ftp:///AGVN-sail-light-2n.gcode.3mf",
+    "use_ams": true
+  }
+}
