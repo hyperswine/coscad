@@ -4,7 +4,10 @@ print.project_file, then status up to the first layer. Black (filament 1) comes 
 unit 0 slot 3 (physical slot 4) on physical extruder 1; green (filament 2) from the external
 feed, virtual slot 255, on physical extruder 0 -- as the printer reported them before slicing.
 
-  python dispatch_x2d.py --confirm-bed-clear --authorization-note '...'
+  python dispatch_x2d.py --confirm-bed-clear --authorization-note '...' [--job tree-two-nozzles-notower-cool10]
+
+--job names the build.py output folder (default tree-two-nozzles, the first print); the record
+goes to <job>/print-run.json and the remote file is named after the job.
 
 Reads IP_ADDR / ACCESS_CODE from coscad/.env and never prints or records the code. An existing
 dispatch record blocks a second send; a missing acknowledgement is recorded, never resent.
@@ -16,13 +19,14 @@ H = Path(__file__).resolve().parent
 ROOT = Path('/Users/jasonqin/Documents/GitHub')
 SERIAL = '20P8BJ692700673'
 CA = os.environ.get('BBL_CA', str(Path(__file__).resolve().parent/'bbl-printer-ca.pem'))
-PACKAGE = H/'tree-two-nozzles/slice/AGVN-sail-light.gcode.3mf'
-REMOTE = 'AGVN-sail-light-2n.gcode.3mf'
-RECORD = H/'tree-two-nozzles/print-run.json'
 EXPECT = {'ams': ('0', '3', 'PLA', 'GFSNL04'), 'virtual': ('255', 'PLA', 'GFA00')}
 
 ap = argparse.ArgumentParser(); ap.add_argument('--confirm-bed-clear', action='store_true', required=True)
-ap.add_argument('--authorization-note', required=True); ap.add_argument('--ca', default=CA); args = ap.parse_args()
+ap.add_argument('--authorization-note', required=True); ap.add_argument('--ca', default=CA)
+ap.add_argument('--job', default='tree-two-nozzles'); args = ap.parse_args()
+PACKAGE = H/args.job/'slice/AGVN-sail-light.gcode.3mf'
+REMOTE = 'AGVN-sail-light-2n.gcode.3mf' if args.job == 'tree-two-nozzles' else f'AGVN-{args.job}.gcode.3mf'
+RECORD = H/args.job/'print-run.json'
 assert not RECORD.exists(), 'A dispatch record exists: inspect it and the printer instead of resending'
 env = {}
 for line in (ROOT/'coscad/.env').read_text().splitlines():

@@ -1,0 +1,11 @@
+[2026-11-28 21:23:58.718337] [0x00000001f6015300] [trace]   Initializing StaticPrintConfigs
+[2026-11-28 21:23:58.789464] [0x00000001f6015300] [warning] cli mode, Current BambuStudio Version 02.08.02.61
+[2026-11-28 21:23:58.806647] [0x00000001f6015300] [warning] run:2873, can not find system preset file: /Applications/BambuStudio.app/Contents/Resources/profiles/BBL/machine_full/Bambu Lab X2D 0.4 nozzle.json 
+[2026-11-28 21:23:58.806671] [0x00000001f6015300] [warning] run:2895, can not find system preset file: /Applications/BambuStudio.app/Contents/Resources/profiles/BBL/process_full/0.20mm Standard @BBL X2D.json 
+[2026-11-28 21:23:58.806917] [0x00000001f6015300] [warning] no filament colors found in projects
+[2026-11-28 21:23:58.810081] [0x00000001f6015300] [warning] load_nozzle_infos_with_compatibility: building nozzle list from filament map and volume types
+[2026-11-28 21:23:58.813629] [0x00000001f6015300] [error]   update_values_to_printer_extruders_for_multiple_filaments, Line 8936: could not found extruder_type Bowden, nozzle_volume_type Standard, filament_index 2, extruder index 2
+[2026-11-28 21:23:59.038341] [0x00000001f6015300] [warning] tree support default to organic support
+[2026-11-28 21:23:59.071445] [0x00000001f6015300] [error]   update_values_to_printer_extruders_for_multiple_filaments, Line 8936: could not found extruder_type Bowden, nozzle_volume_type Standard, filament_index 2, extruder index 2
+[2026-11-28 21:23:59.468382] [0x00000001f6015300] [error]   Invalid T command (T65279).
+[2026-11-28 21:23:59.468394] [0x00000001f6015300] [error]   Invalid T command (T65535).
